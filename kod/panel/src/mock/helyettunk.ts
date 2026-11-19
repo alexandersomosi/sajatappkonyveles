@@ -6,6 +6,9 @@ import { uid } from './data';
 import type { CsapatKieg, MCb, MReg } from './csapat';
 import type {
   AdminServiceStats,
+  ChangeData,
+  ChangeFollowupView,
+  FeeChargeView,
   PathHistoryItem,
   StaffRef,
   TeamAssistDetail,
@@ -24,6 +27,9 @@ import {
   ASSIST_RULES,
   ASSIST_UJEGYKE_JOGCIM_DEFAULT,
   CALLBACK_RULES,
+  CHANGE_FOLLOWUP_KEYS,
+  FEE_DEFAULTS,
+  type ChangeKind,
   PATH_CHANGE_BLOCKER_TEXT,
   REGISTRATION_STEP_STATUS,
   type AssistAction,
@@ -34,7 +40,8 @@ import {
   type AssistStatus,
   type RegistrationStatus,
 } from '../_shared/enums';
-import { fazisElemek, kisbetu, labdaNalam, lejartJovahagyas, type PanelSzerep } from '../lib/helyettunk';
+import { fazisElemek, fazisok, kisbetu, labdaNalam, lejartJovahagyas, valtozasFajta, type PanelSzerep } from '../lib/helyettunk';
+import { CHANGE_FOLLOWUP_LABELS, FEE_CHARGE_STATUS_LABELS, FEE_KIND_LABELS } from '../_shared/bekotes';
 import { bpDate } from '../lib/format';
 
 type H = (x: { q: URLSearchParams; body: Record<string, unknown>; form: FormData | null; p: Record<string, string> }) => unknown;
@@ -93,6 +100,11 @@ interface MAssist {
   closedAt: string | null;
   closedReason: AssistCloseReason | null;
   timeline: { at: string; by: StaffRef | null; action: string; text: string }[];
+  /** SPEC §28.5.5 change kinds */
+  change?: ChangeData | null;
+  followups?: ChangeFollowupView[];
+  fee?: { kind: 'valtozas_egyszeru' | 'valtozas_jogallas'; status: 'nyitott' | 'fizetve'; at: string } | null;
+  callbackAsked?: boolean;
 }
 
 const ORA = 3_600_000;
@@ -332,9 +344,124 @@ export function installHelyettunk(x: HelyettunkCtx): void {
         tl(30, BENCE, 'assist.mh_live', 'Bence ellenőrizte: él a meghatalmazás – kész'),
       ],
     },
+    // SPEC §28.11 / §28.K.21: change kinds (all fictional)
+    valtozasDemo({
+      id: 'as-adam',
+      clientId: 'c-kovacs-adam',
+      kind: 'valtozas_szekhely',
+      status: 'meghatalmazas_el',
+      h: 30,
+      change: {
+        kind: 'valtozas_szekhely',
+        address: { zip: '1117', city: 'Budapest', district: 'XI.', streetName: 'Próba', streetType: 'utca', houseNumber: '3', building: null, staircase: null, floor: '2', door: '5' },
+        effectiveOn: '2026-12-01',
+        right: 'berlet',
+        provider: null,
+        alsoHomeAddress: false,
+      },
+      pipalt: ['valtozas_adatok'],
+      fee: { kind: 'valtozas_egyszeru', status: 'fizetve', at: ago(190) },
+      tlx: [
+        tl(200, null, 'assist.created', 'Kérte az appban: „Bejelentjük helyetted” – székhelyváltozás (havi ellenőrzésből)'),
+        tl(190, null, 'fee.paid', 'Kifizette a díjat: 4 999 Ft (DEMO)'),
+        tl(30, BENCE, 'assist.change_ready', 'Bence átnézte az adatokat – engedélyt kért'),
+      ],
+    }),
+    valtozasDemo({
+      id: 'as-reka2',
+      clientId: 'c-varga-reka2',
+      kind: 'valtozas_szuneteltetes',
+      status: 'bejelentes_bekuldve',
+      h: 20,
+      change: { kind: 'valtozas_szuneteltetes', from: '2026-12-01', to: '2027-05-31' },
+      pipalt: ['valtozas_adatok', 'valtozas_bejelentes'],
+      fee: { kind: 'valtozas_egyszeru', status: 'fizetve', at: ago(240) },
+      tlx: [
+        tl(250, null, 'assist.created', 'Kérte az appban: „Bejelentjük helyetted” – szüneteltetés'),
+        tl(240, null, 'fee.paid', 'Kifizette a díjat: 4 999 Ft (DEMO)'),
+        tl(200, BENCE, 'assist.change_ready', 'Bence átnézte az adatokat – engedélyt kért'),
+        tl(60, null, 'assist.consent', 'Az ügyfél engedélyezte a bejelentést'),
+        tl(20, BENCE, 'assist.ev_filed', 'Bence beküldte a változásbejelentést meghatalmazottként, feltöltötte a NAV-értesítést'),
+      ],
+    }),
+    valtozasDemo({
+      id: 'as-norbert',
+      clientId: 'c-kiss-norbert',
+      kind: 'valtozas_adoadat',
+      status: 'dijra_var',
+      h: 50,
+      change: { kind: 'valtozas_adoadat', items: ['munkavegzes'], workKind: 'munkaviszony_mellett', effectiveOn: '2026-11-03', note: 'Heti 40 órás munkahelyem lett.' },
+      pipalt: [],
+      fee: { kind: 'valtozas_jogallas', status: 'nyitott', at: ago(50) },
+      tlx: [tl(50, null, 'assist.created', 'A havi ellenőrzésben jelezte: munkaviszonyt kezdett (heti 36 óra fölött) – „Bejelentjük helyetted”')],
+    }),
+    valtozasDemo({
+      id: 'as-anna-tev',
+      clientId: 'c-anna',
+      kind: 'valtozas_tevekenyseg',
+      status: 'egyeztetve',
+      h: 18,
+      change: {
+        kind: 'valtozas_tevekenyseg',
+        mode: 'uj_mellek',
+        activities: [{ key: null, label: 'Jógaoktatás', main: false, ovtjKod: '855101', ovtjNev: 'Sport, szabadidős képzés', navKereso: '855101' }],
+        ownWords: null,
+        keepOldMain: true,
+        effectiveOn: '2026-12-01',
+      },
+      pipalt: [],
+      fee: { kind: 'valtozas_egyszeru', status: 'fizetve', at: ago(18) },
+      tlx: [tl(20, null, 'assist.created', 'Kérte az appban: „Bejelentjük helyetted” – új tevékenység'), tl(18, null, 'fee.paid', 'Kifizette a díjat: 4 999 Ft (DEMO)')],
+    }),
   ];
-  // Step rows in line with the demo states (mock only).
+  function valtozasDemo(o: {
+    id: string;
+    clientId: string;
+    kind: ChangeKind;
+    status: AssistStatus;
+    h: number;
+    change: ChangeData;
+    pipalt: ('valtozas_adatok' | 'valtozas_bejelentes')[];
+    fee: MAssist['fee'];
+    tlx: MAssist['timeline'];
+  }): MAssist {
+    const most = ago(o.h);
+    return {
+      id: o.id,
+      clientId: o.clientId,
+      kind: o.kind,
+      status: o.status,
+      statusChangedAt: most,
+      callbackId: null,
+      registrationId: null,
+      assignee: o.status === 'bejelentes_bekuldve' ? null : null,
+      createdAt: o.tlx[0]?.at ?? most,
+      agreedAt: null,
+      checklist: Object.assign({}, ...o.pipalt.map((ph) => pipak(fazisElemek(o.kind, ph), BENCE, most))),
+      jogcim: ASSIST_UJEGYKE_JOGCIM_DEFAULT,
+      ujegykeFiledAt: null,
+      approvalDueOn: null,
+      approvalExpiresAt: null,
+      reminders: 0,
+      expiredCount: 0,
+      clientApprovedAt: null,
+      mhLiveAt: null,
+      consent: null,
+      consentValid: false,
+      evFiledAt: o.status === 'bejelentes_bekuldve' ? most : null,
+      staffNote: null,
+      closedAt: null,
+      closedReason: null,
+      timeline: o.tlx,
+      change: o.change,
+      followups: [],
+      fee: o.fee,
+      callbackAsked: false,
+    };
+  }
+  // Step rows in line with the demo states (mock only; the change kinds of active clients never touch onboarding).
   for (const a of assists) {
+    if (valtozasFajta(a.kind)) continue;
     const k = x.clients.find((c) => c.id === a.clientId);
     const st = k?.steps.find((s) => s.step === 'meghatalmazas');
     if (!k || !st) continue;
@@ -385,7 +512,7 @@ export function installHelyettunk(x: HelyettunkCtx): void {
       case 'ugyfel_engedelyezte':
         return m(munkanap(a.consent?.at ?? a.statusChangedAt, 1), 'Bejelentés beküldése');
       case 'bejelentes_bekuldve':
-        return m(munkanap(a.evFiledAt ?? a.statusChangedAt, 1), 'Átnézés és adószám');
+        return m(munkanap(a.evFiledAt ?? a.statusChangedAt, 1), valtozasFajta(a.kind) ? 'Átnézés és lezárás' : 'Átnézés és adószám');
       default:
         return null;
     }
@@ -412,6 +539,18 @@ export function installHelyettunk(x: HelyettunkCtx): void {
   };
   const megengedett = (a: MAssist): AssistAction[] => {
     const r = szerepKulcs();
+    if (valtozasFajta(a.kind)) {
+      const v: Partial<Record<AssistStatus, AssistAction[]>> = {
+        visszahivas_kerve: ['egyeztetve', 'lezaras'],
+        dijra_var: ['lezaras'],
+        egyeztetve: ['adatok_rendben', 'lezaras'],
+        meghatalmazas_el: ['lezaras'],
+        ugyfel_engedelyezte: ['bejelentes_bekuldve', 'lezaras'],
+        bejelentes_bekuldve: ['valtozas_kesz', 'lezaras'],
+      };
+      if (zarolt(a)) return (v[a.status] ?? []).filter((m) => m === 'lezaras' && (ASSIST_ACTION_ROLES[m] as readonly string[]).includes(r));
+      return (v[a.status] ?? []).filter((m) => (ASSIST_ACTION_ROLES[m] as readonly string[]).includes(r));
+    }
     const jelolt: Partial<Record<AssistStatus, AssistAction[]>> = {
       visszahivas_kerve: ['egyeztetve', 'lezaras'],
       egyeztetve: [...(szerzodesKesz(a) ? (['ujegyke_bekuldve'] as AssistAction[]) : []), 'lezaras'],
@@ -433,7 +572,12 @@ export function installHelyettunk(x: HelyettunkCtx): void {
     return {
       ...sor(a),
       clientCard: b.card(k),
-      checklist: (a.kind === 'meghatalmazas' ? (['hivas', 'ujegyke'] as const) : (['hivas', 'ujegyke', 'bejelentes'] as const)).map((phase) => ({
+      checklist: (valtozasFajta(a.kind)
+        ? fazisok(a.kind, { status: a.status, checklistPhases: a.callbackAsked ? ['hivas'] : [] })
+        : a.kind === 'meghatalmazas'
+          ? (['hivas', 'ujegyke'] as const)
+          : (['hivas', 'ujegyke', 'bejelentes'] as const)
+      ).map((phase) => ({
         phase,
         title: phase,
         items: fazisElemek(a.kind, phase).map((item) => {
@@ -441,7 +585,13 @@ export function installHelyettunk(x: HelyettunkCtx): void {
           return { item, label: ASSIST_CHECK_LABELS[item], done: !!t, doneAt: t?.at ?? null, by: t?.by ?? null };
         }),
       })),
-      filingData: tax
+      change: a.change ?? null,
+      followups: a.followups ?? [],
+      feeCharge: feeOf(a),
+      serviceLocked: zarolt(a),
+      filingData: valtozasFajta(a.kind)
+        ? null
+        : tax
         ? {
             name: b.nev(k),
             adoazonositoJel: teljes ? tax : null,
@@ -460,6 +610,27 @@ export function installHelyettunk(x: HelyettunkCtx): void {
         : null,
     };
   };
+  function zarolt(a: MAssist): boolean {
+    return a.clientId === 'c-fazekas-ilona';
+  }
+  const feeOf = (a: MAssist): FeeChargeView | null =>
+    a.fee
+      ? {
+          id: `fc-${a.clientId}-${a.fee.kind}`,
+          kind: a.fee.kind,
+          label: FEE_KIND_LABELS[a.fee.kind],
+          amountHuf: FEE_DEFAULTS[a.fee.kind].amountHuf,
+          demo: !FEE_DEFAULTS[a.fee.kind].confirmed,
+          status: a.fee.status,
+          statusText: FEE_CHARGE_STATUS_LABELS[a.fee.status],
+          purpose: { type: 'valtozas', assistId: a.id },
+          dueOn: null,
+          createdAt: a.fee.at,
+          paidAt: a.fee.status === 'fizetve' ? a.fee.at : null,
+          feeInvoice: null,
+          canPay: a.fee.status === 'nyitott',
+        }
+      : null;
   const keres = (id: string) => {
     const a = assists.find((k) => k.id === id);
     if (!a || x.role() === 'none') throw x.hiba(404, 'not_found', 'Nincs ilyen kérés, vagy nincs hozzá jogod.');
@@ -489,7 +660,7 @@ export function installHelyettunk(x: HelyettunkCtx): void {
       throw x.hiba(409, 'assist_wrong_status', 'Ebben az állapotban ez nem lehetséges.');
     }
   };
-  const teljesLista = (a: MAssist, phase: 'hivas' | 'ujegyke' | 'bejelentes', items: unknown) => {
+  const teljesLista = (a: MAssist, phase: 'hivas' | 'ujegyke' | 'bejelentes' | 'valtozas_adatok' | 'valtozas_bejelentes', items: unknown) => {
     const kapott = Array.isArray(items) ? (items as AssistCheckItem[]) : [];
     const hiany = fazisElemek(a.kind, phase).filter((i) => !kapott.includes(i));
     if (hiany.length) throw x.hiba(400, 'assist_checklist_incomplete', 'Minden pontot pipálj ki.', { fields: Object.fromEntries(hiany.map((i) => [i, ASSIST_CHECK_LABELS[i]])) });
@@ -551,7 +722,7 @@ export function installHelyettunk(x: HelyettunkCtx): void {
     const ma = bpDate(x.nowIso());
     const items = assists
       .filter((a) => {
-        if (kind && a.kind !== kind) return false;
+        if (kind === 'valtozas' ? !valtozasFajta(a.kind) : kind && a.kind !== kind) return false;
         const r = { status: a.status, ball: ASSIST_BALL[a.status], approvalDueOn: a.approvalDueOn };
         if (f === 'nyitott' && !nyitott(a)) return false;
         if (f === 'nalam' && !labdaNalam(r, szerep(), b.en().userId)) return false;
@@ -657,9 +828,57 @@ export function installHelyettunk(x: HelyettunkCtx): void {
     naplo(a, 'assist.mh_live', `${b.en().firstName} ellenőrizte: él a meghatalmazás`);
     return reszlet(a);
   });
+  on('POST', '/team/assists/:id/change-ready', ({ p }) => {
+    const a = keres(p.id!);
+    kell(a, 'adatok_rendben');
+    const hiany = fazisElemek(a.kind, 'valtozas_adatok').filter((i) => !a.checklist[i]);
+    if (hiany.length) throw x.hiba(400, 'assist_checklist_incomplete', 'Minden pontot pipálj ki.', { fields: Object.fromEntries(hiany.map((i) => [i, ASSIST_CHECK_LABELS[i]])) });
+    allit(a, 'meghatalmazas_el');
+    naplo(a, 'assist.change_ready', `${b.en().firstName} átnézte az adatokat – engedélyt kért`);
+    return reszlet(a);
+  });
+  on('POST', '/team/assists/:id/change-done', ({ p }) => {
+    const a = keres(p.id!);
+    if (zarolt(a)) throw x.hiba(403, 'service_locked', 'Zárolva: a díj nincs kifizetve. A fizetés után újra működik.');
+    if (szerepKulcs() === 'konyvelo') throw x.hiba(403, 'forbidden', 'Négy szem elve: a csapat vagy a tulajdonos zárja le.');
+    kell(a, 'valtozas_kesz');
+    const c = a.change;
+    a.followups = (CHANGE_FOLLOWUP_KEYS[a.kind as ChangeKind] ?? []).map((key) => ({
+      key,
+      label: (CHANGE_FOLLOWUP_LABELS[key] ?? key)
+        .replace('{from}', c && 'from' in c ? c.from : '')
+        .replace('{to}', c && 'to' in c && c.to ? c.to : 'nyitott')
+        .replace('{date}', c && 'effectiveOn' in c ? c.effectiveOn : ''),
+      done: false,
+      doneAt: null,
+      by: null,
+    }));
+    allit(a, 'kesz');
+    naplo(a, 'assist.change_done', `${b.en().firstName} átnézte a NAV-értesítést – kész`);
+    return reszlet(a);
+  });
+  on('PATCH', '/team/assists/:id/followups', ({ p, body }) => {
+    const a = keres(p.id!);
+    if (szerepKulcs() === 'csapat') throw x.hiba(403, 'forbidden', 'Ezt a könyvelő pipálja.');
+    const f = (a.followups ?? []).find((y) => y.key === body.key);
+    if (!f) throw x.hiba(404, 'not_found', 'Nincs ilyen teendő.');
+    f.done = !!body.done;
+    f.doneAt = f.done ? x.nowIso() : null;
+    f.by = f.done ? b.en() : null;
+    naplo(a, 'assist.followup', `${b.en().firstName}: ${f.label}${f.done ? ' – kész' : ' – visszavonva'}`);
+    return reszlet(a);
+  });
   on('POST', '/team/assists/:id/ev-filed', ({ p, form }) => {
     const a = keres(p.id!);
     kell(a, 'bejelentes_bekuldve');
+    if (valtozasFajta(a.kind)) {
+      if (!form?.get('file')) throw x.hiba(400, 'validation_failed', 'Töltsd fel a NAV-os értesítést.');
+      teljesLista(a, 'valtozas_bejelentes', JSON.parse(String(form.get('items') ?? '[]')));
+      a.evFiledAt = x.nowIso();
+      allit(a, 'bejelentes_bekuldve');
+      naplo(a, 'assist.ev_filed', `${b.en().firstName} beküldte a változásbejelentést meghatalmazottként`);
+      return reszlet(a);
+    }
     if (!form?.get('file')) throw x.hiba(400, 'validation_failed', 'Töltsd fel a NAV-os értesítést.');
     teljesLista(a, 'bejelentes', JSON.parse(String(form.get('items') ?? '[]')));
     const r = regOf(a);

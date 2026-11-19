@@ -90,7 +90,7 @@ export async function subscriptionView(deps: Deps, db: DbOrTx, clientId: string)
   };
 }
 
-function invoiceOf(cl: typeof clients.$inferSelect): SpInvoice {
+export function invoiceOf(cl: typeof clients.$inferSelect): SpInvoice {
   return {
     name: `${cl.lastName} ${cl.firstName}`.trim(),
     country: 'HU',
@@ -101,7 +101,7 @@ function invoiceOf(cl: typeof clients.$inferSelect): SpInvoice {
   };
 }
 
-async function authMethod(db: DbOrTx, userId: string): Promise<'02' | '05'> {
+export async function authMethod(db: DbOrTx, userId: string): Promise<'02' | '05'> {
   const [u] = await db.select({ ph: users.passwordHash, g: users.googleSub, a: users.appleSub }).from(users).where(eq(users.id, userId)).limit(1);
   return !u?.ph && (u?.g || u?.a) ? '05' : '02';
 }
@@ -149,7 +149,9 @@ export async function startRegistration(deps: Deps, clientId: string, platform: 
   const times = deps.cfg.simplepay.recurringTimes;
   const until = new Date(now.getTime());
   until.setUTCMonth(until.getUTCMonth() + deps.cfg.simplepay.tokenValidMonths);
-  const price = deps.cfg.planPriceHuf;
+  // SPEC §28.K.1: the plan amount is an admin setting (fee_settings.havidij); the card's maxAmount covers it.
+  const { planAmountHuf } = await import('./dijak.js');
+  const price = await planAmountHuf(deps, db, sub?.planCode ?? 'havi');
   const orderRef = orderRefFor(now);
 
   // Consents for the two SimplePay declarations (SPEC §9.2).
@@ -338,6 +340,13 @@ export async function processIpn(deps: Deps, body: IpnBody): Promise<void> {
     })
     .where(eq(simplepayTransactions.id, txRow.id));
   await audit(deps.db, { action: 'payment.ipn', actorRole: 'system', targetType: 'simplepay_transaction', targetId: txRow.id, clientId: txRow.clientId, details: { valid: true, status: body.status, kind: txRow.kind } });
+  // SPEC §28.K.1: a one-off fee (annual closing, assisted change) has no subscription behind it.
+  if (txRow.kind === 'egyszeri') {
+    const { applyFeeFinished, applyFeeFailed } = await import('./dijak.js');
+    if (body.status === FINAL_OK) await applyFeeFinished(deps, txRow.id, Number(body.transactionId));
+    else if (FINAL_FAIL.has(String(body.status))) await applyFeeFailed(deps, txRow.id, [String(body.status)]);
+    return;
+  }
   if (body.status === FINAL_OK) await applyFinished(deps, txRow.id, { transactionId: Number(body.transactionId), cardMask: body.cardMask, expiry: body.expiry });
   else if (FINAL_FAIL.has(String(body.status))) await applyFailed(deps, txRow.id, [String(body.status)]);
 }
@@ -690,9 +699,12 @@ export async function chargeSubscription(deps: Deps, stale: SubRow): Promise<'ch
   const periodEnd = addMonths(periodStart, 1);
   const orderRef = orderRefFor(now);
   const m: Mode = sub.mode;
+  // SPEC §28.K.6: during szüneteltetés the availability fee instead of the plan fee.
+  const { chargeAmountHuf } = await import('./szuneteltetes.js');
+  const amount = await chargeAmountHuf(deps, db, sub, periodStart);
   const [t] = await db
     .insert(simplepayTransactions)
-    .values({ orderRef, kind: 'ismetlodo', clientId: cl.id, subscriptionId: sub.id, cardRegistrationId: sub.cardRegistrationId, tokenId: tok.id, amountHuf: deps.cfg.planPriceHuf, status: 'INIT', periodStart, periodEnd, mode: m })
+    .values({ orderRef, kind: 'ismetlodo', clientId: cl.id, subscriptionId: sub.id, cardRegistrationId: sub.cardRegistrationId, tokenId: tok.id, amountHuf: amount, status: 'INIT', periodStart, periodEnd, mode: m })
     .returning();
   if (m === 'demo') {
     if (u.email.startsWith('fail+')) {
@@ -709,7 +721,7 @@ export async function chargeSubscription(deps: Deps, stale: SubRow): Promise<'ch
     const res = await deps.simplepay.doRecurring({
       orderRef,
       token: tok.token,
-      total: deps.cfg.planPriceHuf,
+      total: amount,
       customer: `${cl.lastName} ${cl.firstName}`.trim(),
       customerEmail: u.email,
       threeDSReqAuthMethod: await authMethod(db, cl.userId),

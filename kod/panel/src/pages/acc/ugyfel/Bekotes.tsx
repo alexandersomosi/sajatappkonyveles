@@ -500,7 +500,7 @@ function NavKapcsolat({ c }: FulProps) {
     },
     onError: pir.hiba,
   });
-  const sync = useMutation({ mutationFn: () => ep.accNavSync(c.id), onSuccess: () => { pir.ok('Elindult a lehívás. Pár perc.'); inv(); }, onError: pir.hiba });
+  const sync = useMutation({ mutationFn: () => ep.accNavSync(c.id), onSuccess: () => { pir.ok('Elindult a letöltés a NAV rendszeréből. Pár perc.'); inv(); }, onError: pir.hiba });
   const torol = useMutation({ mutationFn: () => ep.accNavDelete(c.id), onSuccess: () => { pir.ok('A NAV-kapcsolatot töröltük.'); setNyitva(true); inv(); }, onError: pir.hiba });
 
   const hibak: string[] = [];
@@ -541,7 +541,7 @@ function NavKapcsolat({ c }: FulProps) {
             <dd className="szam">{n.loginHint ?? '–'}</dd>
             <dt>Adószám</dt>
             <dd className="szam">{n.taxNumber ?? '–'}</dd>
-            <dt>Utolsó lehívás</dt>
+            <dt>Utolsó letöltés</dt>
             <dd>{n.lastSyncAt ? `${idopont(n.lastSyncAt, today())}${n.lastSyncStatus === 'hiba' ? ' – hiba' : ''}` : '–'}</dd>
             {(n.lastTestError || n.lastSyncError) && (
               <>
@@ -557,7 +557,7 @@ function NavKapcsolat({ c }: FulProps) {
               {teszt.isPending ? 'Ellenőrzöm…' : 'Kapcsolat ellenőrzése'}
             </button>
             <button className="gomb-m kicsi csak-szoveg" disabled={sync.isPending || n.status !== 'rendben'} onClick={() => sync.mutate()}>
-              Lehívás most
+              Letöltöm most
             </button>
             <button className="gomb-sz" onClick={() => setNyitva(!nyitva)}>
               {nyitva ? 'Mégse' : 'Új adatok megadása'}
@@ -618,13 +618,13 @@ function NavKapcsolat({ c }: FulProps) {
         </details>
         {n.status !== 'nincs' && (
           <div style={{ marginTop: 18 }}>
-            <h3 style={{ fontSize: 15.5, fontWeight: 650, marginBottom: 6 }}>Lehívások</h3>
+            <h3 style={{ fontSize: 15.5, fontWeight: 650, marginBottom: 6 }}>Letöltések a NAV rendszeréből</h3>
             {runs.isPending ? (
               <Toltes />
             ) : (runs.data?.items.length ?? 0) === 0 ? (
               <div className="ures" style={{ padding: 10 }}>
                 <Targy n="hatarido_naptar" />
-                <p>Még nem volt lehívás. Reggel fél hatkor magától lefut, vagy indítsd most.</p>
+                <p>Még nem volt letöltés. Reggel fél hatkor magától lefut, vagy indítsd most.</p>
               </div>
             ) : (
               <table className="tabla">

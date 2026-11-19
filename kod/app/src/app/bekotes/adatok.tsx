@@ -57,7 +57,7 @@ export default function Adatok() {
         ? cur && ut && ['kerdoiv', 'bejelentes', 'ertesites', 'vegso_jovahagyas'].includes(cur)
           ? router.replace(ut as never)
           : router.replace('/bekotes')
-        : router.replace('/bekotes');
+        : router.replace({ pathname: '/bekotes/alkalmazottak', params: { csakKapu: '1' } });
   // Lapváltáskor a görgető a tetejére megy: a következő lap címe és első kérdése látsszon, ne a közepe.
   const gorgeto = useRef<ScrollViewInstance>(null);
   const lapra = (n: number) => {
@@ -206,7 +206,8 @@ export default function Adatok() {
     setHiba(null);
     try {
       await ment.mutateAsync(adat);
-      router.replace('/bekotes');
+      // SPEC §28.K.7 + §28.3.4: a „van” út mentése után az alkalmazott/EFO kérdés, majd egyszer a kedvezmény-kapu
+      router.replace('/bekotes/alkalmazottak');
     } catch (e) {
       if (e instanceof ApiHiba && e.code === 'path_required') {
         setHiba(e.message);

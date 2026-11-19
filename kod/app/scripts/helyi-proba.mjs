@@ -64,6 +64,17 @@ try {
 } catch (e) {
   console.log('seed 11-19 kimaradt:', e.message);
 }
+// SPEC §28.11 + §28.K.21: a k6 demó-személyek (Eszter, Bálint, Ádám, Gréta, Norbert, Ilona, Tamás, Csilla), ha a backend
+// már tudja (B1: dist/seed/ot1119.js, dist/seed/k28.js). Csak új, kitalált ügyfeleket ad hozzá.
+for (const [fajl, fv, nev] of [['dist/seed/ot1119.js', 'seedOt1119', 'ot1119'], ['dist/seed/k28.js', 'seedK28', 'k28']]) {
+  try {
+    const m = await imp(fajl);
+    const r = await m[fv](deps, { credentialsFile: cred });
+    console.log(`seed ${nev}:`, r?.status ?? 'kész');
+  } catch (e) {
+    console.log(`seed ${nev} kimaradt:`, e.message);
+  }
+}
 console.log('demo belépések (helyi, ideiglenes):', cred);
 
 const tipus = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.ttf': 'font/ttf', '.json': 'application/json', '.ico': 'image/x-icon' };

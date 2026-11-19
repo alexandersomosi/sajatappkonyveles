@@ -1,4 +1,4 @@
-// Előfizetés (FUNKCIOK 3): mit kapsz havi 20 000 Ft-ért; a token paraméterei érthetően; a SimplePay két kötelező
+// Előfizetés (FUNKCIOK 3): mit kapsz havi 19 999 Ft-ért; a token paraméterei érthetően; a SimplePay két kötelező
 // nyilatkozata; a SimplePay tájékoztató linkje; „Kártyás fizetés” → böngésző. DEMO módban jól látható jelzés.
 import { useState } from 'react';
 import { STEP_LOCK_DEFAULT_TEXTS } from '@/_shared/bekotes';

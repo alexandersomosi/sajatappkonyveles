@@ -201,7 +201,7 @@ describe('K4 (API part) – one journey, one number, Előfizetés after the cont
     const st = await h.json('GET', '/client/onboarding', { token: c.token });
     const j = st.body.journey;
     expect(j.variant).toBe('van');
-    expect(j.steps.map((x: { key: string }) => x.key)).toEqual(['ut', 'adatok', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes']);
+    expect(j.steps.map((x: { key: string }) => x.key)).toEqual(['ut', 'adatok', 'kedvezmenyek', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes']); // SPEC §28.3.4 row
     expect(j.steps.filter((x: { state: string }) => x.state === 'most').length).toBe(1);
     expect(j.currentKey).toBe('adatok');
     expect(st.body.todoCount).toBe(j.todoCount);

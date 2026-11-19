@@ -47,7 +47,7 @@ export interface StartRequest {
   invoice: SpInvoice;
   timeout: Date;
   url: string;
-  recurring: { times: number; until: Date; maxAmount: number };
+  recurring?: { times: number; until: Date; maxAmount: number };
 }
 
 export interface StartResponse {
@@ -127,7 +127,8 @@ export function createSimplePayApi(o: { baseUrl: string; merchant: string; secre
         invoice: r.invoice,
         timeout: spTime(r.timeout),
         url: r.url,
-        recurring: { times: r.recurring.times, until: spTime(r.recurring.until), maxAmount: r.recurring.maxAmount },
+        // SPEC §28.K.1: a one-off fee has no recurring block (no token is stored for it).
+        ...(r.recurring ? { recurring: { times: r.recurring.times, until: spTime(r.recurring.until), maxAmount: r.recurring.maxAmount } } : {}),
       });
       return { transactionId: Number(j.transactionId), paymentUrl: String(j.paymentUrl), tokens: (j.tokens ?? []).map(String), timeout: j.timeout };
     },

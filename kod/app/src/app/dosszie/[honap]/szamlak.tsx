@@ -1,6 +1,7 @@
 // A hónap kiállított számlái a NAV Online Számlából (FUNKCIOK 12). Csak olvasható; demóban MINTA jelzéssel.
 import { View } from 'react-native';
-import { fillPlaceholders, INVOICE_WORDING } from '@/_shared/bekotes';
+import { fillPlaceholders, INVOICE_WORDING, RESERVE_TEXTS } from '@/_shared/bekotes';
+import { TartalekAlsor } from '@/kepernyok/k28';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useNavSzamlak } from '@/api/hooks';
 import { datum, honapMelleknev, szam } from '@/lib/format';
@@ -16,6 +17,8 @@ function SzamlakTartalom() {
   const lista = q.data?.items ?? [];
   const ossz = lista.reduce((a, b) => a + b.grossAmountHuf, 0);
   const nev = honapMelleknev(honap);
+  // SPEC §28.1.5: a hónap fejlécében a félreteendő összesen (csak ha van)
+  const felre = lista.reduce((a, b) => a + Math.max(0, b.reserve?.reserveHuf ?? 0), 0);
   return (
     <Kepernyo
       ful="dosszie"
@@ -24,7 +27,7 @@ function SzamlakTartalom() {
           visszaCim={`Vissza ${/^[aáeéiíoóöőuúüű]/.test(nev) ? 'az' : 'a'} ${nev} dossziéhoz`}
           vissza={() => vissza(`/dosszie?honap=${honap}`)}
           cim={INVOICE_WORDING.sectionTitle}
-          al={lista.length ? fillPlaceholders(INVOICE_WORDING.monthSub, { n: String(lista.length), sum: szam(ossz) }) : INVOICE_WORDING.short}
+          al={lista.length ? `${fillPlaceholders(INVOICE_WORDING.monthSub, { n: String(lista.length), sum: szam(ossz) })}${felre > 0 ? ` ${fillPlaceholders(RESERVE_TEXTS.lista.honapOsszeg, { felre: szam(felre) })}` : ''}` : INVOICE_WORDING.short}
         />
       }
     >
@@ -38,7 +41,12 @@ function SzamlakTartalom() {
                 ikon="szamlak"
                 kesz={s.status === 'feldolgozva' || s.status === 'beadva'}
                 cim={s.customerName?.trim() || 'Magánszemély'}
-                al={<Allapot szo={s.invoiceNumber} utana={`${datum(s.issueDate)}${s.demo ? ' · MINTA' : ''}`} />}
+                al={
+                  <>
+                    <Allapot szo={s.invoiceNumber} utana={`${datum(s.issueDate)}${s.demo ? ' · MINTA' : ''}`} m={15} />
+                    <TartalekAlsor r={s.reserve} />
+                  </>
+                }
                 jobbra={<Osszeg szoveg={szam(s.grossAmountHuf)} m={16} />}
                 onPress={() => router.push(`/szamla/${s.id}`)}
               />

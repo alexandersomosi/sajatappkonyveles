@@ -26,6 +26,9 @@ import {
   type MockClient,
 } from './data';
 import { setTodayOverride, isoWeek } from '../lib/today';
+import brand from '../_shared/brand.json';
+/** SPEC §28.K.1: the monthly fee comes from brand.json (19 999 Ft gross), never a literal. */
+const HAVIDIJ = brand.priceHufMonthlyGross;
 import type {
   AccClientDetail,
   AccDocument,
@@ -44,6 +47,9 @@ import type { ClientFilter, DocumentStatus, Milestone, RequestStatus } from '../
 import { MILESTONE_LABELS, MILESTONE_ORDER } from '../_shared/enums';
 import { installCsapat, ANNA } from './csapat';
 import { exportLetiltva, installHelyettunk } from './helyettunk';
+import { installK28, type K28Hooks } from './k28';
+/** SPEC §28 / §28.K extras of the list row and the client detail (set by installK28 below). */
+let k28: K28Hooks | null = null;
 
 class MockError extends Error {
   constructor(
@@ -122,7 +128,7 @@ for (const c of clients) {
   let first = true;
   while (`${y}-${String(m).padStart(2, '0')}-${start.slice(8)}` <= TODAY) {
     const d = `${y}-${String(m).padStart(2, '0')}-${start.slice(8)}`;
-    subsPayments.push({ id: uid('pay'), orderRef: `KJ-${d.replace(/-/g, '')}-${uid('x').toUpperCase().padEnd(10, 'Q').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: first ? 'regisztracio' : 'ismetlodo', amountHuf: 20000, status: 'FINISHED', createdAt: ts(d, first ? '19:27' : '06:00'), finishedAt: ts(d, first ? '19:28' : '06:01'), errorCodes: [], mode: 'demo' });
+    subsPayments.push({ id: uid('pay'), orderRef: `KJ-${d.replace(/-/g, '')}-${uid('x').toUpperCase().padEnd(10, 'Q').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: first ? 'regisztracio' : 'ismetlodo', amountHuf: HAVIDIJ, status: 'FINISHED', createdAt: ts(d, first ? '19:27' : '06:00'), finishedAt: ts(d, first ? '19:28' : '06:01'), errorCodes: [], mode: 'demo' });
     first = false;
     m++;
     if (m > 12) {
@@ -131,8 +137,8 @@ for (const c of clients) {
     }
   }
   if (c.sub.status === 'past_due') {
-    subsPayments.push({ id: uid('pay'), orderRef: `KJ-20261111-${uid('y').toUpperCase().padEnd(10, 'Z').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: 20000, status: 'NOTAUTHORIZED', createdAt: ts('2026-11-11', '06:00'), finishedAt: ts('2026-11-11', '06:00'), errorCodes: ['5071'], mode: 'demo' });
-    subsPayments.push({ id: uid('pay'), orderRef: `KJ-20261114-${uid('z').toUpperCase().padEnd(10, 'W').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: 20000, status: 'NOTAUTHORIZED', createdAt: ts('2026-11-14', '06:00'), finishedAt: ts('2026-11-14', '06:00'), errorCodes: ['5071'], mode: 'demo' });
+    subsPayments.push({ id: uid('pay'), orderRef: `KJ-20261111-${uid('y').toUpperCase().padEnd(10, 'Z').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: HAVIDIJ, status: 'NOTAUTHORIZED', createdAt: ts('2026-11-11', '06:00'), finishedAt: ts('2026-11-11', '06:00'), errorCodes: ['5071'], mode: 'demo' });
+    subsPayments.push({ id: uid('pay'), orderRef: `KJ-20261114-${uid('z').toUpperCase().padEnd(10, 'W').slice(0, 10)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: HAVIDIJ, status: 'NOTAUTHORIZED', createdAt: ts('2026-11-14', '06:00'), finishedAt: ts('2026-11-14', '06:00'), errorCodes: ['5071'], mode: 'demo' });
     const last = subsPayments.filter((p) => p.client.id === c.id && p.status === 'FINISHED' && p.createdAt >= ts('2026-11-01'));
     for (const l of last) subsPayments.splice(subsPayments.indexOf(l), 1);
   }
@@ -240,27 +246,28 @@ function deadlinesOf(c: MockClient): Deadline[] {
   return out.sort((a, b) => a.dueDate.localeCompare(b.dueDate));
 }
 function row(c: MockClient): AccClientRow {
-  const r = reqs.get(c.id) ?? [];
+  const rq = reqs.get(c.id) ?? [];
   const open = (x: RequestSummary) => x.status === 'nyitott' || x.status === 'folyamatban';
   const ms = milestones(c);
-  return {
+  const r: AccClientRow = {
     id: c.id,
     name: name(c),
     lifecycle: c.lifecycle,
-    flags: flagsOf(c, r),
+    flags: flagsOf(c, rq),
     nextDeadline: deadlinesOf(c)[0],
-    openRequestsFromClient: r.filter((x) => x.direction === 'ugyfeltol' && open(x)).length,
-    openRequestsToClient: r.filter((x) => x.direction === 'konyvelotol' && open(x)).length,
+    openRequestsFromClient: rq.filter((x) => x.direction === 'ugyfeltol' && open(x)).length,
+    openRequestsToClient: rq.filter((x) => x.direction === 'konyvelotol' && open(x)).length,
     waitingDocuments: (docs.get(c.id) ?? []).filter((d) => d.source === 'ugyfel' && d.status === 'feltoltve').length,
     lastUploadAt: c.lastUploadAt ?? undefined,
     afaRatio: c.afaUsed / 20_000_000,
     subscriptionStatus: c.sub?.status ?? null,
     onboardingMilestone: c.lifecycle === 'bekotes_alatt' ? (ms.find((m) => m.current)?.key ?? null) : null,
   };
+  return k28 ? k28.sor(c, r) : r;
 }
 function detail(c: MockClient): AccClientDetail {
   const rw = row(c);
-  return {
+  const d: AccClientDetail = {
     id: c.id,
     firstName: c.firstName,
     lastName: c.lastName,
@@ -285,7 +292,7 @@ function detail(c: MockClient): AccClientDetail {
     taxProfile: c.taxProfile,
     onboarding: { steps: c.steps, milestones: milestones(c) },
     kycStatus: c.kycStatus,
-    subscription: c.sub ? { status: c.sub.status, mode: 'demo', priceHuf: 20000, nextChargeAt: c.sub.nextChargeAt ?? undefined, cardMask: c.sub.cardMask ?? undefined, failedAttempts: c.sub.failedAttempts } : null,
+    subscription: c.sub ? { status: c.sub.status, mode: 'demo', priceHuf: HAVIDIJ, nextChargeAt: c.sub.nextChargeAt ?? undefined, cardMask: c.sub.cardMask ?? undefined, failedAttempts: c.sub.failedAttempts } : null,
     nav: c.nav,
     meters: c.taxProfile ? meters(c) : null,
     nextDeadline: rw.nextDeadline ?? null,
@@ -294,6 +301,7 @@ function detail(c: MockClient): AccClientDetail {
     unreadMessages: c.key === 'kata' ? 1 : 0,
     demo: true,
   };
+  return k28 ? k28.reszlet(c, d) : d;
 }
 function docLabel(s: DocumentStatus, nav = false): string {
   return s === 'feltoltve' ? (nav ? 'Letöltöttük' : 'Feltöltve') : s === 'konyvelo_latta' ? `${settings.firstName} látta` : s === 'feldolgozva' ? 'Feldolgozva' : 'Beadva';
@@ -373,7 +381,7 @@ const R: [string, string, H][] = [];
 const on = (m: string, path: string, h: H) => R.push([m, path, h]);
 
 on('GET', '/config', () => ({
-  brand: { name: 'Kézjegy', tagline: '', subline: '', priceHufMonthlyGross: 20000 },
+  brand: { name: brand.name, tagline: brand.tagline, subline: brand.subline, priceHufMonthlyGross: HAVIDIJ },
   appEnv: 'demo',
   demo: true,
   features: { googleSignIn: false, appleSignIn: false, totp: true },
@@ -409,7 +417,7 @@ on('POST', '/auth/password/change', ({ body }) => {
   if (String(body.newPassword).length < 10) throw new MockError(400, 'validation_failed', 'A jelszó legalább 10 karakter legyen.');
   return undefined;
 });
-on('POST', '/auth/totp/setup', () => ({ secret: 'JBSWY3DPEHPK3PXPJBSWY3DP', otpauthUrl: 'otpauth://totp/K%C3%A9zjegy:demo?secret=JBSWY3DPEHPK3PXPJBSWY3DP&issuer=K%C3%A9zjegy' }));
+on('POST', '/auth/totp/setup', () => ({ secret: 'JBSWY3DPEHPK3PXPJBSWY3DP', otpauthUrl: `otpauth://totp/${encodeURIComponent(brand.name)}:demo?secret=JBSWY3DPEHPK3PXPJBSWY3DP&issuer=${encodeURIComponent(brand.name)}` }));
 on('POST', '/auth/totp/enable', () => {
   totpEnabled = true;
   return { recoveryCodes: Array.from({ length: 10 }, (_, i) => `DEMO-${String(1000 + i * 731).slice(-4)}-${String(9000 - i * 377).slice(-4)}`) };
@@ -441,9 +449,10 @@ on('GET', '/acc/clients', ({ q }) => {
   const filter = (q.get('filter') ?? 'mind') as ClientFilter;
   const s = (q.get('q') ?? '').toLowerCase();
   const all = clients.map(row);
-  const counts = { mind: all.length, bekotes_alatt: 0, rendben: 0, hianyzik_valami: 0, hatar_kozel: 0, dij_elmaradt: 0 };
+  const counts = { mind: all.length, bekotes_alatt: 0, rendben: 0, hianyzik_valami: 0, hatar_kozel: 0, dij_elmaradt: 0, zarolva: 0, kata_figyelem: 0 };
   for (const r of all) for (const f of r.flags) counts[f]++;
-  const items = all.filter((r) => (filter === 'mind' || r.flags.includes(filter)) && (!s || r.name.toLowerCase().includes(s)));
+  const kedv = q.get('kedvezmeny') === 'var';
+  const items = all.filter((r) => (filter === 'mind' || r.flags.includes(filter)) && (!s || r.name.toLowerCase().includes(s)) && (!kedv || (r.allowancesPending ?? 0) > 0));
   return { items, counts };
 });
 on('GET', '/acc/clients/:id', ({ p }) => detail(byId(p.id!)));
@@ -868,7 +877,7 @@ on('GET', '/admin/dashboard', () => {
   return {
     clients: { total: clients.length, byLifecycle: byL, newThisMonth: clients.filter((c) => c.clientSince >= '2026-11-01').length },
     funnel: { registered: clients.length + 3, onboardingStarted: clients.length + 1, subscribed: clients.filter((c) => c.sub && c.sub.status !== 'incomplete').length, active: byL.aktiv },
-    mrrHuf: clients.filter((c) => c.sub?.status === 'active').length * 20000,
+    mrrHuf: clients.filter((c) => c.sub?.status === 'active').length * HAVIDIJ,
     revenueByMonth: months.map((m) => ({ month: m, amountHuf: rev[m] ?? 0 })),
     failedPayments: subsPayments.filter((p) => p.status !== 'FINISHED').length,
     cancellationsThisMonth: 0,
@@ -907,7 +916,7 @@ on('GET', '/admin/subscriptions', ({ q }) => {
         client: { id: c.id, name: name(c) },
         status: c.sub!.status,
         mode: 'demo',
-        priceHuf: 20000,
+        priceHuf: HAVIDIJ,
         currentPeriodEnd: c.sub!.nextChargeAt?.slice(0, 10) ?? null,
         nextChargeAt: c.sub!.nextChargeAt,
         failedAttempts: c.sub!.failedAttempts,
@@ -924,7 +933,7 @@ on('POST', '/admin/subscriptions/:id/retry', ({ p }) => {
   c.sub!.status = 'active';
   c.sub!.failedAttempts = 0;
   c.sub!.graceUntil = null;
-  subsPayments.unshift({ id: uid('pay'), orderRef: `KJ-20261117-RETRY${uid('r').toUpperCase().slice(-5)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: 20000, status: 'FINISHED', createdAt: nowIso(), finishedAt: nowIso(), errorCodes: [], mode: 'demo' });
+  subsPayments.unshift({ id: uid('pay'), orderRef: `KJ-20261117-RETRY${uid('r').toUpperCase().slice(-5)}`, client: { id: c.id, name: name(c) }, kind: 'ismetlodo', amountHuf: HAVIDIJ, status: 'FINISHED', createdAt: nowIso(), finishedAt: nowIso(), errorCodes: [], mode: 'demo' });
   return undefined;
 });
 on('POST', '/admin/subscriptions/:id/cancel', ({ p }) => {
@@ -1071,10 +1080,12 @@ installHelyettunk({
   kieg: csapat.kieg,
   belso: csapat.belso,
 });
+// SPEC §28 / §28.K: reserve, earnings, allowances, notifications, check-in, annual closing, lock, EFO, fees (mock/k28.ts).
+k28 = installK28({ on, clients, role, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), logAudit, inv, revenue, msgs, fileMeta });
 /** SPEC §26.4: the service team gets 404 on accountant and owner endpoints (the API enforces the same). */
 function tiltott(path: string): boolean {
   const r = role();
-  if (r === 'csapat') return path.startsWith('/acc/') || path.startsWith('/admin/');
+  if (r === 'csapat') return (path.startsWith('/acc/') && !k28?.csapatUtvonal(path)) || path.startsWith('/admin/');
   return false;
 }
 
@@ -1099,7 +1110,16 @@ function match(method: string, path: string): { h: H; p: Record<string, string> 
 }
 
 export function installMock(): void {
-  setTodayOverride(TODAY);
+  // ?mock_today=2027-03-20 – a later "today" for the annual-closing screenshots (SPEC §28.K.3 opens on 5 January).
+  let ma = TODAY;
+  try {
+    const t = new URLSearchParams(location.search).get('mock_today');
+    if (t && /^\d{4}-\d{2}-\d{2}$/.test(t)) sessionStorage.setItem('mock_today', t);
+    ma = sessionStorage.getItem('mock_today') ?? TODAY;
+  } catch {
+    /* ignore */
+  }
+  setTodayOverride(ma);
   try {
     const r = new URLSearchParams(location.search).get('mock_role');
     if (r) setRole(r);

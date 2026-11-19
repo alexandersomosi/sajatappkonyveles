@@ -1,6 +1,6 @@
 // Képernyő-keret: alap háttér, görgetés, lebegő fülsor a külön kerek Fotózás-gombbal, alsó lap (sheet), lépéssor,
 // betöltés/hiba állapot, MINTA/DEMO jelzés, rövid visszajelzés (toast).
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode, type Ref } from 'react';
+import { Children, cloneElement, createContext, Fragment, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactElement, type ReactNode, type Ref } from 'react';
 import { AccessibilityInfo, ActivityIndicator, Animated, Easing, Keyboard, Modal, PixelRatio, Platform, Pressable, ScrollView, useWindowDimensions, View, type ScrollViewInstance, type ScrollViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Me, Message, OnboardingState, RequestSummary } from '../_shared/api';
@@ -15,18 +15,25 @@ import { mozgasKi } from '../lib/mozgas';
 import { maiNap } from '../lib/format';
 import { utEpit } from '../lib/ut';
 import { arnyek, forma, szin } from '../theme/tokens';
-import { GombM, Lap } from './alap';
+import { Fejlec, GombM, Lap, Szakasz } from './alap';
+import { SAV, TeljesCtx } from './teljes';
+import { ZarolasSav } from './Zarolas';
 import { Ikon3d, KeszJel, type Ikon3dNev } from './kepek';
 import { useAuth } from '../auth/AuthProvider';
 import { useZarolt } from './Zarolt';
 import { T } from './T';
 
-export const FULSOR_MAGASSAG = 64;
+/** SPEC §28.K.10 (C): lapos, teljes szélességű fülsor, 52 pt magas, fölötte egy hajszálvonal. */
+export const FULSOR_MAGASSAG = 52;
+/** A fix fő gomb (dokk) magassága a fülsor fölött: 8 + 52 + 8. */
+export const DOKK_MAGASSAG = 68;
 
 // ---------- fülsor ----------
+// C (B_kisebb fülsora): öt fül, a Fotózás középen, ugyanolyan fülként (nincs külön kerek gomb).
 const FULEK: { kulcs: string; cim: string; ikon: Ikon3dNev; ut: string; skala: number }[] = [
   { kulcs: 'fooldal', cim: 'Főoldal', ikon: 'fooldal', ut: '/', skala: 1 },
   { kulcs: 'dosszie', cim: 'Dosszié', ikon: 'dosszie', ut: '/dosszie', skala: 0.965 },
+  { kulcs: 'fotozas', cim: 'Fotózás', ikon: 'fotozas', ut: '/fotozas', skala: 1 },
   { kulcs: 'uzenetek', cim: 'Üzenetek', ikon: 'uzenetek', ut: '/uzenetek', skala: 1.11 },
   { kulcs: 'fiok', cim: 'Fiók', ikon: 'fiok', ut: '/fiok', skala: 0.93 },
 ];
@@ -100,7 +107,7 @@ export function Fulsor({ aktiv }: { aktiv: string }) {
   const { width } = useWindowDimensions();
   const nagyBetu = PixelRatio.getFontScale() > 1.15;
   const szuk = Math.min(width, 480) < 360 || nagyBetu;
-  const alul = Platform.OS === 'web' ? 20 : Math.max(ins.bottom, 12) + 8;
+  const alul = Platform.OS === 'web' ? 0 : ins.bottom;
   if (billentyuzet) return null;
   const fotozas = async () => {
     if (!allapot.korlatozott) return router.push('/fotozas');
@@ -115,96 +122,92 @@ export function Fulsor({ aktiv }: { aktiv: string }) {
     zarolt({ feature: 'feltoltes' });
   };
   const jelvenyek: Record<string, number> = { fooldal: allapot.fooldal, uzenetek: allapot.uzenetek };
+  const fotoCimke = !allapot.korlatozott
+    ? 'Fotózás: irat lefotózása'
+    : allapot.nyitottKeres
+      ? `Fotózás: ${allapot.nyitottKeres.title} feltöltése, a könyvelőd kérte`
+      : 'Fotózás: a bekötés után nyílik meg. Addig csak a könyvelőd kérésére tölthetsz fel.';
   return (
-    <>
-      {/* fátyol: a fülsor felső élétől lefelé teljesen fed, fölötte 12 pt-os átmenet */}
-      <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: alul + FULSOR_MAGASSAG + 12 }}>
+    <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: szin.lap, borderTopWidth: 1, borderTopColor: szin.hajszal, paddingBottom: alul }}>
+      <View accessibilityRole="tablist" style={{ height: FULSOR_MAGASSAG, flexDirection: 'row' }}>
+        {FULEK.map((f) => {
+          const on = f.kulcs === aktiv;
+          const foto = f.kulcs === 'fotozas';
+          return (
+            <Pressable
+              key={f.kulcs}
+              accessibilityRole={foto ? 'button' : 'tab'}
+              accessibilityLabel={foto ? fotoCimke : jelvenyek[f.kulcs] ? (f.kulcs === 'fooldal' ? `${f.cim}, még ${jelvenyek[f.kulcs]} teendő` : `${f.cim}, ${jelvenyek[f.kulcs]} új`) : f.cim}
+              accessibilityState={foto ? undefined : { selected: on }}
+              // react-native-web 0.21 nem írja ki az accessibilityState-et: a weben az aria-selected jelzi az aktív fület.
+              aria-selected={foto ? undefined : on}
+              onPress={() => {
+                valasztasRezges();
+                if (foto) return void fotozas();
+                if (!on) router.navigate((f.kulcs === 'fooldal' && allapot.korlatozott ? '/bekotes' : f.ut) as never);
+              }}
+              style={({ pressed }) => [{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 2 }, pressed && { opacity: 0.7 }]}
+            >
+              {/* a nagyított ikon (Üzenetek 1,11×) a nagyobb fájlból jön: csak lefelé méretezünk (TERV A6) */}
+              <Ikon3d nev={f.ikon} pt={26} forrasPt={26 * f.skala} arnyektalan={foto} style={{ transform: [{ scale: f.skala }] }} />
+              <T m={szuk ? 11 : 12.5} s={on ? 750 : 550} lh={1.2} c={on ? szin.tintakek : szin.halvany} ls={-0.005} numberOfLines={1} maxFontSizeMultiplier={1.1}>
+                {f.cim}
+              </T>
+              <Jelveny n={jelvenyek[f.kulcs] ?? 0} />
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+/** Az egyetlen fő gomb mindig ugyanott: teljes szélességben, a fülsor fölött (SPEC §28.K.10 „dokk”). */
+function Dokk({ children, ful }: { children: ReactNode; ful: boolean }) {
+  const ins = useSafeAreaInsets();
+  const billentyuzet = useBillentyuzet();
+  const alul = ful && !billentyuzet ? FULSOR_MAGASSAG + 1 + (Platform.OS === 'web' ? 0 : ins.bottom) : Platform.OS === 'web' ? 0 : ins.bottom;
+  return (
+    <View style={{ position: 'absolute', left: 0, right: 0, bottom: alul, backgroundColor: szin.lap, paddingHorizontal: forma.margo, paddingVertical: 8 }}>
+      <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, top: -12, height: 12 }}>
         <Svg width="100%" height={12}>
           <Defs>
-            <LinearGradient id="fatyol" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={szin.alap} stopOpacity={0} />
-              <Stop offset="1" stopColor={szin.alap} stopOpacity={1} />
+            <LinearGradient id="dokkfatyol" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+              <Stop offset="1" stopColor="#FFFFFF" stopOpacity={1} />
             </LinearGradient>
           </Defs>
-          <Rect x={0} y={0} width="100%" height={12} fill="url(#fatyol)" />
+          <Rect x={0} y={0} width="100%" height={12} fill="url(#dokkfatyol)" />
         </Svg>
-        <View style={{ flex: 1, backgroundColor: szin.alap }} />
       </View>
-      <View style={{ position: 'absolute', left: szuk ? 8 : 14, right: szuk ? 8 : 14, bottom: alul, height: FULSOR_MAGASSAG, flexDirection: 'row', gap: szuk ? 6 : 10 }}>
-        {/* only the four tabs form the tablist; the round Fotózás button next to it is a plain button (review k3c2) */}
-        <View
-          accessibilityRole="tablist"
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            padding: 5,
-            borderRadius: 999,
-            backgroundColor: 'rgba(255,255,255,0.94)',
-            borderWidth: 1,
-            borderColor: 'rgba(16,21,60,0.08)',
-            ...arnyek.lebego,
-          }}
-        >
-          {FULEK.map((f) => {
-            const on = f.kulcs === aktiv;
-            return (
-              <Pressable
-                key={f.kulcs}
-                accessibilityRole="tab"
-                accessibilityLabel={jelvenyek[f.kulcs] ? (f.kulcs === 'fooldal' ? `${f.cim}, még ${jelvenyek[f.kulcs]} teendő` : `${f.cim}, ${jelvenyek[f.kulcs]} új`) : f.cim}
-                accessibilityState={{ selected: on }}
-                // react-native-web 0.21 nem írja ki az accessibilityState-et: a weben az aria-selected jelzi az aktív fület.
-                aria-selected={on}
-                onPress={() => {
-                  valasztasRezges();
-                  if (!on) router.navigate((f.kulcs === 'fooldal' && allapot.korlatozott ? '/bekotes' : f.ut) as never);
-                }}
-                style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 1 }}
-              >
-                {/* a nagyított ikon (Üzenetek 1,11×) a 36 pt-os fájlból jön: csak lefelé méretezünk (TERV A6) */}
-                <Ikon3d nev={f.ikon} pt={28} forrasPt={28 * f.skala} arnyektalan={false} style={{ transform: [{ scale: f.skala }] }} />
-                <T m={szuk ? 10.5 : 11.5} s={on ? 750 : 550} lh={1.25} c={on ? szin.tintakek : szin.halvany} ls={szuk ? -0.02 : -0.005} numberOfLines={1} maxFontSizeMultiplier={1.1}>
-                  {f.cim}
-                </T>
-                {on ? <View style={{ position: 'absolute', bottom: -2, width: 24, height: 4, borderRadius: 2, backgroundColor: szin.fulAktiv }} /> : null}
-                <Jelveny n={jelvenyek[f.kulcs] ?? 0} />
-              </Pressable>
-            );
-          })}
-        </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={
-            !allapot.korlatozott
-              ? 'Fotózás: irat lefotózása'
-              : allapot.nyitottKeres
-                ? `Fotózás: ${allapot.nyitottKeres.title} feltöltése, a könyvelőd kérte`
-                : 'Fotózás: a bekötés után nyílik meg. Addig csak a könyvelőd kérésére tölthetsz fel.'
-          }
-          onPress={() => void fotozas()}
-          style={({ pressed }) => [
-            {
-              width: 64,
-              height: 64,
-              borderRadius: 32,
-              backgroundColor: '#fff',
-              borderWidth: 3,
-              borderColor: szin.tintakek,
-              alignItems: 'center',
-              justifyContent: 'center',
-              ...arnyek.lebego,
-            },
-            pressed && { backgroundColor: '#F2F5FA' },
-          ]}
-        >
-          <Ikon3d nev="fotozas" pt={34} style={{ marginTop: -3, marginBottom: -2 }} />
-          <T m={szuk ? 9.5 : 10.5} s={700} lh={1.2} ls={-0.01} numberOfLines={1} maxFontSizeMultiplier={1.1}>
-            Fotózás
-          </T>
-        </Pressable>
-      </View>
-    </>
+      {children}
+    </View>
   );
+}
+
+/** A tartalom elemei sorban (a Fragmentek kibontva), hogy a szakaszcím alatti lap ne kapjon sávot. */
+function kibont(children: ReactNode): ReactNode[] {
+  const ki: ReactNode[] = [];
+  Children.forEach(children, (c) => {
+    if (isValidElement(c) && c.type === Fragment) ki.push(...kibont((c.props as { children?: ReactNode }).children));
+    else if (c !== null && c !== undefined && c !== false && c !== '') ki.push(c);
+  });
+  return ki;
+}
+function savoz(children: ReactNode, elsoNelkul: boolean): ReactNode[] {
+  const elemek = kibont(children);
+  let elozo: unknown = null;
+  return elemek.map((c, i) => {
+    let e = c;
+    if (isValidElement(c)) {
+      const szakaszos = c.type === Lap || c.type === Szakasz || (typeof c.type === 'function' && (c.type as unknown as { szakaszos?: boolean }).szakaszos === true);
+      const elso = elsoNelkul && i === 0 && szakaszos;
+      const kotott = c.type === Lap && elozo === Szakasz;
+      if (elso || kotott) e = cloneElement(c as ReactElement<{ elso?: boolean; kotott?: boolean }>, { ...(elso ? { elso: true } : {}), ...(kotott ? { kotott: true } : {}), key: (c.key ?? `s${i}`) as string });
+      elozo = c.type;
+    } else elozo = null;
+    return e;
+  });
 }
 
 // ---------- képernyő ----------
@@ -217,10 +220,13 @@ export function Kepernyo({
   frissul,
   gorget = true,
   gorgetoRef,
+  dokk,
   ...p
 }: {
   children: ReactNode;
   fejlec?: ReactNode;
+  /** A képernyő egyetlen fő gombja, fixen a fülsor fölött (SPEC §28.K.10). */
+  dokk?: ReactNode;
   ful?: string;
   tartalomStilus?: StyleProp<ViewStyle>;
   frissit?: () => void;
@@ -230,15 +236,22 @@ export function Kepernyo({
   gorgetoRef?: Ref<ScrollViewInstance>;
 } & ScrollViewProps) {
   const ins = useSafeAreaInsets();
-  const alsoTer = ful ? FULSOR_MAGASSAG + 56 + (Platform.OS === 'web' ? 0 : ins.bottom) : 40 + ins.bottom;
+  const alsoTer = (ful ? FULSOR_MAGASSAG + 24 + (Platform.OS === 'web' ? 0 : ins.bottom) : 40 + ins.bottom) + (dokk ? DOKK_MAGASSAG : 0);
+  // C + elválasztó: a kék sáv alatti első szakasz előtt nincs sáv; a CimSor fehér címe után viszont van.
+  const cimSorAlatt = isValidElement(fejlec) && fejlec.type === CimSor;
+  const elemek = savoz(children, !!fejlec && !cimSorAlatt);
+  const elsoSzakasz = isValidElement(elemek[0]) && (elemek[0].type === Lap || elemek[0].type === Szakasz || (typeof elemek[0].type === 'function' && (elemek[0].type as unknown as { szakaszos?: boolean }).szakaszos === true));
   const tartalom = (
     <>
       {fejlec}
-      <View style={[{ paddingHorizontal: forma.margo, paddingTop: 14, paddingBottom: alsoTer }, tartalomStilus]}>{children}</View>
+      {ful ? <ZarolasSav /> : null}
+      <TeljesCtx.Provider value>
+        <View style={[{ paddingHorizontal: forma.margo, paddingTop: elsoSzakasz ? 0 : 16, paddingBottom: alsoTer }, tartalomStilus]}>{elemek}</View>
+      </TeljesCtx.Provider>
     </>
   );
   return (
-    <View style={{ flex: 1, backgroundColor: szin.alap }}>
+    <View style={{ flex: 1, backgroundColor: szin.lap }}>
       {gorget ? (
         <ScrollView
           ref={gorgetoRef}
@@ -253,30 +266,49 @@ export function Kepernyo({
       ) : (
         tartalom
       )}
+      {dokk ? <Dokk ful={!!ful}>{dokk}</Dokk> : null}
       {ful ? <Fulsor aktiv={ful} /> : null}
       <MintaJel />
     </View>
   );
 }
 
-/** Egyszerű fejléc fülsor nélküli képernyőkre: szöveges vissza-link + cím (05 stílus). */
-export function CimSor({ vissza, visszaCim, cim, al }: { vissza?: () => void; visszaCim?: string; cim: string; al?: string }) {
-  const ins = useSafeAreaInsets();
+/**
+ * Fejléc fülsor nélküli képernyőkre (C „form header”, SPEC §28.K.10): a keskeny kék sáv a „Vissza” kapszulával (és ha van,
+ * a szakasz nevével középen), alatta fehéren a képernyő címe 26-os és egy mondat másodlagos szöveggel.
+ */
+export function CimSor({ vissza, visszaCim, cim, al, szakasz }: { vissza?: () => void; visszaCim?: string; cim: string; al?: string; szakasz?: string }) {
+  const vissza2 = vissza ?? (() => (router.canGoBack() ? router.back() : router.replace('/')));
   return (
-    <View style={{ paddingTop: Platform.OS === 'web' ? 10 : ins.top + 2 }}>
-      {visszaCim ? (
-        <Pressable accessibilityRole="link" onPress={vissza ?? (() => (router.canGoBack() ? router.back() : router.replace('/')))} hitSlop={6} style={{ height: 48, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'flex-start' }}>
-          <T m={16.5} s={500} c={szin.tintakekSzoveg} alahuz>
-            {visszaCim}
-          </T>
-        </Pressable>
-      ) : null}
-      <View style={{ paddingTop: 6, paddingHorizontal: 20, paddingBottom: 2 }}>
-        <T m={28} s={700} lh={1.15} ls={-0.025} accessibilityRole="header">
+    <View style={{ backgroundColor: szin.lap }}>
+      <Fejlec rozX={318} rozY={70} alsoTer={12}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, paddingRight: 70 }}>
+          {visszaCim ? (
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel={visszaCim}
+              onPress={vissza2}
+              hitSlop={4}
+              style={({ pressed }) => [{ height: 36, paddingHorizontal: 14, borderRadius: forma.gomb, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.8)', justifyContent: 'center' }, pressed && { backgroundColor: 'rgba(255,255,255,0.1)' }]}
+            >
+              <T m={15.5} s={650} c="#fff" numberOfLines={1}>
+                Vissza
+              </T>
+            </Pressable>
+          ) : null}
+          {szakasz ? (
+            <T m={16} s={650} c="#fff" kozep numberOfLines={1} style={{ flex: 1, marginLeft: 8 }}>
+              {szakasz}
+            </T>
+          ) : null}
+        </View>
+      </Fejlec>
+      <View style={{ paddingTop: 16, paddingHorizontal: 16, paddingBottom: 12 }}>
+        <T m={26} s={700} lh={1.15} ls={-0.022} accessibilityRole="header">
           {cim}
         </T>
         {al ? (
-          <T m={16} lh={1.5} c={szin.halvanyAlapon} style={{ marginTop: 8 }}>
+          <T m={16} lh={1.45} c={szin.halvany} style={{ marginTop: 6 }}>
             {al}
           </T>
         ) : null}
@@ -432,7 +464,7 @@ export function AlsoLap({
                 if (g !== gorgetve) setGorgetve(g);
               }}
             >
-              {children}
+              <TeljesCtx.Provider value={false}>{children}</TeljesCtx.Provider>
             </ScrollView>
             {lab ? <View style={{ borderTopWidth: 1, borderTopColor: szin.hajszal, marginHorizontal: -20, paddingHorizontal: 20, paddingTop: 2, backgroundColor: szin.lap }}>{lab}</View> : null}
           </Animated.View>

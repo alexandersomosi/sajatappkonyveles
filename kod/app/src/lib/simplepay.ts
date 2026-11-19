@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import { router } from 'expo-router';
-import type { SubscriptionStartResult } from '../_shared/api';
+import type { FeePayStart, SubscriptionStartResult } from '../_shared/api';
 import { post } from '../api/http';
 import { SEMA } from '../config';
 
@@ -32,4 +32,24 @@ export async function kartyasFizetes(purpose: 'subscribe' | 'card_update' = 'sub
   } else {
     router.push({ pathname: '/elofizetes/eredmeny', params: { e: 'CANCEL', o: r.orderRef } });
   }
+}
+
+/**
+ * SPEC §28.K.1: egyszeri díj (változás bejelentése helyetted, éves zárás) – egyszeri SimplePay fizetés, soha nem a havidíj
+ * tárolt kártyája. A díj állapotát itt sem az app dönti el: utána a Díjak képernyő a szerver szerinti állapotot mutatja.
+ */
+export async function dijFizetes(id: string): Promise<void> {
+  const r = await post<FeePayStart>(`/client/fees/${encodeURIComponent(id)}/pay`, { platform: Platform.OS === 'web' ? 'web' : Platform.OS });
+  if (r.paymentUrl.startsWith('/')) {
+    // MINTA: nincs valódi fizetőoldal
+    router.replace(r.paymentUrl as never);
+    return;
+  }
+  if (!/^https:\/\//.test(r.paymentUrl)) throw new Error('Érvénytelen fizetési cím érkezett. Próbáld újra később.');
+  if (Platform.OS === 'web') {
+    window.location.assign(r.paymentUrl);
+    return;
+  }
+  await WebBrowser.openAuthSessionAsync(r.paymentUrl, `${SEMA}://fiok/dijak`);
+  router.replace({ pathname: '/fiok/dijak', params: { o: r.orderRef } });
 }

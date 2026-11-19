@@ -3,11 +3,11 @@
 import { Platform, Share, View } from 'react-native';
 import { router } from 'expo-router';
 import Constants from 'expo-constants';
-import { useElofizetes, useErtesitesek, useMe, useVisszahivasok } from '@/api/hooks';
+import { useElofizetes, useErtesitesek, useKedvezmenyek, useMe, useVisszahivasok } from '@/api/hooks';
 import { useAuth } from '@/auth/AuthProvider';
 import { brand } from '@/config';
-import { datumAn, nevelo } from '@/lib/format';
-import { JOURNEY_TEXTS, PATH_CHANGE_TEXTS } from '@/_shared/bekotes';
+import { datumAn, maiNap, nevelo } from '@/lib/format';
+import { ALLOWANCE_TEXTS, CHANGE_TEXTS, EARNINGS_TEXTS, FEE_TEXTS, fillPlaceholders, JOURNEY_TEXTS, PATH_CHANGE_TEXTS } from '@/_shared/bekotes';
 import { useOnboarding } from '@/api/hooks';
 import { MiEz } from '@/ui/Magyarazat';
 import { useUtvaltas } from '@/ui/Ut';
@@ -43,6 +43,21 @@ export default function Fiok() {
   const kod = me.data?.client?.personalReferralCode;
   const e = elo.data;
   const ujErt = (ert.data?.items ?? []).filter((n) => !n.readAt).length;
+  // SPEC §28.3.4 (2): az „Adókedvezményeid” sor alsora az állapot
+  const kedv = useKedvezmenyek(Number(maiNap().slice(0, 4)));
+  const kd = kedv.data;
+  const fnK = acc?.firstName ?? 'a könyvelőd';
+  const kedvAl = !kd
+    ? ALLOWANCE_TEXTS.fiok.subNincs
+    : kd.notForRegime
+      ? ALLOWANCE_TEXTS.fiok.subNemJar
+      : kd.pendingCount
+        ? fillPlaceholders(ALLOWANCE_TEXTS.fiok.subAtnezi, { firstName: fnK })
+        : kd.items.some((i) => i.status === 'jovahagyva')
+          ? fillPlaceholders(ALLOWANCE_TEXTS.fiok.subJovahagyva, { n: String(kd.items.filter((i) => i.status === 'jovahagyva').length) })
+          : kd.gate === 'nem_jar'
+            ? ALLOWANCE_TEXTS.fiok.subNemJar
+            : ALLOWANCE_TEXTS.fiok.subNincs;
   const eloAl = e
     ? `${ALLAPOT[e.status] ?? e.status}${e.cancelAtPeriodEnd && e.currentPeriodEnd ? `, ${datumAn(e.currentPeriodEnd)} lejár` : e.nextChargeAt ? `, következő levonás ${datumAn(e.nextChargeAt)}` : ''}${e.mode === 'demo' ? ' · DEMO' : ''}`
     : undefined;
@@ -88,7 +103,7 @@ export default function Fiok() {
       {bekotes ? (
         <>
           {/* S22: a bekötés alatt itt is módosítható a fő válasz (SPEC §27.2.5/5); a fiók „Mi ez?”-je (k3_kor2 tulaj 9). */}
-          <Szakasz cim="Bekötés" />
+          <Szakasz ikon="fooldal" cim="Bekötés" />
           <Lap>
             <Sor
               elso
@@ -102,11 +117,23 @@ export default function Fiok() {
         </>
       ) : null}
 
-      <Szakasz cim="Szolgáltatás" />
+      {/* SPEC §28.6.1: „Adózás” – kedvezmények, kereset, változások (a kereset a bekötés után nyílik) */}
+      <Szakasz ikon="bevallas" cim={ALLOWANCE_TEXTS.fiok.section} />
+      <Lap>
+        <Sor elso ikon="igazolas" cim={ALLOWANCE_TEXTS.fiok.row} al={kedvAl} onPress={() => router.push('/kedvezmenyek')} />
+        {hf.zarva('kereset') ? (
+          <Sor ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} al="A bekötés után nyílik meg." jobbra={lakat} label={EARNINGS_TEXTS.cardTitle} zaroltOk={hf.ok('kereset') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'kereset' })} />
+        ) : (
+          <Sor ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} al="Mennyi marad a bevételedből az adók után" onPress={() => router.push('/kereset')} />
+        )}
+        <Sor ikon="irat" cim={CHANGE_TEXTS.hub.fiokRow} al="Költözés, új tevékenység, szüneteltetés" onPress={() => router.push('/valtozas')} />
+      </Lap>
+
+      <Szakasz ikon="szamlaszam" cim="Szolgáltatás" />
       <Lap>
         <Sor elso ikon="szamlaszam" cim="Előfizetés" al={eloAl} onPress={() => router.push('/fiok/elofizetes')} />
         {/* S22: a díjszámlák és a határidők a bekötés után jelennek meg (k3_kor2 walkthrough 20). */}
-        {bekotes ? null : <Sor ikon="irat" cim="Díjszámlák" al="A havidíjról kapott számláid" onPress={() => router.push('/fiok/dijszamlak')} />}
+        {bekotes ? null : <Sor ikon="irat" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />}
         <Sor ikon="igazolas" cim="Kérések" al="Igazolások, adatváltozás" onPress={() => router.push('/keresek')} />
         {bekotes ? null : hf.zarva('hataridok') ? (
           <Sor ikon="hataridok" cim="Határidők" al="A bekötés után nyílik meg." jobbra={lakat} label="Határidők" zaroltOk={hf.ok('hataridok') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'hataridok' })} />
@@ -115,7 +142,7 @@ export default function Fiok() {
         )}
       </Lap>
 
-      <Szakasz cim="Beállítások" />
+      <Szakasz ikon="ertesites" cim="Beállítások" />
       <Lap>
         <Sor elso ikon="ertesites" cim="Értesítések" al={ujErt ? `${ujErt} új` : 'Mikről és hogyan szóljunk'} onPress={() => router.push('/ertesitesek')} />
         <Sor ikon="fiok" cim="Biztonság" al={`Jelszó, kétlépcsős belépés${Platform.OS !== 'web' ? ', ujjlenyomat vagy arc' : ''}`} onPress={() => router.push('/fiok/biztonsag')} />
@@ -124,7 +151,7 @@ export default function Fiok() {
 
       {kod && !bekotes ? (
         <>
-          <Szakasz cim="Ajánld ismerősnek" megj="Ha ismersz egyéni vállalkozót, akinek jól jönne egy könyvelő." />
+          <Szakasz ikon="boritek" cim="Ajánld ismerősnek" megj="Ha ismersz egyéni vállalkozót, akinek jól jönne egy könyvelő." />
           <Lap style={{ padding: 18 }}>
             <T m={14} c={szin.halvany}>
               A te ajánlókódod
@@ -151,7 +178,7 @@ export default function Fiok() {
         </>
       ) : null}
 
-      <Szakasz cim="Segítség" />
+      <Szakasz ikon="kerdezek" cim="Segítség" />
       <Lap>
         <Sor elso ikon="ora" cim="Visszahívást kérek" al={nyitottVh ? nyitottVh.statusText : 'Csapatunk 24–48 órán belül felhív.'} onPress={() => router.push(visszahivasUt('fiok', 'egyeb'))} />
         <Sor ikon="kerdezek" cim="Gyakori kérdések" onPress={() => router.push('/gyik')} />

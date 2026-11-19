@@ -21,8 +21,9 @@ import { Betolt, Hiba, Kepernyo, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { useEvSegitseg, useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
-export default function BejelentesUtmutato() {
+function BejelentesUtmutato() {
   const me = useMe();
   const evNyitva = useEvSegitseg();
   const { o, reg } = useUt();
@@ -149,3 +150,6 @@ export default function BejelentesUtmutato() {
     </Kepernyo>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(BejelentesUtmutato);

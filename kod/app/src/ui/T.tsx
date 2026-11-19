@@ -21,7 +21,7 @@ export interface TProps extends TextProps {
 const KOTOTT = /(\d%?|NAV|ÁFA|SZJA|TB)-(?=[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű])/g;
 /** A számhoz/rövidítéshez kötött toldalék előtt nem tör sort: „10-ig”, „18,5%-a”, „NAV-nál”. */
 // \u2026\u00e9s az \u00f6sszeg meg a \u201eFt\u201d k\u00f6z\u00f6tt sem (\u201e0 Ft\u201d egy sorban marad)
-// …és az ezres tagolás szóköze sem („havi 20 000 Ft” nem törik „20 | 000”-ra).
+// …és az ezres tagolás szóköze sem („havi 19 999 Ft” nem törik „19 | 999”-re).
 const javit = (x: string) =>
   x.replace(KOTOTT, '$1-\u2060').replace(/(\d) (?=\d{3}(?!\d))/g, '$1\u00a0').replace(/(\d) Ft\b/g, '$1\u00a0Ft').replace(/^ Ft\b/, '\u00a0Ft');
 function tordel(c: ReactNode): ReactNode {

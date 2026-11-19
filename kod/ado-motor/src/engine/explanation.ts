@@ -3,7 +3,8 @@
 // The design's 2025 wording ("járulékokat havonta", "40%") is replaced by the 2026 law.
 
 import type { TaxRules } from '../rules/types.js';
-import type { Explanation, ExplanationLine, MonthLine, TaxStatus } from '../types.js';
+import type { AllowanceKind, Explanation, ExplanationLine, MonthLine, TaxStatus } from '../types.js';
+import { ALLOWANCE_LINE_LABEL, anyakLabel } from './allowances.js';
 import {
   MINUS,
   capitalize,
@@ -54,7 +55,18 @@ export interface ExplanationInput {
   coveredByPriorOverride: boolean;
   /** Month (≤ the quarter's last month) in which the cumulative income reached the tax-free part. */
   adomentesReachedMonth: number | null;
+  /** SPEC §28.3.7 f: approved allowances (tbHuf above is then the GROSS TB). */
+  allowances?: {
+    usedYtd: Partial<Record<AllowanceKind, number>>;
+    afterAllowancesHuf: number;
+    csjkHuf: number;
+    csaladiUnusedHuf: number;
+    anyakJogcim: 'ket' | 'harom' | 'negyplusz' | null;
+    csaladiChildren: number;
+  };
 }
+
+const ALLOWANCE_ORDER: AllowanceKind[] = ['anya30', 'anyak', 'fiatal25', 'szemelyi', 'elso_hazasok', 'csaladi'];
 
 export function buildExplanation(x: ExplanationInput): Explanation {
   const r = x.rules;
@@ -94,6 +106,10 @@ export function buildExplanation(x: ExplanationInput): Explanation {
       amountHuf: x.tbHuf,
       ...(tbExact ? {} : { note: 'Havonta kerekítve.' }),
     });
+    if (x.allowances && x.allowances.csjkHuf > 0) {
+      lines.push({ kind: 'ado', op: MINUS, label: 'Családi járulékkedvezmény – ennyivel kevesebb a TB-járulék', amountHuf: x.allowances.csjkHuf });
+      lines.push({ kind: 'sor', op: '=', label: 'TB-járulék most', amountHuf: x.tbHuf - x.allowances.csjkHuf });
+    }
     if (x.szochoBaseSumHuf !== baseSum) {
       lines.push({ kind: 'sor', label: 'A szocho alapja', amountHuf: x.szochoBaseSumHuf, note: `A szocho minimuma a ${minName(x)} ${r.szochoMinimumPct}%-a.` });
     }
@@ -126,6 +142,21 @@ export function buildExplanation(x: ExplanationInput): Explanation {
       ...(x.adomentesReachedMonth ? { note: `${capitalize(monthInessive(x.adomentesReachedMonth))} érted el.` } : {}),
     });
     lines.push({ kind: 'sor', op: '=', label: 'Adóköteles rész', amountHuf: x.taxableYtdHuf });
+    const al = x.allowances;
+    const used = al ? ALLOWANCE_ORDER.filter((k) => (al.usedYtd[k] ?? 0) > 0) : [];
+    if (al && used.length) {
+      lines.push({ kind: 'cim', label: 'Kedvezményeid', side: 'jóváhagyott' });
+      for (const k of used) {
+        const label =
+          k === 'anyak'
+            ? anyakLabel(al.anyakJogcim)
+            : k === 'csaladi' && al.csaladiChildren > 0
+              ? `Családi kedvezmény (${al.csaladiChildren} gyermek)`
+              : ALLOWANCE_LINE_LABEL[k];
+        lines.push({ kind: 'sor', op: MINUS, label: capitalize(label), amountHuf: al.usedYtd[k]! });
+      }
+      lines.push({ kind: 'sor', op: '=', label: 'Kedvezmények után', amountHuf: al.afterAllowancesHuf });
+    }
     lines.push({ kind: 'sor', label: `Ennek ${formatPermilleAsPct(r.szjaPermille)}-a`, amountHuf: x.szjaCumulativeHuf });
     if (x.priorSzjaHuf !== 0) lines.push({ kind: 'sor', op: MINUS, label: 'Az előző negyedévek előlege', amountHuf: x.priorSzjaHuf });
     lines.push({
@@ -139,6 +170,11 @@ export function buildExplanation(x: ExplanationInput): Explanation {
     });
   }
 
+  if (x.allowances && x.allowances.csaladiUnusedHuf > 0)
+    lines.push({
+      kind: 'megjegyzes',
+      label: `Fel nem használt családi kedvezmény eddig: ${formatHuf(x.allowances.csaladiUnusedHuf)}. A fel nem használt családi kedvezményedet az éves bevallásban számolja el a könyvelőd.`,
+    });
   if (x.coveredByPriorOverride)
     lines.push({ kind: 'megjegyzes', label: 'Ezt a negyedévet az előző könyvelőd számolta, az ő adatai számítanak. Itt csak tájékoztatásul látod.' });
   if (!x.complete) lines.push({ kind: 'megjegyzes', label: 'A negyedév még tart: ha lesz még bevételed, az összeg nőhet.' });

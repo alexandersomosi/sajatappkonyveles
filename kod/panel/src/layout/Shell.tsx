@@ -8,6 +8,7 @@ import { I3 } from '../ui/Icon3d';
 import { Avatar, Logo } from '../ui/kozos';
 import * as ep from '../api/endpoints';
 import { menuCsoportok, nyitottVisszahivas, type MenuCsoport, type MenuKulcs } from '../lib/csapat';
+import { haviIlleszkedik } from '../lib/k28';
 import { labdaNalam } from '../lib/helyettunk';
 import { Ertesitesek } from './Ertesitesek';
 
@@ -64,6 +65,8 @@ export function Shell() {
   const assistSorok = sajatAssist.data ?? [];
   const neked = assistSorok.filter((r) => labdaNalam(r, 'konyvelo')).length;
 
+  const havi = useQuery({ queryKey: ['acc', 'checkin-items', 'nyitott'], queryFn: () => ep.accCheckinItems('nyitott'), staleTime: 60_000, refetchInterval: 120_000 });
+  const haviNalam = (havi.data ?? []).filter((i) => haviIlleszkedik(i, 'nalam', isCsapat ? 'csapat' : isAccountant ? 'konyvelo' : 'admin')).length;
   const cb = osszeg.data?.callbacks;
   const db: Szamlalo = {
     keresek: { n: nyitott },
@@ -79,6 +82,8 @@ export function Shell() {
         }
       : { n: neked, cim: `Intézzük helyette: ${neked} vár rád` },
     uzenetek: { n: osszeg.data?.unreadThreads ?? 0, cim: 'Üzenetek: olvasatlan beszélgetés' },
+    // SPEC §28.K.2: items whose ball is on the viewer (same query key as the page)
+    havi: { n: haviNalam, cim: `Havi változások: ${haviNalam} vár rád` },
   };
   const csoportok = menuCsoportok({
     csapat: isCsapat,

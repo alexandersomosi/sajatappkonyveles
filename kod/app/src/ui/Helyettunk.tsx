@@ -7,19 +7,23 @@ import { useSegitsegJovahagytam } from '../api/hooks';
 import { hibaUzenet } from '../lib/hiba';
 import { GombE, GombM, GombSz } from './alap';
 import { useJelzes } from './keret';
-import { ASSIST_STEP_LIST, ASSIST_TEXTS, fillPlaceholders } from '../_shared/bekotes';
+import { ASSIST_STEP_LIST, ASSIST_TEXTS, CHANGE_STEP_LIST, fillPlaceholders } from '../_shared/bekotes';
 import { JOURNEY_ACTOR_LABELS, type AssistKind } from '../_shared/enums';
 import { forma, szin } from '../theme/tokens';
 import { Lap } from './alap';
 import { Ikon3d } from './kepek';
+import { szam } from '../lib/format';
 import { T } from './T';
 import { SzereploCimke } from './Ut';
 
 /** A számozott „így megy” lista: ki lép (Te / Bence / Csapatunk / NAV), mit, mennyi idő alatt. */
-export function IgyMegy({ fajta, fn }: { fajta: AssistKind; fn: string }) {
+export function IgyMegy({ fajta, fn, dij }: { fajta: AssistKind; fn: string; /** Változásnál az előre fizetendő díj (Ft; 0 = nincs díj-sor). */ dij?: number }) {
+  // SPEC §28.5.5 + §28.K.1: a változások listája a díj-sorral (csak ha van díj)
+  const lista: readonly { actor: 'te' | 'konyvelo' | 'csapat' | 'nav'; text: string; time: string }[] =
+    fajta === 'vallalkozas_bejelentes' || fajta === 'meghatalmazas' ? ASSIST_STEP_LIST[fajta] : CHANGE_STEP_LIST.filter((l) => !l.onlyWithFee || (dij ?? 0) > 0);
   return (
     <Lap style={{ paddingVertical: 6 }}>
-      {ASSIST_STEP_LIST[fajta].map((l, i) => (
+      {lista.map((l, i) => (
         <View key={i} style={{ flexDirection: 'row', gap: 12, paddingVertical: 10, paddingHorizontal: 14, borderTopWidth: i ? 1 : 0, borderTopColor: szin.hajszal }}>
           <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: l.actor === 'te' ? szin.tintakek : szin.alap, alignItems: 'center', justifyContent: 'center', marginTop: 1 }}>
             <T m={13.5} s={750} lh={1} c={l.actor === 'te' ? '#fff' : szin.tinta} szam>
@@ -29,7 +33,7 @@ export function IgyMegy({ fajta, fn }: { fajta: AssistKind; fn: string }) {
           <View style={{ flex: 1, gap: 4 }}>
             <SzereploCimke cim={fillPlaceholders(JOURNEY_ACTOR_LABELS[l.actor], { firstName: fn })} te={l.actor === 'te'} />
             <T m={16} lh={1.45}>
-              {fillPlaceholders(l.text, { firstName: fn })}
+              {fillPlaceholders(l.text, { firstName: fn, dij: szam(dij ?? 0) })}
             </T>
             <T m={14} lh={1.4} c={szin.halvany}>
               {l.time}

@@ -9,6 +9,7 @@ import { withArticle } from './lib/nevelo.js';
 import { generatedDefaults } from './content/tulaj1118.js';
 import { tulaj1119Defaults } from './content/tulaj1119.js';
 import { TULAJ1119_REGI } from './content/tulaj1119_regi.js';
+import { k28Defaults } from './content/k28.js';
 
 /**
  * jogi-reviewed §26 content texts (kod/jogi/app_szovegek.json → `tartalom`, same content keys). Read once at start from
@@ -34,7 +35,7 @@ function supersededJogi(jogi: Record<string, string>): Record<string, string> {
 }
 
 /** Shipped defaults + the SPEC §26 and §27 texts generated from kod/shared, then the jogi-reviewed texts on top. */
-export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...supersededJogi(jogiTartalom()) };
+export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...k28Defaults(), ...supersededJogi(jogiTartalom()) };
 
 export function placeholdersOf(s: string): string[] {
   return [...new Set([...s.matchAll(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g)].map((m) => m[1]!))];

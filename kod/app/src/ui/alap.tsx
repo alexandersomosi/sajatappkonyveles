@@ -1,11 +1,12 @@
 // Közös elemek a C2 dizájn szerint (tokens.css): fejlécsáv rozettával, lap, gombok, címke, szakaszcím, állapotszó.
 // Alak = feladat: kapszula csak gomb; 18 pt-os lap tartalom; 12 pt mező és csempe; 6 pt állapotcímke.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ActivityIndicator, Image, Platform, Pressable, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, Image, Platform, Pressable, StyleSheet, View, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { forma, szin } from '../theme/tokens';
 import { Ikon3d, KeszJel, type Ikon3dNev } from './kepek';
 import { T } from './T';
+import { SAV, useTeljes } from './teljes';
 
 const ROZETTA = require('../../assets/textura/rozetta.png');
 
@@ -26,18 +27,52 @@ export function Fejlec({ children, rozX = 150, rozY = 100, alsoTer = 22, style, 
   );
 }
 
-export function Lap({ children, style, belso = false }: { children: ReactNode; style?: StyleProp<ViewStyle>; belso?: boolean }) {
-  return <View style={[{ backgroundColor: szin.lap, borderRadius: forma.lap, overflow: 'hidden' }, belso && { padding: 18 }, style]}>{children}</View>;
+/**
+ * Tartalom-lap. A képernyőn (SPEC §28.K.10, C + elválasztó) teljes szélességű fehér szakasz, fölötte a 8 pt-os halvány
+ * sáv; lekerekítés, árnyék nincs. `kotott` = közvetlenül a szakaszcím alatt (nincs sáv), `elso` = rögtön a kék sáv alatt.
+ * Alsó lapon (sheet) belül marad a régi lekerekített kártya.
+ */
+export function Lap({ children, style, belso = false, kotott, elso }: { children: ReactNode; style?: StyleProp<ViewStyle>; belso?: boolean; kotott?: boolean; elso?: boolean }) {
+  const teljes = useTeljes();
+  if (!teljes) return <View style={[{ backgroundColor: szin.lap, borderRadius: forma.lap, overflow: 'hidden' }, belso && { padding: 18 }, style]}>{children}</View>;
+  // a hívó margói és lekerekítése a szakaszos elrendezésben nem érvényesek: a szakaszokat csak a sáv választja el
+  const { margin, marginTop, marginBottom, marginVertical, marginHorizontal, marginLeft, marginRight, borderRadius, ...tobbi } = (StyleSheet.flatten(style) ?? {}) as ViewStyle;
+  void [margin, marginTop, marginBottom, marginVertical, marginHorizontal, marginLeft, marginRight, borderRadius];
+  return (
+    <View style={[{ backgroundColor: szin.lap, marginHorizontal: -forma.margo, borderTopWidth: kotott || elso ? 0 : SAV.vastag, borderTopColor: SAV.szin, overflow: 'hidden' }, belso && { padding: 16 }, tobbi]}>
+      {children}
+    </View>
+  );
 }
 
-export function Szakasz({ cim, megj, style }: { cim: string; megj?: string; style?: StyleProp<ViewStyle> }) {
+/** Szakaszfej (C): 3D ikon 28 + sötét cím 18/650 + legfeljebb egy kapszula jobbra; alatta egy mondat 15-ös másodlagos. */
+export function Szakasz({ cim, megj, style, ikon, jobbra, elso }: { cim: string; megj?: string; style?: StyleProp<ViewStyle>; ikon?: Ikon3dNev; jobbra?: ReactNode; elso?: boolean }) {
+  const teljes = useTeljes();
+  if (!teljes) {
+    return (
+      <View style={[{ paddingTop: 24, paddingBottom: megj ? 8 : 10, paddingHorizontal: 4 }, style]}>
+        <T m={18} s={650} lh={1.3} ls={-0.012} accessibilityRole="header">
+          {cim}
+        </T>
+        {megj ? (
+          <T m={15} lh={1.4} c={szin.halvany} style={{ marginTop: 4 }}>
+            {megj}
+          </T>
+        ) : null}
+      </View>
+    );
+  }
   return (
-    <View style={[{ paddingTop: 30, paddingBottom: megj ? 10 : 11, paddingHorizontal: 4 }, style]}>
-      <T m={19.5} s={600} lh={1.25} ls={-0.016} accessibilityRole="header">
-        {cim}
-      </T>
+    <View style={[{ marginHorizontal: -forma.margo, backgroundColor: szin.lap, borderTopWidth: elso ? 0 : SAV.vastag, borderTopColor: SAV.szin, paddingTop: 16, paddingHorizontal: 16, paddingBottom: megj ? 8 : 4 }, style]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 32 }}>
+        {ikon ? <Ikon3d nev={ikon} pt={28} /> : null}
+        <T m={18} s={650} lh={1.3} ls={-0.012} accessibilityRole="header" style={{ flex: 1, minWidth: 0 }}>
+          {cim}
+        </T>
+        {jobbra}
+      </View>
       {megj ? (
-        <T m={14.5} lh={1.4} c={szin.halvanyAlapon} style={{ marginTop: 5 }}>
+        <T m={15} lh={1.4} c={szin.halvany} style={{ marginTop: 4, paddingLeft: ikon ? 38 : 0 }}>
           {megj}
         </T>
       ) : null}
@@ -48,21 +83,22 @@ export function Szakasz({ cim, megj, style }: { cim: string; megj?: string; styl
 type GombProps = Omit<PressableProps, 'children' | 'style'> & { cim: string; ikon?: Ikon3dNev; tolt?: boolean; style?: StyleProp<ViewStyle>; magas?: number };
 
 /** Elsődleges gomb: tele tintakék kapszula, árnyék nélkül, képernyőnként egy. Ikon nincs rajta (a sötét tárgy beleolvadna). */
-export function GombE({ cim, tolt, style, magas = 56, disabled, ...p }: GombProps) {
+export function GombE({ cim, tolt, style, magas = 52, disabled, ...p }: GombProps) {
   return (
     <Pressable
       accessibilityRole="button"
       disabled={disabled || tolt}
       {...p}
       style={({ pressed }) => [
-        { height: magas, borderRadius: forma.gomb, backgroundColor: szin.tintakek, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 22, flexDirection: 'row', gap: 9 },
+        { minHeight: magas, borderRadius: forma.gomb, backgroundColor: szin.tintakek, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 22, paddingVertical: 4, flexDirection: 'row', gap: 9 },
         (disabled || tolt) && { opacity: 0.55 },
         pressed && { opacity: 0.88 },
         style,
       ]}
     >
       {tolt ? <ActivityIndicator color="#fff" /> : null}
-      <T m={magas < 52 ? 16.5 : 17} s={650} c="#fff" ls={-0.005} numberOfLines={1}>
+      {/* SPEC §28.K.10: nagy betűméretnél a fő gomb két sorra nőhet, a felirat soha nem csonkolódik */}
+      <T m={magas < 52 ? 16.5 : 17} s={650} c="#fff" ls={-0.005} numberOfLines={2} kozep style={{ flexShrink: 1 }}>
         {cim}
       </T>
     </Pressable>
@@ -70,11 +106,12 @@ export function GombE({ cim, tolt, style, magas = 56, disabled, ...p }: GombProp
 }
 
 /** Másodlagos gomb: világoskék kapszula (ez a világoskék csak az övé), 3D ikonnal vagy anélkül. */
-export function GombM({ cim, ikon, tolt, style, magas = 46, disabled, ...p }: GombProps) {
+export function GombM({ cim, ikon, tolt, style, magas = 40, disabled, ...p }: GombProps) {
   return (
     <Pressable
       accessibilityRole="button"
       disabled={disabled || tolt}
+      hitSlop={magas < 44 ? { top: (44 - magas) / 2, bottom: (44 - magas) / 2 } : undefined}
       {...p}
       style={({ pressed }) => [
         {
@@ -94,8 +131,8 @@ export function GombM({ cim, ikon, tolt, style, magas = 46, disabled, ...p }: Go
         style,
       ]}
     >
-      {tolt ? <ActivityIndicator color={szin.tintakekSzoveg} /> : ikon ? <Ikon3d nev={ikon} pt={26} style={{ marginLeft: -3 }} /> : null}
-      <T m={magas >= 52 ? 17 : 16} s={650} c={szin.tintakekSzoveg} ls={-0.005} numberOfLines={1} style={{ flexShrink: 1 }}>
+      {tolt ? <ActivityIndicator color={szin.tintakekSzoveg} /> : ikon ? <Ikon3d nev={ikon} pt={magas < 44 ? 24 : 26} style={{ marginLeft: -3 }} /> : null}
+      <T m={magas >= 52 ? 17 : 15.5} s={650} c={szin.tintakekSzoveg} ls={-0.005} numberOfLines={1} style={{ flexShrink: 1 }}>
         {cim}
       </T>
     </Pressable>
@@ -185,7 +222,7 @@ export const Hajszal = ({ bal = 0, jobb = 0 }: { bal?: number; jobb?: number }) 
 );
 
 /** Lista-sor: 3D tárgy 44 pt-on (kör nélkül), a kész-jel a jobb felső sarkán; az egész sor koppintható. */
-export function Sor({ ikon, kesz, cim, al, onPress, elso, minH = 64, cimSzin, cimSuly = 500, jobbra, label, zaroltOk }: {
+export function Sor({ ikon, kesz, cim, al, onPress, elso, minH = 52, cimSzin, cimSuly = 600, jobbra, label, zaroltOk }: {
   ikon?: Ikon3dNev; kesz?: boolean; cim: string; al?: ReactNode; onPress?: () => void; elso?: boolean; minH?: number; cimSzin?: string; cimSuly?: 500 | 600 | 650; jobbra?: ReactNode; label?: string;
   /** SPEC §26.5.3: a locked row stays focusable and opens the reason, but says "disabled" + the reason to screen readers. */
   zaroltOk?: string;
@@ -206,15 +243,15 @@ export function Sor({ ikon, kesz, cim, al, onPress, elso, minH = 64, cimSzin, ci
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityLabel={zaroltOk && Platform.OS === 'web' ? `${label ?? cim}. ${zaroltOk}` : label}
       {...(zaroltOk ? { accessibilityState: { disabled: true }, accessibilityHint: zaroltOk } : {})}
-      style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 13, paddingVertical: 12, paddingLeft: 16, paddingRight: 14, minHeight: minH }, pressed && { backgroundColor: '#F6F8FB' }]}
+      style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, paddingLeft: 16, paddingRight: 16, minHeight: minH }, pressed && { backgroundColor: '#F6F8FB' }]}
     >
-      {!elso && <View style={{ position: 'absolute', top: 0, left: 73, right: 0, height: 1, backgroundColor: szin.hajszal }} />}
+      {!elso && <View style={{ position: 'absolute', top: 0, left: ikon ? 54 : 16, right: 16, height: 1, backgroundColor: szin.hajszal }} />}
       {ikon ? (
-        <View style={{ width: 44, height: 44 }}>
-          <Ikon3d nev={ikon} pt={44} />
+        <View style={{ width: 28, height: 28 }}>
+          <Ikon3d nev={ikon} pt={28} />
           {kesz ? (
-            <View style={{ position: 'absolute', right: -6, top: -5, width: 21, height: 21, borderRadius: 11, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>
-              <KeszJel pt={19} />
+            <View style={{ position: 'absolute', right: -6, top: -5, width: 17, height: 17, borderRadius: 9, backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center' }}>
+              <KeszJel pt={15} />
             </View>
           ) : null}
         </View>
@@ -224,7 +261,7 @@ export function Sor({ ikon, kesz, cim, al, onPress, elso, minH = 64, cimSzin, ci
           {cim}
         </T>
         {typeof al === 'string' ? (
-          <T m={14.5} lh={1.4} c={szin.halvany} style={{ marginTop: 2 }}>
+          <T m={15} lh={1.4} c={szin.halvany} style={{ marginTop: 1 }}>
             {al}
           </T>
         ) : (

@@ -54,33 +54,33 @@ img.i3 { display: block; flex: none; object-fit: contain; -webkit-user-drag: non
 .tartalom { padding: 24px 36px 56px; max-width: 1280px; width: 100%; }
 
 /* ---------- ink-blue band with the rosette ---------- */
-.fejlec { background: var(--tintakek); color: #fff; position: relative; isolation: isolate; overflow: hidden; padding: 26px 36px 24px; }
+.fejlec { background: var(--tintakek); color: #fff; position: relative; isolation: isolate; overflow: hidden; padding: 22px 36px 20px; }
 .fejlec::before { content: ""; position: absolute; z-index: -1; pointer-events: none; width: 520px; height: 520px;
   right: var(--roz-r, 90px); top: calc(50% - 260px); background: url("/a/guilloche_rozetta.svg") 0 0 / 520px 520px no-repeat; opacity: .95; }
 .fejlec .belso { max-width: 1208px; display: flex; align-items: flex-end; gap: 24px; }
 .fejlec .bal { flex: 1; min-width: 0; }
 .fejlec .felcim { font-size: 13.5px; color: var(--fejlec-halvany); font-weight: 550; letter-spacing: .01em; }
 .fejlec .felcim a { color: var(--fejlec-halvany); text-underline-offset: 3px; }
-.fejlec h1 { font-weight: 700; font-size: 32px; line-height: 1.12; letter-spacing: -.024em; margin-top: 4px; }
-.fejlec .mellek { color: var(--fejlec-halvany); font-size: 15.5px; line-height: 1.45; margin-top: 6px; max-width: 760px; }
+.fejlec h1 { font-weight: 700; font-size: 24px; line-height: 1.2; letter-spacing: -.02em; margin-top: 4px; }
+.fejlec .mellek { color: var(--fejlec-halvany); font-size: 15px; line-height: 1.45; margin-top: 6px; max-width: 820px; }
 .fejlec .mellek b { color: #fff; font-weight: 600; }
-.fejlec .nagyszam { font-weight: 800; font-size: 46px; line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.fejlec .nagyszam { font-weight: 750; font-size: 34px; line-height: 1; letter-spacing: -.035em; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
 .fejlec .nagyszam .ft { font-size: .42em; font-weight: 600; margin-left: 6px; letter-spacing: -.01em; color: var(--fejlec-halvany); }
 .fejlec .jobb { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .fejlec .cimke { vertical-align: 4px; }
 /* the "Ft" unit is muted grey on white sheets; on the blue band it takes the band's light secondary colour */
 .fejlec .ft { color: var(--fejlec-halvany); }
 .fejlec .mellek b .ft { color: #fff; opacity: .82; }
-.gomb-sav { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 16px 0 11px; border-radius: var(--r-gomb);
+.gomb-sav { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 16px 0 11px; border-radius: var(--r-gomb);
   box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.78); color: #fff; font-weight: 600; font-size: 15px; white-space: nowrap; text-decoration: none; }
 .gomb-sav.szoveg { padding: 0 16px; }
 .gomb-sav:hover { background: rgba(255,255,255,.08); }
 .gomb-sav img.i3 { width: 24px; height: 24px; }
-.fulek { display: flex; gap: 4px; margin: 20px 0 -24px; max-width: 1208px; }
-.ful { color: var(--fejlec-halvany); font-weight: 600; font-size: 15px; padding: 10px 14px 13px; position: relative; text-decoration: none; white-space: nowrap; }
+.fulek { display: flex; gap: 2px; margin: 18px 0 -20px; max-width: 1208px; }
+.ful { color: var(--fejlec-halvany); font-weight: 600; font-size: 14px; padding: 10px 8px 13px; position: relative; text-decoration: none; white-space: nowrap; }
 .ful:hover { color: #fff; }
 .ful.on { color: #fff; font-weight: 750; }
-.ful.on::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 0; height: 4px; border-radius: 2px 2px 0 0; background: #fff; }
+.ful.on::after { content: ""; position: absolute; left: 8px; right: 8px; bottom: 0; height: 4px; border-radius: 2px 2px 0 0; background: #fff; }
 .ful .db { font-size: 12px; font-weight: 700; margin-left: 6px; background: rgba(255,255,255,.16); border-radius: var(--r-cimke); padding: 1px 6px; }
 
 /* ---------- sheets (white content) ---------- */
@@ -88,11 +88,11 @@ img.i3 { display: block; flex: none; object-fit: contain; -webkit-user-drag: non
 .lap.belso, .lap > .belso { padding: 20px 22px; }
 .lap + .lap, .lap + .racs, .racs + .lap, .racs + .racs { margin-top: 16px; }
 .lap-fej { display: flex; align-items: center; gap: 12px; padding: 18px 22px 12px; }
-.lap-fej h2, .lap h2 { font-weight: 650; font-size: 18.5px; line-height: 1.25; letter-spacing: -.016em; }
+.lap-fej h2, .lap h2 { font-weight: 650; font-size: 18px; line-height: 1.3; letter-spacing: -.012em; color: var(--tinta); }
 .lap-fej .megj { font-size: 14px; color: var(--halvany); }
 .lap-fej .jobbra { margin-left: auto; display: flex; gap: 8px; align-items: center; }
-.lap-fej img.i3 { width: 36px; height: 36px; }
-.szakasz { font-weight: 650; font-size: 19px; line-height: 1.25; padding: 28px 4px 10px; letter-spacing: -.016em; display: flex; align-items: baseline; gap: 10px; }
+.lap-fej img.i3 { width: 28px; height: 28px; }
+.szakasz { font-weight: 650; font-size: 18px; line-height: 1.25; padding: 28px 4px 10px; letter-spacing: -.016em; display: flex; align-items: baseline; gap: 10px; }
 .szakasz:first-child { padding-top: 4px; }
 .szakasz .megj { font-size: 14px; font-weight: 400; color: var(--halvany-alapon); }
 .racs { display: grid; gap: 16px; }
@@ -132,11 +132,11 @@ img.i3 { display: block; flex: none; object-fit: contain; -webkit-user-drag: non
 .tabla-gorgo { overflow-x: auto; }
 
 /* ---------- buttons: capsule = button ---------- */
-.gomb-e { display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 46px; padding: 0 22px;
-  background: var(--tintakek); color: #fff; border-radius: var(--r-gomb); font-weight: 650; font-size: 15.5px; white-space: nowrap; text-decoration: none; }
+.gomb-e { display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 40px; padding: 0 20px;
+  background: var(--tintakek); color: #fff; border-radius: var(--r-gomb); font-weight: 650; font-size: 15px; white-space: nowrap; text-decoration: none; }
 .gomb-e:hover:not(:disabled) { background: #0E1FAE; }
 .gomb-e:disabled { background: #8F98BD; }
-.gomb-m { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 17px 0 14px;
+.gomb-m { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 38px; padding: 0 16px 0 13px;
   background: var(--gomb-m-alap); color: var(--tintakek-szoveg); border-radius: var(--r-gomb); font-weight: 650; font-size: 15px; white-space: nowrap; text-decoration: none; }
 .gomb-m.csak-szoveg { padding: 0 17px; }
 .gomb-m:hover:not(:disabled) { background: var(--gomb-m-nyomott); }
@@ -254,8 +254,8 @@ img.arckep.kicsi { width: 30px; height: 30px; }
 
 /* ---------- KPI tiles ---------- */
 .kpi { padding: 18px 20px 18px; display: flex; gap: 14px; align-items: flex-start; }
-.kpi img.i3 { width: 44px; height: 44px; }
-.kpi .ertek { font-weight: 750; font-size: 30px; line-height: 1.05; letter-spacing: -.03em; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.kpi img.i3 { width: 32px; height: 32px; }
+.kpi .ertek { font-weight: 750; font-size: 26px; line-height: 1.05; letter-spacing: -.03em; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
 .kpi .ertek .ft { font-size: .5em; font-weight: 600; color: var(--halvany); margin-left: 4px; letter-spacing: 0; }
 .kpi .mi { font-size: 14px; color: var(--halvany); margin-top: 4px; line-height: 1.35; }
 .ft { font-size: .8em; color: var(--halvany); margin-left: 3px; font-weight: 500; letter-spacing: 0; }
@@ -281,9 +281,9 @@ img.arckep.kicsi { width: 30px; height: 30px; }
 .fiok-lap.szeles { width: min(980px, 94vw); }
 .fiok-lap:focus { outline: none; }
 .fiok-lap .fej { display: flex; align-items: flex-start; gap: 14px; padding: 24px 28px 14px; }
-.fiok-lap .fej h2 { font-weight: 700; font-size: 24px; line-height: 1.2; letter-spacing: -.02em; }
+.fiok-lap .fej h2 { font-weight: 700; font-size: 22px; line-height: 1.2; letter-spacing: -.02em; }
 .fiok-lap .fej .bev { font-size: 15px; color: var(--halvany); margin-top: 4px; }
-.fiok-lap .fej img.i3 { width: 44px; height: 44px; }
+.fiok-lap .fej img.i3 { width: 32px; height: 32px; }
 .fiok-lap .test { padding: 6px 28px 24px; overflow-y: auto; flex: 1; }
 .fiok-lap .lab { padding: 16px 28px 22px; border-top: 1px solid var(--hajszal); display: flex; gap: 10px; align-items: center; }
 .bezar { margin-left: auto; height: 36px; padding: 0 14px; border-radius: var(--r-gomb); background: var(--nyomott); color: var(--tinta);
@@ -670,3 +670,48 @@ button.nav-elem.ertesites-gomb { width: 100%; text-align: left; font: inherit; c
 /* a section title with a long note: the note goes under the title instead of squeezing it */
 .szakasz.tores { flex-wrap: wrap; row-gap: 2px; }
 .szakasz.tores .megj { flex-basis: 100%; }
+
+/* =====================================================================================================================
+   SPEC §28.K.10 (panel) – the approved variant C: calm scale, sections inside a sheet separated by the 8 px #EEF1F8
+   band (owner 11-19 20:20 "csak valami elválasztó köztük"), no shadows, no stacked sheets, no darkening layers.
+   Used by every §28 / §28.K card (.lap.k28 > .szak). The old values are in _regi/styles_elotte_k6_1119/.
+   ===================================================================================================================== */
+:root { --elvalaszto-sav: #EEF1F8; }
+.lap.k28 { overflow: hidden; }
+.szak { padding: 16px 22px; }
+.szak + .szak { border-top: 8px solid var(--elvalaszto-sav); }
+.szak-fej { display: flex; align-items: center; gap: 10px; min-height: 32px; margin-bottom: 6px; }
+.szak-fej img.i3 { width: 28px; height: 28px; }
+.szak-fej h2 { flex: 1; min-width: 0; font-weight: 650; font-size: 18px; line-height: 1.3; letter-spacing: -.012em; color: var(--tinta); }
+.szak > p, .szak > div > p { font-size: 15px; line-height: 1.45; margin-top: 4px; }
+.szak .felirat { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.szak .mezo + .mezo { margin-top: 12px; }
+.szak .gomb-sz { margin-top: 6px; }
+.nagy-osszeg { font-weight: 700; font-size: 22px; line-height: 1.25; letter-spacing: -.015em; margin: 2px 0 4px; }
+.k28-okok { margin: 6px 0 0 18px; font-size: 14px; line-height: 1.45; display: grid; gap: 3px; }
+.k28-honap + .k28-honap { margin-top: 16px; }
+.k28-honap .kis-cim { margin-bottom: 4px; }
+.k28-sav { margin: 8px 0 6px; }
+.lap.figyel-lap { outline: 2px solid var(--borostyan); outline-offset: -2px; }
+.lap.k28 + .lap.k28 { margin-top: 16px; }
+.k28-gyerekek { margin: 0 0 0 18px; display: grid; gap: 3px; }
+/* Kedvezmények tab: answers left, the cards right (≥ 1280 px), stacked below */
+.kedvezmeny-racs { grid-template-columns: minmax(320px, .8fr) minmax(0, 1.25fr); align-items: start; }
+@media (max-width: 1279px) { .kedvezmeny-racs { grid-template-columns: minmax(0, 1fr); } }
+.kedvezmeny-tetel.nyitott-tetel { outline: 2px solid var(--tintakek); outline-offset: -2px; }
+.honap-kapcsolok { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 4px; }
+.honap-kapcsolok button { height: 36px; border-radius: 8px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; padding: 0 2px; text-align: center; background: var(--mezo-alap); box-shadow: inset 0 0 0 1px var(--keret); color: var(--halvany-alapon); }
+.honap-kapcsolok button.on { background: var(--tintakek); color: #fff; box-shadow: none; }
+.honap-kapcsolok button:disabled { opacity: .55; }
+.mini-mezo { width: 64px; height: 34px; padding: 0 8px; text-align: right; display: inline-block; }
+.mini-mezo:focus { padding: 0 7px; }
+.csaladi-tabla td, .csaladi-tabla th { padding-top: 6px; padding-bottom: 6px; }
+.negyedev-hatas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 10px 0 8px; border-top: 1px solid var(--hajszal); border-bottom: 1px solid var(--hajszal); }
+.negyedev-hatas > div { padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+.negyedev-hatas > div + div { border-left: 1px solid var(--hajszal); }
+.negyedev-hatas > div.most { background: #F3F5FE; }
+.negyedev-hatas b { font-size: 16px; font-weight: 700; }
+.eves-lepes + .eves-lepes { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hajszal); }
+.extra-szuro { background: #DCE2F2; }
+.nagy-osszeg { overflow-wrap: anywhere; font-variant-numeric: tabular-nums lining-nums; }
+.csaladi-reszlet summary { cursor: pointer; font-size: 14.5px; color: var(--tintakek-szoveg); font-weight: 550; margin-top: 12px; }

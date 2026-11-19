@@ -63,3 +63,19 @@ kék = jelölés), és – ha valamit nem talált – a figyelmeztetéseket még
 - Ha valahol még látszik név, cím vagy adóazonosító: **ne töltsd fel**, szólj Claude-nak.
 - Ha minden jó: kérd meg Claude-ot („töltsd fel a saját NAV-képeket”). A feltöltés parancsa Git Bash-ban fut, nem a
   Windows parancssorban (a parancs a végén kiírja).
+
+## Változásbejelentés – mi hiányzik még (11-19 este)
+
+A 11-19-i saját képeidből elkészült a változás-útmutatók 11 valódi képe (elmosva: a neved, a címed, az azonosítók, a
+főtevékenységed; `valtozas/`). Ami még rajz, és csak te tudod lefotózni a saját fiókodban:
+
+- **Az adatváltozás-űrlap 4. lapja („Ellenőrzés”).** Ugyanúgy indítsd, mint 11-19-én („Egyéni vállalkozással
+  kapcsolatos adatváltozás bejelentése” → „Bejelentés kitöltése”), kattints végig a „Tovább” gombokon, és a 4. lapról
+  készíts képet. **Ne küldd be, és ne mentsd el.**
+- **A szüneteltetés lapjai** az „Új bejelentés, kérelem benyújtása” fül alján: a kártya és a kezdőnap mezője.
+  **Soha ne küldd be – azzal a saját vállalkozásodat szüneteltetnéd.**
+- **ONYA, T101E:** csak az űrlap első lapja.
+
+A képeket tedd a `sajat\vallalkozas_bejelentes\_nyers\` mappába (például `13_ellenorzes.jpg`), és szólj Claude-nak:
+„dolgozd fel az új változás-képeket”. A NAV 11-19-én létrehozott egy üres „Kitöltés alatt” piszkozatot a fiókodban – azt
+csak te törölheted a „Bejelentéseim, kérelmeim” fülön (mi nem nyúlunk a fiókodhoz).

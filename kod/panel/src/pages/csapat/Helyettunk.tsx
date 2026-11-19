@@ -12,6 +12,7 @@ import { Fejlec, HibaSav, Lenyilo, Toltes, Ures } from '../../ui/kozos';
 import { I3 } from '../../ui/Icon3d';
 import { useMost } from '../../ui/useMost';
 import { ASSIST_KIND_LABELS, ASSIST_KINDS, ASSIST_STATUS_LABELS, type AssistKind } from '../../_shared/enums';
+import { CHANGE_HANDBOOK } from '../../_shared/bekotes';
 import { LIFECYCLE_LABEL } from '../../lib/labels';
 import { hanyNapja } from '../../lib/csapat';
 import {
@@ -23,6 +24,8 @@ import {
   labdaSzoveg,
   nyitottAssist,
   szuroIlleszkedik,
+  valtozasFajta,
+  allapotFelirat,
   type AssistSzuro,
   type PanelSzerep,
 } from '../../lib/helyettunk';
@@ -46,7 +49,7 @@ export default function Helyettunk() {
   const nav = useNavigate();
   const [sp, setSp] = useSearchParams();
   const szuro = (sp.get('szuro') as AssistSzuro) || 'nyitott';
-  const fajta = (sp.get('fajta') as AssistKind | null) ?? '';
+  const fajta = (sp.get('fajta') as AssistKind | 'valtozas' | null) ?? '';
   const [kereses, setKereses] = useState('');
   const most = useMost();
   const t = today();
@@ -54,7 +57,7 @@ export default function Helyettunk() {
   const mind = q.data ?? [];
   const alap = useMemo(() => {
     const s = kereses.trim().toLowerCase();
-    return mind.filter((r) => (!fajta || r.kind === fajta) && (!s || r.client.name.toLowerCase().includes(s)));
+    return mind.filter((r) => (!fajta || (fajta === 'valtozas' ? valtozasFajta(r.kind) : r.kind === fajta)) && (!s || r.client.name.toLowerCase().includes(s)));
   }, [mind, fajta, kereses]);
   const darab = (f: AssistSzuro) => alap.filter((r) => szuroIlleszkedik(r, f, szerep, t, enId)).length;
   const sorok = useMemo(() => alap.filter((r) => szuroIlleszkedik(r, szuro, szerep, t, enId)).sort(assistSorrend), [alap, szuro, szerep, t, enId]);
@@ -107,6 +110,8 @@ export default function Helyettunk() {
           <div className="ures-hely" />
           <Lenyilo style={{ width: 210 }} value={fajta} aria-label="Mit kért" onChange={(e) => allit('fajta', e.target.value || null)}>
             <option value="">Minden kérés</option>
+            {/* SPEC §28.5.5: one chip for the six change kinds */}
+            <option value="valtozas">{CHANGE_HANDBOOK.filterChip} (mind)</option>
             {ASSIST_KINDS.map((k) => (
               <option key={k} value={k}>
                 {ASSIST_KIND_LABELS[k]}
@@ -171,7 +176,7 @@ function Sor({ r, szerep, enId, most, megnyit }: { r: TeamAssistRow; szerep: Pan
       </td>
       <td>{ASSIST_KIND_LABELS[r.kind]}</td>
       <td>
-        <span style={{ color: nyitottAssist(r.status) ? undefined : 'var(--halvany)' }}>{ASSIST_STATUS_LABELS[r.status]}</span>
+        <span style={{ color: nyitottAssist(r.status) ? undefined : 'var(--halvany)' }}>{allapotFelirat(r.status, r.kind, ASSIST_STATUS_LABELS)}</span>
       </td>
       <td>
         {nalam ? (

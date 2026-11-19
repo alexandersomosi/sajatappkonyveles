@@ -6,7 +6,7 @@ import { Linking, Pressable, View, type StyleProp, type ViewStyle } from 'react-
 import { router } from 'expo-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Explainer, Me } from '../_shared/api';
-import { fillPlaceholders, ONBOARDING_EXPLAINERS, WHERE_TO_FIND_EXPLAINERS, type ExplainerKey } from '../_shared/bekotes';
+import { EXPLAINERS_28, fillPlaceholders, ONBOARDING_EXPLAINERS, WHERE_TO_FIND_EXPLAINERS, type ExplainerKey } from '../_shared/bekotes';
 import { get } from '../api/http';
 import { K } from '../api/hooks';
 import { brand } from '../config';
@@ -22,7 +22,7 @@ export const useMagyarazat = () => useContext(Ctx);
 
 /** Az alapszöveg kitöltve (offline / régebbi szerver). */
 export function alapMagyarazat(kulcs: string, firstName: string): Explainer | null {
-  const e = ONBOARDING_EXPLAINERS.find((x) => x.key === kulcs);
+  const e = ONBOARDING_EXPLAINERS.find((x) => x.key === kulcs) ?? EXPLAINERS_28.find((x) => x.key === kulcs);
   if (!e) return null;
   const ert = { firstName, havidij: `${szam(brand.priceHufMonthlyGross)} Ft` };
   return { ...e, title: fillPlaceholders(e.title, ert), what: fillPlaceholders(e.what, ert), why: fillPlaceholders(e.why, ert), where: fillPlaceholders(e.where, ert), fields: [...e.fields] };
@@ -155,4 +155,22 @@ export function MiEz({ kulcs, cim = 'Mi ez?', forras, tema, style, sotet }: { ku
 export function HolTalalom({ kulcs, forras, tema }: { kulcs: ExplainerKey | string; forras?: string; tema?: string }) {
   const hol = (WHERE_TO_FIND_EXPLAINERS as readonly string[]).includes(kulcs);
   return <MiEz kulcs={kulcs} cim={hol ? 'Hol találom?' : 'Mi ez?'} forras={forras} tema={tema} style={{ alignSelf: 'flex-start', marginTop: -4, marginBottom: 4 }} />;
+}
+
+/** C (SPEC §28.K.10): a „Mi ez?” kis kerek „i”-ként – 26 pt látszik, 44 pt a koppintási felület. */
+export function MiEzKor({ kulcs, cim = 'Mi ez?', forras, tema, style }: { kulcs: ExplainerKey | string; cim?: string; forras?: string; tema?: string; style?: StyleProp<ViewStyle> }) {
+  const nyit = useMagyarazat();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${cim} Magyarázat megnyitása`}
+      hitSlop={9}
+      onPress={() => nyit(kulcs, { forras, tema })}
+      style={({ pressed }) => [{ width: 26, height: 26, borderRadius: 13, backgroundColor: szin.gombMAlap, alignItems: 'center', justifyContent: 'center' }, pressed && { backgroundColor: szin.gombMNyomott }, style]}
+    >
+      <T m={15} s={750} lh={1} c={szin.tintakekSzoveg}>
+        i
+      </T>
+    </Pressable>
+  );
 }

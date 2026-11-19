@@ -12,7 +12,9 @@ import { becslesFej, datumAn, datumE, datumIg, datumRovid, hataridoSav, hatraVan
 import { szin } from '@/theme/tokens';
 import { Allapot, Cimke, Fejlec, GombE, GombM, GombSav, GombSz, Lap, Osszeg, Sor, Szakasz } from '@/ui/alap';
 import { maBeallit } from '@/ui/ido';
-import { Ikon3d, KeszJel, type Ikon3dNev } from '@/ui/kepek';
+import { Arckep, Ikon3d, KeszJel, type Ikon3dNev } from '@/ui/kepek';
+import { EvesKartya, FelreteszKartya, HaviKartya, KedvezmenyTipp, KeresetKartya, KetSzam, SzunetelKartya } from '@/kepernyok/k28';
+import { HOME_K_TEXTS } from '@/_shared/bekotes';
 import { Betolt, demoBeallit, Hiba, Kepernyo, useJelzes } from '@/ui/keret';
 import { Level } from '@/ui/Level';
 import { Elakadtal } from '@/ui/Visszahivas';
@@ -31,24 +33,26 @@ function AktivalasKartya({ ugyfel, fn }: { ugyfel: string; fn: string }) {
   }, [kulcs]);
   if (!lathato) return null;
   return (
-    <Lap style={{ padding: 18, marginBottom: 12 }}>
-      <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-        <KeszJel pt={40} />
-        <T m={20} s={700} lh={1.3} style={{ flex: 1 }} accessibilityRole="header">
+    <Lap style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 14 }}>
+      <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', minHeight: 32 }}>
+        <KeszJel pt={28} />
+        <T m={18} s={650} lh={1.3} style={{ flex: 1 }} accessibilityRole="header">
           {JOURNEY_TEXTS.activeTitle}
         </T>
       </View>
-      <T m={16} lh={1.5} c={szin.halvany} style={{ marginTop: 8 }}>
-        {fillPlaceholders(JOURNEY_TEXTS.activeBody, { firstName: fn })}
-      </T>
-      <GombM
-        cim="Rendben"
-        style={{ marginTop: 12 }}
-        onPress={() => {
-          setLathato(false);
-          void beallitasIr(kulcs, '1');
-        }}
-      />
+      <View style={{ paddingLeft: 38 }}>
+        <T m={16} lh={1.45} style={{ marginTop: 4 }}>
+          {fillPlaceholders(JOURNEY_TEXTS.activeBody, { firstName: fn })}
+        </T>
+        <GombM
+          cim="Rendben"
+          style={{ marginTop: 10 }}
+          onPress={() => {
+            setLathato(false);
+            void beallitasIr(kulcs, '1');
+          }}
+        />
+      </View>
     </Lap>
   );
 }
@@ -71,66 +75,46 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
       Animated.timing(attunes, { toValue: 1, duration: 240, useNativeDriver: Platform.OS !== 'web' }).start();
     });
   }, [hero.state, attunes]);
-  const ft = (
-    <T m={56 * 0.42} s={600} c={szin.fejlecHalvany} ls={-0.01}>
-      {' Ft'}
-    </T>
-  );
+  const fn = h.accountant.firstName;
+  const osszeg = szam(hero.amountHuf ?? 0);
+  const fo: { ikon: Ikon3dNev; cim: string; mondat: string | null } =
+    hero.state === 'befizetve'
+      ? { ikon: 'befizetve', cim: 'Befizetted', mondat: `${osszeg} Ft, ${hero.paidOn ? datumAn(hero.paidOn) : ''}. ${hero.verified ? `${fn} látta a kivonatodon: megérkezett.` : `${fn} a kivonatodon ellenőrzi.`}` }
+      : hero.state === 'nincs_fizetendo'
+        ? { ikon: 'hataridok', cim: 'Most nincs mit fizetned', mondat: hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.` }
+        : hero.state === 'jovahagyva'
+          ? { ikon: 'szamlaszam', cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(), mondat: hero.dueDate ? `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.` : null }
+          : { ikon: 'szamolo', cim: `Eddig kb. ${osszeg} Ft`, mondat: `${hero.periodLabel ? `${nagybetu(hero.periodLabel)}, becslés. ` : 'Becslés. '}${hero.dueDate ? `Befizetés ${datumIg(hero.dueDate)}. ` : ''}${hero.note ?? `${fn} a negyedév végén véglegesíti.`}` };
   return (
-    <Fejlec rozX={150} rozY={92} alsoTer={16}>
-      <Animated.View style={{ opacity: attunes }}>
-      {hero.state === 'befizetve' ? (
-        <View style={{ paddingTop: 6, paddingHorizontal: 20 }}>
-          <T m={52} s={800} lh={1.1} ls={-0.035} c="#fff" accessibilityRole="header">
-            Befizetted
-          </T>
-          <T m={17} lh={1.4} c="#fff" style={{ marginTop: 10 }}>
-            <T m={17} c="#fff" szam>
-              {szam(hero.amountHuf ?? 0)}
-            </T>{' '}
-            Ft, {hero.paidOn ? datumAn(hero.paidOn) : ''}.
-          </T>
-          <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 3 }}>
-            {hero.verified ? `${h.accountant.firstName} látta a kivonatodon: megérkezett.` : `${h.accountant.firstName} a kivonatodon ellenőrzi.`}
-          </T>
+    <Fejlec rozX={318} rozY={128} alsoTer={20}>
+      {/* ki a könyvelőd */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 36, paddingHorizontal: 16, paddingRight: 70 }}>
+        <View style={{ borderRadius: 16, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.55)' }}>
+          <Arckep pt={30} />
         </View>
-      ) : hero.state === 'nincs_fizetendo' ? (
-        <View style={{ paddingTop: 6, paddingHorizontal: 20 }}>
-          <T m={40} s={800} lh={1.1} ls={-0.035} c="#fff" accessibilityRole="header">
-            Most nincs mit fizetned
+        <T m={15} lh={1.3} c={szin.fejlecHalvany} style={{ flex: 1 }} numberOfLines={1}>
+          <T m={15} s={650} c="#fff">
+            {h.accountant.displayName}
           </T>
-          <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 8 }}>
-            {hero.note ?? `${h.accountant.firstName} szól, amikor legközelebb fizetni kell.`}
+          , a könyvelőd
+        </T>
+      </View>
+      {/* mi a dolgod most */}
+      <Animated.View style={{ opacity: attunes, paddingHorizontal: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
+          <Ikon3d nev={fo.ikon} pt={30} />
+          <T m={keskeny ? 23 : 26} maxFontSizeMultiplier={1.4} s={700} lh={1.15} ls={-0.022} c="#fff" szam style={{ flexShrink: 1 }} accessibilityRole="header">
+            {fo.cim}
           </T>
+          {hero.state === 'jovahagyva' && hero.daysLeft != null && hero.daysLeft <= 14 ? <Cimke szoveg={hatraVan(hero.daysLeft)} /> : null}
         </View>
-      ) : (
-        <>
-          {hero.state === 'becsles' ? (
-            <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 10, paddingHorizontal: 20 }}>
-              {hero.periodLabel ? `${nagybetu(hero.periodLabel)}, becslés` : 'Becslés'}
-            </T>
-          ) : null}
-          <T m={keskeny ? 46 : 56} maxFontSizeMultiplier={1.1} s={800} lh={1.05} ls={-0.035} c="#fff" szam style={{ paddingTop: hero.state === 'becsles' ? 4 : 6, paddingHorizontal: 20 }} accessibilityRole="header" accessibilityLabel={`${hero.state === 'becsles' ? 'Eddig körülbelül ' : 'Befizetendő: '}${szam(hero.amountHuf ?? 0)} forint`}>
-            {szam(hero.amountHuf ?? 0)}
-            {ft}
+        {fo.mondat ? (
+          <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 4, paddingLeft: 38 }}>
+            {fo.mondat}
           </T>
-          {hero.dueDate ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6, paddingTop: 9, paddingHorizontal: 20 }}>
-              <T m={17} lh={1.4} c="#fff">
-                {hero.state === 'becsles' ? `Befizetés ${hataridoSav(hero.dueDate).replace(/^./, (c) => c.toLowerCase())}` : hataridoSav(hero.dueDate)}
-              </T>
-              {hero.state === 'jovahagyva' && hero.daysLeft != null && hero.daysLeft <= 14 ? <Cimke szoveg={hatraVan(hero.daysLeft)} style={{ marginLeft: 6 }} /> : null}
-            </View>
-          ) : null}
-          {hero.state === 'becsles' ? (
-            <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 3, paddingHorizontal: 20 }}>
-              {hero.note ?? `${h.accountant.firstName} a negyedév végén véglegesíti.`}
-            </T>
-          ) : null}
-        </>
-      )}
+        ) : null}
       </Animated.View>
-      {hero.periodId ? <GombSav cim="Hogyan jött ki?" ikon="szamolo" onPress={() => lap('hogyan')} style={{ marginTop: hero.state === 'befizetve' ? 16 : 12, marginLeft: 20 }} /> : null}
+      {hero.periodId ? <GombSav cim="Hogyan jött ki?" ikon="szamolo" onPress={() => lap('hogyan')} style={{ marginTop: 12, marginLeft: 54 }} /> : null}
     </Fejlec>
   );
 }
@@ -159,18 +143,21 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
           ? `Még hátra: ${nyitott.map((x) => x.label).join(', ')}, ${szam(nyitott.reduce((a, b) => a + b.amountHuf, 0))} Ft`
           : utalasFej(t.length);
   return (
-    <Lap style={{ paddingTop: 11, paddingBottom: 10, marginTop: 12 }}>
-      <T m={15} s={600} c={szin.halvany} style={{ paddingHorizontal: 18, paddingBottom: 2 }}>
-        {fej}
-      </T>
+    <Lap style={{ paddingTop: 16, paddingBottom: 12 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 32, paddingHorizontal: 16, paddingBottom: 4 }}>
+        <Ikon3d nev="szamlaszam" pt={28} />
+        <T m={18} s={650} lh={1.3} ls={-0.012} style={{ flex: 1 }} accessibilityRole="header">
+          {fej}
+        </T>
+      </View>
       {t.map((x0, i) => {
         // Jóváhagyott 03: „SZJA-előleg III. negyedév” egy sorban. Ha a szerver hosszú, magyarázó alcímet ad
         // („személyi jövedelemadó-előleg”), itt a negyedév neve áll – a teljes név a „Hogyan jött ki?” lapon olvasható –,
         // különben a harmadik sor is kétsoros lenne, és a gyorsműveletek a fülsor alá csúsznának.
         const x = x0.kind === 'szja_eloleg' && h.hero.periodLabel && (!x0.sublabel || x0.sublabel.length > 16) ? { ...x0, sublabel: h.hero.periodLabel } : x0;
         return (
-        <View key={x.id} style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, paddingVertical: 8, paddingHorizontal: 18 }}>
-          {i > 0 ? <View style={{ position: 'absolute', top: 0, left: 18, right: 18, height: 1, backgroundColor: szin.hajszal }} /> : null}
+        <View key={x.id} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 52, paddingVertical: 6, paddingLeft: 54, paddingRight: 16 }}>
+          {i > 0 ? <View style={{ position: 'absolute', top: 0, left: 54, right: 16, height: 1, backgroundColor: szin.hajszal }} /> : null}
           <View style={{ flex: 1, minWidth: 0 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {allapot !== 'becsles' && x.markedPaidAt ? (
@@ -206,13 +193,13 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
         );
       })}
       {allapot === 'jovahagyva' ? (
-        <View style={{ flexDirection: keskeny ? 'column' : 'row', gap: 10, paddingTop: 8, paddingHorizontal: keskeny ? 16 : 18 }}>
-          <GombE cim="Számlaszámok" magas={50} onPress={() => lap('szamlaszamok')} style={keskeny ? { paddingHorizontal: 14 } : { flex: 1, paddingHorizontal: 14 }} />
-          <GombM cim="Már befizettem" magas={50} onPress={() => lap('befizettem')} style={keskeny ? { alignSelf: 'stretch', paddingHorizontal: 14 } : { flex: 1, alignSelf: 'auto', paddingHorizontal: 14 }} />
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, paddingTop: 8, paddingLeft: 54, paddingRight: 16 }}>
+          {/* SPEC §28.K.12 #2: számlaszám, közlemény másolással; a fő gomb lent a dokkban: „Elutaltam” */}
+          <GombM cim="Számlaszámok és közlemény" onPress={() => lap('szamlaszamok')} />
         </View>
       ) : null}
       {fizetve ? (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', columnGap: 10, paddingTop: 8, paddingHorizontal: 18 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', columnGap: 10, paddingTop: 8, paddingLeft: 54, paddingRight: 16 }}>
           <T m={14.5} c={szin.halvany}>
             {feljegyezveSzoveg(t.find((x) => x.markedPaidAt)?.markedPaidAt)}
           </T>
@@ -235,7 +222,7 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
         </View>
       ) : null}
       {allapot === 'becsles' ? (
-        <T m={14.5} c={szin.halvany} lh={1.45} style={{ paddingTop: 8, paddingHorizontal: 18 }}>
+        <T m={15} c={szin.halvany} lh={1.45} style={{ paddingTop: 8, paddingLeft: 54, paddingRight: 16 }}>
           Még ne utald el: {h.accountant.firstName} a negyedév végén véglegesíti, és szól, mennyit kell fizetned.
         </T>
       ) : null}
@@ -243,26 +230,26 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
   );
 }
 
-const GYORS: { cim: string; ikon: Ikon3dNev; pt: number; alja: number; ut: string }[] = [
-  { cim: 'Feltöltés', ikon: 'feltoltes', pt: 54, alja: -3.8, ut: '/feltoltes' },
-  { cim: 'Kérdezek', ikon: 'kerdezek', pt: 50, alja: -7.4, ut: '/uzenetek' },
-  { cim: 'Igazolás', ikon: 'igazolas', pt: 58, alja: -4.1, ut: '/keresek/uj' },
-  { cim: 'Határidők', ikon: 'hataridok', pt: 54, alja: -6.4, ut: '/hataridok' },
+const GYORS: { cim: string; ikon: Ikon3dNev; ut: string }[] = [
+  { cim: 'Feltöltés', ikon: 'feltoltes', ut: '/feltoltes' },
+  { cim: 'Kérdezek', ikon: 'kerdezek', ut: '/uzenetek' },
+  { cim: 'Igazolás', ikon: 'igazolas', ut: '/keresek/uj' },
+  { cim: 'Határidők', ikon: 'hataridok', ut: '/hataridok' },
 ];
 function Gyorsgombok() {
   return (
-    <View style={{ flexDirection: 'row', backgroundColor: szin.lap, borderRadius: 18, paddingTop: 10, paddingBottom: 10, paddingHorizontal: 4, marginTop: 12 }} accessibilityRole="menu">
-      {GYORS.map((g) => (
-        <Pressable key={g.cim} accessibilityRole="button" accessibilityLabel={g.cim} onPress={() => router.push(g.ut as never)} style={({ pressed }) => [{ flex: 1, alignItems: 'center', gap: 7 }, pressed && { opacity: 0.7 }]}>
-          <View style={{ height: 50, width: '100%', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <Ikon3d nev={g.ikon} pt={g.pt} arnyektalan={false} style={{ marginBottom: g.alja }} />
-          </View>
-          <T m={13.5} s={500} lh={1.2} kozep ls={-0.005}>
-            {g.cim}
-          </T>
-        </Pressable>
-      ))}
-    </View>
+    <Lap style={{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 4 }}>
+      <View accessibilityRole="menu" style={{ flex: 1, flexDirection: 'row' }}>
+        {GYORS.map((g) => (
+          <Pressable key={g.cim} accessibilityRole="button" accessibilityLabel={g.cim} onPress={() => router.push(g.ut as never)} style={({ pressed }) => [{ flex: 1, alignItems: 'center', gap: 4, minHeight: 56, justifyContent: 'center' }, pressed && { opacity: 0.7 }]}>
+            <Ikon3d nev={g.ikon} pt={32} arnyektalan={false} />
+            <T m={13.5} s={550} lh={1.2} kozep ls={-0.005}>
+              {g.cim}
+            </T>
+          </Pressable>
+        ))}
+      </View>
+    </Lap>
   );
 }
 
@@ -342,49 +329,58 @@ export default function Fooldal() {
   const dosszieHonap = h.currentDossier.month;
   const honapNevu = honapMelleknev(dosszieHonap);
 
+  const fizetendo = h.hero.state === 'jovahagyva' && h.paymentItems.some((x) => !x.markedPaidAt);
   return (
-    <Kepernyo ful="fooldal" fejlec={<Sav h={h} lap={setLap} />} tartalomStilus={{ paddingTop: 12 }}>
+    <Kepernyo
+      ful="fooldal"
+      fejlec={<Sav h={h} lap={setLap} />}
+      dokk={fizetendo ? <GombE cim={HOME_K_TEXTS.paidButton} onPress={() => setLap('befizettem')} /> : undefined}
+    >
+      {h.twoNumbers ? <KetSzam v={h.twoNumbers} /> : null}
       <AktivalasKartya ugyfel={h.client.id} fn={fn} />
       {h.serviceNotice ? <SzolgaltatasVege n={h.serviceNotice} fn={fn} /> : null}
+      {h.pause ? <SzunetelKartya p={h.pause} /> : null}
+      {h.checkin ? <HaviKartya c={h.checkin} /> : null}
+      {h.annual && h.annual.status !== 'nem_indult' && h.annual.status !== 'kesz' ? <EvesKartya a={h.annual} fn={fn} /> : null}
       {h.letter ? <Level level={h.letter} alairasUt={h.accountant.signatureSvgPath} befizetve={h.hero.state === 'befizetve' && lap !== 'befizettem'} /> : null}
       <FizetesLap h={h} lap={setLap} />
       <Gyorsgombok />
-      {/* SPEC §26.2.1: the callback entry of the Főoldal (source konyvelo_kartya). It sits BELOW the quick actions in
-          every state: between the letter and the payment sheet it pushed the quick actions under the tab bar
-          (approved 03 / TERV §5: the first screen ends with the quick-action sheet). */}
-      <Elakadtal forras="konyvelo_kartya" tema="egyeb" cim="Kérdésed van? Kérj visszahívást" style={{ marginLeft: 4 }} />
 
       {h.requestsFromAccountant.length ? (
         <>
-          <Szakasz cim={`${fn} kéri`} />
-          {h.requestsFromAccountant.map((r, i) => (
-            <Lap key={r.id} style={{ padding: 18, marginTop: i ? 12 : 0 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
-                <T m={17} s={650} lh={1.4} ls={-0.01} style={{ flex: 1 }}>
-                  {r.title}
+          <Szakasz ikon="irat" cim={`${fn} kéri`} />
+          {h.requestsFromAccountant.map((r) => (
+            <Lap key={r.id} style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
+              <View style={{ paddingLeft: 38 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+                  <T m={16} s={600} lh={1.35} style={{ flex: 1 }}>
+                    {r.title}
+                  </T>
+                  {r.dueDate && r.dueDate < h.today ? <Cimke szoveg="lejárt" veszely style={{ marginTop: 1 }} /> : null}
+                </View>
+                <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 2, marginBottom: 10 }}>
+                  {r.body}
+                  {r.dueDate ? (r.dueDate < h.today ? ` A határidő ${datumE(r.dueDate)} volt, küldd el mielőbb.` : ` Határidő: ${datumIg(r.dueDate)}.`) : ''}
                 </T>
-                {r.dueDate && r.dueDate < h.today ? <Cimke szoveg="lejárt" veszely style={{ marginTop: 2 }} /> : null}
+                <GombM
+                  cim={/kivonat/i.test(r.title) ? 'Kivonat feltöltése' : r.type === 'dokumentum' ? 'Feltöltöm' : 'Válaszolok'}
+                  ikon={r.type === 'dokumentum' ? 'feltoltes' : 'kerdezek'}
+                  onPress={() =>
+                    r.type === 'dokumentum'
+                      ? router.push({ pathname: '/feltoltes', params: { keres: r.id, kategoria: /kivonat/i.test(r.title) ? 'bankszamlakivonat' : 'egyeb', honap: r.dossierMonth ?? '' } })
+                      : router.push('/uzenetek')
+                  }
+                />
+                <KeresKeszGomb id={r.id} fn={fn} />
               </View>
-              <T m={15} lh={1.5} c={szin.halvany} style={{ marginTop: 4, marginBottom: 14 }}>
-                {r.body}
-                {r.dueDate ? (r.dueDate < h.today ? ` A határidő ${datumE(r.dueDate)} volt, küldd el mielőbb.` : ` Határidő: ${datumIg(r.dueDate)}.`) : ''}
-              </T>
-              <GombM
-                cim={/kivonat/i.test(r.title) ? 'Kivonat feltöltése' : r.type === 'dokumentum' ? 'Feltöltöm' : 'Válaszolok'}
-                ikon={r.type === 'dokumentum' ? 'feltoltes' : 'kerdezek'}
-                onPress={() =>
-                  r.type === 'dokumentum'
-                    ? router.push({ pathname: '/feltoltes', params: { keres: r.id, kategoria: /kivonat/i.test(r.title) ? 'bankszamlakivonat' : 'egyeb', honap: r.dossierMonth ?? '' } })
-                    : router.push('/uzenetek')
-                }
-              />
-              <KeresKeszGomb id={r.id} fn={fn} />
             </Lap>
           ))}
         </>
       ) : null}
 
-      <Szakasz cim="Idei kereteid" />
+      {h.reserve ? <FelreteszKartya c={h.reserve} fn={fn} /> : null}
+
+      <Szakasz ikon="hataridok" cim="Idei kereteid" />
       <Lap>
         <Mero
           meter={limits.afa}
@@ -392,25 +388,25 @@ export default function Fooldal() {
           balVeg={`eddig ${szam(limits.afa.usedHuf)} Ft`}
           jobbVeg={`a keret ${szam(limits.afa.limitHuf)} Ft`}
         />
-        <View style={{ height: 1, backgroundColor: szin.hajszal }} />
+        <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />
         {limits.adomentes.reached ? (
           <PipaMondat
             cim={`Az adómentes részt ${limits.adomentes.reachedMonth ? ['januárban', 'februárban', 'márciusban', 'áprilisban', 'májusban', 'júniusban', 'júliusban', 'augusztusban', 'szeptemberben', 'októberben', 'novemberben', 'decemberben'][limits.adomentes.reachedMonth - 1] : 'idén'} elérted.`}
             mellek={/^Az adómentes részt/.test(limits.adomentes.sentence) ? `Az első ${szam(limits.adomentes.limitHuf)} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, ez így rendben van.` : limits.adomentes.sentence}
           />
         ) : (
-          <View style={{ paddingTop: 17, paddingHorizontal: 18, paddingBottom: 16 }}>
-            <T m={17} s={650} lh={1.4}>
+          <View style={{ paddingTop: 14, paddingHorizontal: 16, paddingBottom: 14 }}>
+            <T m={16} s={600} lh={1.4}>
               Még az adómentes részben jársz.
             </T>
-            <T m={15} lh={1.5} c={szin.halvany} style={{ marginTop: 3 }}>
+            <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 2 }}>
               {limits.adomentes.sentence}
             </T>
           </View>
         )}
         {limits.atalanyCap.ratio >= 0.5 ? (
           <>
-            <View style={{ height: 1, backgroundColor: szin.hajszal }} />
+            <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />
             <Mero
               meter={limits.atalanyCap}
               mellek="Az átalányadózásnak felső bevételi határa van. Ha közelíted, a könyvelőd előre szól."
@@ -420,19 +416,29 @@ export default function Fooldal() {
           </>
         ) : null}
       </Lap>
+      {h.allowancesHint?.show ? <KedvezmenyTipp ev={Number(h.today.slice(0, 4))} /> : null}
 
-      <Szakasz cim="Idei bevételed" />
+      <Szakasz ikon="kivonat" cim="Idei bevételed" />
       <Lap>
         <BevetelOszlopok honapok={h.revenueByMonth} ma={h.today} />
       </Lap>
+      {h.earnings ? <KeresetKartya e={h.earnings} /> : null}
 
-      <Szakasz cim={nagybetu(h.currentDossier.label)} />
+      <Szakasz ikon="dosszie" cim={nagybetu(h.currentDossier.label)} />
       <Lap>
         {h.currentDossier.items.map((d, i) => {
           const a = iratAllapot(d, h.today);
           return <Sor key={d.id} elso={i === 0} ikon={d.icon} kesz={a.kesz} cim={d.title} al={<Allapot szo={a.szo} utana={a.utana} />} onPress={() => router.push(`/tetel/${d.id}`)} />;
         })}
-        <Sor elso={!h.currentDossier.items.length} ikon="dosszie" cim={`Az egész ${honapNevu} dosszié`} cimSzin={szin.tintakekSzoveg} cimSuly={600} minH={54} onPress={() => router.push({ pathname: '/dosszie', params: { honap: dosszieHonap } })} />
+        <Sor elso={!h.currentDossier.items.length} ikon="dosszie" cim={`Az egész ${honapNevu} dosszié`} cimSzin={szin.tintakekSzoveg} cimSuly={600} onPress={() => router.push({ pathname: '/dosszie', params: { honap: dosszieHonap } })} />
+      </Lap>
+
+      {/* C: „Ha elakadsz” – egy mondat és egy kapszula (a visszahívás forrása: konyvelo_kartya, SPEC §26.2.1) */}
+      <Szakasz ikon="kerdezek" cim="Ha elakadsz" jobbra={<GombM cim="Visszahívás" onPress={() => router.push({ pathname: '/visszahivas', params: { forras: 'konyvelo_kartya', tema: 'egyeb' } })} />} />
+      <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+        <T m={16} lh={1.45} style={{ paddingLeft: 38 }}>
+          Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.
+        </T>
       </Lap>
 
       <HogyanJottKi lathato={lap === 'hogyan'} bezar={() => setLap(null)} idoszak={idoszak.data} konyvelo={h.accountant} />

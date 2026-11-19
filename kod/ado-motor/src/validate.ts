@@ -128,6 +128,7 @@ export function validateYearInput(input: unknown): NormalizedInput {
             f[`profile.allowances[${i}]`] = 'Ismeretlen kedvezmény.';
         });
     }
+    if (p.kedvezmenyek !== undefined && p.kedvezmenyek !== null) validateKedvezmenyek(p.kedvezmenyek, rules, f);
     retail = typeof p.retail === 'boolean' ? p.retail : costRatioUsed === rules?.costRatios.retail;
   }
 
@@ -177,4 +178,79 @@ export function validateYearInput(input: unknown): NormalizedInput {
     retail,
     approvedQuarters: (approvedQuarters ?? []) as ApprovedQuarterActual[],
   };
+}
+
+// ---------- SPEC §28.3.7 (T21): approved personal allowances ----------
+const isMonth = (m: unknown): m is number => typeof m === 'number' && Number.isInteger(m) && m >= 1 && m <= 12;
+
+function checkMonths(v: unknown, key: string, f: Record<string, string>): void {
+  if (!Array.isArray(v)) f[key] = 'A hónapok listája kell (1–12).';
+  else if (!v.every(isMonth)) f[key] = 'A hónap 1 és 12 közötti egész szám lehet.';
+  else if (new Set(v).size !== v.length) f[key] = 'Egy hónap csak egyszer szerepelhet.';
+}
+
+function validateKedvezmenyek(k: unknown, rules: TaxRules | undefined, f: Record<string, string>): void {
+  const base = 'profile.kedvezmenyek';
+  if (!isPlainObject(k)) {
+    f[base] = 'Hibás kedvezmény-adatok.';
+    return;
+  }
+  const bm = k['birthMonth'];
+  if (bm !== undefined && bm !== null && (typeof bm !== 'string' || !/^(19|20)\d{2}-(0[1-9]|1[0-2])$/.test(bm)))
+    f[`${base}.birthMonth`] = 'A születési hónap ÉÉÉÉ-HH alakú legyen.';
+  for (const key of ['anya30', 'szemelyi'] as const) {
+    const v = k[key];
+    if (v === undefined || v === null) continue;
+    if (!isPlainObject(v)) f[`${base}.${key}`] = 'Hibás kedvezmény.';
+    else checkMonths(v['months'], `${base}.${key}.months`, f);
+  }
+  const anyak = k['anyak'];
+  if (anyak !== undefined && anyak !== null) {
+    if (!isPlainObject(anyak)) f[`${base}.anyak`] = 'Hibás kedvezmény.';
+    else {
+      if (!['ket', 'harom', 'negyplusz'].includes(anyak['jogcim'] as string)) f[`${base}.anyak.jogcim`] = 'A jogcím ket, harom vagy negyplusz lehet.';
+      checkMonths(anyak['months'], `${base}.anyak.months`, f);
+    }
+  }
+  const fi = k['fiatal25'];
+  if (fi !== undefined && fi !== null) {
+    if (!isPlainObject(fi)) f[`${base}.fiatal25`] = 'Hibás kedvezmény.';
+    else if (fi['months'] !== undefined && fi['months'] !== null) checkMonths(fi['months'], `${base}.fiatal25.months`, f);
+  }
+  const hz = k['elsoHazasok'];
+  if (hz !== undefined && hz !== null) {
+    if (!isPlainObject(hz)) f[`${base}.elsoHazasok`] = 'Hibás kedvezmény.';
+    else {
+      checkMonths(hz['months'], `${base}.elsoHazasok.months`, f);
+      const max = rules?.allowances.elsoHazasokMonthlyHuf ?? 33_335;
+      const mh = hz['monthlyHuf'];
+      if (!isSafeInt(mh) || mh < 0 || mh > max) f[`${base}.elsoHazasok.monthlyHuf`] = `Az első házasok kedvezménye havonta 0 és ${max} Ft között lehet.`;
+    }
+  }
+  const cs = k['csaladi'];
+  if (cs !== undefined && cs !== null) {
+    if (!isPlainObject(cs)) f[`${base}.csaladi`] = 'Hibás kedvezmény.';
+    else {
+      if (typeof cs['csjkInYear'] !== 'boolean') f[`${base}.csaladi.csjkInYear`] = 'Igen/nem érték kell.';
+      const months = cs['months'];
+      if (!Array.isArray(months)) f[`${base}.csaladi.months`] = 'A hónapok listája kell.';
+      else {
+        const seen = new Set<number>();
+        months.forEach((m: unknown, i: number) => {
+          const key = `${base}.csaladi.months[${i}]`;
+          if (!isPlainObject(m)) return void (f[key] = 'Hibás hónap.');
+          if (!isMonth(m['month'])) f[`${key}.month`] = 'A hónap 1 és 12 közötti egész szám lehet.';
+          else if (seen.has(m['month'])) f[`${key}.month`] = 'Egy hónap csak egyszer szerepelhet.';
+          else seen.add(m['month']);
+          const children = m['children'];
+          if (!Array.isArray(children) || children.length > 20 || !children.every(isPlainObject)) f[`${key}.children`] = 'A gyermekek listája kell.';
+          const el = m['eltartott'];
+          if (!isSafeInt(el) || el < 0 || el > 30) f[`${key}.eltartott`] = 'Az eltartottak száma 0 és 30 közötti egész szám.';
+          else if (Array.isArray(children) && el < children.length) f[`${key}.eltartott`] = 'Az eltartottak száma nem lehet kevesebb a kedvezményezett gyermekekénél.';
+          const sp = m['sharePct'];
+          if (sp !== undefined && sp !== null && (!isSafeInt(sp) || sp < 0 || sp > 100)) f[`${key}.sharePct`] = 'A megosztás 0 és 100% között lehet.';
+        });
+      }
+    }
+  }
 }

@@ -239,7 +239,7 @@ export function nevelo(szo: string): 'a' | 'az' {
   return /^[aáeéiíoóöőuúüű]/i.test(szo.trim()) ? 'az' : 'a';
 }
 
-/** Összegek a szövegben (pl. a brand.json „havi 20 000 Ft” mondata): a szám és a Ft nem törhet szét. */
+/** Összegek a szövegben (pl. a brand.json „havi 19 999 Ft” mondata): a szám és a Ft nem törhet szét. */
 export function nemTor(s: string): string {
   return s.replace(/(\d) (?=\d{3}\b)/g, `$1${NBSP}`).replace(/(\d) Ft\b/g, `$1${NBSP}Ft`);
 }

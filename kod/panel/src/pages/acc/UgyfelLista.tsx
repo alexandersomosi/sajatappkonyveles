@@ -10,6 +10,17 @@ import { FILTER_ORDER, FLAG_LABEL, MILESTONE_KOVETKEZO } from '../../lib/labels'
 import { MILESTONE_ORDER, type ClientFilter } from '../../_shared/enums';
 import { today } from '../../lib/today';
 import { idopont } from '../../lib/format';
+import { ALLOWANCE_PANEL_TEXTS, ANNUAL_TEXTS, KATA_TEXTS } from '../../_shared/bekotes';
+import type { AccClientRow } from '../../api/types';
+
+/** SPEC §28.3.6 / §28.K.3 / §28.K.11: extra chips, filtered here from the full list (the API also takes ?kedvezmeny=var). */
+type Extra = 'kedvezmeny' | 'eves' | 'kata' | 'havi';
+const EXTRA: { k: Extra; felirat: (n: number) => string; van: (r: AccClientRow) => boolean }[] = [
+  { k: 'kedvezmeny', felirat: (n) => ALLOWANCE_PANEL_TEXTS.filterChip.replace('{n}', String(n)), van: (r) => (r.allowancesPending ?? 0) > 0 },
+  { k: 'eves', felirat: (n) => ANNUAL_TEXTS.panel.chip.replace('{n}', String(n)), van: (r) => !!r.annualWaiting },
+  { k: 'havi', felirat: (n) => `Havi változás (${n})`, van: (r) => (r.checkinOpenItems ?? 0) > 0 },
+  { k: 'kata', felirat: (n) => `${KATA_TEXTS.panelChip} (${n})`, van: (r) => r.taxRegime === 'kata' },
+];
 
 // „következik: Azonosítás” – főnévvel, hogy ne tűnjön késznek a lépés.
 const MILESTONE_NOUN = MILESTONE_KOVETKEZO;
@@ -26,14 +37,22 @@ export default function UgyfelLista() {
   const nav = useNavigate();
   const nev = useKonyveloNev();
   const { konyvelo } = useAuth();
-  const filter = (sp.get('szuro') as ClientFilter) || 'mind';
+  const extra = (sp.get('extra') as Extra | null) ?? null;
+  const filter = extra ? 'mind' : (sp.get('szuro') as ClientFilter) || 'mind';
   const [kereses, setKereses] = useState(sp.get('q') ?? '');
   const q = useQuery({ queryKey: ['acc', 'clients', filter, kereses.trim()], queryFn: () => ep.accClients(filter, kereses.trim()), placeholderData: (p) => p });
+  // the extra chips count over the whole list (one more cached call while a flag filter is on)
+  const mindQ = useQuery({ queryKey: ['acc', 'clients', 'mind', kereses.trim()], queryFn: () => ep.accClients('mind', kereses.trim()), placeholderData: (p) => p });
+  const mindSor = mindQ.data?.items ?? [];
   const t = today();
   const counts = q.data?.counts;
   const teendo = (counts?.hianyzik_valami ?? 0) + (counts?.bekotes_alatt ?? 0);
 
-  const rows = useMemo(() => q.data?.items ?? [], [q.data]);
+  const rows = useMemo(() => {
+    const all = q.data?.items ?? [];
+    const e = EXTRA.find((x) => x.k === extra);
+    return e ? all.filter(e.van) : all;
+  }, [q.data, extra]);
   return (
     <>
       <Fejlec
@@ -70,9 +89,10 @@ export default function UgyfelLista() {
                 key={f}
                 role="tab"
                 aria-selected={filter === f}
-                className={filter === f ? 'on' : ''}
+                className={!extra && filter === f ? 'on' : ''}
                 onClick={() => {
                   const n = new URLSearchParams(sp);
+                  n.delete('extra');
                   if (f === 'mind') n.delete('szuro');
                   else n.set('szuro', f);
                   setSp(n, { replace: true });
@@ -88,6 +108,27 @@ export default function UgyfelLista() {
             <input placeholder="Keresés névre, adószámra…" value={kereses} onChange={(e) => setKereses(e.target.value)} />
           </label>
         </div>
+        {EXTRA.some((x) => mindSor.some(x.van)) && (
+          <div className="szegmens extra-szuro" role="tablist" aria-label="Teendők" style={{ marginTop: -6, marginBottom: 16 }}>
+            {EXTRA.filter((x) => mindSor.some(x.van)).map((x) => (
+              <button
+                key={x.k}
+                role="tab"
+                aria-selected={extra === x.k}
+                className={extra === x.k ? 'on' : ''}
+                onClick={() => {
+                  const n = new URLSearchParams(sp);
+                  n.delete('szuro');
+                  if (extra === x.k) n.delete('extra');
+                  else n.set('extra', x.k);
+                  setSp(n, { replace: true });
+                }}
+              >
+                {x.felirat(mindSor.filter(x.van).length)}
+              </button>
+            ))}
+          </div>
+        )}
         {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
         <div className="lap">
           {q.isPending ? (
@@ -130,6 +171,14 @@ export default function UgyfelLista() {
                     </td>
                     <td>
                       <Jelzok flags={r.flags} />
+                      {(r.taxRegime === 'kata' || (r.allowancesPending ?? 0) > 0 || r.annualWaiting || r.adoszamPending) && (
+                        <div className="cimkek" style={{ marginTop: 4 }}>
+                          {r.taxRegime === 'kata' && <span className="cimke info">{KATA_TEXTS.panelChip}</span>}
+                          {(r.allowancesPending ?? 0) > 0 && <span className="cimke figyel">Kedvezmény vár</span>}
+                          {r.annualWaiting && <span className="cimke figyel">Éves zárás</span>}
+                          {r.adoszamPending && <span className="cimke figyel">Adószám kell</span>}
+                        </div>
+                      )}
                     </td>
                     <td>{r.nextDeadline ? <Hatarido due={r.nextDeadline.dueDate} today={t} cim={r.nextDeadline.title} /> : <span className="halvany">–</span>}</td>
                     <td className="kozep szam">

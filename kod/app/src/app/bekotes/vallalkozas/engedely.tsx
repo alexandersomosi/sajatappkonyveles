@@ -18,8 +18,9 @@ import { MiEz } from '@/ui/Magyarazat';
 import { T } from '@/ui/T';
 import { useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
-export default function Engedely() {
+function Engedely() {
   const { o } = useUt();
   const ev = segitsegFajta(o.data?.assists, 'vallalkozas_bejelentes');
   const q = useEngedelyOsszegzes(ev?.id);
@@ -144,3 +145,6 @@ export default function Engedely() {
     </Kepernyo>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(Engedely);

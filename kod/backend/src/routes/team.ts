@@ -47,6 +47,7 @@ import { messageDtos, messagePage } from '../services/requests.js';
 import { accountantUserOf, clientForStaff, clientForTeamMessages, staffActor, staffRefs, teamClientCard, unreadTeamThreads, type StaffActor } from '../services/team.js';
 import { afterRegistrationDone, finishRegistration } from './client-bekotes.js';
 import { registerTeamAssistRoutes } from './team-helyettunk.js';
+import { registerTeamK28Routes } from './acc-k28.js';
 import { assistSummary } from './team-helyettunk.js';
 import { cardAssist, evFiledByOf, openAssistOf, requestAssist, revalidateConsent } from '../services/assist.js';
 import { pathHistory, WITHDRAW_NOTE_UNDO } from '../services/pathchange.js';
@@ -518,6 +519,8 @@ export function teamRoutes(deps: Deps) {
   });
 
   // ================= "Intézzük helyette" + the branch change by the team (SPEC §27.2.3, §27.6, §27.9.1) =================
+  // SPEC §28.5.5 / §28.K: the change kinds (change-ready, change-done, follow-ups, the change branch of ev-filed / detail)
+  registerTeamK28Routes(r, deps, card);
   registerTeamAssistRoutes(r, deps, { actorOf, teamOrAdmin, card });
 
   return r;

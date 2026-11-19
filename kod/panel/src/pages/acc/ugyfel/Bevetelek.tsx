@@ -1,5 +1,5 @@
 // Bevételek: revenue records (NAV + manual), monthly sums, add manual item, exclude/restore, CSV (FUNKCIOK 9, 22, 27).
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
 import type { FulProps } from '../UgyfelAdatlap';
@@ -9,6 +9,9 @@ import { usePirito } from '../../../ui/Pirito';
 import { datumRovid, HONAPOK_ROVID, parseFt } from '../../../lib/format';
 import { today } from '../../../lib/today';
 import { MegjegyzesFiok } from './Bekotes';
+import { felreteszErtek, felreteszTipp } from '../../../lib/k28';
+import { RESERVE_PANEL_TEXTS } from '../../../_shared/bekotes';
+import type { InvoiceReserveView } from '../../../api/types';
 
 export default function Bevetelek({ c }: FulProps) {
   const t = today();
@@ -16,6 +19,14 @@ export default function Bevetelek({ c }: FulProps) {
   const qc = useQueryClient();
   const pir = usePirito();
   const q = useQuery({ queryKey: ['acc', 'revenue', c.id, ev], queryFn: () => ep.accRevenue(c.id, ev) });
+  // SPEC §28.1.9: "Félretenni" per revenue item (manual items too), joined by revenueItemId.
+  const kata = c.taxRegime === 'kata';
+  const rv = useQuery({ queryKey: ['acc', 'reserve', c.id, ev], queryFn: () => ep.accReserve(c.id, ev), enabled: !kata && c.lifecycle !== 'bekotes_alatt' });
+  const felre = useMemo(() => {
+    const m = new Map<string, InvoiceReserveView>();
+    for (const h of rv.data?.months ?? []) for (const i of h.items) m.set(i.revenueItemId, i.reserve);
+    return m;
+  }, [rv.data]);
   const [uj, setUj] = useState(false);
   const [kizar, setKizar] = useState<RevenueItem | null>(null);
   const [szuro, setSzuro] = useState<'mind' | 'nav_szamla' | 'kezi'>('mind');
@@ -94,6 +105,7 @@ export default function Bevetelek({ c }: FulProps) {
                       <th>Bevétel napja</th>
                       <th>Teljesítés</th>
                       <th className="jobb">Összeg</th>
+                      {!kata && <th className="jobb">{RESERVE_PANEL_TEXTS.column}</th>}
                       <th>Beszámít</th>
                       <th className="utolso" />
                     </tr>
@@ -115,6 +127,11 @@ export default function Bevetelek({ c }: FulProps) {
                         <td className="jobb">
                           <Ft n={r.amountHuf} />
                         </td>
+                        {!kata && (
+                          <td className="jobb nt" title={felre.get(r.id) ? felreteszTipp(felre.get(r.id)!) : undefined}>
+                            <span className="szam">{r.countsForAtalany ? felreteszErtek(felre.get(r.id)) : '—'}</span>
+                          </td>
+                        )}
                         <td className="kicsi nt">
                           {r.countsForAtalany ? 'átalány' : <s>átalány</s>} · {r.countsForAfaLimit ? 'ÁFA-keret' : <s>ÁFA-keret</s>}
                         </td>

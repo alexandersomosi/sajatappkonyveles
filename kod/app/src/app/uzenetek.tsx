@@ -1,6 +1,7 @@
 // 06 Üzenetek (FUNKCIOK 16–17): saját képernyő fülsor nélkül; fejléc a könyvelővel és a válaszidő-vállalással;
 // kérés-csempék; beszélgetés (saját buborék tintakék), kérés-kártyák, csatolmány; lebegő író sor „Küldés” kapszulával.
 import { useEffect, useRef, useState } from 'react';
+import { SUGGESTED_QUESTIONS } from '@/_shared/bekotes';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, useWindowDimensions, View, type ScrollViewInstance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
@@ -285,6 +286,18 @@ export default function Uzenetek() {
 
       <View style={{ position: 'absolute', left: 14, right: 14, bottom: alul }}>
         {nyitottVh ? <VisszahivasAllapot cb={nyitottVh} kompakt forras="uzenetek" style={{ marginBottom: 8 }} /> : null}
+        {/* SPEC §28.K.12 #7: 3–4 javasolt kérdés az író sor fölött; koppintásra csak kitölti, az ügyfél küldi el */}
+        {!szoveg.trim() && !csatolt.length ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginBottom: 8 }} contentContainerStyle={{ gap: 8 }}>
+            {SUGGESTED_QUESTIONS.map((k) => (
+              <Pressable key={k} accessibilityRole="button" accessibilityLabel={`Javasolt kérdés: ${k}`} onPress={() => setSzoveg(k)} style={({ pressed }) => ({ height: 40, paddingHorizontal: 14, borderRadius: 999, backgroundColor: pressed ? szin.gombMNyomott : szin.gombMAlap, justifyContent: 'center' })}>
+                <T m={15} s={600} c={szin.tintakekSzoveg} numberOfLines={1}>
+                  {k}
+                </T>
+              </Pressable>
+            ))}
+          </ScrollView>
+        ) : null}
         {csatolt.length ? (
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
             {csatolt.map((c) => (

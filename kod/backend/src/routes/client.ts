@@ -49,6 +49,9 @@ import { cancelSubscription, deleteCard, resumeSubscription, serviceNotice, star
 import { clientLegalPdf, filledLegalText } from '../services/contracts.js';
 import { markdownToPdf } from '../lib/pdf.js';
 import { pepAad } from '../services/kyc.js';
+import { augmentHome, invoiceReserves, registerClientK28Routes } from './client-k28.js';
+import { clientServiceLock } from '../services/zarolas.js';
+import { blocksActivation, employerRow } from '../services/alkalmazott.js';
 
 async function client(c: C, deps: Deps): Promise<ClientRow> {
   return clientOfUser(deps.db, auth(c).userId);
@@ -94,6 +97,10 @@ export function clientRoutes(deps: Deps) {
   });
   // SPEC §26.5: restricted mode before activation, enforced here (403 locked_until_active + feature).
   r.use('*', restrictedMode(deps));
+  // SPEC §28.K.5: the service lock for an unpaid fee (403 service_locked on the listed writes).
+  r.use('*', clientServiceLock(deps));
+  // SPEC §28 / §28.K routes (change kinds of /guides and /assist first; the rest falls through).
+  registerClientK28Routes(r, deps);
   // SPEC §26: branch question, new-business registration, guides, explainers, access matrix, callbacks.
   registerBekotesRoutes(r, deps);
 
@@ -585,6 +592,7 @@ export function clientRoutes(deps: Deps) {
       const open = docs.filter((d) => documentAlwaysOpen(d));
       home.currentDossier = { ...home.currentDossier, items: await listItems(deps.db, open.slice(0, 4), { firstName: ap.firstName, staff: false }), totalCount: open.length };
     }
+    await augmentHome(deps, cl, home, today);
     return c.json(home);
   });
 
@@ -775,14 +783,16 @@ export function clientRoutes(deps: Deps) {
       .from(navInvoices)
       .where(and(eq(navInvoices.clientId, cl.id), q.month ? eq(navInvoices.dossierMonth, q.month) : sql`true`))
       .orderBy(desc(navInvoices.issueDate));
-    return c.json({ items: rows.map((i) => ({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo })) });
+    const reserves = await invoiceReserves(deps, cl, rows.map((i) => i.id));
+    return c.json({ items: rows.map((i) => ({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo, ...(reserves.get(i.id) ? { reserve: reserves.get(i.id) } : {}) })) });
   });
 
   r.get('/nav-invoices/:id', async (c) => {
     const cl = await client(c, deps);
     const [i] = await deps.db.select().from(navInvoices).where(and(eq(navInvoices.id, param(c, 'id')), eq(navInvoices.clientId, cl.id))).limit(1);
     if (!i) throw E.notFound();
-    return c.json({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo, invoice: i.data });
+    const reserve = (await invoiceReserves(deps, cl, [i.id])).get(i.id);
+    return c.json({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo, invoice: i.data, ...(reserve ? { reserve } : {}) });
   });
 
   // ================= messages, requests =================
@@ -983,6 +993,9 @@ export function clientRoutes(deps: Deps) {
     const cl = await client(c, deps);
     const b = await readJson(c, z.object({ platform: z.enum(['app', 'web']), acceptedDeclarations: z.literal(true, { error: 'A két nyilatkozatot el kell fogadnod.' }), purpose: z.enum(['subscribe', 'card_update']).default('subscribe') }));
     await assertStepOpen(deps, deps.db, cl, 'elofizetes');
+    // SPEC §28.K.7: with employees / EFO no card is charged before the accountant's decision.
+    if (b.purpose === 'subscribe' && blocksActivation(await employerRow(deps.db, cl.id)))
+      throw E.stepLocked(await deps.content.render('alkalmazott.subscription_lock', await accountantParams(deps.db, cl.accountantId)));
     const h = deps.limiter.hit(`substart:${cl.id}`, 10, 3600_000);
     if (!h.ok) throw E.rateLimited(h.retryAfterSec);
     const res = await startRegistration(deps, cl.id, b.platform, c.get('ipHmac'), c.get('ua'), b.purpose);

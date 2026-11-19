@@ -49,8 +49,45 @@ export interface TaxProfileInput {
   hipa?: { method: HipaMethod; ratePct: number; priorYearHuf?: number | null };
   /** Quarters 1..throughQuarter were handled by someone else (e.g. a previous accountant); these are the actual sums they used. */
   priorOverrides?: { throughQuarter: 1 | 2 | 3; priorActualBaseSum: number; priorSzjaAdvanceSum: number };
-  /** (+) Allowances the engine does NOT model (családi kedvezmény, 25 év alattiak / anyák SZJA-mentessége …). Presence → warning, numbers unchanged. */
+  /** (+) Legacy one-line flags (SPEC §26). Presence → the 'kedvezmeny_nem_modellezett' warning only, numbers unchanged. */
   allowances?: { kind: 'csaladi' | 'fiatal_25' | 'anyak' | 'egyeb'; note?: string }[];
+  /** (+) SPEC §28.3.7: APPROVED, in-year personal allowances. They change the SZJA-előleg (and the TB through csjk). */
+  kedvezmenyek?: AllowancesInput;
+}
+
+// ---------- SPEC §28.3.7 personal allowances ----------
+export type AllowanceKind = 'anya30' | 'anyak' | 'fiatal25' | 'szemelyi' | 'elso_hazasok' | 'csaladi';
+export interface CsaladiMonthInput {
+  month: number;
+  /** Eltartottak száma (kedvezményezett + other eltartott) – decides the per-child amount. */
+  eltartott: number;
+  /** One entry per kedvezményezett eltartott of the month. */
+  children: { felvaltva?: boolean; tartosBeteg?: boolean }[];
+  /** The client's share of the frame when shared with the spouse (default 100). */
+  sharePct?: number;
+}
+export interface AllowancesInput {
+  /** 'YYYY-MM'; required for anya30, anyak 'ket', fiatal25 (warning + ignored when missing). */
+  birthMonth?: string;
+  anya30?: { months: number[] };
+  anyak?: { jogcim: 'ket' | 'harom' | 'negyplusz'; months: number[] };
+  /** Default months: computed from birthMonth (every month before the 25th birthday, the birthday month included). */
+  fiatal25?: { months?: number[] };
+  szemelyi?: { months: number[] };
+  /** monthlyHuf: 0..rules.allowances.elsoHazasokMonthlyHuf (the couple may split 33 335 Ft). */
+  elsoHazasok?: { months: number[]; monthlyHuf: number };
+  csaladi?: { months: CsaladiMonthInput[]; csjkInYear: boolean };
+}
+export interface AllowanceSummary {
+  /** Base reduction against SZJA over the returned quarters, per kind. */
+  usedHuf: Partial<Record<AllowanceKind, number>>;
+  szjaSavedHuf: number;
+  csjkHuf: number;
+  savedHuf: number;
+  /** Családi frame left after the last returned month (the annual return may use it). */
+  csaladiUnusedHuf: number;
+  /** min(15 % × unused, TB of the year − csjk) – for the accountant. */
+  annualCsjkPotentialHuf: number;
 }
 
 /**
@@ -97,6 +134,12 @@ export interface MonthLine {
   minimumApplied?: boolean;
   /** (+) The month lies after asOf: the line is a forecast with no further revenue. */
   future?: boolean;
+  /** (+) SPEC §28.3.7 (only with `kedvezmenyek`): the month's taxable part (above the adómentes rész; may be negative). */
+  taxableHuf?: number;
+  /** (+) Income of the month exempted by the month-bound allowances (anyák, 25 év alattiak). */
+  exemptHuf?: number;
+  /** (+) Családi járulékkedvezmény of the month. `tbHuf` stays GROSS; the quarter's tbHuf is net of it. */
+  csjkHuf?: number;
 }
 
 export type PaymentKind = 'tb_jarulek' | 'szocho' | 'szja_eloleg';
@@ -176,6 +219,10 @@ export interface QuarterResult {
   insuredMonths?: number;
   /** (+) true for quarters ≤ priorOverrides.throughQuarter: shown for information, someone else's numbers count. */
   coveredByPriorOverride?: boolean;
+  /** (+) SPEC §28.3.7 (only with `kedvezmenyek`): csjk of the quarter (already subtracted from tbHuf). */
+  csjkHuf?: number;
+  /** (+) Allowances used against the SZJA base from the start of the year up to this quarter. */
+  allowanceUsedYtdHuf?: Partial<Record<AllowanceKind, number>>;
 }
 
 export interface Meter {
@@ -235,6 +282,13 @@ export interface YearResult {
   costRatioUsed?: number;
   /** (+) */
   incomeYtdHuf?: number;
+  /** (+) SPEC §28.3.7: only with `kedvezmenyek`. */
+  allowances?: AllowanceSummary;
+  /** (+) SPEC §28.4.2: months 1..12 with at least one active day (after the start, not fully suspended). */
+  activeMonths?: number[];
+  /** (+) SPEC §28.4.3: active days of the year and the elapsed active days up to asOf (the meters' projection basis). */
+  activeDays?: number;
+  elapsedActiveDays?: number;
 }
 
 export interface DeadlineItem {

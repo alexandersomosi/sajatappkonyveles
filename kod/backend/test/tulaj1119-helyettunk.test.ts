@@ -88,7 +88,7 @@ describe('K3.1–K3.5 – the EV happy path', () => {
     const st = await h.json('GET', '/client/onboarding', { token: c.token });
     expect(st.body.registrationMode).toBe('segitett');
     expect(st.body.journey.variant).toBe('inditas_segitett');
-    expect(st.body.journey.steps.map((x: { key: string }) => x.key)).toEqual(['ut', 'visszahivas', 'adatok', 'kerdoiv', 'szerzodes', 'meghatalmazas', 'vegso_jovahagyas', 'bejelentes', 'kamara', 'azonositas', 'elofizetes', 'nav_bekotes']);
+    expect(st.body.journey.steps.map((x: { key: string }) => x.key)).toEqual(['ut', 'visszahivas', 'adatok', 'kedvezmenyek', 'kerdoiv', 'szerzodes', 'meghatalmazas', 'vegso_jovahagyas', 'bejelentes', 'kamara', 'azonositas', 'elofizetes', 'nav_bekotes']); // SPEC §28.3.4 row
     expect(st.body.steps.map((x: { step: string }) => x.step).slice(0, 5)).toEqual(['fiok', 'adatok', 'szerzodes', 'meghatalmazas', 'vallalkozas_inditas']);
     expect(st.body.assists[0].id).toBe(assistId);
     const [reg] = await h.deps.db.select().from(businessRegistrations).where(eq(businessRegistrations.clientId, c.clientId));

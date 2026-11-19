@@ -77,6 +77,93 @@ export type {
   TeamAssistRow,
 } from '../_shared/api';
 import type { TeamAssistDetail as _TeamAssistDetail, TeamClientCard as _TeamClientCard } from '../_shared/api';
+import type { AccClientDetailK28, FeeChargeView as _FeeChargeView, NotificationSettings as _NotificationSettings } from '../_shared/api';
+import type { InvoiceNotifyState, NotificationKind } from '../_shared/enums';
+// SPEC §28 / §28.K shapes – owned by kod/shared/src/api.ts.
+export type {
+  AccAllowanceItem,
+  AccAllowanceView,
+  AccAnnualView,
+  AccClientDetailK28,
+  AllowanceAnswers,
+  AllowanceChildAnswer,
+  AllowanceDecisionInput,
+  AllowanceParams,
+  AllowancePreview,
+  AllowancePreviewInput,
+  AnnualAnswers,
+  AnnualCheckInput,
+  ChangeData,
+  ChangeDoneInput,
+  ChangeFollowupPatch,
+  ChangeFollowupView,
+  CheckinItemAnswer,
+  CheckinItemDecisionInput,
+  CsaladiMonthParam,
+  EarningsCard,
+  EarningsMonthView,
+  EarningsView,
+  EmployerDecisionInput,
+  EmployerStatusView,
+  FeeChargeView,
+  FeeSettingUpdateInput,
+  FeeSettingView,
+  FeeWaiveInput,
+  InvoiceReserveView,
+  KataHomeView,
+  NavAddress,
+  NotificationSettings,
+  PauseView,
+  ReserveCard,
+  ReserveListItem,
+  ReserveView,
+  ServiceLockView,
+  TaxRegimeInput,
+  AdoszamStaffInput,
+  TeamCheckinItem,
+} from '../_shared/api';
+
+/**
+ * PANEL CONTRACT ADDITION (B3, 11-19; written down in kod/panel/README.md "§28 builder notes"): the notification log
+ * of one client – what the app sent him and why a push waited or did not go out.
+ * GET /acc/clients/:id/notifications?cursor= (A own clients, AD; csapat 404). Never holds push tokens or e-mail
+ * addresses; `body` is the rendered in-app text the client saw.
+ */
+export interface AccNotificationLogRow {
+  id: string;
+  kind: NotificationKind;
+  /** content variant ('tobb', 'kuszob', 'kerdes' …) or null */
+  variant: string | null;
+  title: string;
+  body: string;
+  link: string | null;
+  createdAt: string;
+  readAt: string | null;
+  push: {
+    wanted: boolean;
+    sentAt: string | null;
+    /** quiet hours: the push waits until this time (Budapest) */
+    notBefore: string | null;
+    /** why no push went out: the client's quiet hours (still waiting), the daily cap, the client switched it off, no device */
+    skipped: 'csendes_ido' | 'napi_limit' | 'kikapcsolva' | 'nincs_eszkoz' | null;
+    /** the push showed amounts (invoice_new / kata_business_invoice with pushShowAmounts on) */
+    amountsShown: boolean;
+  };
+  email: { sentAt: string | null } | null;
+}
+export interface AccNotificationLog {
+  items: AccNotificationLogRow[];
+  nextCursor: string | null;
+  /** the client's own settings (SPEC §28.2.3) – null = defaults */
+  settings: _NotificationSettings | null;
+  /** issued invoices of the last 30 days that were NOT notified, with the reason (nav_invoices.notify_state) */
+  skippedInvoices: { navInvoiceId: string; invoiceNumber: string; issueDate: string; grossAmountHuf: number; state: InvoiceNotifyState }[];
+}
+/**
+ * PANEL CONTRACT ADDITION (B3): GET /admin/fee-charges?status= (AD) – the one-off fee charges for the admin's
+ * refund / waive work on /admin/dijak (SPEC §28.K.1 names only the POST actions).
+ */
+export type AdminFeeChargeRow = _FeeChargeView & { client: { id: string; name: string } };
 
 /**
  * SPEC §27.6.3 panel extension (optional fields, see the B3 note in SPEC §24): the 4-day approval window as stored on
@@ -105,8 +192,9 @@ export interface AccClientList {
   counts: Record<ClientFlag | 'mind', number>;
 }
 
-// GET /acc/clients/:id
-export interface AccClientDetail {
+// GET /acc/clients/:id – the SPEC §28 / §28.K extra fields (reserve, earnings, allowancesPending, taxRegime, kata,
+// serviceLock, pause, employer, annual, adoszamPending, checkinOpenItems, mailboxAddress) come from AccClientDetailK28.
+export interface AccClientDetail extends AccClientDetailK28 {
   id: string;
   firstName: string;
   lastName: string;

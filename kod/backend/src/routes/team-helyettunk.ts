@@ -38,7 +38,8 @@ import { clientForStaff, type StaffActor } from '../services/team.js';
 import type { ClientRow } from '../services/people.js';
 import { onLeaveInditas } from '../services/assist.js';
 
-const ALL_ITEMS = [...ASSIST_CHECK_ITEMS.hivas, ...ASSIST_CHECK_ITEMS.ujegyke, ...ASSIST_CHECK_ITEMS.bejelentes] as [AssistCheckItem, ...AssistCheckItem[]];
+// SPEC §28.5.5: the change phases' items too (valtozas_adatok, valtozas_bejelentes)
+const ALL_ITEMS = [...new Set(Object.values(ASSIST_CHECK_ITEMS).flat())] as [AssistCheckItem, ...AssistCheckItem[]];
 const OPEN = [...ASSIST_OPEN_STATUSES] as AssistStatus[];
 const EV_SZAM = /^\d{8}$/;
 const PAGE = 50;
@@ -222,6 +223,9 @@ export function registerTeamAssistRoutes(
     if (!filesIn.length) throw E.validation({ file: 'Töltsd fel a NAV-os értesítést (PDF vagy fotó).' });
     const res = await deps.db.transaction(async (tx) => {
       const p = await prepareEvFiled(deps, tx, a, param(c, 'id'), meta.data.items);
+      // k5 finding 16: the filing day can never be earlier than the client's written consent or the live meghatalmazás
+      const minDay = [p.row.consentAt, p.row.mhLiveAt].filter((d): d is Date => Boolean(d)).map((d) => todayBudapest(d)).sort().at(-1);
+      if (minDay && meta.data.filedOn < minDay) throw E.validation({ filedOn: 'A beküldés napja nem lehet korábbi, mint az ügyfél engedélye.' });
       const d = await createDocument(deps, tx, {
         clientId: p.cl.id,
         source: 'konyvelo',

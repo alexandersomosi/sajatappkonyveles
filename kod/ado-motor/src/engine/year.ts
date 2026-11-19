@@ -3,6 +3,8 @@
 import { quarterDueDate } from '../calendar.js';
 import type { TaxRules } from '../rules/types.js';
 import type {
+  AllowanceKind,
+  AllowanceSummary,
   EngineWarning,
   MonthLine,
   PaymentLine,
@@ -11,16 +13,17 @@ import type {
   YearInput,
   YearResult,
 } from '../types.js';
-import { dayNumber, daysInclusive, daysInYear, maxDate, minDate, monthOf, quarterEnd, quarterStart, toIso } from '../util/dates.js';
+import { dayNumber, daysInclusive, daysInMonth, daysInYear, maxDate, minDate, monthOf, quarterEnd, quarterStart, toIso } from '../util/dates.js';
 import { formatHuf, yearAdjective } from '../util/format.js';
 import { permilleOf, ratio, ratioCompare, ratioMax, ratioMin, ratioRound, roundDiv, sum, type Ratio } from '../util/math.js';
 import { validateYearInput } from '../validate.js';
+import { monthBoundPass, planAllowances } from './allowances.js';
 import { classifyMonths } from './days.js';
 import { buildExplanation } from './explanation.js';
 import { hipaEstimate } from './hipa.js';
 import { adomentesMeter, afaMeter, atalanyCapMeter, type Projection } from './meters.js';
 
-export const ENGINE_VERSION = '1.1.0';
+export const ENGINE_VERSION = '1.2.0';
 export const DISCLAIMER = 'Becslés. A végleges összeget a könyvelőd hagyja jóvá.';
 
 function dedupeWarnings(ws: EngineWarning[]): EngineWarning[] {
@@ -110,6 +113,15 @@ export function calculateYear(input: YearInput): YearResult {
     return null;
   };
 
+  // ---- personal allowances (SPEC §28.3.7): plan + the month-bound pass (they do not depend on the járulék)
+  const overrideEndMonth = profile.priorOverrides ? profile.priorOverrides.throughQuarter * 3 : 0;
+  const plan = profile.kedvezmenyek ? planAllowances(rules, profile, Math.max(startMonth, overrideEndMonth + 1)) : null;
+  const mb = monthBoundPass(I, rules.taxFreeIncomeHuf, plan, rules.allowances.fiatal25MonthlyCapHuf);
+  const convM = new Array<number>(13).fill(0);
+  let allowanceSummary: AllowanceSummary | null = null;
+  let csjkYear = 0;
+  let tbGrossYear = 0;
+
   // ---- insured days per month
   const md = classifyMonths(year, start, profile.insuranceBreaks ?? [], profile.status);
   const fullMinimum = profile.guaranteedMinimum ? rules.guaranteedMinimumHuf : rules.minimumWageHuf;
@@ -186,11 +198,78 @@ export function calculateYear(input: YearInput): YearResult {
       return line;
     });
 
+    // Családi járulékkedvezmény (SPEC §28.3.7 c step 5, Tbj. 80. § (2)): month-local, only in-year, only insured.
+    let qCsjk = 0;
+    if (plan) {
+      const ar = rules.allowances;
+      for (const line of months) {
+        const m = line.month;
+        let csjk = 0;
+        let conv = 0;
+        if (plan.csjkInYear && profile.status !== 'nyugdijas' && line.insured && plan.fCs[m]! > 0) {
+          const b3 = Math.max(0, mb.B2[m]! - plan.fSz[m]! - plan.fHz[m]!);
+          const rest = Math.max(0, plan.fCs[m]! - b3);
+          // A minimum month: only the part of the minimum not above the month's (even tax-free) income; 0 without income.
+          const capBase = line.minimumApplied ? Math.min(line.minimumHuf ?? 0, Math.max(I[m]!, 0)) : line.baseHuf;
+          const capTb = Math.min(permilleOf(capBase, rules.tbPermille), line.tbHuf);
+          csjk = Math.max(0, Math.min(permilleOf(rest, ar.csjkPermille), capTb));
+          // the part of the családi frame turned into csjk (Szja tv. 29/B. § (6))
+          conv = Math.min(rest, roundDiv(csjk * 1000, ar.csjkPermille));
+        }
+        convM[m] = conv;
+        qCsjk += csjk;
+        line.taxableHuf = mb.T[m]!;
+        line.exemptHuf = mb.exA[m]! + mb.exF[m]!;
+        line.csjkHuf = csjk;
+      }
+    }
+
     const szochoBaseSum = sum(szochoBases);
     const baseSum = sum(months.map((m) => m.baseHuf));
-    const tb = sum(months.map((m) => m.tbHuf));
+    const tbGross = sum(months.map((m) => m.tbHuf));
+    const tb = tbGross - qCsjk;
     const szocho = sum(months.map((m) => m.szochoHuf));
-    const szjaCum = permilleOf(taxableYtd, rules.szjaPermille);
+    // SZJA (SPEC §28.3.7 c step 6): with allowances the YTD base after the month-bound exemptions minus the frames.
+    let szjaCum: number;
+    let usedYtd: Partial<Record<AllowanceKind, number>> | undefined;
+    let afterAllowancesHuf = taxableYtd;
+    let csaladiUnused = 0;
+    if (plan) {
+      let base = 0;
+      let fsz = 0;
+      let fhz = 0;
+      let fcs = 0;
+      let exA30 = 0;
+      let exAnyak = 0;
+      let exF = 0;
+      for (let m = 1; m <= lastMonth; m++) {
+        base += mb.B2[m]!;
+        fsz += plan.fSz[m]!;
+        fhz += plan.fHz[m]!;
+        fcs += plan.fCs[m]! - convM[m]!;
+        if (plan.motherKind[m] === 'anya30') exA30 += mb.exA[m]!;
+        else exAnyak += mb.exA[m]!;
+        exF += mb.exF[m]!;
+      }
+      base = Math.max(0, base);
+      afterAllowancesHuf = Math.max(0, base - fsz - fhz - fcs);
+      szjaCum = permilleOf(afterAllowancesHuf, rules.szjaPermille);
+      const usedSz = Math.min(fsz, base);
+      const usedHz = Math.min(fhz, base - usedSz);
+      const usedCs = Math.min(fcs, base - usedSz - usedHz);
+      csaladiUnused = fcs - usedCs;
+      const u: Partial<Record<AllowanceKind, number>> = {};
+      const put = (k: AllowanceKind, v: number) => {
+        if (v > 0) u[k] = v;
+      };
+      put('anya30', exA30);
+      put('anyak', exAnyak);
+      put('fiatal25', exF);
+      put('szemelyi', usedSz);
+      put('elso_hazasok', usedHz);
+      put('csaladi', usedCs);
+      usedYtd = u;
+    } else szjaCum = permilleOf(taxableYtd, rules.szjaPermille);
     let szja = szjaCum - priorSzja;
     const qWarnings: EngineWarning[] = [];
     const clamped = szja < 0;
@@ -235,8 +314,20 @@ export function calculateYear(input: YearInput): YearResult {
         months,
         notInsured,
         szochoBaseSumHuf: szochoBaseSum,
-        tbHuf: tb,
+        tbHuf: tbGross,
         szochoHuf: szocho,
+        ...(plan
+          ? {
+              allowances: {
+                usedYtd: usedYtd ?? {},
+                afterAllowancesHuf,
+                csjkHuf: qCsjk,
+                csaladiUnusedHuf: csaladiUnused,
+                anyakJogcim: plan.anyakJogcim,
+                csaladiChildren: Math.max(0, ...plan.csChildren.slice(1, lastMonth + 1)),
+              },
+            }
+          : {}),
         szjaCumulativeHuf: szjaCum,
         szjaAdvanceHuf: szja,
         szjaClamped: clamped,
@@ -270,7 +361,23 @@ export function calculateYear(input: YearInput): YearResult {
         szjaCumulativeHuf: szjaCum,
         insuredMonths: nIns,
         coveredByPriorOverride: covered,
+        ...(plan ? { csjkHuf: qCsjk, allowanceUsedYtdHuf: usedYtd ?? {} } : {}),
       });
+      if (plan) {
+        csjkYear += qCsjk;
+        tbGrossYear += tbGross;
+        const baselineCum = permilleOf(taxableYtd, rules.szjaPermille);
+        const saved = Math.max(0, baselineCum - szjaCum);
+        allowanceSummary = {
+          usedHuf: usedYtd ?? {},
+          szjaSavedHuf: saved,
+          csjkHuf: csjkYear,
+          savedHuf: saved + csjkYear,
+          csaladiUnusedHuf: csaladiUnused,
+          annualCsjkPotentialHuf:
+            profile.status === 'nyugdijas' ? 0 : Math.max(0, Math.min(permilleOf(csaladiUnused, rules.allowances.csjkPermille), tbGrossYear - csjkYear)),
+        };
+      }
     }
     yearWarnings.push(...qWarnings);
 
@@ -317,6 +424,17 @@ export function calculateYear(input: YearInput): YearResult {
   const activeDays = Math.max(1, calendarDays - suspendedDays.size);
   const elapsedDays = asOf < start ? 0 : Math.max(0, Math.min(activeDays, daysInclusive(start, asOfInYear) - suspendedUntil(asOfInYear)));
   const proj: Projection = { activeDays, elapsedDays };
+  // SPEC §28.4.2: months with at least one active day (on or after the start, not suspended).
+  const activeMonths: number[] = [];
+  for (let m = 1; m <= 12; m++) {
+    const first = dayNumber(toIso(year, m, 1));
+    let active = false;
+    for (let i = 0; i < daysInMonth(year, m) && !active; i++) {
+      const d = first + i;
+      if (d >= startN && !suspendedDays.has(d)) active = true;
+    }
+    if (active) activeMonths.push(m);
+  }
   const atalanyUsed = sum(R.slice(1));
   const capFull = n.retail ? rules.atalanyCapRetailHuf : rules.atalanyCapHuf;
   const capProrated = activeDays < diy;
@@ -385,7 +503,16 @@ export function calculateYear(input: YearInput): YearResult {
       audience: 'konyvelo',
       text: `Ellenőrizd, kell-e garantált bérminimum: ha a főtevékenység legalább középfokú végzettséget igényel (pl. fodrász, kozmetikus), a havi minimum ${formatHuf(rules.guaranteedMinimumHuf)}.`,
     });
-  if (profile.allowances && profile.allowances.length > 0)
+  if (plan) {
+    w.push(...plan.warnings);
+    if (allowanceSummary && allowanceSummary.csaladiUnusedHuf > 0 && profile.kedvezmenyek?.csaladi)
+      w.push({
+        code: 'kedvezmeny_ev_vegen',
+        audience: 'ugyfel',
+        text: 'A fel nem használt családi kedvezményedet az éves bevallásban számolja el a könyvelőd.',
+      });
+  }
+  if (profile.allowances && profile.allowances.length > 0 && !plan)
     w.push({
       code: 'kedvezmeny_nem_modellezett',
       audience: 'ugyfel',
@@ -426,5 +553,9 @@ export function calculateYear(input: YearInput): YearResult {
     year,
     costRatioUsed: costRatio,
     incomeYtdHuf: incomeYtdAll,
+    ...(plan ? { allowances: allowanceSummary ?? { usedHuf: {}, szjaSavedHuf: 0, csjkHuf: 0, savedHuf: 0, csaladiUnusedHuf: 0, annualCsjkPotentialHuf: 0 } } : {}),
+    activeMonths,
+    activeDays,
+    elapsedActiveDays: elapsedDays,
   };
 }

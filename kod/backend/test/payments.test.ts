@@ -54,7 +54,7 @@ describe('registration (DEMO)', () => {
   it('start returns the demo pay URL and the token terms', async () => {
     c = await subscribed('kata@demo.kezjegy.test');
     expect(c.start.paymentUrl).toContain('/api/v1/payments/demo/pay?o=');
-    expect(c.start.tokenInfo).toMatchObject({ times: 12, maxAmountHuf: 20000 });
+    expect(c.start.tokenInfo).toMatchObject({ times: 12, maxAmountHuf: 19999 }); // SPEC §28.K.1
     expect(c.orderRef).toMatch(/^KJ-20261117-[A-Z2-7]{10}$/);
   });
   it('the demo page is clearly labelled', async () => {
@@ -72,11 +72,11 @@ describe('registration (DEMO)', () => {
   });
   it('IPN FINISHED activated the subscription, issued the DEMO fee invoice, finished the onboarding step', async () => {
     const sub = await h.json('GET', '/client/subscription', { token: c.token });
-    expect(sub.body).toMatchObject({ status: 'active', mode: 'demo', priceHuf: 20000, currentPeriodEnd: '2026-12-17', cancelAtPeriodEnd: false });
+    expect(sub.body).toMatchObject({ status: 'active', mode: 'demo', priceHuf: 19999, currentPeriodEnd: '2026-12-17', cancelAtPeriodEnd: false });
     expect(sub.body.card).toMatchObject({ mask: 'xxxx-xxxx-xxxx-4242', tokensLeft: 12 });
     const fees = await h.json('GET', '/client/fee-invoices', { token: c.token });
     expect(fees.body.items).toHaveLength(1);
-    expect(fees.body.items[0]).toMatchObject({ amountHuf: 20000, demo: true });
+    expect(fees.body.items[0]).toMatchObject({ amountHuf: 19999, demo: true });
     expect(fees.body.items[0].number).toMatch(/^DEMO-2026-\d{6}$/);
     const pdf = await h.req('GET', `/files/${fees.body.items[0].fileId}`, { token: c.token });
     expect(pdf.status).toBe(200);

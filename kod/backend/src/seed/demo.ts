@@ -247,7 +247,7 @@ export async function seedDemo(deps: Deps, clock: Clock, o: { credentialsFile: s
       nameFrom: 'Bencétől',
       nameOnto: 'Bencére',
       nameAcc: 'Bencét',
-      responseTimeText: 'Munkanapokon 4 órán belül válaszol',
+      responseTimeText: 'A lehető leggyorsabban válaszol', // SPEC §28.K.15: no answer-time promise
       appointmentsEnabled: true,
       monthlyStatementRequest: true,
     })

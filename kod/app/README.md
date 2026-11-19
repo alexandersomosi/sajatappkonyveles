@@ -135,3 +135,38 @@ node scripts/k27-szamla-szoveg.mjs                     # K5.1: tiltott számla-f
 MINTA forgatókönyvek (új): `marika` (Intézzük helyetted, jóváhagyásra vár), `engedely` (él a meghatalmazás → végső
 engedély), `bekuldve` (bejelentettük, adószámra várunk), `ilona` (visszahívást kért), `david` (meglévő vállalkozás,
 „Megcsináljuk helyetted a meghatalmazást”, egyeztetve), `kamara` (kész bejelentés, kamarai regisztráció).
+
+## Tulaj-kérések 11-19 este (SPEC §28 + §28.K, k6)
+
+**Kinézet (§28.K.10, a tulaj választása 20:10 „a C sokkal jobb” + 20:20 „csak valami elválasztó köztük”):** fehér alap, a
+szakaszok teljes szélességű fehér sávok, köztük **8 pt-os `#EEF1F8` sáv**; árnyék, egymásra rakott lap, sötétítés nincs.
+Ez a közös elemekben él, így minden képernyő megkapja: `src/ui/teljes.tsx` (környezet + `SAV`), `src/ui/alap.tsx`
+(`Lap` teljes szélesség + sáv, `kotott`/`elso`; `Szakasz` 3D ikon 28 + sötét cím 18 + kapszula; `GombE` 52 és két sorra
+nőhet; `GombM` 40/44; `Sor` ikon 28, 52 magas), `src/ui/keret.tsx` (lapos 5 fülű fülsor 52 pt, Fotózás középen; `dokk` =
+fix fő gomb a fülsor fölött; `CimSor` = C űrlap-fejléc „Vissza” kapszulával; a szakaszcím alatti lap nem kap sávot), a
+kerek „i” (`MiEzKor`), C űrlap: `src/kepernyok/Urlap.tsx`. Az alsó lapon (sheet) belül a lap marad kártya.
+
+| Mi | Hol |
+|---|---|
+| Főoldal: két nagy szám, havi kérdés, éves zárás, szünetelés, „Félretenni” (gyűrű + „Félretettem…”), „Mennyit kerestem?”, kedvezmény-tipp, „Ha elakadsz”, dokkban „Elutaltam” | `src/app/index.tsx`, `src/kepernyok/k28.tsx` |
+| Számlánként „Ennyit tegyél félre” + „Miért ennyi?”; a lista második alsora; hónap-összeg | `src/app/szamla/[id].tsx`, `src/app/dosszie/[honap]/szamlak.tsx` |
+| `/felretesz`, `/kereset` | `src/app/felretesz.tsx`, `src/app/kereset.tsx` |
+| Kedvezmény-kérdőív K0–K12 (csak a releváns lapok; nincs név, gyerek-születésnap, TAJ, adóazonosító; egészségügyi adat csak kifejezett hozzájárulással), állapot-képernyő | `src/app/kedvezmenyek/{index,kerdoiv}.tsx` |
+| Változás-útmutatók: hub, info-lap a kiemelt „Bejelentjük helyetted” kártyával (díj, DEMO), útmutató lépésenként (nagyítható képek, ha a B4 kész), kérés + előre fizetés, engedély | `src/app/valtozas/**`, `src/kepernyok/ValtozasUrlap.tsx` |
+| Havi ellenőrzés „Változott valami?”, „Hogyan intézzük?”, díj előre | `src/app/valtozott.tsx` |
+| Éves zárás állapot + kérdőív E0–E8 | `src/app/eves-zaras/{index,kerdoiv}.tsx` |
+| Díjak és számlák (a régi Díjszámlák helyett), egyszeri díj fizetése (`dijFizetes`) | `src/app/fiok/dijak.tsx`, `src/lib/simplepay.ts` |
+| Díj-zárolás sáv minden fő képernyőn | `src/ui/Zarolas.tsx` (a `Kepernyo` teszi be) |
+| Alkalmazott / EFO kérdés + kedvezmény-kapu a bekötésben | `src/app/bekotes/alkalmazottak.tsx` (az Adataid mentése után) |
+| Értesítések: csendes idő, számlák (+ összeg a pushban), kedvezmények, emlékeztetők | `src/app/fiok/ertesitesek.tsx` |
+| Fiók → Adózás (kedvezmények, kereset, változás), Díjak és számlák | `src/app/fiok/index.tsx` |
+| MINTA-szerver minden új végponttal | `src/api/minta/k28.ts` |
+
+MINTA forgatókönyvek (új): `eszter` (kedvezmény vár), `balint` (25 év alatti, jóváhagyva), `norbert` (havi kérdés +
+7 999 Ft DEMO díj), `adam` (székhely-engedély), `eves` (éves zárás kérdőív), `zarolt` (díj-zárolás), `szunetel`, `tamas`
+(bekötés, EFO).
+
+```bash
+npm run export:minta && node scripts/kepek-k6.mjs       # k6_app_* → kod/_qa (390×844 és 320×640), PORT=8834
+ELOTTE=1 MAPPA=<régi dist> node scripts/kepek-k6.mjs    # a restyle előtti képek (k6_app_e*)
+```

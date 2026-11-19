@@ -1,0 +1,1335 @@
+{
+ "utmutato": "valtozas",
+ "cim": "Változás-útmutatók (SPEC §28.5) – a tulaj saját NAV-képernyői, elmosva és jelölve",
+ "verzio": "2026-11-19.ot",
+ "leiras": "Forrás: sajat/vallalkozas_bejelentes/_nyers (a tulaj 2026-11-19-i képei, NEM beküldött adatváltozás-űrlap). Az elmosás területre történt (fejléc-név, értékoszlopok, címek, azonosítók, főtevékenység); az elmosott forrás: _nyers/valtozas/. Újragenerálás: python _eszkoz/valtozas_kepek.py. Személyes adat sehol nincs leírva.",
+ "jelmagyarazat": {
+  "tinta": "kattints / válaszd",
+  "borostyan": "ide írj / ezt töltsd ki",
+  "ures": "hagyd üresen"
+ },
+ "lepesek": [
+  {
+   "sorszam": 2,
+   "slug": "ugyseged_fooldal",
+   "lepes_kulcs": "ugyseged_fooldal",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Bejelentéseim, kérelmeim",
+   "felirat": "Az Ügysegéd kezdőlapja: kattints a középső fülre.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim. A személyes adatok elmosva. Kiemelve – Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/02_ugyseged_fooldal.png",
+    "vagas": [
+     92,
+     62,
+     790,
+     470
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      318,
+      90,
+      484,
+      134
+     ],
+     "stilus": "tinta",
+     "cimke": "Kattints az „Új bejelentés, kérelem benyújtása” fülre."
+    }
+   ],
+   "kimenet": {
+    "fajl": "02_ugyseged_fooldal.png",
+    "fajl_2x": "02_ugyseged_fooldal@2x.png",
+    "szel": 1080,
+    "mag": 742,
+    "szel_2x": 2160,
+    "mag_2x": 1485,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+      "doboz": [
+       0.3274,
+       0.085,
+       0.564,
+       0.1881
+      ],
+      "korong": [
+       0.2866,
+       0.1159
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 3,
+   "slug": "valtozas_inditas",
+   "lepes_kulcs": "valtozas_inditas",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Új bejelentés, kérelem benyújtása",
+   "felirat": "Fent a mostani adataid (elmosva), lent az adatváltozás bejelentése.",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess le, és kattints a „Bejelentés kitöltése” gombra.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/03_valtozas_inditas.png",
+    "vagas": [
+     92,
+     62,
+     790,
+     620
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      124,
+      568,
+      284,
+      602
+     ],
+     "stilus": "tinta",
+     "cimke": "Görgess le, és kattints a „Bejelentés kitöltése” gombra."
+    }
+   ],
+   "kimenet": {
+    "fajl": "03_valtozas_inditas.png",
+    "fajl_2x": "03_valtozas_inditas@2x.png",
+    "szel": 1080,
+    "mag": 962,
+    "szel_2x": 2160,
+    "mag_2x": 1925,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Görgess le, és kattints a „Bejelentés kitöltése” gombra.",
+      "doboz": [
+       0.0638,
+       0.7941,
+       0.2923,
+       0.8584
+      ],
+      "korong": [
+       0.333,
+       0.818
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 4,
+   "slug": "valtozas_szemelyi",
+   "lepes_kulcs": "valtozas_szemelyi",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "1. Személyi adatok",
+   "felirat": "A NAV kitölti, neked csak a születési országot kell kiválasztanod.",
+   "alt": "Képernyőkép: 1. Személyi adatok. A személyes adatok elmosva. Kiemelve – Születési ország: válaszd ki, hol születtél. Kötelező., Kattints a „Tovább” gombra.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/04_valtozas_szemelyi.png",
+    "vagas": [
+     92,
+     62,
+     790,
+     530
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      106,
+      362,
+      560,
+      386
+     ],
+     "stilus": "borostyan",
+     "cimke": "Születési ország: válaszd ki, hol születtél. Kötelező.",
+     "szam_hely": "jobb"
+    },
+    {
+     "n": 2,
+     "doboz": [
+      610,
+      476,
+      768,
+      510
+     ],
+     "stilus": "tinta",
+     "cimke": "Kattints a „Tovább” gombra."
+    }
+   ],
+   "kimenet": {
+    "fajl": "04_valtozas_szemelyi.png",
+    "fajl_2x": "04_valtozas_szemelyi@2x.png",
+    "szel": 1080,
+    "mag": 876,
+    "szel_2x": 2160,
+    "mag_2x": 1753,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "borostyan",
+      "cimke": "Születési ország: válaszd ki, hol születtél. Kötelező.",
+      "doboz": [
+       0.0394,
+       0.5272,
+       0.6672,
+       0.5811
+      ],
+      "korong": [
+       0.7079,
+       0.5535
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "Kattints a „Tovább” gombra.",
+      "doboz": [
+       0.724,
+       0.718,
+       0.9497,
+       0.7886
+      ],
+      "korong": [
+       0.6833,
+       0.7443
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 5,
+   "slug": "valtozas_cimadatok",
+   "lepes_kulcs": "valtozas_cimadatok",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "2. Vállalkozói címadatok",
+   "felirat": "Az aktuális székhelyed (elmosva), alatta az új székhely és az új telephely gombja.",
+   "alt": "Képernyőkép: 2. Vállalkozói címadatok. A személyes adatok elmosva. Kiemelve – Ha költözöl: „Új székhely”., Ha új telephelyed lesz: „Új telephely hozzáadása”., Ha a címeid nem változnak: „Tovább”.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/05_valtozas_cimadatok.png",
+    "vagas": [
+     92,
+     140,
+     790,
+     600
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      125,
+      381,
+      283,
+      414
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha költözöl: „Új székhely”."
+    },
+    {
+     "n": 2,
+     "doboz": [
+      125,
+      498,
+      283,
+      532
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha új telephelyed lesz: „Új telephely hozzáadása”."
+    },
+    {
+     "n": 3,
+     "doboz": [
+      600,
+      560,
+      758,
+      594
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha a címeid nem változnak: „Tovább”."
+    }
+   ],
+   "kimenet": {
+    "fajl": "05_valtozas_cimadatok.png",
+    "fajl_2x": "05_valtozas_cimadatok@2x.png",
+    "szel": 1080,
+    "mag": 911,
+    "szel_2x": 2160,
+    "mag_2x": 1822,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Ha költözöl: „Új székhely”.",
+      "doboz": [
+       0.0652,
+       0.4122,
+       0.2909,
+       0.4786
+      ],
+      "korong": [
+       0.3317,
+       0.4375
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "Ha új telephelyed lesz: „Új telephely hozzáadása”.",
+      "doboz": [
+       0.0652,
+       0.6007,
+       0.2909,
+       0.6686
+      ],
+      "korong": [
+       0.3317,
+       0.6259
+      ]
+     },
+     {
+      "n": 3,
+      "stilus": "tinta",
+      "cimke": "Ha a címeid nem változnak: „Tovább”.",
+      "doboz": [
+       0.7104,
+       0.7005,
+       0.9362,
+       0.7684
+      ],
+      "korong": [
+       0.6697,
+       0.7258
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 6,
+   "slug": "valtozas_uj_szekhely",
+   "lepes_kulcs": "valtozas_uj_szekhely",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Az új székhely címe",
+   "felirat": "Mezőnként írd be az új címet; a dátum a költözés napja.",
+   "alt": "Képernyőkép: Az új székhely címe. A személyes adatok elmosva. Kiemelve – Írd be az új címet mezőnként: ország, irányítószám, település, közterület neve és jellege, házszám., Változás napja: ettől a naptól érvényes az új cím.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/06_valtozas_uj_szekhely.png",
+    "vagas": [
+     92,
+     140,
+     800,
+     624
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      122,
+      382,
+      742,
+      576
+     ],
+     "stilus": "borostyan",
+     "cimke": "Írd be az új címet mezőnként: ország, irányítószám, település, közterület neve és jellege, házszám.",
+     "szam_hely": "jobb"
+    },
+    {
+     "n": 2,
+     "doboz": [
+      122,
+      580,
+      276,
+      622
+     ],
+     "stilus": "borostyan",
+     "cimke": "Változás napja: ettől a naptól érvényes az új cím.",
+     "szam_hely": "jobb"
+    }
+   ],
+   "kimenet": {
+    "fajl": "06_valtozas_uj_szekhely.png",
+    "fajl_2x": "06_valtozas_uj_szekhely@2x.png",
+    "szel": 1080,
+    "mag": 925,
+    "szel_2x": 2160,
+    "mag_2x": 1850,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "borostyan",
+      "cimke": "Írd be az új címet mezőnként: ország, irányítószám, település, közterület neve és jellege, házszám.",
+      "doboz": [
+       0.0605,
+       0.4022,
+       0.902,
+       0.7185
+      ],
+      "korong": [
+       0.9427,
+       0.427
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "borostyan",
+      "cimke": "Változás napja: ettől a naptól érvényes az új cím.",
+      "doboz": [
+       0.0605,
+       0.7118,
+       0.2779,
+       0.7838
+      ],
+      "korong": [
+       0.0633,
+       0.715
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 7,
+   "slug": "valtozas_szekhely_mentes",
+   "lepes_kulcs": "valtozas_szekhely_mentes",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Mentés",
+   "felirat": "Mentsd el az új címet, utána lépj tovább.",
+   "alt": "Képernyőkép: Mentés. A személyes adatok elmosva. Kiemelve – Kattints az „Új székhely adatainak mentése” gombra., Utána: „Tovább”.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/07_valtozas_szekhely_mentes.png",
+    "vagas": [
+     92,
+     55,
+     790,
+     555
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      125,
+      331,
+      295,
+      364
+     ],
+     "stilus": "tinta",
+     "cimke": "Kattints az „Új székhely adatainak mentése” gombra."
+    },
+    {
+     "n": 2,
+     "doboz": [
+      600,
+      512,
+      758,
+      546
+     ],
+     "stilus": "tinta",
+     "cimke": "Utána: „Tovább”."
+    }
+   ],
+   "kimenet": {
+    "fajl": "07_valtozas_szekhely_mentes.png",
+    "fajl_2x": "07_valtozas_szekhely_mentes@2x.png",
+    "szel": 1080,
+    "mag": 924,
+    "szel_2x": 2160,
+    "mag_2x": 1847,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Kattints az „Új székhely adatainak mentése” gombra.",
+      "doboz": [
+       0.0652,
+       0.4623,
+       0.3072,
+       0.5277
+      ],
+      "korong": [
+       0.348,
+       0.4872
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "Utána: „Tovább”.",
+      "doboz": [
+       0.7104,
+       0.7498,
+       0.9362,
+       0.8168
+      ],
+      "korong": [
+       0.6697,
+       0.7747
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 8,
+   "slug": "valtozas_uj_telephely",
+   "lepes_kulcs": "valtozas_uj_telephely",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Az új telephely címe",
+   "felirat": "Ugyanúgy, mint a székhelynél: mezőnként a címet és a napot.",
+   "alt": "Képernyőkép: Az új telephely címe. A személyes adatok elmosva. Kiemelve – Írd be a telephely címét mezőnként, ugyanúgy, mint a székhelynél.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/08_valtozas_uj_telephely.png",
+    "vagas": [
+     92,
+     100,
+     800,
+     624
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      122,
+      398,
+      742,
+      622
+     ],
+     "stilus": "borostyan",
+     "cimke": "Írd be a telephely címét mezőnként, ugyanúgy, mint a székhelynél.",
+     "szam_hely": "jobb"
+    }
+   ],
+   "kimenet": {
+    "fajl": "08_valtozas_uj_telephely.png",
+    "fajl_2x": "08_valtozas_uj_telephely@2x.png",
+    "szel": 1080,
+    "mag": 902,
+    "szel_2x": 2160,
+    "mag_2x": 1804,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "borostyan",
+      "cimke": "Írd be a telephely címét mezőnként, ugyanúgy, mint a székhelynél.",
+      "doboz": [
+       0.0605,
+       0.5022,
+       0.902,
+       0.8681
+      ],
+      "korong": [
+       0.9427,
+       0.5277
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 9,
+   "slug": "valtozas_tevekenysegek",
+   "lepes_kulcs": "valtozas_tevekenysegek",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "3. Tevékenységek",
+   "felirat": "A mostani főtevékenységed (elmosva), alatta az új tevékenység gombjai.",
+   "alt": "Képernyőkép: 3. Tevékenységek. A személyes adatok elmosva. Kiemelve – Ha más lesz a fő munkád: „Új főtevékenység”., Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”., Ha a tevékenységeid nem változnak: „Tovább”.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/09_valtozas_tevekenysegek.png",
+    "vagas": [
+     92,
+     140,
+     790,
+     620
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      125,
+      424,
+      283,
+      458
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha más lesz a fő munkád: „Új főtevékenység”."
+    },
+    {
+     "n": 2,
+     "doboz": [
+      125,
+      520,
+      283,
+      554
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”."
+    },
+    {
+     "n": 3,
+     "doboz": [
+      600,
+      581,
+      758,
+      615
+     ],
+     "stilus": "tinta",
+     "cimke": "Ha a tevékenységeid nem változnak: „Tovább”."
+    }
+   ],
+   "kimenet": {
+    "fajl": "09_valtozas_tevekenysegek.png",
+    "fajl_2x": "09_valtozas_tevekenysegek@2x.png",
+    "szel": 1080,
+    "mag": 940,
+    "szel_2x": 2160,
+    "mag_2x": 1880,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Ha más lesz a fő munkád: „Új főtevékenység”.",
+      "doboz": [
+       0.0652,
+       0.4666,
+       0.2909,
+       0.5325
+      ],
+      "korong": [
+       0.3317,
+       0.4911
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”.",
+      "doboz": [
+       0.0652,
+       0.6165,
+       0.2909,
+       0.6823
+      ],
+      "korong": [
+       0.3317,
+       0.6409
+      ]
+     },
+     {
+      "n": 3,
+      "stilus": "tinta",
+      "cimke": "Ha a tevékenységeid nem változnak: „Tovább”.",
+      "doboz": [
+       0.7104,
+       0.7117,
+       0.9362,
+       0.7755
+      ],
+      "korong": [
+       0.6697,
+       0.7361
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 10,
+   "slug": "valtozas_ovtj_kereso",
+   "lepes_kulcs": "valtozas_ovtj_kereso",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "A tevékenység keresése",
+   "felirat": "Írj be egy szót vagy a kódot, és válaszd ki a sort.",
+   "alt": "Képernyőkép: A tevékenység keresése. A személyes adatok elmosva. Kiemelve – Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából., Adatváltozás ideje: ettől a naptól végzed.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/10_valtozas_ovtj_kereso.png",
+    "vagas": [
+     92,
+     140,
+     790,
+     624
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      126,
+      518,
+      428,
+      560
+     ],
+     "stilus": "borostyan",
+     "cimke": "Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.",
+     "szam_hely": "jobb"
+    },
+    {
+     "n": 2,
+     "doboz": [
+      122,
+      568,
+      276,
+      612
+     ],
+     "stilus": "borostyan",
+     "cimke": "Adatváltozás ideje: ettől a naptól végzed.",
+     "szam_hely": "jobb"
+    }
+   ],
+   "kimenet": {
+    "fajl": "10_valtozas_ovtj_kereso.png",
+    "fajl_2x": "10_valtozas_ovtj_kereso@2x.png",
+    "szel": 1080,
+    "mag": 935,
+    "szel_2x": 2160,
+    "mag_2x": 1870,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "borostyan",
+      "cimke": "Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.",
+      "doboz": [
+       0.0666,
+       0.6166,
+       0.4879,
+       0.6954
+      ],
+      "korong": [
+       0.5286,
+       0.6412
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "borostyan",
+      "cimke": "Adatváltozás ideje: ettől a naptól végzed.",
+      "doboz": [
+       0.0611,
+       0.6951,
+       0.2814,
+       0.7769
+      ],
+      "korong": [
+       0.3222,
+       0.7197
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 11,
+   "slug": "szunetel_inditas",
+   "lepes_kulcs": "szunetel_inditas",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Új bejelentés, kérelem benyújtása",
+   "felirat": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/11_szunetel_inditas.png",
+    "vagas": [
+     92,
+     62,
+     790,
+     620
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": null,
+     "stilus": "tinta",
+     "cimke": "Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik)."
+    }
+   ],
+   "kimenet": {
+    "fajl": "11_szunetel_inditas.png",
+    "fajl_2x": "11_szunetel_inditas@2x.png",
+    "szel": 1080,
+    "mag": 998,
+    "szel_2x": 2160,
+    "mag_2x": 1995,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": []
+   }
+  },
+  {
+   "sorszam": 12,
+   "slug": "valtozas_megtekintes",
+   "lepes_kulcs": "valtozas_megtekintes",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Bejelentéseim, kérelmeim – Megtekintés",
+   "felirat": "A beküldött bejelentésed: töltsd le a NAV értesítését.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim – Megtekintés. A személyes adatok elmosva. Kiemelve – Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "sajat_2026-11-19",
+    "cim": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep"
+   },
+   "forras_rovid": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "alap": {
+    "kep": "_nyers/valtozas/12_valtozas_megtekintes.png",
+    "vagas": [
+     92,
+     120,
+     790,
+     560
+    ],
+    "homalyos": [],
+    "jel_meret": 1.0
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      106,
+      512,
+      264,
+      546
+     ],
+     "stilus": "tinta",
+     "cimke": "Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést."
+    }
+   ],
+   "kimenet": {
+    "fajl": "12_valtozas_megtekintes.png",
+    "fajl_2x": "12_valtozas_megtekintes@2x.png",
+    "szel": 1080,
+    "mag": 790,
+    "szel_2x": 2160,
+    "mag_2x": 1579,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+      "doboz": [
+       0.0394,
+       0.7563,
+       0.2651,
+       0.8347
+      ],
+      "korong": [
+       0.3059,
+       0.7854
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "masolatok": {
+  "belepes": "vallalkozas_bejelentes/01_belepes.png",
+  "onya_belepes": "meghatalmazas/01_onya_nyitooldal.png",
+  "onya_profil": "meghatalmazas/03_onya_profil.png",
+  "t101e_kereses": "meghatalmazas/04_onya_uj_nyomtatvany.png"
+ },
+ "fajtak": {
+  "valtozas_szekhely": [
+   {
+    "lepes_kulcs": "belepes",
+    "kep": "m_01_belepes.png",
+    "kep_2x": "m_01_belepes@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "vallalkozas_bejelentes/01_belepes.png"
+   },
+   {
+    "lepes_kulcs": "ugyseged_fooldal",
+    "kep": "02_ugyseged_fooldal.png",
+    "kep_2x": "02_ugyseged_fooldal@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_inditas",
+    "kep": "03_valtozas_inditas.png",
+    "kep_2x": "03_valtozas_inditas@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_szemelyi",
+    "kep": "04_valtozas_szemelyi.png",
+    "kep_2x": "04_valtozas_szemelyi@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_cimadatok",
+    "kep": "05_valtozas_cimadatok.png",
+    "kep_2x": "05_valtozas_cimadatok@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_uj_szekhely",
+    "kep": "06_valtozas_uj_szekhely.png",
+    "kep_2x": "06_valtozas_uj_szekhely@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_szekhely_mentes",
+    "kep": "07_valtozas_szekhely_mentes.png",
+    "kep_2x": "07_valtozas_szekhely_mentes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_tevekenysegek",
+    "kep": "09_valtozas_tevekenysegek.png",
+    "kep_2x": "09_valtozas_tevekenysegek@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_ellenorzes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "a tulaj fotózza az adatváltozás-űrlap 4. „Ellenőrzés” lapját (beküldés nélkül) – addig rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "valtozas_megtekintes",
+    "kep": "12_valtozas_megtekintes.png",
+    "kep_2x": "12_valtozas_megtekintes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ],
+  "valtozas_telephely": [
+   {
+    "lepes_kulcs": "belepes",
+    "kep": "m_01_belepes.png",
+    "kep_2x": "m_01_belepes@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "vallalkozas_bejelentes/01_belepes.png"
+   },
+   {
+    "lepes_kulcs": "ugyseged_fooldal",
+    "kep": "02_ugyseged_fooldal.png",
+    "kep_2x": "02_ugyseged_fooldal@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_inditas",
+    "kep": "03_valtozas_inditas.png",
+    "kep_2x": "03_valtozas_inditas@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_szemelyi",
+    "kep": "04_valtozas_szemelyi.png",
+    "kep_2x": "04_valtozas_szemelyi@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_cimadatok",
+    "kep": "05_valtozas_cimadatok.png",
+    "kep_2x": "05_valtozas_cimadatok@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_uj_telephely",
+    "kep": "08_valtozas_uj_telephely.png",
+    "kep_2x": "08_valtozas_uj_telephely@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_tevekenysegek",
+    "kep": "09_valtozas_tevekenysegek.png",
+    "kep_2x": "09_valtozas_tevekenysegek@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_ellenorzes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "a tulaj fotózza az adatváltozás-űrlap 4. „Ellenőrzés” lapját (beküldés nélkül) – addig rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "valtozas_megtekintes",
+    "kep": "12_valtozas_megtekintes.png",
+    "kep_2x": "12_valtozas_megtekintes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ],
+  "valtozas_tevekenyseg": [
+   {
+    "lepes_kulcs": "belepes",
+    "kep": "m_01_belepes.png",
+    "kep_2x": "m_01_belepes@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "vallalkozas_bejelentes/01_belepes.png"
+   },
+   {
+    "lepes_kulcs": "ugyseged_fooldal",
+    "kep": "02_ugyseged_fooldal.png",
+    "kep_2x": "02_ugyseged_fooldal@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_inditas",
+    "kep": "03_valtozas_inditas.png",
+    "kep_2x": "03_valtozas_inditas@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_szemelyi",
+    "kep": "04_valtozas_szemelyi.png",
+    "kep_2x": "04_valtozas_szemelyi@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_cimadatok",
+    "kep": "05_valtozas_cimadatok.png",
+    "kep_2x": "05_valtozas_cimadatok@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_tevekenysegek",
+    "kep": "09_valtozas_tevekenysegek.png",
+    "kep_2x": "09_valtozas_tevekenysegek@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_ovtj_kereso",
+    "kep": "10_valtozas_ovtj_kereso.png",
+    "kep_2x": "10_valtozas_ovtj_kereso@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "valtozas_ellenorzes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "a tulaj fotózza az adatváltozás-űrlap 4. „Ellenőrzés” lapját (beküldés nélkül) – addig rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "valtozas_megtekintes",
+    "kep": "12_valtozas_megtekintes.png",
+    "kep_2x": "12_valtozas_megtekintes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ],
+  "valtozas_szuneteltetes": [
+   {
+    "lepes_kulcs": "belepes",
+    "kep": "m_01_belepes.png",
+    "kep_2x": "m_01_belepes@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "vallalkozas_bejelentes/01_belepes.png"
+   },
+   {
+    "lepes_kulcs": "ugyseged_fooldal",
+    "kep": "02_ugyseged_fooldal.png",
+    "kep_2x": "02_ugyseged_fooldal@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "szunetel_inditas",
+    "kep": "11_szunetel_inditas.png",
+    "kep_2x": "11_szunetel_inditas@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "szunetel_datum",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "a szüneteltetés lapjai a tulaj képén nem látszanak – rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "szunetel_ellenorzes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "valtozas_megtekintes",
+    "kep": "12_valtozas_megtekintes.png",
+    "kep_2x": "12_valtozas_megtekintes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ],
+  "valtozas_adoadat": [
+   {
+    "lepes_kulcs": "onya_belepes",
+    "kep": "m_01_onya_nyitooldal.png",
+    "kep_2x": "m_01_onya_nyitooldal@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "meghatalmazas/01_onya_nyitooldal.png"
+   },
+   {
+    "lepes_kulcs": "onya_profil",
+    "kep": "m_03_onya_profil.png",
+    "kep_2x": "m_03_onya_profil@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "meghatalmazas/03_onya_profil.png"
+   },
+   {
+    "lepes_kulcs": "t101e_kereses",
+    "kep": "m_04_onya_uj_nyomtatvany.png",
+    "kep_2x": "m_04_onya_uj_nyomtatvany@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "meghatalmazas/04_onya_uj_nyomtatvany.png"
+   },
+   {
+    "lepes_kulcs": "t101e_blokk",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "ONYA T101E űrlap – rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "t101e_bekuldes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "ONYA T101E beküldés – rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ],
+  "valtozas_folytatas": [
+   {
+    "lepes_kulcs": "belepes",
+    "kep": "m_01_belepes.png",
+    "kep_2x": "m_01_belepes@2x.png",
+    "tipus": "valodi",
+    "masolat_innen": "vallalkozas_bejelentes/01_belepes.png"
+   },
+   {
+    "lepes_kulcs": "ugyseged_fooldal",
+    "kep": "02_ugyseged_fooldal.png",
+    "kep_2x": "02_ugyseged_fooldal@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "folytatas_inditas",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "a szüneteltetés befejezésének kártyája [ELLENŐRIZENDŐ] – rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "folytatas_datum",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "folytatas_ellenorzes",
+    "kep": null,
+    "tipus": "hianyzik",
+    "megjegyzes": "rajzolt vázlat"
+   },
+   {
+    "lepes_kulcs": "valtozas_megtekintes",
+    "kep": "12_valtozas_megtekintes.png",
+    "kep_2x": "12_valtozas_megtekintes@2x.png",
+    "tipus": "valodi"
+   },
+   {
+    "lepes_kulcs": "app_feltoltes",
+    "kep": null,
+    "tipus": "nincs_kep",
+    "megjegyzes": "saját app-képernyő (nem NAV)"
+   }
+  ]
+ },
+ "kep_nelkuli_lepes_kulcsok": [
+  "app_feltoltes"
+ ],
+ "hianyzo_valodi_kepek": {
+  "valtozas_ellenorzes": "a tulaj fotózza az adatváltozás-űrlap 4. „Ellenőrzés” lapját (beküldés nélkül) – addig rajzolt vázlat",
+  "szunetel_datum": "a szüneteltetés lapjai a tulaj képén nem látszanak – rajzolt vázlat",
+  "szunetel_ellenorzes": "rajzolt vázlat",
+  "folytatas_inditas": "a szüneteltetés befejezésének kártyája [ELLENŐRIZENDŐ] – rajzolt vázlat",
+  "folytatas_datum": "rajzolt vázlat",
+  "folytatas_ellenorzes": "rajzolt vázlat",
+  "t101e_blokk": "ONYA T101E űrlap – rajzolt vázlat",
+  "t101e_bekuldes": "ONYA T101E beküldés – rajzolt vázlat"
+ },
+ "jelolve": "2026-11-19T21:31:10"
+}

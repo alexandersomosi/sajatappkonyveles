@@ -11,6 +11,23 @@ export type * from './types.js';
 export type { TaxRules, NavAccount, RuleSource, MonthDay } from './rules/types.js';
 
 export { calculateYear, ENGINE_VERSION, DISCLAIMER } from './engine/year.js';
+// SPEC §28.1 / §28.4 – reserve per invoice, monthly earnings, year-end projection; §28.3 allowance helpers
+export {
+  reserveSeries,
+  roundReserve,
+  earningsByMonth,
+  projectYear,
+  splitByWeights,
+  RESERVE_ROUND_HUF,
+  type ReserveZone,
+  type ReserveItemInput,
+  type ReserveLine,
+  type ReserveSeries,
+  type EarningsMonthEngine,
+  type YearProjection,
+} from './engine/reserve.js';
+export { csaladiFrameHuf, fiatal25Months } from './engine/allowances.js';
+export type { AllowanceRules } from './rules/types.js';
 export { deadlinesFor, quarterDueDate, hipaDates, isWorkingDay, nextWorkingDay } from './calendar.js';
 export { RULES_2026, RULES_2027, NAV_ACCOUNTS, rulesForYear, SUPPORTED_YEARS } from './rules/index.js';
 export { statutoryHolidays, easterSunday, BRIDGE_REST_DAYS, MOVED_WORKING_DAYS } from './rules/holidays.js';

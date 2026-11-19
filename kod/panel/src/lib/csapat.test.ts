@@ -127,7 +127,7 @@ describe('chat bubbles', () => {
 describe('left menu per role (SPEC §26.3.1)', () => {
   const kulcsok = (o: Parameters<typeof menuCsoportok>[0]) => menuCsoportok(o).flatMap((g) => g.elemek.map((e) => e.kulcs));
   it('csapat sees only its own pages; Intézzük helyette between Visszahívások and Vállalkozás-indítás (SPEC §27.6.1)', () => {
-    expect(kulcsok({ csapat: true, konyvelo: false, admin: false, demo: true, konyvelonekVoltVisszahivasa: false })).toEqual(['visszahivasok', 'helyettunk', 'vallalkozas', 'uzenetek', 'beallitasok']);
+    expect(kulcsok({ csapat: true, konyvelo: false, admin: false, demo: true, konyvelonekVoltVisszahivasa: false })).toEqual(['visszahivasok', 'helyettunk', 'vallalkozas', 'havi', 'uzenetek', 'beallitasok']);
   });
   it('accountant: Intézzük helyette only when one of his clients has (had) an assisted request', () => {
     expect(kulcsok({ csapat: false, konyvelo: true, admin: false, demo: false, konyvelonekVoltVisszahivasa: false })).not.toContain('helyettunk');

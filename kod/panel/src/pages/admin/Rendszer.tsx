@@ -9,7 +9,7 @@ import { today } from '../../lib/today';
 const INTEGRACIOK: { k: 'nav' | 'simplepay' | 'mail' | 'push' | 'invoice'; nev: string; mit: string }[] = [
   { k: 'simplepay', nev: 'SimplePay', mit: 'Kártyás előfizetés, havi terhelés' },
   { k: 'mail', nev: 'E-mail (Brevo)', mit: 'Kódok, értesítések e-mailben' },
-  { k: 'nav', nev: 'NAV Online Számla', mit: 'Kiállított számlák napi lehívása' },
+  { k: 'nav', nev: 'NAV Online Számla', mit: 'Kiállított számlák napi letöltése' },
   { k: 'invoice', nev: 'Díjszámla', mit: 'Számla a havidíjról (Számlázz.hu / Billingo)' },
   { k: 'push', nev: 'Telefonos értesítés', mit: 'Push az appba (Expo)' },
 ];
@@ -96,7 +96,7 @@ export default function Rendszer() {
                     <dd>
                       {hb === null ? 'még nem jelentkezett' : hb < 10 ? <>él ({idopont(d.workerHeartbeatAt, t)})</> : <span style={{ color: 'var(--veszely)' }}>{Math.round(hb)} perce nem jelentkezett</span>}
                     </dd>
-                    <dt>NAV-lehívás</dt>
+                    <dt>Napi letöltés (NAV)</dt>
                     <dd>{d.lastNavSync?.at ? `${idopont(d.lastNavSync.at, t)} · ${d.lastNavSync.ok} rendben, ${d.lastNavSync.failed} hibás` : 'még nem futott'}</dd>
                     <dt>Utolsó mentés</dt>
                     <dd>{d.backupAgeHours === null ? 'nincs adat' : d.backupAgeHours <= 26 ? `${Math.round(d.backupAgeHours)} órája` : <span style={{ color: 'var(--veszely)' }}>{Math.round(d.backupAgeHours)} órája – nézd meg!</span>}</dd>

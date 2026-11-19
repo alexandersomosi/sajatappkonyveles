@@ -23,8 +23,9 @@ import { alapMagyarazat, HolTalalom } from '@/ui/Magyarazat';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
-export default function IgazolasFeltoltes() {
+function IgazolasFeltoltes() {
   const me = useMe();
   const reg = useVallalkozas();
   const kuld = useVallalkozasBeadva();
@@ -166,3 +167,6 @@ export default function IgazolasFeltoltes() {
     </KeyboardAvoidingView>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(IgazolasFeltoltes);

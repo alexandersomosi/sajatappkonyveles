@@ -82,5 +82,35 @@ export interface TaxRules {
   };
 
   accounts: { szja: NavAccount; tb: NavAccount; szocho: NavAccount };
+  /** (+) SPEC §28.3.7 b: personal SZJA allowances of an átalányadózó EV (Szja tv. 29/A–29/H, Tbj. 80. §). */
+  allowances: AllowanceRules;
   sources: RuleSource[];
+}
+
+/** SPEC §28.3.7 b. Amounts in forint per month; every value names its source in `sources`. */
+export interface AllowanceRules {
+  /** Családi kedvezmény per kedvezményezett eltartott per month by the number of eltartott (1 / 2 / 3+) [szja-tv 29/A. § (2)]. */
+  csaladiPerChildHuf: { one: number; two: number; threePlus: number };
+  /** + per tartósan beteg / súlyosan fogyatékos kedvezményezett eltartott [szja-tv 29/A. § (2a)]. */
+  csaladiTartosBetegExtraHuf: number;
+  /** Felváltva gondozott gyermek: this % of the amount [szja-tv 29/B. § (1e)]. */
+  felvaltvaPct: number;
+  /** 25 év alattiak: monthly cap of the exempt income (the July KSH average of the previous year) [szja-tv 29/F., nav-73]. */
+  fiatal25MonthlyCapHuf: number;
+  fiatal25AgeYears: number;
+  /** 30 év alatti anyák: eligible up to the year she turns 30 (born year − 30 or later) [tv-2025-13]. */
+  anya30AgeYears: number;
+  /** Két gyermeket nevelő anyák: born in this year or later (null = no age limit any more) [tv-2025-14 4. §]. */
+  ketgyermekesMinBirthYear: number | null;
+  /** Három gyermeket nevelő anyák: in force from [tv-2025-15]. */
+  haromgyermekesFrom: string;
+  /** Személyi kedvezmény per month (1/3 of the minimum wage, rounded) [szja-tv 29/E.]. */
+  szemelyiMonthlyHuf: number;
+  /** Első házasok per month for the couple, at most this many months [szja-tv 29/C.]. */
+  elsoHazasokMonthlyHuf: number;
+  elsoHazasokMaxMonths: number;
+  /** Családi járulékkedvezmény = 15 % of the unused családi frame [tbj 34. § (3), 80. § (2)]. */
+  csjkPermille: number;
+  /** Guard only: a nyugdíjas anya's szocho exemption limit, unreachable for an átalányadózó [szocho-tv 5. § (1a)]. */
+  nyugdijasAnyaSzochoLimitHuf: number;
 }

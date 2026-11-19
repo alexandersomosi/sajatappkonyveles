@@ -21,4 +21,7 @@ export const RULES_2027: TaxRules = {
   legacyGeneralRatios: [40, 45],
   afaLimitHuf: 22_000_000,
   szjaAnnualReturnForm: '27SZJA',
+  // SPEC §28.3.7 b: the two-children mothers' age limit moves to 1977 in 2027 (2025. évi XIV. tv. 4. §); the
+  // under-25 cap (KSH July 2026) and the 2027 minimum wage (személyi) are not known yet → 2026 values (draft).
+  allowances: { ...RULES_2026.allowances, ketgyermekesMinBirthYear: 1977 },
 };

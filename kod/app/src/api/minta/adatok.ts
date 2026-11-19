@@ -10,8 +10,10 @@ import fixtures from '../../_shared/demo/fixtures.json';
 import { DEMO_ALAIRAS } from '../../theme/utak';
 
 // SPEC §26: 'indul' = új vállalkozás, adatlapnál; 'utmutato' = kész az útmutató; 'levente' = beküldte, átnézzük.
-export type Forgatokonyv = 'kata' | 'fizetendo' | 'befizetve' | 'ures' | 'peter' | 'uj' | 'indul' | 'utmutato' | 'levente' | 'marika' | 'david' | 'ilona' | 'engedely' | 'bekuldve' | 'kamara';
-export const FORGATOKONYVEK: Forgatokonyv[] = ['kata', 'fizetendo', 'befizetve', 'ures', 'peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara'];
+// SPEC §28 / §28.K (k6): 'eszter' kedvezmény vár, 'balint' 25 év alatti (jóváhagyva), 'norbert' havi ellenőrzés + díj, 'adam'
+// székhely-engedély, 'eves' éves zárás kérdőív, 'zarolt' díj-zárolás, 'szunetel' szüneteltetés, 'tamas' bekötés + EFO.
+export type Forgatokonyv = 'kata' | 'fizetendo' | 'befizetve' | 'ures' | 'peter' | 'uj' | 'indul' | 'utmutato' | 'levente' | 'marika' | 'david' | 'ilona' | 'engedely' | 'bekuldve' | 'kamara' | 'eszter' | 'balint' | 'norbert' | 'adam' | 'eves' | 'zarolt' | 'szunetel' | 'tamas';
+export const FORGATOKONYVEK: Forgatokonyv[] = ['kata', 'fizetendo', 'befizetve', 'ures', 'peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'eszter', 'balint', 'norbert', 'adam', 'eves', 'zarolt', 'szunetel', 'tamas'];
 
 export const BENCE: AccountantPublic = {
   id: 'minta-konyvelo-bence',
@@ -22,7 +24,7 @@ export const BENCE: AccountantPublic = {
   registrationNumber: '123456',
   avatarKey: 'karakter_1_lapos',
   signatureSvgPath: DEMO_ALAIRAS,
-  responseTimeText: 'Munkanapokon 4 órán belül válaszol',
+  responseTimeText: 'A lehető leggyorsabban válaszol',
 };
 
 // ---- NAV beszedési számlák (SPEC §7.1) + IBAN (mod 97) ----
@@ -370,7 +372,7 @@ export function elofizetes(): SubscriptionView {
   return {
     status: 'active',
     mode: 'demo',
-    priceHuf: 20_000,
+    priceHuf: 19_999,
     currentPeriodEnd: '2026-12-08',
     nextChargeAt: '2026-12-08T08:00:00Z',
     cancelAtPeriodEnd: false,
@@ -381,7 +383,7 @@ export function elofizetes(): SubscriptionView {
 export function dijszamlak(): FeeInvoiceItem[] {
   return Array.from({ length: 11 }, (_, i) => {
     const m = String(i + 1).padStart(2, '0');
-    return { id: `dij-${m}`, number: `DEMO-2026-${String(101 + i).padStart(6, '0')}`, issuedOn: `2026-${m}-08`, amountHuf: 20_000, demo: true, fileId: 'minta-pdf' };
+    return { id: `dij-${m}`, number: `DEMO-2026-${String(101 + i).padStart(6, '0')}`, issuedOn: `2026-${m}-08`, amountHuf: 19_999, demo: true, fileId: 'minta-pdf' };
   }).reverse();
 }
 

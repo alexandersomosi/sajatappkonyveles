@@ -8,6 +8,7 @@
 |---|---|
 | `vallalkozas_bejelentes/` | 18 kép (14 lépés; a munkavégzés 4, a közösségi adószám 2 változatban) + `index.json`. **7 valódi**: a belépés (01) és a NAV kisfilmjéből a 02, 03, 04, 11, 13, 14 (2026-11-19); a 05–10 és a 12 még **Illusztráció** (lásd `hianyzik.md`). |
 | `meghatalmazas/` | 16 kép, **mind valódi NAV-képernyő** + `index.json` |
+| `valtozas/` | **Változás-útmutatók (SPEC §28.5.4), 2026-11-19:** 11 valódi kép a tulaj saját adatváltozás-űrlapjáról (NEM beküldve), elmosva + jelölve, `index.json` (+ `fajtak`: fajtánként a lépéssor és a kép / hiányzó kép; `masolatok`: a belépés és az ONYA-képek másolata `m_*.png` néven). Újragenerálás és OCR-ellenőrzés: `python _eszkoz/valtozas_kepek.py` (csak darabszámot ír ki). Az elmosott forrás: `_nyers/valtozas/`. Hiányzik (rajzolt vázlat kell, vagy a tulaj fotózza beküldés nélkül): `valtozas_ellenorzes`, `szunetel_datum`, `szunetel_ellenorzes`, `folytatas_*`, `t101e_blokk`, `t101e_bekuldes`. |
 | `NN_slug.png` / `NN_slug@2x.png` | 1080 px / 2160 px széles, C2-stílus: alapszínű keret, fehér lap, jelölések, alatta számozott magyarázat és forrás |
 | `annotate.py` | **egy paranccsal újrajelöl mindent**: `python annotate.py` (Pillow kell; numpy/opencv nem kötelező) |
 | `hianyzik.md` | mi rajzolt, mit mutatott meg a NAV kisfilmje, hol kerestünk |

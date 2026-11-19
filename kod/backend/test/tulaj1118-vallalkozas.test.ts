@@ -170,9 +170,9 @@ describe('O1.3 – personalised guide', () => {
     const alanyi = afa.fields.find((f: { label: string }) => f.label.includes('alanyi adómentesség'));
     expect(alanyi.actionLabel).toBe('Jelöld be');
     const kata = g.body.steps.find((s: { key: string }) => s.key === 'adozas_kata_atalany');
-    expect(kata.fields.map((f: { action: string }) => f.action)).toEqual(['ne_jelold', 'jelold']);
+    expect(kata.fields.map((f: { action: string }) => f.action)).toEqual(['jelold', 'ne_jelold']); // §28.K.13: the átalány line first
     const mv = g.body.steps.find((s: { key: string }) => s.key === 'adozas_munkavegzes');
-    expect(mv.fields[0].value).toBe('főfoglalkozású egyéni vállalkozó');
+    expect(mv.fields[0].value).toBe('[1] Főfoglalkozásként'); // §28.K.13: the real NAV row
     const tev = g.body.steps.find((s: { key: string }) => s.key === 'tevekenysegek');
     expect(tev.fields[0].value).toContain('„grafikai”');
     // the copy button copies only the search word, never the whole sentence
@@ -197,7 +197,7 @@ describe('O1.3 – personalised guide', () => {
     const g2 = await h.json('GET', '/client/guides/vallalkozas_bejelentes', { token: c2.token });
     const eu2 = g2.body.steps.find((s: { key: string }) => s.key === 'adozas_afa').fields.find((f: { label: string }) => f.label === 'Közösségi adószám igénylése');
     expect(eu2.actionLabel).toBe('Jelöld be');
-    expect(g2.body.steps.find((s: { key: string }) => s.key === 'adozas_munkavegzes').fields[0].value).toContain('nyugdíj');
+    expect(g2.body.steps.find((s: { key: string }) => s.key === 'adozas_munkavegzes').fields[0].value).toContain('Nyugdíj'); // §28.K.13: '[4] Nyugdíj mellett'
     // progress persists, unknown keys ignored
     const pr = await h.json('PUT', '/client/guides/vallalkozas_bejelentes/progress', { token: c2.token, body: { doneStepKeys: ['belepes', 'ugyseged_inditas', 'nincs_ilyen'] } });
     expect(pr.body.doneStepKeys).toEqual(['belepes', 'ugyseged_inditas']);

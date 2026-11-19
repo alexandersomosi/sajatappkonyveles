@@ -15,7 +15,7 @@ export function Jelzok({ flags }: { flags: ClientFlag[] }) {
             <span className="szo">Rendben</span>
           </span>
         ) : (
-          <span key={f} className={`cimke ${f === 'dij_elmaradt' ? 'hiba' : f === 'bekotes_alatt' ? 'info' : 'figyel'}`}>
+          <span key={f} className={`cimke ${f === 'dij_elmaradt' || f === 'zarolva' || f === 'kata_figyelem' ? 'hiba' : f === 'bekotes_alatt' ? 'info' : 'figyel'}`}>
             {FLAG_LABEL[f]}
           </span>
         ),

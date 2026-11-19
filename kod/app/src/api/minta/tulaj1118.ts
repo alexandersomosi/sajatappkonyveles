@@ -13,6 +13,7 @@ import {
 import { szovegLista } from '../../lib/szovegek';
 import { jarulekSzoveg, koltseghanyadSzoveg } from '../../lib/tevekenyseg';
 import { utmutatoEpit } from '../../lib/utmutato';
+import { GUIDE_KINDS } from '../../_shared/enums';
 import { BENCE } from './adatok';
 
 const URES_VALASZ: BusinessRegistrationAnswers = {
@@ -47,7 +48,7 @@ export interface Allapot1118 {
 }
 
 export function kezdo1118(fk: string): Allapot1118 {
-  const a: Allapot1118 = { path: null, reg: null, cb: null, regiCb: [], haladas: { vallalkozas_bejelentes: [], meghatalmazas: [], meghatalmazas_jovahagyas: [] }, telefon: '+36301234567', szamlalo: 1 };
+  const a: Allapot1118 = { path: null, reg: null, cb: null, regiCb: [], haladas: Object.fromEntries(GUIDE_KINDS.map((k) => [k, [] as string[]])) as Allapot1118['haladas'], telefon: '+36301234567', szamlalo: 1 };
   if (fk === 'peter') {
     a.path = 'van';
     // A régi foglalás visszahívássá alakult (SPEC §26.2.9).
@@ -203,7 +204,7 @@ export function zartFunkcio(method: string, ut: string, test: Record<string, unk
 }
 
 export function magyarazatok(): Explainer[] {
-  const ert = { firstName: BENCE.firstName, havidij: '20 000 Ft' };
+  const ert = { firstName: BENCE.firstName, havidij: '19 999 Ft' };
   return ONBOARDING_EXPLAINERS.map((e) => ({ ...e, title: fillPlaceholders(e.title, ert), what: fillPlaceholders(e.what, ert), why: fillPlaceholders(e.why, ert), where: fillPlaceholders(e.where, ert), fields: [...e.fields] }));
 }
 

@@ -66,10 +66,16 @@ export default function CsapatUzenetek() {
                   </div>
                   <div className="al">{x.lastMessagePreview ?? 'Még nem írtatok egymásnak.'}</div>
                   <div className="sor-flex" style={{ gap: 6, marginTop: 4 }}>
-                    {x.registrationStatus ? (
+                    {/* k5 #5 (§27.16): a path change never shows as "elállt"; the next step reads "most ez jön nála" everywhere.
+                        journeyNext / pathChanged are optional panel-contract additions (README §28 builder notes). */}
+                    {(x as typeof x & { pathChanged?: boolean }).pathChanged ? (
+                      <span className="cimke info">Útvonalat váltott – már van vállalkozása</span>
+                    ) : x.registrationStatus && x.registrationStatus !== 'elallt' ? (
                       <span className="cimke info">Vállalkozás: {REGISTRATION_STATUS_LABELS[x.registrationStatus].toLowerCase()}</span>
+                    ) : (x as typeof x & { journeyNext?: string | null }).journeyNext ? (
+                      <span className="cimke">Most ez jön nála: {(x as typeof x & { journeyNext?: string | null }).journeyNext}</span>
                     ) : x.milestone ? (
-                      <span className="cimke">Következik: {MILESTONE_KOVETKEZO[x.milestone]}</span>
+                      <span className="cimke">Most ez jön nála: {MILESTONE_KOVETKEZO[x.milestone]}</span>
                     ) : null}
                     {x.unread > 0 && <span className="cimke figyel">{x.unread} új</span>}
                   </div>

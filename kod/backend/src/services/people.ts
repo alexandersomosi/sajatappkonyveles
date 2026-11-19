@@ -43,7 +43,7 @@ export function accountantPublic(a: AccountantRow | null | undefined): Accountan
       registrationNumber: '',
       avatarKey: 'karakter_1_lapos',
       signatureSvgPath: null,
-      responseTimeText: 'Munkanapokon válaszol',
+      responseTimeText: 'A lehető leggyorsabban válaszol',
     };
   return {
     id: a.id,

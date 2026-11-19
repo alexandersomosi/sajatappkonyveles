@@ -31,6 +31,7 @@ import {
 } from '../db/schema.js';
 import { auditC } from '../audit.js';
 import { requireAuth } from '../auth/middleware.js';
+import { registerAdminK28Routes } from './acc-k28.js';
 import { issueCode } from '../auth/codes.js';
 import { hmacHex } from '../lib/crypto.js';
 import { endRelationship } from '../services/kyc.js';
@@ -94,6 +95,8 @@ async function reassignmentNotices(deps: Deps, cl: typeof clients.$inferSelect, 
 export function adminRoutes(deps: Deps) {
   const r = new Hono<Env>();
   r.use('*', requireAuth(deps, { roles: ['admin'] }));
+  // SPEC §28.K.1: /admin/fees, /admin/fee-charges/:id/{waive,refunded}
+  registerAdminK28Routes(r, deps);
 
   /**
    * DEMO only: no mail leaves the server and the Demo-postafiók hides other staff members' sign-in mails, so a newly

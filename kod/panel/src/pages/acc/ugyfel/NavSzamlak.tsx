@@ -10,6 +10,9 @@ import { usePirito } from '../../../ui/Pirito';
 import { useKonyveloNev } from '../../../auth/Auth';
 import { datum, datumRovid, HONAPOK, szam } from '../../../lib/format';
 import { today } from '../../../lib/today';
+import { felreteszErtek, felreteszTipp } from '../../../lib/k28';
+import { RESERVE_PANEL_TEXTS } from '../../../_shared/bekotes';
+import type { InvoiceReserveView } from '../../../api/types';
 
 const FIZ: Record<string, string> = { TRANSFER: 'átutalás', CASH: 'készpénz', CARD: 'bankkártya', VOUCHER: 'utalvány', OTHER: 'egyéb' };
 
@@ -22,6 +25,14 @@ export default function NavSzamlak({ c }: FulProps) {
   const q = useQuery({ queryKey: ['acc', 'navinv', c.id, ev], queryFn: () => ep.accNavInvoices(c.id, ev), enabled: c.nav.status !== 'nincs' });
   const [nyitott, setNyitott] = useState<string | null>(null);
   const items = useMemo(() => (q.data?.items ?? []).filter((i) => !honap || i.issueDate.startsWith(honap)), [q.data, honap]);
+  // SPEC §28.1.9: the "Félretenni" column – from the row (NavInvoiceListItem.reserve) or the client's reserve view.
+  const kata = c.taxRegime === 'kata';
+  const rv = useQuery({ queryKey: ['acc', 'reserve', c.id, ev], queryFn: () => ep.accReserve(c.id, ev), enabled: c.nav.status !== 'nincs' && !kata && c.lifecycle !== 'bekotes_alatt' });
+  const felre = useMemo(() => {
+    const m = new Map<string, InvoiceReserveView>();
+    for (const h of rv.data?.months ?? []) for (const i of h.items) if (i.navInvoiceId) m.set(i.navInvoiceId, i.reserve);
+    return m;
+  }, [rv.data]);
   if (c.nav.status === 'nincs')
     return (
       <div className="lap">
@@ -72,6 +83,7 @@ export default function NavSzamlak({ c }: FulProps) {
                 <th>Fizetés</th>
                 <th>Bevétel napja</th>
                 <th className="jobb">Összeg</th>
+                {kata ? <th>Vevő (kata)</th> : <th className="jobb">{RESERVE_PANEL_TEXTS.column}</th>}
                 <th className="utolso">Állapot</th>
               </tr>
             </thead>
@@ -93,6 +105,26 @@ export default function NavSzamlak({ c }: FulProps) {
                   <td className="jobb">
                     <Ft n={i.grossAmountHuf} />
                   </td>
+                  {kata ? (
+                    <td className="kicsi">
+                      {i.payerKind === 'kifizeto' || i.payerKind === 'kulfoldi_kifizeto' ? (
+                        <span className="cimke hiba">cég – a katát megszünteti</span>
+                      ) : i.payerKind === 'ismeretlen' ? (
+                        <span className="cimke figyel">ellenőrizd</span>
+                      ) : (
+                        <span className="halvany">magánszemély</span>
+                      )}
+                    </td>
+                  ) : (
+                    (() => {
+                      const r = i.reserve ?? felre.get(i.id);
+                      return (
+                        <td className="jobb nt" title={r ? felreteszTipp(r) : undefined}>
+                          <span className="szam">{felreteszErtek(r)}</span>
+                        </td>
+                      );
+                    })()
+                  )}
                   <td className="utolso">
                     <DokAllapot s={i.status} firstName={nev} nav />
                   </td>

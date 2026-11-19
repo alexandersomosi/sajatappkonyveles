@@ -19,7 +19,17 @@ export const GUIDE_TITLES: Record<GuideKind, string> = {
   meghatalmazas: 'Így add meg a meghatalmazást – videó',
   // SPEC §27.3.6: no video for the approval guide (Guide.video null); the title is kept for completeness.
   meghatalmazas_jovahagyas: 'Így hagyd jóvá a meghatalmazást',
+  // SPEC §28.5.3: the change guides have no video (GUIDE_VIDEO null); titles for completeness.
+  valtozas_szekhely: 'Így jelented be a költözést',
+  valtozas_tevekenyseg: 'Így jelentesz be új tevékenységet',
+  valtozas_telephely: 'Így jelentesz be telephelyet',
+  valtozas_szuneteltetes: 'Így szünetelteted a vállalkozásodat',
+  valtozas_adoadat: 'Így jelented be az adózási adatod változását',
+  valtozas_folytatas: 'Így kezded újra a vállalkozásodat',
 };
+
+/** The three onboarding guides (the change kinds are built by services/valtozas.ts buildChangeGuide). */
+type OnboardingGuideKind = 'vallalkozas_bejelentes' | 'meghatalmazas' | 'meghatalmazas_jovahagyas';
 
 let ugykorokCache: { dir: string; list: string[] } | null = null;
 /** jogi `meghatalmazas.ugykorok` is the single switch of the ügycsoport list (SPEC §26.6.3); fallback: our copy. */
@@ -47,7 +57,7 @@ export interface GuideContext {
 }
 
 /** SPEC §26.6.2: the shared personaliser (kod/shared/src/bekotes.ts personaliseGuide) fills the template. */
-export function buildGuide(deps: Deps, kind: GuideKind, ctx: GuideContext): Guide {
+export function buildGuide(deps: Deps, kind: OnboardingGuideKind, ctx: GuideContext): Guide {
   const cl = ctx.cl;
   const p = personaliseGuide(kind, {
     answers: ctx.answers,

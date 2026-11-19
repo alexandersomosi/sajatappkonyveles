@@ -11,6 +11,7 @@ import { ensureDossier } from './documents.js';
 import { checkCompletion, setStep, stepStatus } from './onboarding.js';
 import { computeFlags } from './flags.js';
 import { recalcYear } from './tax.js';
+import { notifyNewInvoices, payerKindOf } from './szamla-ertesites.js';
 
 export interface StoredCreds {
   login: string;
@@ -31,7 +32,8 @@ export function receivedOnOf(inv: Pick<NormalizedInvoice, 'paymentMethod' | 'pay
   return { receivedOn: inv.paymentDate ?? inv.issueDate, estimated: true };
 }
 
-export async function storeInvoice(deps: Deps, clientId: string, inv: NormalizedInvoice, rawXml: string | null): Promise<boolean> {
+/** Stores one invoice + its revenue item. Returns the new nav_invoices.id, or null when it already existed (SPEC §28.2.1). */
+export async function storeInvoice(deps: Deps, clientId: string, inv: NormalizedInvoice, rawXml: string | null): Promise<string | null> {
   return deps.db.transaction(async (tx) => {
     const modKey = inv.modificationIndex ?? 0;
     const [exists] = await tx
@@ -39,7 +41,7 @@ export async function storeInvoice(deps: Deps, clientId: string, inv: Normalized
       .from(navInvoices)
       .where(and(eq(navInvoices.clientId, clientId), eq(navInvoices.invoiceNumber, inv.invoiceNumber), eq(navInvoices.modKey, modKey), eq(navInvoices.operation, inv.operation)))
       .limit(1);
-    if (exists) return false;
+    if (exists) return null;
     let rawId: string | null = null;
     if (rawXml) {
       const f = await deps.storage.put(tx, { ownerClientId: clientId, kind: 'nav_xml', mime: 'application/xml', displayName: `${inv.invoiceNumber}.xml`.slice(0, 120), data: Buffer.from(rawXml, 'utf8'), now: deps.now() });
@@ -74,6 +76,8 @@ export async function storeInvoice(deps: Deps, clientId: string, inv: Normalized
         rawXmlFileId: rawId,
         dossierMonth: month,
         demo,
+        // SPEC §28.K.11: the customer's VAT status (DOMESTIC / PRIVATE_PERSON / OTHER) for the KATA warning
+        customerVatStatus: (inv as { customer?: { vatStatus?: string } }).customer?.vatStatus ?? null,
       })
       .returning({ id: navInvoices.id });
     const rec = receivedOnOf(inv);
@@ -86,9 +90,10 @@ export async function storeInvoice(deps: Deps, clientId: string, inv: Normalized
       deliveryDate: inv.deliveryDate ?? inv.issueDate,
       amountHuf: inv.grossAmountHuf,
       description: `${inv.invoiceNumber}${inv.customer?.name ? ` – ${inv.customer.name}` : ''}`.slice(0, 200),
+      payerKind: payerKindOf({ customerVatStatus: (inv as { customer?: { vatStatus?: string } }).customer?.vatStatus ?? null, data: null, customerTaxNumber: null }),
     });
     await ensureDossier(tx, clientId, month);
-    return true;
+    return row!.id;
   });
 }
 
@@ -119,6 +124,9 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
   }
   let seen = 0;
   let added = 0;
+  const newIds: string[] = [];
+  // SPEC §28.2.1 (3): the client's first successful sync is the backfill – nobody is notified.
+  const firstSync = cred.lastSyncStatus === null || cred.lastSyncStatus === undefined;
   let maxIns: string | null = cred.syncCursorInsDate?.toISOString() ?? null;
   try {
     const client = deps.navClient(cred.environment, credsFor(deps, cred));
@@ -133,7 +141,11 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
         .limit(1);
       if (exists) continue;
       const data = await item.data();
-      if (await storeInvoice(deps, clientId, data.invoice, data.rawXml)) added++;
+      const newId = await storeInvoice(deps, clientId, data.invoice, data.rawXml);
+      if (newId) {
+        added++;
+        newIds.push(newId);
+      }
     }
     const now = deps.now();
     await deps.db.update(navSyncRuns).set({ status: 'ok', finishedAt: now, digestsSeen: seen, invoicesNew: added }).where(eq(navSyncRuns.id, runId));
@@ -149,6 +161,7 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
     const years = new Set([Number(asOf.slice(0, 4))]);
     for (const y of years) await recalcYear(deps, deps.db, clientId, y, { asOf });
     await computeFlags(deps, deps.db, clientId);
+    await notifyNewInvoices(deps, clientId, newIds, { firstSync }).catch((err: Error) => log().warn({ err: safeErr(err) }, 'invoice notification failed'));
     return { runId, status: 'ok', digestsSeen: seen, invoicesNew: added };
   } catch (err) {
     const e = isNavError(err) ? err : new NavError({ code: 'INTERNAL', kind: 'unknown', messageHu: 'Váratlan hiba a lekérdezés közben.' });
@@ -164,6 +177,7 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
     await audit(deps.db, { action: 'nav.sync', actorUserId: o.by ?? null, actorRole: o.by ? 'accountant' : 'system', targetType: 'client', targetId: clientId, clientId, details: { ok: false, code: e.code, seen, added } });
     if (added > 0) await recalcYear(deps, deps.db, clientId, Number(asOf.slice(0, 4)), { asOf });
     await computeFlags(deps, deps.db, clientId);
+    if (added > 0) await notifyNewInvoices(deps, clientId, newIds, { firstSync }).catch((e2: Error) => log().warn({ err: safeErr(e2) }, 'invoice notification failed'));
     return { runId, status: 'hiba', digestsSeen: seen, invoicesNew: added, errorCode: e.code, messageHu: e.messageHu };
   }
 }

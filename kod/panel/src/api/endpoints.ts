@@ -342,3 +342,74 @@ export const teamAssistAssign = (id: string, body: CallbackAssignInput) => api.p
 export const teamPatchAssist = (id: string, body: AssistStaffPatch) => api.patch<TeamAssistDetailP>(`/team/assists/${e(id)}`, body);
 /** The team changes the client's branch after a callback (SPEC §27.2.3; csapat, admin). */
 export const teamPathChange = (clientId: string, body: TeamPathChangeInput) => api.post<TeamClientCard>(`/team/clients/${e(clientId)}/path`, body);
+
+// ---------- SPEC §28 / §28.K (reserve, earnings, allowances, changes, check-in, annual closing, lock, EFO, fees) ----------
+import type {
+  AccAllowanceView,
+  AccAnnualView,
+  AccNotificationLog,
+  AdminFeeChargeRow,
+  AllowanceDecisionInput,
+  AllowancePreview,
+  AllowancePreviewInput,
+  AnnualCheckInput,
+  ChangeDoneInput,
+  ChangeFollowupPatch,
+  CheckinItemDecisionInput,
+  EarningsView,
+  EmployerDecisionInput,
+  FeeSettingUpdateInput,
+  FeeSettingView,
+  ReserveView,
+  TaxRegimeInput,
+  TeamCheckinItem,
+} from './types';
+import type { AllowanceKind, CheckinItemStatus } from '../_shared/enums';
+
+/** §28.1.9 / §28.4.4: the client's view, read-only (incl. manual items). */
+export const accReserve = (id: string, year: number) => api.get<ReserveView>(`/acc/clients/${e(id)}/reserve${q({ year })}`);
+export const accEarnings = (id: string, year: number) => api.get<EarningsView>(`/acc/clients/${e(id)}/earnings${q({ year })}`);
+/** §28.3.6 allowances (csapat: 404). */
+export const accAllowances = (id: string, year: number) => api.get<AccAllowanceView>(`/acc/clients/${e(id)}/allowances${q({ year })}`);
+export const accAllowanceDecision = (id: string, kind: AllowanceKind, body: AllowanceDecisionInput) =>
+  api.post<AccAllowanceView>(`/acc/clients/${e(id)}/allowances/${e(kind)}/decision`, body);
+export const accAllowancePreview = (id: string, body: AllowancePreviewInput) => api.post<AllowancePreview>(`/acc/clients/${e(id)}/allowances/preview`, body);
+/** §28.K.2 queue "Havi változások" (the API may answer with a bare array or { items }). */
+export const accCheckinItems = async (status?: CheckinItemStatus | 'nyitott' | 'mind'): Promise<TeamCheckinItem[]> => {
+  const r = await api.get<TeamCheckinItem[] | { items: TeamCheckinItem[] }>(`/acc/checkin-items${q({ status })}`);
+  return Array.isArray(r) ? r : r.items;
+};
+export const accCheckinDecision = (itemId: string, body: CheckinItemDecisionInput) => api.post<TeamCheckinItem>(`/acc/checkin-items/${e(itemId)}`, body);
+/** §28.K.3 annual closing (null = no closing row for that year yet). */
+export const accAnnual = (id: string, year: number) => api.get<AccAnnualView | null>(`/acc/clients/${e(id)}/annual${q({ year })}`);
+const annualUpload = (id: string, aid: string, what: 'draft' | 'filed-szja' | 'filed-hipa', file: File | null, fields: Record<string, string> = {}) => {
+  const form = new FormData();
+  if (file) form.append('file', file);
+  for (const [k, v] of Object.entries(fields)) form.append(k, v);
+  return upload<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/${what}`, form);
+};
+export const accAnnualDraft = (id: string, aid: string, file: File) => annualUpload(id, aid, 'draft', file);
+export const accAnnualFiledSzja = (id: string, aid: string, file: File, filedOn: string) => annualUpload(id, aid, 'filed-szja', file, { filedOn });
+export const accAnnualFiledHipa = (id: string, aid: string, file: File | null, filedOn: string) => annualUpload(id, aid, 'filed-hipa', file, { filedOn });
+export const accAnnualCheck = (id: string, aid: string, body: AnnualCheckInput) => api.post<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/check`, body);
+/** §28.K.7 / §28.K.9 / §28.K.11 */
+export const accEmployerDecision = (id: string, body: EmployerDecisionInput) => api.post<unknown>(`/acc/clients/${e(id)}/employer`, body);
+export const accSetAdoszam = (id: string, adoszam: string) => api.post<unknown>(`/acc/clients/${e(id)}/adoszam`, { adoszam });
+export const accSetTaxRegime = (id: string, body: TaxRegimeInput) => api.post<unknown>(`/acc/clients/${e(id)}/tax-regime`, body);
+/** PANEL CONTRACT ADDITION (README §28 builder notes): the client's notification log. */
+export const accNotifications = (id: string, cursor?: string) => api.get<AccNotificationLog>(`/acc/clients/${e(id)}/notifications${q({ cursor })}`);
+/** §28.5.5 change kinds */
+export const teamAssistChangeReady = (id: string) => api.post<TeamAssistDetailP>(`/team/assists/${e(id)}/change-ready`, {});
+export const teamAssistChangeDone = (id: string, body: ChangeDoneInput) => api.post<TeamAssistDetailP>(`/team/assists/${e(id)}/change-done`, body);
+export const teamAssistFollowup = (id: string, body: ChangeFollowupPatch) => api.patch<TeamAssistDetailP>(`/team/assists/${e(id)}/followups`, body);
+/** §28.K.1 fee settings (AD). GET may answer with a bare array or { items }. */
+export const adminFees = async (): Promise<FeeSettingView[]> => {
+  const r = await api.get<FeeSettingView[] | { items: FeeSettingView[] }>('/admin/fees');
+  return Array.isArray(r) ? r : r.items;
+};
+export const adminPutFee = (body: FeeSettingUpdateInput) => api.put<FeeSettingView[] | { items: FeeSettingView[] }>('/admin/fees', body);
+export const adminConfirmFee = (kind: string) => api.post<FeeSettingView[] | { items: FeeSettingView[] }>(`/admin/fees/${e(kind)}/confirm`, {});
+/** PANEL CONTRACT ADDITION: the one-off charges the admin may waive / mark refunded. */
+export const adminFeeCharges = (status?: string) => api.get<{ items: AdminFeeChargeRow[] }>(`/admin/fee-charges${q({ status })}`);
+export const adminWaiveCharge = (id: string, reason: string) => api.post<unknown>(`/admin/fee-charges/${e(id)}/waive`, { reason });
+export const adminChargeRefunded = (id: string, note?: string) => api.post<unknown>(`/admin/fee-charges/${e(id)}/refunded`, note ? { note } : {});

@@ -10,6 +10,9 @@ import type {
   BusinessRegistrationWithdrawInput, CallbackCreateInput, CallbackUpdateInput, CallbackView, ClientAccess, ClientCallbacks,
   ClientProfileStartInput, Explainer, Guide, GuideImageManifest,
   AssistConsentInput, AssistConsentSummary, AssistCreateInput, AssistCreateResult, AssistView, BusinessStatusInput,
+  AllowanceAnswersInput, AllowanceClientPreview, AllowanceClientPreviewInput, AllowanceGateInput, AllowanceState, AnnualAnswersInput,
+  AnnualApproveInput, AnnualView, AssistChangeUpdateInput, ChangeGuidesView, CheckinAnswerInput, CheckinView, EarningsView,
+  EmployerAnswerInput, FeePayInput, FeePayStart, FeesView, NotificationSettingsPatch, ReserveCard, ReserveMarkInput, ReserveView,
 } from '../_shared/api';
 import type { BusinessStatus, GuideKind, LegalDocType, MeghatalmazasMethod, PaymentItemKind } from '../_shared/enums';
 import { ApiHiba, del, feltolt, get, patch, post, put } from './http';
@@ -89,6 +92,8 @@ export interface NavSzamlaReszlet {
   lines: { lineNo: number; description?: string; quantity?: number; unit?: string; unitPriceHuf?: number; netAmountHuf: number }[];
   receivedOn?: string;
   receivedOnEstimated?: boolean;
+  /** SPEC §28.1.4: a félreteendő (aktív ügyfélnél). */
+  reserve?: import('../_shared/api').InvoiceReserveView;
 }
 export const useNavSzamla = (id?: string) =>
   useQuery({ queryKey: K.navSzamla(id ?? ''), queryFn: () => get<NavSzamlaReszlet>(`/client/nav-invoices/${id}`), enabled: !!id });
@@ -225,3 +230,45 @@ export const useEngedelyOsszegzes = (id?: string) =>
 export const useEngedelyKuld = () =>
   useValtoztat((v: { id: string } & AssistConsentInput) => post<AssistView>(`/client/assist/${v.id}/consent`, { hash: v.hash, declaration: v.declaration, instruction: v.instruction }), SEGITSEG_KULCSOK);
 export const useKamara = () => useValtoztat((v: { done: boolean }) => post<BusinessRegistrationView>('/client/business-registration/chamber', v), BEKOTES_KULCSOK);
+
+// ---------- SPEC §28 + §28.K: félretenni, kereset, kedvezmények, változások, havi ellenőrzés, éves zárás, díjak ----------
+export const K28 = {
+  felretesz: (ev: number) => ['felretesz', ev] as const,
+  kereset: (ev: number) => ['kereset', ev] as const,
+  kedvezmenyek: (ev: number) => ['kedvezmenyek', ev] as const,
+  valtozasok: ['valtozasok'] as const,
+  havi: ['havi'] as const,
+  eves: (ev: number) => ['eves', ev] as const,
+  dijak: ['dijak'] as const,
+};
+const K28_HOME: QueryKey[] = [K.home, K.me];
+export const useFelretesz = (ev: number) => useQuery({ queryKey: K28.felretesz(ev), queryFn: () => get<ReserveView>(`/client/reserve?year=${ev}`), retry: 0 });
+export const useFelreteszJeloles = () =>
+  useValtoztat((v: ReserveMarkInput) => put<ReserveCard>('/client/reserve/mark', v), [K.home, ['felretesz']]);
+export const useKereset = (ev: number) => useQuery({ queryKey: K28.kereset(ev), queryFn: () => get<EarningsView>(`/client/earnings?year=${ev}`), retry: 0 });
+export const useKedvezmenyek = (ev: number, enabled = true) =>
+  useQuery({ queryKey: K28.kedvezmenyek(ev), queryFn: () => get<AllowanceState>(`/client/allowances?year=${ev}`), enabled, retry: 0 });
+export const useKedvezmenyValasz = () =>
+  useValtoztat((v: AllowanceAnswersInput) => put<AllowanceState>('/client/allowances/answers', v), [['kedvezmenyek'], ...K28_HOME, K.onboarding]);
+export const useKedvezmenyKapu = () =>
+  useValtoztat((v: AllowanceGateInput) => post<AllowanceState>('/client/allowances/gate', v), [['kedvezmenyek'], ...K28_HOME, K.onboarding]);
+export const useKedvezmenyBecsles = () => useMutation({ mutationFn: (v: AllowanceClientPreviewInput) => post<AllowanceClientPreview>('/client/allowances/preview', v) });
+export const useValtozasok = () => useQuery({ queryKey: K28.valtozasok, queryFn: () => get<ChangeGuidesView>('/client/change-guides'), retry: 0 });
+export const useValtozasKer = () =>
+  useValtoztat((v: AssistCreateInput) => post<AssistCreateResult>('/client/assist', v), [...SEGITSEG_KULCSOK, K28.valtozasok, K28.dijak, K.home]);
+export const useValtozasModosit = () =>
+  useValtoztat((v: { id: string } & AssistChangeUpdateInput) => put<AssistView>(`/client/assist/${v.id}/change`, { change: v.change }), [...SEGITSEG_KULCSOK, K28.valtozasok]);
+export const useHaviEllenorzes = (enabled = true) =>
+  useQuery({ queryKey: K28.havi, queryFn: () => get<CheckinView | null>('/client/checkins/current'), enabled, retry: 0 });
+export const useHaviValasz = () =>
+  useValtoztat((v: { id: string; input: CheckinAnswerInput }) => post<CheckinView>(`/client/checkins/${v.id}`, v.input), [K28.havi, K.home, K28.dijak, K28.valtozasok, K.segitseg]);
+export const useEvesZaras = (ev: number) => useQuery({ queryKey: K28.eves(ev), queryFn: () => get<AnnualView | null>(`/client/annual?year=${ev}`), retry: 0 });
+export const useEvesValasz = () =>
+  useValtoztat((v: { id: string } & AnnualAnswersInput) => put<AnnualView>(`/client/annual/${v.id}/answers`, { answers: v.answers }), [['eves']]);
+export const useEvesBekuld = () => useValtoztat((id: string) => post<AnnualView>(`/client/annual/${id}/submit`, {}), [['eves'], K.home, K28.dijak]);
+export const useEvesJovahagy = () =>
+  useValtoztat((v: { id: string } & AnnualApproveInput) => post<AnnualView>(`/client/annual/${v.id}/approve`, { hash: v.hash }), [['eves'], K.home]);
+export const useDijak = () => useQuery({ queryKey: K28.dijak, queryFn: () => get<FeesView>('/client/fees'), retry: 0 });
+export const useDijFizet = () => useMutation({ mutationFn: (v: { id: string } & FeePayInput) => post<FeePayStart>(`/client/fees/${v.id}/pay`, { platform: v.platform }) });
+export const useAlkalmazottValasz = () => useValtoztat((v: EmployerAnswerInput) => put<OnboardingState>('/client/onboarding/employer', v), [K.onboarding, K.home]);
+export const useCsendesIdo = () => useValtoztat((v: { notificationSettings: NotificationSettingsPatch }) => patch<Me>('/me', v), [K.me]);

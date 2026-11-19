@@ -36,7 +36,8 @@ export const BENCE: AccountantPublic & { email: string; capacity: number; appoin
   registrationNumber: '123456',
   avatarKey: 'karakter_1_lapos',
   signatureSvgPath: DEMO_SIGNATURE,
-  responseTimeText: 'Munkanapokon 4 órán belül válaszol',
+  // SPEC §28.K.15: no answer-time promise (ACCOUNTANT_RESPONSE_TIME_DEFAULT)
+  responseTimeText: 'A lehető leggyorsabban válaszol',
   email: 'bence.kovacs@demo.kezjegy.test',
   capacity: 150,
   appointmentsEnabled: true,
@@ -357,6 +358,29 @@ export function buildClients(): MockClient[] {
     { ...ujVallalkozo('c-timea', 'Tímea', 'Vass', '2026-11-08', 'vallalkozas_inditas', { phone: '+36 20 555 0193', address: { zip: '9021', city: 'Győr', line: 'Minta tér 2.' }, szerzodes: true }), adoazonositoJel: '8458365081' },
     letezo('c-david', 'Dávid', 'Molnár', '2026-11-13', { phone: '+36 30 555 0126', adoszam: '68790013-1-33', adoazonositoJel: '8437092159', previousAccountant: 'Minta Könyvelő Kft.' }),
     { ...letezo('c-gergely', 'Gergely', 'Szűcs', '2026-11-15', { phone: '+36 20 555 0144', adoszam: null, adoazonositoJel: null, previousAccountant: null }), businessStatus: 'van' },
+    // SPEC §28.11 + §28.K.21 seed personas (all fictional): allowances, reserve, notifications, changes, check-in,
+    // annual closing, service lock, pause, EFO, adószám later, KATA. Their §28 state lives in src/mock/k28.ts.
+    { ...extra('c-szabo-eszter', 'Eszter', 'Szabó', 'Könyvillusztráció', 45, 'aktiv', '2026-02-02', 6_600_000, 'facebook / osz_2025', { sub: 'active' }), taxProfile: profile(45, 'mellekallasu', false), adoszam: '68811223-1-41', phone: '+36 30 555 0211' },
+    { ...extra('c-toth-balint', 'Bálint', 'Tóth', 'Weboldal-készítés', 45, 'aktiv', '2026-03-09', 5_400_000, 'instagram / tavasz', { sub: 'active' }), adoszam: '68822334-1-42', phone: '+36 20 555 0212' },
+    { ...extra('c-kovacs-adam', 'Ádám', 'Kovács', 'Asztalosmunka', 80, 'aktiv', '2026-04-14', 7_900_000, 'google / kereses', { sub: 'active' }), adoszam: '68833445-1-43', adoazonositoJel: '8412345673', phone: '+36 70 555 0213' },
+    { ...extra('c-varga-reka2', 'Réka-Demo', 'Varga', 'Kozmetika', 80, 'aktiv', '2026-02-20', 3_100_000, null, { sub: 'active' }), adoszam: '68844556-1-44', adoazonositoJel: '8423456784', phone: null },
+    { ...extra('c-lakatos-greta', 'Gréta', 'Lakatos', 'Masszázs', 45, 'aktiv', '2026-01-05', 12_600_000, 'google / kereses', { sub: 'active' }), adoszam: '68855667-1-45', phone: '+36 30 555 0215' },
+    { ...extra('c-kiss-norbert', 'Norbert', 'Kiss', 'Villanyszerelés', 80, 'aktiv', '2026-01-20', 9_200_000, 'facebook / osz_2025', { sub: 'active' }), adoszam: '68866778-1-46', adoazonositoJel: '8434567895', phone: '+36 20 555 0216' },
+    { ...extra('c-fazekas-ilona', 'Ilona', 'Fazekas', 'Varroda', 80, 'felfuggesztve', '2026-03-03', 4_300_000, null, { sub: 'suspended' }), adoszam: '68877889-1-47', phone: '+36 70 555 0217' },
+    {
+      ...letezo('c-barany-tamas', 'Tamás', 'Bárány', '2026-11-14', { phone: '+36 30 555 0218', adoszam: null, adoazonositoJel: null, previousAccountant: null }),
+      activityText: 'Rendezvényszervezés',
+      steps: [
+        { step: 'fiok', status: 'kesz', completedAt: ts('2026-11-14', '19:10') },
+        { step: 'adatok', status: 'kesz', completedAt: ts('2026-11-14', '19:25') },
+        { step: 'szerzodes', status: 'kesz', completedAt: ts('2026-11-14', '19:31') },
+        { step: 'meghatalmazas', status: 'ugyfelre_var' },
+        { step: 'azonositas', status: 'nincs_kezdve' },
+        { step: 'elofizetes', status: 'nincs_kezdve' },
+        { step: 'nav_bekotes', status: 'nincs_kezdve' },
+      ],
+    },
+    { ...extra('c-molnar-csilla', 'Csilla', 'Molnár', 'Virágkötészet', 45, 'aktiv', '2025-09-01', 2_400_000, 'ajánlás', { sub: 'active' }), adoszam: '68899001-1-49', phone: '+36 20 555 0219' },
   ];
 }
 
@@ -770,7 +794,7 @@ export function auditRows(clients: MockClient[]): AuditRow[] {
 }
 
 export const FAQ: FaqItem[] = [
-  { id: 'q1', question: 'Mennyibe kerül?', answer: 'Havi 20 000 Ft bruttó. Ebben benne van a könyvelőd munkája, a negyedéves bevallás és az app.', sort: 10, published: true },
+  { id: 'q1', question: 'Mennyibe kerül?', answer: 'Havi 19 999 Ft bruttó. Ebben benne van a könyvelőd munkája, a negyedéves bevallás és az app.', sort: 10, published: true },
   { id: 'q2', question: 'Ki a könyvelőm?', answer: 'Egy név szerinti mérlegképes könyvelő. Az appban látod a nevét, és közvetlenül neki írsz.', sort: 20, published: true },
   { id: 'q3', question: 'Nekem kell beadnom a bevallást?', answer: 'Nem. A könyvelőd a meghatalmazottad a NAV-nál, ő adja be. Te csak befizeted, amit az appban látsz.', sort: 30, published: true },
   { id: 'q4', question: 'Mikor kell fizetnem?', answer: 'Negyedévente, a negyedév utáni hónap 12-éig. Előtte szólunk, és megmutatjuk a számlaszámokat.', sort: 40, published: true },
@@ -817,7 +841,7 @@ export const OUTBOX: DemoMail[] = [
   { id: 'o1', toDisplay: 'ka…@demo.kezjegy.test', subject: 'Megvan a III. negyedévi összeg', bodyText: 'Szia Kata!\n\nBence kiszámolta: 510 471 Ft. Október 12-ig utald el.\n\n(DEMO – nem küldtük el)', createdAt: ts('2026-10-02', '16:41') },
   { id: 'o2', toDisplay: 'pe…@demo.kezjegy.test', subject: 'A megerősítő kódod: 482913', bodyText: 'Szia Péter!\n\nA kódod: 482913\n15 percig érvényes.\n\n(DEMO – nem küldtük el)', createdAt: ts('2026-11-10', '18:56') },
   { id: 'o3', toDisplay: 'li…@demo.kezjegy.test', subject: 'A megerősítő kódod: 730155', bodyText: 'Szia Lili!\n\nA kódod: 730155\n\n(DEMO – nem küldtük el)', createdAt: ts('2026-11-15', '20:01') },
-  { id: 'o4', toDisplay: 'ga…@demo.kezjegy.test', subject: 'Nem sikerült levonni a havidíjat', bodyText: 'Szia Gábor!\n\nA kártyádról nem sikerült levonni a 20 000 Ft-os havidíjat. Nézd meg a kártyád, holnap újra megpróbáljuk.\n\n(DEMO – nem küldtük el)', createdAt: ts('2026-11-14', '06:02') },
+  { id: 'o4', toDisplay: 'ga…@demo.kezjegy.test', subject: 'Nem sikerült levonni a havidíjat', bodyText: 'Szia Gábor!\n\nA kártyádról nem sikerült levonni a 19 999 Ft-os havidíjat. Nézd meg a kártyád, holnap újra megpróbáljuk.\n\n(DEMO – nem küldtük el)', createdAt: ts('2026-11-14', '06:02') },
 ];
 
 export function referralCodes(clients: MockClient[]): ReferralCodeRow[] {

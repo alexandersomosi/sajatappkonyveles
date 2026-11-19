@@ -90,6 +90,23 @@ export const RULES_2026: TaxRules = {
 
   accounts: NAV_ACCOUNTS,
 
+  // SPEC §28.3.1 / §28.3.7 b – personal allowances 2026 (research _munka/k6/kedvezmenyek_2026.md, checked 2026-11-19)
+  allowances: {
+    csaladiPerChildHuf: { one: 133_340, two: 266_660, threePlus: 440_000 }, // Szja tv. 29/A. § (2) [szja-tv, nav-73]
+    csaladiTartosBetegExtraHuf: 133_340, // Szja tv. 29/A. § (2a) [szja-tv]
+    felvaltvaPct: 50, // Szja tv. 29/B. § (1e) [szja-tv]
+    fiatal25MonthlyCapHuf: 715_765, // 2025. július KSH bruttó átlagkereset (Hivatalos Értesítő 52/2025) [ksh-atlagkereset, nav-73]
+    fiatal25AgeYears: 25, // Szja tv. 29/F. § [szja-tv]
+    anya30AgeYears: 30, // 2025. évi XIII. tv. [tv-2025-13]
+    ketgyermekesMinBirthYear: 1986, // 2025. évi XIV. tv. 4. §: 2026 – born 1986 or later [tv-2025-14]
+    haromgyermekesFrom: '2025-10-01', // 2025. évi XV. tv. [tv-2025-15]
+    szemelyiMonthlyHuf: 107_600, // Szja tv. 29/E. §: 1/3 of the minimum wage (322 800 / 3) [szja-tv, nav-73]
+    elsoHazasokMonthlyHuf: 33_335, // Szja tv. 29/C. § [szja-tv, nav-73]
+    elsoHazasokMaxMonths: 24,
+    csjkPermille: 150, // Tbj. 34. § (3), 80. § (2) [tbj, nav-100 6.1]
+    nyugdijasAnyaSzochoLimitHuf: 34_356_720, // Szocho tv. 5. § (1a) – guard only [szocho-tv]
+  },
+
   sources: [
     {
       id: 'nav-100',
@@ -137,6 +154,18 @@ export const RULES_2026: TaxRules = {
       title: 'Tájékoztató a kisvállalkozások egyszerűsített (sávos) iparűzési adózásáról (önkormányzati példa)',
       url: 'https://szegvar.hu/wp-content/uploads/2025/04/Tajekoztato-a-savos-adozasrol.pdf',
     },
+    { id: 'szja-tv', title: '1995. évi CXVII. törvény (Szja tv.) 29/A–29/H. §, 49. § (1), (1a), (6)–(8)', url: 'https://njt.hu/jogszabaly/1995-117-00-00' },
+    { id: 'tv-2025-13', title: '2025. évi XIII. törvény – 30 év alatti anyák kedvezménye', url: 'https://njt.hu/jogszabaly/2025-13-00-00' },
+    { id: 'tv-2025-14', title: '2025. évi XIV. törvény – két gyermeket nevelő anyák kedvezménye', url: 'https://njt.hu/jogszabaly/2025-14-00-00' },
+    { id: 'tv-2025-15', title: '2025. évi XV. törvény – három gyermeket nevelő anyák kedvezménye', url: 'https://njt.hu/jogszabaly/2025-15-00-00' },
+    { id: 'tbj', title: '2019. évi CXXII. törvény (Tbj.) 34–36. §, 40. §, 80–81. § – családi járulékkedvezmény', url: 'https://njt.hu/jogszabaly/2019-122-00-00' },
+    { id: 'szocho-tv', title: '2018. évi LII. törvény (Szocho tv.) 5. § (1a)', url: 'https://njt.hu/jogszabaly/2018-52-00-00' },
+    {
+      id: 'nav-73',
+      title: 'NAV 73. sz. információs füzet – Szja-adóalap-kedvezmények 2026 (2026.03.19)',
+      url: 'https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/nezzen-utana/inf_fuz/2026/73.-Szja-adoalap-kedvezmenyek-2026.-03.19',
+    },
+    { id: 'ksh-atlagkereset', title: 'KSH bruttó átlagkereset 2025. július (Hivatalos Értesítő 52/2025)', url: 'https://www.ksh.hu' },
     {
       id: 'ngm-10-2025',
       title: '10/2025. (IV. 30.) NGM rendelet a 2026. évi munkaszüneti napok körüli munkarendről',

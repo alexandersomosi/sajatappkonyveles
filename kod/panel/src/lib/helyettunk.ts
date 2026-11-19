@@ -7,6 +7,7 @@ import {
   ASSIST_OPEN_STATUSES,
   ASSIST_PHASES,
   ASSIST_RULES,
+  CHANGE_KINDS,
   type AssistAction,
   type AssistCheckItem,
   type AssistCheckPhase,
@@ -154,16 +155,33 @@ export const FAZIS_CIM: Record<AssistCheckPhase, string> = {
   hivas: 'Hívás és egyeztetés',
   ujegyke: 'Meghatalmazás beküldése (UJEGYKE)',
   bejelentes: 'Vállalkozás bejelentése',
+  // SPEC §28.5.5 – change kinds
+  valtozas_adatok: 'Az új adatok átnézése',
+  valtozas_bejelentes: 'Változásbejelentés beküldése',
 };
 /** Who does the phase (shown next to its title). */
 export const FAZIS_KI: Record<AssistCheckPhase, string> = {
   hivas: 'csapat vagy könyvelő',
   ujegyke: 'csak a könyvelő, a saját belépésével',
   bejelentes: 'csak a könyvelő, a saját belépésével',
+  valtozas_adatok: 'a könyvelő',
+  valtozas_bejelentes: 'csak a könyvelő, a saját belépésével',
 };
 
-export function fazisok(kind: AssistKind): readonly AssistCheckPhase[] {
-  return ASSIST_PHASES[kind];
+/** SPEC §28.5.5: the six change kinds share one state machine and one panel layout. */
+export function valtozasFajta(kind: AssistKind): boolean {
+  return (CHANGE_KINDS as readonly string[]).includes(kind);
+}
+
+/**
+ * Phases of a request. Change kinds have the 'hivas' phase only when the client asked for a call first (status
+ * 'visszahivas_kerve' now, or the server's check list already holds that phase).
+ */
+export function fazisok(kind: AssistKind, o?: { status?: AssistStatus; checklistPhases?: readonly AssistCheckPhase[] }): readonly AssistCheckPhase[] {
+  const all = ASSIST_PHASES[kind];
+  if (!valtozasFajta(kind) || !o) return all;
+  const volt = o.status === 'visszahivas_kerve' || (o.checklistPhases ?? []).includes('hivas');
+  return volt ? all : all.filter((p) => p !== 'hivas');
 }
 /** Items of a phase for this kind (kind 'meghatalmazas' hides the EV-only items). */
 export function fazisElemek(kind: AssistKind, phase: AssistCheckPhase): AssistCheckItem[] {
@@ -176,6 +194,7 @@ export function hianyzoPipak(kind: AssistKind, phase: AssistCheckPhase, kesz: re
 
 const SORREND: Record<AssistStatus, number> = {
   visszahivas_kerve: 0,
+  dijra_var: 0.5,
   egyeztetve: 1,
   meghatalmazas_lejart: 1.5,
   meghatalmazas_bekuldve: 2,
@@ -188,8 +207,13 @@ const SORREND: Record<AssistStatus, number> = {
   lezarva: -1,
 };
 /** The phase whose button is the next step now (null = waiting for the client / the NAV, or finished). */
-export function aktivFazis(status: AssistStatus): AssistCheckPhase | null {
+export function aktivFazis(status: AssistStatus, kind?: AssistKind): AssistCheckPhase | null {
   if (status === 'visszahivas_kerve') return 'hivas';
+  if (kind && valtozasFajta(kind)) {
+    if (status === 'egyeztetve') return 'valtozas_adatok';
+    if (status === 'ugyfel_engedelyezte') return 'valtozas_bejelentes';
+    return null;
+  }
   if (status === 'egyeztetve' || status === 'meghatalmazas_lejart') return 'ujegyke';
   if (status === 'ugyfel_engedelyezte') return 'bejelentes';
   return null;
@@ -200,11 +224,14 @@ export function fazisKesz(phase: AssistCheckPhase, status: AssistStatus): boolea
   if (i < 0) return false;
   if (phase === 'hivas') return i >= 1;
   if (phase === 'ujegyke') return i >= 2;
+  // change kinds: the data check ends with 'change-ready' (→ meghatalmazas_el), the filing with 'ev-filed'
+  if (phase === 'valtozas_adatok') return i >= 4;
   return i >= 6;
 }
 
 /** What the client has to do now, in one line for the staff ("Az ügyfél: …"). */
 export function ugyfelTeendo(status: AssistStatus): string | null {
+  if (status === 'dijra_var') return 'kifizeti a díjat az appban (előre fizetendő). Addig nem kezdünk bele.';
   if (status === 'meghatalmazas_bekuldve') return 'jóváhagyja a meghatalmazást az ONYA-ban (a saját belépésével).';
   if (status === 'meghatalmazas_el') return 'átnézi az adatait az appban, és engedélyezi a bejelentést.';
   return null;
@@ -225,8 +252,19 @@ export interface MuveletKornyezet {
   answersMatchConsent: boolean | null;
   /** 11-19 javítás: what the client still owes before the UJEGYKE (TeamAssistDetail.notReadyReasons). */
   notReady?: readonly string[];
+  /** SPEC §28.K.5: the client's service is locked (fee unpaid) – filing actions are disabled with this text. */
+  zarolva?: string | null;
 }
-export type PanelMuvelet = 'egyeztetve' | 'ujegyke_bekuldve' | 'lejart' | 'meghatalmazas_el' | 'bejelentes_bekuldve';
+export type PanelMuvelet =
+  | 'egyeztetve'
+  | 'ujegyke_bekuldve'
+  | 'lejart'
+  | 'meghatalmazas_el'
+  | 'bejelentes_bekuldve'
+  // SPEC §28.5.5 – change kinds: change-ready, ev-filed (reused for changes), change-done
+  | 'adatok_rendben'
+  | 'valtozas_bekuldve'
+  | 'valtozas_kesz';
 /** Statuses in which a button is shown at all. */
 const LATSZIK: Record<PanelMuvelet, readonly AssistStatus[]> = {
   egyeztetve: ['visszahivas_kerve'],
@@ -236,8 +274,16 @@ const LATSZIK: Record<PanelMuvelet, readonly AssistStatus[]> = {
   // late approvals happen: after 'lejart' the accountant may still find it live in ONYA
   meghatalmazas_el: ['meghatalmazas_bekuldve', 'meghatalmazas_jovahagyva', 'meghatalmazas_lejart'],
   bejelentes_bekuldve: ['meghatalmazas_el', 'ugyfel_engedelyezte'],
+  adatok_rendben: ['egyeztetve'],
+  valtozas_bekuldve: ['meghatalmazas_el', 'ugyfel_engedelyezte'],
+  valtozas_kesz: ['bejelentes_bekuldve'],
 };
-const CSAK_KONYVELO: readonly PanelMuvelet[] = ['ujegyke_bekuldve', 'meghatalmazas_el', 'bejelentes_bekuldve'];
+const CSAK_KONYVELO: readonly PanelMuvelet[] = ['ujegyke_bekuldve', 'meghatalmazas_el', 'bejelentes_bekuldve', 'valtozas_bekuldve'];
+/** Buttons that exist only for the change kinds, and the EV/MH buttons a change request never shows. */
+const VALTOZAS_MUVELET: readonly PanelMuvelet[] = ['adatok_rendben', 'valtozas_bekuldve', 'valtozas_kesz'];
+const NEM_VALTOZASNAL: readonly PanelMuvelet[] = ['ujegyke_bekuldve', 'lejart', 'meghatalmazas_el', 'bejelentes_bekuldve'];
+/** Filing actions a service lock stops (SPEC §28.K.5: approvals, letters, filings). */
+const ZAROLT_MUVELET: readonly PanelMuvelet[] = ['ujegyke_bekuldve', 'bejelentes_bekuldve', 'adatok_rendben', 'valtozas_bekuldve', 'valtozas_kesz'];
 
 /**
  * Button state: hidden (null), or enabled / disabled with the reason the panel prints under it (SPEC §27.6.3).
@@ -245,7 +291,29 @@ const CSAK_KONYVELO: readonly PanelMuvelet[] = ['ujegyke_bekuldve', 'meghatalmaz
  */
 export function muveletAllapot(m: PanelMuvelet, k: MuveletKornyezet): { mehet: boolean; miert: string | null } | null {
   if (!LATSZIK[m].includes(k.status)) return null;
+  const valt = valtozasFajta(k.kind);
+  if (valt && NEM_VALTOZASNAL.includes(m)) return null;
+  if (!valt && VALTOZAS_MUVELET.includes(m)) return null;
   if (m === 'bejelentes_bekuldve' && k.kind !== 'vallalkozas_bejelentes') return null;
+  if (k.zarolva && ZAROLT_MUVELET.includes(m)) return { mehet: false, miert: k.zarolva };
+  if (m === 'valtozas_kesz') {
+    // four eyes (SPEC §28.5.5): the service team or the owner closes it, never the filer – unless the server allows it
+    if (k.szerep === 'konyvelo' && !k.allowed.includes('valtozas_kesz'))
+      return { mehet: false, miert: 'Négy szem elve: a csapat vagy a tulajdonos nézi át és zárja le, nem az, aki beküldte.' };
+    if (k.hianyzo > 0) return { mehet: false, miert: `Még ${k.hianyzo} pont van hátra a listából.` };
+    return k.allowed.includes('valtozas_kesz') ? { mehet: true, miert: null } : { mehet: false, miert: 'Ezt most nem teheted meg.' };
+  }
+  if (m === 'adatok_rendben') {
+    if (!(k.szerep === 'admin' || k.sajatKonyvelo)) return { mehet: false, miert: `Ezt ${k.konyveloUtonev} nézi át.` };
+    if (k.hianyzo > 0) return { mehet: false, miert: `Még ${k.hianyzo} pont van hátra a listából.` };
+    return k.allowed.includes('adatok_rendben') ? { mehet: true, miert: null } : { mehet: false, miert: 'Ezt most nem teheted meg.' };
+  }
+  if (m === 'valtozas_bekuldve') {
+    if (!(k.szerep === 'admin' || k.sajatKonyvelo)) return { mehet: false, miert: `Ezt csak ${k.konyveloUtonev} küldheti be, a saját belépésével.` };
+    if (k.status === 'meghatalmazas_el') return { mehet: false, miert: 'Az ügyfél még nem engedélyezte a bejelentést.' };
+    if (k.hianyzo > 0) return { mehet: false, miert: `Még ${k.hianyzo} pont van hátra a listából.` };
+    return k.allowed.includes('bejelentes_bekuldve') ? { mehet: true, miert: null } : { mehet: false, miert: 'Ezt most nem teheted meg.' };
+  }
   if (m === 'meghatalmazas_el' && k.status === 'meghatalmazas_bekuldve' && k.szerep === 'csapat') return null;
   if (CSAK_KONYVELO.includes(m) && !(k.szerep === 'admin' || k.sajatKonyvelo)) return { mehet: false, miert: `Ezt csak ${k.konyveloUtonev} küldheti be, a saját belépésével.` };
   if (m === 'bejelentes_bekuldve') {
@@ -281,4 +349,19 @@ export function utvonalSor(h: PathHistoryItem, ma: string): string {
 /** "Útvonalat váltott – már van vállalkozása" instead of "Elállt" on a pipeline card left by a branch change. */
 export function elalltSzoveg(row: { status: string; pathChangedAt?: string | null }): string | null {
   return row.status === 'elallt' && row.pathChangedAt ? 'Útvonalat váltott – már van vállalkozása' : null;
+}
+
+/**
+ * Status label for the queue and the detail header. The shared ASSIST_STATUS_LABELS speak about the meghatalmazás /
+ * EV registration; for the change kinds (SPEC §28.5.5) the same statuses mean other steps.
+ */
+const VALTOZAS_ALLAPOT: Partial<Record<AssistStatus, string>> = {
+  dijra_var: 'Díjra vár – az ügyfél még nem fizetett',
+  egyeztetve: 'Adatok átnézése – a könyvelőnél',
+  meghatalmazas_el: 'Ügyfél engedélyére vár',
+  ugyfel_engedelyezte: 'Engedélyezte – beküldhető',
+  bejelentes_bekuldve: 'Beküldve – átnézésre vár (négy szem)',
+};
+export function allapotFelirat(status: AssistStatus, kind: AssistKind, alap: Record<AssistStatus, string>): string {
+  return (valtozasFajta(kind) && VALTOZAS_ALLAPOT[status]) || alap[status];
 }

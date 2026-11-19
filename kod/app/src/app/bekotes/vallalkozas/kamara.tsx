@@ -17,8 +17,9 @@ import { MiEz } from '@/ui/Magyarazat';
 import { T } from '@/ui/T';
 import { useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
-export default function Kamara() {
+function Kamara() {
   const { reg } = useUt();
   const kamara = useKamara();
   const jelez = useJelzes();
@@ -75,3 +76,6 @@ export default function Kamara() {
     </Kepernyo>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(Kamara);

@@ -32,6 +32,14 @@ const ROUTE_FEATURES: [RegExp, ClientFeature | 'nyitott'][] = [
   [/^\/nav-invoices(\/|$)/, 'nav_szamlak'],
   [/^\/revenue(\/|$)/, 'bevetel'],
   [/^\/deadlines(\/|$)/, 'hataridok'],
+  // SPEC §28.6.3 / §28.K
+  [/^\/reserve(\/|$)/, 'felretesz'],
+  [/^\/earnings(\/|$)/, 'kereset'],
+  [/^\/allowances(\/|$)/, 'kedvezmenyek'],
+  [/^\/change-guides(\/|$)/, 'valtozas'],
+  [/^\/checkins(\/|$)/, 'havi_ellenorzes'],
+  [/^\/annual(\/|$)/, 'eves_zaras'],
+  [/^\/fees(\/|$)/, 'dijak'],
 ];
 
 export function featureOfRoute(relPath: string): ClientFeature | 'nyitott' | null {

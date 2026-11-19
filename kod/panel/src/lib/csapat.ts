@@ -192,7 +192,10 @@ export type MenuKulcs =
   | 'admin_szovegek'
   | 'admin_naplo'
   | 'admin_demo'
-  | 'admin_rendszer';
+  | 'admin_rendszer'
+  // SPEC §28.K.2 / §28.K.1
+  | 'havi'
+  | 'admin_dijak';
 export interface MenuElem {
   kulcs: MenuKulcs;
   to: string;
@@ -214,6 +217,8 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   helyettunk: { to: '/helyettunk', felirat: 'Intézzük helyette', ikon: 'igazolas' },
   vallalkozas: { to: '/vallalkozas-inditas', felirat: 'Vállalkozás-indítás', ikon: 'bevallas' },
   uzenetek: { to: '/uzenetek', felirat: 'Üzenetek', ikon: 'uzenetek' },
+  // SPEC §28.K.2: the monthly check-in queue (accountant: own clients; admin: all; csapat: items with an assist)
+  havi: { to: '/havi-valtozasok', felirat: 'Havi változások', ikon: 'kerdezek' },
   sablonok: { to: '/sablonok', felirat: 'Válaszsablonok', ikon: 'uzenetek' },
   export: { to: '/export', felirat: 'Export', ikon: 'irat' },
   naplo: { to: '/naplo', felirat: 'Napló', ikon: 'nyugta' },
@@ -222,6 +227,8 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_ugyfelek: { to: '/admin/ugyfelek', felirat: 'Ügyfelek', ikon: 'dosszie' },
   admin_elofizetesek: { to: '/admin/elofizetesek', felirat: 'Előfizetések', ikon: 'szamlak' },
   admin_fizetesek: { to: '/admin/fizetesek', felirat: 'Fizetések', ikon: 'szamlaszam' },
+  // SPEC §28.K.1: admin-editable fees (DEMO until confirmed)
+  admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'szamolo' },
   admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'fiok', karakter: true },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
   admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'fiok' },
@@ -248,12 +255,12 @@ export function menuCsoportok(o: {
 }): MenuCsoport[] {
   const out: MenuCsoport[] = [];
   if (o.csapat) {
-    out.push({ cim: 'Ügyfélszolgálat', elemek: [el('visszahivasok'), el('helyettunk'), el('vallalkozas'), el('uzenetek')] });
+    out.push({ cim: 'Ügyfélszolgálat', elemek: [el('visszahivasok'), el('helyettunk'), el('vallalkozas'), el('havi'), el('uzenetek')] });
     out.push({ cim: 'Fiók', elemek: [el('beallitasok')] });
     return out;
   }
   if (o.konyvelo) {
-    const munka = [el('ugyfelek'), el('hatarido'), el('keresek')];
+    const munka = [el('ugyfelek'), el('hatarido'), el('keresek'), el('havi')];
     if (o.konyvelonekVoltVisszahivasa) munka.push(el('visszahivasok'));
     if (o.konyvelonekVoltHelyettunk) munka.push(el('helyettunk'));
     out.push({ cim: 'Munka', elemek: munka });
@@ -262,6 +269,7 @@ export function menuCsoportok(o: {
   if (o.admin) {
     // An admin who is also an accountant already has Visszahívások / Intézzük helyette under Munka.
     const szolg = [el('vallalkozas')];
+    if (!o.konyvelo) szolg.push(el('havi'));
     if (!(o.konyvelo && o.konyvelonekVoltHelyettunk)) szolg.unshift(el('helyettunk'));
     if (!(o.konyvelo && o.konyvelonekVoltVisszahivasa)) szolg.unshift(el('visszahivasok'));
     out.push({ cim: 'Ügyfélszolgálat', elemek: szolg });
@@ -270,6 +278,7 @@ export function menuCsoportok(o: {
       el('admin_ugyfelek'),
       el('admin_elofizetesek'),
       el('admin_fizetesek'),
+      el('admin_dijak'),
       el('admin_konyvelok'),
       el('admin_csapat'),
       el('admin_forrasok'),

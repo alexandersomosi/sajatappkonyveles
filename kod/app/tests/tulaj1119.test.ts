@@ -41,7 +41,9 @@ test('nincs válasz: 1 teendő, csak a kérdés, szürke előnézet (S2, K4.1)',
 
 test('meglévő vállalkozás: egy „Most ez jön”, az előfizetés a szerződésig zárva, egy szám (K4.1, K4.3)', () => {
   const j = utEpit({ o: allapot('van'), ma: '2026-11-19', keresekDb: 1 });
-  assert.deepEqual(j.steps.map((s) => s.key), [...JOURNEY_ORDER.van]);
+  // SPEC §28.K.7: az „Alkalmazottak” sor csak akkor látszik, ha van alkalmazott/EFO
+  assert.deepEqual(j.steps.map((s) => s.key), JOURNEY_ORDER.van.filter((k) => k !== 'alkalmazottak'));
+  assert.equal(j.steps.find((s) => s.key === 'kedvezmenyek')?.state, 'nyitva'); // soha nem „most”, nem számít
   assert.equal(j.steps.filter((s) => s.state === 'most').length, 1);
   assert.equal(j.currentKey, 'adatok');
   const elo = j.steps.find((s) => s.key === 'elofizetes')!;

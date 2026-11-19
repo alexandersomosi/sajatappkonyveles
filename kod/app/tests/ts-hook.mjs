@@ -1,5 +1,10 @@
 // Feloldó horog: kiterjesztés nélküli relatív import → .ts / .tsx / index.ts (csak a tesztekhez).
 export async function resolve(spec, ctx, next) {
+  // a MINTA-adatok JSON-t importálnak attribútum nélkül (a Metro így kéri): a tesztekben JSON-ként töltjük be
+  if (/\.json$/.test(spec) && !ctx.importAttributes?.type) {
+    const r = await next(spec, { ...ctx, importAttributes: { ...ctx.importAttributes, type: 'json' } });
+    return { ...r, format: 'json', importAttributes: { type: 'json' } };
+  }
   try {
     return await next(spec, ctx);
   } catch (e) {

@@ -111,7 +111,7 @@ describe('O4.1 – before activation', () => {
     for (const f of a.body.features) {
       expect(f.state).toBe(CLIENT_FEATURE_RULES[f.feature as keyof typeof CLIENT_FEATURE_RULES].beforeActivation);
       if (f.state === 'nyitva') expect(f.reason).toBeNull();
-      else expect(f.reason).toMatch(/^A bekötés után nyílik meg\. [^{}]+$/);
+      else expect(f.reason).toMatch(/^A bekötés után [^{}]+$/); // §28.K: 'tovabbito_email' has its own wording
     }
     // the total counts our steps too, so the client's own share is named (matches the band's "Még N dolog kell tőled")
     expect(a.body.activationHint).toMatch(/^Még \d+ lépés, és minden megnyílik\.( Ebből \d+ a tiéd, a többi a mi dolgunk\.| Ebből \d+ a tiéd\.| Ezek már a mi dolgunk: szólunk, ha kész\.)?$/);

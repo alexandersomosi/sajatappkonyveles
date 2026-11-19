@@ -75,6 +75,9 @@ import { teamRows } from '../services/callbacks.js';
 import { currentRegistrationOf } from '../services/registration.js';
 import { teamViews } from './team.js';
 import { openAssistOf } from '../services/assist.js';
+import { accDetailK28, hasResponseTimePromise, registerAccK28Routes } from './acc-k28.js';
+import { pendingAllowances } from '../services/kedvezmeny.js';
+import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
 
 /**
  * One CSV cell for Excel (";" separated). Text from clients or NAV (customer names, descriptions) that starts
@@ -90,6 +93,8 @@ export function csvCell(s: string | number | null | undefined): string {
 export function accRoutes(deps: Deps) {
   const r = new Hono<Env>();
   r.use('*', requireAuth(deps, { roles: ['accountant', 'admin'] }));
+  // SPEC §28 / §28.K (reserve, earnings, allowances, check-in queue, annual closing, EFO, regime) + the service lock
+  registerAccK28Routes(r, deps);
 
   async function me(c: C): Promise<AccountantRow> {
     return accountantOfUser(deps.db, auth(c).userId);
@@ -195,6 +200,10 @@ export function accRoutes(deps: Deps) {
         subscriptionStatus: sub?.status ?? null,
         onboardingMilestone: await milestoneOf(cl.id),
         onboardingJourney: cl.lifecycle === 'bekotes_alatt' ? await journeyLine(cl) : null,
+        // SPEC §28.3.6 / §28.K
+        allowancesPending: await pendingAllowances(deps.db, cl.id),
+        serviceLocked: Boolean(cl.serviceLock),
+        adoszamPending: cl.adoszamPending,
       });
     }
     return c.json({ items, counts });
@@ -294,6 +303,7 @@ export function accRoutes(deps: Deps) {
       openRequestsToClient: reqs.filter((x) => x.direction === 'konyvelotol').length,
       unreadMessages: Number(unread?.n ?? 0),
       demo: deps.cfg.appEnv === 'demo',
+      ...(await accDetailK28(deps, cl)),
     });
   });
 
@@ -1393,6 +1403,8 @@ export function accRoutes(deps: Deps) {
     const raw = await readJson(c, z.object({ responseTimeText: z.string().trim().min(1).max(120).optional(), appointmentsEnabled: z.boolean().optional(), monthlyStatementRequest: z.boolean().optional() }));
     // appointmentsEnabled is accepted for old panels but ignored (SPEC §26.2.9).
     const { appointmentsEnabled: _ignored, ...b } = raw;
+    // SPEC §28.K.15: no answer-time promise
+    if (b.responseTimeText && hasResponseTimePromise(b.responseTimeText)) throw E.validation({ responseTimeText: RESPONSE_TIME_SETTINGS_ERROR });
     await deps.db.update(accountants).set({ ...b, updatedAt: deps.now() }).where(eq(accountants.id, acc.id));
     await auditC(c, deps.db, 'accountant.settings_updated', { targetType: 'accountant', targetId: acc.id, details: { fields: Object.keys(b) } });
     const [u] = await deps.db.select().from(accountants).where(eq(accountants.id, acc.id)).limit(1);

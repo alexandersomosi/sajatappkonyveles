@@ -5,11 +5,11 @@ import type {
   AssistView, BusinessRegistrationView, JourneyStepView, JourneyView, OnboardingState, OnboardingStepState, PathChangeInfo, WaitingCardView,
 } from '../_shared/api';
 import {
-  ASSIST_STATUS_CLIENT_TEXT, ASSIST_STATUS_CLIENT_TEXT_MH, fillPlaceholders, JOURNEY_STEP_TEXTS, JOURNEY_TEXTS, PATH_CHANGE_TEXTS,
+  ASSIST_STATUS_CLIENT_TEXT, ASSIST_STATUS_CLIENT_TEXT_MH, EMPLOYER_TEXTS, fillPlaceholders, JOURNEY_STEP_TEXTS, JOURNEY_TEXTS, PATH_CHANGE_TEXTS,
   STEP_LOCK_DEFAULT_TEXTS, WAITING_ESCALATE_TEXT, WAITING_TEXTS,
 } from '../_shared/bekotes';
 import {
-  ASSIST_CLOSE_REASON_LABELS, ASSIST_OPEN_STATUSES, JOURNEY_ACTOR_LABELS, JOURNEY_ORDER, JOURNEY_PREVIEW, LOCK_ELOFIZETES_SZERZODES_UTAN,
+  ASSIST_CLOSE_REASON_LABELS, ASSIST_OPEN_STATUSES, EMPLOYER_DECISIONS_ALLOW_ACTIVATION, JOURNEY_ACTOR_LABELS, JOURNEY_NOT_COUNTED, JOURNEY_ORDER, JOURNEY_PREVIEW, LOCK_ELOFIZETES_SZERZODES_UTAN,
   PATH_CHANGE_BLOCKER_TEXT, type AssistKind, type AssistStatus, type JourneyActor, type JourneyRowState, type JourneyStepKey, type JourneyVariant,
   type PathChangeBlocker,
 } from '../_shared/enums';
@@ -246,6 +246,18 @@ export function utEpit({ o, reg = null, keresekDb = 0, ma }: UtBemenet): Journey
       case 'azonositas':
         sorok.push(lepesSor('azonositas', st('azonositas')));
         break;
+      // SPEC §28.3.4: nem kötelező sor, soha nem „most”, nem számít a teendők közé (JOURNEY_NOT_COUNTED)
+      case 'kedvezmenyek':
+        sorok.push({ key, allapot: 'kliens', actor: 'te', clientPart: false, action: akcio('kedvezmenyek') });
+        break;
+      // SPEC §28.K.7: csak ha van alkalmazott vagy EFO; a könyvelő dönt
+      case 'alkalmazottak': {
+        const e = o.employer;
+        if (!e || e.answer === 'nincs') break;
+        if (e.decision && EMPLOYER_DECISIONS_ALLOW_ACTIVATION.includes(e.decision)) sorok.push({ key, allapot: 'kesz', actor: 'konyvelo', clientPart: false, statusText: e.clientText ?? undefined });
+        else sorok.push({ key, allapot: 'var', actor: 'konyvelo', clientPart: false, statusText: e.clientText ?? fill(EMPLOYER_TEXTS.journeyWaiting) });
+        break;
+      }
       case 'elofizetes': {
         const s = st('elofizetes');
         const szerz = st('szerzodes');
@@ -266,7 +278,7 @@ export function utEpit({ o, reg = null, keresekDb = 0, ma }: UtBemenet): Journey
   }
 
   // „Most ez jön”: az első, ügyfél-határidős sor (jóváhagyás, kamara), különben az első a sorrendben.
-  const kliens = sorok.filter((s) => s.allapot === 'kliens');
+  const kliens = sorok.filter((s) => s.allapot === 'kliens' && !(JOURNEY_NOT_COUNTED as readonly string[]).includes(s.key));
   const most = kliens.find((s) => s.dueOn) ?? kliens[0] ?? null;
   const actorLabel = (a: JourneyActor) => fill(JOURNEY_ACTOR_LABELS[a]);
   const steps: JourneyStepView[] = sorok.map((s, i) => {

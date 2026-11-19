@@ -1,6 +1,7 @@
 // Adó: quarter calculation from ado-motor, overrides with reason, the letter, "Jóváhagyom és elküldöm",
 // payment verification, "Beadva" with the 2658 PDF + NAV receipt (FUNKCIOK 8, 22, 23; SPEC §6.3, §7).
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { LOCK_TEXTS } from '../../../_shared/bekotes';
 import { useSearchParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
@@ -557,7 +558,12 @@ function Jovahagyas({ p, r, c, alapLevel, alairas, alairo }: { p: AccTaxPeriod; 
           </div>
         )}
         <div className="gombsor" style={{ marginTop: 16 }}>
-          <button className="gomb-e" disabled={!kesz || c.lifecycle === 'bekotes_alatt'} title={c.lifecycle === 'bekotes_alatt' ? 'A bekötés után hagyhatod jóvá.' : undefined} onClick={() => setMegerosit(true)}>
+          <button
+            className="gomb-e"
+            disabled={!kesz || c.lifecycle === 'bekotes_alatt' || !!c.serviceLock}
+            title={c.serviceLock ? LOCK_TEXTS.panelDisabled : c.lifecycle === 'bekotes_alatt' ? 'A bekötés után hagyhatod jóvá.' : undefined}
+            onClick={() => setMegerosit(true)}
+          >
             Jóváhagyom és elküldöm
           </button>
           {c.lifecycle === 'bekotes_alatt' && <span className="sugo" style={{ margin: 0 }}>A bekötés után hagyhatod jóvá.</span>}
@@ -942,7 +948,7 @@ function Beadas({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
             <input className={napHiba && nap ? 'doboz hibas' : 'doboz'} type="date" value={nap} min={elsoNap} max={t} onChange={(e) => setNap(e.target.value)} />
             {napHiba && nap && <span className="hiba-szoveg">{napHiba}</span>}
           </label>
-          <button className="gomb-e" disabled={!kesz || beadva.isPending} onClick={() => setMegerosit(true)}>
+          <button className="gomb-e" disabled={!kesz || beadva.isPending || !!c.serviceLock} title={c.serviceLock ? LOCK_TEXTS.panelDisabled : undefined} onClick={() => setMegerosit(true)}>
             {halad ?? 'Beadottnak jelölöm'}
           </button>
         </div>

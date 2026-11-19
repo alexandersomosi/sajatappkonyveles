@@ -765,7 +765,8 @@ export async function consentSummary(deps: Deps, db: DbOrTx, row: AssistRow): Pr
     instructionText: await t('consent_instruction'),
     publicNote: await t('consent_public'),
     missing,
-    canConsent: !missing.length && !pending && row.kind === 'vallalkozas_bejelentes' && CONSENT_STATUSES.includes(row.status),
+    // k5 finding 13: the kill switch and the 2026-12-31 cut-off stop OPEN EV requests before the filing too
+    canConsent: !missing.length && !pending && row.kind === 'vallalkozas_bejelentes' && CONSENT_STATUSES.includes(row.status) && evEnabled(deps),
   };
 }
 
@@ -789,6 +790,7 @@ export async function giveConsent(
   const row = await lockAssist(db, id);
   if (row.clientId !== cl.id) throw E.notFound();
   if (row.kind !== 'vallalkozas_bejelentes') throw E.notFound();
+  if (!evEnabled(deps)) throw assistErr.disabled(await deps.content.render('helyettunk.disabled', { firstName: await accFirstName(db, cl) }));
   if (row.consentValid && (row.status === 'ugyfel_engedelyezte' || row.status === 'meghatalmazas_el')) {
     if (row.consentHash === b.hash) return row;
   }
@@ -926,6 +928,8 @@ export async function prepareEvFiled(deps: Deps, db: DbOrTx, actor: StaffActor, 
   const { row, cl, kind } = await assistForStaff(deps, db, actor, id, true);
   requireRole('bejelentes_bekuldve', kind, await accFirstName(db, cl));
   if (row.kind !== 'vallalkozas_bejelentes') throw wrong(row);
+  // k5 finding 13: no EV filing after the kill switch / the cut-off
+  if (!evEnabled(deps)) throw assistErr.disabled(await deps.content.render('helyettunk.disabled', { firstName: await accFirstName(db, cl) }));
   if (row.status !== 'ugyfel_engedelyezte' || !row.consentValid) throw assistErr.wrongStatus('Az ügyfél még nem engedélyezte a bejelentést.');
   if (!(await answersMatchConsent(deps, db, row))) throw assistErr.stale('A kérdőív változott az engedély óta.');
   const reg = await registrationOfAssist(db, row);
@@ -1049,7 +1053,14 @@ export async function teamAssistRows(deps: Deps, db: DbOrTx, rows: AssistRow[]):
   });
 }
 
-const PHASE_TITLES: Record<AssistCheckPhase, string> = { hivas: 'Hívás', ujegyke: 'Meghatalmazás (UJEGYKE)', bejelentes: 'Bejelentés a Vállalkozói Ügysegédben' };
+const PHASE_TITLES: Record<AssistCheckPhase, string> = {
+  hivas: 'Hívás',
+  ujegyke: 'Meghatalmazás (UJEGYKE)',
+  bejelentes: 'Bejelentés a Vállalkozói Ügysegédben',
+  // SPEC §28.5.5 change kinds
+  valtozas_adatok: 'Az új adatok ellenőrzése',
+  valtozas_bejelentes: 'Változásbejelentés meghatalmazottként',
+};
 
 const TIMELINE_TEXT: Record<string, (d: Record<string, unknown>) => string> = {
   'assist.created': () => 'Kérés érkezett',

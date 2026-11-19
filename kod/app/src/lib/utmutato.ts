@@ -2,8 +2,8 @@
 // útmutató felépítése a sablonból. Az útmutatót a szerver építi (GET /client/guides/:kind); ez a függvény ugyanazt
 // csinálja a MINTA-szervernek és tartaléknak, ha egy régebbi szerver még nem ismeri a végpontot.
 import type { BusinessRegistrationAnswers, Guide, GuideImage, GuideImageManifest, GuideStep } from '../_shared/api';
-import { personaliseGuide, PREPARE_ITEMS } from '../_shared/bekotes';
-import { GUIDE_ACTION_LABELS, GUIDE_IMAGE_LABELS, GUIDE_VIDEO, VIDEO_FILES, type GuideKind } from '../_shared/enums';
+import { personaliseChangeGuide, personaliseGuide, PREPARE_ITEMS, type ChangeGuideData } from '../_shared/bekotes';
+import { CHANGE_KINDS, CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT, GUIDE_ACTION_LABELS, GUIDE_IMAGE_LABELS, GUIDE_VIDEO, VIDEO_FILES, type ChangeKind, type GuideKind } from '../_shared/enums';
 
 /** A normalizáló (scripts/utmutato-kepek.mjs) kiegészítései a GuideImage-en (SPEC §24 11-18 app). */
 export type UtmutatoKep = GuideImage & {
@@ -65,8 +65,32 @@ export interface UtmutatoKornyezet {
   jovahagyas?: { dueOn: string; dueText: string; daysLeft: number; lastDay: boolean } | null;
 }
 
+export const valtozasFajta = (k: string): k is ChangeKind => (CHANGE_KINDS as readonly string[]).includes(k);
+
+/** SPEC §28.5.3: a változás-útmutató ugyanabból a megosztott sablonból (personaliseChangeGuide), mint a szerveren. */
+export function valtozasUtmutatoEpit(kind: ChangeKind, k: { change: ChangeGuideData | null; firstName: string; kesz: string[]; ma: string }): Guide {
+  const p = personaliseChangeGuide(kind, { change: k.change, firstName: k.firstName, progress: k.kesz, ugysegedValidUntil: CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT });
+  const steps: GuideStep[] = p.steps.map((s) => ({ ...s, fields: s.fields.map((f) => ({ ...f, actionLabel: GUIDE_ACTION_LABELS[f.action] })) }));
+  const elavult = k.ma > p.validUntil;
+  return {
+    kind,
+    version: p.version,
+    title: p.title,
+    intro: p.intro,
+    outro: p.outro,
+    video: null,
+    prepare: [],
+    steps,
+    imagesManifest: `utmutato/${kind}/kepek.json`,
+    outdated: elavult,
+    outdatedText: elavult ? '2027-től a vállalkozói nyilvántartást a kamara vezeti. Ezt az útmutatót frissítjük; addig kérj visszahívást, és segítünk.' : null,
+    activityPending: p.activityPending,
+  };
+}
+
 /** Ugyanaz a megosztott személyre szabó, amit a szerver használ (kod/shared/src/bekotes.ts personaliseGuide). */
 export function utmutatoEpit(kind: GuideKind, k: UtmutatoKornyezet): Guide {
+  if (valtozasFajta(kind)) return valtozasUtmutatoEpit(kind, { change: null, firstName: k.konyvelo.firstName, kesz: k.kesz, ma: k.ma });
   const p = personaliseGuide(kind, {
     answers: k.answers,
     nev: k.nev,

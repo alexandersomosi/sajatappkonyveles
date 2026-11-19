@@ -52,7 +52,7 @@ describe('jogi szövegek: nincs kitöltetlen {{…}}', () => {
     }
     const ism = (await h.json('GET', '/legal/simplepay_ismetlodo')).body.markdown as string;
     const nb = (s: string) => s.replace(/[  ]/g, ' ');
-    expect(nb(ism)).toContain('alkalmanként legfeljebb 20 000 Ft');
+    expect(nb(ism)).toContain('alkalmanként legfeljebb 19 999 Ft'); // SPEC §28.K.1: 19 999 Ft
     expect(ism).toContain('legfeljebb 12 alkalommal');
     expect(ism).toContain('2027. november 18-ig');
     const aszf = (await h.json('GET', '/legal/aszf')).body.markdown as string;

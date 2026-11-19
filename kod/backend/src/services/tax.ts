@@ -22,6 +22,7 @@ import { E } from '../lib/errors.js';
 import { calculateYear, deadlinesFor, ibanHu, NAV_ACCOUNTS, type QuarterResult, type TaxProfileInput, type YearInput, type YearResult } from '../tax/engine.js';
 import { accountantParams, notify } from '../notify/notify.js';
 import { audit } from '../audit.js';
+import { allowancesForEngine, answersRow } from './kedvezmeny.js';
 
 export type PeriodRow = typeof taxPeriods.$inferSelect;
 export type CalcRow = typeof taxCalculations.$inferSelect;
@@ -41,7 +42,7 @@ export function periodAdj(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 
   return p.kind === 'negyedev' ? `${periodLabel(p)}i` : periodLabel(p);
 }
 
-export function profileInput(p: ProfileRow): TaxProfileInput {
+export function profileInput(p: ProfileRow, o: { legacyAllowances?: boolean } = {}): TaxProfileInput {
   return {
     year: p.year,
     costRatio: p.costRatio as 45 | 80 | 90,
@@ -54,7 +55,7 @@ export function profileInput(p: ProfileRow): TaxProfileInput {
     priorOverrides: p.priorOverrides ?? undefined,
     // NAV 100 ch. 4: családi kedvezmény, 25 év alattiak, anyák, első házasok – not modelled, but their
     // presence shows the 'kedvezmeny_nem_modellezett' warning to client and accountant.
-    ...(p.allowances?.length ? { allowances: p.allowances } : {}),
+    ...(p.allowances?.length && o.legacyAllowances !== false ? { allowances: p.allowances } : {}),
   };
 }
 
@@ -107,8 +108,11 @@ export async function engineInput(db: DbOrTx, clientId: string, year: number, as
     .from(revenueItems)
     .where(and(eq(revenueItems.clientId, clientId), isNull(revenueItems.deletedAt), sql`(${revenueItems.receivedOn} between ${`${year}-01-01`} and ${`${year}-12-31`} or ${revenueItems.deliveryDate} between ${`${year}-01-01`} and ${`${year}-12-31`})`));
   const approvedQuarters = await approvedQuarterActuals(db, clientId, year);
+  // SPEC §28.3.7 e: the approved, in-year allowances; the legacy one-line flags stop once the questionnaire exists.
+  const kedvezmenyek = await allowancesForEngine(db, clientId, year);
+  const hasAnswers = Boolean(await answersRow(db, clientId, year));
   return {
-    profile: profileInput(profile),
+    profile: { ...profileInput(profile, { legacyAllowances: !hasAnswers }), ...(kedvezmenyek ? { kedvezmenyek } : {}) },
     asOf,
     ...(approvedQuarters.length ? { approvedQuarters } : {}),
     revenue: items.map((i) => ({

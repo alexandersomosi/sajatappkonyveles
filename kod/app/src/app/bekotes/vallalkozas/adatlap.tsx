@@ -30,6 +30,7 @@ import { HolTalalom, MiEz } from '@/ui/Magyarazat';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
 const LAPOK = ['Mielőtt elkezded', 'Mivel foglalkozol?', 'Hol lesz a székhelyed?', 'Hogyan dolgozol majd?', 'Mikor indulsz?'];
 const EU_LABELS: Record<EuPartnerAnswer, string> = { nem: 'Nem', igen: 'Igen', nem_tudom: 'Nem tudom' };
@@ -174,7 +175,7 @@ function Tipp({ children, sarga }: { children: React.ReactNode; sarga?: boolean 
   );
 }
 
-export default function Adatlap() {
+function Adatlap() {
   const p = useLocalSearchParams<{ lap?: string }>();
   const me = useMe();
   const o = useOnboarding();
@@ -620,3 +621,6 @@ export default function Adatlap() {
     </KeyboardAvoidingView>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(Adatlap);

@@ -3,10 +3,11 @@
 // channel is claimed atomically (UPDATE … WHERE sent_at IS NULL) so API and worker never double-send.
 import { and, eq, gte, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 import brand from '../_shared/brand.json' with { type: 'json' };
-import type { NotificationKind } from '../_shared/enums.js';
+import { ALWAYS_ON_KINDS, QUIET_HOURS_DEFAULT, QUIET_HOURS_EXEMPT_KINDS, type NotificationKind } from '../_shared/enums.js';
+import type { NotificationSettings } from '../_shared/api.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { accountants, clients, notificationPrefs, notifications, pushTokens, users } from '../db/schema.js';
+import { accountants, clients, notificationPrefs, notifications, pushTokens, userNotificationSettings, users } from '../db/schema.js';
 import { log, safeErr } from '../log.js';
 import { addDays, budapestLocalToUtc, budapestParts } from '../lib/dates.js';
 
@@ -71,19 +72,65 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   assist_task: { push: false, email: true, to: 'accountant' },
   assist_approval_overdue: { push: false, email: true, to: 'accountant' },
   client_path_changed: { push: false, email: false, to: 'accountant' },
+  // SPEC §28.8 – client (invoice_new: push on, e-mail off by default; amounts allowed in push, §28.2.5)
+  invoice_new: { push: true, email: false, to: 'client' },
+  allowance_decided: { push: true, email: true, to: 'client' },
+  allowance_check: { push: true, email: true, to: 'any' },
+  assist_change_done: { push: true, email: true, to: 'client' },
+  // SPEC §28.8 – staff (badge + digest)
+  allowance_submitted: { push: false, email: false, to: 'accountant' },
+  // SPEC §28.K.17 – client
+  checkin_due: { push: true, email: false, to: 'client' },
+  fee_due: { push: true, email: true, to: 'client' },
+  annual_due: { push: true, email: false, to: 'client' },
+  annual_status: { push: true, email: true, to: 'client' },
+  service_locked: { push: true, email: true, to: 'client' },
+  service_unlocked: { push: true, email: true, to: 'client' },
+  nudge: { push: true, email: false, to: 'client' },
+  upload_reminder: { push: true, email: false, to: 'client' },
+  kata_business_invoice: { push: true, email: true, to: 'any' },
+  mailbox_received: { push: false, email: false, to: 'client' },
+  mailbox_rejected: { push: true, email: true, to: 'client' },
+  employer_decided: { push: true, email: true, to: 'client' },
+  subscription_paused: { push: true, email: true, to: 'client' },
+  // SPEC §28.K.17 – staff (panel badge + digest)
+  checkin_change: { push: false, email: false, to: 'accountant' },
+  annual_submitted: { push: false, email: false, to: 'accountant' },
+  client_locked: { push: false, email: false, to: 'accountant' },
+  employer_reported: { push: false, email: false, to: 'accountant' },
+  onboarding_task: { push: false, email: false, to: 'accountant' },
 };
 
-/** SPEC §27.3.5: client push of these kinds waits for 08:00 Budapest outside 8–20 h (in-app and e-mail go at once). */
-const QUIET_PUSH_KINDS: readonly NotificationKind[] = ['assist_started', 'assist_mh_filed', 'assist_mh_reminder', 'assist_mh_expired', 'assist_consent_needed', 'assist_ev_filed', 'kamara_reminder'];
-const PUSH_FROM_HOUR = 8;
-const PUSH_TO_HOUR = 20;
+/** SPEC §28.2.3: the defaults when a user has no user_notification_settings row. */
+export const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
+  quietEnabled: QUIET_HOURS_DEFAULT.enabled,
+  quietFrom: QUIET_HOURS_DEFAULT.from,
+  quietTo: QUIET_HOURS_DEFAULT.to,
+  pushShowAmounts: true,
+};
 
-/** The next moment push may go out for a quiet-hours kind, or null when it may go now. */
-export function pushNotBefore(now: Date): Date | null {
+export async function notificationSettingsOf(db: DbOrTx, userId: string): Promise<NotificationSettings> {
+  const [r] = await db.select().from(userNotificationSettings).where(eq(userNotificationSettings.userId, userId)).limit(1);
+  if (!r) return { ...DEFAULT_NOTIFICATION_SETTINGS };
+  return { quietEnabled: r.quietEnabled, quietFrom: r.quietFrom, quietTo: r.quietTo, pushShowAmounts: r.pushShowAmounts };
+}
+
+/** true when `hour` (Budapest) lies inside the quiet window [from, to) – wrapping midnight when from > to. */
+export function inQuietHours(hour: number, s: Pick<NotificationSettings, 'quietEnabled' | 'quietFrom' | 'quietTo'>): boolean {
+  if (!s.quietEnabled || s.quietFrom === s.quietTo) return false;
+  return s.quietFrom < s.quietTo ? hour >= s.quietFrom && hour < s.quietTo : hour >= s.quietFrom || hour < s.quietTo;
+}
+
+/**
+ * SPEC §28.2.3 (replaces the fixed 8–20 h window of §27.3.5): the next moment a push may go out under the user's quiet
+ * hours, or null when it may go now. In-app rows and e-mails are never delayed.
+ */
+export function pushNotBefore(now: Date, s: Pick<NotificationSettings, 'quietEnabled' | 'quietFrom' | 'quietTo'> = DEFAULT_NOTIFICATION_SETTINGS): Date | null {
   const p = budapestParts(now);
-  if (p.hour >= PUSH_FROM_HOUR && p.hour < PUSH_TO_HOUR) return null;
-  const day = p.hour >= PUSH_TO_HOUR ? addDays(p.date, 1) : p.date;
-  return budapestLocalToUtc(day, `${String(PUSH_FROM_HOUR).padStart(2, '0')}:00`);
+  if (!inQuietHours(p.hour, s)) return null;
+  // the end of the window: today's `to` if it is still ahead, else tomorrow's
+  const day = p.hour < s.quietTo ? p.date : addDays(p.date, 1);
+  return budapestLocalToUtc(day, `${String(s.quietTo).padStart(2, '0')}:00`);
 }
 
 export type Params = Record<string, string | number | null | undefined>;
@@ -116,6 +163,10 @@ export interface NotifyInput {
   noPush?: boolean;
   /** E-mail text instead of the in-app body (content key email.<kind>.body rendered with the same params). */
   emailBodyKey?: string;
+  /** SPEC §28.2.4: the push uses notif.<kind>.<pushVariant>.title|body (e.g. 'rejtett' without amounts). */
+  pushVariant?: string;
+  /** Ready push text (wins over pushVariant). */
+  pushText?: { title: string; body: string };
 }
 
 /** Creates the in-app row (inside the caller's transaction if given) and schedules sending. */
@@ -145,9 +196,18 @@ export async function notify(deps: Deps, db: DbOrTx, n: NotifyInput): Promise<st
     .from(notificationPrefs)
     .where(and(eq(notificationPrefs.userId, n.userId), eq(notificationPrefs.kind, n.kind)))
     .limit(1);
-  let wantPush = (pref ? pref.push : def.push) && !n.noPush;
-  const quietUntil = wantPush && QUIET_PUSH_KINDS.includes(n.kind) ? pushNotBefore(deps.now()) : null;
-  const wantEmail = (pref ? pref.email : def.email) && !n.noEmail;
+  // SPEC §28.K.17: payment and lock texts cannot be switched off.
+  const alwaysOn = ALWAYS_ON_KINDS.includes(n.kind);
+  let wantPush = (alwaysOn ? def.push : pref ? pref.push : def.push) && !n.noPush;
+  // SPEC §28.2.3: the user's quiet hours apply to every push except "Most hív kollégánk".
+  const quietUntil = wantPush && !QUIET_HOURS_EXEMPT_KINDS.includes(n.kind) ? pushNotBefore(deps.now(), await notificationSettingsOf(db, n.userId)) : null;
+  const wantEmail = (alwaysOn ? def.email : pref ? pref.email : def.email) && !n.noEmail;
+  let pushText = n.pushText ?? null;
+  if (!pushText && n.pushVariant && (await deps.content.exists(`notif.${n.kind}.${n.pushVariant}.title`)))
+    pushText = {
+      title: await deps.content.render(`notif.${n.kind}.${n.pushVariant}.title`, params),
+      body: await deps.content.render(`notif.${n.kind}.${n.pushVariant}.body`, params),
+    };
   const emailBody = wantEmail && n.emailBodyKey && (await deps.content.exists(n.emailBodyKey)) ? await deps.content.render(n.emailBodyKey, params) : null;
 
   // document_processed: at most one push per day – fold into today's row instead.
@@ -188,6 +248,7 @@ export async function notify(deps: Deps, db: DbOrTx, n: NotifyInput): Promise<st
         ...(n.kind === 'document_processed' ? { count: Number(n.params?.count ?? 1) } : {}),
         ...(emailBody ? { emailBody } : {}),
         ...(quietUntil ? { pushNotBefore: quietUntil.toISOString() } : {}),
+        ...(pushText ? { pushTitle: pushText.title, pushBody: pushText.body } : {}),
       },
       wantPush,
       wantEmail,
@@ -251,7 +312,13 @@ export async function dispatchPending(deps: Deps, limit = 200): Promise<{ push: 
       if (tokens.length) {
         try {
           const tickets = await deps.push.send(
-            tokens.map((t) => ({ to: t.token, title: claimP.title, body: claimP.body, data: { link: claimP.link, id: claimP.id } })),
+            tokens.map((t) => {
+              // SPEC §28.2.4: a row may carry its own push text (e.g. without amounts, 'rejtett').
+              const d = (claimP.data ?? {}) as { pushTitle?: unknown; pushBody?: unknown };
+              const title = typeof d.pushTitle === 'string' ? d.pushTitle : claimP.title;
+              const body = typeof d.pushBody === 'string' ? d.pushBody : claimP.body;
+              return { to: t.token, title, body, data: { link: claimP.link, id: claimP.id } };
+            }),
           );
           const bad = tickets.filter((t) => t.error === 'DeviceNotRegistered').map((t) => t.token);
           if (bad.length) await db.update(pushTokens).set({ disabledAt: deps.now() }).where(inArray(pushTokens.token, bad));

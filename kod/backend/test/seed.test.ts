@@ -96,7 +96,7 @@ describe('demo seed', () => {
   it('the admin dashboard shows business data', async () => {
     const d = await h.json('GET', '/admin/dashboard', { token: tokens.admin! });
     expect(d.body.clients.total).toBe(3);
-    expect(d.body.mrrHuf).toBe(60_000);
+    expect(d.body.mrrHuf).toBe(59_997); // 3 × 19 999 Ft (SPEC §28.K.1)
     const outbox = await h.json('GET', '/admin/demo-outbox', { token: tokens.admin! });
     expect(outbox.status).toBe(200);
     const sys = await h.json('GET', '/admin/system', { token: tokens.admin! });

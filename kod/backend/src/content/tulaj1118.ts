@@ -3,6 +3,7 @@
 // /admin/szovegek edits them with the usual placeholder check. Notification texts live in defaults.hu.json.
 import { ONBOARDING_EXPLAINERS } from '../_shared/bekotes.js';
 import { GROUP_PLACEHOLDERS_1119 } from './tulaj1119.js';
+import { GROUP_PLACEHOLDERS_K28 } from './k28.js';
 import { CALLBACK_CLOSE_REASONS, CLIENT_FEATURE_RULES, CLIENT_FEATURES, REGISTRATION_STATUS_CLIENT_TEXT, REGISTRATION_STATUSES } from '../_shared/enums.js';
 
 /** Client wording of the callback states (SPEC §26.2.6). */
@@ -85,5 +86,5 @@ const GROUP_PLACEHOLDERS: [string, string[]][] = [
   ['visszahivas.', ['firstName', 'callerId', 'phoneMasked', 'staffFirstName', 'when', 'reasonText']],
 ];
 export function groupPlaceholders(key: string): string[] {
-  return [...GROUP_PLACEHOLDERS_1119, ...GROUP_PLACEHOLDERS].find(([p]) => key.startsWith(p))?.[1] ?? [];
+  return [...GROUP_PLACEHOLDERS_K28, ...GROUP_PLACEHOLDERS_1119, ...GROUP_PLACEHOLDERS].find(([p]) => key.startsWith(p))?.[1] ?? [];
 }

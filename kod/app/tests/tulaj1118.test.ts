@@ -77,7 +77,8 @@ test('útmutató: minden helyőrző kitöltve, közösségi adószám a válasz 
     assert.equal(kozossegi[0].action, eu === 'igen' ? 'jelold' : 'ne_jelold');
     assert.ok(afa?.fields.some((f) => /alanyi adómentesség/.test(f.label) && f.action === 'jelold'));
     const munka = g.steps.find((s) => s.key === 'adozas_munkavegzes');
-    assert.match(munka?.fields[0].value ?? '', /főfoglalkozású/);
+    // SPEC §28.K.13: a valódi NAV-sor felirata ([1] Főfoglalkozásként)
+    assert.match(munka?.fields[0].value ?? '', /Főfoglalkozásként/);
     assert.equal(g.steps[0].done, true);
     assert.equal(g.prepare.length, PREPARE_ITEMS.length);
     assert.equal(g.outdated, false);

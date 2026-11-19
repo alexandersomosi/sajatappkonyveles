@@ -17,6 +17,7 @@ import { ASSIST_CALLBACK_TOPIC, GUIDE_KINDS, PATH_CHANGE_BLOCKER_TEXT, type Assi
 import { bekotes1119, engedelyOsszegzes, kezdo1119, NYITOTT_SEGITSEG, segitsegNezet, type Allapot1119 } from './tulaj1119';
 import { utmutatoEpit } from '../../lib/utmutato';
 import { munkanapotHozzaad, napKulcs } from '../../lib/ut';
+import { k28CsendBeallit, k28Home, k28Kezdo, k28Me, k28SzamlaTartalek, k28Utak, type K28Allapot } from './k28';
 
 const tarolt = (k: string, v?: string | null): string | null => {
   try {
@@ -67,8 +68,9 @@ const S = {
   szamlalo: 1,
   t: kezdo1118(kezdo.fk) as Allapot1118,
   u: { assists: [], chamber: null, pathChangedAt: null, szamlalo: 1 } as Allapot1119,
+  k: k28Kezdo(kezdo.fk, '2026-11-17') as K28Allapot,
 };
-const BEKOTES_FK = ['peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara'];
+const BEKOTES_FK = ['peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'tamas'];
 function beallit(fk: Forgatokonyv) {
   S.fk = fk;
   S.ma = fk === 'fizetendo' || fk === 'befizetve' ? '2026-10-09' : fk === 'ures' ? '2026-11-02' : '2026-11-17';
@@ -87,6 +89,7 @@ function beallit(fk: Forgatokonyv) {
   S.kyc = BEKOTES_FK.includes(fk) && fk !== 'peter' ? 'nincs' : 'elfogadva';
   S.t = kezdo1118(fk);
   S.u = kezdo1119(fk, S.t, S.onboarding, S.ma);
+  S.k = k28Kezdo(fk, S.ma);
   maBeallit(S.ma);
 }
 beallit(S.fk);
@@ -97,8 +100,19 @@ const LEVENTE = { id: 'minta-ugyfel-levente', email: 'levente.toth@demo.kezjegy.
 const MARIKA = { id: 'minta-ugyfel-marika', email: 'marika.kiss@demo.kezjegy.test', nev: 'Kiss Marika', firstName: 'Marika', lastName: 'Kiss' };
 const DAVID = { id: 'minta-ugyfel-david', email: 'david.molnar@demo.kezjegy.test', nev: 'Molnár Dávid', firstName: 'Dávid', lastName: 'Molnár' };
 const ILONA = { id: 'minta-ugyfel-ilona', email: 'ilona.balogh@demo.kezjegy.test', nev: 'Balogh Ilona', firstName: 'Ilona', lastName: 'Balogh' };
+// SPEC §28.11 / §28.K.21 kitalált személyei (csak a MINTA buildben)
+const K6_SZEMELYEK: Record<string, { id: string; email: string; nev: string; firstName: string; lastName: string }> = {
+  eszter: { id: 'minta-ugyfel-eszter', email: 'eszter.szabo@demo.kezjegy.test', nev: 'Szabó Eszter', firstName: 'Eszter', lastName: 'Szabó' },
+  balint: { id: 'minta-ugyfel-balint', email: 'balint.toth@demo.kezjegy.test', nev: 'Tóth Bálint', firstName: 'Bálint', lastName: 'Tóth' },
+  norbert: { id: 'minta-ugyfel-norbert', email: 'norbert.kiss@demo.kezjegy.test', nev: 'Kiss Norbert', firstName: 'Norbert', lastName: 'Kiss' },
+  adam: { id: 'minta-ugyfel-adam', email: 'adam.kovacs@demo.kezjegy.test', nev: 'Kovács Ádám', firstName: 'Ádám', lastName: 'Kovács' },
+  zarolt: { id: 'minta-ugyfel-ilona-f', email: 'ilona.fazekas@demo.kezjegy.test', nev: 'Fazekas Ilona', firstName: 'Ilona', lastName: 'Fazekas' },
+  szunetel: { id: 'minta-ugyfel-csilla', email: 'csilla.molnar@demo.kezjegy.test', nev: 'Molnár Csilla', firstName: 'Csilla', lastName: 'Molnár' },
+  tamas: { id: 'minta-ugyfel-tamas', email: 'tamas.barany@demo.kezjegy.test', nev: 'Bárány Tamás', firstName: 'Tamás', lastName: 'Bárány' },
+};
 const szemely = () =>
-  S.fk === 'peter' || S.fk === 'uj'
+  K6_SZEMELYEK[S.fk] ??
+  (S.fk === 'peter' || S.fk === 'uj'
     ? PETER
     : ['indul', 'utmutato', 'levente', 'kamara'].includes(S.fk)
       ? LEVENTE
@@ -108,7 +122,7 @@ const szemely = () =>
           ? DAVID
           : S.fk === 'ilona'
             ? ILONA
-            : KATA;
+            : KATA);
 const nyitottKeresDb = () => S.keresek.filter((k) => k.direction === 'konyvelotol' && (k.status === 'nyitott' || k.status === 'folyamatban')).length;
 const bekotesNezet = () => (S.onboarding ? bekotes1119(bekotes1118(S.onboarding, S.t), S.t, S.u, S.ma, nyitottKeresDb()) : null);
 
@@ -157,7 +171,7 @@ function mintaHome(): ClientHome {
   return {
     today: ma,
     demo: true,
-    client: { id: KATA.id, firstName: 'Kata', lifecycle: 'aktiv', onboardingComplete: true },
+    client: { id: szemely().id, firstName: szemely().firstName, lifecycle: 'aktiv', onboardingComplete: true },
     accountant: BENCE,
     hero: q3
       ? S.fizetve
@@ -176,6 +190,7 @@ function mintaHome(): ClientHome {
       totalCount: iratok.length + navDb,
     },
     nextDeadline: hl[0] ?? null,
+    ...k28Home(S.k, ma, true),
   };
 }
 
@@ -194,7 +209,7 @@ function me(): Me {
   const r = authEredmeny();
   return {
     user: r.user,
-    client: { id: p.id, firstName: p.firstName, lastName: p.lastName, lifecycle: S.onboarding ? 'bekotes_alatt' : 'aktiv', onboardingComplete: !S.onboarding, personalReferralCode: S.onboarding ? null : 'KATA7Q2X' },
+    client: { id: p.id, firstName: p.firstName, lastName: p.lastName, lifecycle: S.onboarding ? 'bekotes_alatt' : 'aktiv', onboardingComplete: !S.onboarding, personalReferralCode: S.onboarding ? null : 'KATA7Q2X', taxRegime: 'atalany', serviceLock: k28Me(S.k).serviceLock },
     accountant: BENCE,
     access: hozzaferes1118(!!S.onboarding, bekotesNezet()?.todoCount ?? 0),
     notificationPrefs: [
@@ -204,8 +219,15 @@ function me(): Me {
       { kind: 'message_new', push: true, email: false },
       { kind: 'document_processed', push: true, email: false },
       { kind: 'limit_warning', push: true, email: true },
+      { kind: 'invoice_new', push: true, email: false },
+      { kind: 'allowance_decided', push: true, email: true },
+      { kind: 'allowance_check', push: true, email: false },
+      { kind: 'checkin_due', push: true, email: false },
+      { kind: 'nudge', push: true, email: false },
+      { kind: 'upload_reminder', push: true, email: false },
     ],
     consentsNeeded: [],
+    notificationSettings: k28Me(S.k).notificationSettings,
   };
 }
 
@@ -221,14 +243,14 @@ const LEGAL_CIM: Record<string, string> = {
 };
 
 // ---------- útválasztás ----------
-type Kezelo = (m: RegExpMatchArray, q: URLSearchParams, test: Record<string, unknown>, k: Keres) => Valasz | Promise<Valasz>;
+type Kezelo = (m: RegExpMatchArray, q: URLSearchParams, test: Record<string, unknown>, k: Keres) => Valasz | Promise<Valasz> | undefined;
 const utak: [string, RegExp, Kezelo][] = [];
 const ut = (method: string, minta: string, f: Kezelo) => utak.push([method, new RegExp('^' + minta.replace(/:([a-zA-Z]+)/g, '([^/]+)') + '$'), f]);
 const kell = () => (S.belepve ? null : hiba(401, 'unauthenticated', 'Lépj be újra.'));
 
 ut('GET', '/config', () =>
   ok({
-    brand: { name: '', tagline: '', subline: '', priceHufMonthlyGross: 20000 },
+    brand: { name: '', tagline: '', subline: '', priceHufMonthlyGross: 19999 },
     appEnv: 'demo',
     demo: true,
     features: { googleSignIn: false, appleSignIn: false, totp: true },
@@ -298,9 +320,20 @@ ut('POST', '/auth/google', () => hiba(503, 'not_configured', 'A Google-belépés
 ut('POST', '/auth/apple', () => hiba(503, 'not_configured', 'Az Apple-belépés még nincs bekapcsolva.'));
 
 ut('GET', '/me', () => kell() ?? ok(me()));
-ut('PATCH', '/me', () => kell() ?? ok(me()));
+ut('PATCH', '/me', (_m, _q, t) => {
+  if (t.notificationSettings && typeof t.notificationSettings === 'object') k28CsendBeallit(S.k, t.notificationSettings as Record<string, never>);
+  return kell() ?? ok(me());
+});
 ut('POST', '/me/push-tokens', () => valasz(204));
-ut('GET', '/me/notifications', () => kell() ?? ok({ items: ertesitesek(S.ma), nextCursor: null }));
+// SPEC §28.2.4: az új kiállított számla értesítése (egy számla → a számla; több → /felretesz), a NAV-szinkron után
+const ujSzamlaErtesites = () =>
+  S.onboarding
+    ? []
+    : [
+        { id: 'e-uj-1', kind: 'invoice_new' as const, title: 'Új kiállított számlád: 240 000 Ft', body: 'Bodza Kiadó Kft. Tegyél félre kb. 20 000 Ft-ot.', createdAt: `${S.ma}T07:00:00Z`, link: '/szamla/nav-KSZ-2026-033', readAt: null },
+        { id: 'e-uj-2', kind: 'invoice_new' as const, title: '2 új kiállított számlád: összesen 402 000 Ft', body: 'Tegyél félre kb. 34 000 Ft-ot. Megnézem, melyik mennyi.', createdAt: `${S.ma}T06:59:00Z`, link: '/felretesz', readAt: null },
+      ];
+ut('GET', '/me/notifications', () => kell() ?? ok({ items: [...ujSzamlaErtesites(), ...ertesitesek(S.ma)], nextCursor: null }));
 ut('POST', '/me/notifications/read', () => valasz(204));
 ut('POST', '/me/consents', () => valasz(204));
 ut('POST', '/me/export', () => valasz(202, { exportId: 'exp1' }));
@@ -437,9 +470,9 @@ ut('DELETE', '/client/documents/:id', (m) => {
 });
 ut('GET', '/client/nav-invoices', (_m, q) => {
   const honap = q.get('month') ?? S.ma.slice(0, 7);
-  return ok({ items: navSzamlak(honap, S.ma, honap < '2026-10' ? 'beadva' : honap === '2026-10' ? 'feldolgozva' : 'feltoltve') });
+  return ok({ items: navSzamlak(honap, S.ma, honap < '2026-10' ? 'beadva' : honap === '2026-10' ? 'feldolgozva' : 'feltoltve').map((x) => ({ ...x, reserve: k28SzamlaTartalek(S.k, x.id, S.ma, !S.onboarding) })) });
 });
-ut('GET', '/client/nav-invoices/:id', (m) => (navSzamla(m[1]) ? ok(navSzamla(m[1])) : hiba(404, 'not_found', 'Ezt a számlát nem találjuk.')));
+ut('GET', '/client/nav-invoices/:id', (m) => (navSzamla(m[1]) ? ok({ ...navSzamla(m[1]), reserve: k28SzamlaTartalek(S.k, m[1], S.ma, !S.onboarding) }) : hiba(404, 'not_found', 'Ezt a számlát nem találjuk.')));
 ut('POST', '/files/:id/link', (m) => ok({ url: `minta:${m[1]}`, expiresAt: new Date(Date.now() + 300_000).toISOString() }));
 
 // --- üzenetek, kérések ---
@@ -488,7 +521,7 @@ ut('POST', '/client/appointments/:id/cancel', () => hiba(410, 'megszunt_funkcio'
 // --- előfizetés ---
 ut('GET', '/client/subscription', () => kell() ?? ok(S.fk === 'uj' ? { ...S.elofizetes, status: 'incomplete', card: undefined, nextChargeAt: undefined, currentPeriodEnd: undefined } : S.elofizetes));
 ut('POST', '/client/subscription/start', () =>
-  ok({ paymentUrl: 'minta:fizetes', orderRef: 'KJ-20261117-MINTA00001', tokenInfo: { times: 12, maxAmountHuf: 20000, until: '2027-11-17T00:00:00Z' } }),
+  ok({ paymentUrl: 'minta:fizetes', orderRef: 'KJ-20261117-MINTA00001', tokenInfo: { times: 12, maxAmountHuf: 19999, until: '2027-11-17T00:00:00Z' } }),
 );
 ut('POST', '/client/subscription/cancel', () => {
   S.elofizetes = { ...S.elofizetes, cancelAtPeriodEnd: true };
@@ -715,6 +748,13 @@ ut('POST', '/client/business-registration/chamber', (_m, _q, t) => {
   return ok({ ...S.t.reg, chamber: S.u.chamber });
 });
 
+// SPEC §28 + §28.K végpontjai: a lista ELEJÉRE (a változás-fajtájú assist és a díjak a régi útvonal előtt)
+{
+  const elotte = utak.length;
+  k28Utak(ut, { st: () => S.k, ma: () => S.ma, aktiv: () => !S.onboarding && S.belepve, ok, hiba: (st, c, m, e = {}, f) => hiba(st, c, m, e, f), kell });
+  utak.unshift(...utak.splice(elotte));
+}
+
 export const mintaSzallito: Szallito = async (k) => {
   await new Promise((r) => setTimeout(r, 60));
   const [utvonal, kerdes = ''] = k.url.split('?');
@@ -733,7 +773,10 @@ export const mintaSzallito: Szallito = async (k) => {
   for (const [method, re, f] of utak) {
     if (method !== k.method) continue;
     const m = utvonal.match(re);
-    if (m) return f(m, q, test, k);
+    if (!m) continue;
+    // undefined = ezt az útvonalat egy korábbi kezelő viszi tovább (SPEC §28 kiegészítések)
+    const v = await f(m, q, test, k);
+    if (v !== undefined) return v;
   }
   return hiba(404, 'not_found', 'Ez a minta-végpont nem létezik.');
 };

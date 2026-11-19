@@ -55,7 +55,32 @@ import {
   TAX_STATUSES,
   USER_ROLES,
   USER_STATUSES,
+  // SPEC §28 / §28.K
+  ACCOUNTANT_RESPONSE_TIME_DEFAULT,
+  ALLOWANCE_GATES,
+  ALLOWANCE_KINDS,
+  ALLOWANCE_REJECT_REASONS,
+  ALLOWANCE_STATUSES,
+  ANNUAL_STATUSES,
+  CHECKIN_ITEM_STATUSES,
+  CHECKIN_ITEMS,
+  CHECKIN_STATUSES,
+  EMPLOYER_ANSWERS,
+  EMPLOYER_DECISIONS,
+  EMPLOYER_SOURCES,
+  FEE_CHARGE_STATUSES,
+  FEE_KINDS,
+  FEE_UNITS,
+  INVOICE_NOTIFY_STATES,
+  MAILBOX_STATUSES,
+  PAUSE_SOURCES,
+  PAYER_KINDS,
+  RESERVE_ZONES,
+  TAX_REGIME_ANSWERS,
+  TAX_REGIMES,
+  WORK_KINDS,
 } from '../_shared/enums.js';
+import type { AllowanceAnswers, AllowanceParams, AnnualAnswers, ChangeData, CheckinItemAnswer } from '../_shared/api.js';
 import type { BusinessRegistrationAnswers } from '../_shared/api.js';
 
 const ts = (name?: string) => (name ? timestamp(name, { withTimezone: true }) : timestamp({ withTimezone: true }));
@@ -256,7 +281,8 @@ export const accountants = pgTable('accountants', {
   nameFrom: text(),
   nameOnto: text(),
   nameAcc: text(),
-  responseTimeText: text().notNull().default('Munkanapokon 4 órán belül válaszol'),
+  /** SPEC §28.K.15: no answer-time promise (old defaults that promised an answer time are replaced by the data step). */
+  responseTimeText: text().notNull().default(ACCOUNTANT_RESPONSE_TIME_DEFAULT),
   appointmentsEnabled: boolean().notNull().default(false),
   monthlyStatementRequest: boolean().notNull().default(true),
   capacity: integer().notNull().default(150),
@@ -321,10 +347,24 @@ export const clients = pgTable(
     /** SPEC §27.11 S9: an admin blocked the account (users.status 'disabled'); when and why (staff text, never shown to the client). */
     disabledAt: ts(),
     disabledReason: text(),
+    /** SPEC §28.K.5: the accounting service is locked for an unpaid fee (null = open). */
+    serviceLock: jsonb().$type<{ reasons: ('havidij' | 'eves_zaras')[]; since: string; amountHuf: number } | null>(),
+    /** SPEC §28.K.9: "Most nem tudom" – the accountant fills the adószám later from ONYA. */
+    adoszamPending: boolean().notNull().default(false),
+    /** SPEC §28.K.11: "Hogyan adózol most?" */
+    taxRegimeAnswer: text().$type<(typeof TAX_REGIME_ANSWERS)[number]>(),
+    /** SPEC §28.K.12 (6): personal forwarding address <code>@<MAILBOX_DOMAIN> and the ≤ 3 extra senders. */
+    mailboxCode: text().unique(),
+    mailboxSenders: text().array().notNull().default(sql`'{}'::text[]`),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [index().on(t.accountantId), index().on(t.adoazonositoHmac), check('clients_business_status_chk', sql`${t.businessStatus} in ${inList(BUSINESS_STATUSES)}`)],
+  (t) => [
+    index().on(t.accountantId),
+    index().on(t.adoazonositoHmac),
+    check('clients_business_status_chk', sql`${t.businessStatus} in ${inList(BUSINESS_STATUSES)}`),
+    check('clients_tax_regime_answer_chk', sql`${t.taxRegimeAnswer} in ${inList(TAX_REGIME_ANSWERS)}`),
+  ],
 );
 
 export const clientTaxProfiles = pgTable(
@@ -348,10 +388,18 @@ export const clientTaxProfiles = pgTable(
     priorOverrides: jsonb().$type<{ throughQuarter: 1 | 2 | 3; priorActualBaseSum: number; priorSzjaAdvanceSum: number }>(),
     /** SZJA allowances the engine does not model (családi, 25 év alatti, anyák, első házasok…): they raise a warning. */
     allowances: jsonb().$type<{ kind: 'csaladi' | 'fiatal_25' | 'anyak' | 'egyeb'; note?: string }[]>(),
+    /** SPEC §28.K.11: átalányadó (default) or KATA; the cost ratio stays stored for a later switch. */
+    regime: text().$type<(typeof TAX_REGIMES)[number]>().notNull().default('atalany'),
+    kataFrom: day(),
+    kataTo: day(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [uniqueIndex().on(t.clientId, t.year), check('client_tax_profiles_cost_ratio_chk', sql`${t.costRatio} in (45, 50, 80, 90)`)],
+  (t) => [
+    uniqueIndex().on(t.clientId, t.year),
+    check('client_tax_profiles_cost_ratio_chk', sql`${t.costRatio} in (45, 50, 80, 90)`),
+    check('client_tax_profiles_regime_chk', sql`${t.regime} in ${inList(TAX_REGIMES)}`),
+  ],
 );
 
 export const internalNotes = pgTable('internal_notes', {
@@ -592,9 +640,20 @@ export const navInvoices = pgTable(
     status: documentStatus().notNull().default('feltoltve'),
     statusChangedAt: ts().notNull().defaultNow(),
     demo: boolean().notNull().default(false),
+    /** SPEC §28.2.1: null = not decided yet; else sent / folded in / the skip reason. */
+    notifyState: text().$type<(typeof INVOICE_NOTIFY_STATES)[number]>(),
+    notifiedAt: ts(),
+    notificationId: uuid(),
+    /** SPEC §28.K.11: NAV customerVatStatus (DOMESTIC / PRIVATE_PERSON / OTHER). */
+    customerVatStatus: text(),
     createdAt: createdAt(),
   },
-  (t) => [uniqueIndex().on(t.clientId, t.invoiceNumber, t.modKey, t.operation), index().on(t.clientId, t.dossierMonth)],
+  (t) => [
+    uniqueIndex().on(t.clientId, t.invoiceNumber, t.modKey, t.operation),
+    index().on(t.clientId, t.dossierMonth),
+    index('nav_invoices_notify_pending_idx').on(t.clientId).where(sql`notify_state is null`),
+    check('nav_invoices_notify_state_chk', sql`${t.notifyState} in ${inList(INVOICE_NOTIFY_STATES)}`),
+  ],
 );
 
 export const revenueItems = pgTable(
@@ -617,10 +676,16 @@ export const revenueItems = pgTable(
     excludedReason: text(),
     createdBy: uuid(),
     deletedAt: ts(),
+    /** SPEC §28.K.11: who paid (from the NAV customerVatStatus); KATA clients get the business-customer warning. */
+    payerKind: text().$type<(typeof PAYER_KINDS)[number]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [index().on(t.clientId, t.receivedOn), uniqueIndex('revenue_items_nav_invoice_uq').on(t.navInvoiceId)],
+  (t) => [
+    index().on(t.clientId, t.receivedOn),
+    uniqueIndex('revenue_items_nav_invoice_uq').on(t.navInvoiceId),
+    check('revenue_items_payer_kind_chk', sql`${t.payerKind} in ${inList(PAYER_KINDS)}`),
+  ],
 );
 
 // ---------- 5.6 tax periods and payments ----------
@@ -929,7 +994,8 @@ export const simplepayTransactions = pgTable(
     id: id(),
     orderRef: text().notNull().unique(),
     simplepayTransactionId: bigint({ mode: 'number' }),
-    kind: text().$type<'regisztracio' | 'ismetlodo' | 'visszaterites'>().notNull(),
+    /** 'egyszeri' = a one-off fee charge (SPEC §28.K.1), never the recurring token. */
+    kind: text().$type<'regisztracio' | 'ismetlodo' | 'visszaterites' | 'egyszeri'>().notNull(),
     clientId: uuid()
       .notNull()
       .references(() => clients.id),
@@ -1142,6 +1208,8 @@ export const businessRegistrations = pgTable(
     chamberDueOn: day(),
     chamberDoneAt: ts(),
     chamberReminders: smallint().notNull().default(0),
+    /** SPEC §28.K.11 / §28.K.13: "Hogyan szeretnél adózni?" of the new-business kérdőív. */
+    taxRegime: text().$type<(typeof TAX_REGIMES)[number]>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1235,7 +1303,7 @@ export const callbackAttempts = pgTable(
  * 'vallalkozas_bejelentes', the EV bejelentés) for him. Our accountant acts ONLY as the client's registered
  * meghatalmazott with his own KAÜ login; no column ever holds a client's Ügyfélkapu+/DÁP login data.
  */
-const ASSIST_OPEN_SQL = sql.raw(`status in ('visszahivas_kerve', 'egyeztetve', 'meghatalmazas_bekuldve', 'meghatalmazas_lejart', 'meghatalmazas_jovahagyva', 'meghatalmazas_el', 'ugyfel_engedelyezte', 'bejelentes_bekuldve')`);
+const ASSIST_OPEN_SQL = sql.raw(`status in ('dijra_var', 'visszahivas_kerve', 'egyeztetve', 'meghatalmazas_bekuldve', 'meghatalmazas_lejart', 'meghatalmazas_jovahagyva', 'meghatalmazas_el', 'ugyfel_engedelyezte', 'bejelentes_bekuldve')`);
 export const assistRequests = pgTable(
   'assist_requests',
   {
@@ -1282,6 +1350,17 @@ export const assistRequests = pgTable(
     closedBy: uuid().references(() => users.id),
     closedReason: text().$type<(typeof ASSIST_CLOSE_REASONS)[number]>(),
     closeNote: text(),
+    /** SPEC §28.5.5: the change kinds' data (NAV fields), its date, the accountant's "Adatok rendben", the final check. */
+    changeData: jsonb().$type<ChangeData>(),
+    changeEffectiveOn: day(),
+    changeReadyAt: ts(),
+    changeReadyBy: uuid().references(() => users.id),
+    changeDoneAt: ts(),
+    changeDoneBy: uuid().references(() => users.id),
+    /** { "<key>": { done, at, by } } – the follow-ups offered on change-done. */
+    followups: jsonb().$type<Record<string, { done: boolean; at: string | null; by: string | null }>>().notNull().default({}),
+    /** SPEC §28.K.1: the prepaid fee of an assisted change. */
+    feeChargeId: uuid(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1297,3 +1376,326 @@ export const assistRequests = pgTable(
     check('assist_requests_closed_reason_chk', sql`${t.closedReason} in ${inList(ASSIST_CLOSE_REASONS)}`),
   ],
 );
+
+
+// =====================================================================================================================
+// SPEC §28 (migration 0015_ot1119.sql)
+// =====================================================================================================================
+
+/** SPEC §28.2.3: per-user push quiet hours and "amounts in push"; a missing row = the defaults. */
+export const userNotificationSettings = pgTable(
+  'user_notification_settings',
+  {
+    userId: uuid()
+      .primaryKey()
+      .references(() => users.id),
+    quietEnabled: boolean().notNull().default(true),
+    quietFrom: smallint().notNull().default(20),
+    quietTo: smallint().notNull().default(8),
+    pushShowAmounts: boolean().notNull().default(true),
+    updatedAt: updatedAt(),
+  },
+  (t) => [check('uns_quiet_from_chk', sql`${t.quietFrom} between 0 and 23`), check('uns_quiet_to_chk', sql`${t.quietTo} between 0 and 23`)],
+);
+
+/** SPEC §28.1.4: reserve cache per client and year (recomputed when inputs_hash changes). */
+export const reserveYears = pgTable(
+  'reserve_years',
+  {
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    year: integer().notNull(),
+    inputsHash: text().notNull(),
+    baseHuf: huf().notNull(),
+    totalHuf: huf().notNull(),
+    fixedByMonth: jsonb().$type<number[]>().notNull(),
+    engineVersion: text().notNull(),
+    computedAt: ts().notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.clientId, t.year] })],
+);
+
+export const revenueReserves = pgTable(
+  'revenue_reserves',
+  {
+    revenueItemId: uuid()
+      .primaryKey()
+      .references(() => revenueItems.id),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    year: integer().notNull(),
+    seq: integer().notNull(),
+    rawHuf: huf().notNull(),
+    reserveHuf: huf().notNull(),
+    szjaHuf: huf().notNull(),
+    tbHuf: huf().notNull(),
+    szochoHuf: huf().notNull(),
+    zone: text().$type<(typeof RESERVE_ZONES)[number]>().notNull(),
+    crossesTaxFree: boolean().notNull().default(false),
+    estimated: boolean().notNull().default(false),
+    computedAt: ts().notNull().defaultNow(),
+  },
+  (t) => [index().on(t.clientId, t.year, t.seq), check('revenue_reserves_zone_chk', sql`${t.zone} in ${inList(RESERVE_ZONES)}`)],
+);
+
+/** SPEC §28.3.2: the client's answers (one row per client and tax year). No names, child birth dates, TAJ or tax ids. */
+export const allowanceAnswers = pgTable(
+  'allowance_answers',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    year: integer().notNull(),
+    gate: text().$type<(typeof ALLOWANCE_GATES)[number]>(),
+    answers: jsonb().$type<AllowanceAnswers>(),
+    version: integer().notNull().default(0),
+    submittedAt: ts(),
+    healthConsentAt: ts(),
+    healthConsentVersion: text(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex().on(t.clientId, t.year), check('allowance_answers_gate_chk', sql`${t.gate} in ${inList(ALLOWANCE_GATES)}`)],
+);
+
+/** SPEC §28.3.2: the server's proposal + the accountant's decision per kind. Only 'jovahagyva' + in_year reach the engine. */
+export const clientAllowances = pgTable(
+  'client_allowances',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    year: integer().notNull(),
+    kind: text().$type<(typeof ALLOWANCE_KINDS)[number]>().notNull(),
+    status: text().$type<(typeof ALLOWANCE_STATUSES)[number]>().notNull().default('javasolt'),
+    months: smallint().array().notNull().default(sql`'{}'::smallint[]`),
+    params: jsonb().$type<AllowanceParams>().notNull().default({}),
+    paramsPrev: jsonb().$type<{ status: string; months: number[]; params: AllowanceParams; inYear: boolean } | null>(),
+    inYear: boolean().notNull().default(true),
+    proposal: jsonb().$type<{ months: number[]; params: AllowanceParams; reasons: string[]; warnings?: string[] } | null>(),
+    answersVersion: integer().notNull().default(0),
+    decidedBy: uuid().references(() => users.id),
+    decidedAt: ts(),
+    rejectReason: text().$type<(typeof ALLOWANCE_REJECT_REASONS)[number]>(),
+    clientText: text(),
+    staffNote: text(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    uniqueIndex().on(t.clientId, t.year, t.kind),
+    index('client_allowances_pending_idx').on(t.status).where(sql`status in ('javasolt', 'kerdes')`),
+    check('client_allowances_kind_chk', sql`${t.kind} in ${inList(ALLOWANCE_KINDS)}`),
+    check('client_allowances_status_chk', sql`${t.status} in ${inList(ALLOWANCE_STATUSES)}`),
+    check('client_allowances_reject_reason_chk', sql`${t.rejectReason} in ${inList(ALLOWANCE_REJECT_REASONS)}`),
+  ],
+);
+
+// =====================================================================================================================
+// SPEC §28.K (migration 0016_ot1119_k.sql)
+// =====================================================================================================================
+
+/** Admin-editable fee amounts (history in fee_setting_history); confirmed_at null = DEMO (not chargeable in production). */
+export const feeSettings = pgTable(
+  'fee_settings',
+  {
+    kind: text().$type<(typeof FEE_KINDS)[number]>().primaryKey(),
+    amountHuf: integer().notNull(),
+    unit: text().$type<(typeof FEE_UNITS)[number]>().notNull(),
+    confirmedAt: ts(),
+    confirmedBy: uuid().references(() => users.id),
+    effectiveFrom: day(),
+    updatedBy: uuid(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [check('fee_settings_kind_chk', sql`${t.kind} in ${inList(FEE_KINDS)}`), check('fee_settings_amount_chk', sql`${t.amountHuf} >= 0`), check('fee_settings_unit_chk', sql`${t.unit} in ${inList(FEE_UNITS)}`)],
+);
+
+export const feeSettingHistory = pgTable(
+  'fee_setting_history',
+  {
+    id: id(),
+    kind: text().$type<(typeof FEE_KINDS)[number]>().notNull(),
+    amountHuf: integer().notNull(),
+    confirmed: boolean().notNull().default(false),
+    changedBy: uuid(),
+    changedAt: ts().notNull().defaultNow(),
+    note: text(),
+  },
+  (t) => [index().on(t.kind, t.changedAt)],
+);
+
+/** One-off fees (annual closing, assisted change): paid in advance with a one-time SimplePay payment. */
+export const feeCharges = pgTable(
+  'fee_charges',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    kind: text().$type<(typeof FEE_KINDS)[number]>().notNull(),
+    amountHuf: integer().notNull(),
+    purpose: jsonb().$type<{ type: 'valtozas'; assistId: string } | { type: 'eves_zaras'; annualId: string }>().notNull(),
+    status: text().$type<(typeof FEE_CHARGE_STATUSES)[number]>().notNull().default('nyitott'),
+    dueOn: day(),
+    simplepayTransactionId: uuid(),
+    feeInvoiceId: uuid(),
+    demo: boolean().notNull().default(false),
+    waivedBy: uuid(),
+    waivedAt: ts(),
+    waivedReason: text(),
+    refundNote: text(),
+    createdBy: uuid(),
+    createdAt: createdAt(),
+    paidAt: ts(),
+  },
+  (t) => [index().on(t.clientId, t.status), check('fee_charges_kind_chk', sql`${t.kind} in ${inList(FEE_KINDS)}`), check('fee_charges_status_chk', sql`${t.status} in ${inList(FEE_CHARGE_STATUSES)}`)],
+);
+
+/** SPEC §28.K.2: the monthly check-in "Változott valami?" (period = the month asked about). */
+export const monthlyCheckins = pgTable(
+  'monthly_checkins',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    period: text().notNull(),
+    status: text().$type<(typeof CHECKIN_STATUSES)[number]>().notNull().default('nyitott'),
+    answers: jsonb().$type<CheckinItemAnswer[] | null>(),
+    openedAt: ts().notNull().defaultNow(),
+    answeredAt: ts(),
+    reminded: jsonb().$type<Record<string, string>>().notNull().default({}),
+  },
+  (t) => [uniqueIndex().on(t.clientId, t.period), check('monthly_checkins_status_chk', sql`${t.status} in ${inList(CHECKIN_STATUSES)}`)],
+);
+
+export const checkinItems = pgTable(
+  'checkin_items',
+  {
+    id: id(),
+    checkinId: uuid()
+      .notNull()
+      .references(() => monthlyCheckins.id),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    item: text().$type<(typeof CHECKIN_ITEMS)[number]>().notNull(),
+    status: text().$type<(typeof CHECKIN_ITEM_STATUSES)[number]>().notNull().default('uj'),
+    details: jsonb().$type<CheckinItemAnswer>().notNull(),
+    assistId: uuid(),
+    feeChargeId: uuid(),
+    staffNote: text(),
+    clientText: text(),
+    decidedBy: uuid(),
+    decidedAt: ts(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index().on(t.clientId, t.status), check('checkin_items_item_chk', sql`${t.item} in ${inList(CHECKIN_ITEMS)}`), check('checkin_items_status_chk', sql`${t.status} in ${inList(CHECKIN_ITEM_STATUSES)}`)],
+);
+
+/** SPEC §28.K.3: the annual closing of one tax year (questionnaire, fee, draft approval, filings). */
+export const annualClosings = pgTable(
+  'annual_closings',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    taxYear: integer().notNull(),
+    regime: text().$type<(typeof TAX_REGIMES)[number]>().notNull().default('atalany'),
+    status: text().$type<(typeof ANNUAL_STATUSES)[number]>().notNull().default('nem_indult'),
+    answers: jsonb().$type<Partial<AnnualAnswers> | null>(),
+    /** APP_DATA_KEY, AAD 'annual_closings.refund_account'. */
+    refundAccountEnc: text(),
+    feeChargeId: uuid(),
+    questionnaireDue: day().notNull(),
+    submittedAt: ts(),
+    approvedAt: ts(),
+    approvalHash: text(),
+    filedSzjaAt: ts(),
+    filedHipaAt: ts(),
+    checklist: jsonb().$type<Record<string, { at: string; by: string }>>().notNull().default({}),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex().on(t.clientId, t.taxYear), check('annual_closings_status_chk', sql`${t.status} in ${inList(ANNUAL_STATUSES)}`), check('annual_closings_regime_chk', sql`${t.regime} in ${inList(TAX_REGIMES)}`)],
+);
+
+/** SPEC §28.K.7: employees / EFO answer and the accountant's decision. */
+export const clientEmployerStatus = pgTable(
+  'client_employer_status',
+  {
+    clientId: uuid()
+      .primaryKey()
+      .references(() => clients.id),
+    answer: text().$type<(typeof EMPLOYER_ANSWERS)[number]>().notNull(),
+    answeredAt: ts().notNull().defaultNow(),
+    source: text().$type<(typeof EMPLOYER_SOURCES)[number]>().notNull(),
+    decision: text().$type<(typeof EMPLOYER_DECISIONS)[number]>(),
+    clientText: text(),
+    staffNote: text(),
+    decidedBy: uuid(),
+    decidedAt: ts(),
+  },
+  (t) => [
+    check('client_employer_status_answer_chk', sql`${t.answer} in ${inList(EMPLOYER_ANSWERS)}`),
+    check('client_employer_status_source_chk', sql`${t.source} in ${inList(EMPLOYER_SOURCES)}`),
+    check('client_employer_status_decision_chk', sql`${t.decision} in ${inList(EMPLOYER_DECISIONS)}`),
+  ],
+);
+
+/** SPEC §28.K.6: szüneteltetés → the availability fee instead of the plan fee. */
+export const subscriptionPauses = pgTable(
+  'subscription_pauses',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    from: day().notNull(),
+    to: day(),
+    feeKind: text().notNull().default('szuneteltetesi_dij'),
+    source: text().$type<(typeof PAUSE_SOURCES)[number]>().notNull(),
+    createdBy: uuid(),
+    createdAt: createdAt(),
+  },
+  (t) => [index().on(t.clientId, t.from), check('subscription_pauses_source_chk', sql`${t.source} in ${inList(PAUSE_SOURCES)}`)],
+);
+
+/** SPEC §28.K.12 (3): what the client says he already put aside (self-reported). */
+export const reserveMarks = pgTable(
+  'reserve_marks',
+  {
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    year: integer().notNull(),
+    markedHuf: huf().notNull(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [primaryKey({ columns: [t.clientId, t.year] })],
+);
+
+/** SPEC §28.K.12 (6): forwarding mailbox log – no bodies, no full addresses. */
+export const mailboxLog = pgTable(
+  'mailbox_log',
+  {
+    id: id(),
+    clientId: uuid(),
+    receivedAt: ts().notNull().defaultNow(),
+    senderMasked: text().notNull(),
+    status: text().$type<(typeof MAILBOX_STATUSES)[number]>().notNull(),
+    reason: text(),
+    attachments: integer().notNull().default(0),
+    documentIds: uuid().array().notNull().default(sql`'{}'::uuid[]`),
+  },
+  (t) => [index().on(t.clientId, t.receivedAt), check('mailbox_log_status_chk', sql`${t.status} in ${inList(MAILBOX_STATUSES)}`)],
+);
+
+void WORK_KINDS;

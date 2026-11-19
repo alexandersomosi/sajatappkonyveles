@@ -1,5 +1,7 @@
 // Áttekintés: client data, 2026 tax profile editor, meters, subscription summary, internal notes (FUNKCIOK 21, 22).
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router';
+import { K28Kartyak } from './K28Kartyak';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
 import type { FulProps } from '../UgyfelAdatlap';
@@ -29,6 +31,7 @@ export default function Attekintes({ c }: FulProps) {
             </div>
             <Mero m={c.meters.afa} cim={c.meters.afa.sentence} mellek="Alanyi ÁFA-mentesség, teljesítési dátum szerint. A csíkozott rész az év végéig várható." />
             {c.meters.atalanyCap.ratio >= 0.5 && <Mero m={c.meters.atalanyCap} />}
+            {c.taxRegime !== 'kata' && (
             <div className="mero">
               <div className="sor-flex" style={{ alignItems: 'flex-start' }}>
                 {c.meters.adomentes.reached && <I3 n="befizetve_jel" s={24} />}
@@ -38,8 +41,10 @@ export default function Attekintes({ c }: FulProps) {
                 </div>
               </div>
             </div>
+            )}
           </div>
         )}
+        <K28Kartyak c={c} />
         <Elofizetes c={c} />
         <Jegyzetek c={c} />
       </div>
@@ -123,6 +128,16 @@ function AdoProfil({ c }: FulProps) {
   const [priorQ, setPriorQ] = useState<number>(c.taxProfile?.priorOverrides?.throughQuarter ?? 0);
   // A szerver mezőhibái a mezők alatt jelennek meg (nem egy szavas felugró üzenetben).
   const [mezoHiba, setMezoHiba] = useState<Record<string, string>>({});
+  // SPEC §28.3.6 / §28.5.5: "Kieső időként felveszem" and the szüneteltetés follow-up open this editor with a prefilled
+  // insurance break (?kieso=… or ?szunetel=…, &ig=…); after saving, the csed_gyed allowance item is marked approved.
+  const [sp, setSp] = useSearchParams();
+  const elotolt = sp.get('kieso') ? { kind: 'kieso' as const, from: sp.get('kieso')!, to: sp.get('ig') ?? `${ev}-12-31` } : sp.get('szunetel') ? { kind: 'szunetel' as const, from: sp.get('szunetel')!, to: sp.get('ig') ?? `${ev}-12-31` } : null;
+  const kedvezmenyUtan = sp.get('kedvezmeny') === 'csed_gyed';
+  const honapokParam = (sp.get('honapok') ?? '').split(',').map(Number).filter((n) => n >= 1 && n <= 12);
+  useEffect(() => {
+    if (elotolt) document.getElementById('adoprofil')?.scrollIntoView({ block: 'start' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => setP(c.taxProfile), [c.taxProfile]);
   const ment = useMutation({
     mutationFn: () => {
@@ -147,9 +162,25 @@ function AdoProfil({ c }: FulProps) {
         ...(ujKod !== (c.activityCode ?? '') ? { activityCode: ujKod || null } : {}),
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       setMezoHiba({});
-      pir.ok('Elmentve. Az idei becslést újraszámoltuk.');
+      if (kedvezmenyUtan) {
+        try {
+          await ep.accAllowanceDecision(c.id, 'csed_gyed', { status: 'jovahagyva', months: honapokParam, inYear: true });
+          void qc.invalidateQueries({ queryKey: ['acc', 'allowances', c.id] });
+          pir.ok('Elmentve: a kieső időt felvetted, a kedvezmény-tételt lezártuk.');
+        } catch (e) {
+          pir.hiba(e);
+        }
+        const n = new URLSearchParams(sp);
+        ['kieso', 'ig', 'kedvezmeny', 'honapok'].forEach((k) => n.delete(k));
+        setSp(n, { replace: true });
+      } else if (elotolt) {
+        const n = new URLSearchParams(sp);
+        ['szunetel', 'ig'].forEach((k) => n.delete(k));
+        setSp(n, { replace: true });
+        pir.ok('Elmentve. Az idei becslést újraszámoltuk.');
+      } else pir.ok('Elmentve. Az idei becslést újraszámoltuk.');
       void qc.invalidateQueries({ queryKey: ['acc', 'client', c.id] });
       void qc.invalidateQueries({ queryKey: ['acc', 'tax', c.id] });
     },
@@ -171,7 +202,15 @@ function AdoProfil({ c }: FulProps) {
     );
   const set = (patch: Partial<TaxProfile>) => setP({ ...p, ...patch });
   return (
-    <div className="lap" style={{ marginTop: 16 }}>
+    <div className="lap" style={{ marginTop: 16 }} id="adoprofil">
+      {elotolt && (
+        <div className="uzenet-sav info" style={{ margin: '16px 22px 0' }}>
+          <div>
+            <b>{elotolt.kind === 'kieso' ? 'Kieső idő felvétele (a kedvezmény-kérdőívből)' : 'Szünetelés felvétele (a változásbejelentés után)'}:</b> lent előre kitöltöttük a dátumokat. Nézd át, kattints a
+            „Hozzáadom” gombra, majd mentsd el.
+          </div>
+        </div>
+      )}
       <div className="lap-fej">
         <h2>Adózási beállítások, {ev}</h2>
         {p.costRatioSource === 'ugyfel_javaslat' ? <span className="cimke figyel">Megerősítésre vár</span> : <span className="allapot"><I3 n="befizetve_jel" s={18} /><span className="szo">Megerősítetted</span></span>}
@@ -255,7 +294,7 @@ function AdoProfil({ c }: FulProps) {
             {(mezoHiba['hipa.ratePct'] || mezoHiba.hipa) && <span className="hiba-szoveg">0 és 2 közötti szám legyen.</span>}
           </label>
         </div>
-        <Szunetek p={p} set={set} />
+        <Szunetek p={p} set={set} elotolt={elotolt} />
         <details className="osszevont" style={{ marginTop: 16 }} open={priorQ > 0}>
           <summary>Korábbi könyvelő adatai (év közben jött)</summary>
           <div className="mezosor elozo-konyvelo" style={{ marginTop: 10 }}>
@@ -290,10 +329,10 @@ function AdoProfil({ c }: FulProps) {
   );
 }
 
-function Szunetek({ p, set }: { p: TaxProfile; set: (x: Partial<TaxProfile>) => void }) {
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [kind, setKind] = useState<'szunetel' | 'kieso'>('kieso');
+function Szunetek({ p, set, elotolt }: { p: TaxProfile; set: (x: Partial<TaxProfile>) => void; elotolt?: { kind: 'szunetel' | 'kieso'; from: string; to: string } | null }) {
+  const [from, setFrom] = useState(elotolt?.from ?? '');
+  const [to, setTo] = useState(elotolt?.to ?? '');
+  const [kind, setKind] = useState<'szunetel' | 'kieso'>(elotolt?.kind ?? 'kieso');
   return (
     <div className="mezo" style={{ marginTop: 16 }}>
       <span className="felirat">Szünetelés, kieső idő (táppénz, gyed…)</span>

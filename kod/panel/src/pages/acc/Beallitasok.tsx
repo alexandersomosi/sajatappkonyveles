@@ -1,6 +1,9 @@
 // Beállítások: response-time promise, monthly statement request, 2FA, password, sessions, signature preview.
 // The appointments switch is gone (SPEC §26.2.9: callbacks instead of booking). The service team sees only security.
 import { useEffect, useState } from 'react';
+import { valaszidoTilos } from '../../lib/k28';
+import { RESPONSE_TIME_SETTINGS_ERROR } from '../../_shared/bekotes';
+import { ACCOUNTANT_RESPONSE_TIME_DEFAULT } from '../../_shared/enums';
 import brand from '../../_shared/brand.json';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
@@ -54,8 +57,20 @@ export default function Beallitasok() {
                 </div>
                 <div className="belso" style={{ paddingTop: 0 }}>
                   <label className="mezo">
-                    <span className="felirat">Válaszidő-vállalás (az ügyfél az üzeneteknél látja)</span>
-                    <input className="doboz" maxLength={80} value={f.responseTimeText} onChange={(e) => setF({ ...f, responseTimeText: e.target.value })} />
+                    {/* SPEC §28.K.15: no answer-time promise – "A lehető leggyorsabban válaszol" */}
+                    <span className="felirat">Válaszadás (az ügyfél az üzeneteknél látja)</span>
+                    <input
+                      className={`doboz${valaszidoTilos(f.responseTimeText) ? ' hibas' : ''}`}
+                      maxLength={80}
+                      value={f.responseTimeText}
+                      placeholder={ACCOUNTANT_RESPONSE_TIME_DEFAULT}
+                      onChange={(e) => setF({ ...f, responseTimeText: e.target.value })}
+                    />
+                    {valaszidoTilos(f.responseTimeText) ? (
+                      <span className="hiba-szoveg">{RESPONSE_TIME_SETTINGS_ERROR}</span>
+                    ) : (
+                      <span className="sugo">{RESPONSE_TIME_SETTINGS_ERROR}</span>
+                    )}
                   </label>
                   <label className="jelolo" style={{ marginTop: 16 }}>
                     <input type="checkbox" checked={f.monthlyStatementRequest} onChange={(e) => setF({ ...f, monthlyStatementRequest: e.target.checked })} />
@@ -68,7 +83,7 @@ export default function Beallitasok() {
                     Időpontot az ügyfelek már nem foglalnak: visszahívást kérnek, és a csapat 24–48 órán belül hívja őket. Ha neked adnak át egyet, a Visszahívások oldalon látod.
                   </p>
                   <div className="gombsor" style={{ marginTop: 18 }}>
-                    <button className="gomb-e" disabled={ment.isPending || !f.responseTimeText.trim()} onClick={() => ment.mutate()}>
+                    <button className="gomb-e" disabled={ment.isPending || !f.responseTimeText.trim() || valaszidoTilos(f.responseTimeText)} onClick={() => ment.mutate()}>
                       Mentés
                     </button>
                   </div>

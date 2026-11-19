@@ -1,4 +1,7 @@
 // /me – all roles (SPEC §12.3): profile, notification prefs, push tokens, inbox, consents, GDPR.
+import { notificationSettingsOf } from '../notify/notify.js';
+import { userNotificationSettings } from '../db/schema.js';
+import { NOTIFICATION_PREFS_MAX } from '../_shared/enums.js';
 import { and, desc, eq, inArray, isNull, lt, notInArray } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { stream } from 'hono/streaming';
@@ -64,6 +67,8 @@ export function meRoutes(deps: Deps) {
       user: { id: u.id, email: u.email, role: u.role, displayName: u.displayName ?? '', emailVerified: Boolean(u.emailVerifiedAt), totpEnabled: Boolean(u.totpEnabledAt) },
       notificationPrefs: await prefs(u.id, u.role),
       consentsNeeded: await consentsNeeded(u.id, u.role),
+      // SPEC §28.2.3: quiet hours + amounts in push
+      notificationSettings: await notificationSettingsOf(deps.db, u.id),
     };
     if (u.role === 'client') {
       const [cl] = await deps.db.select().from(clients).where(eq(clients.userId, u.id)).limit(1);
@@ -97,9 +102,19 @@ export function meRoutes(deps: Deps) {
       c,
       z.object({
         displayName: z.string().trim().min(1).max(80).optional(),
-        notificationPrefs: z.array(z.object({ kind: z.enum(NOTIFICATION_KINDS), push: z.boolean(), email: z.boolean() })).max(40).optional(),
+        notificationPrefs: z.array(z.object({ kind: z.enum(NOTIFICATION_KINDS), push: z.boolean(), email: z.boolean() })).max(NOTIFICATION_PREFS_MAX).optional(),
+        notificationSettings: z
+          .strictObject({ quietEnabled: z.boolean().optional(), quietFrom: z.number().int().min(0).max(23).optional(), quietTo: z.number().int().min(0).max(23).optional(), pushShowAmounts: z.boolean().optional() })
+          .optional(),
       }),
     );
+    if (b.notificationSettings && Object.keys(b.notificationSettings).length) {
+      const cur = await notificationSettingsOf(deps.db, a.userId);
+      const v = { ...cur, ...b.notificationSettings };
+      const row = { quietEnabled: v.quietEnabled, quietFrom: v.quietFrom, quietTo: v.quietTo, pushShowAmounts: v.pushShowAmounts, updatedAt: deps.now() };
+      await deps.db.insert(userNotificationSettings).values({ userId: a.userId, ...row }).onConflictDoUpdate({ target: userNotificationSettings.userId, set: row });
+      await audit(deps.db, { action: 'me.notification_settings', actorUserId: a.userId, actorRole: a.role, targetType: 'user', targetId: a.userId, details: { fields: Object.keys(b.notificationSettings) } });
+    }
     if (b.displayName) await deps.db.update(users).set({ displayName: b.displayName, updatedAt: deps.now() }).where(eq(users.id, a.userId));
     for (const p of b.notificationPrefs ?? []) {
       if ((p.kind as NotificationKind).startsWith('auth_')) continue;

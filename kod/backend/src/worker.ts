@@ -9,6 +9,7 @@ import { buildDeps } from './deps.js';
 import { heartbeat, jobDefs, runIfDue } from './jobs.js';
 import { createLogger, log, setLogger, safeErr } from './log.js';
 import { runDataFixKor1, runDataStepTulaj1118, runDataStepTulaj1119, runFaqSafetyFix } from './services/datastep.js';
+import { runDataStepK28, runDataStepOt1119 } from './services/datastep-k28.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -65,6 +66,13 @@ async function main(): Promise<void> {
     await runDataStepTulaj1119(deps);
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step tulaj1119 failed');
+  }
+  // SPEC §28.7.2 / §28.K.16: one-time data steps of the five features and the evening orders (idempotent).
+  try {
+    await runDataStepOt1119(deps);
+    await runDataStepK28(deps);
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step ot1119/k28 failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

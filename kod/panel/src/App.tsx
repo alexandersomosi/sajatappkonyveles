@@ -34,6 +34,8 @@ const AdminSzovegek = lazy(() => import('./pages/admin/Szovegek'));
 const AdminNaplo = lazy(() => import('./pages/admin/Naplo'));
 const AdminDemoPosta = lazy(() => import('./pages/admin/DemoPosta'));
 const AdminRendszer = lazy(() => import('./pages/admin/Rendszer'));
+const HaviValtozasok = lazy(() => import('./pages/acc/HaviValtozasok'));
+const AdminDijak = lazy(() => import('./pages/admin/Dijak'));
 
 let goTotpSetup: (() => void) | null = null;
 const onApiError = (e: unknown) => {
@@ -141,6 +143,9 @@ export function App() {
                 <Route path="/admin/naplo" element={<Csak szerep={AD}><AdminNaplo /></Csak>} />
                 <Route path="/admin/demo-postafiok" element={<Csak szerep={AD}><AdminDemoPosta /></Csak>} />
                 <Route path="/admin/rendszer" element={<Csak szerep={AD}><AdminRendszer /></Csak>} />
+                {/* SPEC §28.K.2 / §28.K.1 */}
+                <Route path="/havi-valtozasok" element={<Csak szerep={['konyvelo', 'admin', 'csapat']}><HaviValtozasok /></Csak>} />
+                <Route path="/admin/dijak" element={<Csak szerep={AD}><AdminDijak /></Csak>} />
                 <Route path="/admin/beallitasok" element={<Csak szerep={AD}><Beallitasok /></Csak>} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

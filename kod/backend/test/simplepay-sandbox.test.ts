@@ -59,8 +59,8 @@ describe('SimplePay sandbox flow', () => {
     expect(start.status).toBe(200);
     expect(start.body.paymentUrl).toBe('https://sandbox.simplepay.hu/pay/pay/pspHU/abc');
     const s0 = calls.find((x) => x.path === 'start')!.body;
-    expect(s0).toMatchObject({ merchant: MERCHANT, currency: 'HUF', total: 20000, methods: ['CARD'], language: 'HU', threeDSReqAuthMethod: '02', sdkVersion: 'Kezjegy_Node_1.0' });
-    expect(s0.recurring).toMatchObject({ times: 12, maxAmount: 20000 });
+    expect(s0).toMatchObject({ merchant: MERCHANT, currency: 'HUF', total: 19999, methods: ['CARD'], language: 'HU', threeDSReqAuthMethod: '02', sdkVersion: 'Kezjegy_Node_1.0' });
+    expect(s0.recurring).toMatchObject({ times: 12, maxAmount: 19999 });
     expect(String(s0.url)).toBe('https://api.45-94-65-74.sslip.io/api/v1/payments/simplepay/back?p=app');
     expect(s0.invoice).toMatchObject({ name: 'Szabó Kata', country: 'HU', city: 'Budapest', zip: '1136' });
     const toks = await h.deps.db.select().from(paymentTokens);
@@ -75,7 +75,7 @@ describe('SimplePay sandbox flow', () => {
     const res = await runBillingJob(h.deps);
     expect(res.pending).toBe(1);
     const dr = calls.find((x) => x.path === 'dorecurring')!.body;
-    expect(dr).toMatchObject({ token: 'SPTOKEN0', type: 'MIT', total: 20000, customerEmail: 'sandbox@demo.kezjegy.test' });
+    expect(dr).toMatchObject({ token: 'SPTOKEN0', type: 'MIT', total: 19999, customerEmail: 'sandbox@demo.kezjegy.test' });
     const [tx] = await h.deps.db.select().from(simplepayTransactions).where(eq(simplepayTransactions.orderRef, String(dr.orderRef)));
     expect(tx!.status).toBe('INPAYMENT');
     await ipn(String(dr.orderRef), 501239999);

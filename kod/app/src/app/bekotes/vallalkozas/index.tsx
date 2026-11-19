@@ -25,6 +25,7 @@ import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { useEvSegitseg, KiemeltKartya, SegitsegAllapot, useUt, useUtvaltas, VarakozasKartya } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { csakInditasUton } from '@/ui/UtVedelem';
 
 function AdoszamUrlap({ fn }: { fn: string }) {
   const ment = useVallalkozasAdoszam();
@@ -87,7 +88,7 @@ function Teendo({ ikon = 'bevallas', cim, szoveg, gomb, onPress, children }: { i
   );
 }
 
-export default function VallalkozasKozpont() {
+function VallalkozasKozpont() {
   const me = useMe();
   const { o, j, reg: q } = useUt();
   const utv = useUtvaltas();
@@ -337,3 +338,6 @@ export default function VallalkozasKozpont() {
     </Kepernyo>
   );
 }
+
+/** k5 #2: csak az „inditas” úton (különben vissza a bekötés Főoldalára). */
+export default csakInditasUton(VallalkozasKozpont);

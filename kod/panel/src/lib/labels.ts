@@ -18,6 +18,7 @@ import type {
   SubscriptionStatus,
   TaxStatus,
   CertificateType,
+  NotificationKind,
 } from '../_shared/enums';
 import type { Icon3dName } from '../ui/Icon3d';
 import { datum, honapEv, negyedevNev } from './format';
@@ -29,9 +30,12 @@ export const FLAG_LABEL: Record<ClientFlag | 'mind', string> = {
   hianyzik_valami: 'Hiányzik valami',
   hatar_kozel: 'Határ közelében',
   dij_elmaradt: 'Díj elmaradt',
+  // SPEC §28.K.5 / §28.K.11
+  zarolva: 'Zárolva',
+  kata_figyelem: 'Kata: cégnek számlázott',
   mind: 'Mind',
 };
-export const FILTER_ORDER: (ClientFlag | 'mind')[] = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'mind'];
+export const FILTER_ORDER: (ClientFlag | 'mind')[] = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'zarolva', 'mind'];
 
 export const LIFECYCLE_LABEL: Record<ClientLifecycle, string> = {
   bekotes_alatt: 'Bekötés alatt',
@@ -166,6 +170,9 @@ export const PAYMENT_KIND_LABEL: Record<PaymentItemKind, string> = {
   szja_eloleg: 'SZJA-előleg',
   hipa_eloleg: 'Iparűzési adóelőleg',
   hipa_kulonbozet: 'Iparűzési adó különbözet',
+  // SPEC §28.K.11
+  kata_teteles: 'Kata (tételes adó)',
+  kata_kulonado: 'Kata különadó (40%)',
 };
 
 export const REQUEST_TYPE_LABEL: Record<RequestType, string> = {
@@ -219,6 +226,19 @@ export const CALLBACK_SOURCE_LABEL: Record<CallbackSource, string> = {
   helyettunk_vallalkozas: 'az app „Intézzük helyetted” kártyájáról',
   helyettunk_meghatalmazas: 'a meghatalmazás lépés kártyájáról',
   utvaltas: 'a válasza módosításánál („van már vállalkozásod?”)',
+  // SPEC §28 / §28.K
+  valtozas_utmutato: 'a változás-útmutatóból',
+  helyettunk_valtozas: 'a változásnál: „Bejelentjük helyetted”',
+  kedvezmenyek: 'az adókedvezményeinél',
+  felretesz: 'a „Félretenni” oldalról',
+  kereset: 'a „Mennyit kerestem?” oldalról',
+  havi_ellenorzes: 'a havi „Változott valami?” kérdésnél',
+  eves_zaras: 'az éves zárásnál',
+  kalkulator: 'a nyilvános adókalkulátorból',
+  zarolas: 'a zárolt fiókja sávjáról',
+  alkalmazott: 'az alkalmazottakról szóló ajánlatnál',
+  adoszam_kereso: 'az adószám-keresőnél',
+  kata: 'a kata-kérdésnél',
 };
 export const APPT_LABEL: Record<AppointmentStatus, string> = { foglalt: 'Foglalt', lemondva: 'Lemondva', megtortent: 'Megtörtént', elmaradt: 'Elmaradt' };
 
@@ -242,7 +262,7 @@ export const AUDIT_LABEL: Record<string, string> = {
   'nav_credentials.saved': 'NAV-kapcsolatot mentett',
   'nav_credentials.deleted': 'NAV-kapcsolatot törölt',
   'nav_credentials.tested': 'NAV-kapcsolatot ellenőrzött',
-  'nav.sync': 'NAV-lehívás',
+  'nav.sync': 'Letöltés a NAV rendszeréből',
   'tax.calculated': 'Adót számolt',
   'tax.approved': 'Jóváhagyta a fizetendőt',
   'tax.reopened': 'Újranyitotta a fizetendőt',
@@ -658,4 +678,43 @@ export function fizetesiHiba(kod: string | null | undefined, fajta?: string): { 
   if (ismert) return { kod: k, demo, mi: demo ? `DEMO: ${ismert.mi.charAt(0).toLowerCase()}${ismert.mi.slice(1)}` : ismert.mi, teendo: ismert.teendo };
   if (/^\d+$/.test(tiszta)) return { kod: k, demo, mi: `SimplePay-hibakód ${tiszta}`, teendo: 'A jelentését a SimplePay fejlesztői dokumentációjának hibakód-listája adja meg; a kereskedői admin is mutatja.' };
   return { kod: k, demo, mi: tiszta, teendo: '' };
+}
+
+/** Staff label of a notification kind (the client page's notification log, SPEC §28 panel addition). */
+const ERTESITES_FAJTA: Partial<Record<NotificationKind, string>> = {
+  tax_approved: 'Jóváhagyott adó',
+  tax_due_soon: 'Befizetési emlékeztető',
+  tax_payment_verified: 'Befizetés rendben',
+  tax_payment_mismatch: 'Befizetési eltérés',
+  document_processed: 'Irat feldolgozva',
+  request_new: 'Új kérés',
+  request_reminder: 'Kérés-emlékeztető',
+  message_new: 'Új üzenet',
+  limit_warning: 'Keret-figyelmeztetés',
+  subscription_payment_failed: 'Sikertelen díjlevonás',
+  fee_invoice_issued: 'Díjszámla',
+  callback_received: 'Visszahívás',
+  callback_calling: 'Most hív kollégánk',
+  assist_consent_needed: 'Engedély kell (helyettünk)',
+  assist_ev_filed: 'Beküldtük (helyettünk)',
+  invoice_new: 'Új kiállított számla',
+  allowance_decided: 'Kedvezmény – döntés',
+  allowance_check: 'Kedvezmény – emlékeztető',
+  assist_change_done: 'Változás kész',
+  checkin_due: 'Havi ellenőrzés',
+  fee_due: 'Díj fizetendő',
+  annual_due: 'Éves zárás – határidő',
+  annual_status: 'Éves zárás – állapot',
+  service_locked: 'Zárolás',
+  service_unlocked: 'Zárolás feloldva',
+  nudge: 'Rád vár (3/7 nap)',
+  upload_reminder: 'Feltöltési emlékeztető',
+  kata_business_invoice: 'Kata: cégnek számlázott',
+  mailbox_received: 'Továbbított levél',
+  mailbox_rejected: 'Elutasított levél',
+  employer_decided: 'Alkalmazottak – döntés',
+  subscription_paused: 'Szünetelés díja',
+};
+export function ertesitesFajta(k: NotificationKind): string {
+  return ERTESITES_FAJTA[k] ?? k.replace(/_/g, ' ');
 }

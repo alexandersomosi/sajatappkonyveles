@@ -328,10 +328,11 @@ export function registerBekotesRoutes(r: Hono<Env>, deps: Deps): void {
   });
 
   // ================= guides (SPEC §26.6, §27.3.6) =================
-  const kindParam = (c: C): GuideKind => {
+  // SPEC §28.5.3: the change guides (CHANGE_KINDS) are answered by routes/client-ot1119.ts, registered before these.
+  const kindParam = (c: C): 'vallalkozas_bejelentes' | 'meghatalmazas' | 'meghatalmazas_jovahagyas' => {
     const k = c.req.param('kind');
-    if (!(GUIDE_KINDS as readonly string[]).includes(k ?? '')) throw E.notFound();
-    return k as GuideKind;
+    if (!(GUIDE_KINDS as readonly string[]).includes(k ?? '') || k?.startsWith('valtozas_')) throw E.notFound();
+    return k as 'vallalkozas_bejelentes' | 'meghatalmazas' | 'meghatalmazas_jovahagyas';
   };
 
   async function meghatalmazasProgress(clientId: string, key: 'guideProgress' | 'approvalGuideProgress' = 'guideProgress'): Promise<string[]> {

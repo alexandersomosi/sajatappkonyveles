@@ -1,5 +1,6 @@
 // Kérések: requests both ways for one client; create and handle (FUNKCIOK 17, 24).
 import { useState } from 'react';
+import { LOCK_TEXTS } from '../../../_shared/bekotes';
 import { useSearchParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
@@ -44,7 +45,7 @@ export default function Keresek({ c }: FulProps) {
     <>
       <div className="sor-flex ter" style={{ marginBottom: 14 }}>
         <span className="halvany">Iratot, adatot kérhetsz tőle; ő igazolást és adatváltozást kérhet tőled.</span>
-        <button className="gomb-e" onClick={() => setSp({ uj: '1' }, { replace: true })}>
+        <button className="gomb-e" disabled={!!c.serviceLock} title={c.serviceLock ? LOCK_TEXTS.panelDisabled : undefined} onClick={() => setSp({ uj: '1' }, { replace: true })}>
           Új kérés {c.firstName} részére
         </button>
       </div>

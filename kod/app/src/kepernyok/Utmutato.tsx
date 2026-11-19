@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Image, Linking, PixelRatio, Platform, Pressable, useWindowDimensions, View, type ScrollViewInstance } from 'react-native';
 import type { Guide, GuideField, GuideImageManifest, GuidePrepareItem, GuideStep } from '../_shared/api';
 import type { CallbackSource, CallbackTopic, GuideKind } from '../_shared/enums';
-import { ACTIVITY_PENDING_BANNER, ASSIST_TEXTS, fillPlaceholders, GUIDE_DRAWN_NOTE, HUB_TEXTS } from '../_shared/bekotes';
-import { kepCimke, kepekLepeshez, vanRajzolt, type UtmutatoKep } from '../lib/utmutato';
+import { CHANGE_TEXTS, ACTIVITY_PENDING_BANNER, ASSIST_TEXTS, fillPlaceholders, GUIDE_DRAWN_NOTE, HUB_TEXTS } from '../_shared/bekotes';
+import { kepCimke, kepekLepeshez, vanRajzolt, type UtmutatoKep, valtozasFajta } from '../lib/utmutato';
 import { mediaUrl } from '../lib/media';
 import { MASOLAS_HIBA, vagolapra } from '../lib/vagolap';
 import { forma, szin } from '../theme/tokens';
@@ -175,6 +175,8 @@ export function lepesFejcim(s: GuideStep, kind: GuideKind, kepek: UtmutatoKep[])
   if (fajta === 'kamara') return 'KAMARAI OLDAL';
   // A rajzolt képet a kép alatti kis sor jelzi (SPEC §27.1.2), a fejléc csak azt mondja, kinek a képernyője.
   void kepek;
+  // SPEC §28.5.1: a változások a Vállalkozói Ügysegédben (NAV) mennek, csak az adózási adat az ONYA-ban (T101E)
+  if (valtozasFajta(kind)) return kind === 'valtozas_adoadat' || /^(onya|t101e)_/.test(s.key) ? 'ONYA KÉPERNYŐ' : 'NAV KÉPERNYŐ';
   return kind === 'vallalkozas_bejelentes' ? 'NAV KÉPERNYŐ' : 'ONYA KÉPERNYŐ';
 }
 
@@ -338,8 +340,8 @@ export function UtmutatoTorzs({
   pipal?: (k: string, b: boolean) => void;
 }) {
   const [elokeszitNyitva, setElokeszitNyitva] = useState(false);
-  const forras: CallbackSource = g.kind === 'meghatalmazas' ? 'meghatalmazas_utmutato' : 'vallalkozas_utmutato';
-  const tema: CallbackTopic = g.kind === 'meghatalmazas' ? 'meghatalmazas' : 'vallalkozas_inditas';
+  const forras: CallbackSource = g.kind === 'meghatalmazas' ? 'meghatalmazas_utmutato' : valtozasFajta(g.kind) ? 'valtozas_utmutato' : 'vallalkozas_utmutato';
+  const tema: CallbackTopic = g.kind === 'meghatalmazas' ? 'meghatalmazas' : valtozasFajta(g.kind) ? 'valtozas' : 'vallalkozas_inditas';
   const db = g.steps.filter((s) => kesz.includes(s.key)).length;
   return (
     <>
@@ -506,9 +508,10 @@ export function useLepesParam(n: number) {
  * 3D ikon, kapszula-gomb) – a bevezető tetején és minden lépés kártyáján, közvetlenül a fő gomb alatt (11-19 javítás:
  * eddig vékony szöveges link volt a képernyő alján, a meghatalmazás-útmutatóban pedig hiányzott).
  */
-export function SegitsegCsik({ fajta, fn, onPress, kompakt, style }: { fajta: 'ev' | 'mh'; fn: string; onPress: () => void; kompakt?: boolean; style?: object }) {
-  const cim = fajta === 'mh' ? ASSIST_TEXTS.mhGuideLink : ASSIST_TEXTS.guideLink;
-  const szoveg = fillPlaceholders(fajta === 'mh' ? ASSIST_TEXTS.guideStripBodyMh : ASSIST_TEXTS.guideStripBodyEv, { firstName: fn });
+export function SegitsegCsik({ fajta, fn, onPress, kompakt, style }: { fajta: 'ev' | 'mh' | 'valtozas'; fn: string; onPress: () => void; kompakt?: boolean; style?: object }) {
+  // SPEC §28.5.2: a változásoknál „Bejelentjük helyetted” (díjas, előre fizetve – a díjat a kérés képernyője mutatja)
+  const cim = fajta === 'valtozas' ? `Nem boldogulsz vele? ${CHANGE_TEXTS.helyettunk.title}` : fajta === 'mh' ? ASSIST_TEXTS.mhGuideLink : ASSIST_TEXTS.guideLink;
+  const szoveg = fillPlaceholders(fajta === 'valtozas' ? CHANGE_TEXTS.helyettunk.body : fajta === 'mh' ? ASSIST_TEXTS.guideStripBodyMh : ASSIST_TEXTS.guideStripBodyEv, { firstName: fn });
   return (
     <Pressable
       accessibilityRole="button"
@@ -581,15 +584,15 @@ export function UtmutatoLepesenkent({
   /** „Nem boldogulsz vele? Intézzük helyetted” – kiemelt csík a bevezetőn és minden lépésen. */
   segitseg?: (() => void) | null;
   /** Melyik segítséget kínálja a csík: a bejelentést ('ev', alap) vagy a meghatalmazást ('mh'). */
-  segitsegFajta?: 'ev' | 'mh';
+  segitsegFajta?: 'ev' | 'mh' | 'valtozas';
   egyben: () => void;
   elotte?: React.ReactNode;
   /** A bevezető lap UTÁN (pl. a „soha nem kérjük el a belépésedet” doboz), hogy a „Kezdjük” a hajtás fölött maradjon. */
   utana?: React.ReactNode;
 }) {
   const [elokeszitNyitva, setElokeszitNyitva] = useState(false);
-  const forras: CallbackSource = g.kind === 'vallalkozas_bejelentes' ? 'vallalkozas_utmutato' : 'meghatalmazas_utmutato';
-  const tema: CallbackTopic = g.kind === 'vallalkozas_bejelentes' ? 'vallalkozas_inditas' : 'meghatalmazas';
+  const forras: CallbackSource = g.kind === 'vallalkozas_bejelentes' ? 'vallalkozas_utmutato' : valtozasFajta(g.kind) ? 'valtozas_utmutato' : 'meghatalmazas_utmutato';
+  const tema: CallbackTopic = g.kind === 'vallalkozas_bejelentes' ? 'vallalkozas_inditas' : valtozasFajta(g.kind) ? 'valtozas' : 'meghatalmazas';
   const n = g.steps.length;
   const csik = (kompakt: boolean, style?: object) => (segitseg ? <SegitsegCsik fajta={segitsegFajta} fn={fn} onPress={segitseg} kompakt={kompakt} style={style} /> : null);
   if (lepes === 0) {

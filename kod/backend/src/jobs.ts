@@ -20,6 +20,7 @@ import { unreadTeamThreads } from './services/team.js';
 import { activityPending } from './_shared/bekotes.js';
 import { answersOf } from './services/registration.js';
 import { assistDigestLine, jobDefsTulaj1119 } from './jobs-tulaj1119.js';
+import { jobDefsK28, k28DigestLines } from './jobs-k28.js';
 
 /** Creates a notification only once per dedupe key (stored in notifications.data.dedupe). */
 async function notifyOnce(deps: Deps, key: string, n: NotifyInput): Promise<boolean> {
@@ -297,6 +298,7 @@ export async function jobStaffDigest(deps: Deps): Promise<number> {
     if (p.role === 'csapat' && threads) lines.push(`- Olvasatlan üzenet bekötés alatti ügyféltől: ${threads}`);
     const assistLine = await assistDigestLine(deps, p); // SPEC §27.8
     if (assistLine) lines.push(assistLine);
+    lines.push(...(await k28DigestLines(deps, p))); // SPEC §28.8 / §28.K.17
     if (!lines.length) continue;
     const firstName = p.first ?? (p.displayName ?? '').trim().split(/\s+/).pop() ?? '';
     const params = { brand: brand.name, count: lines.length, firstName, lines: lines.join('\n'), panelUrl: deps.cfg.panelPublicUrl };
@@ -328,6 +330,7 @@ export function jobDefs(deps: Deps): JobDef[] {
     { name: 'staff_digest', slot: at(8, 0), run: (d) => jobStaffDigest(d) },
     { name: 'registration_reminders', slot: at(10, 0), run: (d) => jobRegistrationReminders(d) },
     ...jobDefsTulaj1119(), // SPEC §27.8 (B1): assist_approvals every 15 min, kamara_reminders daily 10:00
+    ...jobDefsK28(), // SPEC §28 / §28.K: allowances yearly/monthly, check-in, reminders, annual closing, service lock
     { name: 'gdpr', slot: at(3, 30), run: (d) => runGdprJob(d) },
     {
       name: 'gdpr_export',

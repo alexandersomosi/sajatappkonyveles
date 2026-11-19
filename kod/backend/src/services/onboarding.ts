@@ -22,7 +22,8 @@ import {
 } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { accountants, clients, onboardingSteps } from '../db/schema.js';
+import { accountants, allowanceAnswers, clientEmployerStatus, clients, onboardingSteps } from '../db/schema.js';
+import { EMPLOYER_DECISIONS_ALLOW_ACTIVATION } from '../_shared/enums.js';
 import { huDayMonthAn, todayBudapest, WEEKDAYS_ON_HU, weekdayOf } from '../lib/dates.js';
 import { E } from '../lib/errors.js';
 import { accountantParams, notify } from '../notify/notify.js';
@@ -321,7 +322,19 @@ export async function journeyOf(deps: Deps, db: DbOrTx, cl: ClientRow): Promise<
     openRequests: (await openRequestsFromAccountant(db, cl.id)).length,
     callback: cb ? await callbackView(deps, db, cb) : null,
     lockText,
+    ...(await journeyK28(db, cl, deps.now())),
   });
+}
+
+/** SPEC §28.3.4 / §28.K.7 inputs of the journey (the allowance row and the employees row). */
+async function journeyK28(db: DbOrTx, cl: ClientRow, now: Date): Promise<{ allowancesDone: boolean; employer: { answer: string; decided: boolean; allows: boolean } | null }> {
+  const year = Number(todayBudapest(now).slice(0, 4));
+  const [ans] = await db.select().from(allowanceAnswers).where(and(eq(allowanceAnswers.clientId, cl.id), eq(allowanceAnswers.year, year))).limit(1);
+  const [emp] = await db.select().from(clientEmployerStatus).where(eq(clientEmployerStatus.clientId, cl.id)).limit(1);
+  return {
+    allowancesDone: Boolean(ans && (ans.gate === 'nem_jar' || ans.gate === 'lehet' || ans.submittedAt)),
+    employer: emp ? { answer: emp.answer, decided: Boolean(emp.decision), allows: emp.answer === 'nincs' || Boolean(emp.decision && EMPLOYER_DECISIONS_ALLOW_ACTIVATION.includes(emp.decision)) } : null,
+  };
 }
 
 export async function onboardingState(deps: Deps, db: DbOrTx, clientId: string, perspective: Perspective = 'client'): Promise<OnboardingState> {

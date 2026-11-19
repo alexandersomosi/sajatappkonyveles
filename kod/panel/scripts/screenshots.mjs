@@ -16,6 +16,9 @@ const out = join(root, '_kepek');
 const tmpBase = (process.env.KEPEK_TMP || join(tmpdir(), 'kezjegy_panel_kepek')).replace(/\\/g, '/');
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const filter = process.argv[2] || '';
+/** KEPEK_SZEL=1280 → the same shots at 1280 px, file names with "_1280" (SPEC §28.K.10 panel check). */
+const SZEL = Number(process.env.KEPEK_SZEL || 1440);
+const UTO = SZEL === 1440 ? '' : `_${SZEL}`;
 mkdirSync(out, { recursive: true });
 mkdirSync(tmpBase, { recursive: true });
 
@@ -67,6 +70,15 @@ const type = (sel, text) => async (page) => {
   await new Promise((r) => setTimeout(r, 200));
 };
 
+const wait = (ms) => async () => {
+  await new Promise((r) => setTimeout(r, ms));
+};
+const selectAllType = (sel, text) => async (page) => {
+  await page.click(sel, { clickCount: 3 });
+  await page.keyboard.press('Backspace');
+  await page.type(sel, text);
+  await new Promise((r) => setTimeout(r, 250));
+};
 const evalStep = (fn) => async (page) => {
   await page.evaluate(fn);
   await new Promise((r) => setTimeout(r, 450));
@@ -184,6 +196,50 @@ const SHOTS = [
   ['k5_33_admin_szovegek', AD, '/admin/szovegek?ful=szovegek'],
   ['k5_34_konyvelo_ertesitesek', A, '/helyettunk', [clickText('Értesítések', 'button')]],
   ['k5_35_csapat_marika_regisztracio_ugyfel', CS, '/vallalkozas-inditas/reg-timea', [], true],
+  // SPEC §28 + §28.K (11-19 owner orders): allowances, reserve/earnings, notifications, check-in, annual closing, lock,
+  // pause, EFO, adószám later, KATA, change kinds, fees, the C-look typography – k6_* (node scripts/screenshots.mjs k6_)
+  ['k6_01_ugyfelek_lista', A, '/ugyfelek'],
+  ['k6_02_ugyfelek_kedvezmeny_var', A, '/ugyfelek?extra=kedvezmeny'],
+  ['k6_03_eszter_attekintes_ezt_latja', A, '/ugyfelek/c-szabo-eszter/attekintes', [], true],
+  ['k6_04_eszter_kedvezmenyek', A, '/ugyfelek/c-szabo-eszter/kedvezmenyek', [wait(900)], true],
+  ['k6_05_eszter_kedvezmeny_honap_valt', A, '/ugyfelek/c-szabo-eszter/kedvezmenyek', [clickText('okt.', '.kedvezmeny-tetel .honap-kapcsolok button'), clickText('nov.', '.kedvezmeny-tetel .honap-kapcsolok button'), clickText('dec.', '.kedvezmeny-tetel .honap-kapcsolok button'), wait(900)], true],
+  ['k6_06_eszter_kedvezmeny_kerdezek', A, '/ugyfelek/c-szabo-eszter/kedvezmenyek', [clickText('Kérdezek', 'button'), type('.fiok-lap textarea', 'A párod is egyéni vállalkozó? Akkor lehet, hogy nála éri meg jobban a családi kedvezmény.')]],
+  ['k6_07_eszter_kedvezmeny_nem_jar', A, '/ugyfelek/c-szabo-eszter/kedvezmenyek', [clickText('Nem jár', 'button')]],
+  ['k6_08_meszter_kieso_ido', A, '/ugyfelek/c-eszter/kedvezmenyek', [wait(900)], true],
+  ['k6_09_meszter_kieso_adoprofil', A, '/ugyfelek/c-eszter/kedvezmenyek', [clickText('Kieső időként felveszem', 'button'), wait(900)]],
+  ['k6_10_balint_felretesz_szamlankent', A, '/ugyfelek/c-toth-balint/attekintes', [clickText('Számlánként', 'button'), wait(700)]],
+  ['k6_11_balint_kereset_havonta', A, '/ugyfelek/c-toth-balint/attekintes', [clickText('Havonta megnézem', 'button'), wait(700)]],
+  ['k6_12_kata_szamlak_felretesz_oszlop', A, '/ugyfelek/c-kata/nav'],
+  ['k6_13_kata_bevetelek_felretesz_oszlop', A, '/ugyfelek/c-kata/bevetelek', [], true],
+  ['k6_14_balint_ertesitesnaplo', A, '/ugyfelek/c-toth-balint/naplo?mit=ertesitesek', [], true],
+  ['k6_15_greta_kata_attekintes', A, '/ugyfelek/c-lakatos-greta/attekintes', [], true],
+  ['k6_16_greta_kata_szamlak', A, '/ugyfelek/c-lakatos-greta/nav'],
+  ['k6_17_ilona_zarolva_ado', A, '/ugyfelek/c-fazekas-ilona/ado', [], true],
+  ['k6_18_ugyfelek_zarolva', A, '/ugyfelek?szuro=zarolva'],
+  ['k6_19_csilla_szunetel', A, '/ugyfelek/c-molnar-csilla/attekintes', [], true],
+  ['k6_20_tamas_efo_adoszam', A, '/ugyfelek/c-barany-tamas/attekintes', [], true],
+  ['k6_21_havi_valtozasok', A, '/havi-valtozasok'],
+  ['k6_22_havi_valtozasok_mind', A, '/havi-valtozasok?szuro=mind'],
+  ['k6_23_havi_norbert_fiok', A, '/havi-valtozasok?szuro=mind', [clickText('Kiss Norbert', 'tr')]],
+  ['k6_24_havi_egyeb_nem_kell', A, '/havi-valtozasok', [clickText('Molnár Eszter', 'tr'), clickText('Nem kell teendő', '.fiok-lap label')]],
+  ['k6_25_havi_csapat', CS, '/havi-valtozasok'],
+  ['k6_30_eves_kata_konyvelonel', A, '/ugyfelek/c-kata/eves?mock_today=2027-03-20', [], true],
+  ['k6_31_eves_greta_kata_jovahagyasra', A, '/ugyfelek/c-lakatos-greta/eves?mock_today=2027-03-20', [], true],
+  ['k6_32_eves_eszter_dijra_var', A, '/ugyfelek/c-szabo-eszter/eves?mock_today=2027-03-20', [], true],
+  ['k6_33_eves_most_nem_indult', A, '/ugyfelek/c-kata/eves'],
+  ['k6_40_helyettunk_valtozasok', A, '/helyettunk?fajta=valtozas&szuro=mind'],
+  ['k6_41_adam_szekhely_engedelyre_var', A, '/helyettunk/as-adam', [clickText('Kézikönyv', 'summary')], true],
+  ['k6_42_anna_tevekenyseg_adatok', A, '/helyettunk/as-anna-tev', [], true],
+  ['k6_43_norbert_dijra_var', A, '/helyettunk/as-norbert', [], true],
+  ['k6_44_reka2_csapat_atnezi', CS, '/helyettunk/as-reka2', [], true],
+  ['k6_45_reka2_csapat_lezarta_utomunka', CS, '/helyettunk/as-reka2', [clickText('A NAV elfogadta – lezárom', 'button'), wait(700)], true],
+  ['k6_46_reka2_konyvelo', A, '/helyettunk/as-reka2'],
+  ['k6_50_admin_dijak', AD, '/admin/dijak', [], true],
+  ['k6_51_admin_dij_emeles_hiba', AD, '/admin/dijak', [clickText('Módosítom', 'button'), selectAllType('.fiok-lap input.szam', '21999'), clickText('Elmentem', '.fiok-lap button')]],
+  ['k6_52_admin_dij_elengedes', AD, '/admin/dijak', [clickText('Elengedem', 'button')]],
+  ['k6_53_admin_szovegek', AD, '/admin/szovegek?ful=szovegek'],
+  ['k6_54_admin_attekintes_menu', AD, '/admin'],
+  ['k6_60_beallitasok_valaszido', A, '/beallitasok', [selectAllType('.lap input.doboz[maxlength="80"]', 'Munkanapokon 4 órán belül válaszol')]],
 ];
 
 let n = 0;
@@ -197,7 +253,7 @@ for (const [nev, role, path, steps = [], full = false] of SHOTS) {
     headless: true,
     userDataDir: udd,
     args: ['--no-first-run', '--no-default-browser-check', '--hide-scrollbars', '--force-device-scale-factor=1', '--lang=hu-HU'],
-    defaultViewport: { width: 1440, height: 900, deviceScaleFactor: 1 },
+    defaultViewport: { width: SZEL, height: 900, deviceScaleFactor: 1 },
     protocolTimeout: 180000,
   });
   const watchdog = setTimeout(() => {
@@ -220,8 +276,8 @@ for (const [nev, role, path, steps = [], full = false] of SHOTS) {
     await page.waitForFunction(() => !document.querySelector('.betoltes'), { timeout: 10000 }).catch(() => {});
     await page.evaluate(() => window.scrollTo(0, 0));
     await new Promise((r) => setTimeout(r, 250));
-    await page.screenshot({ path: join(out, `${nev}.png`).replace(/\\/g, '/') });
-    if (full) await page.screenshot({ path: join(out, `${nev}_teljes.png`).replace(/\\/g, '/'), fullPage: true });
+    await page.screenshot({ path: join(out, `${nev}${UTO}.png`).replace(/\\/g, '/') });
+    if (full) await page.screenshot({ path: join(out, `${nev}${UTO}_teljes.png`).replace(/\\/g, '/'), fullPage: true });
     if (errors.length) fails.push(`${nev}: ${errors.join(' | ')}`);
     n++;
     console.log('ok', nev);

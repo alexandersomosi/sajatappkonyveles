@@ -27,12 +27,12 @@ $ertekek['SIMPLEPAY_MERCHANT_HUF'] = Read-Host '   Kereskedő azonosító (MERCH
 $ertekek['SIMPLEPAY_SECRET_HUF'] = Read-Secret '   Titkos kulcs (SECRET KEY, HUF)'
 Write-Host '   (A SimplePay adminban az IPN cím: https://api.45-94-65-74.sslip.io/api/v1/webhooks/simplepay/ipn - saját domainnél azzal)'
 
-Write-Host '2) E-mail (Brevo SMTP: Brevo > SMTP & API > SMTP)'
-$ertekek['SMTP_HOST'] = Read-Host '   SMTP szerver (Brevo: smtp-relay.brevo.com)'
-$ertekek['SMTP_PORT'] = Read-Host '   SMTP port (Brevo: 587)'
-$ertekek['SMTP_USER'] = Read-Host '   SMTP felhasználó (Brevo login)'
-$ertekek['SMTP_PASS'] = Read-Secret '   SMTP jelszó / kulcs'
-$ertekek['MAIL_FROM'] = Read-Host '   Feladó (pl. Kézjegy <hello@sajatdomain.hu>; a domain legyen hitelesítve a Brevóban)'
+Write-Host '2) E-mail (Zoho CPaaS / ZeptoMail SMTP: E-Mail > Agents > agent_1 > SMTP; 11-19 óta ez a választott)'
+$ertekek['SMTP_HOST'] = Read-Host '   SMTP szerver (ZeptoMail EU: smtp.zeptomail.eu)'
+$ertekek['SMTP_PORT'] = Read-Host '   SMTP port (ZeptoMail: 587)'
+$ertekek['SMTP_USER'] = Read-Host '   SMTP felhasználó (ZeptoMail: emailapikey)'
+$ertekek['SMTP_PASS'] = Read-Secret '   SMTP jelszó = a ZeptoMail "Send Mail Token" (nem látszik)'
+$ertekek['MAIL_FROM'] = Read-Host '   Feladó (pl. Adózz <ertesites@adozz.hu>; az adozz.hu legyen hitelesítve a Zohóban)'
 $ertekek['MAIL_REPLY_TO'] = Read-Host '   Válaszcím (üres = a feladó)'
 
 Write-Host '3) Google-belépés (Google Cloud > APIs & Services > Credentials > OAuth client ID)'

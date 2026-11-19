@@ -52,6 +52,10 @@ export interface JourneyInput {
   callback: CallbackView | null;
   /** step → filled lock text (stepLockKeys rendered). */
   lockText: Map<OnboardingStep, string>;
+  /** SPEC §28.3.4: the allowance gate was answered or the questionnaire sent (row 'kedvezmenyek' done). */
+  allowancesDone?: boolean;
+  /** SPEC §28.K.7: the employees / EFO answer (row 'alkalmazottak' only when it is not 'nincs'). */
+  employer?: { answer: string; decided: boolean; allows: boolean } | null;
 }
 
 export function journeyVariant(cl: Pick<ClientRow, 'businessStatus'>, reg: RegRow | null): JourneyVariant {
@@ -187,8 +191,23 @@ export async function buildJourney(deps: Deps, _db: DbOrTx, i: JourneyInput): Pr
         break;
       case 'nav_bekotes':
         if (s('nav_bekotes') === 'kesz' || s('nav_bekotes') === 'kihagyva') r = { key, actor: 'konyvelo', state: s('nav_bekotes') === 'kihagyva' ? 'kihagyva' : 'kesz', clientPart: false, completedAt: st.get('nav_bekotes')?.completedAt ?? null };
+        // k5 finding 15: a new business has nothing to connect before the registration is 'kesz' (no adószám yet)
+        else if (variant !== 'van' && variant !== 'nincs' && regStatus !== 'kesz') r = { key, actor: 'konyvelo', state: 'kesobb', clientPart: false, lockedReason: i.lockText.get('nav_bekotes') ?? (await t('bekotes.ut.zarolt_nav_bekotes')) };
         else if (s('meghatalmazas') === 'kesz') r = { key, actor: 'konyvelo', state: 'var', clientPart: false, wait: { key: 'nav_bekotes', from: st.get('meghatalmazas')?.completedAt ?? null, addWd: 3, actor: 'konyvelo' } };
         else r = { key, actor: 'konyvelo', state: 'kesobb', clientPart: false, lockedReason: i.lockText.get('nav_bekotes') ?? (await t('bekotes.ut.zarolt_nav_bekotes')) };
+        break;
+      case 'kedvezmenyek':
+        // SPEC §28.3.4: optional, never 'most', not counted, never blocks activation
+        r = i.allowancesDone
+          ? { key, actor: 'te', state: 'kesz', clientPart: false, optional: true }
+          : { key, actor: 'te', state: 'nyitva', clientPart: false, optional: true, action: { label: await t('kedvezmeny.hint.button'), route: '/kedvezmenyek/kerdoiv' } };
+        break;
+      case 'alkalmazottak':
+        // SPEC §28.K.7: only when the client has employees / EFO; the accountant decides
+        if (!i.employer || i.employer.answer === 'nincs') continue;
+        r = i.employer.allows
+          ? { key, actor: 'konyvelo', state: 'kesz', clientPart: false }
+          : { key, actor: 'konyvelo', state: 'var', clientPart: false, statusText: await t('alkalmazott.journey_waiting') };
         break;
       default:
         r = await stepRow(key as 'szerzodes' | 'azonositas' | 'elofizetes');
@@ -254,7 +273,7 @@ export async function buildJourney(deps: Deps, _db: DbOrTx, i: JourneyInput): Pr
   }
 
   // ---------- the one 'most' row: the first client row with a deadline, else the first open client row ----------
-  const open = rows.filter((r) => r.state === 'nyitva');
+  const open = rows.filter((r) => r.state === 'nyitva' && r.key !== 'kedvezmenyek');
   const most = open.find((r) => r.dueOn) ?? open[0] ?? null;
   if (most) most.state = 'most';
   const mostIdx = most ? rows.indexOf(most) : -1;

@@ -30,6 +30,7 @@ import {
   type AssistCheckPhase,
   type AssistCloseReason,
   type AssistJogcim,
+  type AssistKind,
 } from '../../_shared/enums';
 import {
   FAZIS_CIM,
@@ -47,9 +48,13 @@ import {
   nyitottAssist,
   ugyfelTeendo,
   utonev,
+  valtozasFajta,
+  allapotFelirat,
   type MuveletKornyezet,
   type PanelMuvelet,
 } from '../../lib/helyettunk';
+import { ValtozasAdatok, ValtozasDij, ValtozasKezikonyv, ValtozasUtomunka, valtozasRovid } from './Valtozas';
+import { CHANGE_HANDBOOK, LOCK_TEXTS } from '../../_shared/bekotes';
 import { adoszamEllenor, hanyNapja, nyilvantartasiSzamOk } from '../../lib/csapat';
 import { datum, idopont } from '../../lib/format';
 import { today } from '../../lib/today';
@@ -122,7 +127,7 @@ export default function HelyettunkReszlet() {
           <>
             {d.client.name}{' '}
             <span className={`cimke ${nyitott ? (d.status === 'meghatalmazas_lejart' ? 'hiba' : 'info') : ''}`} style={{ marginLeft: 6 }}>
-              {ASSIST_STATUS_LABELS[d.status]}
+              {allapotFelirat(d.status, d.kind, ASSIST_STATUS_LABELS)}
             </span>
           </>
         }
@@ -157,7 +162,7 @@ export default function HelyettunkReszlet() {
               </button>
             )}
             {!isCsapat && !isAdmin && (
-              <button className="gomb-sav" onClick={() => nav(`/ugyfelek/${cc.id}/bekotes`)}>
+              <button className="gomb-sav" onClick={() => nav(`/ugyfelek/${cc.id}/${valtozasFajta(d.kind) ? 'attekintes' : 'bekotes'}`)}>
                 <I3 n="dosszie" s={24} />
                 Ügyfél adatlapja
               </button>
@@ -262,6 +267,22 @@ function MostSav({ d, sajatKonyvelo, konyveloUtonev, most }: { d: TeamAssistDeta
     visszavonva: 'Az ügyfél lemondta: magától intézi. A saját útmutatója újra ott van neki.',
     lezarva: 'Lezártuk.',
   };
+  if (valtozasFajta(d.kind)) {
+    const rovid = valtozasRovid(d.change);
+    Object.assign(szoveg, {
+      visszahivas_kerve: 'Hívd fel az ügyfelet: előbb beszélni szeretne. Pipáld ki a hívás listáját.',
+      dijra_var: `Díjra vár: az ügyfél még nem fizette ki ${d.feeCharge ? `a(z) ${d.feeCharge.amountHuf.toLocaleString('hu-HU').replace(/\s/g, ' ')} Ft-ot` : 'a díjat'}. Előre fizetendő – addig ne kezdj bele.`,
+      egyeztetve: sajatKonyvelo
+        ? `Nézd át az új adatokat (${rovid ?? 'még nincsenek meg'}), pipáld ki a listát, és kérj engedélyt az ügyféltől.`
+        : `${konyveloUtonev} átnézi az új adatokat, és engedélyt kér az ügyféltől.`,
+      meghatalmazas_el: 'Az ügyfél az appban átnézi, mit jelentünk be, és engedélyezi.',
+      ugyfel_engedelyezte: sajatKonyvelo
+        ? 'Az ügyfél engedélyezte: küldd be meghatalmazottként, pontosan ezekkel az adatokkal, és töltsd fel a NAV-értesítést.'
+        : `Az ügyfél engedélyezte. ${konyveloUtonev} beküldi meghatalmazottként.`,
+      bejelentes_bekuldve: 'Beküldve. Négy szem elve: a csapat (vagy a tulajdonos) nézi át a NAV-értesítést, és zárja le – nem az, aki beküldte.',
+      kesz: 'Kész: a NAV elfogadta. Az utómunkát lent pipálja a könyvelő.',
+    });
+  }
   const nyitott = nyitottAssist(d.status);
   return (
     <div className={`lap most-sav${nyitott ? '' : ' lezart'}`}>
@@ -294,6 +315,13 @@ function AdatokOszlop({ d, szerep, onKartya }: { d: TeamAssistDetailP; szerep: s
           <UgyfelKartya c={d.clientCard} rejtsAssist onFrissult={onKartya} />
         </div>
       </div>
+      {valtozasFajta(d.kind) && (
+        <>
+          <ValtozasDij d={d} />
+          <ValtozasAdatok d={d} />
+        </>
+      )}
+      {!valtozasFajta(d.kind) && (
       <div className="lap">
         <div className="lap-fej">
           <I3 n="igazolas" s={36} />
@@ -350,6 +378,7 @@ function AdatokOszlop({ d, szerep, onKartya }: { d: TeamAssistDetailP; szerep: s
           )}
         </div>
       </div>
+      )}
       {d.kind === 'vallalkozas_bejelentes' && (
         <div className="lap">
           <div className="lap-fej">
@@ -514,8 +543,10 @@ function LepesekOszlop({
     konyveloUtonev,
     answersMatchConsent: d.answersMatchConsent,
     notReady: d.readyForUjegyke === false ? (d.notReadyReasons ?? []) : [],
+    zarolva: d.serviceLocked ? LOCK_TEXTS.panelDisabled : null,
   });
-  const akt = aktivFazis(d.status);
+  const valt = valtozasFajta(d.kind);
+  const akt = aktivFazis(d.status, d.kind);
   // The phase whose list stays open: the current one, or the UJEGYKE phase while we wait for / check the approval.
   const nyitvaFazis = akt ?? (d.status === 'meghatalmazas_bekuldve' || d.status === 'meghatalmazas_jovahagyva' ? 'ujegyke' : null);
   const ujegykeIdo = d.approval?.filedAt ?? d.timeline.filter((h) => h.action === 'assist.ujegyke_filed').sort((a, b) => b.at.localeCompare(a.at))[0]?.at ?? null;
@@ -531,13 +562,21 @@ function LepesekOszlop({
             </div>
           </div>
           <details className="osszevont kezikonyv" style={{ marginTop: 12 }}>
-            <summary>Így küldd be meghatalmazottként</summary>
-            <Kezikonyv kind={d.kind} />
+            <summary>{valt ? CHANGE_HANDBOOK.title : 'Így küldd be meghatalmazottként'}</summary>
+            {valt ? <ValtozasKezikonyv kind={d.kind} /> : <Kezikonyv kind={d.kind} />}
           </details>
         </div>
       </div>
+      {d.serviceLocked && (
+        <div className="uzenet-sav hiba">
+          <I3 n="lakat" s={28} />
+          <div>
+            <b>Zárolva:</b> {LOCK_TEXTS.panelDisabled} Olvasni és üzenni lehet, beküldeni nem.
+          </div>
+        </div>
+      )}
       {jovahagyasAlatt && ujegykeIdo && <JovahagyasIdozito d={d} filedAt={ujegykeIdo} most={most} />}
-      {fazisok(d.kind).map((phase, i) => {
+      {fazisok(d.kind, { status: d.status, checklistPhases: d.checklist.map((c) => c.phase) }).map((phase, i) => {
         const kesz = fazisKesz(phase, d.status);
         const aktiv = akt === phase;
         const pipalhat =
@@ -598,6 +637,7 @@ function LepesekOszlop({
           </div>
         );
       })}
+      {valt && <ValtozasUtomunka d={d} szerep={szerep} frissit={frissit} />}
       {(d.status === 'bejelentes_bekuldve' || (d.status === 'kesz' && d.kind === 'vallalkozas_bejelentes')) && d.registrationId && (
         <div className="uzenet-sav info">
           <div>
@@ -694,6 +734,9 @@ function FazisGombok({ d, phase, k, pipak, frissit }: { d: TeamAssistDetailP; ph
       if (m === 'ujegyke_bekuldve') return ep.teamAssistUjegyke(d.id, { items: elemek('ujegyke'), jogcim });
       if (m === 'lejart') return ep.teamAssistExpired(d.id);
       if (m === 'meghatalmazas_el') return ep.teamAssistMhLive(d.id);
+      if (m === 'adatok_rendben') return ep.teamAssistChangeReady(d.id);
+      if (m === 'valtozas_kesz') return ep.teamAssistChangeDone(d.id, {});
+      if (m === 'valtozas_bekuldve') return ep.teamAssistEvFiled(d.id, fajl!, { items: elemek('valtozas_bejelentes'), filedOn: napja });
       return ep.teamAssistEvFiled(d.id, fajl!, {
         items: elemek('bejelentes'),
         filedOn: napja,
@@ -714,7 +757,13 @@ function FazisGombok({ d, phase, k, pipak, frissit }: { d: TeamAssistDetailP; ph
                 ? d.kind === 'meghatalmazas'
                   ? 'Kész: él a meghatalmazás.'
                   : 'Él a meghatalmazás. Az ügyfél értesítést kapott: most engedélyezheti a bejelentést.'
-                : 'Rögzítetted a bejelentést. A csapat átnézi, és rögzíti az adószámot.',
+                : m === 'adatok_rendben'
+                  ? 'Engedélyt kértél. Az ügyfél értesítést kapott: „Nézd át, mit jelentünk be”.'
+                  : m === 'valtozas_bekuldve'
+                    ? 'Rögzítetted a beküldést. A csapat átnézi a NAV-értesítést, és lezárja.'
+                    : m === 'valtozas_kesz'
+                      ? 'Lezártad. Az ügyfél értesítést kapott; az utómunka a könyvelőnél van.'
+                      : 'Rögzítetted a bejelentést. A csapat átnézi, és rögzíti az adószámot.',
       );
     },
     onError: pir.hiba,
@@ -734,6 +783,35 @@ function FazisGombok({ d, phase, k, pipak, frissit }: { d: TeamAssistDetailP; ph
     );
   };
   if (phase === 'hivas') return gomb('egyeztetve', 'Egyeztettünk – elindítom');
+  if (phase === 'valtozas_adatok') return gomb('adatok_rendben', CHANGE_HANDBOOK.changeReady);
+  if (phase === 'valtozas_bejelentes') {
+    const vb = muveletAllapot('valtozas_bekuldve', k);
+    const tiltV = !!vb && !vb.mehet && !(vb.miert ?? '').startsWith('Még ');
+    return (
+      <div className="oszlop" style={{ gap: 12, marginTop: 6 }}>
+        {vb && (
+          <div className="mezosor k2">
+            <label className="mezo">
+              <span className="felirat">A NAV-értesítés (PDF vagy kép)</span>
+              <input ref={fajlRef} type="file" accept="application/pdf,image/*" className="rejtett" disabled={tiltV} onChange={(e) => setFajl(e.target.files?.[0] ?? null)} />
+              <button type="button" className="gomb-m kicsi" disabled={tiltV} onClick={() => fajlRef.current?.click()}>
+                <I3 n="feltoltes" s={22} />
+                {fajl ? 'Másik fájl' : 'Kiválasztom'}
+              </button>
+              {fajl && <span className="sugo">{fajl.name}</span>}
+            </label>
+            <label className="mezo">
+              <span className="felirat">Beküldés napja</span>
+              <input className="doboz" type="date" value={napja} max={today()} disabled={tiltV} onChange={(e) => setNapja(e.target.value)} />
+            </label>
+          </div>
+        )}
+        {gomb('valtozas_bekuldve', CHANGE_HANDBOOK.evFiled, true, !!fajl && !!napja)}
+        {vb?.mehet && !fajl && <span className="sugo" style={{ marginTop: -6 }}>Előbb válaszd ki a letöltött értesítést.</span>}
+        {gomb('valtozas_kesz', CHANGE_HANDBOOK.changeDone)}
+      </div>
+    );
+  }
   if (phase === 'ujegyke') {
     const be = muveletAllapot('ujegyke_bekuldve', k);
     return (
@@ -799,7 +877,7 @@ function FazisGombok({ d, phase, k, pipak, frissit }: { d: TeamAssistDetailP; ph
   );
 }
 
-function Kezikonyv({ kind }: { kind: 'vallalkozas_bejelentes' | 'meghatalmazas' }) {
+function Kezikonyv({ kind }: { kind: AssistKind }) {
   return (
     <div className="kezikonyv-test">
       <h3 className="kis-cim">Meghatalmazás (UJEGYKE) – ONYA</h3>
