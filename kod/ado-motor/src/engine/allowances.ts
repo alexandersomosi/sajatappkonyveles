@@ -3,7 +3,7 @@
 //
 // Two kinds of allowance:
 //  - income-bound (30 év alatti anyák, 2/3/4+ gyermekes anyák, 25 év alattiak): they exempt the taxable income of the
-//    eligible MONTHS (month-local);
+//    eligible MONTHS (the mothers' month-local; the 25 év alattiak cumulatively up to eligible months × cap, see monthBoundPass);
 //  - frames (személyi, első házasok, családi): they reduce the YEAR-TO-DATE base of the quarterly advance
 //    (Szja tv. 49. § (1) "korábban még nem érvényesített kedvezmény").
 // The adómentes rész always comes first; allowances act only on the taxable part above it ([K] §2.1).
@@ -130,7 +130,7 @@ export function planAllowances(rules: TaxRules, profile: TaxProfileInput, firstM
       for (const m of a.anyak.months) if (inRange(m) && plan.motherKind[m] === null) plan.motherKind[m] = 'anyak';
     }
   }
-  // 4. 25 év alattiak (month-bound, capped per month)
+  // 4. 25 év alattiak (eligible months; annual frame = eligible months × cap, applied cumulatively)
   if (a.fiatal25) {
     if (!birth) needBirth('25 év alattiak kedvezménye');
     else {
@@ -190,13 +190,27 @@ export interface MonthBound {
   exF: number[];
 }
 
-/** Steps 1 and 3 of SPEC §28.3.7 c. */
+/**
+ * Steps 1 and 3 of SPEC §28.3.7 c.
+ *
+ * 25 év alattiak (Szja tv. 29/F. § (2)): the cap is ANNUAL – "adóévenként legfeljebb a jogosultsági hónapok számának és
+ * [a júliusi átlagkeresetnek] a szorzata" (NAV 73. füzet 7.2: 8 589 180 Ft for a whole eligible year), and the advance
+ * may use the part "korábban még nem érvényesített" (49. § (1)). So the exemption is CUMULATIVE: up to month m it is
+ * min(the eligible months' taxable income since 1 January, the eligible months so far × cap); a month whose income
+ * stays under the frame leaves the rest for later months (a lump sum in April with 4 eligible months has a
+ * 4 × 715 765 frame). exF[m] is the month's increment, so Σ exF up to a quarter end = that quarter's YTD exemption.
+ * An increment may exceed the month's own taxable part (catch-up of an earlier month's income): B2[m] can then be
+ * negative; only Σ B2 is used for the SZJA, and the month-local csjk clamps it at 0.
+ */
 export function monthBoundPass(I: readonly number[], taxFree: number, plan: AllowancePlan | null, cap: number): MonthBound {
   const T = zeros();
   const B2 = zeros();
   const exA = zeros();
   const exF = zeros();
   let c = 0;
+  let eligibleBase = 0; // taxable income of the eligible months so far (after the mothers' exemptions)
+  let eligibleMonths = 0;
+  let usedF = 0; // Σ exF so far
   for (let m = 1; m <= 12; m++) {
     const prev = c;
     c += I[m] ?? 0;
@@ -208,7 +222,11 @@ export function monthBoundPass(I: readonly number[], taxFree: number, plan: Allo
         b = 0;
       }
       if (plan.fiatal[m]) {
-        exF[m] = Math.min(Math.max(b, 0), cap);
+        eligibleMonths++;
+        eligibleBase += Math.max(b, 0);
+        const cum = Math.min(eligibleBase, eligibleMonths * cap);
+        exF[m] = Math.max(0, cum - usedF);
+        usedF += exF[m]!;
         b -= exF[m]!;
       }
     }

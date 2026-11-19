@@ -286,6 +286,8 @@ export interface YearResult {
   allowances?: AllowanceSummary;
   /** (+) SPEC §28.4.2: months 1..12 with at least one active day (after the start, not fully suspended). */
   activeMonths?: number[];
+  /** SPEC §28.4.2: active days of each month (index 0 = January): on or after the start, not suspended. */
+  activeDaysByMonth?: number[];
   /** (+) SPEC §28.4.3: active days of the year and the elapsed active days up to asOf (the meters' projection basis). */
   activeDays?: number;
   elapsedActiveDays?: number;

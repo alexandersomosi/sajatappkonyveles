@@ -23,7 +23,7 @@ import { buildExplanation } from './explanation.js';
 import { hipaEstimate } from './hipa.js';
 import { adomentesMeter, afaMeter, atalanyCapMeter, type Projection } from './meters.js';
 
-export const ENGINE_VERSION = '1.2.0';
+export const ENGINE_VERSION = '1.3.0';
 export const DISCLAIMER = 'Becslés. A végleges összeget a könyvelőd hagyja jóvá.';
 
 function dedupeWarnings(ws: EngineWarning[]): EngineWarning[] {
@@ -426,14 +426,16 @@ export function calculateYear(input: YearInput): YearResult {
   const proj: Projection = { activeDays, elapsedDays };
   // SPEC §28.4.2: months with at least one active day (on or after the start, not suspended).
   const activeMonths: number[] = [];
+  const activeDaysByMonth: number[] = [];
   for (let m = 1; m <= 12; m++) {
     const first = dayNumber(toIso(year, m, 1));
-    let active = false;
-    for (let i = 0; i < daysInMonth(year, m) && !active; i++) {
+    let days = 0;
+    for (let i = 0; i < daysInMonth(year, m); i++) {
       const d = first + i;
-      if (d >= startN && !suspendedDays.has(d)) active = true;
+      if (d >= startN && !suspendedDays.has(d)) days++;
     }
-    if (active) activeMonths.push(m);
+    activeDaysByMonth.push(days);
+    if (days > 0) activeMonths.push(m);
   }
   const atalanyUsed = sum(R.slice(1));
   const capFull = n.retail ? rules.atalanyCapRetailHuf : rules.atalanyCapHuf;
@@ -555,6 +557,7 @@ export function calculateYear(input: YearInput): YearResult {
     incomeYtdHuf: incomeYtdAll,
     ...(plan ? { allowances: allowanceSummary ?? { usedHuf: {}, szjaSavedHuf: 0, csjkHuf: 0, savedHuf: 0, csaladiUnusedHuf: 0, annualCsjkPotentialHuf: 0 } } : {}),
     activeMonths,
+    activeDaysByMonth,
     activeDays,
     elapsedActiveDays: elapsedDays,
   };

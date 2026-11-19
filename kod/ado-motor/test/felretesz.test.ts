@@ -3,7 +3,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { calculateYear, reserveSeries, roundReserve, type ReserveItemInput, type TaxProfileInput, type TaxStatus } from '../src/index.js';
-import { prng } from './helpers.js';
+import { monthly, prng } from './helpers.js';
 
 const prof = (status: TaxStatus, extra: Partial<TaxProfileInput> = {}): TaxProfileInput => ({ year: 2026, costRatio: 45, status, guaranteedMinimum: false, ...extra });
 let n = 0;
@@ -124,3 +124,16 @@ describe('R10 property: Σ raw (no estimates) + base = total', () => {
     }
   });
 });
+
+// Round 2 of 2026-11-19 (k6c review R4): the annual 25 év alattiak frame covers the April invoice – no SZJA in its reserve.
+describe('R4 25 év alatti (2003-01) mellékállású: 3 000 000 in January, 3 000 000 in April', () => {
+  it('April reserve = TB + szocho only: Q2 base 454 400 × 3 → 252 192 + 177 216 = 429 408 → 430 000, SZJA 0', () => {
+    const items = monthly({ 1: 3_000_000, 4: 3_000_000 }, 2026, 10).map((x, i) => ({ ...x, id: `y${i}`, arrivalKey: `${x.receivedOn}-y${i}` }));
+    const r = reserveSeries({ year: 2026, costRatio: 45, status: 'mellekallasu', guaranteedMinimum: false, kedvezmenyek: { birthMonth: '2003-01', fiatal25: {} } }, items);
+    expect(r.lines.map((l) => [l.rawHuf, l.szjaHuf, l.reserveHuf])).toEqual([
+      [0, 0, 0],
+      [429_408, 0, 430_000],
+    ]);
+  });
+});
+

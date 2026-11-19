@@ -1,5 +1,6 @@
 // Tax periods, calculations and payment items (SPEC §5.6, §6.3, §7). The engine is pure; this
 // module feeds it from the DB, stores versioned calculations and runs the approval flow.
+import { fmt as fmtHuf } from './kedvezmeny.js';
 import { and, asc, desc, eq, inArray, isNull, lte, sql } from 'drizzle-orm';
 import type { DocumentListItem, Letter, PaymentItem, TaxPeriodDetail, TaxPeriodSummary } from '../_shared/api.js';
 import type { PaymentItemKind } from '../_shared/enums.js';
@@ -424,9 +425,8 @@ export async function reopenPeriod(deps: Deps, db: DbOrTx, periodId: string, acc
   await recalcYear(deps, db, cl.id, p.year, { by: accountantUserId });
 }
 
-const fmt = new Intl.NumberFormat('hu-HU');
 export function ft(n: number): string {
-  return `${fmt.format(n)} Ft`;
+  return `${fmtHuf(n)} Ft`;
 }
 
 export function paymentItemDto(i: typeof taxPaymentItems.$inferSelect): PaymentItem {

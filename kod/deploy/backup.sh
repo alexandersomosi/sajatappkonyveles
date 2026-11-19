@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Nightly backup of the Kézjegy database (SPEC §20.4). Cron of the deploy user, 03:00:
-#   0 3 * * * /bin/bash /srv/kezjegy/deploy/backup.sh >> /srv/kezjegy/backups/backup.log 2>&1
+# HOURLY backup of the Kézjegy database (SPEC §20.4; owner 11-19: "óránként egy mentés"). Cron of the deploy user:
+#   5 * * * * /bin/bash /srv/kezjegy/deploy/backup.sh >> /srv/kezjegy/backups/backup.log 2>&1
 # pg_dump (custom format) → gpg AES256 with /srv/kezjegy/.backup_pass → backups/db_<date>.dump.gpg (600).
-# On Sundays also a tar of data/files (the blobs are already AES-256-GCM encrypted).
-# House rule: nothing is deleted. Rotation = MOVE: the newest 14 dumps and 4 file snapshots stay in backups/,
-# older ones go to backups/regi/ (from there the owner copies them offsite, e.g. Hetzner Storage Box) [OWNER].
+# Once a day (the 03:xx run) also a tar of data/files (the blobs are already AES-256-GCM encrypted).
+# House rule: nothing is deleted. Rotation = MOVE: the newest 48 dumps (2 days) and 7 file snapshots stay in
+# backups/, older ones go to backups/regi/. Offsite: the owner's PC copies every new file to the Hetzner Storage
+# Box each hour (mentes-kulso.sh via Windows Task Scheduler, hidden window).
 set -euo pipefail
 umask 077
 B=/srv/kezjegy/backups
@@ -16,14 +17,14 @@ docker exec kezjegy-db pg_dump -U kezjegy -d kezjegy -Fc \
         --symmetric --cipher-algo AES256 -o "$OUT.part"
 mv "$OUT.part" "$OUT"
 echo "$(date -Is) db backup: $OUT ($(stat -c %s "$OUT") bytes)"
-if [ "$(date +%u)" = 7 ] || [ "${FILES:-0}" = 1 ]; then
+if [ "$(date +%H)" = 03 ] || [ "${FILES:-0}" = 1 ]; then
   tar -C /srv/kezjegy/data -cf "$B/files_$TS.tar.part" files && mv "$B/files_$TS.tar.part" "$B/files_$TS.tar"
   echo "$(date -Is) files snapshot: $B/files_$TS.tar"
 fi
-# rotation by moving (never deleting): keep the newest 14 dumps and 4 file snapshots at hand
+# rotation by moving (never deleting): keep the newest 48 dumps and 7 file snapshots at hand
 mkdir -p "$B/regi"
-ls -1t "$B"/db_*.dump.gpg 2>/dev/null | tail -n +15 | while read -r f; do mv "$f" "$B/regi/"; done
-ls -1t "$B"/files_*.tar 2>/dev/null | tail -n +5 | while read -r f; do mv "$f" "$B/regi/"; done
+ls -1t "$B"/db_*.dump.gpg 2>/dev/null | tail -n +49 | while read -r f; do mv "$f" "$B/regi/"; done
+ls -1t "$B"/files_*.tar 2>/dev/null | tail -n +8 | while read -r f; do mv "$f" "$B/regi/"; done
 # Disk watch (QA kör 3): backups/regi only grows (nothing is deleted). Above 5 GB, or with less than 15% free
 # space on the disk, the admin panel (Rendszer) shows a warning – time to copy them offsite (mentes-kulso.sh).
 REGI_KB=$(du -sk "$B/regi" 2>/dev/null | cut -f1); REGI_KB=${REGI_KB:-0}

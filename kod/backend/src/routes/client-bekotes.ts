@@ -2,6 +2,7 @@
 // e-mail check and restricted-mode middleware): the changeable branch question, the new-business registration
 // (self-service and "Intézzük helyetted"), the guides, the explainers, the access matrix, the callback request, the
 // assisted requests and the kamarai regisztráció tick.
+import { fmt as fmtHuf } from '../services/kedvezmeny.js';
 import { and, eq, sql } from 'drizzle-orm';
 import type { Hono } from 'hono';
 import { z } from 'zod';
@@ -101,7 +102,7 @@ export function registerBekotesRoutes(r: Hono<Env>, deps: Deps): void {
 
   r.get('/explainers', async (c) => {
     const cl = await client(c);
-    const params = { firstName: await firstName(cl), havidij: `${new Intl.NumberFormat('hu-HU').format(deps.cfg.planPriceHuf).replace(/ /g, ' ')} Ft` };
+    const params = { firstName: await firstName(cl), havidij: `${fmtHuf(deps.cfg.planPriceHuf)} Ft` };
     const items: Explainer[] = [];
     for (const e of ONBOARDING_EXPLAINERS) {
       const k = `bekotes.magyarazat.${e.key}`;

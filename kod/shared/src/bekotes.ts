@@ -1951,7 +1951,11 @@ export const RESERVE_TEXTS = {
     sentence: 'Most kb. {keepNow} Ft legyen félretéve az adódra.',
     sentenceZero: 'Most nincs mit félretenned.',
     detail:
-      'Az idei számláid, a havi járulék és az iparűzési adó után eddig kb. {A} Ft adóval kell számolnod. Ebből {B} Ft a lezárt negyedévekre esik: azt már befizetted, vagy most kell befizetned.',
+      'Az idei bevételed után eddig kb. {A} Ft adóval kell számolnod. Ebből {B} Ft a lezárt negyedévekre esik: azt már befizetted, vagy most kell befizetned.',
+    /** Appended when the running quarter still has future months with a fixed járulék (the blue band counts them). */
+    detailHero: ' Fent a kék sávban az egész negyedév van, itt csak az eddigi hónapok.',
+    /** Round 2 of 11-19: overpaid SZJA advances / year-end csjk. */
+    refund: 'Kb. {refund} Ft-ot az éves bevallásban visszakapsz. Addig a befizetéshez ez is kell.',
     detailZero: 'Ami eddig összegyűlt, az a lezárt negyedévekre esik, és azt már befizetted, vagy most kell befizetned.',
     rowSzamlak: 'Az idei számláid után',
     rowFix: 'Havi fix járulék eddig',
@@ -1970,6 +1974,10 @@ export const RESERVE_TEXTS = {
     privatePerson: 'Magánszemély',
     manualItem: 'Kézi tétel: {description}',
     empty: 'Idén még nincs kiállított számlád. Ha lesz, itt látod, mennyit tegyél félre.',
+    /** Round 2 of 11-19: an item whose money is expected later (the payment deadline). */
+    upcoming: 'Várható: {datum}. Még nincs benne a fenti összegben.',
+    monthSub: '{n} tétel · félretenni kb. {felre} Ft',
+    monthSubUpcoming: '{n} tétel · félretenni kb. {felre} Ft · {u} várható',
     help: 'Elakadtál? Kérj visszahívást',
   },
 } as const;
@@ -2044,7 +2052,7 @@ export const ANYAK_LABELS: Record<'ket' | 'harom' | 'negyplusz', string> = {
 export const ALLOWANCE_CLIENT_LINES: Record<_AllowanceKind, string> = {
   anya30: '30 éves korodig nem fizetsz SZJA-t a vállalkozásod jövedelme után.',
   anyak: 'Nem fizetsz SZJA-t a vállalkozásod jövedelme után, egész életedben.',
-  fiatal25: '25 éves korodig havonta kb. 716 000 Ft jövedelemig nem fizetsz SZJA-t.',
+  fiatal25: 'Idén az adómentes részen felül kb. 8,6 millió Ft jövedelemig nem fizetsz SZJA-t (havonta kb. 716 000 Ft gyűlik).',
   szemelyi: 'Havonta 16 140 Ft-tal kevesebb SZJA.',
   elso_hazasok: 'Havonta 5 000 Ft-tal kevesebb SZJA, 24 hónapig, kettőtöknek együtt.',
   csaladi: 'Gyerekenként havonta 20 001–66 000 Ft-tal kevesebb SZJA. Ha nem fogy el, a TB-járulékodból is.',
@@ -2272,7 +2280,7 @@ export const ALLOWANCE_PANEL_TEXTS = {
 export const EARNINGS_TEXTS = {
   cardTitle: 'Mennyit kerestem?',
   cardSentence: 'Idén eddig kb. {ytdNet} Ft maradt neked',
-  cardSub: '{ytdRevenue} Ft bevételből, {ytdTaxes} Ft adó és járulék után.',
+  cardSub: '{ytdRevenue} Ft bevételből, kb. {ytdTaxes} Ft adó és járulék után.',
   cardProjection: 'Ha így folytatod, év végéig kb. {projNet} Ft marad.',
   cardLink: 'Havonta megnézem',
   screenTitle: 'Mennyit kerestem?',
@@ -2294,6 +2302,9 @@ export const EARNINGS_TEXTS = {
   projectionNotYet: 'Az év végi előrejelzést 2 hónap után mutatjuk.',
   howLink: 'Hogyan számoljuk?',
   disclaimer: 'Becslés. A végleges adót {firstName} hagyja jóvá.',
+  /** Round 2 of 11-19: the SZJA advances never go below 0 – after a late allowance part of them comes back. */
+  refund: 'Az eddigi előlegekből kb. {refund} Ft az éves bevallásban visszajár. A fenti adóban ezt már levontuk.',
+  cardRefund: 'Ebből kb. {refund} Ft az éves bevallásban visszajár.',
   /** KATA view (SPEC §28.K.11). */
   kataLine: 'A kata mindent fedez: nincs külön SZJA, TB és szocho.',
 } as const;
@@ -2955,7 +2966,7 @@ export const EXPLAINERS_28: readonly ExplainerDefault[] = [
   {
     key: 'kereset_miert',
     title: 'Hogyan számoljuk?',
-    what: 'A bevételed a pénz megérkezésének hónapjában számít. Az adót és a járulékot ahhoz a hónaphoz írjuk, amelyikben a bevétel keletkezett; az iparűzési adót egyenletesen osztjuk el az évre.',
+    what: 'A bevételed a pénz megérkezésének hónapjában számít. Az adót és a járulékot ahhoz a hónaphoz írjuk, amelyikben a bevétel keletkezett; főállásban a havi fix járulék minden hónapra jut. Az iparűzési adót napok szerint osztjuk el az évre.',
     why: 'Hogy lásd, mennyi marad neked. A költségeidet nem látjuk, ezeket ebből fizeted.',
     where: 'Ahol {firstName} már jóváhagyta vagy befizetted, azt az összeget használjuk, máshol becslést.',
     icon: 'szamolo',

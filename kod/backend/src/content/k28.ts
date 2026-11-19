@@ -209,9 +209,9 @@ export function k28Defaults(): Record<string, string> {
 
 /** SPEC §28.9 / §28.K.19: placeholders allowed per new content group. */
 export const GROUP_PLACEHOLDERS_K28: [string, string[]][] = [
-  ['felretesz.', ['firstName', 'felre', 'osszeg', 'keepNow', 'A', 'B', 'fixedMonthly', 'hipaAnnual', 'havi', 'szja', 'tb', 'szocho', 'jovedelemArany', 'description']],
+  ['felretesz.', ['firstName', 'felre', 'osszeg', 'keepNow', 'A', 'B', 'fixedMonthly', 'hipaAnnual', 'havi', 'szja', 'tb', 'szocho', 'jovedelemArany', 'description', 'refund', 'datum', 'n', 'u']],
   ['kedvezmeny.', ['firstName', 'n', 'savedYtd', 'question', 'monthsText', 'effectYear', 'rejectText', 'x', 'y', 'u', 'c', 'at']],
-  ['kereset.', ['firstName', 'ytdNet', 'ytdRevenue', 'ytdTaxes', 'projNet', 'projRev', 'projTaxes', 'year', 'honap', 'rev', 'taxes']],
+  ['kereset.', ['firstName', 'ytdNet', 'ytdRevenue', 'ytdTaxes', 'projNet', 'projRev', 'projTaxes', 'year', 'honap', 'rev', 'taxes', 'refund']],
   ['valtozas.', ['firstName', 'kindLabel', 'konyveloNev', 'valtozasNapja', 'clientName', 'n']],
   ['dij.', ['firstName', 'dij', 'label', 'unit', 'date', 'admin', 'n', 'clientName', 'honap']],
   ['havi.', ['firstName', 'honap', 'i', 'n', 'status', 'date']],

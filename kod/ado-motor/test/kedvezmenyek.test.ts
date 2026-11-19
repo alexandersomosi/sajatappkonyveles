@@ -40,7 +40,7 @@ describe('baseline (no allowances) – the numbers the cases start from', () => 
   });
 });
 
-describe('T1–T3 25 év alattiak (month-bound, 715 765 Ft cap)', () => {
+describe('T1–T3 25 év alattiak (annual frame: eligible months × 715 765, cumulative)', () => {
   it('T1 birth 2002-05 → every month eligible, SZJA 0, TB/szocho unchanged, used 4 663 200', () => {
     const r = run('mellekallasu', { birthMonth: '2002-05', fiatal25: {} });
     expect(szja(r)).toEqual([0, 0, 0, 0]);
@@ -56,11 +56,11 @@ describe('T1–T3 25 év alattiak (month-bound, 715 765 Ft cap)', () => {
     expect(total(szja(r))).toBe(495_000);
   });
 
-  it('T3 6 000 000 on 04-10 → April taxable 1 363 200 − 715 765 = 647 435 → Q2 97 115, TB Q2 unchanged', () => {
+  it('T3 6 000 000 on 04-10 → April taxable 1 363 200 ≤ 4 eligible months × 715 765 (annual frame, 29/F. § (2)) → SZJA 0, TB Q2 unchanged', () => {
     const r = run('mellekallasu', { birthMonth: '2003-01', fiatal25: {} }, monthly({ 4: 6_000_000 }, 2026, 10));
-    expect(szja(r)).toEqual([0, 97_115, 0, 0]);
+    expect(szja(r)).toEqual([0, 0, 0, 0]);
     expect(r.quarters[1]!.tbHuf).toBe(252_192);
-    expect(r.quarters[1]!.months[0]).toMatchObject({ taxableHuf: 1_363_200, exemptHuf: 715_765, csjkHuf: 0 });
+    expect(r.quarters[1]!.months[0]).toMatchObject({ taxableHuf: 1_363_200, exemptHuf: 1_363_200, csjkHuf: 0 });
   });
 
   it('explicit months after the birthday month are dropped with fiatal25_kor', () => {
@@ -267,3 +267,32 @@ describe('T22 NAV 100 6.1 csjk example (főfogl., minimálbér, kieső and szün
   // the accountant confirms the cap base of a short-minimum month (SPEC §28.13 wait #32; builder note §28.K B1).
   it.todo('csjk bases cumulative 968 400 / 1 491 200 / 1 814 000 / 2 459 600');
 });
+
+// Round 2 of 2026-11-19 (k6c tax review): the 25 év alattiak frame is ANNUAL (Szja tv. 29/F. § (2), NAV 73. füzet 7.2:
+// 8 589 180 Ft for a whole eligible year), used cumulatively in the advances (49. § (1) "korábban még nem érvényesített").
+describe('C5 / C5b / C18 – 25 év alattiak with lumpy or high income (hand-computed)', () => {
+  it('C5 mellékállású, born 2003-01, 6 000 000 on 04-10 → SZJA 0 (taxable 1 363 200 < 4 × 715 765)', () => {
+    const r = run('mellekallasu', { birthMonth: '2003-01', fiatal25: {} }, monthly({ 4: 6_000_000 }, 2026, 10));
+    expect(total(szja(r))).toBe(0);
+  });
+  it('C5b főfoglalkozású, 2 000 000 every month → taxable 11 263 200 − 8 589 180 = 2 674 020 → year SZJA 401 103', () => {
+    const r = run('fofoglalkozasu', { birthMonth: '2003-01', fiatal25: {} }, monthly(Object.fromEntries(ALL.map((m) => [m, 2_000_000])), 2026, 10));
+    expect(total(szja(r))).toBe(401_103);
+    expect(r.allowances!.usedHuf.fiatal25).toBe(8_589_180);
+    // Q2 end: taxable 263 200 + 4 × 1 100 000 = 4 663 200, frame 6 × 715 765 = 4 294 590 → 15 % × 368 610 = 55 292
+    expect(szja(r)[1]).toBe(55_292);
+  });
+  it('C18 90 % kiskereskedő, mellékállású, born 2004-05, 40 000 000 in March → taxable 2 063 200 ≤ 3 × 715 765 → SZJA 0', () => {
+    const r = calculateYear({
+      profile: { year: 2026, costRatio: 90, retail: true, status: 'mellekallasu', guaranteedMinimum: false, kedvezmenyek: { birthMonth: '2004-05', fiatal25: {} } },
+      revenue: monthly({ 3: 40_000_000 }, 2026, 10),
+      asOf: '2026-12-31',
+    });
+    expect(szja(r)).toEqual([0, 0, 0, 0]);
+  });
+  it('no frame after the 25th birthday month (born 2001-06, 6 000 000 in July → 15 % × 1 363 200 = 204 480)', () => {
+    const r = run('mellekallasu', { birthMonth: '2001-06', fiatal25: {} }, monthly({ 7: 6_000_000 }, 2026, 10));
+    expect(total(szja(r))).toBe(204_480);
+  });
+});
+

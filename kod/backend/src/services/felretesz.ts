@@ -11,7 +11,8 @@ import type { DbOrTx } from '../db/client.js';
 import { clientTaxProfiles, navInvoices, reserveMarks, reserveYears, revenueItems, revenueReserves, taxPeriods } from '../db/schema.js';
 import { audit } from '../audit.js';
 import { daysBetween, huDayMonthIg, MONTHS_HU, todayBudapest } from '../lib/dates.js';
-import { calculateYear, ENGINE_VERSION, reserveSeries, roundReserve, type ReserveItemInput, type YearInput, type YearResult } from '../tax/engine.js';
+import { ENGINE_VERSION, reserveSeries, roundReserve, type ReserveItemInput, type YearInput, type YearResult } from '../tax/engine.js';
+import { earningsBasis, kb1000 } from './kereset.js';
 import { accountantParams } from '../notify/notify.js';
 import { activeItems, engineInput, periodLabel } from './tax.js';
 import { fmt } from './kedvezmeny.js';
@@ -167,13 +168,20 @@ async function estimateReasons(deps: Deps, db: DbOrTx, cl: ClientRow, year: numb
 
 const ceil1000 = (n: number) => (n <= 0 ? 0 : Math.ceil(n / RESERVE_ROUND_HUF) * RESERVE_ROUND_HUF);
 
+/**
+ * Round 2 of 2026-11-19: "eddig" (A) is ONE number – the taxes of the months so far exactly as "Mennyit kerestem?"
+ * attributes them (kereset.ts earningsBasis: every tax in the month whose income caused it, the fixed minimum of each
+ * month, HIPA by active days, approved quarters as approved), before the year-end settlement (the card is about the
+ * cash needed for the payments; what comes back later is said in one sentence). So the card, the "Eddigi adód" and
+ * "Mennyit kerestem?" never show two different "eddig" amounts. The rows under it are rounded "kb." values.
+ */
 export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: string): Promise<ReserveCard | null> {
   const year = Number(today.slice(0, 4));
   const yr = await ensureReserves(deps, db, cl.id, year);
   if (!yr) return null;
-  const input = await engineInput(db, cl.id, year, today);
-  if (!input) return null;
-  const result = calculateYear(input);
+  const basis = await earningsBasis(db, cl, year, today);
+  if (!basis) return null;
+  const { input, result } = basis;
   const params = await accountantParams(db, cl.accountantId);
   const firstName = String(params.firstName);
   const rows = await db
@@ -181,17 +189,16 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
     .from(revenueReserves)
     .innerJoin(revenueItems, eq(revenueItems.id, revenueReserves.revenueItemId))
     .where(and(eq(revenueReserves.clientId, cl.id), eq(revenueReserves.year, year), isNull(revenueItems.deletedAt)));
-  const invoicesHuf = rows.filter((x) => x.receivedOn <= today).reduce((a, x) => a + x.r.reserveHuf, 0);
   const month = Number(today.slice(5, 7));
+  const soFar = basis.months.filter((m) => m.month <= month);
+  const A = soFar.reduce((a, m) => a + m.szjaHuf + m.tbHuf + m.szochoHuf + m.hipaHuf, 0);
   const fixedHuf = yr.fixedByMonth.slice(0, month).reduce((a, b) => a + b, 0);
   const fixedMonthlyHuf = yr.fixedByMonth[month - 1] ?? 0;
-  // HIPA: elapsed share by active days (sávos estimate; általános → "{firstName} számolja", adds 0)
+  // HIPA (sávos estimate; általános → "{firstName} számolja", adds 0): the same by-days split as the earnings
   const h = result.hipa;
   const hipaAnnualHuf = h && h.method === 'savos' ? (h.annualHuf ?? null) : null;
-  const active = result.activeDays ?? 365;
-  const elapsed = result.elapsedActiveDays ?? 0;
-  const hipaHuf = hipaAnnualHuf ? Math.round((hipaAnnualHuf * elapsed) / Math.max(1, active)) : 0;
-  const A = invoicesHuf + fixedHuf + hipaHuf;
+  const hipaHuf = soFar.reduce((a, m) => a + m.hipaHuf, 0);
+  const invoicesHuf = Math.max(0, A - fixedHuf - hipaHuf);
   // B: the quarters that ended before today (approved amount, else the engine estimate) + HIPA periods due by today
   const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
   let B = 0;
@@ -210,35 +217,48 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
   const next = periods.find((p) => p.dueDate >= today && p.paymentStatus !== 'befizetve_jelezve' && p.paymentStatus !== 'ellenorizve');
   const [mark] = await db.select().from(reserveMarks).where(and(eq(reserveMarks.clientId, cl.id), eq(reserveMarks.year, year))).limit(1);
   const zero = keepNowHuf <= 0;
-  const p2 = { firstName, keepNow: fmt(keepNowHuf), A: fmt(A), B: fmt(B) };
+  const p2 = { firstName, keepNow: fmt(keepNowHuf), A: fmt(ceil1000(A)), B: fmt(B) };
   const markedHuf = mark ? mark.markedHuf : null;
   const remaining = Math.max(0, keepNowHuf - (markedHuf ?? 0));
+  // The blue band above shows the whole running quarter (with the fixed járulék of its months still to come): say so.
+  const qOfMonth = Math.ceil(month / 3);
+  const futureFixedInQuarter = yr.fixedByMonth.slice(month, qOfMonth * 3).reduce((a, b) => a + b, 0);
+  let detail = await deps.content.render(zero ? 'felretesz.kartya.detail_zero' : 'felretesz.kartya.detail', p2);
+  if (!zero && futureFixedInQuarter > 0) detail += await deps.content.get('felretesz.kartya.detail_hero');
+  const refundHuf = basis.refundHuf;
   return {
     year,
     keepNowHuf,
     accruedHuf: A,
-    invoicesHuf,
+    invoicesHuf: kb1000(invoicesHuf),
     fixedHuf,
     fixedMonthlyHuf,
-    hipaHuf,
+    hipaHuf: kb1000(hipaHuf),
     hipaAnnualHuf,
     dueOrPaidHuf: B,
     nextDue: next ? { dueDate: next.dueDate, label: `${periodLabel(next)} · ${huDayMonthIg(next.dueDate)}` } : null,
     estimateReasons: await estimateReasons(deps, db, cl, year, input, rows.map((x) => x.r), firstName, result),
     sentence: await deps.content.render(zero ? 'felretesz.kartya.sentence_zero' : 'felretesz.kartya.sentence', p2),
-    detail: await deps.content.render(zero ? 'felretesz.kartya.detail_zero' : 'felretesz.kartya.detail', p2),
+    detail,
     footnote: await deps.content.render('felretesz.kartya.footnote', p2),
     markedHuf,
     ring:
       markedHuf !== null && keepNowHuf > 0
         ? { ratio: Math.min(1, Math.round((markedHuf / keepNowHuf) * 1000) / 1000), remainingHuf: remaining, line: `Még ${fmt(remaining)} Ft-ot tegyél félre.` }
         : null,
+    refundHuf,
+    refundText: refundHuf > 0 ? await deps.content.render('felretesz.kartya.refund', { refund: fmt(kb1000(refundHuf)) }) : null,
   };
 }
 
-/** GET /client/reserve, GET /acc/clients/:id/reserve: the card + every item of the year by month, newest first. */
+/**
+ * GET /client/reserve, GET /acc/clients/:id/reserve: the card + every item of the year by month, newest first. An item
+ * whose money is expected later (receivedOn after today: the payment deadline) is marked "várható" and left out of the
+ * month's sum, exactly as the card leaves it out (round 2 of 2026-11-19).
+ */
 export async function reserveList(deps: Deps, db: DbOrTx, cl: ClientRow, year: number, today: string): Promise<ReserveView | null> {
-  const card = await reserveCard(deps, db, cl, year === Number(today.slice(0, 4)) ? today : `${year}-12-31`);
+  const asOf = year === Number(today.slice(0, 4)) ? today : `${year}-12-31`;
+  const card = await reserveCard(deps, db, cl, asOf);
   if (!card) return null;
   const items = await yearItems(db, cl.id, year);
   const rr = items.length ? await db.select().from(revenueReserves).where(inArray(revenueReserves.revenueItemId, items.map((i) => i.id))) : [];
@@ -252,14 +272,42 @@ export async function reserveList(deps: Deps, db: DbOrTx, cl: ClientRow, year: n
     const view = await reserveView(deps, r, { amountHuf: it.amountHuf, nextYear: false, year });
     const title = inv ? inv.customerName?.trim() || priv : await deps.content.render('felretesz.kepernyo.manual_item', { description: it.description });
     const m = Number(it.receivedOn.slice(5, 7));
+    const upcoming = it.receivedOn > asOf;
     const list = byMonth.get(m) ?? [];
-    list.push({ revenueItemId: it.id, navInvoiceId: it.navInvoiceId, title, sub: inv ? `${inv.invoiceNumber}` : it.receivedOn, receivedOn: it.receivedOn, amountHuf: it.amountHuf, reserve: view });
+    list.push({
+      revenueItemId: it.id,
+      navInvoiceId: it.navInvoiceId,
+      title,
+      sub: inv ? `${inv.invoiceNumber}` : it.receivedOn,
+      receivedOn: it.receivedOn,
+      amountHuf: it.amountHuf,
+      reserve: view,
+      upcoming,
+      upcomingText: upcoming ? await deps.content.render('felretesz.kepernyo.upcoming', { datum: huMonthDay(it.receivedOn) }) : null,
+    });
     byMonth.set(m, list);
   }
-  const months = [...byMonth.entries()]
-    .sort((a, b) => b[0] - a[0])
-    .map(([month, list]) => ({ month, label: MONTHS_HU[month - 1] ?? String(month), items: list.sort((a, b) => (a.receivedOn < b.receivedOn ? 1 : -1)) }));
+  const months = [];
+  for (const [month, list] of [...byMonth.entries()].sort((a, b) => b[0] - a[0])) {
+    const now = list.filter((x) => !x.upcoming);
+    const reserveHuf = now.reduce((a, x) => a + Math.max(0, x.reserve.reserveHuf), 0);
+    const upcomingCount = list.length - now.length;
+    const p = { n: String(now.length), felre: fmt(reserveHuf), u: String(upcomingCount) };
+    months.push({
+      month,
+      label: MONTHS_HU[month - 1] ?? String(month),
+      items: list.sort((a, b) => (a.receivedOn < b.receivedOn ? 1 : -1)),
+      reserveHuf,
+      upcomingCount,
+      sub: await deps.content.render(upcomingCount ? 'felretesz.kepernyo.month_sub_upcoming' : 'felretesz.kepernyo.month_sub', p),
+    });
+  }
   return { card, months };
+}
+
+/** "2026-11-20" → "november 20." */
+function huMonthDay(d: string): string {
+  return `${MONTHS_HU[Number(d.slice(5, 7)) - 1] ?? ''} ${Number(d.slice(8, 10))}.`;
 }
 
 /** PUT /client/reserve/mark (§28.K.12 item 3; self-reported, never a bank link). */

@@ -93,16 +93,19 @@ compose hozza létre; ne futtass `docker compose down`-t a kezjegy projekten (a 
 
 ## Mentés és visszaállítás
 
-- **[TULAJ] Az éjszakai cron még NINCS bekapcsolva** (állandó beállítás a szerveren – a te jóváhagyásod kell).
-  Bekapcsolás egyszer, a gépedről:
+- **ÓRÁNKÉNTI mentés BEKAPCSOLVA (2026-11-19 23:05, a tulaj kérésére).** A szerver cronja (deploy felhasználó):
   ```bash
-  ssh appok-1 '{ crontab -l 2>/dev/null | grep -v kezjegy/deploy/backup.sh || true; echo "0 3 * * * /bin/bash /srv/kezjegy/deploy/backup.sh >> /srv/kezjegy/backups/backup.log 2>&1"; } | crontab - && crontab -l'
+  ssh appok-1 '{ crontab -l 2>/dev/null | grep -v kezjegy/deploy/backup.sh || true; echo "5 * * * * /bin/bash /srv/kezjegy/deploy/backup.sh >> /srv/kezjegy/backups/backup.log 2>&1"; } | crontab - && crontab -l'
   ```
-  2026-11-18 02:57-kor kézzel lefutott egy mentés + a visszaállítási próba (sorszámok egyeztek).
-- `backup.sh` – cron (deploy felhasználó) 03:00: `pg_dump -Fc` → `gpg --symmetric AES256` (`.backup_pass`) →
-  `backups/db_<idő>.dump.gpg`; vasárnap a titkosított `data/files` tar-ja is. A végén beírja a mentés idejét
-  (admin → Rendszer: „mentés kora”). Régi mentést nem töröl (házirend) – rotáció és külső másolat
-  (pl. Hetzner Storage Box): **tulaj döntése**.
+  Az első óránkénti mentés visszaállíthatóságát ellenőriztük (`pg_restore -l`: 55 tábla adata).
+- `backup.sh` – minden óra 05. percében: `pg_dump -Fc` → `gpg --symmetric AES256` (`.backup_pass`) →
+  `backups/db_<idő>.dump.gpg`; naponta egyszer (a 03 órás futáskor) a titkosított `data/files` tar-ja is. A végén
+  beírja a mentés idejét (admin → Rendszer: „mentés kora”). Nem töröl (házirend): a legutóbbi 48 mentés és 7
+  fájl-pillanatkép marad kéznél, a régebbiek a `backups/regi/` alá kerülnek.
+- **Külső másolat óránként:** a tulaj gépén a Feladatütemező „Adozz mentes kulso” feladata (minden óra 20.
+  percében, rejtett ablakban: `mentes-kulso-rejtett.vbs` → `mentes-kulso.sh`) minden új fájlt átmásol a Hetzner
+  Storage Boxra (`hetzner-tar:kezjegy/mentesek/`), SHA-256-tal ellenőrizve. Ha a gép ki van kapcsolva, a következő
+  futás pótolja. Napló: `_munka/mentes_kulso.log`.
 - `restore-proba.sh` – visszaállítási próba: a legutóbbi mentést egy eldobható, hálózat nélküli Postgres
   konténerbe tölti, és sorszámokat hasonlít az éleshez. Az éles adatbázishoz nem nyúl.
 - Valódi visszaállítás (katasztrófa után):

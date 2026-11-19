@@ -95,7 +95,7 @@ export const RULES_2026: TaxRules = {
     csaladiPerChildHuf: { one: 133_340, two: 266_660, threePlus: 440_000 }, // Szja tv. 29/A. § (2) [szja-tv, nav-73]
     csaladiTartosBetegExtraHuf: 133_340, // Szja tv. 29/A. § (2a) [szja-tv]
     felvaltvaPct: 50, // Szja tv. 29/B. § (1e) [szja-tv]
-    fiatal25MonthlyCapHuf: 715_765, // 2025. július KSH bruttó átlagkereset (Hivatalos Értesítő 52/2025) [ksh-atlagkereset, nav-73]
+    fiatal25MonthlyCapHuf: 715_765, // 2025. július KSH bruttó átlagkereset (Hivatalos Értesítő 52/2025) [ksh-atlagkereset, nav-73]; per ELIGIBLE MONTH of an annual frame (29/F. § (2): 12 × = 8 589 180), applied cumulatively
     fiatal25AgeYears: 25, // Szja tv. 29/F. § [szja-tv]
     anya30AgeYears: 30, // 2025. évi XIII. tv. [tv-2025-13]
     ketgyermekesMinBirthYear: 1986, // 2025. évi XIV. tv. 4. §: 2026 – born 1986 or later [tv-2025-14]

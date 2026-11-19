@@ -24,6 +24,8 @@ export {
   earningsByMonth,
   projectYear,
   splitByWeights,
+  hipaByMonth,
+  yearEndSettlement,
   fiatal25Months,
   csaladiFrameHuf,
   rulesForYear,

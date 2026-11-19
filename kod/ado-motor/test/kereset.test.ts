@@ -1,7 +1,7 @@
 // SPEC §28.4 – "Mennyit kerestem?": monthly attribution and the year-end projection (2026, 45 %, HIPA sávos 2 %).
 
 import { describe, expect, it } from 'vitest';
-import { calculateYear, earningsByMonth, projectYear, type TaxStatus } from '../src/index.js';
+import { calculateYear, earningsByMonth, projectYear, yearEndSettlement, type TaxStatus } from '../src/index.js';
 import { monthly } from './helpers.js';
 
 const ALL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -11,17 +11,19 @@ const prof = (status: TaxStatus) => ({ year: 2026, costRatio: 45 as const, statu
 describe('E1 mellékállású even year, asOf 2026-12-31 (12 000 000 → band a, HIPA 50 000)', () => {
   const r = calculateYear({ profile: prof('mellekallasu'), revenue: evenYear, asOf: '2026-12-31' });
   const e = earningsByMonth(r, { hipaAnnualHuf: r.hipa!.annualHuf });
-  it('January net 995 833 (HIPA 4 167); April 813 217 (SZJA 39 480, TB 84 064, szocho 59 072); May SZJA 82 500', () => {
+  // Own-month attribution (round 2 of 2026-11-19): April's taxable part 263 200 carries its own TB 18,5 % = 48 692 and
+  // szocho 13 % = 34 216; May's 550 000 → 101 750 / 71 500. HIPA by active days: Jan 50 000 × 31/365 = 4 247, Apr 4 109.
+  it('January net 995 753 (HIPA 4 247); April 873 503 (SZJA 39 480, TB 48 692, szocho 34 216, HIPA 4 109); May TB 101 750', () => {
     expect(r.hipa!.annualHuf).toBe(50_000);
-    expect(e[0]).toMatchObject({ revenueHuf: 1_000_000, hipaHuf: 4_167, netHuf: 995_833 });
-    expect(e[3]).toMatchObject({ szjaHuf: 39_480, tbHuf: 84_064, szochoHuf: 59_072, hipaHuf: 4_167, netHuf: 813_217 });
-    expect(e[4]!.szjaHuf).toBe(82_500);
+    expect(e[0]).toMatchObject({ revenueHuf: 1_000_000, hipaHuf: 4_247, netHuf: 995_753 });
+    expect(e[3]).toMatchObject({ szjaHuf: 39_480, tbHuf: 48_692, szochoHuf: 34_216, hipaHuf: 4_109, netHuf: 873_503 });
+    expect(e[4]).toMatchObject({ szjaHuf: 82_500, tbHuf: 101_750, szochoHuf: 71_500 });
   });
-  it('months 1–6: revenue 6 000 000, taxes 658 888, net 5 341 112; HIPA months sum to 50 000; quarters sum exactly', () => {
+  it('months 1–6: revenue 6 000 000, taxes 633 888 + HIPA 24 795 = 658 683, net 5 341 317; HIPA months sum to 50 000; quarters sum exactly', () => {
     const h = e.slice(0, 6);
     expect(h.reduce((a, x) => a + x.revenueHuf, 0)).toBe(6_000_000);
-    expect(h.reduce((a, x) => a + x.szjaHuf + x.tbHuf + x.szochoHuf + x.hipaHuf, 0)).toBe(658_888);
-    expect(h.reduce((a, x) => a + x.netHuf, 0)).toBe(5_341_112);
+    expect(h.reduce((a, x) => a + x.szjaHuf + x.tbHuf + x.szochoHuf + x.hipaHuf, 0)).toBe(658_683);
+    expect(h.reduce((a, x) => a + x.netHuf, 0)).toBe(5_341_317);
     expect(e.reduce((a, x) => a + x.hipaHuf, 0)).toBe(50_000);
     r.quarters.forEach((q, i) => {
       const ms = e.slice(i * 3, i * 3 + 3);
@@ -32,10 +34,10 @@ describe('E1 mellékállású even year, asOf 2026-12-31 (12 000 000 → band a,
 });
 
 describe('E2 főfogl., revenue Feb–Dec only', () => {
-  it('January net −105 849 (TB 59 718 + szocho 41 964 + HIPA 4 167)', () => {
+  it('January net −105 929 (the fixed minimum: TB 59 718 + szocho 41 964; HIPA 4 247)', () => {
     const r = calculateYear({ profile: prof('fofoglalkozasu'), revenue: evenYear.slice(1), asOf: '2026-12-31' });
     const e = earningsByMonth(r, { hipaAnnualHuf: r.hipa!.annualHuf });
-    expect(e[0]).toMatchObject({ revenueHuf: 0, tbHuf: 59_718, szochoHuf: 41_964, hipaHuf: 4_167, netHuf: -105_849 });
+    expect(e[0]).toMatchObject({ revenueHuf: 0, tbHuf: 59_718, szochoHuf: 41_964, hipaHuf: 4_247, netHuf: -105_929 });
   });
 });
 
@@ -71,3 +73,43 @@ describe('E4 an approved quarter with an override', () => {
     expect(e.slice(0, 3).map((x) => x.tbHuf)).toEqual([1_000, 1_000, 1_000]);
   });
 });
+
+// Round 2 of 2026-11-19 (k6c review): "eddig" must carry the járulék of the income received so far, not a third of it on
+// the future December; the overpaid SZJA advance comes back in the annual return.
+describe('E5 running quarter: TB / szocho stay with the months that earned them', () => {
+  it('mellékállású, Oct 620 000 + Nov 650 000, asOf 11-19: all of Q4 TB lands in Oct + Nov, December 0', () => {
+    const rev = [...evenYear.slice(0, 9), ...monthly({ 10: 620_000, 11: 650_000 }, 2026, 10)];
+    const r = calculateYear({ profile: prof('mellekallasu'), revenue: rev, asOf: '2026-11-19' });
+    const e = earningsByMonth(r, { hipaAnnualHuf: 0 });
+    const q4 = r.quarters[3]!;
+    expect(e[11]).toMatchObject({ tbHuf: 0, szochoHuf: 0, szjaHuf: 0 });
+    expect(e[9]!.tbHuf + e[10]!.tbHuf).toBe(q4.tbHuf);
+    expect(e[9]!.szochoHuf + e[10]!.szochoHuf).toBe(q4.szochoHuf);
+    // Q4 TB = 3 × 18,5 % × round(698 500 / 3) = 129 222 split 341 000 : 357 500 → 63 085 / 66 137 (18,5 % of each, rounding to the quarter sum)
+    expect([e[9]!.tbHuf, e[10]!.tbHuf]).toEqual([63_085, 66_137]);
+  });
+  it('főfoglalkozású: the future December keeps only its own fixed minimum', () => {
+    const r = calculateYear({ profile: prof('fofoglalkozasu'), revenue: evenYear.slice(0, 11), asOf: '2026-11-19' });
+    const e = earningsByMonth(r, { hipaAnnualHuf: 0 });
+    expect(e[11]).toMatchObject({ tbHuf: 59_718, szochoHuf: 41_964 });
+  });
+});
+
+describe('C17 overpaid SZJA advance (családi kedvezmény from September, 8 000 000 in January, mellékállású)', () => {
+  const k = { csaladi: { months: [9, 10, 11, 12].map((month) => ({ month, eltartott: 1, children: [{}] })), csjkInYear: false } };
+  const items = monthly({ 1: 8_000_000 }, 2026, 10);
+  const prof17 = { year: 2026, costRatio: 45 as const, status: 'mellekallasu' as const, guaranteedMinimum: false, kedvezmenyek: k };
+  const r = calculateYear({ profile: prof17, revenue: items, asOf: '2026-12-31' });
+  it('advances 369 480 (Q1) vs the year SZJA 15 % × (2 463 200 − 4 × 133 340) = 289 476 → 80 004 comes back', () => {
+    expect(r.quarters.reduce((a, q) => a + q.szjaAdvanceHuf, 0)).toBe(369_480);
+    expect(r.quarters[3]!.szjaCumulativeHuf).toBe(289_476);
+    expect(yearEndSettlement(r).szjaRefundHuf).toBe(80_004);
+  });
+  it('the projection counts the year SZJA, not the advances', () => {
+    const p = projectYear({ profile: prof17, revenue: items, asOf: '2026-12-31' });
+    expect(p.refundHuf).toBeGreaterThanOrEqual(80_004);
+    const plain = r.quarters.reduce((a, q) => a + q.totalHuf, 0);
+    expect(p.taxesHuf).toBe(plain + p.hipaHuf - p.refundHuf);
+  });
+});
+

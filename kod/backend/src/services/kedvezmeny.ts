@@ -348,8 +348,11 @@ async function itemView(deps: Deps, r: AllowanceRow, firstName: string, effectYe
   };
 }
 
+/** Whole forints with a space between every 3 digits, also for 4 digits ("1 000", "4 999"; Intl hu-HU writes "1000"). */
 export function fmt(n: number): string {
-  return new Intl.NumberFormat('hu-HU').format(n).replace(/ /g, ' ');
+  const r = Math.round(n);
+  const s = Math.abs(r).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return r < 0 ? `-${s}` : s;
 }
 
 function documentsToKeep(a: AllowanceAnswers | null, kinds: AllowanceKind[]): string[] {

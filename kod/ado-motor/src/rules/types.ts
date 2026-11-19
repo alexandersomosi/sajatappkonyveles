@@ -95,7 +95,7 @@ export interface AllowanceRules {
   csaladiTartosBetegExtraHuf: number;
   /** Felváltva gondozott gyermek: this % of the amount [szja-tv 29/B. § (1e)]. */
   felvaltvaPct: number;
-  /** 25 év alattiak: monthly cap of the exempt income (the July KSH average of the previous year) [szja-tv 29/F., nav-73]. */
+  /** 25 év alattiak: the July KSH average of the previous year, per eligible month; the frame is ANNUAL (eligible months × this), used cumulatively in the advances [szja-tv 29/F. (2), 49. § (1), nav-73 7.2]. */
   fiatal25MonthlyCapHuf: number;
   fiatal25AgeYears: number;
   /** 30 év alatti anyák: eligible up to the year she turns 30 (born year − 30 or later) [tv-2025-13]. */

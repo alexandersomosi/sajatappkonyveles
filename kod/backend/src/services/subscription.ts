@@ -1,6 +1,7 @@
 // Subscription + SimplePay recurring card payments (SPEC §5.9, §6.5, §9). Money state changes
 // only on IPN FINISHED (or /query FINISHED). DEMO mode uses the same apply code with a demo
 // signature secret and never contacts SimplePay.
+import { fmt as fmtHuf } from './kedvezmeny.js';
 import { and, asc, count, desc, eq, inArray, isNull, lt, lte, or, sql } from 'drizzle-orm';
 import type { SubscriptionStartResult, SubscriptionView } from '../_shared/api.js';
 import type { Deps } from '../deps.js';
@@ -232,7 +233,7 @@ export async function startRegistration(deps: Deps, clientId: string, platform: 
 export async function tokenInfoSentence(deps: Deps, times: number, maxAmount: number, until: Date): Promise<string> {
   return deps.content.render('ui.subscription.token_info', {
     times,
-    maxAmount: `${new Intl.NumberFormat('hu-HU').format(maxAmount)} Ft`,
+    maxAmount: `${fmtHuf(maxAmount)} Ft`,
     untilText: huFullDateIg(todayBudapest(until)),
   });
 }
@@ -451,7 +452,7 @@ export async function applyFinished(deps: Deps, txId: string, ipn: { transaction
     feeAmount = t.amountHuf;
   });
   if (notifyUser) {
-    await notify(deps, deps.db, { userId: notifyUser, kind: 'fee_invoice_issued', params: { amount: `${new Intl.NumberFormat('hu-HU').format(feeAmount)} Ft` }, link: '/fiok/dijszamlak' });
+    await notify(deps, deps.db, { userId: notifyUser, kind: 'fee_invoice_issued', params: { amount: `${fmtHuf(feeAmount)} Ft` }, link: '/fiok/dijszamlak' });
     const [t] = await db.select().from(simplepayTransactions).where(eq(simplepayTransactions.id, txId)).limit(1);
     if (t) {
       await checkCompletion(deps, db, t.clientId);

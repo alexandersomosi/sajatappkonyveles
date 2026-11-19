@@ -1517,6 +1517,9 @@ export interface ReserveCard {
   /** SPEC §28.K.12 item 3: what the client says he already put aside (self-reported) and the ring. */
   markedHuf?: number | null;
   ring?: { ratio: number; remainingHuf: number; line: string } | null;
+  /** Round 2 of 11-19: what comes back in the annual return (overpaid SZJA advances, year-end csjk); 0 = none. */
+  refundHuf?: number;
+  refundText?: string | null;
 }
 export interface ReserveListItem {
   revenueItemId: string;
@@ -1526,10 +1529,14 @@ export interface ReserveListItem {
   receivedOn: ISODate;
   amountHuf: number;
   reserve: InvoiceReserveView;
+  /** Round 2 of 11-19: the money is expected later (receivedOn after today) – not yet in the card's or the month's sum. */
+  upcoming?: boolean;
+  upcomingText?: string | null;
 }
 export interface ReserveView {
   card: ReserveCard;
-  months: { month: number; label: string; items: ReserveListItem[] }[];
+  /** reserveHuf: Σ positive reserves of the items received so far (the upcoming ones are left out); upcomingCount: those left out. */
+  months: { month: number; label: string; items: ReserveListItem[]; reserveHuf?: number; upcomingCount?: number; sub?: string }[];
 }
 
 // ---------- §28.2 notification settings ----------
@@ -1702,6 +1709,8 @@ export interface EarningsView {
   projection: { reliable: boolean; revenueHuf: number | null; taxesHuf: number | null; netHuf: number | null; text: string };
   line: string;
   disclaimer: string;
+  /** Round 2 of 11-19: comes back in the annual return (already counted in ytd: taxes lower, net higher than the month rows). */
+  refund?: { huf: number; text: string } | null;
 }
 export interface EarningsCard {
   ytdNetHuf: number;
@@ -1710,6 +1719,7 @@ export interface EarningsCard {
   sentence: string;
   sub: string;
   projectionText: string | null;
+  refundText?: string | null;
 }
 
 // ---------- §28.5 changes ----------

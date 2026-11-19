@@ -1,6 +1,7 @@
 // New business, SELF-SERVICE (SPEC §26.1): the client answers the short data form, gets a personalised guide, files the
 // EV bejelentés himself in the NAV Vállalkozói Ügysegéd, uploads the NAV confirmation; the team only checks it and
 // records the adószám. We never ask for or store TAJ, anyja neve, születési adatok (zod strict objects reject them).
+import { fmt as fmtHuf } from './kedvezmeny.js';
 import { and, desc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 import type { BusinessActivityChoice, BusinessRegistrationAnswers, BusinessRegistrationHints, BusinessRegistrationInput, BusinessRegistrationView } from '../_shared/api.js';
@@ -201,7 +202,7 @@ export function missingFields(a: BusinessRegistrationAnswers, ctx: { adatokDone:
   return m;
 }
 
-const ft = (n: number) => `${new Intl.NumberFormat('hu-HU').format(n).replace(/ /g, ' ')} Ft`;
+const ft = (n: number) => `${fmtHuf(n)} Ft`;
 
 /**
  * Minimum monthly TB + szocho of a főállású EV (SPEC §26.1.3): 2026 minimálbér 59 718 + 41 964 = 101 682 Ft; with

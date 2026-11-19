@@ -8,6 +8,7 @@ import { rulesForYear } from '../rules/index.js';
 import type {
   ApprovedQuarterActual,
   EngineWarning,
+  MonthLine,
   RevenueItemInput,
   TaxProfileInput,
   YearInput,
@@ -209,8 +210,15 @@ function evenly(amount: number, n: number): number[] {
 }
 
 /**
- * SPEC §28.4.2. Monthly attribution of the year's taxes. `approved` (periodKey → the approved parts of an approved
- * quarter) replaces the engine's quarter parts, spread in the engine's proportions.
+ * SPEC §28.4.2. Monthly attribution of the year's taxes: every tax goes to the month whose own income caused it.
+ *  - SZJA: the quarter's advance by the months' taxable part after the month-bound exemptions (B2);
+ *  - TB (after csjk) and szocho: the fixed minimum of a főfoglalkozású month stays in that month; the rest of the
+ *    quarter (the göngyölített base above the minimum) goes to the months by their own taxable part. So the income of
+ *    October and November carries its járulék even while December is still to come (round 2 of 2026-11-19: the even
+ *    spread put a third of it on the future December, and "eddig" was too low);
+ *  - HIPA: the year amount by the active days of each month (the same basis everywhere, card included).
+ * `approved` (periodKey → the approved parts of an approved quarter) replaces the engine's quarter parts, spread in
+ * the engine's proportions.
  */
 export function earningsByMonth(
   year: YearResult,
@@ -220,17 +228,21 @@ export function earningsByMonth(
   const rules = rulesForYear(y);
   const ratio = year.costRatioUsed ?? 45;
   const taxFree = rules?.taxFreeIncomeHuf ?? 0;
-  // taxable part per month (B2 = taxable − month-bound exemptions when allowances exist)
+  const tbPermille = rules?.tbPermille ?? 185;
+  const szPermille = rules?.szochoPermille ?? 130;
+  const szMinPct = rules?.szochoMinimumPct ?? 100;
+  // taxable part per month (T) and the SZJA base after the month-bound exemptions (B2)
   const R = new Array<number>(13).fill(0);
   for (const r of year.revenueByMonth) R[r.month] = r.amountHuf;
   const I = R.map((r) => roundDiv(r * (100 - ratio), 100));
-  const B2 = new Array<number>(13).fill(0);
+  const T = new Array<number>(13).fill(0);
   let c = 0;
   for (let m = 1; m <= 12; m++) {
     const p = c;
     c += I[m]!;
-    B2[m] = Math.max(0, c - taxFree) - Math.max(0, p - taxFree);
+    T[m] = Math.max(0, c - taxFree) - Math.max(0, p - taxFree);
   }
+  const B2 = T.slice();
   for (const q of year.quarters) for (const l of q.months) if (l.taxableHuf !== undefined) B2[l.month] = l.taxableHuf - (l.exemptHuf ?? 0);
 
   const out: EarningsMonthEngine[] = Array.from({ length: 12 }, (_, i) => ({
@@ -248,17 +260,37 @@ export function earningsByMonth(
   for (const q of year.quarters) {
     const ms = q.months;
     const idx = ms.map((l) => l.month - 1);
-    const tbEng = ms.map((l) => l.tbHuf - (l.csjkHuf ?? 0));
-    const szEng = ms.map((l) => l.szochoHuf);
     const active = ms.map((l) => (year.activeMonths ? year.activeMonths.includes(l.month) : true));
     const activeIdx = active.map((a, i) => (a ? i : -1)).filter((i) => i >= 0);
+    const insuredIdx = ms.map((l, i) => (l.insured ? i : -1)).filter((i) => i >= 0);
+    const pastIdx = (mask: number[]) => mask.filter((i) => !ms[i]!.future);
     const spreadEvenOver = (amount: number, mask: number[]): number[] => {
-      const n = mask.length || ms.length;
-      const parts = evenly(amount, n);
+      const past = pastIdx(mask);
+      const use = past.length ? past : mask.length ? mask : ms.map((_, i) => i);
+      const parts = evenly(amount, use.length);
       const res = new Array<number>(ms.length).fill(0);
-      (mask.length ? mask : ms.map((_, i) => i)).forEach((i, k) => (res[i] = parts[k]!));
+      use.forEach((i, k) => (res[i] = parts[k]!));
       return res;
     };
+    // TB / szocho by own month: the fixed minimum where it applies, the rest by the months' taxable part
+    const weights = ms.map((l) => T[l.month]!);
+    const own = (lineAmount: (l: MonthLine) => number, fixedOf: (l: MonthLine) => number): number[] => {
+      const fixed = ms.map((l) => (l.insured ? Math.min(lineAmount(l), fixedOf(l)) : 0));
+      const rest = ms.reduce((a, l, i) => a + lineAmount(l) - fixed[i]!, 0);
+      const restParts = rest === 0 ? ms.map(() => 0) : weights.some((w) => w > 0) ? splitByWeights(rest, weights) : spreadEvenOver(rest, insuredIdx);
+      return fixed.map((f, i) => f + restParts[i]!);
+    };
+    const tbGrossOwn = own(
+      (l) => l.tbHuf,
+      (l) => (l.minimumHuf !== null ? permille(l.minimumHuf, tbPermille) : 0),
+    );
+    const szEng = own(
+      (l) => l.szochoHuf,
+      (l) => (l.minimumHuf !== null ? permille(roundDiv(l.minimumHuf * szMinPct, 100), szPermille) : 0),
+    );
+    // TB after csjk: the quarter's net TB in the proportions of the gross attribution (sums stay exact)
+    const tbNet = ms.reduce((a, l) => a + l.tbHuf - (l.csjkHuf ?? 0), 0);
+    const tbEng = tbNet === 0 ? ms.map(() => 0) : tbGrossOwn.some((x) => x > 0) ? splitByWeights(tbNet, tbGrossOwn) : spreadEvenOver(tbNet, insuredIdx);
     let szjaEng = splitByWeights(q.szjaAdvanceHuf, ms.map((l) => B2[l.month]!));
     if (q.szjaAdvanceHuf > 0 && szjaEng.every((x) => x === 0)) szjaEng = spreadEvenOver(q.szjaAdvanceHuf, activeIdx);
     let tbM = tbEng;
@@ -266,7 +298,6 @@ export function earningsByMonth(
     let szjaM = szjaEng;
     const ap = o.approved?.[q.periodKey];
     if (ap) {
-      const insuredIdx = ms.map((l, i) => (l.insured ? i : -1)).filter((i) => i >= 0);
       const scale = (target: number, eng: number[], fallbackMask: number[]) =>
         eng.some((x) => x > 0) ? splitByWeights(target, eng) : target > 0 ? spreadEvenOver(target, fallbackMask) : eng.map(() => 0);
       tbM = scale(ap.tbHuf, tbEng, insuredIdx);
@@ -283,24 +314,55 @@ export function earningsByMonth(
     });
   }
 
-  // HIPA: the year amount spread over the active months by cumulative rounding.
-  const annual = o.hipaAnnualHuf ?? 0;
-  const activeMonths = year.activeMonths ?? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  const n = activeMonths.length;
-  activeMonths.forEach((m, k) => {
-    out[m - 1]!.hipaHuf = n > 0 ? roundDiv(annual * (k + 1), n) - roundDiv(annual * k, n) : 0;
-  });
+  // HIPA: the year amount by the active days of each month (cumulative rounding).
+  const hipa = hipaByMonth(year, o.hipaAnnualHuf ?? 0);
+  hipa.forEach((h, i) => (out[i]!.hipaHuf = h));
   for (const row of out) row.netHuf = row.revenueHuf - row.szjaHuf - row.tbHuf - row.szochoHuf - row.hipaHuf;
   return out;
+}
+
+const permille = (base: number, p: number) => roundDiv(base * p, 1000);
+
+/** The HIPA of the year spread over the months by active days (index 0 = January); sums exactly to `annual`. */
+export function hipaByMonth(year: YearResult, annual: number): number[] {
+  const days =
+    year.activeDaysByMonth ??
+    Array.from({ length: 12 }, (_, i) => ((year.activeMonths ?? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]).includes(i + 1) ? 1 : 0));
+  if (annual === 0 || days.every((d) => d <= 0)) return new Array<number>(12).fill(0);
+  return splitByWeights(annual, days);
+}
+
+export interface YearEndSettlement {
+  /** Σ SZJA advances (approved where approved) − the year's SZJA (the last quarter's cumulative): returned in the annual return. */
+  szjaRefundHuf: number;
+  /** The fel nem használt családi kedvezmény turned into családi járulékkedvezmény in the annual return (estimate). */
+  csjkYearEndHuf: number;
+  totalHuf: number;
+}
+
+/**
+ * SPEC §28.4 (round 2 of 2026-11-19): the quarterly SZJA advances never go below 0, so after a late allowance (or a
+ * front-loaded year) their sum can exceed the year's SZJA; the difference comes back in the annual return. The
+ * unused családi kedvezmény may also become a járulékkedvezmény there. Both are estimates for the year so far.
+ */
+export function yearEndSettlement(year: YearResult, approved?: Record<string, { szjaHuf: number }>): YearEndSettlement {
+  const last = year.quarters.at(-1);
+  if (!last) return { szjaRefundHuf: 0, csjkYearEndHuf: 0, totalHuf: 0 };
+  const paid = year.quarters.reduce((a, q) => a + (approved?.[q.periodKey]?.szjaHuf ?? q.szjaAdvanceHuf), 0);
+  const szjaRefundHuf = Math.max(0, paid - (last.szjaCumulativeHuf ?? paid));
+  const csjkYearEndHuf = Math.max(0, year.allowances?.annualCsjkPotentialHuf ?? 0);
+  return { szjaRefundHuf, csjkYearEndHuf, totalHuf: szjaRefundHuf + csjkYearEndHuf };
 }
 
 export interface YearProjection {
   reliable: boolean;
   revenueHuf: number;
-  /** SZJA + TB (after csjk) + szocho + HIPA of the projected year. */
+  /** SZJA + TB (after csjk) + szocho + HIPA of the projected year, after the year-end settlement (the year's real tax). */
   taxesHuf: number;
   hipaHuf: number;
   netHuf: number;
+  /** Comes back in the annual return (overpaid SZJA advances + year-end csjk); already deducted from taxesHuf. */
+  refundHuf: number;
 }
 
 /**
@@ -344,6 +406,7 @@ export function projectYear(input: YearInput): YearProjection {
   const full = calculateYear({ ...input, revenue: [...actual, ...synthetic], asOf: yearEnd });
   const l = lOf(full);
   const hipa = full.hipa?.annualHuf ?? 0;
-  const taxes = l.total + hipa;
-  return { reliable, revenueHuf: projected, taxesHuf: taxes, hipaHuf: hipa, netHuf: projected - taxes };
+  const refund = yearEndSettlement(full).totalHuf;
+  const taxes = l.total + hipa - refund;
+  return { reliable, revenueHuf: projected, taxesHuf: taxes, hipaHuf: hipa, netHuf: projected - taxes, refundHuf: refund };
 }

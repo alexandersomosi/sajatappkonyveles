@@ -156,6 +156,7 @@ _kepek/         képernyőképek
   = későbbi „ma” az éves zárás képeihez. Képek: `node scripts/screenshots.mjs k6_` (1440), `KEPEK_SZEL=1280 node scripts/screenshots.mjs k6_…` (1280).
 
 ### §28 builder notes (B3 → B1/B0; szerződés-kiegészítések, a panel opcionálisan olvassa)
+> **Integrátor k6, 11-19:** az 1. (`GET /acc/clients/:id/notifications`), a 2. (`GET /admin/fee-charges?status=`) és a 3. pont (`?status=nyitott|mind`, csapat olvashatja a `GET /acc/checkin-items`-t), valamint a `POST /acc/clients/:id/adoszam` (§28.K.9) a backendben megvan (`backend/src/routes/acc-k28.ts`, teszt: `backend/test/k6-integ.test.ts`). Nyitva: 5. (`TeamThreadRow.journeyNext/pathChanged`) és az `AdminClientRow.serviceLock`.
 1. **`GET /acc/clients/:id/notifications?cursor=`** (A saját ügyfél, AD; csapat 404) → `AccNotificationLog` (`src/api/types.ts`): `items[]` = az ügyfél
    értesítései (`kind`, `variant`, `title`, `body` = a megjelenített szöveg, `link`, `createdAt`, `readAt`, `push { wanted, sentAt, notBefore, skipped:
    'csendes_ido'|'napi_limit'|'kikapcsolva'|'nincs_eszkoz'|null, amountsShown }`, `email { sentAt } | null`), `settings` (az ügyfél

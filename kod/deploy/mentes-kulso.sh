@@ -21,7 +21,8 @@ while IFS= read -r f; do
   if printf '%s\n' "$van" | grep -qx "$nev"; then continue; fi
   scp -q "appok-1:/srv/kezjegy/backups/$f" "$TMP/$nev"
   helyi=$(sha256sum "$TMP/$nev" | cut -d' ' -f1)
-  szerver=$(ssh appok-1 "sha256sum /srv/kezjegy/backups/$f" | cut -d' ' -f1)
+  # -n: az ssh ne olvassa el a ciklus bemenetét (különben az első fájl után elfogy a lista)
+  szerver=$(ssh -n appok-1 "sha256sum /srv/kezjegy/backups/$f" | cut -d' ' -f1)
   [ "$helyi" = "$szerver" ] || { echo "HIBA: $nev ellenőrzőösszege eltér, kihagyom"; continue; }
   scp -q "$TMP/$nev" "hetzner-tar:$CEL/$nev"
   # visszaolvasás ellenőrzéssel (a Storage Box nem ad sha256sum-ot: méret-összevetés + teljes letöltés)

@@ -1,0 +1,18 @@
+{
+  "_note": "Az éles indításkor felveendő első könyvelő (a tulaj 11-19-én küldte: konyveles-mennyiazannyi.hu/rolunk és /kapcsolat, nyilvános adatok). A demo adatbázisba NEM került be; az éles, üres adatbázis feltöltésekor ebből készül a könyvelő-fiók és a jogi szövegek konyvelo.* mezői. Fotó: Dávid jóváhagyásával, külön kérjük.",
+  "nev": "Fendrik Dávid",
+  "keresztnev": "Dávid",
+  "titulus": "mérlegképes könyvelő és adótanácsadó",
+  "mk_regisztracios_szam": "214239",
+  "adotanacsado_regisztracios_szam": "2119717",
+  "ceg": {
+    "nev": "Mennyi Az Annyi Adótanácsadó és Könyvelő Kft.",
+    "adoszam": "32571967-2-06",
+    "szekhely": "6727 Szeged, Göndör sor I/1.",
+    "cegjegyzekszam": "06-09-029687",
+    "iroda": "6724 Szeged, Pulz utca 46/B, 1. emelet 117."
+  },
+  "telefon": "+36 70 303 3922",
+  "email": "konyveles@mennyilegyen.hu",
+  "forras": ["https://www.konyveles-mennyiazannyi.hu/rolunk/", "https://www.konyveles-mennyiazannyi.hu/kapcsolat/"]
+}
