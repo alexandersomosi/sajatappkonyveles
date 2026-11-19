@@ -5,6 +5,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import fixtures from '../_shared/demo/fixtures.json' with { type: 'json' };
+import brand from '../_shared/brand.json' with { type: 'json' };
 import { ONBOARDING_STEPS, type OnboardingStep } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import {
@@ -223,7 +224,7 @@ export async function seedDemo(deps: Deps, clock: Clock, o: { credentialsFile: s
   const today = fixtures.today; // 2026-11-17 (SPEC demo "today")
   await deps.legal.load(deps.db);
   await ensurePlan(deps, deps.db);
-  const creds: string[] = ['# Kézjegy DEMO belépések – KITALÁLT fiókok. Ne add tovább, ne használd élesben.', '# szerep;e-mail;jelszó'];
+  const creds: string[] = [`# ${brand.name} DEMO belépések – KITALÁLT fiókok. Ne add tovább, ne használd élesben.`, '# szerep;e-mail;jelszó'];
 
   // ---------- admin, accountant ----------
   const adminPw = pw();
@@ -608,7 +609,7 @@ export async function rotateDemoPasswords(deps: Deps, o: { credentialsFile: stri
   const seeded = rows.filter((u) => u.email === `admin@${DOMAIN}` || u.email === `bence.kovacs@${DOMAIN}` || ['kata.szabo', 'reka.varga', 'peter.nemeth'].some((p) => u.email === `${p}@${DOMAIN}`));
   const order = (r: string) => (r === 'admin' ? 0 : r === 'accountant' ? 1 : 2);
   seeded.sort((a, b) => order(a.role) - order(b.role) || a.email.localeCompare(b.email));
-  const creds: string[] = ['# Kézjegy DEMO belépések – KITALÁLT fiókok. Ne add tovább, ne használd élesben.', '# szerep;e-mail;jelszó'];
+  const creds: string[] = [`# ${brand.name} DEMO belépések – KITALÁLT fiókok. Ne add tovább, ne használd élesben.`, '# szerep;e-mail;jelszó'];
   for (const u of seeded) {
     const p = pw();
     await deps.db.update(users).set({ passwordHash: await hashPassword(p), failedLogins: 0, lockedUntil: null, updatedAt: deps.now() }).where(eq(users.id, u.id));

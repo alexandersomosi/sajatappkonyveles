@@ -7,7 +7,7 @@ import fixtures from '../_shared/demo/fixtures.json';
 describe('format', () => {
   it('money uses no-break space grouping and Ft', () => {
     expect(szam(510471)).toBe('510 471');
-    expect(ft(20000)).toBe('20 000 Ft');
+    expect(ft(19999)).toBe('19 999 Ft');
     expect(szam(-1500)).toBe('−1 500');
     expect(ft(null)).toBe('–');
   });

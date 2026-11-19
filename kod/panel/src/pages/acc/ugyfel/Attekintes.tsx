@@ -216,6 +216,14 @@ function AdoProfil({ c }: FulProps) {
         {p.costRatioSource === 'ugyfel_javaslat' ? <span className="cimke figyel">Megerősítésre vár</span> : <span className="allapot"><I3 n="befizetve_jel" s={18} /><span className="szo">Megerősítetted</span></span>}
       </div>
       <div className="belso" style={{ paddingTop: 4 }}>
+        {c.taxRegime === 'kata' && (
+          <div className="uzenet-sav info" style={{ marginBottom: 14 }}>
+            <div>
+              <b>Katás ügyfél:</b> a kata havi 50 000 Ft, ezek a beállítások most nem hatnak rá. Akkor számítanak, ha átalányadóra vált – addig maradjanak a mostani
+              értékek. A szünetelés és a kieső idő viszont a katára is számít.
+            </div>
+          </div>
+        )}
         <div className="mezo">
           <span className="felirat">Költséghányad</span>
           <div className="valaszto" role="radiogroup">

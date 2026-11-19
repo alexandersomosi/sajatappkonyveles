@@ -1,0 +1,68 @@
+{
+ "kind": "valtozas_adoadat",
+ "generatedAt": "2026-11-19T21:22:51.390Z",
+ "sourceVersion": "2026-11-19.ot",
+ "items": [
+  {
+   "stepKey": "onya_belepes",
+   "file": "m_01_onya_nyitooldal.png",
+   "file2x": "m_01_onya_nyitooldal@2x.png",
+   "width": 1080,
+   "height": 674,
+   "kind": "kepernyokep",
+   "caption": "Bejelentkezés, nem azonosítás nélkül.",
+   "alt": "Az ONYA nyitóoldala: Bejelentkezés gomb kiemelve, a Belépés azonosítás nélkül gomb szaggatottan.",
+   "source": {
+    "title": "ONYA nyitóoldal (Bejelentkezés)",
+    "url": "https://onya.nav.gov.hu/",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: onya.nav.gov.hu, 2026.11.18. Belépés nélkül készült.",
+   "markers": []
+  },
+  {
+   "stepKey": "onya_profil",
+   "file": "m_03_onya_profil.png",
+   "file2x": "m_03_onya_profil@2x.png",
+   "width": 1080,
+   "height": 771,
+   "kind": "kepernyokep",
+   "caption": "A saját profilodat válaszd.",
+   "alt": "Az ONYA Képviseltek oldala elmosott nevekkel; a jobb felső felhasználói rész és a Magánszemély kártya kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 8
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 8. dia. A mintaadatok elmosva.",
+   "markers": []
+  },
+  {
+   "stepKey": "t101e_kereses",
+   "file": "m_04_onya_uj_nyomtatvany.png",
+   "file2x": "m_04_onya_uj_nyomtatvany@2x.png",
+   "width": 1080,
+   "height": 554,
+   "kind": "kepernyokep",
+   "caption": "Új nyomtatvány.",
+   "alt": "Az ONYA főoldala három csempével; az Új nyomtatvány csempe kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 7
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 7. dia. A felhasználó neve elmosva.",
+   "markers": []
+  }
+ ],
+ "missing": [
+  "t101e_blokk",
+  "t101e_bekuldes",
+  "app_feltoltes"
+ ]
+}

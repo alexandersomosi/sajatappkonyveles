@@ -95,10 +95,12 @@ render(nyugta, 358, 254, 2, join(out, 'minta/nyugta_keretben.png'));
 const nyugta2 = fit(svgFile('app_v2/nyugta_foto.svg'), 358, 214);
 render(nyugta2, 358, 214, 2, join(out, 'minta/nyugta.png'));
 
-// app-ikon: lapos márkakék (#1428DB, a tulaj 11-18 17:50-es döntése) négyzet, Geist Black K, alatta a kézvonás (#C9D2FF) – kozos.js #appikon
+// app-ikon: lapos márkakék (#1428DB, a tulaj 11-18 17:50-es döntése) négyzet, Geist Black kezdőbetű, alatta a kézvonás (#C9D2FF) – kozos.js #appikon
+// A betű a brand.json nevének első betűje (11-19: „Adózz” → A; csak az ikonok: scripts/ikonok.mjs).
+const KEZDOBETU = JSON.parse(readFileSync(join(app, '../shared/brand.json'), 'utf8')).name.trim().charAt(0).toLocaleUpperCase('hu-HU').replace(/[<&>]/g, '');
 const ikonSvg = (bg, r) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="1024" height="1024" style="display:block">
   ${bg ? `<rect width="120" height="120" rx="${r}" fill="#1428DB"/>` : ''}
-  <text x="60" y="83" text-anchor="middle" fill="#fff" style="font-family:Geist;font-weight:900;font-size:76px;letter-spacing:-.02em">K</text>
+  <text x="60" y="83" text-anchor="middle" fill="#fff" style="font-family:Geist;font-weight:900;font-size:76px;letter-spacing:-.02em">${KEZDOBETU}</text>
   <path d="${kvIkon}" fill="#C9D2FF"/></svg>`;
 render(ikonSvg(true, 0), 1024, 1024, 1, join(out, 'icon.png')); // az áruház maga kerekít
 // Android adaptív ikon: előtér átlátszó, a K a biztonsági zónában (66%)

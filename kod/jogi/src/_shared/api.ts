@@ -77,6 +77,47 @@ import type {
   JourneyVariant,
   PathChangeBlocker,
   RegistrationMode,
+  // SPEC §28
+  AllowanceGate,
+  AllowanceKind,
+  AllowanceRejectReason,
+  AllowanceStatus,
+  AnyakJogcim,
+  ChangeActivityMode,
+  ChangeKind,
+  ChangeTaxItem,
+  EarningsBasis,
+  ReserveEstimateReason,
+  ReserveZone,
+  // SPEC §28.K
+  AnnualCheckItem,
+  AnnualHipaPlace,
+  AnnualStatus,
+  BusinessIdentitySource,
+  CalculatorSide,
+  CheckinHow,
+  CheckinItem,
+  CheckinItemStatus,
+  CheckinStatus,
+  CheckinWeeklyHours,
+  DocumentStatusTab,
+  EmployerAnswer,
+  EmployerDecision,
+  EmployerSource,
+  FeeChargeStatus,
+  FeeKind,
+  FeeUnit,
+  MailboxRejectReason,
+  MailboxStatus,
+  OtherIncomeKind,
+  PauseSource,
+  PayerKind,
+  PlanCode,
+  ServiceLockReason,
+  TaxRegime,
+  TaxRegimeAnswer,
+  TaxpayerLookupStatus,
+  YesNoDontKnow,
 } from './enums';
 
 export type ISODate = string; // 'YYYY-MM-DD'
@@ -144,6 +185,8 @@ export interface RegisterInput {
   referralCode?: string;
   utm?: { source?: string; medium?: string; campaign?: string; content?: string };
   platform: 'web' | 'android' | 'ios';
+  /** SPEC §28.K.8: where the visitor came from (`?forras=kalkulator`) and whether he asked for a callback (`?cel=visszahivas`). */
+  entry?: { forras?: string; cel?: 'visszahivas' };
 }
 export interface LoginInput {
   email: string;
@@ -177,6 +220,10 @@ export interface ClientSummary {
   lifecycle: ClientLifecycle;
   onboardingComplete: boolean;
   personalReferralCode: string | null;
+  /** SPEC §28.K.11 (default 'atalany'). */
+  taxRegime?: TaxRegime;
+  /** SPEC §28.K.5: set while the accounting service is locked for an unpaid fee. */
+  serviceLock?: ServiceLockView | null;
 }
 export interface Me {
   user: AuthUser;
@@ -189,6 +236,8 @@ export interface Me {
   access?: ClientAccess;
   notificationPrefs: { kind: NotificationKind; push: boolean; email: boolean }[];
   consentsNeeded: LegalDocType[];
+  /** SPEC §28.2.3: per-user quiet hours + amounts in push (defaults QUIET_HOURS_DEFAULT, true). */
+  notificationSettings?: NotificationSettings;
 }
 
 // ---------- onboarding ----------
@@ -230,6 +279,12 @@ export interface OnboardingState {
   assists?: AssistView[];
   /** SPEC §27.3: new-business path only – who files the EV bejelentés. null on 'van' / unanswered. */
   registrationMode?: RegistrationMode | null;
+  /** SPEC §28.K.7: the employees / EFO answer and the accountant's decision. */
+  employer?: EmployerStatusView | null;
+  /** SPEC §28.K.9: how the business data came in; adoszamPending = "Most nem tudom" (the accountant fills it later). */
+  businessIdentity?: { source: BusinessIdentitySource; adoszamPending: boolean } | null;
+  /** SPEC §28.K.11: "Hogyan adózol most?" */
+  taxRegimeAnswer?: TaxRegimeAnswer | null;
 }
 export interface ClientProfileInput {
   firstName: string;
@@ -246,6 +301,8 @@ export interface ClientProfileInput {
   evSince: ISODate;
   previousAccountant?: string;
   hasSeparateBusinessAccount: boolean;
+  /** SPEC §28.K.9: true = "Most nem tudom" – `adoszam` may be '' and the accountant fills it from ONYA later. */
+  adoszamPending?: boolean;
 }
 /**
  * SPEC §26.1.2: PUT /client/profile on the new-business path ("Rólad" page only). The business fields are filled by
@@ -268,6 +325,8 @@ export interface ClientProfile extends Omit<ClientProfileInput, 'adoazonositoJel
   adoazonositoJelMasked: string; // "•••••••456"
   suggestedCostRatio: CostRatio;
   confirmedCostRatio: CostRatio | null;
+  /** SPEC §28.K.11 */
+  taxRegime?: TaxRegime;
 }
 
 // ---------- money / tax ----------
@@ -356,6 +415,8 @@ export interface Deadline {
   /** Payments only: true while the amount is still an estimate (the accountant has not approved it yet). */
   estimate?: boolean;
   link: string; // in-app route
+  /** SPEC §28.K.12: the collapsed group row ("2026. 4. negyedév", KATA: the month; annual items: their own key). */
+  group?: { key: string; label: string };
 }
 
 // ---------- documents ----------
@@ -405,6 +466,11 @@ export interface NavInvoiceListItem {
   grossAmountHuf: number;
   status: DocumentStatus;
   demo: boolean;
+  /** SPEC §28.1.4 (null-free: absent while restricted or without profile). */
+  reserve?: InvoiceReserveView;
+  /** SPEC §28.K.11: from NAV customerVatStatus; KATA clients get the business-customer warning. */
+  payerKind?: PayerKind | null;
+  kataWarning?: string | null;
 }
 
 // ---------- home ----------
@@ -427,6 +493,18 @@ export interface ClientHome {
   nextDeadline: Deadline | null;
   /** Shown as a home banner when the service is ending or ended (cancelled subscription, cancelled deletion). */
   serviceNotice?: { kind: 'megszunik' | 'megszunt'; endsOn: ISODate | null; canResume: boolean };
+  // SPEC §28 (null while restricted or without profile)
+  reserve?: ReserveCard | null;
+  earnings?: EarningsCard | null;
+  allowancesHint?: { show: boolean } | null;
+  // SPEC §28.K (all optional; §28.K.12)
+  twoNumbers?: TwoNumbersView | null;
+  paymentCard?: PaymentCardView | null;
+  checkin?: CheckinView | null;
+  annual?: AnnualView | null;
+  lock?: ServiceLockView | null;
+  pause?: PauseView | null;
+  kata?: KataHomeView | null;
 }
 
 // ---------- messages / requests ----------
@@ -487,6 +565,11 @@ export interface SubscriptionView {
    * that starts on this day. For a paid, running period this is currentPeriodEnd (no day is paid twice).
    */
   nextPaidPeriodStart?: ISODate;
+  /** SPEC §28.K: plan, the amount of the next charge (availability fee while paused), DEMO price mark. */
+  planCode?: PlanCode;
+  nextChargeAmountHuf?: number;
+  pause?: PauseView | null;
+  priceDemo?: boolean;
 }
 export interface SubscriptionStartResult {
   paymentUrl: string;
@@ -502,6 +585,9 @@ export interface FeeInvoiceItem {
   amountHuf: number;
   demo: boolean;
   fileId: string;
+  /** SPEC §28.K.1: what it was for (absent = the monthly fee). */
+  feeKind?: FeeKind;
+  label?: string;
 }
 
 // ---------- notifications ----------
@@ -529,6 +615,18 @@ export interface AccClientRow {
   afaRatio: number;
   subscriptionStatus: SubscriptionStatus | null;
   onboardingMilestone: Milestone | null;
+  /**
+   * 11-19 javítás: the same journey the client sees ("Így halad a bekötésed") – done/total of the required rows and what
+   * comes next (the client's current row, else what others work on). Only during onboarding.
+   */
+  onboardingJourney?: { done: number; total: number; next: string | null; nextActor: string | null; waiting: string | null } | null;
+  /** SPEC §28.3.6 / §28.K: badges and chips of the client list. */
+  allowancesPending?: number;
+  taxRegime?: TaxRegime;
+  serviceLocked?: boolean;
+  annualWaiting?: boolean;
+  checkinOpenItems?: number;
+  adoszamPending?: boolean;
 }
 export interface RevenueItem {
   id: string;
@@ -646,6 +744,8 @@ export interface BusinessRegistrationInput {
   startPlan?: StartPlan;
   startDate?: ISODate | null;
   hasSeparateBusinessAccount?: boolean | null;
+  /** SPEC §28.K.11: "Hogyan szeretnél adózni?" (drives the KATA variant of the guide, §28.K.13). */
+  taxRegime?: TaxRegimeAnswer;
 }
 /** Stored answers as the client and the team see them (null = not answered yet). */
 export interface BusinessRegistrationAnswers {
@@ -661,6 +761,8 @@ export interface BusinessRegistrationAnswers {
   startPlan: StartPlan | null;
   startDate: ISODate | null;
   hasSeparateBusinessAccount: boolean | null;
+  /** SPEC §28.K.11 (optional for rows saved before §28.K; null = not answered → the átalány variant of the guide). */
+  taxRegime?: TaxRegimeAnswer | null;
 }
 /** Computed by the backend with @kezjegy/ado-motor (RULES_2026); suggestion only, the accountant confirms. */
 export interface BusinessRegistrationHints {
@@ -784,7 +886,7 @@ export interface Guide {
   /** SPEC §27.3.6: null for 'meghatalmazas_jovahagyas' (no video; the card is not shown). */
   video: VideoRef | null;
   /** SPEC §27.3.6: approval guide only – the shown due date of the client's ONYA approval. */
-  approvalDue?: { dueOn: ISODate; dueText: string; daysLeft: number; lastDay: boolean } | null;
+  approvalDue?: { dueOn: ISODate; dueText: string; daysLeft: number; lastDay: boolean; afterDue?: boolean } | null;
   /** Only for 'vallalkozas_bejelentes' (the "Készítsd elő" list); [] for the other. */
   prepare: GuidePrepareItem[];
   steps: GuideStep[];
@@ -909,7 +1011,10 @@ export interface TeamClientCard {
   businessStatus: BusinessStatus | null;
   milestone: Milestone | null;
   accountant: { id: string; userId: string; name: string } | null;
-  registration: { id: string; status: RegistrationStatus } | null;
+  /** `pathChanged`: an 'elallt' registration left by a branch change ("Útvonalat váltott", not "Elállt"). */
+  registration: { id: string; status: RegistrationStatus; pathChanged?: boolean } | null;
+  /** 11-19 javító kör 2: the client's own journey ("Most ez jön") – the team sees the same next step as the client. */
+  journeyNext?: { title: string; actorLabel: string; waiting: string | null } | null;
   openCallbackId: string | null;
   /** Team may message only clients in onboarding. */
   canMessage: boolean;
@@ -1129,6 +1234,10 @@ export interface WaitingCardView {
   body: string;
   /** "Ha november 21-ig nem történik semmi, kérj visszahívást." */
   escalateText: string | null;
+  /** 11-19 javítás: 'uzenet' while a callback is already open ("… írj nekünk az Üzenetekben"), else 'visszahivas'. */
+  escalateKind?: 'visszahivas' | 'uzenet';
+  /** How long the others usually need ("általában 1 munkanap", "24–48 órán belül") – the "Közben: {title} · {time}" strip. */
+  timeText?: string | null;
   /** Something the client may already do meanwhile (first 'nyitva' row). */
   meanwhile: { title: string; label: string; route: string } | null;
 }
@@ -1168,6 +1277,8 @@ export interface PathChangeInfo {
 /** PUT /client/onboarding/business-status (SPEC §27.2.3). */
 export interface BusinessStatusInput {
   businessStatus: BusinessStatus;
+  /** 11-19 javítás: only the toast's "Visszavonom" sends this (an undo is not a new change for the staff badge). */
+  undo?: true;
   /** Only with 'inditas': the answer to "Hogyan jelentsük be?" when it is 'onallo' (the assisted answer goes through POST /client/assist). */
   mode?: 'onallo';
 }
@@ -1198,6 +1309,8 @@ export interface AssistView {
     dueText: string;
     daysLeft: number;
     lastDay: boolean;
+    /** 11-19 javítás: the day(s) after the shown due day – NAV's real 4 × 24 h are not over yet ("Ma még jóváhagyhatod"). */
+    afterDue?: boolean;
     /** How many times NAV deleted an unapproved filing (re-filed since). */
     expiredCount: number;
   } | null;
@@ -1211,6 +1324,12 @@ export interface AssistView {
   canCancel: boolean;
   closedReason: AssistCloseReason | null;
   closedAt: ISODateTime | null;
+  /** SPEC §28.5.5: change kinds only – the data to file. */
+  change?: ChangeData | null;
+  /** SPEC §28.5.6: a free-text activity still waits for its ÖVTJ line. */
+  activityPending?: boolean;
+  /** SPEC §28.K.1: the prepaid fee of an assisted change (status 'dijra_var' until paid). */
+  feeCharge?: FeeChargeView | null;
 }
 /** POST /client/assist – creates (or links) the callback with topic ASSIST_CALLBACK_TOPIC[kind]. */
 export interface AssistCreateInput {
@@ -1221,10 +1340,16 @@ export interface AssistCreateInput {
   window?: CallbackWindow;
   note?: string;
   savePhoneToProfile?: boolean;
+  /** SPEC §28.5.5: change kinds – the change data; `callback` true = "Hívjatok fel előtte" (forced for CHANGE_TAX_ITEMS_CALL_FIRST). */
+  change?: ChangeData;
+  callback?: boolean;
 }
 export interface AssistCreateResult {
   assist: AssistView;
-  callback: CallbackView;
+  /** SPEC §28.5.5: null for a change request without a callback. */
+  callback: CallbackView | null;
+  /** SPEC §28.K.1: the fee to pay before the team acts (null = no fee). */
+  feeCharge?: FeeChargeView | null;
 }
 /** GET /client/assist/:id/consent – the final review (EV only). */
 export interface AssistConsentSummary {
@@ -1282,6 +1407,12 @@ export interface TeamAssistChecklistItem {
 }
 export interface TeamAssistDetail extends TeamAssistRow {
   clientCard: TeamClientCard;
+  /**
+   * 11-19 javítás: the UJEGYKE may be filed only when the client accepted the contract and gave his name and adóazonosító
+   * jel. While false, 'ujegyke_bekuldve' is not among `allowedActions` and `notReadyReasons` says what the client still owes.
+   */
+  readyForUjegyke?: boolean;
+  notReadyReasons?: string[];
   checklist: { phase: AssistCheckPhase; title: string; items: TeamAssistChecklistItem[] }[];
   /**
    * What our accountant types into UJEGYKE (Képviselt) and checks in the Ügysegéd. `adoazonositoJel` is the full value
@@ -1301,6 +1432,12 @@ export interface TeamAssistDetail extends TeamAssistRow {
   /** Actions the CURRENT user may do now (role + status). Disabled buttons explain why in the panel. */
   allowedActions: AssistAction[];
   staffNote: string | null;
+  /** SPEC §28.5.5: change kinds. */
+  change?: ChangeData | null;
+  followups?: ChangeFollowupView[];
+  feeCharge?: FeeChargeView | null;
+  /** SPEC §28.K.5: the client's service is locked – filing actions are disabled. */
+  serviceLocked?: boolean;
 }
 /** POST /team/assists/:id/agreed – the call happened and the client wants it (all 'hivas' items). */
 export interface AssistAgreedInput {
@@ -1331,4 +1468,691 @@ export interface AssistStaffPatch {
   staffNote?: string | null;
   /** Tick or untick single items without moving the status (autosave of the check list). */
   check?: { item: AssistCheckItem; done: boolean }[];
+}
+
+// =====================================================================================================================
+// SPEC §28 – "Öt új funkció" 11-19 (félretenni, new-invoice notification, allowances, "Mennyit kerestem?", change guides)
+// =====================================================================================================================
+
+// ---------- §28.1 "Ennyit tegyél félre" ----------
+export interface InvoiceReserveView {
+  year: number;
+  reserveHuf: number;
+  rawHuf: number;
+  parts: { szjaHuf: number; tbHuf: number; szochoHuf: number };
+  zone: ReserveZone;
+  crossesTaxFree: boolean;
+  estimated: boolean;
+  nextYear: boolean;
+  /** "120 000 Ft-os számla – ebből kb. 31 000 Ft-ot tegyél félre." */
+  line: string;
+  /** The invoice list sub-line (RESERVE_TEXTS.lista); null for nincs_adat. */
+  listLine: string | null;
+  /** "SZJA, TB-járulék, szocho" */
+  partsText: string | null;
+  /** The crossesTaxFree sentence. */
+  thresholdText: string | null;
+}
+export interface ReserveCard {
+  year: number;
+  /** max(0, A − B), rounded up to 1 000. */
+  keepNowHuf: number;
+  /** A */
+  accruedHuf: number;
+  /** Σ reserveHuf of the items received ≤ today. */
+  invoicesHuf: number;
+  /** Σ fixedByMonth of the months ≤ the current month. */
+  fixedHuf: number;
+  /** The current month's fixed amount (0 = the row is not shown). */
+  fixedMonthlyHuf: number;
+  /** HIPA elapsed share. */
+  hipaHuf: number;
+  hipaAnnualHuf: number | null;
+  /** B */
+  dueOrPaidHuf: number;
+  nextDue: { dueDate: ISODate; label: string } | null;
+  estimateReasons: { code: ReserveEstimateReason; text: string }[];
+  sentence: string;
+  detail: string;
+  footnote: string;
+  /** SPEC §28.K.12 item 3: what the client says he already put aside (self-reported) and the ring. */
+  markedHuf?: number | null;
+  ring?: { ratio: number; remainingHuf: number; line: string } | null;
+}
+export interface ReserveListItem {
+  revenueItemId: string;
+  navInvoiceId: string | null;
+  title: string;
+  sub: string;
+  receivedOn: ISODate;
+  amountHuf: number;
+  reserve: InvoiceReserveView;
+}
+export interface ReserveView {
+  card: ReserveCard;
+  months: { month: number; label: string; items: ReserveListItem[] }[];
+}
+
+// ---------- §28.2 notification settings ----------
+export interface NotificationSettings {
+  quietEnabled: boolean;
+  /** 0–23, Budapest time; [from, to) wraps midnight when from > to. */
+  quietFrom: number;
+  quietTo: number;
+  pushShowAmounts: boolean;
+}
+/** PATCH /me { notificationSettings } */
+export type NotificationSettingsPatch = Partial<NotificationSettings>;
+
+// ---------- §28.3 allowances ----------
+export interface AllowanceChildAnswer {
+  /** családi pótlék now / ≥ 12 years in the past / ended by the child's death / no */
+  potlek: 'most' | 'tizenket_ev' | 'elhunyt' | 'nem';
+  /** own or adopted (mothers' allowances) */
+  sajat: boolean;
+  /** health flag (needs healthConsent) */
+  tartosBeteg: boolean;
+  /** alternating care (50 %) */
+  felvaltva: boolean;
+  /** 'YYYY-MM' if it started this year (birth, adoption) */
+  potlekKezdeteHo: MonthKey | null;
+  /** 'YYYY-MM' if it ends this year (school finished) */
+  potlekVegeHo: MonthKey | null;
+}
+export interface AllowanceAnswers {
+  /** 'YYYY-MM' */
+  birthMonth: MonthKey | null;
+  /** 0..12 */
+  children: AllowanceChildAnswer[];
+  /** eltartott but not kedvezményezett, 0..9 */
+  otherDependants: number;
+  /** expected birth 'YYYY-MM' */
+  pregnancy: { dueMonth: MonthKey } | null;
+  mother: boolean | null;
+  csaladiWho: 'en' | 'par' | 'kozosen' | null;
+  /** 10..90 when 'kozosen' */
+  csaladiSharePct: number | null;
+  csjkWish: 'igen' | 'konyvelo_donti' | null;
+  marriage: { month: MonthKey; first: boolean; who: 'en' | 'par' | 'kozosen' } | null;
+  disability: { fromMonth: MonthKey | null; basis: 'orvosi_igazolas' | 'rokkantsagi_jaradek' | 'fogyatekossagi_tamogatas' } | null;
+  /** táppénz / CSED / GYED */
+  benefit: { fromMonth: MonthKey; toMonth: MonthKey | null } | null;
+  healthConsent: boolean;
+  /** ≤ 500, for the accountant */
+  note: string | null;
+}
+export interface CsaladiMonthParam {
+  month: number;
+  eltartott: number;
+  children: { felvaltva: boolean; tartosBeteg: boolean }[];
+  sharePct: number;
+}
+export interface AllowanceParams {
+  anyakJogcim?: AnyakJogcim;
+  elsoHazasokMonthlyHuf?: number;
+  csaladi?: CsaladiMonthParam[];
+  csjkInYear?: boolean;
+}
+export interface AllowanceItemView {
+  kind: AllowanceKind;
+  label: string;
+  line: string;
+  status: AllowanceStatus;
+  statusText: string;
+  months: number[];
+  /** "január–december", "július–december" */
+  monthsText: string;
+  inYear: boolean;
+  /** Approved only: SZJA + csjk saved this year (estimate). */
+  effectYearHuf: number | null;
+  question: string | null;
+  rejectText: string | null;
+}
+export interface AllowanceState {
+  year: number;
+  gate: AllowanceGate | null;
+  answers: AllowanceAnswers | null;
+  version: number;
+  submittedAt: ISODateTime | null;
+  items: AllowanceItemView[];
+  pendingCount: number;
+  savedYtdHuf: number | null;
+  savedYearHuf: number | null;
+  documentsToKeep: string[];
+  canEdit: boolean;
+  /** SPEC §28.K.11: KATA clients get no questionnaire (the gate sheet says why). */
+  notForRegime?: boolean;
+}
+/** PUT /client/allowances/answers (`submit: false` = draft, `true` = submit + proposal + notify). */
+export interface AllowanceAnswersInput {
+  year: number;
+  answers: AllowanceAnswers;
+  submit: boolean;
+}
+export interface AllowanceGateInput {
+  year: number;
+  gate: AllowanceGate;
+}
+/** POST /client/allowances/preview (K12 estimate; never stored). */
+export interface AllowanceClientPreviewInput {
+  year: number;
+  answers: AllowanceAnswers;
+}
+export interface AllowanceClientPreview {
+  items: { kind: AllowanceKind; label: string; effectYearHuf: number | null; onlyAnnual: boolean }[];
+}
+// staff
+export interface AccAllowanceItem extends AllowanceItemView {
+  params: AllowanceParams;
+  paramsPrev: AllowanceParams | null;
+  proposal: { months: number[]; params: AllowanceParams; reasons: string[] };
+  decidedBy: string | null;
+  decidedAt: ISODateTime | null;
+  staffNote: string | null;
+  warnings: string[];
+  documents: { label: string; keep: boolean }[];
+}
+export interface AccAllowanceView {
+  year: number;
+  answers: AllowanceAnswers | null;
+  version: number;
+  submittedAt: ISODateTime | null;
+  healthConsentAt: ISODateTime | null;
+  legacy: { kind: string; note?: string }[];
+  items: AccAllowanceItem[];
+}
+export interface AllowanceDecisionInput {
+  status: 'jovahagyva' | 'kerdes' | 'elutasitva';
+  months?: number[];
+  params?: AllowanceParams;
+  inYear?: boolean;
+  reason?: AllowanceRejectReason;
+  clientText?: string;
+  staffNote?: string;
+}
+export interface AllowancePreviewInput {
+  year: number;
+  decisions: { kind: AllowanceKind; months: number[]; params?: AllowanceParams; inYear: boolean }[];
+}
+export interface AllowancePreview {
+  without: { szjaHuf: number; tbHuf: number; szochoHuf: number };
+  with: { szjaHuf: number; tbHuf: number; szochoHuf: number };
+  savedHuf: number;
+  byKind: { kind: AllowanceKind; szjaSavedHuf: number; csjkHuf: number }[];
+  csaladiUnusedHuf: number;
+  annualCsjkPotentialHuf: number;
+  warnings: string[];
+}
+
+// ---------- §28.4 "Mennyit kerestem?" ----------
+export interface EarningsMonthView {
+  month: number;
+  label: string;
+  revenueHuf: number;
+  taxesHuf: number;
+  parts: { szjaHuf: number; tbHuf: number; szochoHuf: number; hipaHuf: number };
+  netHuf: number;
+  basis: EarningsBasis;
+  note: string | null;
+}
+export interface EarningsView {
+  year: number;
+  /** 1..current month */
+  months: EarningsMonthView[];
+  ytd: { revenueHuf: number; taxesHuf: number; netHuf: number };
+  projection: { reliable: boolean; revenueHuf: number | null; taxesHuf: number | null; netHuf: number | null; text: string };
+  line: string;
+  disclaimer: string;
+}
+export interface EarningsCard {
+  ytdNetHuf: number;
+  ytdRevenueHuf: number;
+  ytdTaxesHuf: number;
+  sentence: string;
+  sub: string;
+  projectionText: string | null;
+}
+
+// ---------- §28.5 changes ----------
+export interface NavAddress {
+  zip: string;
+  city: string;
+  district?: string | null;
+  streetName: string;
+  streetType: string;
+  houseNumber: string;
+  building?: string | null;
+  staircase?: string | null;
+  floor?: string | null;
+  door?: string | null;
+}
+export type ChangeData =
+  | { kind: 'valtozas_szekhely'; address: NavAddress; effectiveOn: ISODate; right: SeatRight; provider?: { name: string; adoszam: string } | null; alsoHomeAddress: boolean }
+  | { kind: 'valtozas_telephely'; address: NavAddress; effectiveOn: ISODate; right: SeatRight; label?: string | null }
+  | { kind: 'valtozas_tevekenyseg'; mode: ChangeActivityMode; activities: BusinessActivityChoice[]; ownWords?: string | null; keepOldMain: boolean; effectiveOn: ISODate }
+  | { kind: 'valtozas_szuneteltetes'; from: ISODate; to: ISODate | null }
+  | { kind: 'valtozas_adoadat'; items: ChangeTaxItem[]; workKind?: WorkKind | null; effectiveOn: ISODate; note?: string | null }
+  /** SPEC §28.K.6: resumption after szüneteltetés (≥ today, ≤ today + 60 days). */
+  | { kind: 'valtozas_folytatas'; from: ISODate };
+/** GET /client/change-guides */
+export interface ChangeGuidesView {
+  items: { kind: ChangeKind; title: string; line: string; icon: Icon3dAny; outdated: boolean; openAssist: AssistView | null }[];
+}
+/** PUT /client/assist/:id/change (allowed until 'bejelentes_bekuldve'; invalidates the consent). */
+export interface AssistChangeUpdateInput {
+  change: ChangeData;
+}
+/** POST /team/assists/:id/change-done */
+export interface ChangeDoneInput {
+  followups?: string[];
+}
+/** PATCH /team/assists/:id/followups */
+export interface ChangeFollowupPatch {
+  key: string;
+  done: boolean;
+}
+export interface ChangeFollowupView {
+  key: string;
+  label: string;
+  done: boolean;
+  doneAt: ISODateTime | null;
+  by: StaffRef | null;
+}
+/**
+ * Extra fields of the panel's AccClientDetail (`GET /acc/clients/:id`; the base type lives in kod/panel/src/api/types.ts):
+ * SPEC §28.1.9, §28.3.6, §28.4.4 and §28.K.
+ */
+export interface AccClientDetailK28 {
+  allowancesPending?: number;
+  reserve?: ReserveCard | null;
+  earnings?: EarningsCard | null;
+  taxRegime?: TaxRegime;
+  kata?: KataHomeView | null;
+  serviceLock?: ServiceLockView | null;
+  pause?: PauseView | null;
+  employer?: EmployerStatusView | null;
+  annual?: AnnualView | null;
+  adoszamPending?: boolean;
+  checkinOpenItems?: number;
+  mailboxAddress?: string | null;
+}
+
+// =====================================================================================================================
+// SPEC §28.K – owner orders 11-19 afternoon–evening (fees, check-in, annual closing, lock, pause, EFO, calculator,
+// adószám lookup, KATA, Accountable patterns, mailbox)
+// =====================================================================================================================
+
+// ---------- §28.K.1 fees ----------
+export interface FeeChargeView {
+  id: string;
+  kind: FeeKind;
+  label: string;
+  amountHuf: number;
+  /** true while the fee setting is unconfirmed (amber DEMO chip). */
+  demo: boolean;
+  status: FeeChargeStatus;
+  statusText: string;
+  purpose: { type: 'valtozas'; assistId: string } | { type: 'eves_zaras'; annualId: string };
+  dueOn: ISODate | null;
+  createdAt: ISODateTime;
+  paidAt: ISODateTime | null;
+  feeInvoice: FeeInvoiceItem | null;
+  canPay: boolean;
+}
+/** GET /client/fees */
+export interface FeesView {
+  table: { kind: FeeKind; label: string; amountHuf: number; unit: FeeUnit; demo: boolean; line: string }[];
+  inPlan: string;
+  open: FeeChargeView[];
+  paid: FeeChargeView[];
+  invoices: FeeInvoiceItem[];
+}
+/** POST /client/fees/:id/pay */
+export interface FeePayInput {
+  platform: 'web' | 'android' | 'ios';
+}
+export interface FeePayStart {
+  paymentUrl: string;
+  orderRef: string;
+  chargeId: string;
+  amountHuf: number;
+  demo: boolean;
+}
+/** GET/PUT /admin/fees (AD) */
+export interface FeeSettingView {
+  kind: FeeKind;
+  label: string;
+  amountHuf: number;
+  unit: FeeUnit;
+  confirmed: boolean;
+  confirmedAt: ISODateTime | null;
+  confirmedBy: StaffRef | null;
+  effectiveFrom: ISODate | null;
+  /** Running subscriptions whose card registration (maxAmount) would not cover a raised amount. */
+  cardLimitAffected?: number;
+  history: { amountHuf: number; confirmed: boolean; changedBy: StaffRef | null; changedAt: ISODateTime; note: string | null }[];
+}
+export interface FeeSettingUpdateInput {
+  kind: FeeKind;
+  amountHuf: number;
+  /** Required for a rise of havidij / havidij_kata (≥ today + FEE_RULES.priceRiseNoticeDays). */
+  effectiveFrom?: ISODate;
+  note?: string;
+}
+/** POST /admin/fee-charges/:id/waive */
+export interface FeeWaiveInput {
+  reason: string;
+}
+
+// ---------- §28.K.2 A – monthly check-in ----------
+export interface CheckinItemView {
+  item: CheckinItem;
+  question: string;
+  /** After the answer: */
+  status?: CheckinItemStatus;
+  statusText?: string;
+  assistId?: string | null;
+  feeCharge?: FeeChargeView | null;
+  /** The accountant's one-line reason when 'nem_kell'. */
+  clientText?: string | null;
+}
+export interface CheckinView {
+  id: string;
+  /** 'YYYY-MM' = the month asked about ("október óta"). */
+  period: MonthKey;
+  periodLabel: string;
+  status: CheckinStatus;
+  dueOn: ISODate;
+  items: CheckinItemView[];
+  answeredAt: ISODateTime | null;
+}
+export interface CheckinItemAnswer {
+  item: CheckinItem;
+  /** munkaviszony / nyugdij: from when. */
+  since?: ISODate;
+  weeklyHours?: CheckinWeeklyHours;
+  /** koltozes: which change form. */
+  choice?: 'szekhely' | 'telephely';
+  /** Chosen on the "Hogyan intézzük?" screen (absent = only a question). */
+  how?: CheckinHow;
+  employer?: EmployerAnswer;
+  /** The change form data when the item leads to a change (§28.5.6). */
+  change?: ChangeData;
+  /** egyeb: ≤ 500 */
+  text?: string;
+}
+/** POST /client/checkins/:id */
+export type CheckinAnswerInput = { result: 'nem_valtozott' } | { result: 'valtozott'; answers: CheckinItemAnswer[] };
+/** POST /acc/checkin-items/:id */
+export interface CheckinItemDecisionInput {
+  status: 'nem_kell' | 'kesz' | 'csapatnal';
+  /** Required for 'nem_kell' (shown to the client, ≤ 300). */
+  clientText?: string;
+  staffNote?: string;
+  /** One-click effects the accountant applies (never automatic). */
+  apply?: ('adoprofil_statusz' | 'szunetel' | 'kedvezmeny_ujranezes' | 'alkalmazott_dontes')[];
+}
+/** GET /acc/checkin-items?status= (panel queue "Havi változások"). */
+export interface TeamCheckinItem {
+  id: string;
+  checkinId: string;
+  client: { id: string; name: string; lifecycle: ClientLifecycle };
+  period: MonthKey;
+  item: CheckinItem;
+  itemLabel: string;
+  how: CheckinHow | null;
+  status: CheckinItemStatus;
+  fee: { kind: FeeKind; amountHuf: number; status: FeeChargeStatus } | null;
+  ball: 'csapat' | 'konyvelo' | 'ugyfel' | null;
+  since: ISODateTime;
+  details: CheckinItemAnswer;
+  assistId: string | null;
+  staffNote: string | null;
+}
+
+// ---------- §28.K.3 B – annual closing ----------
+export interface AnnualAnswers {
+  otherIncomes: OtherIncomeKind[];
+  otherIncomeNote: string | null;
+  /** átalány: the approved allowances confirmed (false = "Valami változott"). */
+  allowancesOk: boolean | null;
+  hipaPlace: AnnualHipaPlace | null;
+  hipaOtherTowns: { town: string; days: number }[];
+  municipalityLetter: boolean | null;
+  onePercent: { civilAdoszam: string | null; egyhazTechnikaiSzam: string | null } | null;
+  /** Write-only (stored encrypted); views return refundAccountMasked. */
+  refundAccount?: string | null;
+  refundAccountMasked?: string | null;
+  missingDocuments: boolean | null;
+  /** ≤ 1000 */
+  message: string | null;
+}
+export interface AnnualView {
+  id: string;
+  year: number;
+  regime: TaxRegime;
+  status: AnnualStatus;
+  statusText: string;
+  questionnaireDue: ISODate;
+  legalDue: { szja: ISODate | null; kata: ISODate | null; hipa: ISODate };
+  answers: AnnualAnswers | null;
+  feeCharge: FeeChargeView | null;
+  /** The draft return (category 'bevallas', visibility 'kozos') while 'jovahagyasra_var'. */
+  draft: DocumentListItem | null;
+  approval: { at: ISODateTime; hash: string } | null;
+  nextAction: 'kitoltes' | 'fizetes' | 'jovahagyas' | null;
+  canEdit: boolean;
+}
+/** PUT /client/annual/:id/answers (draft save; every field optional). */
+export interface AnnualAnswersInput {
+  answers: Partial<AnnualAnswers>;
+}
+/** POST /client/annual/:id/approve */
+export interface AnnualApproveInput {
+  hash: string;
+}
+export interface AccAnnualView extends AnnualView {
+  checklist: { item: AnnualCheckItem; label: string; done: boolean; doneAt: ISODateTime | null; by: StaffRef | null }[];
+  documents: DocumentListItem[];
+  /** The full refund account – the client's accountant and admins only (audited). */
+  refundAccount: string | null;
+}
+/** POST /acc/clients/:id/annual/:aid/check */
+export interface AnnualCheckInput {
+  item: AnnualCheckItem;
+  done: boolean;
+}
+
+// ---------- §28.K.5 / §28.K.6 lock and pause ----------
+export interface ServiceLockView {
+  reasons: ServiceLockReason[];
+  since: ISODate;
+  amountHuf: number;
+  /** LOCK_TEXTS.banner filled. */
+  text: string;
+  /** In-app route of the payment ("/fiok/dijak" or "/fiok/elofizetes"). */
+  payRoute: string;
+}
+export interface PauseView {
+  from: ISODate;
+  to: ISODate | null;
+  source: PauseSource;
+  amountHuf: number;
+  demo: boolean;
+  text: string;
+}
+
+// ---------- §28.K.7 F – employees / EFO ----------
+export interface EmployerStatusView {
+  answer: EmployerAnswer;
+  answeredAt: ISODateTime;
+  source: EmployerSource;
+  decision: EmployerDecision | null;
+  clientText: string | null;
+  decidedAt: ISODateTime | null;
+  /** true while the answer is not 'nincs' and no activation-allowing decision exists (Előfizetés stays locked). */
+  blocksActivation: boolean;
+}
+/** PUT /client/onboarding/employer */
+export interface EmployerAnswerInput {
+  answer: EmployerAnswer;
+}
+/** POST /acc/clients/:id/employer */
+export interface EmployerDecisionInput {
+  decision: EmployerDecision;
+  /** Required except 'nincs_teendo' (≤ 500). */
+  clientText?: string;
+  staffNote?: string;
+  /** egyedi_ajanlat: the amount as text (not charged in the app this round). */
+  offerAmountText?: string;
+}
+
+// ---------- §28.K.8 G – public tax calculator ----------
+export interface CalculatorInput {
+  year: number;
+  revenueHuf: number;
+  /** BUSINESS_ACTIVITIES key; null = "Nem találom" (CALCULATOR_RULES.fallbackCostRatio). */
+  activityKey: string | null;
+  costRatio: CostRatio;
+  side: CalculatorSide;
+  start: { kind: 'mar_mukodom' } | { kind: 'iden'; month: number };
+  allowances?: { under25: boolean; motherOfTwoPlus: boolean; motherUnder30: boolean; children: number };
+  kata?: boolean;
+}
+export interface CalculatorTaxes {
+  szjaHuf: number;
+  tbHuf: number;
+  szochoHuf: number;
+  hipaHuf: number;
+  totalHuf: number;
+}
+export interface CalculatorResult {
+  year: number;
+  activeMonths: number;
+  perYear: CalculatorTaxes;
+  perQuarter: (CalculatorTaxes & { quarter: 1 | 2 | 3 | 4 })[];
+  /** Revenue − taxes (before the real costs). */
+  netHuf: number;
+  /** ⌈yearly taxes ÷ active months⌉ rounded up to 1 000. */
+  monthlyReserveHuf: number;
+  afaNote: string;
+  starterNote: string | null;
+  kata: { monthlyHuf: number; yearHuf: number; limitHuf: number; overLimitHuf: number; kulonadoHuf: number; netHuf: number; monthlyReserveHuf: number } | null;
+  warnings: string[];
+  rulesVersion: string;
+  engineVersion: string;
+}
+
+// ---------- §28.K.9 H – auto-fill by adószám ----------
+/** POST /client/onboarding/taxpayer-lookup */
+export interface TaxpayerLookupInput {
+  /** The first 8 digits of the adószám. */
+  torzsszam: string;
+}
+export interface TaxpayerLookupResult {
+  status: TaxpayerLookupStatus;
+  /** DEMO mock (fictional taxpayers) – the card shows "DEMO – kitalált adatok". */
+  demo: boolean;
+  name: string | null;
+  seat: NavAddress | null;
+  selfEmployed: boolean | null;
+  /** 9th digit (ÁFA code) and the county code → the full adószám. */
+  vatCode: string | null;
+  countyCode: string | null;
+  adoszam: string | null;
+  alanyiMentes: boolean | null;
+  /** ÁFA code ≠ ALANYI_MENTES_VAT_CODE: the amber line; the client may continue, the accountant gets a flag. */
+  afaWarning: boolean;
+  message: string | null;
+}
+/** POST /client/onboarding/business-identity */
+export interface BusinessIdentityInput {
+  source: BusinessIdentitySource;
+  /** null with source 'kezi' ("Most nem tudom") → ClientProfile.adoszamPending. */
+  adoszam: string | null;
+  name: string;
+  seat: NavAddress;
+  alanyiMentes: YesNoDontKnow;
+  evSinceMonth?: MonthKey | null;
+  activityText?: string;
+  activityAnswer?: ActivityAnswer;
+  taxRegimeAnswer?: TaxRegimeAnswer;
+  taxStatus?: TaxStatus;
+}
+/** POST /acc/clients/:id/adoszam */
+export interface AdoszamStaffInput {
+  adoszam: string;
+}
+/** POST /acc/clients/:id/tax-regime */
+export interface TaxRegimeInput {
+  regime: TaxRegime;
+  kataFrom?: ISODate | null;
+  kataTo?: ISODate | null;
+}
+
+// ---------- §28.K.11 J – KATA ----------
+export interface KataHomeView {
+  revenueHuf: number;
+  /** The prorated keret (liable months × 1 500 000). */
+  limitHuf: number;
+  usedPct: number;
+  level: 'rendben' | 'figyelem' | 'tullepve';
+  liableMonths: number[];
+  kulonadoEstimateHuf: number;
+  nextPayment: { amountHuf: number; dueDate: ISODate; accountName: string; accountNumber: string; iban: string; reference: string } | null;
+  businessInvoices: { navInvoiceId: string; customerName: string | null; amountHuf: number; payerKind: PayerKind; endsOn: ISODate | null; reportBy: ISODate | null }[];
+  infoCardSeen: boolean;
+}
+
+// ---------- §28.K.12 K – Accountable patterns ----------
+export interface TwoNumbersView {
+  revenueHuf: number;
+  revenueSub: string;
+  /** = EarningsCard.ytdTaxesHuf (átalány); KATA: the meter instead. */
+  taxesHuf: number | null;
+  taxesSub: string | null;
+  kata?: { limitHuf: number; usedPct: number; level: 'rendben' | 'figyelem' | 'tullepve' } | null;
+}
+export interface PaymentCardView {
+  /** "Utalj 234 000 Ft-ot november 12-ig" */
+  title: string;
+  amountHuf: number;
+  dueDate: ISODate;
+  rows: { paymentItemId: string; label: string; accountName: string; accountNumber: string; iban: string; reference: string; amountHuf: number }[];
+  /** "Elutaltam" already tapped. */
+  markedPaid: boolean;
+}
+/** GET/PUT /client/reserve/mark (self-reported, never a bank link) → ReserveCard */
+export interface ReserveMarkInput {
+  year: number;
+  markedHuf: number;
+}
+export interface DocumentStatusTabCount {
+  tab: DocumentStatusTab;
+  label: string;
+  count: number;
+}
+/** GET /client/mailbox · POST /client/mailbox/rotate · PUT /client/mailbox/senders */
+export interface MailboxView {
+  /** null before activation. */
+  address: string | null;
+  demo: boolean;
+  senders: { email: string; primary: boolean }[];
+  maxExtraSenders: number;
+  limitsText: string;
+  log: MailboxLogRow[];
+}
+export interface MailboxSendersInput {
+  /** Extra senders (≤ MAILBOX_RULES.maxExtraSenders); the login e-mail is always accepted. */
+  senders: string[];
+}
+export interface MailboxLogRow {
+  id: string;
+  receivedAt: ISODateTime;
+  /** e.g. "k***@gmail.com" – never the full address. */
+  senderMasked: string;
+  status: MailboxStatus;
+  reason: MailboxRejectReason | null;
+  attachments: number;
+  documentIds: string[];
 }

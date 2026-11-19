@@ -124,5 +124,67 @@ for (const kind of Object.keys(KULCSOK)) {
     hibas++;
   }
 }
+// SPEC §28.5 (integrátor k6, 11-19): a változás-útmutatók képei. A forrás EGY mappa (utmutato_kepek/valtozas/index.json),
+// benne a `fajtak` térkép: változásfajtánként a lépéskulcs → kép (a `masolatok` a más útmutatókból átvett, már elmosott
+// képek). Az app fajtánként olvas: kod/media/utmutato/<valtozas_fajta>/kepek.json – ugyanabban az alakban, mint fent.
+const pngMeret = (p) => {
+  const b = readFileSync(p);
+  return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
+};
+const vIdx = join(forras, 'valtozas', 'index.json');
+if (existsSync(vIdx)) {
+  const index = JSON.parse(readFileSync(vIdx, 'utf8'));
+  // a lépések metaadatai a kimeneti fájlnév szerint (a saját képek), a másolatoké a forrás-útmutató indexéből
+  const meta = new Map();
+  for (const l of index.lepesek ?? []) if (l.kimenet?.fajl) meta.set(l.kimenet.fajl, l);
+  const forrasMeta = (utvonal) => {
+    const [g, fajl] = String(utvonal).split('/');
+    const p = join(forras, g, 'index.json');
+    if (!existsSync(p)) return null;
+    return (JSON.parse(readFileSync(p, 'utf8')).lepesek ?? []).find((l) => l.kimenet?.fajl === fajl) ?? null;
+  };
+  for (const [kind, lepesek] of Object.entries(index.fajtak ?? {})) {
+    const kiMappa = join(cel, kind);
+    mkdirSync(kiMappa, { recursive: true });
+    const items = [];
+    const missing = [];
+    let masolt = 0;
+    for (const x of lepesek) {
+      if (!x.kep || !existsSync(join(forras, 'valtozas', x.kep))) {
+        missing.push(x.lepes_kulcs);
+        continue;
+      }
+      if (masol(join(forras, 'valtozas', x.kep), join(kiMappa, x.kep))) masolt++;
+      let file2x;
+      if (x.kep_2x && existsSync(join(forras, 'valtozas', x.kep_2x))) {
+        if (masol(join(forras, 'valtozas', x.kep_2x), join(kiMappa, x.kep_2x))) masolt++;
+        file2x = x.kep_2x;
+      }
+      const l = meta.get(x.kep) ?? (x.masolat_innen ? forrasMeta(x.masolat_innen) : null) ?? {};
+      const k = meta.has(x.kep) ? (l.kimenet ?? {}) : {};
+      const m = pngMeret(join(forras, 'valtozas', x.kep));
+      const f = l.forras ?? null;
+      items.push({
+        stepKey: x.lepes_kulcs,
+        file: x.kep,
+        ...(file2x ? { file2x } : {}),
+        width: m.w,
+        height: m.h,
+        kind: (x.tipus ?? l.tipus) === 'valodi' ? 'kepernyokep' : 'illusztracio',
+        caption: x.felirat ?? l.felirat ?? '',
+        alt: x.alt ?? l.alt ?? l.felirat ?? '',
+        source: f ? { title: f.cim, url: f.url, ...(f.datum ? { date: f.datum } : {}), ...(f.oldal != null ? { page: f.oldal } : {}) } : null,
+        part: 1,
+        sourceShort: l.forras_rovid ?? null,
+        // a másolt képek jelölései a forrás-útmutató méretére szólnak – ott nem adjuk tovább (a kép maga jelölt)
+        markers: (k.jelolesek_kimeneten ?? []).map((j) => ({ n: j.n, style: j.stilus, label: j.cimke, box: j.doboz })),
+      });
+    }
+    const manifest = { kind, generatedAt: new Date().toISOString(), sourceVersion: index.verzio ?? null, items, missing };
+    const irt = irJson(join(kiMappa, 'kepek.json'), manifest);
+    console.log(`${kind}: ${items.length} kép, ${masolt} fájl másolva, kepek.json ${irt ? 'frissítve' : 'változatlan'}${missing.length ? `; kép nélkül: ${missing.join(', ')}` : ''}`);
+  }
+} else console.log(`MÉG NINCS KÉP: ${vIdx} (a változás-útmutatók kép nélkül)`);
+
 if (felulirt) console.log(`${felulirt} régi kép a ${regi} mappába került.`);
 process.exit(hibas ? 1 : 0);

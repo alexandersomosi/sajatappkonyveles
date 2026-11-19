@@ -154,7 +154,7 @@ export async function jobCheckinOpen(deps: Deps): Promise<number> {
 // ---------------------------------------------------------------------------------------------------------------------
 // staff queue "Havi változások"
 // ---------------------------------------------------------------------------------------------------------------------
-export async function teamCheckinItems(deps: Deps, db: DbOrTx, scope: { accountantId: string | null; role: string }, status?: CheckinItemStatus): Promise<TeamCheckinItem[]> {
+export async function teamCheckinItems(deps: Deps, db: DbOrTx, scope: { accountantId: string | null; role: string }, status?: CheckinItemStatus | 'mind'): Promise<TeamCheckinItem[]> {
   const rows = await db
     .select({ i: checkinItems, c: clients, ch: monthlyCheckins })
     .from(checkinItems)
@@ -162,7 +162,8 @@ export async function teamCheckinItems(deps: Deps, db: DbOrTx, scope: { accounta
     .innerJoin(monthlyCheckins, eq(monthlyCheckins.id, checkinItems.checkinId))
     .where(
       and(
-        status ? eq(checkinItems.status, status) : inArray(checkinItems.status, ['uj', 'dijra_var', 'csapatnal', 'ugyfel_intezi']),
+        // 'mind' (panel /havi-valtozasok filters locally, integrator k6): every status; none = the open ones
+        status === 'mind' ? sql`true` : status ? eq(checkinItems.status, status) : inArray(checkinItems.status, ['uj', 'dijra_var', 'csapatnal', 'ugyfel_intezi']),
         scope.role === 'accountant' ? eq(clients.accountantId, scope.accountantId ?? '00000000-0000-0000-0000-000000000000') : sql`true`,
         scope.role === 'csapat' ? sql`${checkinItems.assistId} is not null` : sql`true`,
       ),

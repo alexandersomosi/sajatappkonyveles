@@ -1,0 +1,108 @@
+{
+ "kind": "valtozas_szuneteltetes",
+ "generatedAt": "2026-11-19T21:22:51.380Z",
+ "sourceVersion": "2026-11-19.ot",
+ "items": [
+  {
+   "stepKey": "belepes",
+   "file": "m_01_belepes.png",
+   "file2x": "m_01_belepes@2x.png",
+   "width": 1080,
+   "height": 1238,
+   "kind": "kepernyokep",
+   "caption": "Belépés: DÁP vagy Ügyfélkapu+.",
+   "alt": "A NAV belépő oldala: kék DÁP mobilalkalmazás gomb, alatta Ügyfélkapu+.",
+   "source": {
+    "title": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+    "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: a Vállalkozói Ügysegéd belépő oldala (kau.gov.hu), 2026.11.18. Belépés nélkül készült.",
+   "markers": []
+  },
+  {
+   "stepKey": "ugyseged_fooldal",
+   "file": "02_ugyseged_fooldal.png",
+   "file2x": "02_ugyseged_fooldal@2x.png",
+   "width": 1080,
+   "height": 742,
+   "kind": "kepernyokep",
+   "caption": "Az Ügysegéd kezdőlapja: kattints a középső fülre.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim. A személyes adatok elmosva. Kiemelve – Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+     "box": [
+      0.3274,
+      0.085,
+      0.564,
+      0.1881
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "szunetel_inditas",
+   "file": "11_szunetel_inditas.png",
+   "file2x": "11_szunetel_inditas@2x.png",
+   "width": 1080,
+   "height": 998,
+   "kind": "kepernyokep",
+   "caption": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": []
+  },
+  {
+   "stepKey": "valtozas_megtekintes",
+   "file": "12_valtozas_megtekintes.png",
+   "file2x": "12_valtozas_megtekintes@2x.png",
+   "width": 1080,
+   "height": 790,
+   "kind": "kepernyokep",
+   "caption": "A beküldött bejelentésed: töltsd le a NAV értesítését.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim – Megtekintés. A személyes adatok elmosva. Kiemelve – Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+     "box": [
+      0.0394,
+      0.7563,
+      0.2651,
+      0.8347
+     ]
+    }
+   ]
+  }
+ ],
+ "missing": [
+  "szunetel_datum",
+  "szunetel_ellenorzes",
+  "app_feltoltes"
+ ]
+}

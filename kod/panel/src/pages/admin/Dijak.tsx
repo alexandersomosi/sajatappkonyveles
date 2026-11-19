@@ -95,7 +95,8 @@ export default function Dijak() {
                         <DemoCimke>{FEE_TEXTS.demoChip}</DemoCimke>
                       )}
                     </td>
-                    <td className="utolso jobb nt">
+                    {/* integrator k6: the three actions may wrap (at 1440 px the nowrap cell pushed „Előzmények” out of the card) */}
+                    <td className="utolso jobb" style={{ minWidth: 220 }}>
                       <button className="gomb-m kicsi csak-szoveg" onClick={() => setModosit(f)}>
                         Módosítom
                       </button>{' '}

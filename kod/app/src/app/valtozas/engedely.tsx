@@ -71,7 +71,7 @@ export default function ValtozasEngedely() {
               </Lap>
             </Fragment>
           ))}
-          <View style={{ marginHorizontal: -16, paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 8, borderTopColor: szin.sav }}>
+          <View style={{ marginHorizontal: -16, paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 10, borderTopColor: szin.sav }}>
             <Pipa be={nyil} valt={setNyil}>
               {fillPlaceholders(C.declaration, { valtozasNapja: huLongDate(nap) || 'a megadott nap' })}
             </Pipa>

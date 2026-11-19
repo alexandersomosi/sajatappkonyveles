@@ -77,7 +77,7 @@ export default function Alkalmazott() {
       </View>
       <Kapszulak oszlop elemek={EMPLOYER_ANSWERS.map((k) => ({ kulcs: k, cim: EMPLOYER_ANSWER_LABELS[k] }))} ertek={v} valt={setV} />
       {v && v !== 'nincs' ? (
-        <View style={{ marginTop: 16, marginHorizontal: -16, paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 8, borderTopColor: szin.sav }}>
+        <View style={{ marginTop: 16, marginHorizontal: -16, paddingHorizontal: 16, paddingTop: 12, borderTopWidth: 10, borderTopColor: szin.sav }}>
           <T m={16} s={600} lh={1.45}>
             {fillPlaceholders(EMPLOYER_TEXTS.yes, { firstName: fn })}
           </T>

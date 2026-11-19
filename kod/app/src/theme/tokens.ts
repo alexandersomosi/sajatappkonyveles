@@ -37,8 +37,8 @@ export const szin = {
   kesz: '#7A62D9', // a pecsét ibolyája (összekötő vonal a kész lépések között, 40% átlátszósággal)
   szegmensFelirat: '#D3DAFB',
   levelPapir: '#FFFFFF',
-  // SPEC §28.K.10 (C + elválasztó): a szakaszok közti 8 pt-os sáv; a C-ben a képernyő alapja fehér.
-  sav: '#EEF1F8',
+  // SPEC §28.K.10 (C + elválasztó): a szakaszok közti sáv (tulaj végleges, 11-19 20:40: 10 pt #D3DAFC); a C-ben a képernyő alapja fehér.
+  sav: '#D3DAFC',
 } as const;
 
 export const forma = {

@@ -1,0 +1,346 @@
+{
+ "kind": "valtozas_szekhely",
+ "generatedAt": "2026-11-19T21:22:51.328Z",
+ "sourceVersion": "2026-11-19.ot",
+ "items": [
+  {
+   "stepKey": "belepes",
+   "file": "m_01_belepes.png",
+   "file2x": "m_01_belepes@2x.png",
+   "width": 1080,
+   "height": 1238,
+   "kind": "kepernyokep",
+   "caption": "Belépés: DÁP vagy Ügyfélkapu+.",
+   "alt": "A NAV belépő oldala: kék DÁP mobilalkalmazás gomb, alatta Ügyfélkapu+.",
+   "source": {
+    "title": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+    "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: a Vállalkozói Ügysegéd belépő oldala (kau.gov.hu), 2026.11.18. Belépés nélkül készült.",
+   "markers": []
+  },
+  {
+   "stepKey": "ugyseged_fooldal",
+   "file": "02_ugyseged_fooldal.png",
+   "file2x": "02_ugyseged_fooldal@2x.png",
+   "width": 1080,
+   "height": 742,
+   "kind": "kepernyokep",
+   "caption": "Az Ügysegéd kezdőlapja: kattints a középső fülre.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim. A személyes adatok elmosva. Kiemelve – Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
+     "box": [
+      0.3274,
+      0.085,
+      0.564,
+      0.1881
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_inditas",
+   "file": "03_valtozas_inditas.png",
+   "file2x": "03_valtozas_inditas@2x.png",
+   "width": 1080,
+   "height": 962,
+   "kind": "kepernyokep",
+   "caption": "Fent a mostani adataid (elmosva), lent az adatváltozás bejelentése.",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess le, és kattints a „Bejelentés kitöltése” gombra.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Görgess le, és kattints a „Bejelentés kitöltése” gombra.",
+     "box": [
+      0.0638,
+      0.7941,
+      0.2923,
+      0.8584
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_szemelyi",
+   "file": "04_valtozas_szemelyi.png",
+   "file2x": "04_valtozas_szemelyi@2x.png",
+   "width": 1080,
+   "height": 876,
+   "kind": "kepernyokep",
+   "caption": "A NAV kitölti, neked csak a születési országot kell kiválasztanod.",
+   "alt": "Képernyőkép: 1. Személyi adatok. A személyes adatok elmosva. Kiemelve – Születési ország: válaszd ki, hol születtél. Kötelező., Kattints a „Tovább” gombra.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Születési ország: válaszd ki, hol születtél. Kötelező.",
+     "box": [
+      0.0394,
+      0.5272,
+      0.6672,
+      0.5811
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Kattints a „Tovább” gombra.",
+     "box": [
+      0.724,
+      0.718,
+      0.9497,
+      0.7886
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_cimadatok",
+   "file": "05_valtozas_cimadatok.png",
+   "file2x": "05_valtozas_cimadatok@2x.png",
+   "width": 1080,
+   "height": 911,
+   "kind": "kepernyokep",
+   "caption": "Az aktuális székhelyed (elmosva), alatta az új székhely és az új telephely gombja.",
+   "alt": "Képernyőkép: 2. Vállalkozói címadatok. A személyes adatok elmosva. Kiemelve – Ha költözöl: „Új székhely”., Ha új telephelyed lesz: „Új telephely hozzáadása”., Ha a címeid nem változnak: „Tovább”.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Ha költözöl: „Új székhely”.",
+     "box": [
+      0.0652,
+      0.4122,
+      0.2909,
+      0.4786
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Ha új telephelyed lesz: „Új telephely hozzáadása”.",
+     "box": [
+      0.0652,
+      0.6007,
+      0.2909,
+      0.6686
+     ]
+    },
+    {
+     "n": 3,
+     "style": "tinta",
+     "label": "Ha a címeid nem változnak: „Tovább”.",
+     "box": [
+      0.7104,
+      0.7005,
+      0.9362,
+      0.7684
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_uj_szekhely",
+   "file": "06_valtozas_uj_szekhely.png",
+   "file2x": "06_valtozas_uj_szekhely@2x.png",
+   "width": 1080,
+   "height": 925,
+   "kind": "kepernyokep",
+   "caption": "Mezőnként írd be az új címet; a dátum a költözés napja.",
+   "alt": "Képernyőkép: Az új székhely címe. A személyes adatok elmosva. Kiemelve – Írd be az új címet mezőnként: ország, irányítószám, település, közterület neve és jellege, házszám., Változás napja: ettől a naptól érvényes az új cím.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Írd be az új címet mezőnként: ország, irányítószám, település, közterület neve és jellege, házszám.",
+     "box": [
+      0.0605,
+      0.4022,
+      0.902,
+      0.7185
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "Változás napja: ettől a naptól érvényes az új cím.",
+     "box": [
+      0.0605,
+      0.7118,
+      0.2779,
+      0.7838
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_szekhely_mentes",
+   "file": "07_valtozas_szekhely_mentes.png",
+   "file2x": "07_valtozas_szekhely_mentes@2x.png",
+   "width": 1080,
+   "height": 924,
+   "kind": "kepernyokep",
+   "caption": "Mentsd el az új címet, utána lépj tovább.",
+   "alt": "Képernyőkép: Mentés. A személyes adatok elmosva. Kiemelve – Kattints az „Új székhely adatainak mentése” gombra., Utána: „Tovább”.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Kattints az „Új székhely adatainak mentése” gombra.",
+     "box": [
+      0.0652,
+      0.4623,
+      0.3072,
+      0.5277
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Utána: „Tovább”.",
+     "box": [
+      0.7104,
+      0.7498,
+      0.9362,
+      0.8168
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_tevekenysegek",
+   "file": "09_valtozas_tevekenysegek.png",
+   "file2x": "09_valtozas_tevekenysegek@2x.png",
+   "width": 1080,
+   "height": 940,
+   "kind": "kepernyokep",
+   "caption": "A mostani főtevékenységed (elmosva), alatta az új tevékenység gombjai.",
+   "alt": "Képernyőkép: 3. Tevékenységek. A személyes adatok elmosva. Kiemelve – Ha más lesz a fő munkád: „Új főtevékenység”., Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”., Ha a tevékenységeid nem változnak: „Tovább”.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Ha más lesz a fő munkád: „Új főtevékenység”.",
+     "box": [
+      0.0652,
+      0.4666,
+      0.2909,
+      0.5325
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”.",
+     "box": [
+      0.0652,
+      0.6165,
+      0.2909,
+      0.6823
+     ]
+    },
+    {
+     "n": 3,
+     "style": "tinta",
+     "label": "Ha a tevékenységeid nem változnak: „Tovább”.",
+     "box": [
+      0.7104,
+      0.7117,
+      0.9362,
+      0.7755
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "valtozas_megtekintes",
+   "file": "12_valtozas_megtekintes.png",
+   "file2x": "12_valtozas_megtekintes@2x.png",
+   "width": 1080,
+   "height": 790,
+   "kind": "kepernyokep",
+   "caption": "A beküldött bejelentésed: töltsd le a NAV értesítését.",
+   "alt": "Képernyőkép: Bejelentéseim, kérelmeim – Megtekintés. A személyes adatok elmosva. Kiemelve – Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+   "source": {
+    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "url": null,
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
+     "box": [
+      0.0394,
+      0.7563,
+      0.2651,
+      0.8347
+     ]
+    }
+   ]
+  }
+ ],
+ "missing": [
+  "valtozas_ellenorzes",
+  "app_feltoltes"
+ ]
+}

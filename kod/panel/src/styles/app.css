@@ -676,10 +676,10 @@ button.nav-elem.ertesites-gomb { width: 100%; text-align: left; font: inherit; c
    band (owner 11-19 20:20 "csak valami elválasztó köztük"), no shadows, no stacked sheets, no darkening layers.
    Used by every §28 / §28.K card (.lap.k28 > .szak). The old values are in _regi/styles_elotte_k6_1119/.
    ===================================================================================================================== */
-:root { --elvalaszto-sav: #EEF1F8; }
+:root { --elvalaszto-sav: #D3DAFC; } /* tulaj végleges, 11-19 20:40: 10 px #D3DAFC (C_VEGLEGES); előtte 8 px #EEF1F8 */
 .lap.k28 { overflow: hidden; }
 .szak { padding: 16px 22px; }
-.szak + .szak { border-top: 8px solid var(--elvalaszto-sav); }
+.szak + .szak { border-top: 10px solid var(--elvalaszto-sav); }
 .szak-fej { display: flex; align-items: center; gap: 10px; min-height: 32px; margin-bottom: 6px; }
 .szak-fej img.i3 { width: 28px; height: 28px; }
 .szak-fej h2 { flex: 1; min-width: 0; font-weight: 650; font-size: 18px; line-height: 1.3; letter-spacing: -.012em; color: var(--tinta); }

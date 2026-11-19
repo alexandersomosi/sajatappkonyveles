@@ -259,7 +259,7 @@ function TetelLap({ item, x, set, fn, i, n, mellek }: { item: CheckinItem; x: Va
       ) : null}
       {item === 'egyeb' ? <Mezo felirat={CHECKIN_TEXTS.egyebPlaceholder} multiline value={x.text} onChangeText={(t) => set({ text: t.slice(0, 500) })} /> : null}
       {eredmeny ? (
-        <View style={{ marginHorizontal: -16, paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 8, borderTopColor: szin.sav }}>
+        <View style={{ marginHorizontal: -16, paddingHorizontal: 16, paddingVertical: 12, borderTopWidth: 10, borderTopColor: szin.sav }}>
           <T m={16} s={600} lh={1.45}>
             {eredmeny}
           </T>

@@ -111,7 +111,7 @@ export default function Helyettunk() {
           <Lenyilo style={{ width: 210 }} value={fajta} aria-label="Mit kért" onChange={(e) => allit('fajta', e.target.value || null)}>
             <option value="">Minden kérés</option>
             {/* SPEC §28.5.5: one chip for the six change kinds */}
-            <option value="valtozas">{CHANGE_HANDBOOK.filterChip} (mind)</option>
+            <option value="valtozas">{CHANGE_HANDBOOK.filterChip}</option>
             {ASSIST_KINDS.map((k) => (
               <option key={k} value={k}>
                 {ASSIST_KIND_LABELS[k]}

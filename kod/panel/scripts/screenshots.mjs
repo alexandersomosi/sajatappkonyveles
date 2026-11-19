@@ -74,7 +74,10 @@ const wait = (ms) => async () => {
   await new Promise((r) => setTimeout(r, ms));
 };
 const selectAllType = (sel, text) => async (page) => {
-  await page.click(sel, { clickCount: 3 });
+  await page.click(sel);
+  await page.keyboard.down('Control');
+  await page.keyboard.press('KeyA');
+  await page.keyboard.up('Control');
   await page.keyboard.press('Backspace');
   await page.type(sel, text);
   await new Promise((r) => setTimeout(r, 250));
@@ -214,7 +217,7 @@ const SHOTS = [
   ['k6_14_balint_ertesitesnaplo', A, '/ugyfelek/c-toth-balint/naplo?mit=ertesitesek', [], true],
   ['k6_15_greta_kata_attekintes', A, '/ugyfelek/c-lakatos-greta/attekintes', [], true],
   ['k6_16_greta_kata_szamlak', A, '/ugyfelek/c-lakatos-greta/nav'],
-  ['k6_17_ilona_zarolva_ado', A, '/ugyfelek/c-fazekas-ilona/ado', [], true],
+  ['k6_17_ilona_zarolva_keresek', A, '/ugyfelek/c-fazekas-ilona/keresek', [], true],
   ['k6_18_ugyfelek_zarolva', A, '/ugyfelek?szuro=zarolva'],
   ['k6_19_csilla_szunetel', A, '/ugyfelek/c-molnar-csilla/attekintes', [], true],
   ['k6_20_tamas_efo_adoszam', A, '/ugyfelek/c-barany-tamas/attekintes', [], true],

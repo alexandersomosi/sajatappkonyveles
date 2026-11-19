@@ -1,13 +1,18 @@
 // /acc, /admin and /team routes of SPEC §28 / §28.K (staff side). The accountant sees his own clients only (others 404);
 // admin sees all; the csapat role never sees allowances or tax numbers (404 – §28.3.2).
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNotNull, lt, notInArray } from 'drizzle-orm';
 import type { Hono } from 'hono';
 import { z } from 'zod';
 import type { AccClientDetailK28 } from '../_shared/api.js';
 import { ALLOWANCE_KINDS, ALLOWANCE_REJECT_REASONS, ANNUAL_CHECK_ITEMS, ANYAK_JOGCIMEK, CHECKIN_ITEM_STATUSES, EMPLOYER_DECISIONS, FEE_KINDS, RESPONSE_TIME_FORBIDDEN_PATTERNS, type AllowanceKind } from '../_shared/enums.js';
 import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
 import type { Deps } from '../deps.js';
-import { accountants, assistRequests, checkinItems, clients, clientTaxProfiles } from '../db/schema.js';
+import { accountants, assistRequests, checkinItems, clients, clientTaxProfiles, feeCharges, navInvoices, notificationPrefs, notifications } from '../db/schema.js';
+import { addDays } from '../lib/dates.js';
+import { notificationSettingsOf } from '../notify/notify.js';
+import { checkRegistrationAdoszam } from '../services/registration.js';
+import { clientName } from '../services/people.js';
+import { FEE_CHARGE_STATUSES } from '../_shared/enums.js';
 import { auditC } from '../audit.js';
 import { collectFiles } from '../files/upload.js';
 import { auth, param, parseQuery, readJson, type C, type Env } from '../http/core.js';
@@ -133,14 +138,79 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
   // ---- monthly check-in queue (§28.K.2)
   r.get('/checkin-items', async (c) => {
     const actor = await staffActor(deps.db, auth(c).userId, auth(c).role);
-    const q = parseQuery(c, z.object({ status: z.enum(CHECKIN_ITEM_STATUSES).optional() }));
-    return c.json({ items: await teamCheckinItems(deps, deps.db, { accountantId: actor.accountantId, role: actor.role }, q.status) });
+    // panel: 'nyitott' (= the default open set) and 'mind' (every status, the panel filters locally) – integrator k6
+    const q = parseQuery(c, z.object({ status: z.enum([...CHECKIN_ITEM_STATUSES, 'nyitott', 'mind']).optional() }));
+    return c.json({ items: await teamCheckinItems(deps, deps.db, { accountantId: actor.accountantId, role: actor.role }, q.status === 'nyitott' ? undefined : q.status) });
   });
   r.post('/checkin-items/:id', async (c) => {
     const actor = await staffActor(deps.db, auth(c).userId, auth(c).role);
     const b = await readJson(c, z.strictObject({ status: z.enum(['nem_kell', 'kesz', 'csapatnal']), clientText: z.string().trim().max(300).optional(), staffNote: z.string().trim().max(1000).optional(), apply: z.array(z.enum(['adoprofil_statusz', 'szunetel', 'kedvezmeny_ujranezes', 'alkalmazott_dontes'])).max(4).optional() }));
     await decideCheckinItem(deps, deps.db, param(c, 'id'), b, actor);
     return c.json({ items: await teamCheckinItems(deps, deps.db, { accountantId: actor.accountantId, role: actor.role }) });
+  });
+
+  // ---- the client's notification log (panel contract addition 1, README §28 builder notes; integrator k6). Own client / admin;
+  //      csapat 404 (staffClient). No push token, no e-mail address; reading it is not audited (the client's own data).
+  r.get('/clients/:id/notifications', async (c) => {
+    const { cl } = await staffClient(deps, c);
+    const q = parseQuery(c, z.object({ cursor: z.string().datetime().optional() }));
+    const LIMIT = 50;
+    const rows = await deps.db
+      .select()
+      .from(notifications)
+      .where(and(eq(notifications.userId, cl.userId), q.cursor ? lt(notifications.createdAt, new Date(q.cursor)) : undefined))
+      .orderBy(desc(notifications.createdAt))
+      .limit(LIMIT + 1);
+    const prefs = await deps.db.select({ kind: notificationPrefs.kind, push: notificationPrefs.push }).from(notificationPrefs).where(eq(notificationPrefs.userId, cl.userId));
+    const pushOff = new Set(prefs.filter((p) => !p.push).map((p) => p.kind as string));
+    const now = deps.now().getTime();
+    const items = rows.slice(0, LIMIT).map((n) => {
+      const d = (n.data ?? {}) as { pushNotBefore?: string; pushTickets?: unknown[]; variant?: string; pushTitle?: string | null };
+      const notBefore = typeof d.pushNotBefore === 'string' ? d.pushNotBefore : null;
+      let skipped: 'csendes_ido' | 'napi_limit' | 'kikapcsolva' | 'nincs_eszkoz' | null = null;
+      if (!n.wantPush) skipped = pushOff.has(n.kind) || n.kind !== 'invoice_new' ? 'kikapcsolva' : 'napi_limit';
+      else if (!n.pushSentAt && notBefore && Date.parse(notBefore) > now) skipped = 'csendes_ido';
+      else if (n.pushSentAt && !(Array.isArray(d.pushTickets) && d.pushTickets.length)) skipped = 'nincs_eszkoz';
+      return {
+        id: n.id,
+        kind: n.kind,
+        variant: typeof d.variant === 'string' ? d.variant : null,
+        title: n.title,
+        body: n.body,
+        link: n.link,
+        createdAt: n.createdAt.toISOString(),
+        readAt: n.readAt?.toISOString() ?? null,
+        push: { wanted: n.wantPush, sentAt: n.pushSentAt?.toISOString() ?? null, notBefore, skipped, amountsShown: n.wantPush && (n.kind === 'invoice_new' || n.kind === 'kata_business_invoice') && d.variant !== 'rejtett' },
+        email: n.wantEmail ? { sentAt: n.emailSentAt?.toISOString() ?? null } : null,
+      };
+    });
+    const since = addDays(todayBudapest(deps.now()), -30);
+    const skippedInvoices = (
+      await deps.db
+        .select({ id: navInvoices.id, invoiceNumber: navInvoices.invoiceNumber, issueDate: navInvoices.issueDate, grossHuf: navInvoices.grossHuf, state: navInvoices.notifyState })
+        .from(navInvoices)
+        .where(and(eq(navInvoices.clientId, cl.id), isNotNull(navInvoices.notifyState), notInArray(navInvoices.notifyState, ['kuldve', 'osszevonva']), gte(navInvoices.issueDate, since)))
+        .orderBy(desc(navInvoices.issueDate))
+        .limit(100)
+    ).map((r) => ({ navInvoiceId: r.id, invoiceNumber: r.invoiceNumber, issueDate: r.issueDate, grossAmountHuf: Number(r.grossHuf), state: r.state! }));
+    return c.json({
+      items,
+      nextCursor: rows.length > LIMIT ? items[items.length - 1]!.createdAt : null,
+      settings: await notificationSettingsOf(deps.db, cl.userId),
+      skippedInvoices,
+    });
+  });
+
+  // ---- adószám filled by the accountant from ONYA (§28.K.9 "Most nem tudom"; panel 'Adószám hiányzik'; integrator k6)
+  r.post('/clients/:id/adoszam', async (c) => {
+    const { actor, cl } = await staffClient(deps, c);
+    const b = await readJson(c, z.strictObject({ adoszam: z.string().trim().max(20) }));
+    const ck = checkRegistrationAdoszam(b.adoszam);
+    if (!ck.ok) throw E.validation({ adoszam: 'Ez az adószám nem stimmel (formátum: 12345678-1-23).' });
+    if (cl.adoszam && !cl.adoszamPending) throw E.conflict('Ennek az ügyfélnek már van adószáma.');
+    await deps.db.update(clients).set({ adoszam: b.adoszam, adoszamPending: false, updatedAt: deps.now() }).where(eq(clients.id, cl.id));
+    await auditC(c, deps.db, 'client.adoszam_set', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { by: actor.role, afaMentes: ck.afaMentes } });
+    return c.json({ adoszam: b.adoszam, afaMentes: ck.afaMentes, adoszamPending: false });
   });
 
   // ---- annual closing (§28.K.3)
@@ -218,6 +288,20 @@ export function registerAdminK28Routes(r: Hono<Env>, deps: Deps): void {
     if (!(FEE_KINDS as readonly string[]).includes(kind)) throw E.notFound();
     await confirmFeeSetting(deps, deps.db, kind as (typeof FEE_KINDS)[number], auth(c).userId);
     return c.json({ items: await feeSettingViews(deps, deps.db) });
+  });
+  // panel contract addition 2 (integrator k6): the one-off charges, for the refund / waive work on /admin/dijak
+  r.get('/fee-charges', async (c) => {
+    const q = parseQuery(c, z.object({ status: z.enum(FEE_CHARGE_STATUSES).optional() }));
+    const rows = await deps.db
+      .select({ f: feeCharges, cl: { id: clients.id, firstName: clients.firstName, lastName: clients.lastName } })
+      .from(feeCharges)
+      .innerJoin(clients, eq(clients.id, feeCharges.clientId))
+      .where(q.status ? eq(feeCharges.status, q.status) : undefined)
+      .orderBy(desc(feeCharges.createdAt))
+      .limit(500);
+    const items = [];
+    for (const r0 of rows) items.push({ ...(await feeChargeView(deps, deps.db, r0.f)), client: { id: r0.cl.id, name: clientName(r0.cl) } });
+    return c.json({ items });
   });
   r.post('/fee-charges/:id/waive', async (c) => {
     const b = await readJson(c, z.strictObject({ reason: z.string().trim().min(3, { error: 'Írd be az indokot.' }).max(500) }));

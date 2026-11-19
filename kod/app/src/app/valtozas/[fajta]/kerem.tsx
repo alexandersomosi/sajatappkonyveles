@@ -116,7 +116,7 @@ export default function ValtozasKerem() {
             ))}
           </Lap>
           {!p.assist ? (
-            <View style={{ marginHorizontal: -16, borderTopWidth: 8, borderTopColor: szin.sav, marginTop: 4 }}>
+            <View style={{ marginHorizontal: -16, borderTopWidth: 10, borderTopColor: szin.sav, marginTop: 4 }}>
               <Kapcsolo be={hivjatok || hivasKell} tilt={hivasKell} valt={setHivjatok} cim={CHANGE_TEXTS.callbackToggle} al={hivasKell ? CHANGE_TEXTS.callbackForced : 'Kollégánk 24–48 órán belül hív, és együtt átnézitek.'} />
             </View>
           ) : null}

@@ -1,6 +1,7 @@
 {
   "_note": "EGYETLEN HELY a termék nevéhez. A 'name' átírása mindenhol átírja (app, panel, e-mailek, PDF-ek, jogi szövegek). A csomag- és sémaazonosítók szándékosan NEM a névből jönnek (áruházi azonosító nem változhat).",
-  "name": "Kézjegy",
+  "name": "Adózz",
+  "webName": "Adózz.hu",
   "tagline": "Saját könyvelő, aki név szerint ismer.",
   "subline": "Egyéni vállalkozóknak, havi 19 999 Ft.",
   "priceHufMonthlyGross": 19999,

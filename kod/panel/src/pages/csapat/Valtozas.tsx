@@ -109,9 +109,9 @@ export function ValtozasUtomunka({ d, szerep, frissit }: { d: TeamAssistDetailP;
   const pipalhat = szerep !== 'csapat';
   return (
     <div className="lap">
-      <div className="lap-fej">
+      <div className="lap-fej" style={{ flexWrap: 'nowrap', alignItems: 'flex-start' }}>
         <I3 n="befizetve_jel" s={28} />
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
           <h2>Utómunka nálunk</h2>
           <div className="halvany kicsi">A NAV elfogadta. Ezeket a könyvelő vezeti át – magától semmi nem változik.</div>
         </div>

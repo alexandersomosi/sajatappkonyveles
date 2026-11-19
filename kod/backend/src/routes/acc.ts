@@ -92,7 +92,11 @@ export function csvCell(s: string | number | null | undefined): string {
 
 export function accRoutes(deps: Deps) {
   const r = new Hono<Env>();
-  r.use('*', requireAuth(deps, { roles: ['accountant', 'admin'] }));
+  // SPEC §28.K.2 + panel note 3 (integrator k6): the service team (csapat) may READ the check-in queue – teamCheckinItems shows it only
+  // the items with an assist; every other /acc route stays accountant + admin.
+  const accAuth = requireAuth(deps, { roles: ['accountant', 'admin'] });
+  const queueAuth = requireAuth(deps, { roles: ['accountant', 'admin', 'csapat'] });
+  r.use('*', (c, next) => (c.req.method === 'GET' && /\/acc\/checkin-items\/?$/.test(c.req.path) ? queueAuth : accAuth)(c, next));
   // SPEC §28 / §28.K (reserve, earnings, allowances, check-in queue, annual closing, EFO, regime) + the service lock
   registerAccK28Routes(r, deps);
 

@@ -32,7 +32,7 @@ function KeresetTartalom() {
           ikon="kivonat"
           cim={EARNINGS_TEXTS.screenTitle}
           nagy={v ? `kb. ${szam(v.ytd.netHuf)} Ft` : null}
-          mondat={v && utolso ? fillPlaceholders(EARNINGS_TEXTS.screenSub, { year: String(v.year), honap: utolso.label }) : null}
+          mondat={v && utolso ? fillPlaceholders(EARNINGS_TEXTS.screenSub, { year: String(v.year), honap: utolso.label.toLocaleLowerCase('hu-HU') }) : null}
         />
       }
     >

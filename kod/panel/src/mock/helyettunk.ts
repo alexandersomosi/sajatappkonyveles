@@ -502,7 +502,7 @@ export function installHelyettunk(x: HelyettunkCtx): void {
         return m(c?.dueAt ?? new Date(Date.parse(a.createdAt) + CALLBACK_RULES.dueHours * ORA).toISOString(), 'Visszahívás');
       }
       case 'egyeztetve':
-        return m(munkanap(a.agreedAt ?? a.statusChangedAt, 1), 'UJEGYKE beküldése');
+        return m(munkanap(a.agreedAt ?? a.statusChangedAt, 1), valtozasFajta(a.kind) ? 'Adatok átnézése' : 'UJEGYKE beküldése');
       case 'meghatalmazas_bekuldve':
         return m(lejar(a), 'Ügyfél jóváhagyása');
       case 'meghatalmazas_lejart':

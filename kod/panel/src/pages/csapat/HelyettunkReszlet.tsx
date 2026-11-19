@@ -56,7 +56,7 @@ import {
 import { ValtozasAdatok, ValtozasDij, ValtozasKezikonyv, ValtozasUtomunka, valtozasRovid } from './Valtozas';
 import { CHANGE_HANDBOOK, LOCK_TEXTS } from '../../_shared/bekotes';
 import { adoszamEllenor, hanyNapja, nyilvantartasiSzamOk } from '../../lib/csapat';
-import { datum, idopont } from '../../lib/format';
+import { datum, ft, idopont } from '../../lib/format';
 import { today } from '../../lib/today';
 import { HataridoCimke, useSzerep } from './Helyettunk';
 import { UgyfelKartya } from './UgyfelKartya';
@@ -271,7 +271,7 @@ function MostSav({ d, sajatKonyvelo, konyveloUtonev, most }: { d: TeamAssistDeta
     const rovid = valtozasRovid(d.change);
     Object.assign(szoveg, {
       visszahivas_kerve: 'Hívd fel az ügyfelet: előbb beszélni szeretne. Pipáld ki a hívás listáját.',
-      dijra_var: `Díjra vár: az ügyfél még nem fizette ki ${d.feeCharge ? `a(z) ${d.feeCharge.amountHuf.toLocaleString('hu-HU').replace(/\s/g, ' ')} Ft-ot` : 'a díjat'}. Előre fizetendő – addig ne kezdj bele.`,
+      dijra_var: `Díjra vár: az ügyfél még nem fizette ki a díjat${d.feeCharge ? ` (${ft(d.feeCharge.amountHuf)})` : ''}. Előre fizetendő – addig ne kezdj bele.`,
       egyeztetve: sajatKonyvelo
         ? `Nézd át az új adatokat (${rovid ?? 'még nincsenek meg'}), pipáld ki a listát, és kérj engedélyt az ügyféltől.`
         : `${konyveloUtonev} átnézi az új adatokat, és engedélyt kér az ügyféltől.`,

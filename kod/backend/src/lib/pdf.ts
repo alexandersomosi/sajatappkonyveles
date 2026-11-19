@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from 'pdf-lib';
+import brand from '../_shared/brand.json' with { type: 'json' };
 
 // Colours = the app palette (dizajn/PALETTA.md, 11-18 17:50): body text = --tinta #10152B, secondary = --halvany #505873.
 const INK = rgb(0x10 / 255, 0x15 / 255, 0x2b / 255);
@@ -39,7 +40,7 @@ async function begin(fontDir: string, title: string): Promise<Typesetter> {
   const reg = await doc.embedFont(f.regular, { subset: true });
   const bold = await doc.embedFont(f.semibold, { subset: true });
   doc.setTitle(title);
-  doc.setProducer('Kezjegy');
+  doc.setProducer(brand.name);
   doc.setCreationDate(new Date(0));
   doc.setModificationDate(new Date(0));
   const page = doc.addPage(A4);

@@ -362,3 +362,24 @@ api/app/konyvelo health 200, mp4 Range 206, `/client/assist` token nélkül 401;
 Helyi próba: `PORT=8864 node kod/app/scripts/_helyi_j2.mjs` (+ `allapot=inditas_kerdoiv | segitett_nemvette`, staff TOTP csak itt
 kikapcsolva) és `BASE=http://127.0.0.1:8864 node kod/app/scripts/_kepek_j2.mjs` → `kod/_qa/j2_*.png`, `j2_eredmeny.json`;
 panel: `VITE_API_PROXY=http://127.0.0.1:8864 npx vite --port 5191` + `scripts/_panel_j2.mjs` → `kod/_qa/j2_panel_*.png`.
+
+## k6 (SPEC §28 + §28.K, átnevezés „Adózz”) – integrátor 2026-11-19 22:45: KÉSZ HELYBEN, MÉG NEM ÉL
+Az élesítést az automatikus engedélyszűrő megállította a `feltolt.sh`-nál – a szerveren eddig csak ez történt: Gardoko 200,
+pillanatkép `fiokok_elotte_k6integ_20261119_224123.txt`, titkosított mentés `/srv/kezjegy/_regi/pg_dump_elotte_k6integ_20261119_224123.dump.gpg`
+(pg_restore -l: 399 sor), a közös Caddy két fájljának másolata `/srv/appok/_regi/*_elotte_kezjegy_k6integ_20261119_224123` (nem változtak).
+A buildek készen állnak (`app/dist` – benne az „Adózz” név és az új ikon –, `panel/dist`, `backend` tesztek 300/300). A folytatás, ugyanígy:
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://45-94-65-74.sslip.io/api/v1/health                 # Gardoko: 200
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh                                                   # ÚJ: csak darabszámok (alex@, tulaj@, david@, bence.kovacs@)
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'                         # migráció 0014–0016 (csak bővít), worker: data.ot1119 + data.k28
+ssh appok-1 'bash /srv/kezjegy/deploy/seed-ot1119.sh' && ssh appok-1 'bash /srv/kezjegy/deploy/seed-k28.sh'   # új kitalált ügyfelek; 2. futás: „már megvan”
+node kod/app/scripts/utmutato-kepek.mjs && python utmutato_kepek/_eszkoz/media_kicsinyit.py && node kod/deploy/videok-json.mjs
+bash kod/deploy/feltolt.sh --media                                                                 # ÚJ: utmutato/valtozas_<fajta>/ (6 mappa, elmosott NAV-képek)
+ssh appok-1 'bash -s ment utana_k6integ_<TS>' < kod/deploy/tulaj-fiokok-allapot.sh
+ssh appok-1 'bash -s hasonlit elotte_k6integ_20261119_224123 utana_k6integ_<TS>' < kod/deploy/tulaj-fiokok-allapot.sh
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh                                                   # david@: 20 irat, 33 számla, 34 bevétel, 9 üzenet maradjon
+```
+Előtte (11-19 22:41) a darabszámok: alex@ és tulaj@ bekotes_alatt, minden 0; david@ aktiv, 20 irat / 33 NAV-számla / 34 bevétel / 9 üzenet /
+14 értesítés / 5 negyedév / 1 adóprofil; bence.kovacs@ active, 23 ügyfél; összesen 26 felhasználó, 23 ügyfél, 14 migráció; tárolt szövegben
+„Kézjegy”: 0. Helyi végigjátszás: `APP_PORT=8871 PANEL_PORT=8872 node kod/_qa/k6_integ_harness.mjs` + `node kod/_qa/k6_integ_proba.mjs`
+→ `kod/_qa/k6_integ_*.png`, `k6_integ_eredmeny.txt` (50/50 rendben).

@@ -217,7 +217,7 @@ export default function KedvezmenyKerdoiv() {
               {a.children.map((c, i) => {
                 const valt = (x: Partial<AllowanceChildAnswer>) => set({ children: a.children.map((g, j) => (j === i ? { ...g, ...x } : g)) });
                 return (
-                  <View key={i} style={{ marginTop: 14, paddingTop: 12, borderTopWidth: 8, borderTopColor: szin.sav, marginHorizontal: -16, paddingHorizontal: 16 }}>
+                  <View key={i} style={{ marginTop: 14, paddingTop: 12, borderTopWidth: 10, borderTopColor: szin.sav, marginHorizontal: -16, paddingHorizontal: 16 }}>
                     <T m={18} s={650} style={{ marginBottom: 8 }}>
                       {fillPlaceholders(Q.K3.card, { n: String(i + 1) })}
                     </T>

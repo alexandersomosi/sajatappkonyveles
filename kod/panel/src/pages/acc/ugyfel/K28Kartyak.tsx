@@ -161,7 +161,12 @@ function FelreteszFiok({ c, nyitva, bezar }: FulProps & { nyitva: boolean; bezar
           {q.data.months.map((m) => (
             <div key={m.month} className="k28-honap">
               <h3 className="kis-cim">{m.label}</h3>
-              <table className="tabla tomor">
+              <table className="tabla tomor" style={{ tableLayout: 'fixed' }}>
+                <colgroup>
+                  <col />
+                  <col style={{ width: 150 }} />
+                  <col style={{ width: 250 }} />
+                </colgroup>
                 <tbody>
                   {m.items.map((i) => (
                     <tr key={i.revenueItemId}>
