@@ -1,17 +1,14 @@
-# C4 átláthatóság – választás (2026-11-19)
-
-**Nyertes: A („egy nyugodt kártya”) mindkét képernyőn**, csiszolva: `valasztott/fooldal.html`, `valasztott/urlap.html` → `valasztott_fooldal.png`, `valasztott_urlap.png`.
-**Miért A:** hunyorítva (blur 6) a kék fő gomb a legerősebb, utána az egy fehér kártya, így 2 mp alatt látszik, mi a dolgod; a főoldal egy képernyőn elfér (videó + visszahívás görgetés nélkül), és megtartja a jóváhagyott kinézetet (halvány alap, fehér kártya, lebegő fülsor + Fotózás).
-**Miért nem B:** két szöveges linkje van („Még 10 lépés”, videó-link), a visszahívás a hajtás alá csúszik, a „szerződés” háromszor szerepel, a „Még 10 lépés” rossz összeg (2+2+10=14), a fehér alap és a lapos fülsor eltér a jóváhagyott kinézettől.
-**Csiszolás:** Fotózás-gyűrű 3 → 2 px; űrlapon a „Hol találom?” világoskék kapszula lett (így egyetlen link marad: „Most nem tudom”); „Tovább” → „Igen, ez az enyém” (pár a „Nem, ez nem az enyém”-mel); a mondatból kikerült az ismételt „vállalkozásod”.
-**Tulaj döntsön:** a „Következő” most a csapat tevékenység-munkája (a saját NAV-meghatalmazás a „Még 8 lépés”-ben van); Bence végzettsége a profilján legyen.
-
+# C4 átláthatóság – választás (2026-11-19 este, a „Nem túl nagyok amúgy a dolgok?” után)
+**Nyertes: C (a javított B) mindkét képernyőn, csiszolva** – `valasztott/` → `valasztott_fooldal.png`, `valasztott_urlap.png` (a délutáni A-választás és képei: `_regi/`).
+**Miért C, nem B:** B szerkezete és lapos, 5 fülű sávja (Fotózás középen) marad, csak a lépték lett nyugodt és sűrű: cím 31→26, szakaszcím 20 kék→18 sötét félkövér, szöveg 17→16, másodlagos 16→15 (7:1), „2 / 12” 28→18 a csík mellett, ikon 36→28, gomb 56→52. Így a főoldal görgetés nélkül elfér a „Ha elakadsz” résszel együtt (B-ben a hajtás alá csúszott), a lépésszám helyes (2+1+1+8=12; B-ben „Még 10”), a „Most te jössz” ismétlés eltűnt, és visszajött a jóváhagyott kék sáv rozettával.
+**Hunyorítás (blur 6):** két erős folt, és ugyanazt mondják: fent a kék sáv (mi a dolgod most), lent a fő gomb (csináld). Képernyőnként 1 szöveges link, doboz a dobozban nincs.
+**Csiszolás:** a 12 szeletes csík helyett egy folytonos vékony csík (a lépést a szám mondja); űrlapon a „vállalkozásod” 3→2 előfordulás, árva sorvégi szó nélkül.
+**Ihlet:** Billingo (lépték, köznyelv), Kontist/Accountable (felül egy színes blokk csak a legfontosabbal), Shopify Setup guide (egy lépés nyitva, egy csík), GOV.UK kérdésoldal (a cím maga a felirat, „1. kérdés a 3-ból”), Baymard (pipa a 11. számjegy után), Monzo (sorban balra felirat, jobbra egy vezérlő). Források URL-lel: `C/INSPIRACIO.md`.
+**Tulaj döntsön:** űrlap fő gombja „Igen, ez az enyém” vagy „Tovább”; a 12 lépés 4–5 nevesített szakaszba („2 / 5 szakasz kész”). A `B_kisebb/` többi képernyőjét (aktív főoldal, Dosszié, Fotózás, Üzenetek) erre a léptékre kell hozni.
 **Szabályok az egész appra:**
-1. Egy fő gomb képernyőnként, mindig ugyanott: teljes szélesség, a fülsor fölött rögzítve; címkéje maga a teendő vagy a feltett kérdésre adott válasz.
-2. Egy fehér kártya képernyőnként (a „Most”); minden más sor doboz nélkül az alapon, köztük legfeljebb egy hajszálvonal; doboz a dobozban soha.
-3. Szakasz eleje mindig: 3D ikon + kék cím, egy mondat, legfeljebb egy művelet; a sorok címe sötét, így csak a fő kártya vezet kékkel.
-4. Két szövegszint (cím, szöveg) + nagy szám, ahol számít; nincs kis szürke nagybetűs címke, nincs „Te/Csapatunk/Bence” szövegcímke – ki lép: egy kis ikon/arc a sor elején.
-5. Legfeljebb egy szöveges link; a „Mi ez?” kerek „i” gomb; a másodlagos műveletek világoskék kapszulák jobbra.
-6. Csak a „Most” és a „Következő” látszik, a többi egy sorban („Még N lépés”, N helyesen számolva).
-7. Minden üzenet egyszer; köznyelv, rövidítés (ONYA, ÖVTJ, UJEGYKE) nélkül.
-8. 16 px oldalmargó, ≥16 px szövegtörzs, ≥44 pt érintési felület, másodlagos szöveg ≥4,5:1; csak 3D ikon, Bence csak kis arcként, nincs díszítő kabala; minden új képernyő átmegy a hunyorítás-próbán (a fő gomb legyen a legerősebb folt).
+1. Lépték: képernyőcím 26, szakaszcím 18 félkövér sötét, szöveg 16 (soha < 15), másodlagos 15 (≥ 4,5:1), fülfelirat 12,5; 3D ikon 28 (sávban 30, fülön 26); fő gomb és fülsor 52; térköz csak 4/8/12/16/24; érintés ≥ 44 pt.
+2. Felül mindig a kék sáv: ki (Bence kis arca), hol tartasz (kis szám + egy folytonos csík), mi a dolgod most (cím + egy mondat); űrlapon csak Vissza + a szakasz neve.
+3. Lent mindig ugyanaz: egy teljes szélességű fő gomb (a teendő vagy a válasz), alatta a lapos 5 fülű sáv; nyitott billentyűzetnél a gomb a billentyűzet fölé ugrik.
+4. Szakasz = 3D ikon + sötét cím (+ jobbra legfeljebb egy kapszula), alatta egy mondat vagy sorok (cím + egy szürke sor); köztük hajszálvonal, doboz a dobozban soha.
+5. Csak a „most” és a „következő” látszik, a többi egy „Még N lépés · Mutasd” sor (N helyesen); képernyőnként ≤ 1 szöveges link, minden üzenet egyszer.
+6. Pénz (később): egy kártya, egy nagy szám („Bence szerint ennyit tegyél félre”); számlánként a félreteendő a sor második sora; a főoldalon egy „Következő fizetendő”, a többi egy sorban.

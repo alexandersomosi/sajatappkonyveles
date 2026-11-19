@@ -172,7 +172,8 @@ export type PaymentStatus = (typeof PAYMENT_STATUSES)[number];
 export const FILING_STATUSES = ['nincs', 'beadva'] as const;
 export type FilingStatus = (typeof FILING_STATUSES)[number];
 
-export const PAYMENT_ITEM_KINDS = ['tb_jarulek', 'szocho', 'szja_eloleg', 'hipa_eloleg', 'hipa_kulonbozet'] as const;
+// SPEC §28.K.11: + the KATA monthly tax (adónem 288) and the 40 % különadó above the keret.
+export const PAYMENT_ITEM_KINDS = ['tb_jarulek', 'szocho', 'szja_eloleg', 'hipa_eloleg', 'hipa_kulonbozet', 'kata_teteles', 'kata_kulonado'] as const;
 export type PaymentItemKind = (typeof PAYMENT_ITEM_KINDS)[number];
 
 export const HERO_STATES = ['bekotes_alatt', 'becsles', 'jovahagyva', 'befizetve', 'nincs_fizetendo'] as const;
@@ -215,7 +216,8 @@ export type PaymentMode = (typeof INTEGRATION_MODES)[number];
 export const NAV_MODES = ['demo', 'test', 'prod'] as const;
 export type NavMode = (typeof NAV_MODES)[number];
 
-export const CLIENT_FLAGS = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt'] as const;
+// SPEC §28.K: 'zarolva' = service lock (§28.K.5), 'kata_figyelem' = a KATA client invoiced a business (§28.K.11).
+export const CLIENT_FLAGS = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'zarolva', 'kata_figyelem'] as const;
 export type ClientFlag = (typeof CLIENT_FLAGS)[number];
 export type ClientFilter = ClientFlag | 'mind';
 
@@ -294,6 +296,32 @@ export const NOTIFICATION_KINDS = [
   'assist_task',
   'assist_approval_overdue',
   'client_path_changed',
+  // SPEC §28.8 (DB: ADD VALUE in 0014_ot1119_enumok.sql, this order)
+  'invoice_new',
+  'allowance_submitted',
+  'allowance_decided',
+  'allowance_check',
+  'assist_change_done',
+  // SPEC §28.K.17 – client (same migration file, this order)
+  'checkin_due',
+  'fee_due',
+  'annual_due',
+  'annual_status',
+  'service_locked',
+  'service_unlocked',
+  'nudge',
+  'upload_reminder',
+  'kata_business_invoice',
+  'mailbox_received',
+  'mailbox_rejected',
+  'employer_decided',
+  'subscription_paused',
+  // SPEC §28.K.17 – staff
+  'checkin_change',
+  'annual_submitted',
+  'client_locked',
+  'employer_reported',
+  'onboarding_task',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 /** Kinds never sent any more and hidden from the client's notification settings (SPEC §26.2.9). */
@@ -449,17 +477,20 @@ export const SEAT_RIGHT_LABELS: Record<SeatRight, string> = {
   szekhelyszolgaltatasi_szerzodes: 'Székhelyszolgáltatási szerződésem van',
 };
 /** "Munkavégzés jellege" on the NAV form. Maps to TaxStatus (WORK_KIND_TAX_STATUS). */
-export const WORK_KINDS = ['fofoglalkozas', 'munkaviszony_mellett', 'tanulmany_mellett', 'nyugdij_mellett'] as const;
+// SPEC §28.K.13: + 'rovid_munkaviszony_mellett' = NAV [3] "Heti 36 órát el nem érő munkaviszony mellett" (tax: főfoglalkozású).
+export const WORK_KINDS = ['fofoglalkozas', 'munkaviszony_mellett', 'rovid_munkaviszony_mellett', 'tanulmany_mellett', 'nyugdij_mellett'] as const;
 export type WorkKind = (typeof WORK_KINDS)[number];
 export const WORK_KIND_LABELS: Record<WorkKind, string> = {
   fofoglalkozas: 'Ez lesz a fő munkám',
   munkaviszony_mellett: 'Mellette legalább heti 36 órás munkaviszonyom van',
+  rovid_munkaviszony_mellett: 'Mellette heti 36 óránál rövidebb munkaviszonyom van',
   tanulmany_mellett: 'Mellette nappali tagozaton tanulok',
   nyugdij_mellett: 'Saját jogú nyugdíjas vagyok',
 };
 export const WORK_KIND_TAX_STATUS: Record<WorkKind, TaxStatus> = {
   fofoglalkozas: 'fofoglalkozasu',
   munkaviszony_mellett: 'mellekallasu',
+  rovid_munkaviszony_mellett: 'fofoglalkozasu',
   tanulmany_mellett: 'mellekallasu',
   nyugdij_mellett: 'nyugdijas',
 };
@@ -531,7 +562,18 @@ export const COST_CLASS_ANSWER: Record<CostClass, ActivityAnswer | null> = {
 
 // ---------- §26.6 self-service guides (annotated REAL NAV screenshots, order 9) ----------
 // SPEC §27.3.6: 'meghatalmazas_jovahagyas' = how the client APPROVES the UJEGYKE our accountant filed (assisted path).
-export const GUIDE_KINDS = ['vallalkozas_bejelentes', 'meghatalmazas', 'meghatalmazas_jovahagyas'] as const;
+// SPEC §28.5 + §28.K.6: the six change guides ("Változás-útmutatók") are guide kinds too (no video).
+export const GUIDE_KINDS = [
+  'vallalkozas_bejelentes',
+  'meghatalmazas',
+  'meghatalmazas_jovahagyas',
+  'valtozas_szekhely',
+  'valtozas_tevekenyseg',
+  'valtozas_telephely',
+  'valtozas_szuneteltetes',
+  'valtozas_adoadat',
+  'valtozas_folytatas',
+] as const;
 export type GuideKind = (typeof GUIDE_KINDS)[number];
 /**
  * Canonical step keys = image keys. The guide images live under <media>/utmutato/<kind>/ and are resolved through
@@ -572,6 +614,47 @@ export const GUIDE_STEP_KEYS = {
     'onya_jovahagyas',
     'app_jovahagytam',
   ],
+  // SPEC §28.5.3 (step lists) + §28.K.6 (valtozas_folytatas)
+  valtozas_szekhely: [
+    'belepes',
+    'ugyseged_fooldal',
+    'valtozas_inditas',
+    'valtozas_szemelyi',
+    'valtozas_cimadatok',
+    'valtozas_uj_szekhely',
+    'valtozas_szekhely_mentes',
+    'valtozas_tevekenysegek',
+    'valtozas_ellenorzes',
+    'valtozas_megtekintes',
+    'app_feltoltes',
+  ],
+  valtozas_tevekenyseg: [
+    'belepes',
+    'ugyseged_fooldal',
+    'valtozas_inditas',
+    'valtozas_szemelyi',
+    'valtozas_cimadatok',
+    'valtozas_tevekenysegek',
+    'valtozas_ovtj_kereso',
+    'valtozas_ellenorzes',
+    'valtozas_megtekintes',
+    'app_feltoltes',
+  ],
+  valtozas_telephely: [
+    'belepes',
+    'ugyseged_fooldal',
+    'valtozas_inditas',
+    'valtozas_szemelyi',
+    'valtozas_cimadatok',
+    'valtozas_uj_telephely',
+    'valtozas_tevekenysegek',
+    'valtozas_ellenorzes',
+    'valtozas_megtekintes',
+    'app_feltoltes',
+  ],
+  valtozas_szuneteltetes: ['belepes', 'ugyseged_fooldal', 'szunetel_inditas', 'szunetel_datum', 'szunetel_ellenorzes', 'valtozas_megtekintes', 'app_feltoltes'],
+  valtozas_adoadat: ['onya_belepes', 'onya_profil', 't101e_kereses', 't101e_blokk', 't101e_bekuldes', 'app_feltoltes'],
+  valtozas_folytatas: ['belepes', 'ugyseged_fooldal', 'folytatas_inditas', 'folytatas_datum', 'folytatas_ellenorzes', 'valtozas_megtekintes', 'app_feltoltes'],
 } as const satisfies Record<GuideKind, readonly string[]>;
 export type GuideStepKey<K extends GuideKind = GuideKind> = (typeof GUIDE_STEP_KEYS)[K][number];
 /** What the client does with a field on the NAV screen; rendered as a short verb (✓ / × as Geist text glyphs). */
@@ -615,6 +698,12 @@ export const GUIDE_VIDEO: Record<GuideKind, VideoName | null> = {
   vallalkozas_bejelentes: 'vallalkozas_bejelentes',
   meghatalmazas: 'meghatalmazas',
   meghatalmazas_jovahagyas: null,
+  valtozas_szekhely: null,
+  valtozas_tevekenyseg: null,
+  valtozas_telephely: null,
+  valtozas_szuneteltetes: null,
+  valtozas_adoadat: null,
+  valtozas_folytatas: null,
 };
 /** Web: relative. Native: /config.mediaBaseUrl, else this fallback (the live client web origin). */
 export const MEDIA_WEB_BASE = '/media/';
@@ -647,6 +736,11 @@ export const CALLBACK_TOPICS = [
   'egyeb',
   'vallalkozas_bejelentes_helyettem',
   'meghatalmazas_helyettem',
+  // SPEC §28.5.5 (change guides / assisted changes) and §28.K (annual closing, tax regime incl. KATA)
+  'valtozas',
+  'valtozas_helyettem',
+  'eves_zaras',
+  'adozasi_mod',
 ] as const;
 export type CallbackTopic = (typeof CALLBACK_TOPICS)[number];
 export const CALLBACK_TOPIC_LABELS: Record<CallbackTopic, string> = {
@@ -660,6 +754,10 @@ export const CALLBACK_TOPIC_LABELS: Record<CallbackTopic, string> = {
   egyeb: 'Valami más',
   vallalkozas_bejelentes_helyettem: 'Intézzétek helyettem: vállalkozás bejelentése',
   meghatalmazas_helyettem: 'Intézzétek helyettem: NAV-meghatalmazás',
+  valtozas: 'Változás a vállalkozásomban',
+  valtozas_helyettem: 'Intézzétek helyettem: változás bejelentése',
+  eves_zaras: 'Éves zárás, bevallás',
+  adozasi_mod: 'Adózási mód (átalány vagy kata)',
 };
 /** Topics that are assisted-path requests → the assist kind they open (SPEC §27.3.2). */
 export const CALLBACK_ASSIST_TOPIC: Partial<Record<CallbackTopic, 'vallalkozas_bejelentes' | 'meghatalmazas'>> = {
@@ -694,6 +792,20 @@ export const CALLBACK_SOURCES = [
   'helyettunk_vallalkozas',
   'helyettunk_meghatalmazas',
   'utvaltas',
+  // SPEC §28
+  'valtozas_utmutato',
+  'helyettunk_valtozas',
+  'kedvezmenyek',
+  'felretesz',
+  'kereset',
+  // SPEC §28.K
+  'havi_ellenorzes',
+  'eves_zaras',
+  'kalkulator',
+  'zarolas',
+  'alkalmazott',
+  'adoszam_kereso',
+  'kata',
 ] as const;
 export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
 export const CALLBACK_ATTEMPT_OUTCOMES = ['beszeltunk', 'nem_vette_fel', 'foglalt', 'hibas_szam', 'kesobb_kerte'] as const;
@@ -758,6 +870,16 @@ export const CLIENT_FEATURES = [
   'bevetel',
   'hataridok',
   'igazolas_keres',
+  // SPEC §28.6.3
+  'felretesz',
+  'kereset',
+  'kedvezmenyek',
+  'valtozas',
+  // SPEC §28.K
+  'havi_ellenorzes',
+  'eves_zaras',
+  'dijak',
+  'tovabbito_email',
 ] as const;
 export type ClientFeature = (typeof CLIENT_FEATURES)[number];
 /**
@@ -815,6 +937,36 @@ export const CLIENT_FEATURE_RULES: Record<ClientFeature, { beforeActivation: Fea
     label: 'Igazolás kérése, adat- vagy tevékenységváltozás',
     reason: 'A bekötés után nyílik meg. Igazolást {firstName} a NAV-meghatalmazás után kérhet neked.',
   },
+  // SPEC §28.6.3
+  felretesz: {
+    beforeActivation: 'zarva',
+    label: 'Ennyit tegyél félre',
+    reason: 'A bekötés után nyílik meg. Akkor minden számládnál látod, mennyit tegyél félre.',
+  },
+  kereset: {
+    beforeActivation: 'zarva',
+    label: 'Mennyit kerestem?',
+    reason: 'A bekötés után nyílik meg. Akkor látod, mennyi marad a bevételedből az adók után.',
+  },
+  kedvezmenyek: { beforeActivation: 'nyitva', label: 'Adókedvezményeid', reason: null },
+  valtozas: { beforeActivation: 'nyitva', label: 'Változás a vállalkozásodban', reason: null },
+  // SPEC §28.K
+  havi_ellenorzes: {
+    beforeActivation: 'zarva',
+    label: 'Havi ellenőrzés („Változott valami?”)',
+    reason: 'A bekötés után nyílik meg. Akkor havonta egyszer rákérdezünk, változott-e valami.',
+  },
+  eves_zaras: {
+    beforeActivation: 'zarva',
+    label: 'Éves zárás',
+    reason: 'A bekötés után nyílik meg. Az év végén itt készítjük elő az éves bevallásodat.',
+  },
+  dijak: { beforeActivation: 'nyitva', label: 'Díjak és fizetés', reason: null },
+  tovabbito_email: {
+    beforeActivation: 'zarva',
+    label: 'Továbbító e-mail-cím',
+    reason: 'A bekötés után kapsz egy saját címet, ahová a nyugtáidat és a kivonataidat továbbíthatod.',
+  },
 };
 /** Request types a client may create before activation (others → 403 'locked_until_active', feature 'igazolas_keres'). */
 export const REQUEST_TYPES_BEFORE_ACTIVATION: readonly RequestType[] = ['kerdes'];
@@ -857,23 +1009,47 @@ export const REGISTRATION_MODE_LABELS: Record<RegistrationMode, string> = {
   segitett: 'Intézzétek helyettem',
 };
 /** What we do for the client. 'vallalkozas_bejelentes' includes the meghatalmazás (one UJEGYKE with both groups). */
-export const ASSIST_KINDS = ['vallalkozas_bejelentes', 'meghatalmazas'] as const;
+// SPEC §28.5.5 + §28.K.6: the six change kinds (CHANGE_KINDS) are assist kinds too.
+export const ASSIST_KINDS = [
+  'vallalkozas_bejelentes',
+  'meghatalmazas',
+  'valtozas_szekhely',
+  'valtozas_tevekenyseg',
+  'valtozas_telephely',
+  'valtozas_szuneteltetes',
+  'valtozas_adoadat',
+  'valtozas_folytatas',
+] as const;
 export type AssistKind = (typeof ASSIST_KINDS)[number];
 export const ASSIST_KIND_LABELS: Record<AssistKind, string> = {
   vallalkozas_bejelentes: 'Vállalkozás bejelentése',
   meghatalmazas: 'NAV-meghatalmazás',
+  valtozas_szekhely: 'Székhelyváltozás',
+  valtozas_tevekenyseg: 'Tevékenységváltozás',
+  valtozas_telephely: 'Új telephely',
+  valtozas_szuneteltetes: 'Szüneteltetés',
+  valtozas_adoadat: 'Adózási adat változása',
+  valtozas_folytatas: 'Szüneteltetés befejezése',
 };
 /** The callback topic each kind uses (CALLBACK_TOPICS). */
 export const ASSIST_CALLBACK_TOPIC: Record<AssistKind, CallbackTopic> = {
   vallalkozas_bejelentes: 'vallalkozas_bejelentes_helyettem',
   meghatalmazas: 'meghatalmazas_helyettem',
+  valtozas_szekhely: 'valtozas_helyettem',
+  valtozas_tevekenyseg: 'valtozas_helyettem',
+  valtozas_telephely: 'valtozas_helyettem',
+  valtozas_szuneteltetes: 'valtozas_helyettem',
+  valtozas_adoadat: 'valtozas_helyettem',
+  valtozas_folytatas: 'valtozas_helyettem',
 };
 /**
  * assist_requests.status (SPEC §27.3.4). Kind 'meghatalmazas' skips 'meghatalmazas_el', 'ugyfel_engedelyezte' and
  * 'bejelentes_bekuldve' (verified → 'kesz').
  */
+// SPEC §28.K.1: 'dijra_var' = a fee-bearing change waits for the client's prepayment (ball: ugyfel) → 'egyeztetve'.
 export const ASSIST_STATUSES = [
   'visszahivas_kerve',
+  'dijra_var',
   'egyeztetve',
   'meghatalmazas_bekuldve',
   'meghatalmazas_lejart',
@@ -888,6 +1064,7 @@ export const ASSIST_STATUSES = [
 export type AssistStatus = (typeof ASSIST_STATUSES)[number];
 export const ASSIST_OPEN_STATUSES: readonly AssistStatus[] = [
   'visszahivas_kerve',
+  'dijra_var',
   'egyeztetve',
   'meghatalmazas_bekuldve',
   'meghatalmazas_lejart',
@@ -899,6 +1076,7 @@ export const ASSIST_OPEN_STATUSES: readonly AssistStatus[] = [
 /** The client may cancel ("Mégis magam csinálom") only before anything is filed for the EV. */
 export const ASSIST_CANCELLABLE_STATUSES: readonly AssistStatus[] = [
   'visszahivas_kerve',
+  'dijra_var',
   'egyeztetve',
   'meghatalmazas_bekuldve',
   'meghatalmazas_lejart',
@@ -909,7 +1087,8 @@ export const ASSIST_CANCELLABLE_STATUSES: readonly AssistStatus[] = [
 /** Panel wording (queue column "Állapot"). */
 export const ASSIST_STATUS_LABELS: Record<AssistStatus, string> = {
   visszahivas_kerve: 'Hívásra vár',
-  egyeztetve: 'Egyeztetve – UJEGYKE beküldésére vár',
+  dijra_var: 'Díjra vár – az ügyfél még nem fizetett',
+  egyeztetve: 'Egyeztetve – UJEGYKE beküldésére vár (változásnál: adatok átnézése)',
   meghatalmazas_bekuldve: 'Ügyfél jóváhagyására vár',
   meghatalmazas_lejart: 'Lejárt a 4 nap – újra kell küldeni',
   meghatalmazas_jovahagyva: 'Jóváhagyta – ellenőrizni kell a NAV-nál',
@@ -923,6 +1102,7 @@ export const ASSIST_STATUS_LABELS: Record<AssistStatus, string> = {
 /** Who has the ball (panel "Kinél a labda", client actor chip). null = finished. */
 export const ASSIST_BALL: Record<AssistStatus, 'csapat' | 'konyvelo' | 'ugyfel' | null> = {
   visszahivas_kerve: 'csapat',
+  dijra_var: 'ugyfel',
   egyeztetve: 'konyvelo',
   meghatalmazas_bekuldve: 'ugyfel',
   meghatalmazas_lejart: 'konyvelo',
@@ -948,6 +1128,10 @@ export const ASSIST_ACTIONS = [
   'kesz',
   'visszavonas',
   'lezaras',
+  // SPEC §28.5.5 (change-ready, change-done) and §28.K.1 (prepayment arrived)
+  'adatok_rendben',
+  'valtozas_kesz',
+  'dij_fizetve',
 ] as const;
 export type AssistAction = (typeof ASSIST_ACTIONS)[number];
 /** Who may trigger an action. 'konyvelo' = only the client's own accountant; 'rendszer' = worker/backend. */
@@ -966,6 +1150,10 @@ export const ASSIST_ACTION_ROLES: Record<AssistAction, readonly ('ugyfel' | 'csa
   kesz: ['rendszer'],
   visszavonas: ['ugyfel'],
   lezaras: ['csapat', 'konyvelo', 'admin'],
+  // SPEC §28.5.5: 'valtozas_kesz' by the accountant only when env CHANGE_DONE_BY_FILER_ALLOWED=true (default: four eyes)
+  adatok_rendben: ['konyvelo', 'admin'],
+  valtozas_kesz: ['csapat', 'admin'],
+  dij_fizetve: ['rendszer'],
 };
 export const ASSIST_CLOSE_REASONS = ['nincs_belepese', 'magam_intezem', 'nem_ertuk_el', 'utvaltas', 'duplikalt', 'egyeb'] as const;
 export type AssistCloseReason = (typeof ASSIST_CLOSE_REASONS)[number];
@@ -982,6 +1170,9 @@ export const ASSIST_CHECK_ITEMS = {
   hivas: ['nincs_elo_ev', 'afa_mentes_kor', 'belepes_van', 'telefon_jo', 'lepesek_elmondva', 'jelszo_figyelmeztetes'],
   ujegyke: ['sajat_profil', 'kepviselt_adatai', 'jogcim', 'ugycsoport_ado', 'ugycsoport_ev', 'kezdete_ma', 'sikeres_benyujtas'],
   bejelentes: ['kepviseletvalaszto', 'adatok_egyeznek', 'ellenorzes_lap', 'nyilatkozatok_ugyfeltol', 'sikeres_bejelentes', 'ertesites_letoltve'],
+  // SPEC §28.5.5 – change kinds
+  valtozas_adatok: ['adatok_teljesek', 'jogcim_rendben', 'ovtj_rendben', 'meghatalmazas_lefedi', 'datum_rendben'],
+  valtozas_bejelentes: ['kepviseletvalaszto', 'adatok_egyeznek', 'valtozas_bekuldve', 'ertesites_letoltve'],
 } as const;
 export type AssistCheckPhase = keyof typeof ASSIST_CHECK_ITEMS;
 export type AssistCheckItem = (typeof ASSIST_CHECK_ITEMS)[AssistCheckPhase][number];
@@ -989,6 +1180,13 @@ export type AssistCheckItem = (typeof ASSIST_CHECK_ITEMS)[AssistCheckPhase][numb
 export const ASSIST_PHASES: Record<AssistKind, readonly AssistCheckPhase[]> = {
   vallalkozas_bejelentes: ['hivas', 'ujegyke', 'bejelentes'],
   meghatalmazas: ['hivas', 'ujegyke'],
+  // SPEC §28.5.5: 'hivas' only when a callback was requested
+  valtozas_szekhely: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_tevekenyseg: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_telephely: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_szuneteltetes: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_adoadat: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_folytatas: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
 };
 /** Items that are NOT required (and not shown) for kind 'meghatalmazas' (the client already has / does not start an EV). */
 export const ASSIST_CHECK_NOT_FOR_MH: readonly AssistCheckItem[] = ['nincs_elo_ev', 'afa_mentes_kor', 'ugycsoport_ev'];
@@ -1012,6 +1210,13 @@ export const ASSIST_CHECK_LABELS: Record<AssistCheckItem, string> = {
   nyilatkozatok_ugyfeltol: 'A nyilatkozatokat (kizáró okok) az ügyfél tette meg az appban',
   sikeres_bejelentes: '„Bejelentés megtétele” → „Figyelem!” → „Sikeres bejelentés”',
   ertesites_letoltve: 'Az értesítés PDF-je letöltve, itt feltöltöd',
+  // SPEC §28.5.5
+  adatok_teljesek: 'Az új adatok teljesek, mezőnként a NAV szerint',
+  jogcim_rendben: 'A jogcím rendben (székhely, telephely)',
+  ovtj_rendben: 'Az ÖVTJ-sor kiválasztva (tevékenység)',
+  meghatalmazas_lefedi: 'A meghatalmazás kiterjed az „Egyéni vállalkozói nyilvántartással kapcsolatos ügyek” csoportra (adóadatnál: ADÓÜGYEK)',
+  datum_rendben: 'A változás napja rendben (szüneteltetésnél: nem múltbeli)',
+  valtozas_bekuldve: 'Beküldve, a NAV visszaigazolta',
 };
 /** UJEGYKE jogcím codes our accountant may use for a natural-person client (env ASSIST_UJEGYKE_JOGCIM) [KÖNYVELŐ/JOGI]. */
 export const ASSIST_JOGCIMEK = ['9', '60'] as const;
@@ -1067,6 +1272,9 @@ export const JOURNEY_STEP_KEYS = [
   'azonositas',
   'elofizetes',
   'nav_bekotes',
+  // SPEC §28.3.4 (optional, never counted) and §28.K.7 (listed only when the employer answer is not 'nincs')
+  'kedvezmenyek',
+  'alkalmazottak',
 ] as const;
 export type JourneyStepKey = (typeof JOURNEY_STEP_KEYS)[number];
 /** Who acts on a row right now: the client, his accountant, our team, or the NAV. */
@@ -1092,13 +1300,563 @@ export type JourneyVariant = (typeof JOURNEY_VARIANTS)[number];
 /** Row order per variant. The numbers the client sees are 1…n in this order. */
 export const JOURNEY_ORDER: Record<JourneyVariant, readonly JourneyStepKey[]> = {
   nincs: ['ut'],
-  van: ['ut', 'adatok', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes'],
-  inditas_onallo: ['ut', 'adatok', 'kerdoiv', 'bejelentes', 'ertesites', 'atnezes', 'kamara', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes'],
-  inditas_segitett: ['ut', 'visszahivas', 'adatok', 'kerdoiv', 'szerzodes', 'meghatalmazas', 'vegso_jovahagyas', 'bejelentes', 'kamara', 'azonositas', 'elofizetes', 'nav_bekotes'],
+  // SPEC §28.3.4 / §28.K.7: 'kedvezmenyek' and 'alkalmazottak' right after 'adatok' ('alkalmazottak' only when needed).
+  van: ['ut', 'adatok', 'kedvezmenyek', 'alkalmazottak', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes'],
+  inditas_onallo: ['ut', 'adatok', 'kedvezmenyek', 'alkalmazottak', 'kerdoiv', 'bejelentes', 'ertesites', 'atnezes', 'kamara', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes'],
+  inditas_segitett: ['ut', 'visszahivas', 'adatok', 'kedvezmenyek', 'alkalmazottak', 'kerdoiv', 'szerzodes', 'meghatalmazas', 'vegso_jovahagyas', 'bejelentes', 'kamara', 'azonositas', 'elofizetes', 'nav_bekotes'],
 };
 /** Greyed preview under the unanswered branch question ("Utána ezek jönnek"). */
 export const JOURNEY_PREVIEW: readonly JourneyStepKey[] = ['adatok', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes', 'nav_bekotes'];
 /** Rows that never block activation even when open (the client still sees and counts them). */
-export const JOURNEY_NOT_REQUIRED_FOR_ACTIVATION: readonly JourneyStepKey[] = ['kamara'];
+export const JOURNEY_NOT_REQUIRED_FOR_ACTIVATION: readonly JourneyStepKey[] = ['kamara', 'kedvezmenyek'];
+/** SPEC §28.3.4: rows never counted in todoCount / the badge (and never 'most'). */
+export const JOURNEY_NOT_COUNTED: readonly JourneyStepKey[] = ['kedvezmenyek'];
 /** Content key of the new step lock: Előfizetés waits for the Szerződés on both paths (k3_kor2 finding, SPEC §27.4). */
 export const LOCK_ELOFIZETES_SZERZODES_UTAN = 'bekotes.zarolt.elofizetes_szerzodes_utan';
+
+// =====================================================================================================================
+// SPEC §28 – "Öt új funkció" (owner order 2026-11-19 12:25): félretenni, new-invoice notification, 2026 allowances,
+// "Mennyit kerestem?", change guides. Keys, rules and numbers only; the client texts are in bekotes.ts.
+// =====================================================================================================================
+
+// ---------- §28.1 "Ennyit tegyél félre" ----------
+/** Zone of one invoice's reserve (SPEC §28.1.2 rule 7) = CHECK of revenue_reserves.zone. */
+export const RESERVE_ZONES = ['adomentes', 'nem_novel', 'csak_szja', 'teljes', 'kedvezmeny', 'sztorno', 'nincs_adat'] as const;
+export type ReserveZone = (typeof RESERVE_ZONES)[number];
+/** Why a reserve is only an estimate (SPEC §28.1.7). Client texts: RESERVE_TEXTS.becsles. */
+export const RESERVE_ESTIMATE_REASONS = ['fizetesi_hatarido', 'profil_nincs_megerositve', 'kedvezmeny_jovahagyasra_var', 'szabalyok_tervezet', 'elozo_konyvelo'] as const;
+export type ReserveEstimateReason = (typeof RESERVE_ESTIMATE_REASONS)[number];
+/** SPEC §28.1.2 rule 5: positive reserves round UP to this, storno reserves towards zero. */
+export const RESERVE_ROUND_HUF = 1_000;
+
+// ---------- §28.2 new-invoice notification ----------
+export const INVOICE_NOTIFY_RULES = {
+  /** env INVOICE_NOTIFY_MAX_AGE_DAYS: older issue dates are never notified ('kihagyva_regi'). */
+  maxAgeDays: 10,
+  /** env INVOICE_NOTIFY_MAX_PUSH_PER_DAY: pushes per client per Budapest day; later rows are in-app only. */
+  maxPushPerDay: 2,
+  /** An unread invoice_new row of the last N hours whose push has not gone out yet absorbs the new invoices. */
+  foldInHours: 20,
+  /** {vevo} is trimmed to this many characters. */
+  customerNameMaxChars: 40,
+} as const;
+/** nav_invoices.notify_state (SPEC §28.7.1); null = not decided yet. */
+export const INVOICE_NOTIFY_STATES = ['kuldve', 'osszevonva', 'kihagyva_elso_szinkron', 'kihagyva_regi', 'kihagyva_modositas', 'kihagyva_zarolt'] as const;
+export type InvoiceNotifyState = (typeof INVOICE_NOTIFY_STATES)[number];
+/** Variants of notif.invoice_new (SPEC §28.2.4). 'alap' = the content keys without a variant segment. */
+export const INVOICE_NOTIFY_VARIANTS = ['alap', 'kuszob', 'adomentes', 'tobb', 'tobb_adomentes', 'rejtett'] as const;
+export type InvoiceNotifyVariant = (typeof INVOICE_NOTIFY_VARIANTS)[number];
+/** SPEC §28.2.3: per-user push quiet hours (Budapest time, [from, to) wrapping midnight). */
+export const QUIET_HOURS_DEFAULT = { enabled: true, from: 20, to: 8 } as const;
+/** The only client push kinds that ignore the quiet hours (SPEC §28.2.3). Staff never get push. */
+export const QUIET_HOURS_EXEMPT_KINDS: readonly NotificationKind[] = ['callback_calling'];
+/** Kinds whose push may show amounts and the customer (SPEC §28.2.5, §28.K.17); never a private person's name. */
+export const PUSH_AMOUNT_KINDS: readonly NotificationKind[] = ['invoice_new', 'kata_business_invoice'];
+/** PATCH /me: max length of notificationPrefs (was 40, SPEC §28.2.3). */
+export const NOTIFICATION_PREFS_MAX = 80;
+
+// ---------- §28.3 personal allowances 2026 ----------
+export const ALLOWANCE_KINDS = ['anya30', 'anyak', 'fiatal25', 'szemelyi', 'elso_hazasok', 'csaladi', 'csed_gyed'] as const;
+export type AllowanceKind = (typeof ALLOWANCE_KINDS)[number];
+/** Engine order (Szja tv. 29/H; SPEC §28.3.1). 'csed_gyed' is an info item: the accountant records a 'kieso' break. */
+export const ALLOWANCE_ENGINE_ORDER: readonly AllowanceKind[] = ['anya30', 'anyak', 'fiatal25', 'szemelyi', 'elso_hazasok', 'csaladi'];
+export const ALLOWANCE_STATUSES = ['javasolt', 'kerdes', 'jovahagyva', 'elutasitva', 'visszavonva'] as const;
+export type AllowanceStatus = (typeof ALLOWANCE_STATUSES)[number];
+/** Waiting for the accountant (badge `allowancesPending`, filter "Kedvezmény vár"). */
+export const ALLOWANCE_PENDING_STATUSES: readonly AllowanceStatus[] = ['javasolt', 'kerdes'];
+export const ALLOWANCE_GATES = ['lehet', 'nem_jar', 'kesobb'] as const;
+export type AllowanceGate = (typeof ALLOWANCE_GATES)[number];
+export const ANYAK_JOGCIMEK = ['ket', 'harom', 'negyplusz'] as const;
+export type AnyakJogcim = (typeof ANYAK_JOGCIMEK)[number];
+export const ALLOWANCE_REJECT_REASONS = ['kor', 'nem_jogosult', 'mas_veszi_igenybe', 'nincs_jovedelem', 'igazolas_hianyzik', 'egyeb'] as const;
+export type AllowanceRejectReason = (typeof ALLOWANCE_REJECT_REASONS)[number];
+/** Input limits of the questionnaire and the panel (SPEC §28.3.2–§28.3.6). Tax values themselves live in the engine rules. */
+export const ALLOWANCE_LIMITS = {
+  birthYearMin: 1940,
+  birthYearMax: 2010,
+  childrenMax: 12,
+  otherDependantsMax: 9,
+  sharePctMin: 10,
+  sharePctMax: 90,
+  sharePctStep: 10,
+  /** Első házasok: Ft/month for the couple (Szja tv. 29/C.). */
+  elsoHazasokMonthlyMaxHuf: 33_335,
+  elsoHazasokMaxMonths: 24,
+  noteMaxChars: 500,
+  clientTextMaxChars: 500,
+  staffNoteMaxChars: 1_000,
+  /** Panel preview debounce. */
+  previewDebounceMs: 400,
+} as const;
+/** Variants of allowance_decided and allowance_check (SPEC §28.3.9). */
+export const ALLOWANCE_DECIDED_VARIANTS = ['jovahagyva', 'reszben', 'kerdes', 'elutasitva'] as const;
+export type AllowanceDecidedVariant = (typeof ALLOWANCE_DECIDED_VARIANTS)[number];
+export const ALLOWANCE_CHECK_VARIANTS = ['ev_eleje', 'lejar'] as const;
+export type AllowanceCheckVariant = (typeof ALLOWANCE_CHECK_VARIANTS)[number];
+
+// ---------- §28.4 "Mennyit kerestem?" ----------
+/** The weakest part of a month decides its basis (SPEC §28.4.1): becsles < jovahagyva < befizetve. */
+export const EARNINGS_BASES = ['becsles', 'jovahagyva', 'befizetve'] as const;
+export type EarningsBasis = (typeof EARNINGS_BASES)[number];
+export const EARNINGS_RULES = {
+  /** The year-end projection needs this many elapsed active days (same rule as the meters). */
+  projectionMinDays: 60,
+  /** Projected numbers are shown rounded to this, with "kb.". */
+  projectionRoundHuf: 10_000,
+} as const;
+
+// ---------- §28.5 change guides ("Változás-útmutatók") + §28.K.6 resumption ----------
+/** = the change assist kinds and the change guide kinds (SPEC §28.5.1 + §28.K.6 'valtozas_folytatas'). */
+export const CHANGE_KINDS = [
+  'valtozas_szekhely',
+  'valtozas_tevekenyseg',
+  'valtozas_telephely',
+  'valtozas_szuneteltetes',
+  'valtozas_adoadat',
+  'valtozas_folytatas',
+] as const;
+export type ChangeKind = (typeof CHANGE_KINDS)[number];
+/** Filed in the Vállalkozói Ügysegéd (valid until env CHANGE_UGYSEGED_VALID_UNTIL); 'valtozas_adoadat' goes to ONYA (T101E). */
+export const CHANGE_UGYSEGED_KINDS: readonly ChangeKind[] = ['valtozas_szekhely', 'valtozas_tevekenyseg', 'valtozas_telephely', 'valtozas_szuneteltetes', 'valtozas_folytatas'];
+export const CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT = '2026-12-31';
+export const CHANGE_ADOADAT_VALID_UNTIL = '2027-12-31';
+/** env CHANGE_DONE_BY_FILER_ALLOWED default: four eyes on change-done. */
+export const CHANGE_DONE_BY_FILER_ALLOWED_DEFAULT = false;
+/** 3D icon per change kind (hub rows, SPEC §28.5.2). */
+export const CHANGE_KIND_ICON: Record<ChangeKind, Icon3dAny> = {
+  valtozas_szekhely: 'fooldal',
+  valtozas_tevekenyseg: 'irat',
+  valtozas_telephely: 'boritek',
+  valtozas_szuneteltetes: 'tepnaptar',
+  valtozas_adoadat: 'bevallas',
+  valtozas_folytatas: 'tepnaptar',
+};
+/** Items of a tax-data change (T101E). SPEC §28.5.6 + §28.K.1 / §28.K.11 (pension, KATA in / out). */
+export const CHANGE_TAX_ITEMS = ['munkavegzes', 'nyugdijba_vonulas', 'kozossegi_adoszam', 'kata_belepes', 'kata_kilepes', 'atalany_kilepes', 'afa_kilepes', 'egyeb'] as const;
+export type ChangeTaxItem = (typeof CHANGE_TAX_ITEMS)[number];
+/** Out of our service: the callback is forced, no fee and no filing until the call agrees (SPEC §28.5.5). */
+export const CHANGE_TAX_ITEMS_CALL_FIRST: readonly ChangeTaxItem[] = ['atalany_kilepes', 'afa_kilepes'];
+/** A change of legal status (fee 'valtozas_jogallas', SPEC §28.K.1). */
+export const CHANGE_TAX_ITEMS_JOGALLAS: readonly ChangeTaxItem[] = ['munkavegzes', 'nyugdijba_vonulas', 'kata_belepes', 'kata_kilepes'];
+export const CHANGE_ACTIVITY_MODES = ['uj_fo', 'uj_mellek', 'torles'] as const;
+export type ChangeActivityMode = (typeof CHANGE_ACTIVITY_MODES)[number];
+/** "Közterület jellege" select of the address screens (the most common NAV values). */
+export const STREET_TYPES = ['utca', 'út', 'útja', 'tér', 'köz', 'sor', 'körút', 'sétány', 'fasor', 'park', 'lakótelep', 'liget', 'dűlő', 'tanya', 'major'] as const;
+export const CHANGE_RULES = {
+  /** Szüneteltetés start: ≥ today, ≤ today + 60 days; the end ≤ start + 2 years. */
+  szunetelStartMaxAheadDays: 60,
+  szunetelMaxYears: 2,
+  /** Folytatás (resumption): ≥ today, ≤ today + 60 days. */
+  folytatasMaxAheadDays: 60,
+  noteMaxChars: 500,
+} as const;
+/** Follow-ups the panel offers on change-done (SPEC §28.5.5 + §28.K.6); labels: CHANGE_FOLLOWUP_LABELS (bekotes.ts). */
+export const CHANGE_FOLLOWUP_KEYS: Record<ChangeKind, readonly string[]> = {
+  valtozas_szekhely: ['hq_municipality', 'hipa_atnezes', 'szamlazo_emlekezteto'],
+  valtozas_tevekenyseg: ['tevekenyseg_frissites', 'koltseghanyad_megerosites'],
+  valtozas_telephely: ['hipa_masik_telepules'],
+  valtozas_szuneteltetes: ['szunetel_szakasz', 'szunetel_dij', 'folytatas_emlekezteto'],
+  valtozas_adoadat: ['adoprofil_statusz', 'adozasi_mod'],
+  valtozas_folytatas: ['szunetel_lezaras', 'szunetel_dij_lezaras', 'hipa_atnezes'],
+};
+
+// =====================================================================================================================
+// SPEC §28.K – owner orders 11-19 afternoon–evening (A–N, prices, fees). Texts in bekotes.ts, DTOs in api.ts.
+// =====================================================================================================================
+
+// ---------- §28.K.1 prices and fees ----------
+export const FEE_KINDS = ['havidij', 'havidij_kata', 'eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas', 'szuneteltetesi_dij'] as const;
+export type FeeKind = (typeof FEE_KINDS)[number];
+export const FEE_UNITS = ['ho', 'ev', 'alkalom'] as const;
+export type FeeUnit = (typeof FEE_UNITS)[number];
+/**
+ * Defaults seeded into fee_settings (admin-editable, history kept). `confirmed: false` = shown with the amber DEMO chip
+ * and not chargeable in APP_ENV=production until the owner confirms it in /admin/dijak (SPEC §28.K.1).
+ */
+export const FEE_DEFAULTS: Record<FeeKind, { amountHuf: number; unit: FeeUnit; confirmed: boolean; note: string }> = {
+  havidij: { amountHuf: 19_999, unit: 'ho', confirmed: true, note: 'Tulaj 2026-11-19 19:30: 19 999 Ft' },
+  havidij_kata: { amountHuf: 19_999, unit: 'ho', confirmed: true, note: 'Tulaj 2026-11-19 17:25: „Ugyanannyi lesz”' },
+  eves_zaras: { amountHuf: 14_999, unit: 'ev', confirmed: false, note: 'DEMO-érték, a tulaj megerősítésére vár' },
+  valtozas_egyszeru: { amountHuf: 4_999, unit: 'alkalom', confirmed: false, note: 'Tulaj ~15:00 „Ez jó lesz” – megerősítés az /admin/dijak oldalon' },
+  valtozas_jogallas: { amountHuf: 7_999, unit: 'alkalom', confirmed: false, note: 'Tulaj ~15:00 „Ez jó lesz” – megerősítés az /admin/dijak oldalon' },
+  szuneteltetesi_dij: { amountHuf: 2_999, unit: 'ho', confirmed: false, note: 'DEMO-érték, a tulaj megerősítésére vár' },
+};
+/** Monthly plan codes (plans.code) and their fee setting. */
+export const PLAN_CODES = ['havi', 'havi_kata'] as const;
+export type PlanCode = (typeof PLAN_CODES)[number];
+export const PLAN_FEE_KIND: Record<PlanCode, FeeKind> = { havi: 'havidij', havi_kata: 'havidij_kata' };
+/** One-off fees: a one-time SimplePay payment per charge (simplepay_transactions.kind 'egyszeri'), never the recurring token. */
+export const ONE_OFF_FEE_KINDS: readonly FeeKind[] = ['eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas'];
+/** A change the client files himself with our guide costs nothing (a rule, not a setting). */
+export const CHANGE_FEE_RULES = { selfService: 0 } as const;
+/** Which fee an ASSISTED change pays (SPEC §28.K.1); null = no fee (for CHANGE_TAX_ITEMS_CALL_FIRST: no filing until agreed). */
+export function changeFeeKind(kind: ChangeKind, items: readonly ChangeTaxItem[] = []): FeeKind | null {
+  if (kind !== 'valtozas_adoadat') return 'valtozas_egyszeru';
+  if (items.some((i) => CHANGE_TAX_ITEMS_CALL_FIRST.includes(i))) return null;
+  if (items.some((i) => CHANGE_TAX_ITEMS_JOGALLAS.includes(i))) return 'valtozas_jogallas';
+  return items.length ? 'valtozas_egyszeru' : null;
+}
+/** fee_charges.status. 'visszavonva' = cancelled before payment (its purpose was cancelled or closed). */
+export const FEE_CHARGE_STATUSES = ['nyitott', 'fizetve', 'visszavonva', 'visszaterites_kell', 'visszaterites_megtortent', 'elengedve'] as const;
+export type FeeChargeStatus = (typeof FEE_CHARGE_STATUSES)[number];
+export const FEE_PURPOSE_TYPES = ['valtozas', 'eves_zaras'] as const;
+export type FeePurposeType = (typeof FEE_PURPOSE_TYPES)[number];
+export const FEE_RULES = {
+  /** A rise of havidij / havidij_kata applies to running subscriptions only from ≥ today + 30 days [JOGI]. */
+  priceRiseNoticeDays: 30,
+} as const;
+export const FEE_ERROR_CODES = ['fee_unpaid', 'fee_not_payable'] as const;
+export type FeeErrorCode = (typeof FEE_ERROR_CODES)[number];
+
+// ---------- §28.K.2 A – monthly check-in "Változott valami?" ----------
+export const CHECKIN_STATUSES = ['nyitott', 'nem_valtozott', 'valtozott', 'lejart'] as const;
+export type CheckinStatus = (typeof CHECKIN_STATUSES)[number];
+export const CHECKIN_ITEMS = ['munkaviszony', 'nyugdij', 'koltozes', 'tevekenyseg', 'csalad', 'alkalmazott', 'szuneteltetes', 'folytatas', 'kata_ceges', 'egyeb'] as const;
+export type CheckinItem = (typeof CHECKIN_ITEMS)[number];
+export const CHECKIN_ITEM_STATUSES = ['uj', 'dijra_var', 'csapatnal', 'ugyfel_intezi', 'kesz', 'nem_kell'] as const;
+export type CheckinItemStatus = (typeof CHECKIN_ITEM_STATUSES)[number];
+/** "hogyan" column of the panel queue: we file it / the client files it with the guide / only a question. */
+export const CHECKIN_HOW = ['helyettunk', 'magatol', 'kerdes'] as const;
+export type CheckinHow = (typeof CHECKIN_HOW)[number];
+/** Answer of "Heti hány órában?"; the threshold is 36 hours (Tbj.; KATA: Kata tv. 2. § 2.). */
+export const CHECKIN_WEEKLY_HOURS = ['legalabb_36', 'kevesebb_36'] as const;
+export type CheckinWeeklyHours = (typeof CHECKIN_WEEKLY_HOURS)[number];
+export const EMPLOYMENT_THRESHOLD_HOURS = 36;
+export const CHECKIN_RULES = {
+  /** Only clients active for at least this many days get a check-in. */
+  minActiveDays: 20,
+  /** Opened on the first working day of the month at this hour (Budapest); the period is the previous month. */
+  openHour: 9,
+  /** Due on this day of the month; unanswered at month end → 'lejart'. */
+  dueDay: 10,
+  /** Nudges after the opening (§28.K.4). */
+  nudgeDays: [3, 7],
+  egyebMaxChars: 500,
+} as const;
+/** The rows a client sees (SPEC §28.K.2: only the relevant ones), in screen order. */
+export function checkinItemsFor(c: { regime: TaxRegime; taxStatus: TaxStatus | null; suspended: boolean }): CheckinItem[] {
+  const out: CheckinItem[] = ['munkaviszony'];
+  if (c.taxStatus !== 'nyugdijas') out.push('nyugdij');
+  out.push('koltozes', 'tevekenyseg');
+  if (c.regime === 'atalany') out.push('csalad');
+  out.push('alkalmazott', c.suspended ? 'folytatas' : 'szuneteltetes');
+  if (c.regime === 'kata') out.push('kata_ceges');
+  out.push('egyeb');
+  return out;
+}
+
+// ---------- §28.K.3 B – annual closing + questionnaire ----------
+export const ANNUAL_STATUSES = ['nem_indult', 'kerdoiv', 'dijra_var', 'konyvelonel', 'jovahagyasra_var', 'beadva', 'kesz'] as const;
+export type AnnualStatus = (typeof ANNUAL_STATUSES)[number];
+/** Who acts now. */
+export const ANNUAL_BALL: Record<AnnualStatus, 'ugyfel' | 'konyvelo' | null> = {
+  nem_indult: null,
+  kerdoiv: 'ugyfel',
+  dijra_var: 'ugyfel',
+  konyvelonel: 'konyvelo',
+  jovahagyasra_var: 'ugyfel',
+  beadva: 'konyvelo',
+  kesz: null,
+};
+export const ANNUAL_RULES = {
+  /** Opens on 5 January 09:00 (Budapest) for the previous tax year. */
+  openMonthDay: '01-05',
+  openHour: 9,
+  /** Questionnaire due (MM-DD of the following year) [KÖNYVELŐ]. */
+  questionnaireDue: { atalany: '03-15', kata: '02-05' },
+  /** Legal deadlines (MM-DD of the following year): SZJA return, HIPA return, '26KATA declaration. */
+  legalDue: { szja: '05-20', hipa: '05-31', kata: '02-25' },
+  reminderDaysBefore: [14, 3, 1],
+  nudgeDays: [3, 7],
+  /** An unpaid annual-closing charge locks the service this many days after the questionnaire was sent (§28.K.5). */
+  lockAfterDays: 14,
+  messageMaxChars: 1_000,
+} as const;
+export const ANNUAL_CHECK_ITEMS = [
+  'kerdoiv_atnezve',
+  'jovedelmek_rendben',
+  'kedvezmenyek_rendben',
+  'hipa_adatok_rendben',
+  'tervezet_feltoltve',
+  'ugyfel_jovahagyta',
+  'szja_beadva',
+  'kata_beadva',
+  'hipa_beadva',
+  'visszaigazolas_feltoltve',
+] as const;
+export type AnnualCheckItem = (typeof ANNUAL_CHECK_ITEMS)[number];
+export const OTHER_INCOME_KINDS = ['munkaber', 'nyugdij', 'ingatlan_berbeadas', 'ingatlan_auto_eladas', 'ertekpapir', 'kulfold', 'mas', 'nem_volt'] as const;
+export type OtherIncomeKind = (typeof OTHER_INCOME_KINDS)[number];
+/** The NAV already knows these (no follow-up line). */
+export const OTHER_INCOME_KNOWN_TO_NAV: readonly OtherIncomeKind[] = ['munkaber', 'nyugdij'];
+export const ANNUAL_HIPA_PLACES = ['csak_szekhely', 'mas_telepulesen_is'] as const;
+export type AnnualHipaPlace = (typeof ANNUAL_HIPA_PLACES)[number];
+export const ANNUAL_ERROR_CODES = ['annual_wrong_status', 'checkin_closed'] as const;
+export type AnnualErrorCode = (typeof ANNUAL_ERROR_CODES)[number];
+
+// ---------- §28.K.4 C – reminders and nudges ----------
+export const REMINDER_RULES = {
+  /** Approved, unpaid quarter: days before, on the due day 08:00, and one day after. */
+  taxDueDaysBefore: [7, 3, 1],
+  taxDueDayHour: 8,
+  taxOverdueDaysAfter: 1,
+  /** KATA: on these days of the month (or the next working day) for the previous month's tax. */
+  kataDays: [8, 12],
+  /** HIPA advance (16 March, 15 September): days before. */
+  hipaAdvanceDaysBefore: [7, 1],
+  /** Bank statement reminder day; receipts reminder day and look-back (months). */
+  statementDay: 5,
+  receiptsDay: 3,
+  receiptsLookbackMonths: 3,
+  /** Open accountant request: days after it was sent (plus the existing due-1 / due+1 / due+4). */
+  requestNudgeDays: [3, 7],
+  /** Anything waiting on the client. */
+  waitingNudgeDays: [3, 7],
+  /** At most one nudge push per client per day (several items → one push). */
+  maxNudgePushPerDay: 1,
+  /** Staff digest: "Ügyfélre vár 7 napja". */
+  staffOverdueDays: 7,
+} as const;
+/** Fiók → Értesítések → "EMLÉKEZTETŐK" rows (labels REMINDER_TEXTS.groups) and the kinds each row switches. */
+export const REMINDER_GROUPS = ['befizetes', 'feltoltes', 'ra_var'] as const;
+export type ReminderGroup = (typeof REMINDER_GROUPS)[number];
+export const REMINDER_GROUP_KINDS: Record<ReminderGroup, readonly NotificationKind[]> = {
+  befizetes: ['tax_due_soon', 'annual_due'],
+  feltoltes: ['upload_reminder'],
+  ra_var: ['nudge', 'checkin_due', 'request_reminder'],
+};
+/** Cannot be switched off (payment and lock texts). */
+export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked'];
+/** Variants used by §28.K.4 (content notif.<kind>.<variant>.*). */
+export const REMINDER_VARIANTS = {
+  tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'hipa'],
+  upload_reminder: ['kivonat', 'nyugta'],
+  request_reminder: ['nap3', 'nap7'],
+  nudge: ['egy', 'tobb', 'szunetel_ket_ev'],
+} as const;
+/** What one 'nudge' row is about (one row per item, one push per day). */
+export const NUDGE_SUBJECTS = ['havi_ellenorzes', 'kedvezmeny_kerdes', 'eves_kerdoiv', 'dij', 'valtozas_engedely', 'eves_jovahagyas'] as const;
+export type NudgeSubject = (typeof NUDGE_SUBJECTS)[number];
+
+// ---------- §28.K.5 D – unpaid fee lock ----------
+export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras'] as const;
+export type ServiceLockReason = (typeof SERVICE_LOCK_REASONS)[number];
+export const SERVICE_LOCK_ERROR_CODE = 'service_locked';
+/** What stays open, what is read-only and what is locked while clients.service_lock is set (SPEC §28.K.5). */
+export const SERVICE_LOCK_RULES = {
+  open: ['fizetes', 'elofizetes', 'kartya', 'dijak', 'dijszamlak', 'fiok', 'ertesitesek', 'gyik_jogi', 'adatletoltes', 'fiok_torles', 'ugyfelszolgalat', 'visszahivas_elofizetes', 'feltoltes'],
+  readOnly: ['fooldal', 'dosszie', 'kiallitott_szamlak', 'hataridok', 'felretesz', 'kereset'],
+  lockedClient: ['uj_keres', 'igazolas_keres', 'valtozas', 'helyettunk', 'havi_ellenorzes_folytatas', 'kedvezmeny_bekuldes', 'eves_kerdoiv_bekuldes', 'jovahagyas'],
+  lockedStaff: ['negyedev_jovahagyas', 'level', 'ev_filed', 'change_done', 'eves_beadva', 'uj_keres_ugyfelnek', 'kedvezmeny_dontes', 'igazolas_keres'],
+  /** One extra notice when a tax deadline is this close while locked. */
+  deadlineNoticeDays: 14,
+} as const;
+
+// ---------- §28.K.6 E – suspension availability fee ----------
+export const PAUSE_SOURCES = ['valtozas', 'konyvelo'] as const;
+export type PauseSource = (typeof PAUSE_SOURCES)[number];
+export const PAUSE_RULES = {
+  feeKind: 'szuneteltetesi_dij',
+  /** The EV is deleted after 2 years without resumption [ELLENŐRIZENDŐ Evectv.]; reminders before that mark. */
+  maxYears: 2,
+  reminderDaysBefore: [60, 30],
+} as const;
+
+// ---------- §28.K.7 F – employees / EFO ----------
+export const EMPLOYER_ANSWERS = ['nincs', 'alkalmazott', 'efo', 'mindketto', 'hamarosan'] as const;
+export type EmployerAnswer = (typeof EMPLOYER_ANSWERS)[number];
+export const EMPLOYER_DECISIONS = ['nincs_teendo', 'berszamfejtes_mashol', 'egyedi_ajanlat', 'egyedi_elfogadva', 'nem_vallaljuk'] as const;
+export type EmployerDecision = (typeof EMPLOYER_DECISIONS)[number];
+/** Activation needs one of these when the answer is not 'nincs'. */
+export const EMPLOYER_DECISIONS_ALLOW_ACTIVATION: readonly EmployerDecision[] = ['nincs_teendo', 'berszamfejtes_mashol', 'egyedi_elfogadva'];
+export const EMPLOYER_SOURCES = ['onboarding', 'havi_ellenorzes', 'konyvelo'] as const;
+export type EmployerSource = (typeof EMPLOYER_SOURCES)[number];
+export const EMPLOYER_RULES = { clientTextMaxChars: 500 } as const;
+
+// ---------- §28.K.8 G – public tax calculator /kalkulator ----------
+export const CALCULATOR_SIDE_OPTIONS = ['csak_ez', 'munkaviszony_36', 'nyugdijas', 'rovid_munkaviszony'] as const;
+export type CalculatorSide = (typeof CALCULATOR_SIDE_OPTIONS)[number];
+export const CALCULATOR_SIDE_TAX_STATUS: Record<CalculatorSide, TaxStatus> = {
+  csak_ez: 'fofoglalkozasu',
+  munkaviszony_36: 'mellekallasu',
+  nyugdijas: 'nyugdijas',
+  rovid_munkaviszony: 'fofoglalkozasu',
+};
+export const CALCULATOR_RULES = {
+  defaultRevenueHuf: 6_000_000,
+  maxRevenueHuf: 100_000_000,
+  sliderStepHuf: 100_000,
+  debounceMs: 300,
+  /** HIPA estimate rate (municipal rates are 0–2 %). */
+  hipaRatePct: 2,
+  /** "Nem találom" → the general cost ratio. */
+  fallbackCostRatio: 45,
+  maxChildren: 5,
+  /** "Ennyit tegyél félre havonta" rounds up to this. */
+  monthlyReserveRoundHuf: 1_000,
+  /** Only if the server path is used: POST /public/calculator per IP per minute. */
+  serverRateLimitPerMinute: 30,
+  routeBundleTargetKbGzip: 150,
+  lighthouseMobileMin: 85,
+  /** postMessage type of the embedded mode (`?beagyazva=1`). */
+  heightMessageType: 'kalkulator:magassag',
+} as const;
+
+// ---------- §28.K.9 H – auto-fill by adószám ----------
+export const TAXPAYER_LOOKUP_RULES = {
+  /** The lookup fires when the 8th digit (törzsszám) is typed. */
+  triggerDigits: 8,
+  debounceMs: 250,
+  /** The shared nav-kliens queue keeps at least this gap between NAV calls (§8.1). */
+  navMinIntervalMs: 1_000,
+  perClientPerHour: 10,
+  perClientPerDay: 30,
+} as const;
+export const TAXPAYER_LOOKUP_STATUSES = ['talalt', 'nincs', 'nem_ev'] as const;
+export type TaxpayerLookupStatus = (typeof TAXPAYER_LOOKUP_STATUSES)[number];
+export const TAXPAYER_LOOKUP_ERROR_CODES = ['lookup_not_configured', 'lookup_unavailable', 'lookup_rate_limited'] as const;
+export type TaxpayerLookupErrorCode = (typeof TAXPAYER_LOOKUP_ERROR_CODES)[number];
+export const BUSINESS_IDENTITY_SOURCES = ['nav', 'kezi'] as const;
+export type BusinessIdentitySource = (typeof BUSINESS_IDENTITY_SOURCES)[number];
+export const YES_NO_DONTKNOW = ['igen', 'nem', 'nem_tudom'] as const;
+export type YesNoDontKnow = (typeof YES_NO_DONTKNOW)[number];
+/** The ÁFA code (9th digit of the adószám) of an alanyi ÁFA-mentes EV (SPEC §27 rule). */
+export const ALANYI_MENTES_VAT_CODE = '1';
+
+// ---------- §28.K.11 J – KATA ----------
+export const TAX_REGIMES = ['atalany', 'kata'] as const;
+export type TaxRegime = (typeof TAX_REGIMES)[number];
+/** clients.tax_regime_answer (onboarding "Hogyan adózol most?"). */
+export const TAX_REGIME_ANSWERS = ['atalany', 'kata', 'nem_tudom'] as const;
+export type TaxRegimeAnswer = (typeof TAX_REGIME_ANSWERS)[number];
+/** 2026 KATA facts for the UI (the engine rules block `kata` is the source for numbers; [KATA] research 11-19). */
+export const KATA_RULES_2026 = {
+  monthlyHuf: 50_000,
+  /** Due by the 12th of the following month (next working day). */
+  dueDayOfNextMonth: 12,
+  accountName: 'NAV Kisadózó vállalkozások tételes adója bevételi számla',
+  accountNumber: '10032000-01076349',
+  iban: 'HU27100320000107634900000000',
+  adonem: '288',
+  yearlyLimitHuf: 18_000_000,
+  /** The limit is prorated: liable months × this. */
+  monthlyLimitHuf: 1_500_000,
+  kulonadoPct: 40,
+  /** '26KATA declaration and the különadó payment (MM-DD of the next year). */
+  declarationDue: '02-25',
+  /** Notice deadline after a kifizető payment or a lost főfoglalkozás (days). */
+  reportDays: 15,
+  /** No re-entry for the rest of the year + this many months after leaving. */
+  reentryBanMonths: 12,
+  ellatasiAlapHuf: 108_000,
+  serviceDaysPerYear: 122,
+  /** The keret meter turns amber at this share, red above 100 %. */
+  warnPct: 80,
+} as const;
+/** revenue_items.payer_kind (SPEC §28.K.11). */
+export const PAYER_KINDS = ['maganszemely', 'kifizeto', 'kulfoldi_kifizeto', 'ismeretlen'] as const;
+export type PayerKind = (typeof PAYER_KINDS)[number];
+/** From NAV customerVatStatus; a missing status → 'ismeretlen'. OTHER = a foreign customer: the accountant checks it. */
+export const PAYER_KIND_BY_VAT_STATUS: Record<'PRIVATE_PERSON' | 'DOMESTIC' | 'OTHER', PayerKind> = {
+  PRIVATE_PERSON: 'maganszemely',
+  DOMESTIC: 'kifizeto',
+  OTHER: 'kulfoldi_kifizeto',
+};
+/** Invoices that trigger the KATA business-customer warning ('ismeretlen' → "ellenőrizd"). */
+export const KATA_WARNING_PAYER_KINDS: readonly PayerKind[] = ['kifizeto', 'kulfoldi_kifizeto', 'ismeretlen'];
+
+// ---------- §28.K.12 K – patterns from Accountable ----------
+/** Status tabs with counts in document lists ("Feltöltve 3 · Bence látta 2 · Kész 12"). */
+export const DOCUMENT_STATUS_TABS = ['feltoltve', 'latta', 'kesz'] as const;
+export type DocumentStatusTab = (typeof DOCUMENT_STATUS_TABS)[number];
+export const DOCUMENT_STATUS_TAB_OF: Record<DocumentStatus, DocumentStatusTab> = {
+  feltoltve: 'feltoltve',
+  konyvelo_latta: 'latta',
+  feldolgozva: 'kesz',
+  beadva: 'kesz',
+};
+/** Personal forwarding e-mail address (SPEC §28.K.12 item 6). */
+export const MAILBOX_RULES = {
+  /** <kod>@<MAILBOX_DOMAIN>, kod = 8 random base32 characters (lower case). */
+  codeLength: 8,
+  codeAlphabet: 'abcdefghijklmnopqrstuvwxyz234567',
+  /** Extra senders besides the login e-mail. */
+  maxExtraSenders: 3,
+  maxAttachments: 10,
+  maxAttachmentBytes: 15 * 1024 * 1024,
+  maxMailBytes: 25 * 1024 * 1024,
+  mimeTypes: ['application/pdf', 'image/jpeg', 'image/png', 'image/heic', 'application/xml', 'text/xml'],
+  /** A bank statement received on day 1–10 goes to the previous month's dossier. */
+  statementPrevMonthUntilDay: 10,
+} as const;
+export const MAILBOX_STATUSES = ['elfogadva', 'elutasitva'] as const;
+export type MailboxStatus = (typeof MAILBOX_STATUSES)[number];
+export const MAILBOX_REJECT_REASONS = ['idegen_felado', 'hitelesites_hibas', 'tul_nagy', 'rossz_tipus', 'tul_sok_csatolmany', 'nincs_csatolmany', 'ismeretlen_cim'] as const;
+export type MailboxRejectReason = (typeof MAILBOX_REJECT_REASONS)[number];
+
+// ---------- §28.K.15 N – no response-time promise ----------
+/**
+ * Case-insensitive RegExp sources. The QA grep over kod/app/src, kod/panel/src, kod/backend/src (content + seed),
+ * kod/jogi (without _regi/), kod/media/*.vtt and kod/shared/src must find 0 hits. They never match the callback promise
+ * "24–48 órán belül hív" (owner decision) or process lines such as "általában 1 munkanapon belül beküldi".
+ */
+export const RESPONSE_TIME_FORBIDDEN_PATTERNS: readonly string[] = [
+  'nincs\\s+buta\\s+kérdés',
+  '(órán|percen|munkanapon|napon)\\s+belül\\s+válaszol',
+  'munkanapokon\\s+\\d+\\s*órán\\s+belül',
+  'munkanapon\\s+belül\\s+átnézi',
+];
+/** accountants.response_time_text default (migration SET DEFAULT, SPEC §28.K.15). */
+export const ACCOUNTANT_RESPONSE_TIME_DEFAULT = 'A lehető leggyorsabban válaszol';
+
+// ---------- §28.K.10 I – the approved look: variant C + the 8 px separator band ----------
+/**
+ * Binding UI scale (pt = CSS px at 390 width). Source: dizajn/C4_atlathato/valasztott/ (owner 11-19 20:10 "a C sokkal
+ * jobb") + dizajn/C4_atlathato/C_elvalaszto/ (20:20 "csak valami elválasztó köztük"): between two white sections an
+ * 8 px #EEF1F8 band. C_retegek (stacked sheets, shadows, darkening layers) is rejected.
+ */
+export const UI_SCALE = {
+  screenTitle: { size: 26, weight: 700, lineHeight: 1.15, letterSpacingEm: -0.022 },
+  /** Dark ink, not blue: blue is only the band, the main button, the text link and the active tab. */
+  sectionTitle: { size: 18, weight: 650, lineHeight: 1.3, letterSpacingEm: -0.012, color: 'tinta' },
+  body: { size: 16, weight: 400, lineHeight: 1.45, minSize: 15 },
+  secondary: { size: 15, lineHeight: 1.4, color: 'halvany', minContrast: 4.5 },
+  row: { titleSize: 16, titleWeight: 600, titleLineHeight: 1.35, subSize: 15, subLineHeight: 1.4, minHeight: 52 },
+  bigNumber: { size: 22, weight: 700, tabularNums: true },
+  band: {
+    avatar: 30,
+    nameSize: 15,
+    progressNumberSize: 18,
+    progressNumberWeight: 750,
+    progressBarHeight: 6,
+    messageIcon: 30,
+    messageTitleSize: 26,
+    messageTextSize: 16,
+    messageIndent: 38,
+    paddingBottom: 20,
+  },
+  icon: { section: 28, row: 28, band: 30, tab: 26, info: 26 },
+  mainButton: { height: 52, fontSize: 17, weight: 650, sideMargin: 16 },
+  capsule: { height: 40, tapHeight: 44, fontSize: 15.5, weight: 650 },
+  textLink: { size: 16, weight: 550, minHeight: 44, maxPerScreen: 1 },
+  input: { height: 56, radius: 12, focusBorder: 2, valueSize: 22, valueWeight: 600 },
+  formHeader: { backHeight: 36, titleSize: 16, titleWeight: 650 },
+  tabBar: { height: 52, tabs: ['Főoldal', 'Dosszié', 'Fotózás', 'Üzenetek', 'Fiók'], labelSize: 12.5, labelWeight: 550, activeWeight: 750 },
+  section: { padding: 16, contentIndent: 38, separator: { heightPx: 8, color: '#EEF1F8' }, rowDivider: { heightPx: 1, color: '#E2E6F1' } },
+  spacing: [4, 8, 12, 16, 24],
+  minTapTarget: 44,
+  colors: {
+    brand: '#1428DB',
+    tinta: '#10152B',
+    halvany: '#505873',
+    hajszal: '#E2E6F1',
+    fejlecHalvany: '#C9D2FF',
+    gombMAlap: '#DFE4FD',
+    tintakekSzoveg: '#1226B8',
+    sectionSeparator: '#EEF1F8',
+    page: '#FFFFFF',
+  },
+  /** Never: rejected by the owner or outside the approved set. */
+  forbidden: ['card_shadow', 'stacked_sheets', 'darkening_layer', 'box_in_box', 'line_icons', 'pastel_circles', 'hamburger_menu', 'fab_plus'],
+  panel: { pageTitle: 24, sectionTitle: 18, tableText: 14.5, rowMinHeight: 40, buttonHeightMin: 36, buttonHeightMax: 40 },
+} as const;

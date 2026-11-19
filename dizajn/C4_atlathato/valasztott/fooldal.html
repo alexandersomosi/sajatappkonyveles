@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=390, initial-scale=1">
-<title>Adózz – Főoldal (C: a javított B)</title>
+<title>Adózz – Főoldal (választott: C csiszolva)</title>
 <link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
 <link rel="stylesheet" href="../../C3_zold/kek.css">
-<link rel="stylesheet" href="c_kozos.css">
+<link rel="stylesheet" href="kozos.css">
 <style>
 /* C főoldal (indulás). Felül a kék sáv egy egység: ki a könyvelőd → hol tartasz → mi a dolgod most (a „hős”).
    Alatta B három szakasza, sűrűbben: Utána jön (következő + a többi egy sorban), Közben mi dolgozunk, Ha elakadsz.
@@ -23,10 +23,9 @@
 .halad .szam { font-weight: 750; font-size: 18px; line-height: 1; letter-spacing: -.01em; color: #fff; }
 .halad .mi { font-size: 15px; line-height: 1; color: var(--fejlec-halvany); white-space: nowrap; }
 .halad .szoveg { display: flex; align-items: baseline; gap: 6px; flex: none; }
-.csik { flex: 1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; }
-.csik i { height: 6px; border-radius: 3px; background: rgba(255,255,255,.24); }
-.csik i.k { background: #fff; }
-.csik i.mo { background: rgba(255,255,255,.58); }
+/* egy folytonos csík (Shopify Setup guide), nem 12 szelet: a szám mondja meg a lépést, a csík csak az arányt */
+.csik { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.26); overflow: hidden; }
+.csik i { display: block; height: 100%; width: calc(100% * 2 / 12); border-radius: 3px; background: #fff; }
 
 /* mi a dolgod most */
 .most { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
@@ -60,7 +59,7 @@
 
   <div class="halad">
     <div class="szoveg"><span class="szam">2 / 12</span><span class="mi">lépés kész</span></div>
-    <div class="csik" role="img" aria-label="12 lépésből 2 kész, a 3. most jön"><i class="k"></i><i class="k"></i><i class="mo"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="csik" role="img" aria-label="12 lépésből 2 kész"><i></i></div>
   </div>
 
   <div class="most">

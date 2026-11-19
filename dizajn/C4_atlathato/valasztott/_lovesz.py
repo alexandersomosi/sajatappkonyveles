@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""C4/C: fooldal + urlap képek @2x (390x844), teljes hosszú fooldal, és hunyorítás-próba (GaussianBlur 6)."""
+"""C4/valasztott (C csiszolva): fooldal + urlap képek @2x (390x844), teljes hosszú fooldal, és hunyorítás-próba (GaussianBlur 6)."""
 import os, re, sys, subprocess, tempfile, uuid
 from PIL import Image, ImageFilter
 
 CH = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
-D = 'C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/C'
+D = 'C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/valasztott'
 
 
 def prof():
