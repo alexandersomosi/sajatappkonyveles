@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Tétel</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* felső sor: szöveges vissza-link (nem kapszula) */
+  .navsor { display: flex; align-items: center; height: 48px; padding: 0 10px; }
+  /* 5. kör: a vissza-nyíl (vonalas ikon) helyett kimondjuk, hová visz */
+  .vissza { display: inline-flex; align-items: center; height: 44px; padding: 0 10px;
+    color: var(--tintakek-szoveg); font-weight: 500; font-size: 16.5px;
+    text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .fej { padding: 6px 20px 16px; }
+  .fej h1 { font-weight: 700; font-size: 28px; line-height: 1.15; letter-spacing: -.025em; }
+  /* állapot: sima szöveg pipával, nem gombformájú pirula */
+  .fej .allapot { margin-top: 10px; font-size: 16px; }
+  .fej .allapot img.i3 { width: 23px; height: 23px; }
+  .foto { display: block; width: 100%; }
+  .adat { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 13px 18px; font-size: 16px; }
+  .adat + .adat { border-top: 1px solid var(--hajszal); }
+  .adat .c { color: var(--halvany); font-size: 15px; white-space: nowrap; }
+  .adat .osszeg { font-size: 18px; }
+
+  /* idővonal: a négy állapot a dosszié szavaival */
+  .ido { padding: 8px 18px 6px; }
+  .lepes { display: grid; grid-template-columns: 22px 1fr; column-gap: 14px; position: relative; padding: 10px 0 12px; }
+  .lepes .pont { width: 22px; height: 22px; position: relative; z-index: 1; background: var(--lap); border-radius: 50%; }
+  .lepes .pont img.i3 { width: 22px; height: 22px; }
+  /* 11-18: a még hátralévő lépés tömör, halk korong a sorszámmal (az üres karika vonalas ikonnak hatott, és nagyobb volt
+     a pecsétnél); akkora, mint a pecsét látható része, mint a 02 lépéssorában */
+  .lepes.var .pont { width: 21px; height: 21px; margin: .5px; display: grid; place-items: center; background: var(--alap);
+    color: var(--tinta); font-size: 12.5px; font-weight: 750; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+  .lepes:not(:last-child)::after { content: ""; position: absolute; left: 10px; top: 33px; bottom: -11px; width: 2px; background: #7A62D9; opacity: .4; }  /* 5. kör: a pecsét ibolyája */
+  .lepes.utolso-kesz::after { background: var(--keret); opacity: 1; }
+  .lepes .mi { font-weight: 650; font-size: 16px; line-height: 1.35; }
+  .lepes.var .mi { font-weight: 600; color: var(--halvany); }
+  .lepes .mikor { font-size: 14px; line-height: 1.4; color: var(--halvany); margin-top: 1px; }
+
+  .jegyzet { padding: 16px 18px 16px; }
+  /* 11-18: Bence arca mellé a neve is kiírva (az arc 34 pt-on magában nem felismerhető) */
+  .jegyzet .ki { display: flex; align-items: center; gap: 9px; font-size: 14px; line-height: 1.3; color: var(--halvany); }
+  .jegyzet .ki .arc-kicsi { width: 34px; height: 34px; }
+  .jegyzet .ki b { display: block; font-weight: 650; font-size: 14.5px; color: var(--tinta); }
+  .jegyzet p { font-size: 16px; line-height: 1.5; }
+  .jegyzet .ala { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+<div class="navsor"><a class="vissza">Vissza az októberi dossziéhoz</a></div>
+<div class="fej">
+  <h1>Nyugta, készpénzes eladás</h1>
+  <div class="allapot kesz"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"><span><span class="szo">Feldolgozva</span>, hétfő 9:20</span></div>
+</div>
+
+<main class="tartalom" style="padding-top:0">
+  <section class="lap">
+    <img class="foto" src="nyugta_foto_keretben.svg" alt="Lefotózott nyugta: 3 darab, 18 000 Ft, 2026. október 3.">
+    <div class="adat"><span class="c">Összeg</span><span class="osszeg">18&nbsp;000<span class="ft">Ft</span></span></div>
+    <div class="adat"><span class="c">Hová került</span><span>az októberi bevételedhez</span></div>
+    <div class="adat"><span class="c">Feltöltötted</span><span>szombaton, fotóként, 1 oldal</span></div>
+  </section>
+
+  <div class="szakasz">Hol tart</div>
+  <section class="lap ido">
+    <div class="lepes">
+      <span class="pont"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"></span>
+      <div><div class="mi">Feltöltve</div><div class="mikor">Szombat, október 3., 18:40</div></div>
+    </div>
+    <div class="lepes">
+      <span class="pont"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"></span>
+      <div><div class="mi">Bence látta</div><div class="mikor">Hétfő, október 5., 9:05</div></div>
+    </div>
+    <div class="lepes utolso-kesz">
+      <span class="pont"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"></span>
+      <div><div class="mi">Feldolgozva</div><div class="mikor">Hétfő, október 5., 9:20</div></div>
+    </div>
+    <div class="lepes var">
+      <span class="pont">4</span>
+      <div><div class="mi">Beadva</div><div class="mikor">A IV. negyedéves bevallással, legkésőbb január 12-én.</div></div>
+    </div>
+  </section>
+
+  <div class="szakasz">Bence megjegyzése</div>
+  <section class="lap jegyzet">
+    <p>Rendben, hozzáadtam az októberi bevételedhez. Ha máskor is kézzel adsz nyugtát, elég a hónap végén egyszerre lefotóznod a tömb lapjait.</p>
+    <div class="ala">
+      <span class="ki"><img class="arc-kicsi" src="../assets/avatar/karakter_1_lapos@2x.png" srcset="../assets/avatar/karakter_1_lapos@2x.png 2x, ../assets/avatar/karakter_1_lapos@3x.png 3x" alt=""><span><b>Bence</b>hétfő 9:20</span></span>
+      <button class="gomb-m"><img class="i3" src="../assets/ikon3d/kerdezek_28@2x.png" srcset="../assets/ikon3d/kerdezek_28@2x.png 2x, ../assets/ikon3d/kerdezek_28@3x.png 3x" alt="">Válaszolok</button>
+    </div>
+  </section>
+</main>
+
+<div class="alj-fatyol" aria-hidden="true"></div>
+<nav class="fulsor" aria-label="Fő navigáció">
+  <div class="fulek">
+    <a class="ful"><img class="i3 fooldal" src="../assets/ikon3d/fooldal_36@2x.png" srcset="../assets/ikon3d/fooldal_36@2x.png 2x, ../assets/ikon3d/fooldal_36@3x.png 3x" alt="">Főoldal</a>
+    <a class="ful on"><img class="i3 dosszie" src="../assets/ikon3d/dosszie_36@2x.png" srcset="../assets/ikon3d/dosszie_36@2x.png 2x, ../assets/ikon3d/dosszie_36@3x.png 3x" alt="">Dosszié</a>
+    <a class="ful"><img class="i3 uzenetek" src="../assets/ikon3d/uzenetek_36@2x.png" srcset="../assets/ikon3d/uzenetek_36@2x.png 2x, ../assets/ikon3d/uzenetek_36@3x.png 3x" alt="">Üzenetek</a>
+    <a class="ful"><img class="i3 fiok" src="../assets/ikon3d/fiok_36@2x.png" srcset="../assets/ikon3d/fiok_36@2x.png 2x, ../assets/ikon3d/fiok_36@3x.png 3x" alt="">Fiók</a>
+  </div>
+  <button class="fotogomb" aria-label="Fotózás: irat lefotózása"><img class="i3" src="../assets/ikon3d/fotozas_arnyektalan_36@2x.png" srcset="../assets/ikon3d/fotozas_arnyektalan_36@2x.png 2x, ../assets/ikon3d/fotozas_arnyektalan_36@3x.png 3x" alt="">Fotózás</button>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="480" height="360">
+<!-- Kézjegy C2, 4. kör: tépőnaptár SZEMBŐL (kamera a tárgy fél magasságában, teleobjektív: felső és oldallap nem látszik).
+     Átlátszó háttér, árnyék nélkül: a talajárnyékot a CSS rajzolja (.targy::after). A lap ÜRES, a szöveg (OKT. 15. / CSÜT / 10:00)
+     valódi HTML-szöveg fölötte. A tárgy a 160 × 120-as doboz közepén, 96 egység magas (y 12–108), alapvonala y = 108. -->
+<defs>
+  <linearGradient id="fej" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#31477A"/><stop offset=".5" stop-color="#22355E"/><stop offset="1" stop-color="#19284B"/>
+  </linearGradient>
+  <linearGradient id="lap" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FDFCF9"/><stop offset=".72" stop-color="#F8F5EE"/><stop offset="1" stop-color="#EFEBE2"/>
+  </linearGradient>
+  <linearGradient id="szel" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#3A3320" stop-opacity=".09"/><stop offset=".05" stop-color="#3A3320" stop-opacity="0"/>
+    <stop offset=".95" stop-color="#3A3320" stop-opacity="0"/><stop offset="1" stop-color="#3A3320" stop-opacity=".11"/>
+  </linearGradient>
+  <linearGradient id="fejarnyek" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0E1830" stop-opacity=".2"/><stop offset="1" stop-color="#0E1830" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="fenyfolt" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <radialGradient id="szegecs" cx=".36" cy=".32" r=".75">
+    <stop offset="0" stop-color="#F6F8FB"/><stop offset=".45" stop-color="#C3C9D3"/><stop offset="1" stop-color="#6A7282"/>
+  </radialGradient>
+  <linearGradient id="hajlat" x1="1" y1="1" x2="0" y2="0">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F1EDE4"/><stop offset="1" stop-color="#DCD6C9"/>
+  </linearGradient>
+  <!-- papírrost: finom, szabálytalan zaj, csak a lap alakján belül -->
+  <filter id="rost" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="1.15 .55" numOctaves="3" seed="11" result="z"/>
+    <feColorMatrix in="z" type="matrix" values="0 0 0 0 .35  0 0 0 0 .31  0 0 0 0 .22  .075 0 0 0 -.022" result="r"/>
+    <feComposite in="r" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="karton" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".95" numOctaves="2" seed="5" result="z"/>
+    <feColorMatrix in="z" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .09 0 0 0 -.03" result="r"/>
+    <feComposite in="r" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <clipPath id="lapvago"><rect x="38" y="31" width="84" height="72.4" rx="1"/></clipPath>
+</defs>
+
+<!-- a tömb alja: az egymásra fekvő lapok élei (csak itt látszik a vastagság, mert szemből nézzük) -->
+<rect x="38.5" y="101" width="83" height="7" rx="1.2" fill="#E6E1D5"/>
+<g stroke-width=".45">
+  <path d="M38.9 102.6H121.2" stroke="#FBF9F4"/><path d="M38.7 103.5H121.4" stroke="#D3CDBF"/>
+  <path d="M39.1 104.4H121.0" stroke="#FAF8F2"/><path d="M38.8 105.3H121.3" stroke="#D6D0C3"/>
+  <path d="M39.0 106.2H121.1" stroke="#F8F6EF"/><path d="M38.9 107.1H121.2" stroke="#CFC9BB"/>
+</g>
+
+<!-- az elülső (üres) lap -->
+<g clip-path="url(#lapvago)">
+  <rect x="38" y="31" width="84" height="72.4" fill="url(#lap)"/>
+  <rect x="38" y="31" width="84" height="72.4" fill="url(#szel)"/>
+  <rect x="38" y="31" width="84" height="72.4" fill="#fff" filter="url(#rost)"/>
+  <rect x="38" y="31" width="60" height="40" fill="url(#fenyfolt)" opacity=".5"/>
+  <!-- a fejléc halk árnyéka a lapon -->
+  <rect x="38" y="31" width="84" height="6.5" fill="url(#fejarnyek)"/>
+  <!-- jobb alsó sarok: épp hogy felpöndörödik, alatta a következő lap -->
+  <path d="M122 92.4 L122 103.4 L110.6 103.4 Q117.4 99.6 122 92.4Z" fill="#E9E4D8"/>
+  <path d="M122 92.4 Q115.4 96.8 110.6 103.4 Q117.8 101.4 122 92.4Z" fill="url(#hajlat)"/>
+  <path d="M122 92.4 Q115.4 96.8 110.6 103.4" fill="none" stroke="#C9C2B3" stroke-width=".35"/>
+</g>
+
+<!-- a korábban letépett lapok csonkja a fejléc alatt -->
+<path d="M37.6 30.6 H122.4 V32.2 L121.2 33.4 L119.6 32.5 L118.1 33.8 L116.2 32.6 L114.4 33.3 L112.1 32.4 L110.2 33.9 L108.0 32.7 L106.1 33.5 L103.7 32.5 L101.8 33.7 L99.4 32.6 L97.6 33.3 L95.2 32.4 L93.1 33.8 L91.0 32.8 L88.7 33.4 L86.6 32.5 L84.3 33.9 L82.4 32.7 L80.0 33.4 L77.9 32.4 L75.6 33.7 L73.5 32.6 L71.4 33.5 L69.0 32.5 L67.1 33.8 L64.8 32.6 L62.9 33.4 L60.5 32.4 L58.4 33.6 L56.2 32.7 L54.0 33.5 L51.9 32.4 L49.6 33.8 L47.7 32.6 L45.3 33.3 L43.4 32.5 L41.2 33.7 L39.4 32.6 L37.6 33.2Z" fill="#F4F1E9"/>
+<path d="M37.6 33.2 L39.4 32.6 L41.2 33.7 L43.4 32.5 L45.3 33.3 L47.7 32.6 L49.6 33.8 L51.9 32.4 L54.0 33.5 L56.2 32.7 L58.4 33.6 L60.5 32.4 L62.9 33.4 L64.8 32.6 L67.1 33.8 L69.0 32.5 L71.4 33.5 L73.5 32.6 L75.6 33.7 L77.9 32.4 L80.0 33.4 L82.4 32.7 L84.3 33.9 L86.6 32.5 L88.7 33.4 L91.0 32.8 L93.1 33.8 L95.2 32.4 L97.6 33.3 L99.4 32.6 L101.8 33.7 L103.7 32.5 L106.1 33.5 L108.0 32.7 L110.2 33.9 L112.1 32.4 L114.4 33.3 L116.2 32.6 L118.1 33.8 L119.6 32.5 L121.2 33.4 L122.4 32.2" fill="none" stroke="#CFC8B9" stroke-width=".35"/>
+
+<!-- fejléc: tintakék karton két szegeccsel -->
+<rect x="35" y="12" width="90" height="19.4" rx="2.4" fill="url(#fej)"/>
+<rect x="35" y="12" width="90" height="19.4" rx="2.4" fill="#fff" filter="url(#karton)"/>
+<path d="M37.2 12.55 H122.8" stroke="#fff" stroke-opacity=".2" stroke-width=".6" stroke-linecap="round"/>
+<path d="M35.6 31.1 H124.4" stroke="#0B1428" stroke-opacity=".45" stroke-width=".5"/>
+<g>
+  <circle cx="45" cy="21.7" r="2.55" fill="#0B1428" opacity=".35" transform="translate(.35 .45)"/>
+  <circle cx="45" cy="21.7" r="2.4" fill="url(#szegecs)"/>
+  <circle cx="115" cy="21.7" r="2.55" fill="#0B1428" opacity=".35" transform="translate(.35 .45)"/>
+  <circle cx="115" cy="21.7" r="2.4" fill="url(#szegecs)"/>
+</g>
+</svg>

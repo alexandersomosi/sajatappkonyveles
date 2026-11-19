@@ -1,0 +1,42 @@
+{
+ "ikon_monogram": {
+  "doboz": [
+   151,
+   167,
+   490,
+   493
+  ],
+  "szin": "#263855",
+  "forras_px": 339
+ },
+ "ikon_alairas": {
+  "doboz": [
+   534,
+   167,
+   872,
+   493
+  ],
+  "szin": "#263855",
+  "forras_px": 338
+ },
+ "ikon_pecset": {
+  "doboz": [
+   151,
+   536,
+   490,
+   861
+  ],
+  "szin": "#253653",
+  "forras_px": 339
+ },
+ "ikon_boritek": {
+  "doboz": [
+   534,
+   535,
+   872,
+   861
+  ],
+  "szin": "#263855",
+  "forras_px": 338
+ }
+}

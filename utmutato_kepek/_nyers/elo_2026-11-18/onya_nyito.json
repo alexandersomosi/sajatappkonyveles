@@ -1,0 +1,31 @@
+{
+ "nev": "onya_nyito",
+ "url": "https://onya.nav.gov.hu/#!/login",
+ "cim": "Belépés - Online Nyomtatványkitöltő Alkalmazás",
+ "ido": "2026-11-18T09:53:14.513Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 900,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "bejelentkezes": [
+   212,
+   546,
+   430,
+   586
+  ],
+  "azonositas_nelkul": [
+   546,
+   546,
+   952,
+   586
+  ]
+ },
+ "megjegyzes": "a süti-tájékoztató ablakot a képről eltávolítottuk (nem fogadtuk el)",
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

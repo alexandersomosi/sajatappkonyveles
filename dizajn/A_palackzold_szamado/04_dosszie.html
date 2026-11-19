@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Dosszié</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .nav { height: 48px; display: flex; align-items: center; padding: 0 12px; }
+  .vissza { display: inline-flex; align-items: center; gap: 2px; color: var(--link); font: 700 17px/1 var(--sans); height: 44px; padding-right: 8px; }
+  .head { padding-top: 2px; }
+  .mhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .mhead + .lede { margin-top: 6px; }
+  .rad .small { margin-top: 6px; }
+  .rad .btn-p { margin-top: 18px; }
+</style>
+</head>
+<body>
+<div class="sb"></div>
+<div class="nav"><button class="vissza" aria-label="Előző hónap: szeptember"><i data-i="back" data-s="26"></i>Szeptember</button></div>
+
+<header class="head">
+  <div class="mhead">
+    <h1 class="t1">Október</h1>
+    <button class="btn-s"><i data-i="camera" data-s="20"></i>Feltöltés</button>
+  </div>
+  <p class="lede">7 tétel. Egy vár rád, kettő Bencénél van.</p>
+</header>
+
+<h2 class="sect w">Rád vár</h2>
+<div class="sheet pad rad">
+  <p class="t3">Bence kéri a szeptemberi bankszámlakivonatod 2. oldalát.</p>
+  <p class="small">Az 1. oldalt október 5-én töltötted fel. Elég a bankod appjából letöltött PDF is.</p>
+  <button class="btn-p"><i data-i="camera" data-s="22"></i>Feltöltöm a 2. oldalt</button>
+</div>
+
+<h2 class="sect">Kiállított számláid <span class="aside">a NAV-ból, maguktól jönnek</span></h2>
+<div class="sheet">
+  <div class="row">
+    <div class="main"><div class="top"><p class="ttl">Fekete Nyomda Kft.</p><span class="amt">380&thinsp;000<small>Ft</small></span></div>
+      <p class="state">Feldolgozva, október 5.</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+  <div class="row">
+    <div class="main"><div class="top"><p class="ttl">Lantos és Társa Bt.</p><span class="amt">220&thinsp;000<small>Ft</small></span></div>
+      <p class="state">Bence látta, október 6.</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+  <div class="row">
+    <div class="main"><div class="top"><p class="ttl">Halász Anna</p><span class="amt">65&thinsp;000<small>Ft</small></span></div>
+      <p class="state">Megjött a NAV-ból, ma</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+</div>
+
+<h2 class="sect">Amit feltöltöttél</h2>
+<div class="sheet">
+  <div class="row">
+    <div class="main"><div class="top"><p class="ttl">Kézi nyugták, 3 oldal</p><span class="amt">42&thinsp;000<small>Ft</small></span></div>
+      <p class="state">Feldolgozva, október 5.</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+</div>
+
+<h2 class="sect">Hivatalos iratok</h2>
+<div class="sheet">
+  <div class="row">
+    <div class="main"><p class="ttl">Egyenlegértesítő a NAV-tól</p>
+      <p class="state">Bence elolvasta, nincs vele teendőd.</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+  <div class="row">
+    <div class="main"><p class="ttl">Új tevékenység bejelentése (fotózás)</p>
+      <p class="state">Beadva október 6-án, a NAV visszaigazolta.</p></div>
+    <i data-i="chev" data-s="16" class="chev"></i>
+  </div>
+</div>
+
+<div class="spacer-tab"></div>
+<nav class="tabbar" data-on="dosszie"></nav>
+<script src="kozos.js"></script>
+</body>
+</html>

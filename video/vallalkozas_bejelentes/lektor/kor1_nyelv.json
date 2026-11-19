@@ -1,0 +1,83 @@
+{
+ "talalatok": [
+  {
+   "id": "b07",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "A felirat 'Ügyfélkapu+-szal' írásmódot használ, a mond viszont 'Ügyfélkapu plusszal'. Az egységesség érdekében a feliratnak is a mond szerinti alakot kell követnie, és a magyar helyesírásban a '+' jel betűs formában is írható ('plusz').",
+   "javitott": "Nyisd meg a Vállalkozói Ügysegédet, és lépj be DÁP-pal vagy Ügyfélkapu pluszszal."
+  },
+  {
+   "id": "b25",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "Az 'ÁFÁ-t' alak helyesírása: a rövidítés nagybetűs formája ('ÁFA') után a toldalék kötőjel nélkül, kisbetűvel kapcsolódik a szóhoz, illetve a szabályos alak 'ÁFÁ-t' helyett 'ÁFA-t' (vagy kiírva 'áfát'). A következetesség miatt a 'ÁFA-mentesség' írásmóddal összhangban 'ÁFA-t' a helyes.",
+   "javitott": "Ez a legfontosabb pipa: így nem kell ÁFA-t felszámolnod."
+  },
+  {
+   "id": "b29",
+   "mezo": "mindketto",
+   "sulyossag": "hiba",
+   "problema": "Az 'ÁFA-mentesség' és 'ÁFA' írásmód a mond oldalon 'áfa' (kisbetűvel, sima szóként) lenne, a felirat pedig nagybetűs rövidítés. A felirat és a mond tartalma így eltér, és a 'mentesség' helyesen 'mentesség' — a mond oldalon a TTS a 'ÁFA' betűzését fogja igényelni. Javasolt egységesen 'áfa' írással a mondban; a feliratban maradhat 'ÁFA-mentesség', de a mondban a szöveg nem egyezik. A 'mond' oldalon nincs ilyen szó, ezért a felirat a helyes; a fő hiba a felirat nem egyezik a mond szavaival: a mond 'alanyi áfamentesség', a felirat 'alanyi ÁFA-mentesség'.",
+   "javitott": "Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem."
+  },
+  {
+   "id": "b36",
+   "mezo": "mindketto",
+   "sulyossag": "javaslat",
+   "problema": "A 'Beküldtem, feltöltöm' gomb neve a mond szövegében és a feliratban is idézőjelben van, de a mond-ban a 'koppints a Beküldtem, feltöltöm gombra' szerkezet vesszővel tagolt gombnévvel nehezen követhető hallás alapján; a TTS-ben a gomb neve és a parancs összeolvadhat. Egyértelműbb a gomb nevét elkülöníteni.",
+   "javitott": "Itt, az alkalmazásban koppints a „Beküldtem, feltöltöm” gombra, és töltsd fel."
+  },
+  {
+   "id": "b39",
+   "mezo": "mindketto",
+   "sulyossag": "hiba",
+   "problema": "A mond szövege 'huszonnégy-negyvennyolc órán belül' (kötőjeles, betűs), a felirat pedig '24–48 órán belül' (számjegyes, gondolatjeles). Tartalmilag egyezik, de a TTS-ben a számjegyes tartomány felolvasása nem garantált; a felirat és a mond közötti egyezés érdekében a felirat is használhatna betűs alakot, vagy a mond is számjegyet. A kötőjeles időtartam felolvasása a 'huszonnégy-negyvennyolc' helyett zavaró lehet, ezért a mondban a 'huszonnégy-negyvennyolc' helyes.",
+   "javitott": "Ha elakadsz, kérj visszahívást: a csapatunk huszonnégy-negyvennyolc órán belül hív."
+  },
+  {
+   "id": "m02",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "A felirat rövidítést használ ('Kb. 5 perc'), a mond teljes szót ('Körülbelül öt perc'). A feliratban a 'kb.' rövidítés a képernyőn olvasóbarát, de a szövegegyezés és a 60 éves célközönség miatt a teljes alak javasolt.",
+   "javitott": "Így ő intézheti az adóügyeidet. Körülbelül öt perc."
+  },
+  {
+   "id": "m21",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "A felirat 'Kb. 20 perc múlva' rövidítést használ, a mond 'Körülbelül húsz percet'. Ugyanaz a probléma, mint az m02-ben: a feliratnak és a mond szövegének egyeznie kell.",
+   "javitott": "Kész. Körülbelül húsz perc múlva él a meghatalmazás."
+  },
+  {
+   "id": "m14",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat '9-est' számjegyes alakot használ, a mond 'kilencest' betűs. A szövegegyezés miatt a feliratnak is a mond szerinti alakot kell követnie.",
+   "javitott": "Jogcímnek válaszd a kilencest: Könyvelő."
+  },
+  {
+   "id": "b24",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat '2. pontot' számjegyes, a mond 'második pontot' betűs. A szövegegyezés érdekében egységesítendő.",
+   "javitott": "Az áfamentességnél csak a második pontot jelöld: az alanyi adómentességet."
+  },
+  {
+   "id": "b38",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat '5 munkanapon belül' számjegyes, a mond 'öt munkanapon belül' betűs. Egységesítendő a mond alakjára.",
+   "javitott": "Még egy dolog: öt munkanapon belül regisztrálj a területi gazdasági kamaránál is."
+  },
+  {
+   "id": "m06",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat 'Ügyfélkapu+-szal', a mond 'Ügyfélkapu plusszal'. Ugyanaz az egységesítési probléma, mint a b07-nél.",
+   "javitott": "Lépj be DÁP-pal vagy Ügyfélkapu pluszszal. A belépésedet senkinek ne add meg."
+  }
+ ],
+ "osszegzes": "A szövegek általában természetesek, udvariasak és egységes tegeződést használnak. A fő problémák a mond és a felirat eltéréséből adódnak: a számok (öt/5, húsz/20, kilenc/9, második/2.) és a 'Ügyfélkapu plusz' / 'Ügyfélkapu+' írásmód nem egyezik, valamint a 'kb.' rövidítés. Az ÁFA/áfa írásmód egységesítése is szükséges. A kötőjeles időtartam és a gombnevek elkülönítése a TTS-ben jobb érthetőséget ad. A sorok többsége hibátlan, a fenti javítások után a két videó szövege konzisztens lesz.",
+ "_modell": "anthropic/claude-haiku-5.5"
+}

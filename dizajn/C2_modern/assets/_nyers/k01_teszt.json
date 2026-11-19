@@ -1,0 +1,38 @@
+[
+ {
+  "nev": "teszt_gem25_boritek",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "Spot illustration in the manner of a fine steel engraving or pen-and-ink etching on good letter paper. Drawn with ONE ink colour only, deep navy ink-blue (#1F2F5C), using precise thin contour lines and delicate parallel hatching and cross-hatching for shading. Exactly one additional flat colour: a very pale blue-grey wash (#D6E0F0), applied in a few soft flat areas like a watercolour tint, slightly offset from the lines as in risograph printing. Pure white background, the object centred with a generous empty white margin around it, no ground shadow, no frame, no border. Calm, adult, precise, quietly premium, like the stationery of a private bank. Strictly no text, no letters, no numbers, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not a cartoon, not cute, no sparkles. Subject: an opened paper envelope seen at a slight three-quarter angle, with a folded letter sheet half pulled out of it; on the letter only a few loose abstract wavy pen lines and a small signature-like flourish, nothing readable.",
+  "aspect_ratio": "4:3"
+ },
+ {
+  "nev": "teszt_gem25_ikon",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "App icon, square with rounded corners, filled with flat deep navy ink-blue (#17284A). Centred, one bold simple mark in off-white (#F5F7FA): the tip of a fountain-pen nib finishing one short, confident looping signature stroke. Flat, minimal, strong silhouette that stays recognisable at 60 pixels, generous padding, calm premium private-bank feel. No text, no letters, no gradient, no 3D, no glossy highlight, no shadow, no extra decoration.",
+  "aspect_ratio": "1:1"
+ },
+ {
+  "nev": "teszt_recfree_boritek",
+  "model": "recraft/recraft-v4.1-flash-v2:free",
+  "prompt": "Spot illustration in the manner of a fine steel engraving or pen-and-ink etching on good letter paper. Drawn with ONE ink colour only, deep navy ink-blue (#1F2F5C), using precise thin contour lines and delicate parallel hatching and cross-hatching for shading. Exactly one additional flat colour: a very pale blue-grey wash (#D6E0F0), applied in a few soft flat areas like a watercolour tint, slightly offset from the lines as in risograph printing. Pure white background, the object centred with a generous empty white margin around it, no ground shadow, no frame, no border. Calm, adult, precise, quietly premium, like the stationery of a private bank. Strictly no text, no letters, no numbers, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not a cartoon, not cute, no sparkles. Subject: an opened paper envelope seen at a slight three-quarter angle, with a folded letter sheet half pulled out of it; on the letter only a few loose abstract wavy pen lines and a small signature-like flourish, nothing readable.",
+  "aspect_ratio": "4:3"
+ },
+ {
+  "nev": "teszt_recfree_ikon",
+  "model": "recraft/recraft-v4.1-flash-v2:free",
+  "prompt": "App icon, square with rounded corners, filled with flat deep navy ink-blue (#17284A). Centred, one bold simple mark in off-white (#F5F7FA): the tip of a fountain-pen nib finishing one short, confident looping signature stroke. Flat, minimal, strong silhouette that stays recognisable at 60 pixels, generous padding, calm premium private-bank feel. No text, no letters, no gradient, no 3D, no glossy highlight, no shadow, no extra decoration.",
+  "aspect_ratio": "1:1"
+ },
+ {
+  "nev": "teszt_flux3k_boritek",
+  "model": "black-forest-labs/flux-3-image-klein",
+  "prompt": "Spot illustration in the manner of a fine steel engraving or pen-and-ink etching on good letter paper. Drawn with ONE ink colour only, deep navy ink-blue (#1F2F5C), using precise thin contour lines and delicate parallel hatching and cross-hatching for shading. Exactly one additional flat colour: a very pale blue-grey wash (#D6E0F0), applied in a few soft flat areas like a watercolour tint, slightly offset from the lines as in risograph printing. Pure white background, the object centred with a generous empty white margin around it, no ground shadow, no frame, no border. Calm, adult, precise, quietly premium, like the stationery of a private bank. Strictly no text, no letters, no numbers, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not a cartoon, not cute, no sparkles. Subject: an opened paper envelope seen at a slight three-quarter angle, with a folded letter sheet half pulled out of it; on the letter only a few loose abstract wavy pen lines and a small signature-like flourish, nothing readable.",
+  "aspect_ratio": "4:3"
+ },
+ {
+  "nev": "teszt_flux3k_ikon",
+  "model": "black-forest-labs/flux-3-image-klein",
+  "prompt": "App icon, square with rounded corners, filled with flat deep navy ink-blue (#17284A). Centred, one bold simple mark in off-white (#F5F7FA): the tip of a fountain-pen nib finishing one short, confident looping signature stroke. Flat, minimal, strong silhouette that stays recognisable at 60 pixels, generous padding, calm premium private-bank feel. No text, no letters, no gradient, no 3D, no glossy highlight, no shadow, no extra decoration.",
+  "aspect_ratio": "1:1"
+ }
+]

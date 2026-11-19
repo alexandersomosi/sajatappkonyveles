@@ -1,0 +1,13 @@
+# Used by BuildKit for backend/Dockerfile (build context = kod/).
+**/node_modules
+**/dist
+**/.test-*
+**/_shared
+app
+panel
+deploy
+_qa
+**/*.log
+**/_regi
+**/pdf_minta
+**/_kepek

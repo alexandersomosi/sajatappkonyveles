@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Dosszié, november (B kisebb)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="b_kozos.css">
+<style>
+/* Dosszié, egy hónap. Fent az állapot-fülek a darabszámmal (szűrők: ha egyik sincs kijelölve, minden irat látszik),
+   alatta a hónap iratai: kis 3D irat-ikon, cím, fajta és dátum, jobbra az összeg és az állapot.
+   A kiállított számlák külön csoport, mert maguktól jönnek. A fő gomb: „Fotózás”. */
+
+.fej { padding: 4px 16px 10px; }
+.cimsor { display: flex; align-items: center; gap: 12px; min-height: 40px; }
+
+/* ---------- állapot-fülek: semleges szürke kapszula, a szám félkövér ---------- */
+.fulsav { display: flex; gap: 8px; padding: 0 16px 6px; }
+.szuro { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 13px; border-radius: var(--r-gomb);
+  background: var(--nyomott); color: var(--tinta); font-weight: 550; font-size: 14.5px; letter-spacing: -.005em; white-space: nowrap; position: relative; }
+.szuro b { font-weight: 750; font-variant-numeric: tabular-nums lining-nums; }
+.szuro::after { content: ""; position: absolute; inset: -5px -2px; }
+
+/* ---------- iratsorok ---------- */
+.lista { padding: 4px 16px 0; }
+.tetel { display: flex; align-items: center; gap: 12px; min-height: 54px; position: relative; }
+.tetel + .tetel::before { content: ""; position: absolute; top: 0; left: 40px; right: 0; border-top: 1px solid var(--hajszal); }
+.tetel img.i3 { width: 28px; height: 28px; }
+.tetel .l { flex: 1; min-width: 0; }
+.tetel .c { font-weight: 600; font-size: 15.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tetel .a { font-size: 14px; line-height: 1.35; color: var(--halvany); margin-top: 1px; }
+.tetel .j { text-align: right; flex: none; }
+.tetel .o { font-weight: 650; font-size: 15.5px; line-height: 1.3; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.tetel .o .ft { font-size: .86em; margin-left: 3px; }
+/* állapot: sima szó, előtte kis jel (ki tart nála): feltöltés-tálca / Bence arca / ibolya pecsét */
+.all { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin-top: 1px; font-size: 14px; line-height: 1.35; color: var(--halvany); white-space: nowrap; }
+.all img.i3, .all img.arc-kicsi { width: 18px; height: 18px; }
+.lista .tobb { min-height: 42px; }
+
+.szak.kiallitott { margin-top: 4px; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="fej">
+    <div class="cimsor"><h1>November</h1><span class="demo">DEMO</span></div>
+  </div>
+  <nav class="fulsav" aria-label="Állapot szerint">
+    <button class="szuro">Feltöltve <b>3</b></button>
+    <button class="szuro">Bence látta <b>2</b></button>
+    <button class="szuro">Kész <b>12</b></button>
+  </nav>
+</header>
+
+<main>
+  <div class="lista">
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@3x.png 3x" alt="Nyugta">
+      <div class="l"><div class="c">Irodaszer</div><div class="a">Nyugta · nov. 18.</div></div>
+      <div class="j"><div class="o">18&nbsp;000<span class="ft">Ft</span></div>
+        <div class="all"><img class="i3" src="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png" srcset="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png 2x, ../../C2_modern/assets/ikon3d/feltoltes_24@3x.png 3x" alt="">Feltöltve</div></div>
+    </div>
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/irat_arnyektalan_28@3x.png 3x" alt="Számla">
+      <div class="l"><div class="c">Mobilnet</div><div class="a">Számla · nov. 15.</div></div>
+      <div class="j"><div class="o">8&nbsp;990<span class="ft">Ft</span></div>
+        <div class="all"><img class="i3" src="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png" srcset="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png 2x, ../../C2_modern/assets/ikon3d/feltoltes_24@3x.png 3x" alt="">Feltöltve</div></div>
+    </div>
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/irat_arnyektalan_28@3x.png 3x" alt="Számla">
+      <div class="l"><div class="c">Tárhely</div><div class="a">Számla · nov. 12.</div></div>
+      <div class="j"><div class="o">4&nbsp;572<span class="ft">Ft</span></div>
+        <div class="all"><img class="i3" src="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png" srcset="../../C2_modern/assets/ikon3d/feltoltes_24@2x.png 2x, ../../C2_modern/assets/ikon3d/feltoltes_24@3x.png 3x" alt="">Feltöltve</div></div>
+    </div>
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/irat_arnyektalan_28@3x.png 3x" alt="Számla">
+      <div class="l"><div class="c">Szakkönyvek</div><div class="a">Számla · nov. 10.</div></div>
+      <div class="j"><div class="o">12&nbsp;480<span class="ft">Ft</span></div>
+        <div class="all"><img class="arc-kicsi" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt="">Bence látta</div></div>
+    </div>
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@3x.png 3x" alt="Nyugta">
+      <div class="l"><div class="c">Tankolás</div><div class="a">Nyugta · nov. 7.</div></div>
+      <div class="j"><div class="o">21&nbsp;340<span class="ft">Ft</span></div>
+        <div class="all"><img class="arc-kicsi" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt="">Bence látta</div></div>
+    </div>
+    <div class="tetel">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/irat_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/irat_arnyektalan_28@3x.png 3x" alt="Számla">
+      <div class="l"><div class="c">Tervezőprogram</div><div class="a">Számla · nov. 3.</div></div>
+      <div class="j"><div class="o">3&nbsp;990<span class="ft">Ft</span></div>
+        <div class="all"><img class="i3" src="../../C2_modern/assets/ikon3d/befizetve_jel_20@2x.png" srcset="../../C2_modern/assets/ikon3d/befizetve_jel_20@2x.png 2x, ../../C2_modern/assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="">Kész</div></div>
+    </div>
+    <button class="tobb">Még 11 kész irat</button>
+  </div>
+
+  <section class="szak kiallitott">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/szamlak_28@2x.png" srcset="../../C2_modern/assets/ikon3d/szamlak_28@2x.png 2x, ../../C2_modern/assets/ikon3d/szamlak_28@3x.png 3x" alt=""><h2>Kiállított számlák (8)</h2></div>
+    <p>Maguktól megjelennek itt, nem kell feltöltened őket.</p>
+    <a class="link" href="#">Megnézem őket</a>
+  </section>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Fotózás</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

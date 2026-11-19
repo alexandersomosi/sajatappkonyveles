@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Bekötés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.bekotes { padding: 0 20px; }
+.bekotes .cim { padding: 14px 0 0; font-size: 34px; }
+.bekotes .alcim { color: var(--eloter-masod); padding: 8px 0 0; }
+
+/* Lépések: függőleges idővonal, mert valóban sorrend */
+.lepesek { list-style: none; margin-top: 22px; position: relative; }
+.lepes { display: grid; grid-template-columns: 30px 1fr auto; column-gap: 12px; align-items: start; position: relative; padding-bottom: 12px; }
+.lepes:last-child { padding-bottom: 0; }
+.lepes::before { content: ""; position: absolute; left: 14px; top: 28px; bottom: 0; width: 2px; background: var(--eloter-vonal); }
+.lepes.kesz::before { background: #FFFFFF; }
+.lepes:last-child::before { display: none; }
+.pont { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--eloter-vonal); background: var(--eloter); position: relative; z-index: 1; }
+.kesz .pont { background: #FFFFFF; border-color: #FFFFFF; color: var(--eloter); }
+.kesz .pont .ikon { width: 18px; height: 18px; stroke-width: 2.6; }
+.most .pont { border-color: #FFFFFF; }
+.most .pont::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #FFFFFF; }
+.lepes .nev { font-size: 17px; line-height: 30px; font-weight: 700; }
+.lepes.var .nev { font-weight: 400; color: var(--eloter-masod); }
+.lepes .mikor { font-size: 15px; line-height: 30px; color: var(--eloter-masod); white-space: nowrap; }
+.lepes .mi { grid-column: 2 / 4; font-size: 15px; line-height: 1.42; color: var(--eloter-masod); margin-top: -2px; }
+.most .mi { color: #FFFFFF; }
+
+.panel { margin-top: 14px; padding: 16px 16px 16px; border: 1px solid var(--eloter-vonal); border-radius: var(--r-lap); background: var(--eloter-lap); }
+.panel h2 { font-size: 17px; font-weight: 700; line-height: 1.35; }
+.panel p { font-size: 15.5px; line-height: 1.45; color: var(--eloter-masod); margin-top: 6px; }
+.panel .gomb.elso { margin-top: 14px; }
+.hivas { display: grid; grid-template-columns: 28px 1fr; column-gap: 12px; margin-top: 12px; }
+.hivas .ikon { width: 26px; height: 26px; margin-top: 1px; }
+.hivas .ido { font-family: var(--szuk); font-weight: 600; font-size: 22px; line-height: 1.15; margin-top: 3px; }
+.hivas .gombsor { grid-column: 2; display: flex; gap: 22px; margin-top: 2px; }
+</style>
+</head>
+<body class="telefon eloter">
+<div data-allapotsor></div>
+
+<main class="bekotes">
+  <h1 class="cim">Szia, Kata! Már csak pár nap.</h1>
+  <p class="alcim">Ennyi kell, hogy Bence átvegye a könyvelésedet.</p>
+
+  <ol class="lepesek">
+    <li class="lepes kesz">
+      <span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+      <span class="nev">Aláírva</span><span class="mikor">szept. 28.</span>
+    </li>
+    <li class="lepes kesz">
+      <span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+      <span class="nev">Azonosítva</span><span class="mikor">szept. 29.</span>
+    </li>
+    <li class="lepes most">
+      <span class="pont"></span>
+      <span class="nev">NAV-nál bejelentve</span><span class="mikor">most zajlik</span>
+      <p class="mi">Ezt a könyvelőd intézi, neked nincs vele dolgod. Általában 1–2 munkanap, utána a számláid maguktól jönnek a NAV-ból.</p>
+    </li>
+    <li class="lepes var">
+      <span class="pont"></span>
+      <span class="nev">Számlák bekötve</span><span class="mikor"></span>
+    </li>
+    <li class="lepes var">
+      <span class="pont"></span>
+      <span class="nev">Kész, Bence könyvel neked</span><span class="mikor"></span>
+    </li>
+  </ol>
+
+  <section class="panel">
+    <h2>Neked most ez a dolgod</h2>
+    <p>Kérd el az eddigi könyvelődtől az idei bevallásaidat, és töltsd fel ide. Ha e-mailben küldi, onnan is továbbíthatod.</p>
+    <button class="gomb elso">Feltöltöm a bevallásokat</button>
+  </section>
+
+  <section class="panel">
+    <h2>Videóhívás Bencével</h2>
+    <div class="hivas">
+      <svg class="ikon"><use href="#i-video"/></svg>
+      <div>
+        <div class="ido">Péntek, október 2., 10:00</div>
+        <p>15 perc. Bemutatkozik, és megbeszélitek, mire lesz szüksége.</p>
+      </div>
+      <div class="gombsor">
+        <button class="gomb harmad">Naptárba teszem</button>
+        <button class="gomb harmad">Másik időpont</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="kozos.js"></script>
+</body>
+</html>

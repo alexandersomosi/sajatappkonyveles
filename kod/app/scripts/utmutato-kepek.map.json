@@ -1,0 +1,41 @@
+{
+  "_megjegyzes": "slug -> GUIDE_STEP_KEYS kulcs, csak ha az index.json lepes_kulcs mezője hiányzik vagy elavult (a képek címe alapján írva, 2026-11-18).",
+  "vallalkozas_bejelentes": {
+    "belepes": "belepes",
+    "ugyseged_fooldal": "ugyseged_inditas",
+    "ugyseged_ugytipus": "ugyseged_inditas",
+    "szemelyi_adatok": "szemelyi_adatok",
+    "cimadatok": "cimadatok",
+    "tevekenysegek": "tevekenysegek",
+    "adozas_munkavegzes_fofoglalkozas": "adozas_munkavegzes",
+    "adozas_munkavegzes_munkaviszony_mellett": "adozas_munkavegzes",
+    "adozas_munkavegzes_tanulmany_mellett": "adozas_munkavegzes",
+    "adozas_munkavegzes_nyugdij_mellett": "adozas_munkavegzes",
+    "adozas_kata_atalany": "adozas_kata_atalany",
+    "adozas_afa_mentesseg": "adozas_afa",
+    "adozas_afa_tobbi_eu_igen": "adozas_afa",
+    "adozas_afa_tobbi_eu_nem": "adozas_afa",
+    "nyilatkozatok": "nyilatkozatok",
+    "ellenorzes": "ellenorzes",
+    "bekuldes": "bekuldes",
+    "megtekintes_pdf": "megtekintes_pdf"
+  },
+  "meghatalmazas": {
+    "onya_nyitooldal": "onya_belepes",
+    "kau_belepes": "onya_belepes",
+    "onya_profil": "onya_profil",
+    "onya_uj_nyomtatvany": "onya_uj_nyomtatvany",
+    "ujegyke_kivalasztas": "onya_uj_nyomtatvany",
+    "meghatalmazo_szerep": "onya_szerep",
+    "uj_bejelentes": "onya_szerep",
+    "kepviselo_konyvelo": "onya_meghatalmazott",
+    "jogcim_konyvelo": "onya_meghatalmazott",
+    "kepviselt_te": "onya_meghatalmazott",
+    "idobeli_hataly": "onya_ugykorok",
+    "adougyek": "onya_ugykorok",
+    "ev_nyilvantartas": "onya_ugykorok",
+    "benyujtas": "onya_bekuldes",
+    "sikeres_benyujtas": "onya_bekuldes",
+    "lista_megtekintes": "onya_bekuldes"
+  }
+}

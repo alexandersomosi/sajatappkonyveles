@@ -1,0 +1,1955 @@
+{
+ "revolut": {
+  "id": 932493382,
+  "stores": {
+   "gb": {
+    "name": "Revolut — Mobile Finance",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welcome to Revolut.\n\nWe’ve made some tweaks and improvements under the hood in this version to make your Revolut experience even smoother.",
+    "url": "https://apps.apple.com/gb/app/revolut-mobile-finance/id932493382?uo=4"
+   },
+   "us": {
+    "name": "Revolut: send, spend, and save",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welcome to Revolut.\n\nWe’ve made some tweaks and improvements under the hood in this version to make your Revolut experience even smoother.",
+    "url": "https://apps.apple.com/us/app/revolut-send-spend-and-save/id932493382?uo=4"
+   },
+   "hu": {
+    "name": "Revolut — Mobile Finance",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welcome to Revolut.\n\nWe’ve made some tweaks and improvements under the hood in this version to make your Revolut experience even smoother.",
+    "url": "https://apps.apple.com/hu/app/revolut-mobile-finance/id932493382?uo=4"
+   },
+   "fr": {
+    "name": "Revolut — Plus qu'une banque",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Bienvenue chez Revolut.\nCette version comporte quelques améliorations pour vous offrir une expérience encore plus fluide sur Revolut.",
+    "url": "https://apps.apple.com/fr/app/revolut-plus-quune-banque/id932493382?uo=4"
+   },
+   "de": {
+    "name": "Revolut — Mehr als eine Bank",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Willkommen bei Revolut.\nWir haben in dieser Version einige Verbesserungen und Optimierungen vorgenommen, um dein Revolut-Erlebnis noch angenehmer zu gestalten.",
+    "url": "https://apps.apple.com/de/app/revolut-mehr-als-eine-bank/id932493382?uo=4"
+   },
+   "it": {
+    "name": "Revolut — Tutta un'altra banca",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Benvenuto su Revolut.\nIn questa versione abbiamo apportato alcune modifiche e miglioramenti alle impostazioni disponibili per semplificare ulteriormente la tua esperienza con Revolut.",
+    "url": "https://apps.apple.com/it/app/revolut-tutta-unaltra-banca/id932493382?uo=4"
+   },
+   "es": {
+    "name": "Revolut — Más que un banco",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Te damos la bienvenida a Revolut. \nHemos realizado unos ajustes y mejoras en esta versión para que tu experiencia con Revolut sea cada vez más cómoda.",
+    "url": "https://apps.apple.com/es/app/revolut-m%C3%A1s-que-un-banco/id932493382?uo=4"
+   },
+   "nl": {
+    "name": "Revolut — Meer dan een bank",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welkom bij Revolut.\nWe hebben in deze versie enkele aanpassingen en verbeteringen aangebracht om je Revolut-ervaring nog vlotter te maken.",
+    "url": "https://apps.apple.com/nl/app/revolut-meer-dan-een-bank/id932493382?uo=4"
+   },
+   "pl": {
+    "name": "Revolut — Mobile Finance",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welcome to Revolut.\n\nWe’ve made some tweaks and improvements under the hood in this version to make your Revolut experience even smoother.",
+    "url": "https://apps.apple.com/pl/app/revolut-mobile-finance/id932493382?uo=4"
+   },
+   "ie": {
+    "name": "Revolut — Mobile Finance",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Welcome to Revolut.\n\nWe’ve made some tweaks and improvements under the hood in this version to make your Revolut experience even smoother.",
+    "url": "https://apps.apple.com/ie/app/revolut-mobile-finance/id932493382?uo=4"
+   },
+   "pt": {
+    "name": "Revolut — Mais que um banco",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Bem-vindo(a) à Revolut.\nEfetuámos alguns ajustes e melhorias nesta versão da app para tornar a sua experiência Revolut ainda mais simples.",
+    "url": "https://apps.apple.com/pt/app/revolut-mais-que-um-banco/id932493382?uo=4"
+   },
+   "at": {
+    "name": "Revolut — Mehr als eine Bank",
+    "version": "10.156",
+    "date": "2026-11-13T07:27:43Z",
+    "notes": "Willkommen bei Revolut.\nWir haben in dieser Version einige Verbesserungen und Optimierungen vorgenommen, um dein Revolut-Erlebnis noch angenehmer zu gestalten.",
+    "url": "https://apps.apple.com/at/app/revolut-mehr-als-eine-bank/id932493382?uo=4"
+   }
+  },
+  "shots": [
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4d/e0/e2/4de0e230-ec4f-2030-b732-5cd32a22dfa3/Screen_1_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7e/b9/74/7eb9744e-01ba-5426-3f28-6f6c7f653645/Screen_2_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/96/26/a4/9626a4f9-7898-76a7-1bad-f227ebfdbb6d/Screen_3_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d2/1e/0b/d21e0b07-4f2c-b829-a238-336efb148c34/Screen_4_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bb/1e/c4/bb1ec41f-869c-185f-3e53-c7582f6658b8/Screen_5_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/99/b9/38/99b93876-572d-4af7-8195-788d231a2d46/Screen_6_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/66/7a/93/667a93f4-c9de-1f50-b373-6c1554c68c66/Screen_7_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3c/60/d3/3c60d36a-444c-df72-1df8-1a5725a70845/Screen_8_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ca/27/b5/ca27b52f-cb8b-fe24-c488-bba0d484c2ec/Screen_9_1206x2622.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/13/3a/fe133a59-be53-9515-1536-c979a3fd347f/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/07/64/50/0764507b-a017-f09e-38c9-d5daad62c124/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6e/f6/f6/6ef6f697-d484-b297-85d4-17c149df8540/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/6e/f1/63/6ef1639e-67b8-3166-d862-af4a3e15cd3b/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ad/05/f5/ad05f5b2-4318-c02e-547c-417f94b4ae30/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/71/ed/69/71ed6965-aa95-8ede-4cca-12f0450b5b4f/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/08/42/8b/08428bf7-21a8-24ac-e063-a58d81fc382b/Screen_7__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/0f/bf/52/0fbf52eb-8ac8-63ef-de27-6d7eb11c7154/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/82/19/43/821943e1-b28c-f18e-bfdd-c57b03d01d06/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/82/b0/de/82b0dea3-beaf-4e6f-12ba-582f2ab82f84/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f2/7c/d7/f27cd727-2a5f-3cf6-45c0-7dff17d92fd1/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e8/c7/31/e8c7315e-3b07-9bc0-45cd-8f41ad29c124/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/67/bb/89/67bb8935-7ed5-d2c3-7340-e0715f384372/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a6/2d/e9/a62de962-1c5f-4ce7-d966-ae29d3f8ba42/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2c/dd/c3/2cddc303-e556-0ed0-fc33-963824f49bee/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/77/36/30/7736301a-d011-5f4b-0579-70ba5279eab1/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dd/de/af/dddeaf8f-f4c7-734b-0d90-38b0bca01f30/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/38/46/b8/3846b890-020b-4313-41db-0b6744d3c68d/Screen_1_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/48/17/40/481740f4-3590-3dcc-744f-3d562c9159ec/Screen_2_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a0/69/29/a0692996-213a-c643-79ed-242ac3f29497/Screen_3_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/28/23/e3/2823e3f6-4a76-d868-4e8b-73f5f2bc6662/Screen_4_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f6/5f/fa/f65ffac7-8f2f-11fa-8aac-3fce91db5a5e/Screen_5_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/28/39/d0/2839d041-14fa-ea49-54b3-1bd5ad70b15d/Screen_6_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f5/ca/76/f5ca7621-0238-a5c9-3bab-3517966e9ad2/Screen_7_1242x2208-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/91/23/1f/91231fa6-3301-fec9-2c43-b3e84239804a/Screen_8_1242x2208.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9f/02/16/9f021662-f4d0-024c-2968-da895967d5ae/Screen_9_1242x2688.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/99/4e/21/994e2125-b905-1a7f-c596-98990fc669f2/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/0a/09/5a/0a095a59-0e96-4e68-1070-cede36ea123b/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a0/5d/a8/a05da8cc-1398-4c9b-ae0c-250c51dac6ff/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6e/89/6b/6e896bfc-740e-735c-9cf5-f6cc623671ab/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ba/60/2c/ba602cdc-7a6e-ef7a-dbed-16b69d738b89/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/61/c3/a7/61c3a73e-cfb0-9e16-b60b-8e187d9401e0/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ff/39/60/ff3960b9-47e3-58f7-1fe1-afa98143901c/Screen_7_-_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5e/4d/81/5e4d811f-6aaa-701e-017a-47dfd94d401d/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/89/49/95/89499550-8a18-98bd-ec46-b94f29f272f7/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c6/9e/ff/c69effa6-3dfa-84ef-07a3-1a9777ee7951/Screen_1_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5e/87/86/5e878674-a055-5774-9d3a-96aa5d87990b/Screen_2_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b7/db/ec/b7dbec23-4031-3ddc-5986-11f814659a00/Screen_2_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b6/01/98/b6019863-b3b3-cfa0-c67b-78b176d48be9/Screen_3_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3e/10/4a/3e104aef-4574-0c46-fd55-bae8f6a8272b/Screen_4_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b7/33/df/b733df9b-3d95-0686-833a-2c83008a80b5/Screen_5_1242x2208-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/80/5e/90/805e90b6-4512-2c9f-205a-5a91e046689c/Screen_6_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b4/f3/79/b4f37905-f37c-e76f-497c-7b89bcbfb41c/Screen_7_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/92/a9/4f/92a94f90-69b5-07cc-7e7e-b965d6dc7ef9/Screen_8_1242x2208.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/00/66/98/006698f0-3b4e-0b67-b035-5f6892c554fd/Screen_9_1242x2688.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f4/65/d5/f465d569-e0ec-71a7-7135-428229491b0a/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/be/86/e3/be86e364-3f9a-b7cd-5491-6851e50ec69c/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f2/03/44/f2034428-a698-c852-d0f7-c6044ed77561/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a4/fb/e6/a4fbe6dc-dbf1-0d9a-0783-ac042773f905/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fd/41/e0/fd41e034-c51f-3c67-c05f-ef48010eb4cd/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9b/d2/49/9bd24909-9e66-3a5a-3b03-481e10d1c677/Screen_5_-_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/eb/43/da/eb43da5e-db41-9d22-823b-a33e27b5beab/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4b/75/73/4b7573ea-5f1d-ab71-0f3f-94e9217edf7e/Screen_7__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9e/bc/81/9ebc814e-723d-9c16-2a6b-34573d32dc0b/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/49/52/da/4952da27-4555-c8f7-a727-cebb7b6f1af1/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d8/56/c7/d856c7c7-611f-78a9-54a5-30d52be08f1c/Screen_1_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/54/16/80/54168001-7805-c1dc-e470-8bab5e82349c/Screen_2_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/19/99/d6/1999d637-3aad-c369-3130-671c7ad96345/Screen_3_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b1/e2/e4/b1e2e421-719e-fff4-7528-c63cc447ca49/Screen_4_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5f/8c/e4/5f8ce47e-08d4-efe1-76c1-51efa5db9fe4/Screen_5_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/39/03/e5/3903e5e5-35d1-a42d-f727-aa114d5e021a/Screen_6_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2b/87/89/2b8789d0-dbfc-a8b0-2599-cb85664de568/Screen_7_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fc/47/3f/fc473f3a-1127-d11b-383d-7fe43cfe4a78/Screen_8_1242x2208.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ec/49/79/ec49791a-27f7-ab98-2b64-5b7a0da14c1d/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/d6/40/d9d6404a-514c-d0ed-443d-626ba73c49c3/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c2/7d/84/c27d8424-3e61-332e-94b1-89bcd2b65ed4/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/aa/b5/bc/aab5bccb-2f6c-f273-6347-7db6172c764e/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/82/4d/1b/824d1bdc-0daf-56aa-938d-dc6b04fbdbec/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9b/eb/d4/9bebd459-0648-cbff-92ef-cec35c86882a/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/92/9b/de/929bde7b-851e-37aa-2408-014aa2399fc0/Screen_7__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ee/c5/4a/eec54a24-404c-2e73-6a59-d4ce88b0257f/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/78/bc/0c/78bc0cb1-e4cd-095f-a683-2ad32cd42d10/Screen_1_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4e/fd/7f/4efd7f2a-cea9-d1e6-c996-1b58de757f76/Screen_2_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/0d/f0/df/0df0df4a-5610-61c4-7672-b4b6abb757ab/Screen_3_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/84/45/a8/8445a8f5-5f2b-b550-4c6a-9e1822bfabbc/Screen_4_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fd/a2/fb/fda2fbaa-1982-3b2e-a613-a0a047923b79/Screen_5_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/27/d6/bb/27d6bb72-5b10-fda3-4095-48ce8525bcf0/Screen_6_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ef/ae/fd/efaefd1e-c5e9-ba0e-6c09-35aa2a6d365a/Screen_7_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b4/ee/ef/b4eeefdf-d9ed-046b-0e1f-b02b83b6885e/Screen_8_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ad/ae/61/adae61c9-4299-7198-38b7-7f8944c1d0f5/Screen_9_1206x2622.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/df/4f/b0/df4fb055-07b6-dd4b-7d4e-bf59d558ad27/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f3/c1/c8/f3c1c8ca-10e3-596e-9c90-d8829ef2909c/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/07/e8/f5/07e8f56e-a520-1de8-7d34-1b82590e1ae2/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b9/95/4d/b9954db5-39f3-7e85-61f0-041ea86397d4/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f3/a8/03/f3a8038b-bbc9-6b54-3d63-ebe75500eaea/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/34/24/0d/34240d41-c48e-078e-c502-84edaa5aa2c7/Screen_6__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/7f/30/99/7f3099cb-13fb-ac03-48b7-7784304818e2/Screen_7__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/cd/98/12/cd981245-fe80-e8cd-906e-9dec4e81dce1/Screen_8__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ab/71/08/ab7108cf-815a-1cf9-2b59-941d6ba1a961/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/1c/a4/56/1ca456bd-471f-cd61-9743-01e11bc4cd2a/Screen_1_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d6/26/09/d6260926-43b8-c7c1-1ca3-4592b00422b7/Screen_2_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a2/dd/d1/a2ddd159-6cc2-0dc9-e8a4-6cfccd3a1fb1/Screen_3_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/bc/32/d2/bc32d2ea-24d6-efd5-af80-129e04427ae2/Screen_4_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d1/27/be/d127beb8-a367-7a15-a937-aa640a7928c1/Screen_5_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/97/74/97/977497b7-5d4f-d1a4-7139-3512a9e002c2/Screen_6_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ad/e6/ac/ade6ac7c-821b-5956-2b51-83f9c86fe733/Screen_7_1242x2208-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/22/c1/96/22c1961a-a644-61e6-28da-9ec2f82543cc/Screen_8_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/00/b7/01/00b7010d-30d9-030b-6d6b-a738c529e458/Screen_9_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9f/21/e9/9f21e9b1-b43f-6878-b8ad-9d29be95873e/Screen_1_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4a/f2/77/4af277ab-7442-d244-a9a5-8c52dea0ac83/Screen_2_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/28/2e/eb/282eeb82-fd51-6f9e-af5b-a5b7938a5e89/Screen_3_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/af/d0/96/afd09621-8a6d-4168-64e5-79ab24eee62d/Screen_4_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3d/d5/ba/3dd5badf-3aa9-de03-c2e9-0cba42cad021/Screen_5_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ee/1b/4c/ee1b4c94-02c0-1092-4ec4-b0960a441dc2/Screen_6_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c5/fc/4c/c5fc4c71-01bc-da66-b8b9-2980e92daab6/Screen_7_-_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a5/2d/73/a52d7383-7ef5-7577-33ec-b91620a2ea19/Screen_8_1242x2688.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b8/9c/92/b89c9207-78f8-4d77-b067-c2e8b5c660ab/Screen_9__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9c/d1/6a/9cd16a42-2026-ca4f-ebf0-278d8e66315e/Screen_1_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/46/99/d2/4699d2fb-7806-ccd8-22e4-2331f629f03b/Screen_2_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5c/49/8f/5c498fcf-f22c-3b80-9c84-f8a1df0b73ec/Screen_3_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/08/ba/69/08ba694e-4c0f-cc95-049e-0265461dea28/Screen_4_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/82/e4/98/82e49835-670b-7a74-d4ed-618d808b03db/Screen_5_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/87/56/83/8756830b-c415-78c1-5b88-4198391d7c83/Screen_6_1242x2208-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/14/73/03/147303d4-cd01-8094-f39c-4fe453e6dd5a/Screen_7_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1a/07/30/1a0730be-17b6-fc30-ed4c-0ac6a3e6582c/Screen_8_1242x2208.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/1a/88/d91a88ca-2566-66f7-5eac-a5841690df1c/Screen_9_1242x2688.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/84/13/b0/8413b022-86af-6fb3-e3a5-566a95cbe187/Screen_1__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fa/17/62/fa1762ba-9611-d80e-3e4b-b2bdee98b3cd/Screen_2__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2c/8d/63/2c8d63ef-2c4d-b700-e294-96a109b5cef3/Screen_3__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/42/0f/21/420f21f8-a6e1-b667-5aae-7d159f2f7359/Screen_4__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/89/63/19/896319a9-802a-b69f-bc5c-3c35ce191670/Screen_5__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d6/f7/99/d6f799fa-94cb-a5f2-d5d9-a305b6189ef6/Screen_7_-_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/87/2f/f4/872ff43c-26cb-be07-311f-aacca6e9b903/Screen_7__U00282048x2732_U0029.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f3/f8/db/f3f8dbcb-6c3e-8124-2971-69c2254430ac/Screen_8__U00282048x2732_U0029.jpg"
+   }
+  ]
+ },
+ "revolutbiz": {
+  "id": 1436969262,
+  "stores": {
+   "gb": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business keeps getting better. Manage, spend, and grow your company money more efficiently than ever.",
+    "url": "https://apps.apple.com/gb/app/revolut-business/id1436969262?uo=4"
+   },
+   "us": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business keeps getting better. Manage, spend and grow your company money more efficiently than ever.",
+    "url": "https://apps.apple.com/us/app/revolut-business/id1436969262?uo=4"
+   },
+   "hu": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business keeps getting better. Manage, spend, and grow your company money more efficiently than ever.",
+    "url": "https://apps.apple.com/hu/app/revolut-business/id1436969262?uo=4"
+   },
+   "fr": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business ne cesse de s'améliorer. Gérez les finances, dépensez et faites fructifier les liquidités de votre entreprise, plus efficacement que jamais.",
+    "url": "https://apps.apple.com/fr/app/revolut-business/id1436969262?uo=4"
+   },
+   "de": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business wird immer besser. Verwalte, bezahle und baue dein Unternehmen auf, effizienter als je zuvor.",
+    "url": "https://apps.apple.com/de/app/revolut-business/id1436969262?uo=4"
+   },
+   "it": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business continua a migliorare. Gestisci, spendi e fai crescere il capitale della tua azienda in modo ancora più efficiente.",
+    "url": "https://apps.apple.com/it/app/revolut-business/id1436969262?uo=4"
+   },
+   "es": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business sigue mejorando. Gestiona, paga y haz crecer el dinero de tu empresa de forma más eficiente que nunca.",
+    "url": "https://apps.apple.com/es/app/revolut-business/id1436969262?uo=4"
+   },
+   "nl": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business wordt steeds beter. Beheer, besteed en laat het geld van je bedrijf efficiënter groeien dan ooit tevoren.",
+    "url": "https://apps.apple.com/nl/app/revolut-business/id1436969262?uo=4"
+   },
+   "pl": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business keeps getting better. Manage, spend, and grow your company money more efficiently than ever.",
+    "url": "https://apps.apple.com/pl/app/revolut-business/id1436969262?uo=4"
+   },
+   "ie": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business keeps getting better. Manage, spend, and grow your company money more efficiently than ever.",
+    "url": "https://apps.apple.com/ie/app/revolut-business/id1436969262?uo=4"
+   },
+   "pt": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "A Revolut Business está em constante melhoria! Faça a gestão, gaste e faça crescer o dinheiro da sua empresa com mais eficiência do que nunca.",
+    "url": "https://apps.apple.com/pt/app/revolut-business/id1436969262?uo=4"
+   },
+   "at": {
+    "name": "Revolut Business",
+    "version": "6.17",
+    "date": "2026-11-12T10:39:19Z",
+    "notes": "Revolut Business wird immer besser. Verwalte, bezahle und baue dein Unternehmen auf, effizienter als je zuvor.",
+    "url": "https://apps.apple.com/at/app/revolut-business/id1436969262?uo=4"
+   }
+  },
+  "shots": [
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e7/7e/0d/e77e0dd0-cf83-4e3f-4c40-a3a6f28f647c/RBAppstore_VP1-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/47/5f/6d/475f6df5-a373-e8c0-7777-add3c3f43890/RBAppstore_VP2-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/66/21/07/66210783-8cee-684d-c92c-dfa3ad9ebdf3/RBAppstore_VP3-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3e/8c/ce/3e8ccec8-e8fd-8182-a8d4-6fa0fb682af0/RBAppstore_VP6-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/04/92/e3/0492e356-1e83-6399-5f47-ebe2ca1c4d20/RBAppstore_VP7-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/99/3f/bc/993fbc3d-f875-d674-8db4-b7b76e2f67c6/RBAppstore_VP8-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/98/7d/aa/987daa7a-5dfe-459e-a4ba-999b37d3a44d/RBAppstore_VP5-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1e/94/03/1e9403db-068e-bd2f-ac7f-808bec51642e/RBAppstore_VP9-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c2/f0/c4/c2f0c4e6-0d09-b7ce-c791-2059680bfe28/RBAppstore_VP4-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/27/a5/44/27a54414-e43f-0735-d694-9695f891f073/RBAppstore_VP10-GB-EN.png"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/32/57/0b/32570b45-3203-0096-a074-9132d1a74939/Screen_1_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9e/f4/8b/9ef48bbf-b25d-eb85-2fef-4779898024c9/Screen_2_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/71/b4/a9/71b4a98f-2d77-b2c9-5a1c-01ce9525a3cc/Screen_3_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/da/cb/4b/dacb4bc6-ac49-edb3-e16c-414015664197/Screen_4_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/58/8b/82/588b82ec-9d85-0b27-0b7c-2df990eb7bcd/Screen_5_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/aa/50/ae/aa50aea0-3858-01bf-88e5-428f0e4e077e/Screen_6_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/74/d6/be/74d6bec9-9a0c-f177-3f31-1810d9fcd04c/Screen_7_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f1/d7/14/f1d71476-4db3-487e-d261-c96fadf1494b/Screen_8_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/14/e8/d914e898-67e3-c61c-878d-f31529e9e91b/Screen_9_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "gb",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/20/46/18/20461889-2c66-2b89-e28f-1b782de92a8e/Screen_10_2048x2732-GB-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5f/79/f5/5f79f541-6115-17eb-494b-5b0d02362683/RBAppstore_VP1-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4f/e6/c1/4fe6c13a-5616-e786-8012-8c012fbc6d45/RBAppstore_VP2-US-EN.jpeg"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ce/f4/b8/cef4b899-dc98-8ccc-39ee-92d6234cf2b3/RBAppstore_VP3-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c2/b3/4c/c2b34ce2-ab59-62d7-6333-72e69f9b7a1f/RBAppstore_VP6-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a5/78/6a/a5786a04-b4f4-6dff-a63a-40786c562195/RBAppstore_VP7-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/56/08/7f/56087fad-fbaf-144b-6269-658e6fb6f82b/RBAppstore_VP8-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4f/8e/44/4f8e44df-5b57-c46a-3b9c-a4b350143a45/RBAppstore_VP5-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/80/01/d4/8001d47b-5193-1c46-1c5f-ffcc3d2faea6/RBAppstore_VP10-US-EN.png"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/75/c4/ff/75c4ffe9-e02a-99a3-c2ad-b9d88d174932/Screen_1_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d3/69/1a/d3691ac7-7fb9-4002-acb1-b873afa7ffea/Screen_2_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f1/a7/b7/f1a7b70e-636c-6181-019c-da12ac407285/Screen_3_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/94/a8/19/94a819d8-519d-7eec-6d25-0aa48b79248d/Screen_4_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/66/d5/9e/66d59e98-60dc-3317-de2a-7052456abe04/Screen_5_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/97/78/93/97789365-c854-58f8-6a4d-82bf222a5946/Screen_6_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/0b/91/bc/0b91bc51-4602-a98d-b785-3ae59ae45284/Screen_7_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "us",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/df/1e/55/df1e55ee-48c3-7780-6db8-9da5cd9f2261/Screen_10_2048x2732-US-EN.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/75/c2/cb/75c2cb44-8012-8ac5-f3e3-1965c67ca147/RBAppstore_VP1-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d8/21/2f/d8212fb9-ab60-a1bf-0b7b-d7c2274df33c/RBAppstore_VP2-FR-FR.jpeg"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5c/88/bf/5c88bf2a-f27e-8582-f04a-bfd03585979f/RBAppstore_VP3-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/06/88/e9/0688e956-ca06-a973-6d04-6ad0a26c1a38/RBAppstore_VP6-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/38/1d/9e/381d9e89-cd87-2488-f7f3-f309dd86e804/RBAppstore_VP7-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5e/9d/91/5e9d9122-71d3-b5dc-ebd7-cbcf15e24d80/RBAppstore_VP8-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/09/32/1e/09321e5f-fba6-059b-b36e-eeb329342d0d/RBAppstore_VP5-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/21/dc/65/21dc6561-28bc-934e-cfa7-9b93c9eb1a3f/RBAppstore_VP9-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/68/89/14/6889141e-48ce-d489-01dc-efac34cdab29/RBAppstore_VP4-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/67/08/e8/6708e8e7-b65b-93fb-10cd-e9f3893b297a/RBAppstore_VP10-FR-FR.png"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/78/c2/15/78c2156d-3177-da11-137e-e35b1a2c781a/Screen_1_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a0/f7/bd/a0f7bdd1-03ed-9943-84f1-7e26256b27d9/Screen_2_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d6/3b/9d/d63b9da6-9fba-faa1-bb0b-08c868ec7c2a/Screen_3_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/61/03/8c/61038c56-7fe6-c0a5-83c3-252ebeedd3e1/Screen_4_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/18/11/e3/1811e38a-80e2-5920-6402-e64eb1e29e34/Screen_5_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/76/c5/81/76c5812c-fd48-7447-e189-e53c084f02bc/Screen_6_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/bd/58/63/bd586399-117d-e1e9-3b65-793d352c013c/Screen_7_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/74/ce/3b/74ce3bac-8734-89aa-cad5-c6c46a3f3ed3/Screen_8_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/34/61/de/3461deb6-9c5d-5ebf-cb53-b99cdd0f4e5c/Screen_9_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "fr",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a8/9b/c6/a89bc622-db13-f566-ec05-99e8d598d87f/Screen_10_2048x2732-FR-FR.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4b/82/5b/4b825b5f-85ac-fd11-fb60-6765f05399e9/RBAppstore_VP1-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/8d/97/49/8d9749d6-b585-5d5b-ebca-4d3906530cd7/RBAppstore_VP2-DE-DE.jpeg"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5b/bc/8f/5bbc8fd3-f093-e5ef-7e69-ff3db836ad5c/RBAppstore_VP3-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f0/1a/45/f01a4537-e402-b544-b48f-acbf8225228d/RBAppstore_VP6-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5b/19/27/5b192781-d91d-9285-2006-ae4af81e97d4/RBAppstore_VP7-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d1/45/bf/d145bfda-6785-25a6-0c7c-8b35dd3feb1d/RBAppstore_VP8-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/53/b6/ed/53b6ed0a-ee24-80f4-fd5a-e9f1a6b275b4/RBAppstore_VP5-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4e/d5/9b/4ed59bcc-e7d9-6f21-bb57-fabfa45f8e9c/RBAppstore_VP9-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4d/73/19/4d73198b-9778-2603-f456-5dff0a0da532/RBAppstore_VP4-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f6/ce/47/f6ce47da-600b-a5f0-4dff-cd7d70a8fa33/RBAppstore_VP10-DE-DE.png"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b9/af/58/b9af5864-60af-b20e-f9c1-ea0ac8065af6/Screen_1_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/93/9b/90/939b903d-f13e-7b8a-e8cc-aed72a775f1d/Screen_2_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e9/3a/55/e93a55ab-7547-0cda-2913-542d6dae2192/Screen_3_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b9/ff/d4/b9ffd49d-3c78-69ec-3ad1-79c4e2a76476/Screen_4_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d6/61/c5/d661c5ac-65cf-e067-e251-9afa8ec139bc/Screen_5_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/35/b2/dc/35b2dca3-5459-e539-8d3c-1e6277313b9a/Screen_6_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/94/0b/73/940b73c9-bb56-2c76-3cba-167fcbe9f769/Screen_7_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/82/4f/0b/824f0bea-f057-8562-08c0-6acb69e6c8a0/Screen_8_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/58/df/ec/58dfec03-4e5d-4751-0b36-ec839bd4eeef/Screen_9_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "de",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/53/a0/b7/53a0b7b9-92ff-6222-cb8d-05581b51a87b/Screen_10_2048x2732-DE-DE.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a8/00/72/a80072bf-2433-53e4-56d5-50ad44e66057/RBAppstore_VP1-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/35/55/5a/35555afc-252e-5044-b279-0aaa9d63b2d5/RBAppstore_VP2-IT-IT.jpeg"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4d/21/65/4d2165c2-b406-88a3-ac8c-6008d8dda8e1/RBAppstore_VP3-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3f/90/5a/3f905ab1-2fd6-e045-2b3b-bd2beadd15e8/RBAppstore_VP6-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/14/94/f1/1494f1d5-cd83-02c0-df2b-f1673d1c32e9/RBAppstore_VP7-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/19/11/49/19114979-35de-9517-3212-53495cc47375/RBAppstore_VP8-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/56/e5/8a56e5d6-ae29-0866-a524-20d6fb7a05d4/RBAppstore_VP5-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/02/9b/c0/029bc097-62a3-3da4-6978-3c3cb0bf0802/RBAppstore_VP9-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/42/86/4b/42864bcc-16db-dec1-23ec-97d3664f9bea/RBAppstore_VP4-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c5/7b/3d/c57b3d01-0b08-bbc8-8348-e471658487be/RBAppstore_VP10-IT-IT.png"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b3/a4/1b/b3a41b1c-bf45-6ec7-388e-ca786be3cb06/Screen_1_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/66/98/aa/6698aa6f-5ee1-bd8e-2562-8b3b1e69ca26/Screen_2_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dd/8b/9d/dd8b9d56-0741-573f-56e2-43f75ed020fb/Screen_3_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/65/fe/a4/65fea4ad-bbc8-61ba-9126-969fe2fd160a/Screen_4_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c9/f1/91/c9f1910a-ad92-0ae3-7400-6b260337b3af/Screen_5_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/15/26/74/152674e6-ab7f-fc02-a50e-6180718d62fe/Screen_6_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/be/7c/f7/be7cf7ee-fbd3-e341-81cd-742f19e29704/Screen_7_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2a/09/c2/2a09c2e3-5990-c29d-8ebb-2c3be5150bd7/Screen_8_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a7/d5/bc/a7d5bcbc-7c7e-4f1e-9dbb-6bd3d0d5fb92/Screen_9_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "it",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a2/56/ef/a256efaf-c8d2-de01-a3d4-25b5409f3052/Screen_10_2048x2732-IT-IT.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d3/b5/94/d3b594c8-ca27-2725-24ec-0bcf813cef5a/RBAppstore_VP1-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d8/0d/a6/d80da644-3d47-2c3d-585e-41bc8e62d4ed/RBAppstore_VP2-ES-ES.jpeg"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1a/77/d3/1a77d33b-3cb5-c3de-5ead-bfc5f735cfc3/RBAppstore_VP3-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/72/14/4c/72144c7a-5a65-75c3-15b1-1f2827f7e809/RBAppstore_VP6-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c6/b3/a0/c6b3a03a-cb2a-fcf1-5d36-51396a61a349/RBAppstore_VP7-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/13/03/38/13033806-707c-5cef-a129-c5728607b5a0/RBAppstore_VP8-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e8/13/fe/e813fe7a-3b07-7fcb-c22d-10ee25f8463b/RBAppstore_VP5-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3a/41/4f/3a414fd8-e8d1-b90d-ad76-aafc562f509b/RBAppstore_VP9-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/1e/eb/24/1eeb249e-ee7e-7cd0-3426-dea4d1d72f7c/RBAppstore_VP4-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d5/c2/e4/d5c2e415-f87b-14eb-9caa-7e1327a461e8/RBAppstore_VP10-ES-ES.png"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/79/ed/6c/79ed6c29-1e62-7f51-deff-64549eadba1f/Screen_1_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/80/63/a6/8063a649-53a7-00fa-15b3-4c6897a338e7/Screen_2_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c4/4e/e5/c44ee583-dfb9-4733-ade0-d3c580059745/Screen_3_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/48/b5/8e/48b58ee4-fbb7-325f-ea62-ff77a894a5a3/Screen_4_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ff/e6/24/ffe62441-4e82-7f28-0dcf-760b21e5a80c/Screen_5_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c1/92/07/c1920729-ae1c-e419-ff89-1d1371f26bf2/Screen_6_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f5/dc/fa/f5dcfac7-e9ac-aa5a-9aff-d33524cbba3d/Screen_7_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/32/e8/7a/32e87aa1-7045-98b4-c134-132fe36a8353/Screen_8_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d9/a2/ee/d9a2ee1a-89d4-b68d-43a1-bc528f70216c/Screen_9_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "es",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e4/62/b9/e462b9d9-7331-da3a-a3dd-203dfef2c375/Screen_10_2048x2732-ES-ES.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a9/a5/ba/a9a5bac8-086d-b5f8-9ba2-baf03fa6c215/RBAppstore_VP1-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/18/2a/de/182ade93-c469-f79d-dedc-d7d7daafcac4/RBAppstore_VP2-NL-NL.jpeg"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/00/d3/8d/00d38dae-742c-02c4-31be-d4a99e286424/RBAppstore_VP3-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/18/94/13/18941363-211b-a2c9-d625-47ef470721b6/RBAppstore_VP6-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ee/5e/be/ee5ebed0-35c0-e82d-a306-3192c22381ed/RBAppstore_VP7-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/07/55/a0/0755a0da-7323-2195-43a1-725cd669d0e2/RBAppstore_VP8-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/89/da/37/89da37ab-313b-76bb-19e7-cb66b7d206ae/RBAppstore_VP5-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a4/76/9f/a4769fa9-2188-c204-0d25-af6e8573fec2/RBAppstore_VP9-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b8/2d/01/b82d01e6-7ec0-584b-581c-d8285091d3db/RBAppstore_VP4-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3c/db/ef/3cdbef45-2a1b-e66a-afae-012bf999b9cf/RBAppstore_VP10-NL-NL.png"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/2e/42/2f/2e422f76-9ca0-a74f-d92c-e7bc2d4f423c/Screen_1_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/02/14/10/02141052-d2a4-001f-f187-92698d073193/Screen_2_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/50/4c/41/504c4164-176d-4cbe-6859-582a1e57b3b7/Screen_3_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/28/d9/53/28d953dd-420e-101d-4653-7c75c316c2b3/Screen_4_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/de/cf/d6/decfd6e0-cb03-2a38-2ca2-88dc6c5d60d2/Screen_5_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d6/7b/06/d67b0602-9c2a-918c-3aca-58bfb9ba6ab0/Screen_6_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f1/58/3e/f1583ea1-8c68-6821-58fa-34600bd6470f/Screen_7_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5b/69/0e/5b690eb3-fe73-a883-7b7b-17ae1e37fc99/Screen_8_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/79/6b/0f/796b0f58-6c4f-375a-90d0-9a14121a7c8c/Screen_9_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "nl",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fe/b2/07/feb20778-b957-dd7d-eeb0-54f4a6b20653/Screen_10_2048x2732-NL-NL.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/53/d0/0e/53d00ec0-17d2-3c4f-5233-2e6ab48af370/RBAppstore_VP1-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2b/39/5b/2b395b97-8b4c-f657-d680-1cb58e611a8e/RBAppstore_VP2-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/12/eb/d5/12ebd594-766d-e21c-4c65-dfc95948354d/RBAppstore_VP3-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d5/9e/4a/d59e4af9-7f0b-42bc-62fb-5ae6d26f4f49/RBAppstore_VP6-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/fa/69/61/fa696173-4d26-1080-b12c-10e1f119dad4/RBAppstore_VP7-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a4/05/27/a40527d2-6c1e-4531-e6f5-3e10a36c9ff0/RBAppstore_VP8-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6d/6d/a7/6d6da78b-a1d4-2ffa-2ef1-39d40b8ffdb1/RBAppstore_VP5-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f2/9e/00/f29e0089-5cd2-b1b1-26d0-6f63f6beda4a/RBAppstore_VP9-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3d/5c/f4/3d5cf455-523d-ebb5-6a6b-eb6b4c26f4b5/RBAppstore_VP4-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a0/6b/0c/a06b0c88-38e4-d584-0c06-e7af8e6da7ff/RBAppstore_VP10-PT-PT.png"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/3e/e5/94/3ee594bb-4d86-85ef-b2e0-2727f3e5138d/Screen_1_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/51/8c/16/518c1668-7544-b0ee-46ad-53a32d29af8e/Screen_2_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/f8/fc/0b/f8fc0bda-d88a-26c9-4b96-f40e0d5c2b25/Screen_3_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c2/a0/37/c2a03713-5808-7851-480e-485145c705b6/Screen_4_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/07/62/04/07620415-1f5b-b077-2783-99aba9c9546f/Screen_5_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/07/a1/a9/07a1a949-505c-b761-e758-adb04ec8e0f2/Screen_6_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/40/af/fd/40affd74-506d-7384-9fd3-d3cde9042d68/Screen_7_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f3/01/83/f30183f2-e3dd-7bbb-0c35-fae36078b272/Screen_8_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/0a/58/b3/0a58b35d-f1a6-fae6-fc84-966dbf3d957c/Screen_9_2048x2732-PT-PT.jpg"
+   },
+   {
+    "country": "pt",
+    "kind": "ipadScreenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d9/2e/59/d92e5997-8d14-ba08-842f-d3ac2742bf24/Screen_10_2048x2732-PT-PT.jpg"
+   }
+  ]
+ },
+ "qonto": {
+  "id": 1214811644,
+  "stores": {
+   "gb": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/gb/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "us": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/us/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "hu": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/hu/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "fr": {
+    "name": "Qonto : Plus qu’un compte pro",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Votre application Qonto s’enrichit toujours plus pour que vous puissiez gérer vos finances pro en accéléré, sans faire l’impasse sur la sécurité.",
+    "url": "https://apps.apple.com/fr/app/qonto-plus-quun-compte-pro/id1214811644?uo=4"
+   },
+   "de": {
+    "name": "Qonto: Business Banking online",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Ihre Qonto App wird immer besser. So können Sie Ihre Geschäftsfinanzen im Handumdrehen verwalten – ohne Kompromisse bei der Sicherheit.",
+    "url": "https://apps.apple.com/de/app/qonto-business-banking-online/id1214811644?uo=4"
+   },
+   "it": {
+    "name": "Qonto: Conto business online",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "La tua app Qonto si arricchisce ogni giorno di più, per permetterti di gestire le tue finanze in modo facile e veloce, senza compromettere la sicurezza.",
+    "url": "https://apps.apple.com/it/app/qonto-conto-business-online/id1214811644?uo=4"
+   },
+   "es": {
+    "name": "Qonto: Cuenta para empresas",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Día a día, tu app de Qonto va mejorando. Así podrás gestionar tu cuenta de empresa en un momento - sin comprometer la seguridad.",
+    "url": "https://apps.apple.com/es/app/qonto-cuenta-para-empresas/id1214811644?uo=4"
+   },
+   "nl": {
+    "name": "Qonto: Zakelijke Financiën app",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Je Qonto-app wordt elke dag beter. Zo kun je je zakelijke account razendsnel beheren, zonder dat dit ten koste gaat van de beveiliging.",
+    "url": "https://apps.apple.com/nl/app/qonto-zakelijke-financi%C3%ABn-app/id1214811644?uo=4"
+   },
+   "pl": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/pl/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "ie": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/ie/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "pt": {
+    "name": "Qonto - Business Finance App",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Day by day, your Qonto app is improving. So you can manage your business account in a flash - without compromising on security.",
+    "url": "https://apps.apple.com/pt/app/qonto-business-finance-app/id1214811644?uo=4"
+   },
+   "at": {
+    "name": "Qonto: Business Banking online",
+    "version": "20261111.0",
+    "date": "2026-11-11T18:55:39Z",
+    "notes": "Ihre Qonto App wird immer besser. So können Sie Ihre Geschäftsfinanzen im Handumdrehen verwalten – ohne Kompromisse bei der Sicherheit.",
+    "url": "https://apps.apple.com/at/app/qonto-business-banking-online/id1214811644?uo=4"
+   }
+  },
+  "shots": [
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/63/f7/8f/63f78f69-edf6-6a5b-db20-0e5fcae8e29b/0_APP_IPHONE_69_0.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4b/22/23/4b22231d-de38-1a49-f958-e776467d2d56/1_APP_IPHONE_69_1.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2d/37/4d/2d374d98-9904-f62f-5581-3acbaa8a11c4/2_APP_IPHONE_69_2.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/53/40/ea/5340eaf2-d722-0c73-93f8-0febd49c8c64/3_APP_IPHONE_69_3.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/65/61/10/656110c8-bfa2-e37f-d39a-4102170e3f84/4_APP_IPHONE_69_4.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/c7/53/11/c75311a0-3107-75f1-a3d4-72c36fb3a3df/5_APP_IPHONE_69_5.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ae/1d/c4/ae1dc4de-6cd2-7783-8522-1014559ec191/6_APP_IPHONE_69_6.png"
+   },
+   {
+    "country": "gb",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/9d/65/56/9d6556c2-0baa-67d2-7254-d3ffaebb40da/7_APP_IPHONE_69_7.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/24/f2/49/24f249bc-f067-6ee6-2c27-dfbced59e75d/0_APP_IPHONE_69_0.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a4/fd/ff/a4fdff94-eb21-8a28-a789-88abb9ff2f50/1_APP_IPHONE_69_1.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/e5/21/d4/e521d411-e45c-cbd3-a930-8dd784490b62/2_APP_IPHONE_69_2.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/15/aa/df/15aadf96-83ab-014f-a60d-32e21df52e52/3_APP_IPHONE_69_3.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/af/89/bd/af89bd4b-a8a5-98eb-6fd0-ab4834fb4661/4_APP_IPHONE_69_4.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/5e/e5/d8/5ee5d808-1e29-345e-ce07-d3141bb40112/5_APP_IPHONE_69_5.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ed/69/ab/ed69abbe-bc8d-cde3-4bea-bdbe91e22218/6_APP_IPHONE_69_6.png"
+   },
+   {
+    "country": "fr",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/11/4d/81/114d81bf-737b-096e-6efa-5611260b8403/7_APP_IPHONE_69_7.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/58/b7/57/58b75728-67d0-8b4a-2514-6d8bc2e23e8b/0_APP_IPHONE_69_0.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/21/98/38/219838e3-6d63-e3df-0343-ef002541bac8/1_APP_IPHONE_69_1.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/c9/6a/f0/c96af0b1-ced5-8787-c0cd-432f51956f53/2_APP_IPHONE_69_2.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b2/c1/be/b2c1be87-b8ed-db86-924b-d30513bf8922/3_APP_IPHONE_69_3.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/dc/b7/b3/dcb7b3fb-9b36-6385-aa9c-1c190636dda8/4_APP_IPHONE_69_4.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/b1/c9/9e/b1c99ea8-0eea-5ce3-b7ec-aeab099ccca3/5_APP_IPHONE_69_5.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/94/10/39/941039e0-6c7a-9e04-c2f9-0d91fd24adf7/6_APP_IPHONE_69_6.png"
+   },
+   {
+    "country": "de",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/44/fd/20/44fd20d2-9360-a8b1-8466-2c08c64d9338/7_APP_IPHONE_69_7.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/57/c5/c8/57c5c8da-0775-94eb-159b-3ee2a7e3e266/0_APP_IPHONE_69_0.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e6/83/5f/e6835f45-cfe8-974f-a3b3-459eace75b86/1_APP_IPHONE_69_1.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/98/66/fc/9866fcba-668c-ee07-97db-6440c75004fa/2_APP_IPHONE_69_2.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/52/94/dc/5294dc7c-3414-35e3-9166-3166c47b7aed/3_APP_IPHONE_69_3.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4a/ee/3f/4aee3fc2-ccc0-a7d4-15da-ed3a91538ac9/4_APP_IPHONE_69_4.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9b/76/67/9b766761-51bb-5431-3fc7-6b533594c303/5_APP_IPHONE_69_5.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b7/fa/c1/b7fac1b1-413d-0ad4-625f-6ac38578f38d/6_APP_IPHONE_69_6.png"
+   },
+   {
+    "country": "it",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b0/b0/7c/b0b07cc2-e6fa-7a85-8ae1-cb1a565f30a7/7_APP_IPHONE_69_7.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/bf/97/cd/bf97cdd9-35c0-1316-f26b-477ff801e48f/0_APP_IPHONE_69_0.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/0b/59/fd/0b59fdae-a820-0dd7-53ab-7d32cf510148/1_APP_IPHONE_69_1.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/53/9c/18/539c18bd-8565-2efb-68a9-6730f81cc45f/2_APP_IPHONE_69_2.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b7/c9/15/b7c91575-476d-02bc-10b3-1aad64bb09c8/3_APP_IPHONE_69_3.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/4f/5c/0e/4f5c0e11-cd9a-3a1d-6702-9ecea4f202f2/4_APP_IPHONE_69_4.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/40/af/ce/40afce4e-3ca3-a71d-bb1f-54809a646fdb/5_APP_IPHONE_69_5.png"
+   },
+   {
+    "country": "es",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/9f/cc/02/9fcc02ee-83a9-f1d4-b19e-e1bf3dfe5b1a/6_APP_IPHONE_69_6.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f0/f7/65/f0f76515-bc2a-d5b4-6b0b-2d74c0ff1e62/Apple_Store_6.9_SC1.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f2/b0/aa/f2b0aadf-2c07-7723-3dc1-c47fef4c8040/Apple_Store_6.9_SC2.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/14/90/c9/1490c92f-79b5-81fb-1df8-a521cae05a57/Apple_Store_6.9_SC3.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b9/91/47/b99147b3-0144-3738-7f6b-8fcf8c97bab5/Apple_Store_6.9_SC4.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/d1/54/d5/d154d5ed-cf08-a151-7e67-ef68f85468f8/Apple_Store_6.9_SC5.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/64/94/f5/6494f547-fb9e-eeed-faa9-4b0ea34adaac/Apple_Store_6.9_SC6.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a8/4f/85/a84f8506-2db9-a9d9-f994-ff529ab2c127/Apple_Store_6.9_SC7.png"
+   },
+   {
+    "country": "nl",
+    "kind": "screenshotUrls",
+    "src": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/a9/90/76/a99076b2-c346-3664-0224-9343f2784f7f/Apple_Store_6.9_SC8.png"
+   }
+  ]
+ }
+}

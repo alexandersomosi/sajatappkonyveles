@@ -1,0 +1,20 @@
+{
+ "talalatok": [
+  {
+   "id": "b18",
+   "sulyossag": "hiany",
+   "problema": "A források (SPEC 26.1.4, sablon 'adozas_munkavegzes', NAV útmutató) szerint a munkavégzés jellegének kitöltése kötelező mező, a videószöveg ezt nem említi, holott a sablon és spec hangsúlyozza.",
+   "forras": "spec_26_1_4 ('\"A munkavégzés jellege\" mandatory'), utmutato_sablonok_bekotes_ts ('Ezt kötelező kitölteni.')",
+   "javitott": "Add meg a munkavégzés jellegét: kötelező kitölteni, és ettől függ a járulékod."
+  },
+  {
+   "id": "m12",
+   "sulyossag": "javaslat",
+   "problema": "A SPEC 26.7.4 vázlata szerint az appban egy gombbal másolható az adat ('az alkalmazásban egy gombbal kimásolod'), a videószövegben csak általánosságban szerepel ('az alkalmazásból kimásolod').",
+   "forras": "spec_26_7_4 ('az alkalmazásban egy gombbal kimásolod')",
+   "javitott": "Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod."
+  }
+ ],
+ "osszegzes": "A videószövegek kiváló minőségűek, pontosan követik a SPEC 26.6.3 és 26.7.4 elvárásait, a lépések sorrendje, a képernyőkhöz rendelt azonosítók és a NAV-terminológia maradéktalanul egyezik a forrásokkal. Mindössze egyetlen kisebb hiányosság található (a munkavégzés jellege kötelező mivoltának explicit említése a b18-nál), valamint egy apró fogalmazásbeli pontosítási javaslat a meghatalmazás kimásolásánál.",
+ "_modell": "google/gemini-3.8-flash"
+}

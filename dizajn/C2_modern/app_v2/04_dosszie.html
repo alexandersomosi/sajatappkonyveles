@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Dosszié</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* a hónapváltó a sávba került; a nagy cím így nem ismétli a hónapot, hanem összefoglal */
+  .fejlec { --roz-x: 120px; --roz-y: 130px; padding-bottom: 22px; }
+  .fejlec h1 { padding-top: 18px; font-size: 29px; }
+
+  /* Bence átnézte: konkrét szám + egy kérés; Bence arca a lap fejében */
+  .bence { padding: 18px 18px 14px; }
+  .bence .ki { font-weight: 650; font-size: 16px; line-height: 1.3; }
+  .bence .mikor { font-size: 14.5px; color: var(--halvany); line-height: 1.35; }
+  .bence .szamlalo { display: flex; align-items: baseline; gap: 9px; margin-top: 12px; }
+  .bence .szamlalo b { font-weight: 800; font-size: 40px; line-height: .9; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+  .bence .szamlalo span { font-size: 17px; font-weight: 600; }
+  .bence .szamlalo span em { font-style: normal; color: var(--tinta); }  /* 11-18: egy kész-szín (ibolya pecsét), a szó tinta */
+  .bence .meg { font-size: 15.5px; line-height: 1.45; color: var(--tinta); margin-top: 6px; }
+  .bence .keres { border-top: 1px solid var(--hajszal); margin-top: 16px; padding-top: 14px; }
+  .bence .keres .mit { font-weight: 650; font-size: 16.5px; line-height: 1.4; }
+  .bence .keres .miert { font-size: 15px; color: var(--halvany); line-height: 1.5; margin: 2px 0 12px; }
+  .bence .ala { display: flex; align-items: flex-end; justify-content: space-between; }
+  /* 5. kör: a KB szignó helyett Bence rajzolt arca a lap fejében */
+  .bence .fejsor { display: flex; align-items: center; gap: 12px; }
+  .bence .fejsor .arckep { width: 44px; height: 44px; }
+
+  /* a lista végén: szaggatott sor a saját fájlhoz (nem a felette lévő tételhez tartozik) */
+  .hozzaad { display: flex; align-items: center; justify-content: center; gap: 8px; width: calc(100% - 24px); margin: 4px 12px 12px; height: 52px;
+    border-radius: var(--r-mezo); border: 1.5px dashed #A9B6D6; color: var(--kek); font-weight: 600; font-size: 16px; }
+  .hozzaad img.i3 { width: 26px; height: 26px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="szegmens-sav" role="tablist" aria-label="Hónap">
+    <button class="on" role="tab" aria-selected="true">Október</button>
+    <button role="tab">Szeptember</button>
+    <button role="tab">Korábbiak</button>
+  </div>
+  <h1>8 irat, ebből egy még Bencére vár.</h1>
+</header>
+
+<main class="tartalom">
+  <section class="lap bence">
+    <div class="fejsor"><img class="arckep" src="../assets/avatar/karakter_1_lapos@2x.png" srcset="../assets/avatar/karakter_1_lapos@2x.png 2x, ../assets/avatar/karakter_1_lapos@3x.png 3x" alt="Kovács Bence, a könyvelőd">
+      <div><div class="ki">Bence átnézte az iratokat</div>
+      <div class="mikor">tegnap, 16:40</div></div></div>
+    <div class="szamlalo"><b>7</b><span>irat <em>rendben</em></span></div>
+    <div class="meg">A tegnapi szerződésre még ránéz.</div>
+    <div class="keres">
+      <div class="mit">Kéri a szeptemberi bankszámlakivonatodat.</div>
+      <div class="miert">Csak ellenőrzéshez. Elég a bankod appjából letöltött PDF.</div>
+      <div class="ala">
+        <button class="gomb-m"><img class="i3" src="../assets/ikon3d/feltoltes_28@2x.png" srcset="../assets/ikon3d/feltoltes_28@2x.png 2x, ../assets/ikon3d/feltoltes_28@3x.png 3x" alt="">Kivonat feltöltése</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="szakasz">Amit te küldtél</div>
+  <section class="lap">
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/nyugta_arnyektalan_44@2x.png" srcset="../assets/ikon3d/nyugta_arnyektalan_44@2x.png 2x, ../assets/ikon3d/nyugta_arnyektalan_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../assets/ikon3d/befizetve_jel_20@2x.png" srcset="../assets/ikon3d/befizetve_jel_20@2x.png 2x, ../assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Nyugta, készpénzes eladás</div>
+        <div class="allapot kesz"><span><span class="szo">Feldolgozva</span>, hétfőn</span></div></div>
+    </div>
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/irat_arnyektalan_44@2x.png" srcset="../assets/ikon3d/irat_arnyektalan_44@2x.png 2x, ../assets/ikon3d/irat_arnyektalan_44@3x.png 3x" alt=""></span>
+      <div class="l"><div class="cim">Szerződés, Bodza Kiadó</div>
+        <div class="allapot var"><span><span class="szo">Feltöltve</span>, tegnap</span></div></div>
+    </div>
+    <button class="hozzaad"><img class="i3" src="../assets/ikon3d/feltoltes_28@2x.png" srcset="../assets/ikon3d/feltoltes_28@2x.png 2x, ../assets/ikon3d/feltoltes_28@3x.png 3x" alt="">Fájl hozzáadása</button>
+  </section>
+
+  <div class="szakasz">A NAV-tól kaptuk</div>
+  <p class="szakasz-megj">Ezeket neked nem kell feltöltened.</p>
+  <section class="lap">
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/szamlak_44@2x.png" srcset="../assets/ikon3d/szamlak_44@2x.png 2x, ../assets/ikon3d/szamlak_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../assets/ikon3d/befizetve_jel_20@2x.png" srcset="../assets/ikon3d/befizetve_jel_20@2x.png 2x, ../assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Kiállított számláid, 4 db</div>
+        <div class="allapot kesz"><span><span class="szo">Feldolgozva</span>, szerdán</span></div></div>
+    </div>
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/boritek_44@2x.png" srcset="../assets/ikon3d/boritek_44@2x.png 2x, ../assets/ikon3d/boritek_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../assets/ikon3d/befizetve_jel_20@2x.png" srcset="../assets/ikon3d/befizetve_jel_20@2x.png 2x, ../assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Levél a NAV-tól</div>
+        <div class="allapot kesz"><span><span class="szo">Feldolgozva</span>, nincs teendőd</span></div></div>
+    </div>
+  </section>
+
+  <div class="szakasz">Bence beadta</div>
+  <section class="lap">
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/bevallas_44@2x.png" srcset="../assets/ikon3d/bevallas_44@2x.png 2x, ../assets/ikon3d/bevallas_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../assets/ikon3d/befizetve_jel_20@2x.png" srcset="../assets/ikon3d/befizetve_jel_20@2x.png 2x, ../assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Bevallás a III. negyedévről</div>
+        <div class="allapot kesz"><span><span class="szo">Beadva</span>, október 2-án</span></div></div>
+    </div>
+  </section>
+</main>
+
+<div class="alj-fatyol" aria-hidden="true"></div>
+<nav class="fulsor" aria-label="Fő navigáció">
+  <div class="fulek">
+    <a class="ful"><img class="i3 fooldal" src="../assets/ikon3d/fooldal_36@2x.png" srcset="../assets/ikon3d/fooldal_36@2x.png 2x, ../assets/ikon3d/fooldal_36@3x.png 3x" alt="">Főoldal</a>
+    <a class="ful on"><img class="i3 dosszie" src="../assets/ikon3d/dosszie_36@2x.png" srcset="../assets/ikon3d/dosszie_36@2x.png 2x, ../assets/ikon3d/dosszie_36@3x.png 3x" alt="">Dosszié</a>
+    <a class="ful"><img class="i3 uzenetek" src="../assets/ikon3d/uzenetek_36@2x.png" srcset="../assets/ikon3d/uzenetek_36@2x.png 2x, ../assets/ikon3d/uzenetek_36@3x.png 3x" alt="">Üzenetek</a>
+    <a class="ful"><img class="i3 fiok" src="../assets/ikon3d/fiok_36@2x.png" srcset="../assets/ikon3d/fiok_36@2x.png 2x, ../assets/ikon3d/fiok_36@3x.png 3x" alt="">Fiók</a>
+  </div>
+  <button class="fotogomb" aria-label="Fotózás: irat lefotózása"><img class="i3" src="../assets/ikon3d/fotozas_arnyektalan_36@2x.png" srcset="../assets/ikon3d/fotozas_arnyektalan_36@2x.png 2x, ../assets/ikon3d/fotozas_arnyektalan_36@3x.png 3x" alt="">Fotózás</button>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

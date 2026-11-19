@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Befizetve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.megerosit { padding: 0 24px; }
+.megerosit .cim { padding: 56px 0 0; font-size: 40px; }
+.megerosit .alcim { color: var(--eloter-masod); padding: 6px 0 0; font-size: 17px; }
+/* Az összeg kétszer aláhúzva, mint a végeredmény a füzetben */
+.vegosszeg { display: inline-block; margin-top: 26px; font-family: var(--szuk); font-weight: 600; font-size: 44px; line-height: 1; padding-bottom: 10px; position: relative; font-variant-numeric: tabular-nums; }
+.vegosszeg::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; }
+.vegosszeg small { font-size: 26px; color: var(--eloter-masod); margin-left: 4px; }
+.utalasok { list-style: none; margin-top: 26px; border: 1px solid var(--eloter-vonal); border-radius: var(--r-lap); background: var(--eloter-lap); }
+.utalasok li { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 13px 16px; font-size: 17px; }
+.utalasok li + li { border-top: 1px solid var(--eloter-vonal); }
+.utalasok .ikon { width: 22px; height: 22px; stroke-width: 2.4; }
+.utalasok .szam { color: #FFFFFF; }
+.utalasok .ft { color: var(--eloter-masod); }
+.szoveg { font-size: 16.5px; line-height: 1.5; color: var(--eloter-masod); margin-top: 20px; }
+.szoveg b { color: #FFFFFF; font-weight: 700; }
+.lent { position: absolute; left: 24px; right: 24px; bottom: 44px; text-align: center; }
+.lent .gomb.harmad { margin-top: 8px; }
+</style>
+</head>
+<body class="telefon eloter">
+<div data-allapotsor></div>
+
+<main class="megerosit">
+  <h1 class="cim">Befizetve</h1>
+  <p class="alcim">október 12., hétfő</p>
+  <div class="vegosszeg szam">820&#8239;260<small>Ft</small></div>
+
+  <ul class="utalasok">
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>SZJA-előleg</span><span class="szam">264&#8239;600<span class="ft">Ft</span></span></li>
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>TB-járulék</span><span class="szam">326&#8239;340<span class="ft">Ft</span></span></li>
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>Szocho</span><span class="szam">229&#8239;320<span class="ft">Ft</span></span></li>
+  </ul>
+
+  <p class="szoveg"><b>Felírtuk.</b> Bence pár napon belül a NAV-nál is megnézi, hogy megérkezett-e, és szól, ha valami nem stimmel.</p>
+  <p class="szoveg">Legközelebb januárban kell fizetned. Előtte egy héttel szólunk.</p>
+</main>
+
+<div class="lent">
+  <button class="gomb elso">Vissza a főoldalra</button>
+  <button class="gomb harmad">Mégsem fizettem be</button>
+</div>
+
+<script src="kozos.js"></script>
+</body>
+</html>

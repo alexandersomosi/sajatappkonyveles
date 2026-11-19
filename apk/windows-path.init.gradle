@@ -1,0 +1,36 @@
+// Gradle init script, used by build-apk.sh (--init-script). Changes nothing in the project.
+//
+// Windows path limit: without the system-wide "long paths" setting, ninja cannot handle paths
+// longer than 260 characters (folders: 248). CMake puts each object file under a folder that
+// repeats the full source path (e.g. .cxx/.../CMakeFiles/reanimated.dir/C_/Users/.../
+// node_modules/react-native-reanimated/Common/cpp/...), which goes past that limit.
+//
+// 1. CMAKE_OBJECT_PATH_MAX (every native module): CMake replaces the long part of such object
+//    paths with a short hash once the full path would exceed the limit.
+// 2. The app module compiles the autolinked codegen of every library inside android/app/.cxx,
+//    which is already ~180 characters deep there; its CMake staging folder is moved to a short
+//    root (CXX_ROOT). Only :app is moved: reanimated, worklets and expo-modules-core refer to
+//    their own `.cxx` folders in their build scripts, so those stay where they are.
+def objMax = "-DCMAKE_OBJECT_PATH_MAX=250"
+def cxxRoot = System.getenv("KEZJEGY_CXX_ROOT") ?: "D:/Atvitel/Android/cxk"
+
+allprojects { p ->
+    ["com.android.library", "com.android.application"].each { pluginId ->
+        p.plugins.withId(pluginId) {
+            if (pluginId == "com.android.application") {
+                def staging = new File(cxxRoot, p.name)
+                p.android.externalNativeBuild.cmake.buildStagingDirectory = staging
+                p.logger.lifecycle("[windows-path] ${p.path}: CMake staging folder ${staging}")
+            }
+            def ac = p.extensions.findByName("androidComponents")
+            if (ac == null) return
+            ac.onVariants(ac.selector().all(), { variant ->
+                def enb = variant.externalNativeBuild
+                if (enb != null) {
+                    enb.arguments.add(objMax)
+                    p.logger.info("[windows-path] ${p.path} ${variant.name}: ${objMax}")
+                }
+            } as Action)
+        }
+    }
+}

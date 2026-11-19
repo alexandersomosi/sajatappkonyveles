@@ -1,0 +1,43 @@
+{
+ "helyek": {
+  "jovahagyasra_var": [
+   118,
+   28,
+   270,
+   58
+  ],
+  "meghatalmazott": [
+   14,
+   222,
+   230,
+   264
+  ],
+  "megtekintes_kartya": [
+   8,
+   70,
+   494,
+   700
+  ]
+ },
+ "elozetesen_elmosva": [
+  [
+   14,
+   184,
+   300,
+   208
+  ],
+  [
+   14,
+   296,
+   490,
+   346
+  ],
+  [
+   14,
+   492,
+   270,
+   518
+  ]
+ ],
+ "megjegyzes": "A segédlet 10. oldalának képe; a meghatalmazó neve és adóazonosító jele, a szervezet neve és száma és az azonosító elmosva."
+}

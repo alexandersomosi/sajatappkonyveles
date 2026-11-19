@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Tétel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.vissza { display: inline-flex; align-items: center; gap: 2px; height: 44px; color: var(--pala); font-weight: 700; font-size: 17px; margin-left: -6px; padding-right: 8px; }
+.vissza .ikon { width: 22px; height: 22px; stroke-width: 2.2; }
+.tetel-cim { font-family: var(--szuk); font-weight: 700; font-size: 30px; line-height: 1.1; padding: 2px 4px 0; }
+.foto { padding: 12px; }
+.foto-keret { position: relative; border-radius: 8px; overflow: hidden; background: #E9ECEB; border: 1px solid var(--hajszal); }
+.foto-keret svg { display: block; width: 100%; height: auto; }
+.oldalszam { position: absolute; left: 8px; top: 8px; background: rgba(19,35,38,.82); color: #FFFFFF; font-size: 13.5px; font-weight: 700; padding: 3px 9px; border-radius: 10px; }
+.foto-ala { display: flex; justify-content: space-between; align-items: center; padding: 4px 5px 0; }
+.foto-ala span { font-size: 14.5px; color: var(--masod); }
+
+.tortenet { list-style: none; padding: 16px var(--belso) 14px; }
+.lep { display: grid; grid-template-columns: 26px 1fr auto; column-gap: 12px; position: relative; padding-bottom: 14px; }
+.lep:last-child { padding-bottom: 0; }
+.lep::before { content: ""; position: absolute; left: 12px; top: 26px; bottom: 0; width: 2px; background: var(--pala); }
+.lep.var::before, .lep:last-child::before { display: none; }
+.lep:nth-last-child(2)::before { background: var(--hajszal); }
+.lep .p { width: 26px; height: 26px; border-radius: 50%; background: var(--pala); color: #FFFFFF; display: grid; place-items: center; }
+.lep .p .ikon { width: 16px; height: 16px; stroke-width: 2.8; }
+.lep.var .p { background: var(--lap); border: 2px solid #7C8E92; }
+.lep .nev { font-weight: 700; font-size: 17px; line-height: 26px; }
+.lep.var .nev { font-weight: 400; color: var(--masod); }
+.lep .ido { font-size: 14.5px; line-height: 26px; color: var(--masod); white-space: nowrap; }
+.lep .mi { grid-column: 2 / 4; font-size: 15px; line-height: 1.42; color: var(--masod); }
+.lep .mi .szam { color: var(--tinta); }
+
+.megjegyzes { padding: 14px var(--belso) 16px; }
+.megjegyzes .ki { display: flex; align-items: center; gap: 12px; }
+.megjegyzes .ki .monogram { width: 38px; height: 38px; font-size: 16px; }
+.megjegyzes .ki b { display: block; font-size: 16px; }
+.megjegyzes .ki span { font-size: 14px; color: var(--masod); }
+.megjegyzes p { font-size: 16.5px; line-height: 1.45; margin-top: 10px; }
+.lent { display: flex; align-items: center; gap: 22px; margin-top: 14px; padding: 0 4px; }
+</style>
+</head>
+<body class="telefon" data-ful="dosszie">
+<div data-allapotsor></div>
+
+<main class="tartalom">
+  <button class="vissza"><svg class="ikon"><use href="#i-balra"/></svg>Október</button>
+  <h1 class="tetel-cim">Nyugtatömb, 4 nyugta</h1>
+  <p class="alcim">A vásári bevételed, október 3.</p>
+
+  <section class="lap foto" style="margin-top:14px">
+    <div class="foto-keret">
+      <!-- Saját rajz: a lefotózott és kiegyenesített nyugtalap. Kézírás helyett vonalak. -->
+      <svg viewBox="0 0 332 196" role="img" aria-label="A feltöltött fotó első oldala: egy kézzel kitöltött nyugta">
+        <rect x="0" y="0" width="332" height="196" fill="#F1F2EF"/>
+        <path d="M0 0h332v196H0z" fill="none" stroke="#DADDD8" stroke-width="2"/>
+        <text x="166" y="30" text-anchor="middle" font-family="Sofia Sans" font-weight="700" font-size="17" letter-spacing="3" fill="#3C4547">NYUGTA</text>
+        <text x="236" y="29" font-family="Sofia Sans" font-size="10.5" fill="#5E6769">Sorszám</text>
+        <text x="280" y="30" font-family="Sofia Sans" font-size="15" font-weight="700" fill="#B23A2E" style="font-variant-numeric:tabular-nums">0031</text>
+        <!-- Kelt -->
+        <text x="16" y="62" font-family="Sofia Sans" font-size="10.5" fill="#5E6769">Kelt:</text>
+        <path d="M44 64h130" stroke="#A3ABAC" stroke-width=".8"/>
+        <path d="M 54.1,53.7 C 55.2,50.8 60.1,50.4 59.3,53.9 C 58.7,56.2 54.6,58.8 52.3,61.5 L 58.3,61.3 M 65.0,51.0 C 61.9,51.0 59.8,61.5 62.9,61.5 C 66.1,61.5 68.2,51.0 65.0,51.0 M 69.4,53.7 C 70.5,50.8 75.4,50.4 74.6,53.9 C 74.0,56.2 70.0,58.8 67.6,61.5 L 73.7,61.3 M 82.6,51.4 C 79.3,51.0 76.8,55.2 76.3,58.4 C 75.8,61.1 77.2,61.5 78.4,61.5 C 80.3,61.5 81.5,59.9 81.6,58.4 C 81.7,56.8 80.4,56.0 79.3,56.1 C 77.7,56.2 76.5,57.4 76.3,58.4 M 83.6,60.9 L 83.8,61.5 M 88.7,53.3 L 91.9,51.0 L 89.6,61.5 M 97.0,51.0 C 93.9,51.0 91.8,61.5 94.9,61.5 C 98.1,61.5 100.2,51.0 97.0,51.0 M 100.3,60.9 L 100.5,61.5 M 108.0,51.0 C 104.8,51.0 102.7,61.5 105.9,61.5 C 109.0,61.5 111.1,51.0 108.0,51.0 M 112.8,52.3 C 114.6,50.4 118.3,51.0 117.2,53.7 C 116.5,55.4 114.7,56.0 113.6,56.0 C 115.8,56.0 117.5,57.4 116.6,59.5 C 115.4,62.1 111.9,62.0 110.8,60.5 M 118.8,60.9 L 119.0,61.5" fill="none" stroke="#2C4A97" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Bélyegző -->
+        <rect x="16" y="78" width="148" height="44" rx="3" fill="none" stroke="#6B5DA6" stroke-width="1.3" opacity=".85" transform="rotate(-1.2 90 100)"/>
+        <text x="24" y="95" font-family="Sofia Sans" font-weight="700" font-size="11" fill="#6B5DA6" opacity=".9" transform="rotate(-1.2 90 100)">Szabó Katalin e.v.</text>
+        <path d="M24 104h118M24 113h96" stroke="#6B5DA6" stroke-width="2.2" opacity=".55" stroke-dasharray="7 2 11 2 5 2 9 2" transform="rotate(-1.2 90 100)"/>
+        <!-- Összeg -->
+        <text x="184" y="104" font-family="Sofia Sans" font-size="10.5" fill="#5E6769">Összeg:</text>
+        <path d="M222 108h96" stroke="#A3ABAC" stroke-width=".8"/>
+        <path d="M 231.7,94.2 L 236.1,91.0 L 232.9,105.5 M 238.8,94.8 C 240.4,90.7 247.2,90.1 246.0,95.1 C 245.3,98.2 239.6,101.7 236.4,105.5 L 244.7,105.2 M 260.5,91.0 C 256.1,91.0 253.2,105.5 257.6,105.5 C 261.9,105.5 264.8,91.0 260.5,91.0 M 270.9,91.0 C 266.6,91.0 263.7,105.5 268.0,105.5 C 272.4,105.5 275.3,91.0 270.9,91.0 M 281.4,91.0 C 277.0,91.0 274.1,105.5 278.5,105.5 C 282.8,105.5 285.7,91.0 281.4,91.0 M 286.3,104.0 L 284.7,107.8 M 291.5,99.7 L 297.3,99.7" fill="none" stroke="#2C4A97" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- azaz -->
+        <text x="16" y="148" font-family="Sofia Sans" font-size="10.5" fill="#5E6769">azaz:</text>
+        <path d="M46 150h270" stroke="#A3ABAC" stroke-width=".8"/>
+        <path transform="translate(54 146) scale(1.4 1.15) translate(-54 -146)" d="M54.0,146.0 C56.0,137.2 56.5,135.0 56.6,135.0 L56.4,145.5 C56.6,146.3 57.6,146.0 58.6,145.4 C59.6,142.7 60.6,140.5 60.8,140.5 L60.6,145.0 C60.8,146.3 61.6,146.0 62.6,145.4 C63.6,140.5 66.6,139.9 67.1,140.5 L63.6,146.0 C65.6,145.0 67.6,146.5 68.6,145.6 C71.6,144.5 73.1,140.5 71.4,140.5 C69.6,140.5 69.4,146.4 73.6,145.7 C74.2,139.1 78.0,139.1 78.6,146.0 C81.6,143.0 83.0,133.3 81.4,133.3 C79.8,133.3 80.2,146.0 80.6,146.0 C81.6,140.5 84.6,140.5 82.6,143.8 L85.1,146.0 C88.1,144.5 89.6,140.5 87.9,140.5 C86.1,140.5 85.9,146.4 90.1,145.6 C92.1,137.2 92.6,135.0 92.7,135.0 L92.5,145.5 C92.7,146.3 93.7,146.0 94.7,145.4 C97.7,144.5 99.2,140.5 97.5,140.5 C95.7,140.5 95.5,146.4 99.7,145.6 C100.7,140.5 103.7,139.9 104.2,140.5 L100.7,146.0 C102.7,145.0 104.7,146.5 105.7,145.4 C108.7,144.5 110.2,140.5 108.5,140.5 C106.7,140.5 106.5,146.4 110.7,145.7 C111.7,141.6 112.2,140.5 112.7,140.5 C113.2,142.7 114.7,139.9 115.7,141.6 M54.6,139.4 L59.0,139.0 M61.2,137.0 l.4,-.6 M90.7,139.4 L95.1,139.0" fill="none" stroke="#2C4A97" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Aláírás -->
+        <path d="M210 180h104" stroke="#A3ABAC" stroke-width=".8"/>
+        <text x="246" y="192" font-family="Sofia Sans" font-size="9.5" fill="#5E6769">aláírás</text>
+        <path d="M218 176c4-14 9-16 9-8s-6 12-2 6 7-12 10-6c2 4 0 8 4 2s5-6 7-1c2 4 5 0 8-3 4-3 6 1 10-1 5-2 9-6 14-5" fill="none" stroke="#2C4A97" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="oldalszam">1 / 2</span>
+    </div>
+    <div class="foto-ala"><span>Fotó, 2 oldal, kiegyenesítve</span><button class="gomb harmad">Nagyítás</button></div>
+  </section>
+
+  <h3 class="szakasz">Mi történt vele</h3>
+  <section class="lap">
+    <ol class="tortenet">
+      <li class="lep">
+        <span class="p"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <span class="nev">Feltöltve</span><span class="ido">okt. 3., szombat 18:42</span>
+        <p class="mi">Te töltötted fel a telefonodról.</p>
+      </li>
+      <li class="lep">
+        <span class="p"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <span class="nev">Bence látta</span><span class="ido">okt. 5., hétfő 9:12</span>
+      </li>
+      <li class="lep">
+        <span class="p"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <span class="nev">Feldolgozva</span><span class="ido">okt. 5., hétfő 9:40</span>
+        <p class="mi"><span class="szam">12&#8239;000 + 9&#8239;500 + 14&#8239;000 + 6&#8239;500</span><br><span class="szam">= 42&#8239;000 Ft</span>, az októberi bevételedhez adva.</p>
+      </li>
+      <li class="lep var">
+        <span class="p"></span>
+        <span class="nev">Beadva</span><span class="ido">januárban</span>
+        <p class="mi">A negyedik negyedéves bevallással megy a NAV-hoz.</p>
+      </li>
+    </ol>
+  </section>
+
+  <h3 class="szakasz">Bence megjegyzése</h3>
+  <section class="lap megjegyzes">
+    <div class="ki"><span class="monogram" aria-hidden="true">KB</span><div><b>Kovács Bence</b><span>okt. 5., hétfő 9:40</span></div></div>
+    <p>Köszi, mind a négy nyugta jól olvasható. Ha legközelebb több vásár is lesz egy hónapban, elég a hónap végén egyben feltöltened.</p>
+  </section>
+
+  <div class="lent">
+    <button class="gomb masod">Kérdezek erről</button>
+    <button class="gomb harmad">Letöltés</button>
+  </div>
+</main>
+
+<script src="kozos.js"></script>
+</body>
+</html>

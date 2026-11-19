@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Főoldal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.fizetes .lap-belso { padding-top: 18px; padding-bottom: 18px; }
+.mondat { font-family: var(--szuk); font-weight: 600; font-size: 28px; line-height: 1.12; letter-spacing: -.003em; }
+.mondat-al { font-size: 16px; line-height: 1.4; color: var(--masod); margin-top: 8px; }
+.utalas { margin: 0 calc(-1 * var(--belso)); }
+.utalas .sor { min-height: 62px; padding-top: 10px; padding-bottom: 10px; }
+.utalas .mi { font-size: 14.5px; color: var(--masod); line-height: 1.3; }
+.utalas .mi .szam { color: var(--tinta); }
+.utalas .mit { font-size: 17px; line-height: 1.3; margin-top: 2px; }
+.utalas .gomb.harmad { padding: 12px 0 12px 12px; }
+.fizetes .gomb.elso { margin-top: 14px; }
+.mero-mondat { font-size: 17px; line-height: 1.35; }
+.mero-al { font-size: 14.5px; line-height: 1.4; color: var(--masod); margin-top: 6px; }
+.meroblokk + .meroblokk { border-top: 1px solid var(--hajszal); margin-top: 16px; padding-top: 16px; }
+.keres-fo { font-size: 17px; font-weight: 700; line-height: 1.35; }
+.keres-al { font-size: 15.5px; line-height: 1.45; color: var(--masod); margin-top: 6px; }
+.keres .gomb.masod { margin-top: 14px; }
+</style>
+</head>
+<body class="telefon" data-ful="fooldal">
+<div data-allapotsor></div>
+
+<main class="tartalom">
+  <h1 class="cim">Október</h1>
+  <p class="alcim">Szia, Kata! Bence tegnap beadta a harmadik negyedéves bevallásodat.</p>
+
+  <!-- Befizetés: mondat, kockás számolás, utalási adatok, egy elsődleges gomb -->
+  <section class="lap fizetes" style="margin-top:16px" aria-labelledby="fizetes-cim">
+    <div class="lap-belso">
+      <h2 class="mondat" id="fizetes-cim">Október 12-ig fizess be <span class="szam">820&#8239;260&nbsp;Ft-ot.</span></h2>
+      <p class="mondat-al">Három utalás a NAV-nak, a közlemény mindegyiknél ugyanaz.</p>
+
+      <div class="kockas" id="szamolas" role="table" aria-label="Hogyan jött ki a fizetendő összeg">
+        <div class="fej">Hogyan jött ki? <span>július–szeptember</span></div>
+        <div class="r" style="--i:0" role="row"><span class="op"></span><span class="cimke">Bevétel</span><span class="n">2&#8239;940&#8239;000</span></div>
+        <div class="r alahuz" style="--i:1" role="row"><span class="op">−</span><span class="cimke">40% költséghányad</span><span class="n">1&#8239;176&#8239;000</span></div>
+        <div class="r vastag" style="--i:2" role="row"><span class="op">=</span><span class="cimke">Jövedelem</span><span class="n">1&#8239;764&#8239;000</span></div>
+        <div class="ures"></div>
+        <div class="r" style="--i:3" role="row"><span class="op">×</span><span class="cimke">15% SZJA-előleg</span><span class="n">264&#8239;600</span></div>
+        <div class="r" style="--i:4" role="row"><span class="op">×</span><span class="cimke">18,5% TB-járulék</span><span class="n">326&#8239;340</span></div>
+        <div class="r alahuz" style="--i:5" role="row"><span class="op">×</span><span class="cimke">13% szocho</span><span class="n">229&#8239;320</span></div>
+        <div class="r vastag vegso" style="--i:6" role="row"><span class="op">=</span><span class="cimke">Fizetendő, forintban</span><span class="n">820&#8239;260</span></div>
+        <p class="labjegy">Az adómentes részed már elfogyott, ezért most a teljes jövedelmed után jár SZJA.</p>
+      </div>
+
+      <div class="utalas">
+        <div class="sor">
+          <div class="bal"><div class="mi">SZJA-előleg, <span class="szam">264&#8239;600</span> Ft</div><div class="mit szam">10032000-06056353</div></div>
+          <button class="gomb harmad" data-masol="10032000-06056353">Másolás</button>
+        </div>
+        <div class="sor">
+          <div class="bal"><div class="mi">TB-járulék, <span class="szam">326&#8239;340</span> Ft</div><div class="mit szam">10032000-06055912</div></div>
+          <button class="gomb harmad" data-masol="10032000-06055912">Másolás</button>
+        </div>
+        <div class="sor">
+          <div class="bal"><div class="mi">Szocho, <span class="szam">229&#8239;320</span> Ft</div><div class="mit szam">10032000-06055802</div></div>
+          <button class="gomb harmad" data-masol="10032000-06055802">Másolás</button>
+        </div>
+        <div class="sor">
+          <div class="bal"><div class="mi">Közlemény mindháromhoz</div><div class="mit szam">8412345678</div></div>
+          <button class="gomb harmad" data-masol="8412345678">Másolás</button>
+        </div>
+      </div>
+
+      <button class="gomb elso">Befizettem</button>
+    </div>
+  </section>
+
+  <h3 class="szakasz">Bence kéri <span>tegnap, 16:05</span></h3>
+  <section class="lap lap-belso keres">
+    <p class="keres-fo">Töltsd fel a szeptemberi bankszámlakivonatot.</p>
+    <p class="keres-al">A bevallás már bent van. A kivonatból csak azt nézem meg, hogy minden bevételed megvan-e.</p>
+    <button class="gomb masod"><svg class="ikon"><use href="#i-kamera"/></svg>Feltöltés</button>
+  </section>
+
+  <h3 class="szakasz">Határok idén</h3>
+  <section class="lap lap-belso">
+    <div class="meroblokk">
+      <p class="mero-mondat">ÁFA nélkül még <span class="szam">11&#8239;580&#8239;000</span> Ft-ot számlázhatsz.</p>
+      <div class="mero" role="meter" aria-valuemin="0" aria-valuemax="20000000" aria-valuenow="8420000"><b style="width:42.1%"></b><span class="jel80"></span></div>
+      <div class="mero-lab"><span class="szam">8&#8239;420&#8239;000 Ft eddig</span><span class="szam">20&#8239;000&#8239;000 Ft a határ</span></div>
+      <p class="mero-al">A jelnél, 16 millió forintnál szólunk, hogy figyelj.</p>
+    </div>
+    <div class="meroblokk">
+      <p class="mero-mondat">Az adómentes részed elfogyott.</p>
+      <div class="mero" role="meter" aria-valuemin="0" aria-valuemax="1936800" aria-valuenow="1936800"><b style="width:100%"></b></div>
+      <div class="mero-lab"><span>a második negyedévben</span><span class="szam">1&#8239;936&#8239;800 Ft</span></div>
+      <p class="mero-al">Idén az első 1&#8239;936&#8239;800 Ft jövedelmed után nem kellett SZJA-t fizetned. Januártól újra jár.</p>
+    </div>
+  </section>
+
+  <h3 class="szakasz">A könyvelőd</h3>
+  <section class="lap">
+    <div class="sor">
+      <span class="monogram" aria-hidden="true">KB</span>
+      <div class="bal"><div class="fo">Kovács Bence</div><div class="al">Hétköznap 4 órán belül válaszol.</div></div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+  </section>
+</main>
+
+<script src="kozos.js"></script>
+<script>
+/* A számolás csak az első megnyitáskor „íródik”, utána rögtön kész. */
+(function () {
+  var kulcs = 'tisztan.szamolas.2026-3';
+  var latta = false;
+  try { latta = localStorage.getItem(kulcs) === '1'; } catch (e) {}
+  var kevesebb = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!latta && !kevesebb) document.getElementById('szamolas').classList.add('ir');
+  try { localStorage.setItem(kulcs, '1'); } catch (e) {}
+})();
+</script>
+</body>
+</html>

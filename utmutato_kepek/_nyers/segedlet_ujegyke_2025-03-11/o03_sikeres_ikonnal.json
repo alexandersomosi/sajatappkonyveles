@@ -1,0 +1,38 @@
+{
+ "helyek": {
+  "vissza": [
+   165,
+   328,
+   597,
+   386
+  ],
+  "uzenet": [
+   0,
+   152,
+   765,
+   312
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": [
+  [
+   140,
+   314,
+   622,
+   388
+  ]
+ ],
+ "ikon_javitas": {
+  "mibol": "o03_sikeres.png",
+  "eszkoz": "_eszkoz/ikon_teljes.py",
+  "felso_sav_keppont": 42,
+  "potolt_sorok": 26,
+  "kor": {
+   "kozep_x": 380.5,
+   "kozep_y": 73.5,
+   "sugar": 56.2
+  },
+  "tukrozes_ellenorzes_atlagos_elteres": 0.0,
+  "megjegyzes": "A NAV-segédlet ábrája felül levágva szerepel (az ikon köré rajzolt kör teteje hiányzott). A hiányzó körívet a kör saját alsó ívének tükrözése pótolja, fölötte fehér sáv; a kör belseje, a szöveg és a gombok változatlanok."
+ }
+}

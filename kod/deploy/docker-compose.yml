@@ -1,0 +1,173 @@
+# Kézjegy stack on appok-1 (/srv/kezjegy/deploy/docker-compose.yml) – SPEC §20.2.
+# Own compose project, own Postgres + volume, own networks. NO "ports:" anywhere: Docker bypasses ufw,
+# so only the shared Caddy (appok-caddy-1) publishes 80/443 and reaches kezjegy-api / kezjegy-web over
+# the kezjegy_edge network. The database sits on kezjegy_internal (internal: true, no internet).
+# Start with: bash /srv/kezjegy/deploy/up.sh   (passes --env-file /srv/kezjegy/.env)
+#
+# Secrets are split (QA kör 3): /srv/kezjegy/.env holds the app settings and keys and goes to the API and the
+# worker; /srv/kezjegy/.env.db holds the database owner's secrets (POSTGRES_PASSWORD, MIGRATION_DATABASE_URL,
+# KEZJEGY_APP_DB_PASSWORD) and goes ONLY to kezjegy-db and the one-shot kezjegy-migrate. The API and worker
+# connect as the least-privilege role kezjegy_app and never see a superuser credential (deploy/gen-env.sh).
+name: kezjegy
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  kezjegy-db:
+    image: postgres:17-alpine
+    container_name: kezjegy-db
+    restart: unless-stopped
+    env_file:
+      - path: ../.env.db
+        required: true
+    environment:
+      POSTGRES_USER: kezjegy
+      POSTGRES_DB: kezjegy
+    volumes:
+      - kezjegy_pgdata:/var/lib/postgresql/data
+    networks: [kezjegy_internal]
+    shm_size: 128mb
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kezjegy -d kezjegy"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 1g
+    logging: *logging
+
+  # Migrations as the owner role, once per deploy (up.sh: `compose --profile migrate run --rm kezjegy-migrate`).
+  kezjegy-migrate:
+    image: kezjegy/api:latest
+    container_name: kezjegy-migrate
+    profiles: [migrate]
+    restart: "no"
+    command: ["node", "dist/db/migrate-cli.js"]
+    user: "${KEZJEGY_UID:-1001}:${KEZJEGY_GID:-1001}"   # §27.11 S15: KEZJEGY_UID/GID=10001 after the chown in README "Saját uid"
+    env_file:
+      - path: ../.env.db
+        required: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [kezjegy_internal]
+    healthcheck:
+      disable: true
+    depends_on:
+      kezjegy-db:
+        condition: service_healthy
+    mem_limit: 256m
+    pids_limit: 64    # SPEC §27.11 S15
+    logging: *logging
+
+  kezjegy-api:
+    build:
+      context: ../src
+      dockerfile: backend/Dockerfile
+    image: kezjegy/api:latest
+    container_name: kezjegy-api
+    restart: unless-stopped
+    # deploy user of the host (uid/gid 1001): the encrypted blobs in /srv/kezjegy/data/files belong to it.
+    user: "${KEZJEGY_UID:-1001}:${KEZJEGY_GID:-1001}"   # §27.11 S15: KEZJEGY_UID/GID=10001 after the chown in README "Saját uid"
+    env_file:
+      - path: ../.env
+        required: true
+    environment:
+      FILES_DIR: /data/files
+      LEGAL_DIR: /app/legal
+      FONT_DIR: /app/fonts
+      SEED_CREDENTIALS_FILE: /run/seed/demo_belepesek.txt
+      # migrations ran in kezjegy-migrate; this role has no DDL rights anyway
+      SKIP_MIGRATIONS: "1"
+    volumes:
+      - ../data/files:/data/files
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    # kezjegy_edge: Caddy reaches the API, and outbound internet (NAV, SimplePay, SMTP, Google/Apple JWKS, Expo push).
+    networks: [kezjegy_edge, kezjegy_internal]
+    depends_on:
+      kezjegy-db:
+        condition: service_healthy
+    mem_limit: 1280m   # round 1 (2026-11-19): 2 uploads at a time (≈ 250 MB each while parsing) + headroom; the server has 12 GB
+    pids_limit: 256   # SPEC §27.11 S15
+    logging: *logging
+
+  kezjegy-worker:
+    image: kezjegy/api:latest
+    container_name: kezjegy-worker
+    restart: unless-stopped
+    command: ["node", "dist/worker.js"]
+    user: "${KEZJEGY_UID:-1001}:${KEZJEGY_GID:-1001}"   # §27.11 S15: KEZJEGY_UID/GID=10001 after the chown in README "Saját uid"
+    env_file:
+      - path: ../.env
+        required: true
+    environment:
+      SKIP_MIGRATIONS: "1"
+      FILES_DIR: /data/files
+      LEGAL_DIR: /app/legal
+      FONT_DIR: /app/fonts
+    volumes:
+      - ../data/files:/data/files
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [kezjegy_edge, kezjegy_internal]
+    # The image's HEALTHCHECK probes the API port, which the worker does not serve.
+    healthcheck:
+      disable: true
+    depends_on:
+      kezjegy-api:
+        condition: service_healthy
+    mem_limit: 512m
+    pids_limit: 128   # SPEC §27.11 S15
+    logging: *logging
+
+  kezjegy-web:
+    image: caddy:2-alpine
+    container_name: kezjegy-web
+    restart: unless-stopped
+    user: "${KEZJEGY_UID:-1001}:${KEZJEGY_GID:-1001}"   # §27.11 S15: KEZJEGY_UID/GID=10001 after the chown in README "Saját uid"
+    volumes:
+      - ./web.Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../web/app:/srv/app:ro
+      - ../web/panel:/srv/panel:ro
+      # SPEC §26.7.1: videos + guide images (kod/media, uploaded with feltolt.sh --media)
+      - ../web/media:/srv/media:ro
+    read_only: true
+    # Caddy's own state dirs, writable by the non-root user (static only: auto_https/admin are off).
+    tmpfs:
+      - /data:uid=1001,gid=1001,mode=0700
+      - /config:uid=1001,gid=1001,mode=0700
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [kezjegy_edge]
+    mem_limit: 128m
+    pids_limit: 64    # SPEC §27.11 S15
+    logging: *logging
+
+networks:
+  kezjegy_edge:
+    name: kezjegy_edge
+  kezjegy_internal:
+    name: kezjegy_internal
+    internal: true
+
+volumes:
+  kezjegy_pgdata:
+    name: kezjegy_pgdata

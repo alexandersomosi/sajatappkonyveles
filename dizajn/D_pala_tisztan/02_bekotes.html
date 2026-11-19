@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Bekötés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=Sofia+Sans+Condensed:wght@600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.bekotes { padding: 0 var(--perem) 40px; }
+.bekotes .szakasz { padding-top: 22px; }
+.feladat { margin-top: 18px; }
+.feladat .gomb.elso { margin-top: 16px; }
+
+/* Lépések: vékony, világos idővonal a háttéren. Kész: pala pipa, folyamatban: sárgaréz kör, hátra van: üres kör. */
+.lepesek { list-style: none; padding: 0 4px; }
+.lepes { display: grid; grid-template-columns: 22px 1fr auto; column-gap: 12px; align-items: start; padding-bottom: 11px; }
+.lepes:last-child { padding-bottom: 0; }
+.jel { width: 22px; height: 24px; display: grid; place-items: center; }
+.kesz .jel .ikon { width: 20px; height: 20px; stroke-width: 2.4; color: var(--pala); }
+.most .jel::before { content: ""; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rez); box-sizing: border-box; background: radial-gradient(circle, var(--rez) 0 3px, transparent 3.5px); }
+.var .jel::before { content: ""; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--ures); box-sizing: border-box; }
+.lepes .nev { font-size: 17px; line-height: 24px; }
+.lepes.most .nev { font-weight: 600; }
+.lepes.var .nev { color: var(--masod-alap); }
+.lepes .mikor { font-size: 15px; line-height: 24px; color: var(--masod-alap); white-space: nowrap; }
+.lepes.most .mikor { color: var(--rez-szoveg); font-weight: 500; }
+.lepes .mi { grid-column: 2 / 4; font-size: 15.5px; line-height: 1.42; color: var(--masod-alap); margin-top: 2px; }
+
+.hivas .ido { font-weight: 600; font-size: 19px; line-height: 1.25; }
+.hivas .ki { margin-top: 3px; }
+.hivas .hossz { font-size: 15px; line-height: 1.35; color: var(--masod); }
+.hivas .lap-al { margin-top: 12px; }
+.gombsor { display: flex; flex-wrap: wrap; column-gap: 24px; margin-top: 4px; }
+</style>
+</head>
+<body class="telefon">
+<div data-allapotsor></div>
+
+<main class="bekotes">
+  <h1 class="cim">Szia, Kata! Már csak pár nap.</h1>
+  <p class="alcim">Ennyi van hátra, és Bence átveszi a könyvelésedet.</p>
+
+  <section class="lap lap-belso feladat" aria-labelledby="feladat-cim">
+    <h2 class="lap-fo" id="feladat-cim">Neked most ez a dolgod</h2>
+    <p class="lap-al">Kérd el az eddigi könyvelődtől az idei bevallásaidat, és töltsd fel ide.</p>
+    <button class="gomb elso">Feltöltöm a bevallásokat</button>
+  </section>
+
+  <h3 class="szakasz">Hol tartunk</h3>
+  <ol class="lepesek">
+    <li class="lepes kesz">
+      <span class="jel"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+      <span class="nev">Aláírtad a meghatalmazást</span><span class="mikor">szept. 28.</span>
+    </li>
+    <li class="lepes kesz">
+      <span class="jel"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+      <span class="nev">Igazoltad magad</span><span class="mikor">szept. 29.</span>
+    </li>
+    <li class="lepes most" aria-current="step">
+      <span class="jel"></span>
+      <span class="nev">Bence bejelent a NAV-nál</span><span class="mikor">most intézi</span>
+      <p class="mi">Neked nincs vele dolgod, egy-két munkanap.</p>
+    </li>
+    <li class="lepes var">
+      <span class="jel"></span>
+      <span class="nev">A számláid maguktól jönnek</span><span class="mikor"></span>
+    </li>
+    <li class="lepes var">
+      <span class="jel"></span>
+      <span class="nev">Bence átveszi a könyvelést</span><span class="mikor"></span>
+    </li>
+  </ol>
+
+  <h3 class="szakasz">Videóhívás Bencével</h3>
+  <section class="lap lap-belso hivas">
+    <div class="konyvelo">
+      <span class="portre nagy" data-portre></span>
+      <div>
+        <div class="ido">Péntek, október 2., 10:00</div>
+        <div class="ki">Kovács Bence, mérlegképes könyvelő</div>
+        <div class="hossz">15 perc, videón</div>
+      </div>
+    </div>
+    <p class="lap-al">Bemutatkozik, és megbeszélitek, mire van szüksége tőled.</p>
+    <div class="gombsor">
+      <button class="gomb harmad">Naptárba teszem</button>
+      <button class="gomb harmad">Másik időpontot kérek</button>
+    </div>
+  </section>
+</main>
+
+<script src="kozos.js"></script>
+</body>
+</html>

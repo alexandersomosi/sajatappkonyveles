@@ -1,0 +1,159 @@
+{
+  "_mi_ez": "A bekötés-videó szövege (SPEC §26.7.4). 'szoveg' = felirat (a '|' feliratváltást jelöl, a hangban nem hallatszik), 'tts' = amit a hang kimond, ha eltér (számok betűvel). 'hangulat' = ../hang.json hangulatok kulcsa. 'jelenet' = a Remotion-jelenet. Terméknév és könyvelőnév SOHA nem kerül bele. Ha az [OWNER] a díjkezdést 'azonnal'-ra állítja (SPEC §26.1.7), csak az L12 sort kell átírni és újra hangosítani.",
+  "verzio": "v3-2026-11-18 (1. bírálati kör + rövidítés 70-110 s-ra)",
+  "szunet_utana_alap": 0.35,
+  "sorok": [
+    {
+      "id": "L01",
+      "jelenet": "koszonto",
+      "hangulat": "udvozlo",
+      "szunet_utana": 0.5,
+      "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat!"
+    },
+    {
+      "id": "L02",
+      "jelenet": "koszonto",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.55,
+      "szoveg": "Megmutatjuk, mire jó, | és mi kell a kezdéshez."
+    },
+    {
+      "id": "L03",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "Valódi könyvelőd lesz, | aki intézi az adóidat."
+    },
+    {
+      "id": "L04",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "A számláid maguktól megjönnek a NAV-tól."
+    },
+    {
+      "id": "L05",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "A Főoldalon látod, mennyit, | mikorra és hova fizess."
+    },
+    {
+      "id": "L06",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.55,
+      "szoveg": "A nyugtákat pedig csak lefotózod."
+    },
+    {
+      "id": "L07",
+      "jelenet": "bekotes",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.55,
+      "szoveg": "A bekötés néhány lépés. | Mindegyiknél leírtuk, mi ez, miért kell, | és hol találod."
+    },
+    {
+      "id": "L08",
+      "jelenet": "lepes_adatok",
+      "hangulat": "lepes",
+      "szunet_utana": 0.55,
+      "szoveg": "Először az adataid: | ezekből dolgozik a könyvelőd."
+    },
+    {
+      "id": "L09",
+      "jelenet": "lepes_inditas",
+      "hangulat": "lepes",
+      "szoveg": "Ha még nincs vállalkozásod, | te magad jelented be a NAV-nál."
+    },
+    {
+      "id": "L10",
+      "jelenet": "lepes_inditas",
+      "hangulat": "lepes",
+      "szoveg": "Az alkalmazás lépésről lépésre | megmutatja, mit hova jelölj."
+    },
+    {
+      "id": "L10b",
+      "jelenet": "lepes_inditas",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.55,
+      "szoveg": "A NAV-os igazolást feltöltöd, | mi pedig átnézzük."
+    },
+    {
+      "id": "L11",
+      "jelenet": "lepes_szerzodes",
+      "hangulat": "lepes",
+      "szoveg": "Aztán elfogadod a szerződést, | és megadod a kártyádat."
+    },
+    {
+      "id": "L12",
+      "jelenet": "lepes_szerzodes",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.55,
+      "szoveg": "Új vállalkozásnál a kártyát csak akkor kérjük, | ha már megvan az adószámod."
+    },
+    {
+      "id": "L13",
+      "jelenet": "lepes_meghatalmazas",
+      "hangulat": "lepes",
+      "szoveg": "Ezután NAV-meghatalmazást adsz a könyvelődnek. | Ebben is végigvezet az alkalmazás."
+    },
+    {
+      "id": "L14",
+      "jelenet": "lepes_meghatalmazas",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.55,
+      "szoveg": "Így ő adhatja be helyetted | a bevallásaidat."
+    },
+    {
+      "id": "L15",
+      "jelenet": "lepes_azonositas",
+      "hangulat": "lepes",
+      "szoveg": "Lefotózod a személyidet | és a lakcímkártyád lakcímes oldalát."
+    },
+    {
+      "id": "L16",
+      "jelenet": "lepes_azonositas",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.55,
+      "szoveg": "Ezt a törvény írja elő: | azonosítanunk kell téged."
+    },
+    {
+      "id": "L17",
+      "jelenet": "lepes_szamlak",
+      "hangulat": "lepes",
+      "szunet_utana": 0.55,
+      "szoveg": "Végül a könyvelőd beköti a számláidat."
+    },
+    {
+      "id": "L18",
+      "jelenet": "korlatozott",
+      "hangulat": "figyelem",
+      "szoveg": "Addig néhány funkció zárva van. | Utána minden megnyílik."
+    },
+    {
+      "id": "L19",
+      "jelenet": "korlatozott",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.55,
+      "szoveg": "Onnantól a könyvelőd szól, | ha tenned kell valamit."
+    },
+    {
+      "id": "L20",
+      "jelenet": "segitseg",
+      "hangulat": "megnyugtato",
+      "szoveg": "Ha elakadsz, kérj visszahívást: | csapatunk 24–48 órán belül felhív.",
+      "tts": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív."
+    },
+    {
+      "id": "L21",
+      "jelenet": "segitseg",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.55,
+      "szoveg": "Az Üzenetekben pedig bármikor írhatsz nekünk."
+    },
+    {
+      "id": "L22",
+      "jelenet": "zaro",
+      "hangulat": "zaro",
+      "szunet_utana": 1.6,
+      "szoveg": "Kezdjük is! Az első lépést lent találod."
+    }
+  ]
+}

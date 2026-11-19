@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Üzenetek</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* a beszélgetés saját képernyő: vissza-link a sávban, a fülsor itt nem látszik (egy lebegő sáv elég: az író sor) */
+  .fejlec { --roz-x: 96px; --roz-y: 110px; padding-bottom: 18px; }
+  /* 5. kör: a vissza-nyíl helyett szöveges link */
+  .vissza-sav { display: inline-flex; align-items: center; height: 36px; padding: 0 20px; margin-top: 2px; color: #fff; font-size: 16px; font-weight: 500;
+    text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; text-decoration-color: rgba(255,255,255,.7); }
+  .ki-o { display: flex; align-items: center; gap: 14px; padding: 6px 20px 0; }
+  .ki-o .arckep { width: 60px; height: 60px; font-size: 20px; }
+  .ki-o h1 { padding: 0; font-size: 26px; }
+  .ki-o .szerep { color: var(--fejlec-halvany); font-size: 15px; line-height: 1.4; margin-top: 2px; }
+  .ki-o .valaszido { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 14.5px; line-height: 1.35; margin-top: 2px; }
+
+  /* kérések: semleges csempék 3D ikonnal, két sorba tördelve (semmi sem lóg ki a lapból) */
+  .kerj { padding: 14px 10px 12px; }
+  .kerj .mit { font-weight: 650; font-size: 15.5px; margin: 0 4px 10px; }
+  .kerj .csempek { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* 11-18: a fátyol most az író sor fölött teljesen fed, ezért a beszélgetés 60 px-szel rövidebb: a legutóbbi üzenet
+     (a kérés-kártya az idejével) teljesen látszik az író sor fölött */
+  .beszelgetes { display: flex; flex-direction: column; justify-content: flex-end; gap: 3px; height: 388px; margin-top: 8px; overflow: hidden; }
+  .buborek { max-width: 290px; padding: 11px 14px 10px; border-radius: 20px; font-size: 16px; line-height: 1.45; }
+  .tole { align-self: flex-start; background: var(--lap); border-bottom-left-radius: 6px; }
+  /* saját üzenet: tintakék, fehér szöveg (a legjobb kontraszt, és nem a gombok világoskékje) */
+  .tolem { align-self: flex-end; background: var(--tintakek); color: #fff; border-bottom-right-radius: 6px; }
+  .ido { font-size: 13px; color: var(--halvany-alapon); margin: 3px 8px 8px; }
+  .ido.j { align-self: flex-end; }
+  .keres-kartya { align-self: flex-end; width: 292px; background: var(--lap); border-radius: 20px; border-bottom-right-radius: 6px;
+    padding: 12px 14px 12px; display: flex; gap: 12px; align-items: flex-start; }
+  .keres-kartya .ikonkor { width: 38px; height: 38px; }
+  .keres-kartya .ikonkor img.i3 { width: 40px; height: 40px; }
+  .keres-kartya .k1 { font-size: 14px; color: var(--halvany); }
+  .keres-kartya .k2 { font-weight: 650; font-size: 16px; margin-top: 1px; line-height: 1.35; }
+  .keres-kartya .allapot { margin-top: 5px; }
+
+  /* író sor: alul lebeg; egyetlen mező 14 px-es sarokkal. 11-18: a csatolás (3D tálca) a MEZŐN BELÜL, balra áll;
+     a külön fehér kör mögüle kikerült (ikon mögött nincs kör). „Küldés” szöveges kapszula. */
+  .iro { position: fixed; left: 14px; width: 362px; bottom: 30px; display: flex; align-items: center; z-index: 8; }
+  .iro .csatol { width: 44px; height: 46px; display: grid; place-items: center; flex: none; margin-right: 2px; }
+  .iro .csatol img.i3 { width: 30px; height: 30px; }
+  .iro .mezo-iro { flex: 1; height: 50px; border-radius: 14px; background: var(--lap); border: 1px solid var(--mezo-keret);
+    display: flex; align-items: center; padding: 0 6px 0 4px; color: var(--halvany); font-size: 16px;
+    box-shadow: 0 4px 12px -6px rgba(23,40,74,.3); }
+  .iro .mezo-iro span { flex: 1; }
+  .iro .kuld { height: 34px; padding: 0 12px; border-radius: var(--r-gomb); background: var(--nyomott); color: #7A8396;
+    display: inline-flex; align-items: center; font-weight: 600; font-size: 14.5px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <a class="vissza-sav">Vissza a főoldalra</a>
+  <div class="ki-o">
+    <img class="arckep" src="../assets/avatar/karakter_1_lapos@3x.png" srcset="../assets/avatar/karakter_1_lapos@3x.png 2x, ../assets/avatar/karakter_1_lapos_nagy.png 3x" alt="Kovács Bence, a könyvelőd">
+    <div><h1>Kovács Bence</h1><div class="szerep">Mérlegképes könyvelő</div>
+      <div class="valaszido">Munkanapokon 4 órán belül válaszol</div></div>
+  </div>
+</header>
+
+<main class="tartalom" style="padding-bottom:110px">
+  <section class="lap kerj">
+    <div class="mit">Kérj tőle egy gombnyomással:</div>
+    <div class="csempek">
+      <button class="csempe"><img class="i3" src="../assets/ikon3d/igazolas_28@2x.png" srcset="../assets/ikon3d/igazolas_28@2x.png 2x, ../assets/ikon3d/igazolas_28@3x.png 3x" alt="">Jövedelemigazolás</button>
+      <button class="csempe"><img class="i3" src="../assets/ikon3d/igazolas_28@2x.png" srcset="../assets/ikon3d/igazolas_28@2x.png 2x, ../assets/ikon3d/igazolas_28@3x.png 3x" alt="">Nullás igazolás</button>
+      <button class="csempe"><img class="i3" src="../assets/ikon3d/fiok_28@2x.png" srcset="../assets/ikon3d/fiok_28@2x.png 2x, ../assets/ikon3d/fiok_28@3x.png 3x" alt="">Megváltozott egy adatom</button>
+    </div>
+  </section>
+
+  <div class="beszelgetes">
+    <div class="buborek tolem">Levelet kaptam a NAV-tól, megijedtem. Feltöltöttem a dossziéba.</div>
+    <div class="ido j">tegnap 20:31</div>
+
+    <div class="buborek tole">Megnéztem: csak értesítés, nincs vele teendőd. Elteheted.</div>
+    <div class="ido">ma 8:47</div>
+
+    <div class="keres-kartya">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/igazolas_44@2x.png" srcset="../assets/ikon3d/igazolas_44@2x.png 2x, ../assets/ikon3d/igazolas_44@3x.png 3x" alt=""></span>
+      <div>
+        <div class="k1">Kérésed</div>
+        <div class="k2">Jövedelemigazolás, 2025</div>
+        <div class="allapot var"><span><span class="szo">Bence látta</span>, pár napon belül kész</span></div>
+      </div>
+    </div>
+    <div class="ido j">ma 9:02</div>
+  </div>
+</main>
+
+<div class="alj-fatyol" aria-hidden="true" style="height:104px"></div>
+<div class="iro">
+  <div class="mezo-iro"><button class="csatol" aria-label="Fájl csatolása"><img class="i3" src="../assets/ikon3d/feltoltes_36@2x.png" srcset="../assets/ikon3d/feltoltes_36@2x.png 2x, ../assets/ikon3d/feltoltes_36@3x.png 3x" alt=""></button><span>Írj Bencének…</span><button class="kuld" disabled>Küldés</button></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

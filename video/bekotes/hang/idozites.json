@@ -1,0 +1,422 @@
+{
+ "becsult": false,
+ "hang": "Umbriel",
+ "hossz": 107.02,
+ "atempo": 1.0,
+ "lufs": -16.3,
+ "csucs_dbtp": -2.6,
+ "keveres_plafon_dbtp": -2.6,
+ "sorok": [
+  {
+   "id": "L01",
+   "jelenet": "koszonto",
+   "start": 0.6,
+   "end": 3.32,
+   "cues": [
+    {
+     "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat!",
+     "start": 0.6,
+     "end": 3.32
+    }
+   ]
+  },
+  {
+   "id": "L02",
+   "jelenet": "koszonto",
+   "start": 3.82,
+   "end": 7.18,
+   "cues": [
+    {
+     "szoveg": "Megmutatjuk, mire jó,",
+     "start": 3.82,
+     "end": 5.55
+    },
+    {
+     "szoveg": "és mi kell a kezdéshez.",
+     "start": 5.55,
+     "end": 7.18
+    }
+   ]
+  },
+  {
+   "id": "L03",
+   "jelenet": "mire_jo",
+   "start": 7.68,
+   "end": 11.0,
+   "cues": [
+    {
+     "szoveg": "Saját könyvelőd lesz,",
+     "start": 7.68,
+     "end": 9.24
+    },
+    {
+     "szoveg": "aki intézi az adóidat.",
+     "start": 9.24,
+     "end": 11.0
+    }
+   ]
+  },
+  {
+   "id": "L04",
+   "jelenet": "mire_jo",
+   "start": 11.3,
+   "end": 16.56,
+   "cues": [
+    {
+     "szoveg": "A kiállított számláid maguktól megjelennek",
+     "start": 11.3,
+     "end": 13.839
+    },
+    {
+     "szoveg": "az alkalmazásban – nem kell feltöltened őket.",
+     "start": 13.839,
+     "end": 16.56
+    }
+   ]
+  },
+  {
+   "id": "L05",
+   "jelenet": "mire_jo",
+   "start": 16.86,
+   "end": 21.12,
+   "cues": [
+    {
+     "szoveg": "A Főoldalon látod, mennyit,",
+     "start": 16.86,
+     "end": 18.878
+    },
+    {
+     "szoveg": "mikorra és hova kell fizetned.",
+     "start": 18.878,
+     "end": 21.12
+    }
+   ]
+  },
+  {
+   "id": "L06",
+   "jelenet": "mire_jo",
+   "start": 21.42,
+   "end": 23.52,
+   "cues": [
+    {
+     "szoveg": "A nyugtákat pedig csak lefotózod.",
+     "start": 21.42,
+     "end": 23.52
+    }
+   ]
+  },
+  {
+   "id": "L07",
+   "jelenet": "bekotes",
+   "start": 24.02,
+   "end": 29.9,
+   "cues": [
+    {
+     "szoveg": "A bekötés néhány lépés.",
+     "start": 24.02,
+     "end": 26.0
+    },
+    {
+     "szoveg": "Mindegyiknél leírtuk, mi ez, miért kell,",
+     "start": 26.0,
+     "end": 27.99
+    },
+    {
+     "szoveg": "és hol találod.",
+     "start": 27.99,
+     "end": 29.9
+    }
+   ]
+  },
+  {
+   "id": "L08",
+   "jelenet": "lepes_adatok",
+   "start": 30.4,
+   "end": 33.94,
+   "cues": [
+    {
+     "szoveg": "Először az adataid kellenek:",
+     "start": 30.4,
+     "end": 32.23
+    },
+    {
+     "szoveg": "ezekből számol a könyvelőd.",
+     "start": 32.23,
+     "end": 33.94
+    }
+   ]
+  },
+  {
+   "id": "L09",
+   "jelenet": "lepes_inditas",
+   "start": 34.44,
+   "end": 39.84,
+   "cues": [
+    {
+     "szoveg": "Ha még nincs vállalkozásod, te magad jelented be",
+     "start": 34.44,
+     "end": 38.0
+    },
+    {
+     "szoveg": "a NAV-nál, nagyjából negyedóra alatt.",
+     "start": 38.0,
+     "end": 39.84
+    }
+   ]
+  },
+  {
+   "id": "L10",
+   "jelenet": "lepes_inditas",
+   "start": 40.14,
+   "end": 43.9,
+   "cues": [
+    {
+     "szoveg": "Az alkalmazás lépésről lépésre",
+     "start": 40.14,
+     "end": 42.085
+    },
+    {
+     "szoveg": "megmutatja, mit hova jelölj.",
+     "start": 42.085,
+     "end": 43.9
+    }
+   ]
+  },
+  {
+   "id": "L10b",
+   "jelenet": "lepes_inditas",
+   "start": 44.2,
+   "end": 47.66,
+   "cues": [
+    {
+     "szoveg": "A NAV-os igazolást feltöltöd,",
+     "start": 44.2,
+     "end": 46.335
+    },
+    {
+     "szoveg": "mi pedig átnézzük.",
+     "start": 46.335,
+     "end": 47.66
+    }
+   ]
+  },
+  {
+   "id": "L11",
+   "jelenet": "lepes_szerzodes",
+   "start": 48.16,
+   "end": 56.92,
+   "cues": [
+    {
+     "szoveg": "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat.",
+     "start": 48.16,
+     "end": 52.75
+    },
+    {
+     "szoveg": "Új vállalkozásnál erre csak akkor van szükség,",
+     "start": 52.75,
+     "end": 55.142
+    },
+    {
+     "szoveg": "ha már megvan az adószámod.",
+     "start": 55.142,
+     "end": 56.92
+    }
+   ]
+  },
+  {
+   "id": "L13",
+   "jelenet": "lepes_meghatalmazas",
+   "start": 57.42,
+   "end": 62.62,
+   "cues": [
+    {
+     "szoveg": "Ezután NAV-meghatalmazást adsz a könyvelődnek.",
+     "start": 57.42,
+     "end": 60.74
+    },
+    {
+     "szoveg": "Ebben is segít az alkalmazás.",
+     "start": 60.74,
+     "end": 62.62
+    }
+   ]
+  },
+  {
+   "id": "L14",
+   "jelenet": "lepes_meghatalmazas",
+   "start": 62.92,
+   "end": 65.66,
+   "cues": [
+    {
+     "szoveg": "Így ő adhatja be helyetted",
+     "start": 62.92,
+     "end": 64.38
+    },
+    {
+     "szoveg": "a bevallásaidat.",
+     "start": 64.38,
+     "end": 65.66
+    }
+   ]
+  },
+  {
+   "id": "L15",
+   "jelenet": "lepes_azonositas",
+   "start": 66.16,
+   "end": 70.22,
+   "cues": [
+    {
+     "szoveg": "Lefotózod a személyidet",
+     "start": 66.16,
+     "end": 67.91
+    },
+    {
+     "szoveg": "és a lakcímkártyád lakcímes oldalát.",
+     "start": 67.91,
+     "end": 70.22
+    }
+   ]
+  },
+  {
+   "id": "L16",
+   "jelenet": "lepes_azonositas",
+   "start": 70.52,
+   "end": 73.44,
+   "cues": [
+    {
+     "szoveg": "A törvény szerint",
+     "start": 70.52,
+     "end": 71.702
+    },
+    {
+     "szoveg": "azonosítanunk kell téged.",
+     "start": 71.702,
+     "end": 73.44
+    }
+   ]
+  },
+  {
+   "id": "L17",
+   "jelenet": "lepes_szamlak",
+   "start": 73.94,
+   "end": 77.12,
+   "cues": [
+    {
+     "szoveg": "Végül a könyvelőd összeköti",
+     "start": 73.94,
+     "end": 75.729
+    },
+    {
+     "szoveg": "a fiókodat a NAV-val.",
+     "start": 75.729,
+     "end": 77.12
+    }
+   ]
+  },
+  {
+   "id": "L18",
+   "jelenet": "korlatozott",
+   "start": 77.62,
+   "end": 81.3,
+   "cues": [
+    {
+     "szoveg": "Addig néhány rész még zárva van,",
+     "start": 77.62,
+     "end": 79.79
+    },
+    {
+     "szoveg": "utána minden megnyílik.",
+     "start": 79.79,
+     "end": 81.3
+    }
+   ]
+  },
+  {
+   "id": "L19",
+   "jelenet": "korlatozott",
+   "start": 81.6,
+   "end": 86.14,
+   "cues": [
+    {
+     "szoveg": "Onnantól a Főoldalon látod, mi a teendőd,",
+     "start": 81.6,
+     "end": 84.41
+    },
+    {
+     "szoveg": "a többit a könyvelőd intézi.",
+     "start": 84.41,
+     "end": 86.14
+    }
+   ]
+  },
+  {
+   "id": "L20",
+   "jelenet": "segitseg",
+   "start": 86.64,
+   "end": 92.4,
+   "cues": [
+    {
+     "szoveg": "Ha elakadsz, kérj visszahívást:",
+     "start": 86.64,
+     "end": 89.14
+    },
+    {
+     "szoveg": "csapatunk 24–48 órán belül felhív.",
+     "start": 89.14,
+     "end": 92.4
+    }
+   ]
+  },
+  {
+   "id": "L20b",
+   "jelenet": "segitseg",
+   "start": 92.7,
+   "end": 98.2,
+   "cues": [
+    {
+     "szoveg": "Ha egyedül nem megy, a bejelentést",
+     "start": 92.7,
+     "end": 94.21
+    },
+    {
+     "szoveg": "és a meghatalmazást is elintézzük helyetted.",
+     "start": 94.21,
+     "end": 98.2
+    }
+   ]
+  },
+  {
+   "id": "L21",
+   "jelenet": "segitseg",
+   "start": 98.5,
+   "end": 101.4,
+   "cues": [
+    {
+     "szoveg": "Az Üzenetekben bármikor írhatsz nekünk.",
+     "start": 98.5,
+     "end": 101.4
+    }
+   ]
+  },
+  {
+   "id": "L22",
+   "jelenet": "zaro",
+   "start": 101.9,
+   "end": 105.02,
+   "cues": [
+    {
+     "szoveg": "Kezdjük is! Az első lépést lent találod.",
+     "start": 101.9,
+     "end": 105.02
+    }
+   ]
+  }
+ ],
+ "verzio": "v8-2026-11-19 tulaj1119 (L04 új számla-szöveg – 5. kérés; új L20b „Intézzük helyetted” – 3. kérés; az előző: szoveg/sorok_v7.json)",
+ "kesz_fajl_hang": {
+  "csatornak": 1,
+  "lufs_csatornankent": -16.4,
+  "csucs_dbtp": -2.2,
+  "keveres_plafon_dbtp": -2.6
+ }
+}

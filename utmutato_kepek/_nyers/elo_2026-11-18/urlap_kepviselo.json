@@ -1,0 +1,78 @@
+{
+ "nev": "urlap_kepviselo",
+ "url": "https://webnyk-public.nav.gov.hu/app/webnykKim#form",
+ "cim": "Kitöltés - Regisztráció nélküli nyomtatványkitöltő",
+ "ido": "2026-11-18T10:14:22.056Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 1000,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "kepviselo": [
+   582,
+   391,
+   718,
+   431
+  ],
+  "maganszemely": [
+   582,
+   447,
+   787,
+   487
+  ],
+  "neve_cimke": [
+   582,
+   503,
+   1320,
+   537
+  ],
+  "adoazon_cimke": [
+   1360,
+   503,
+   1709,
+   537
+  ],
+  "szervezet": [
+   582,
+   641,
+   715,
+   681
+  ],
+  "nem_ismert": [
+   694,
+   835,
+   1315,
+   883
+  ],
+  "kepviselet": [
+   582,
+   919,
+   727,
+   959
+  ],
+  "kod_cimke": [
+   582,
+   1031,
+   801,
+   1065
+  ],
+  "nyilv_cimke": [
+   1490,
+   1031,
+   2098,
+   1065
+  ],
+  "kod_mezo": [
+   582,
+   1073,
+   803,
+   1137
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Fotózás után (B kisebb)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="b_kozos.css">
+<style>
+/* Fotózás után: fent a fotó, alatta amit leolvastunk róla (három kitöltött, átírható mező), Bence-sor,
+   a fő gomb: „Mentés a dossziéba”. Fent az urlap.html felső sora (bal: vissza a kamerához, jobb: DEMO). */
+
+/* ---------- a fotó (rajzolt nyugta-minta, kitalált adatokkal) ---------- */
+.foto { margin: 6px 16px 0; height: 256px; border-radius: 14px; overflow: hidden; background: #343A45; }
+.foto svg { display: block; width: 358px; height: 256px; }
+
+/* ---------- a leolvasott adatok ---------- */
+.szak.elso { border-top: 0; padding-top: 14px; }
+.mezok { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.mezo2 { display: flex; flex-direction: column; justify-content: center; height: 58px; padding: 0 14px;
+  border: 1px solid var(--mezo-keret); border-radius: var(--r-mezo); background: var(--mezo-alap); }
+.mezo2.egesz { grid-column: 1 / -1; }
+.mezo2 .fel { font-size: 13.5px; line-height: 1.3; color: var(--halvany); }
+.mezo2 .ert { font-weight: 600; font-size: 16.5px; line-height: 1.3; letter-spacing: -.005em; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.mezo2 .ert .ft { font-size: .86em; margin-left: 3px; }
+.mezok + .bence-sor { margin-top: 8px; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="felso">
+    <button class="vissza">Újrafotózom</button>
+    <span class="demo">DEMO</span>
+  </div>
+</header>
+
+<main>
+  <div class="foto" role="img" aria-label="A lefotózott nyugta">
+    <svg viewBox="0 0 358 256" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="asztal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A515E"/><stop offset="1" stop-color="#262B34"/></linearGradient>
+        <linearGradient id="papir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBFBF8"/><stop offset=".75" stop-color="#F1F1EC"/><stop offset="1" stop-color="#E6E6E0"/></linearGradient>
+        <radialGradient id="feny" cx=".35" cy=".2" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <filter id="arny" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+      </defs>
+      <rect width="358" height="256" fill="url(#asztal)"/>
+      <rect width="358" height="256" fill="url(#feny)"/>
+      <g transform="translate(92 22) rotate(-2.2 87 110)">
+        <!-- árnyék -->
+        <path d="M3 6 H177 V214 L173.38 220 L169.75 214 L166.12 220 L162.50 214 L158.88 220 L155.25 214 L151.62 220 L148.00 214 L144.38 220 L140.75 214 L137.12 220 L133.50 214 L129.88 220 L126.25 214 L122.62 220 L119.00 214 L115.38 220 L111.75 214 L108.12 220 L104.50 214 L100.88 220 L97.25 214 L93.62 220 L90.00 214 L86.38 220 L82.75 214 L79.12 220 L75.50 214 L71.88 220 L68.25 214 L64.62 220 L61.00 214 L57.38 220 L53.75 214 L50.12 220 L46.50 214 L42.88 220 L39.25 214 L35.62 220 L32.00 214 L28.38 220 L24.75 214 L21.12 220 L17.50 214 L13.88 220 L10.25 214 L6.62 220 L3.00 214 Z" fill="#0B0E14" opacity=".55" filter="url(#arny)"/>
+        <!-- papír, csipkézett alj -->
+        <path d="M0 0 H174 V208 L170.38 214 L166.75 208 L163.12 214 L159.50 208 L155.88 214 L152.25 208 L148.62 214 L145.00 208 L141.38 214 L137.75 208 L134.12 214 L130.50 208 L126.88 214 L123.25 208 L119.62 214 L116.00 208 L112.38 214 L108.75 208 L105.12 214 L101.50 208 L97.88 214 L94.25 208 L90.62 214 L87.00 208 L83.38 214 L79.75 208 L76.12 214 L72.50 208 L68.88 214 L65.25 208 L61.62 214 L58.00 208 L54.38 214 L50.75 208 L47.12 214 L43.50 208 L39.88 214 L36.25 208 L32.62 214 L29.00 208 L25.38 214 L21.75 208 L18.12 214 L14.50 208 L10.88 214 L7.25 208 L3.62 214 L0.00 208 Z" fill="url(#papir)"/>
+        <g font-family="'Courier New', Courier, monospace" fill="#2E323A">
+          <text x="87" y="20" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing=".4">MINTA PAPÍRBOLT KFT.</text>
+          <text x="87" y="31" text-anchor="middle" font-size="7">1111 Budapest, Kitalált u. 1.</text>
+          <text x="87" y="40" text-anchor="middle" font-size="7">Adószám: 12345678-2-41</text>
+          <text x="12" y="54" font-size="7" fill="#7A7F88" letter-spacing="1">------------------------------</text>
+          <text x="12" y="67" font-size="8">Irodaszer csomag</text><text x="162" y="67" text-anchor="end" font-size="8">12 000</text>
+          <text x="12" y="79" font-size="8">Nyomtatópapír A4</text><text x="162" y="79" text-anchor="end" font-size="8">6 000</text>
+          <text x="12" y="92" font-size="7" fill="#7A7F88" letter-spacing="1">------------------------------</text>
+          <text x="12" y="108" font-size="10.5" font-weight="700">ÖSSZESEN:</text><text x="162" y="108" text-anchor="end" font-size="10.5" font-weight="700">18 000 Ft</text>
+          <text x="12" y="121" font-size="8">Készpénz</text><text x="162" y="121" text-anchor="end" font-size="8">18 000</text>
+          <text x="12" y="134" font-size="7" fill="#7A7F88" letter-spacing="1">------------------------------</text>
+          <text x="12" y="148" font-size="8">2026.11.18.</text><text x="162" y="148" text-anchor="end" font-size="8">10:42</text>
+          <text x="87" y="166" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="2">NYUGTA</text>
+          <text x="87" y="179" text-anchor="middle" font-size="7">Sorszám: 0042/00318</text>
+          <text x="87" y="195" text-anchor="middle" font-size="7">Köszönjük a vásárlást!</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <section class="szak elso">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/nyugta_arnyektalan_28@3x.png 3x" alt=""><h2>Ezt olvastuk le</h2></div>
+    <p>Ha valami nem stimmel, koppints rá, és írd át.</p>
+    <div class="mezok">
+      <button class="mezo2"><span class="fel">Összeg</span><span class="ert">18&nbsp;000<span class="ft">Ft</span></span></button>
+      <button class="mezo2"><span class="fel">Dátum</span><span class="ert">2026. nov. 18.</span></button>
+      <button class="mezo2 egesz"><span class="fel">Milyen bizonylat?</span><span class="ert">Nyugta</span></button>
+    </div>
+    <div class="bence-sor"><img class="arc-kicsi" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt=""><span><b>Bence ellenőrzi</b>, mielőtt könyveli.</span></div>
+  </section>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Mentés a dossziéba</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

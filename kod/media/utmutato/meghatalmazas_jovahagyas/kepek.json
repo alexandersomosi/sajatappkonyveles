@@ -1,0 +1,301 @@
+{
+ "kind": "meghatalmazas_jovahagyas",
+ "generatedAt": "2026-11-19T17:06:21.132Z",
+ "sourceVersion": "2026-11-19",
+ "items": [
+  {
+   "stepKey": "onya_belepes",
+   "file": "01_onya_nyitooldal.png",
+   "file2x": "01_onya_nyitooldal@2x.png",
+   "width": 1080,
+   "height": 674,
+   "kind": "kepernyokep",
+   "caption": "Bejelentkezés, nem azonosítás nélkül.",
+   "alt": "Az ONYA nyitóoldala: Bejelentkezés gomb kiemelve, a Belépés azonosítás nélkül gomb szaggatottan.",
+   "source": {
+    "title": "ONYA nyitóoldal (Bejelentkezés)",
+    "url": "https://onya.nav.gov.hu/",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: onya.nav.gov.hu, 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints: Bejelentkezés",
+     "box": [
+      0.097,
+      0.6104,
+      0.2901,
+      0.7036
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Ezt ne: így nem tudod beküldeni",
+     "box": [
+      0.3503,
+      0.6104,
+      0.6861,
+      0.7036
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_belepes",
+   "file": "02_kau_belepes.png",
+   "file2x": "02_kau_belepes@2x.png",
+   "width": 1080,
+   "height": 1238,
+   "kind": "kepernyokep",
+   "caption": "Belépés: DÁP vagy Ügyfélkapu+.",
+   "alt": "A kormányzati belépő oldal: DÁP mobilalkalmazás gomb, alatta Ügyfélkapu+.",
+   "source": {
+    "title": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+    "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+    "date": "2026-11-18"
+   },
+   "part": 2,
+   "sourceShort": "Képernyőkép: a NAV-szolgáltatások belépő oldala (kau.gov.hu), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "DÁP mobilalkalmazással",
+     "box": [
+      0.1423,
+      0.5578,
+      0.9247,
+      0.6607
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "vagy Ügyfélkapu+-szal",
+     "box": [
+      0.3364,
+      0.7133,
+      0.7238,
+      0.7886
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_profil",
+   "file": "03_onya_profil.png",
+   "file2x": "03_onya_profil@2x.png",
+   "width": 1080,
+   "height": 771,
+   "kind": "kepernyokep",
+   "caption": "A saját profilodat válaszd.",
+   "alt": "Az ONYA Képviseltek oldala elmosott nevekkel; a jobb felső felhasználói rész és a Magánszemély kártya kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 8
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 8. dia. A mintaadatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints a nevedre a jobb felső sarokban",
+     "box": [
+      0.5665,
+      0.1365,
+      0.8059,
+      0.2382
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "A saját neved: ezt válaszd (Kiválasztva)",
+     "box": [
+      0.1686,
+      0.3109,
+      0.8125,
+      0.4033
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_ertesites",
+   "file": "04_onya_fooldal_meghatalmazasok.png",
+   "file2x": "04_onya_fooldal_meghatalmazasok@2x.png",
+   "width": 1080,
+   "height": 528,
+   "kind": "kepernyokep",
+   "caption": "Meghatalmazások – itt vár a jóváhagyás.",
+   "alt": "Az ONYA Főoldala: a Meghatalmazások csempe tintakékkel, a fejlécben az értesítés-harang borostyánnal kiemelve; a felhasználó neve elmosva.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 7
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 7. dia. A felhasználó neve elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints: Meghatalmazások",
+     "box": [
+      0.4639,
+      0.2932,
+      0.851,
+      0.6716
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "Itt is jelez: Értesítések (harang)",
+     "box": [
+      0.8685,
+      0.0609,
+      0.9135,
+      0.1497
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_ertesites",
+   "file": "04_onya_ertesitesek_jel.png",
+   "file2x": "04_onya_ertesitesek_jel@2x.png",
+   "width": 1080,
+   "height": 538,
+   "kind": "kepernyokep",
+   "caption": "A piros szám: új értesítésed van.",
+   "alt": "Az ONYA Értesítések ikonja piros 1-es számlálóval, tintakék kerettel kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 11
+   },
+   "part": 2,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 11. dia (a dia jobb fele).",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Értesítések: a piros szám az új üzenet",
+     "box": [
+      0.3547,
+      0.2131,
+      0.6362,
+      0.6676
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_jovahagyasra_var",
+   "file": "05_onya_jovahagyasra_var.png",
+   "file2x": "05_onya_jovahagyasra_var@2x.png",
+   "width": 1080,
+   "height": 1471,
+   "kind": "kepernyokep",
+   "caption": "Ezt a csempét nyisd meg. A te képernyődön a „Meghatalmazott” alatt a könyvelőd neve áll (ezen a mintán ez a sor üres).",
+   "alt": "Egy UJEGYKE-csempe az ONYA-ban „Véglegesítve – Jóváhagyásra vár” állapottal; a felirat tintakékkel, a „Meghatalmazott” címke borostyánnal kiemelve (a mintán alatta még nincs név, nálad ott a könyvelőd neve áll). A nevek és azonosítók elmosva.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 10
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – UJEGYKE ONYA-segédlet (2025.03.11.), 10. oldal. A nevek és az azonosítók elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "„Jóváhagyásra vár”: ezt nyisd meg",
+     "box": [
+      0.3294,
+      0.0624,
+      0.5826,
+      0.1024
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "„Meghatalmazott”: alatta a könyvelőd neve áll – ha nem, ne hagyd jóvá",
+     "box": [
+      0.16,
+      0.2945,
+      0.423,
+      0.3261
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_jovahagyas",
+   "file": "06_onya_jovahagyas.png",
+   "file2x": "06_onya_jovahagyas@2x.png",
+   "width": 1080,
+   "height": 1833,
+   "kind": "illusztracio",
+   "caption": "Jóváhagyás, majd a kis ablakban még egyszer.",
+   "alt": "Rajz: az ONYA meghatalmazás-oldalának alja a JÓVÁHAGYÁS gombbal, alatta a megerősítő kis ablak; a Meghatalmazott sor borostyánnal kiemelve.",
+   "source": {
+    "title": "NAV – UJEGYKE: gyakori kérdések (jóváhagyás 4 napon belül)",
+    "url": "https://nav.gov.hu/ugyfeliranytu/eljarasi-kerdesek",
+    "date": "2026-11-19"
+   },
+   "part": 1,
+   "sourceShort": "Rajzolt vázlat – a valódi képernyő kicsit eltérhet. A gombról és a felugró ablakról nincs hivatalos NAV-kép.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Itt a könyvelőd neve áll",
+     "box": [
+      0.1816,
+      0.2531,
+      0.9136,
+      0.3219
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Koppints: Jóváhagyás",
+     "box": [
+      0.5584,
+      0.5042,
+      0.9447,
+      0.5622
+     ]
+    },
+    {
+     "n": 3,
+     "style": "tinta",
+     "label": "A kis ablakban még egyszer: Jóváhagyás",
+     "box": [
+      0.5584,
+      0.7442,
+      0.8867,
+      0.8022
+     ]
+    }
+   ]
+  }
+ ],
+ "missing": [
+  "app_jovahagytam"
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "helyek": {
+  "tovabb": [
+   162,
+   330,
+   419,
+   384
+  ],
+  "megsem": [
+   438,
+   331,
+   691,
+   382
+  ],
+  "uzenet": [
+   28,
+   174,
+   829,
+   324
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": [
+  [
+   138,
+   314,
+   438,
+   393
+  ]
+ ],
+ "javitas": {
+  "mibol": "o03_benyujtas.png",
+  "eszkoz": "_eszkoz/benyujtas_teljes.py",
+  "feher_sav_bal_jobb": [
+   28,
+   28
+  ],
+  "potolt_oszlopok": 3,
+  "megjegyzes": "A NAV-segédlet ábrája a bal szélén levágva szerepel (a „Ha folytatja” H betűjének bal szára hiányzott). A hiányzó képpontoszlopok ugyanennek a segédletnek a 833x459-es ábrájából valók, ahol ugyanez a sor képpontra azonos rajzolattal teljes; a két szélen fehér sáv."
+ },
+ "ikon_javitas": {
+  "mibol": "o03_benyujtas_teljes.png",
+  "eszkoz": "_eszkoz/ikon_teljes.py",
+  "felso_sav_keppont": 24,
+  "potolt_sorok": 8,
+  "kor": {
+   "kozep_x": 426.5,
+   "kozep_y": 73.5,
+   "sugar": 56.3
+  },
+  "tukrozes_ellenorzes_atlagos_elteres": 0.0,
+  "megjegyzes": "A NAV-segédlet ábrája felül levágva szerepel (az ikon köré rajzolt kör teteje hiányzott). A hiányzó körívet a kör saját alsó ívének tükrözése pótolja, fölötte fehér sáv; a kör belseje, a szöveg és a gombok változatlanok."
+ }
+}

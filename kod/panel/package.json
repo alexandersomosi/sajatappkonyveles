@@ -1,0 +1,43 @@
+{
+  "name": "@kezjegy/panel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Könyvelői és admin webes felület (SPEC §18). React + Vite + TypeScript, same-origin /api/v1.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "sync": "node ../shared/scripts/sync-shared.mjs src/_shared && node scripts/sync-assets.mjs",
+    "predev": "npm run sync",
+    "dev": "vite",
+    "dev:mock": "npm run sync && vite --mode mock",
+    "prebuild": "npm run sync",
+    "build": "tsc -p tsconfig.json --noEmit && vite build && node scripts/check-dist.mjs dist",
+    "build:mock": "npm run sync && vite build --mode mock --outDir dist-mock",
+    "preview:mock": "vite preview --outDir dist-mock --port 4319 --strictPort",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "kepek": "npm run build:mock && node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "5.3.0",
+    "@tanstack/react-query": "5.108.0",
+    "qrcode": "1.5.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "8.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.3.0",
+    "jsdom": "27.4.0",
+    "puppeteer-core": "25.18.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  }
+}

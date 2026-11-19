@@ -1,0 +1,674 @@
+{
+ "kind": "meghatalmazas",
+ "generatedAt": "2026-11-19T08:50:52.810Z",
+ "sourceVersion": "2026-11-18",
+ "items": [
+  {
+   "stepKey": "onya_belepes",
+   "file": "01_onya_nyitooldal.png",
+   "file2x": "01_onya_nyitooldal@2x.png",
+   "width": 1080,
+   "height": 674,
+   "kind": "kepernyokep",
+   "caption": "Bejelentkezés, nem azonosítás nélkül.",
+   "alt": "Az ONYA nyitóoldala: Bejelentkezés gomb kiemelve, a Belépés azonosítás nélkül gomb szaggatottan.",
+   "source": {
+    "title": "ONYA nyitóoldal (Bejelentkezés)",
+    "url": "https://onya.nav.gov.hu/",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: onya.nav.gov.hu, 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints: Bejelentkezés",
+     "box": [
+      0.097,
+      0.6104,
+      0.2901,
+      0.7036
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Ezt ne: így nem tudod beküldeni",
+     "box": [
+      0.3503,
+      0.6104,
+      0.6861,
+      0.7036
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_belepes",
+   "file": "02_kau_belepes.png",
+   "file2x": "02_kau_belepes@2x.png",
+   "width": 1080,
+   "height": 1238,
+   "kind": "kepernyokep",
+   "caption": "Belépés: DÁP vagy Ügyfélkapu+.",
+   "alt": "A kormányzati belépő oldal: DÁP mobilalkalmazás gomb, alatta Ügyfélkapu+.",
+   "source": {
+    "title": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+    "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+    "date": "2026-11-18"
+   },
+   "part": 2,
+   "sourceShort": "Képernyőkép: a NAV-szolgáltatások belépő oldala (kau.gov.hu), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "DÁP mobilalkalmazással",
+     "box": [
+      0.1423,
+      0.5578,
+      0.9247,
+      0.6607
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "vagy Ügyfélkapu+-szal",
+     "box": [
+      0.3364,
+      0.7133,
+      0.7238,
+      0.7886
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_profil",
+   "file": "03_onya_profil.png",
+   "file2x": "03_onya_profil@2x.png",
+   "width": 1080,
+   "height": 771,
+   "kind": "kepernyokep",
+   "caption": "A saját profilodat válaszd.",
+   "alt": "Az ONYA Képviseltek oldala elmosott nevekkel; a jobb felső felhasználói rész és a Magánszemély kártya kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 8
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 8. dia. A mintaadatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints a nevedre a jobb felső sarokban",
+     "box": [
+      0.5665,
+      0.1365,
+      0.8059,
+      0.2382
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "A saját neved: ezt válaszd (Kiválasztva)",
+     "box": [
+      0.1686,
+      0.3109,
+      0.8125,
+      0.4033
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_uj_nyomtatvany",
+   "file": "04_onya_uj_nyomtatvany.png",
+   "file2x": "04_onya_uj_nyomtatvany@2x.png",
+   "width": 1080,
+   "height": 554,
+   "kind": "kepernyokep",
+   "caption": "Új nyomtatvány.",
+   "alt": "Az ONYA főoldala három csempével; az Új nyomtatvány csempe kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 7
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 7. dia. A felhasználó neve elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints: Új nyomtatvány",
+     "box": [
+      0.2564,
+      0.3153,
+      0.7019,
+      0.7276
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_uj_nyomtatvany",
+   "file": "05_ujegyke_kivalasztas.png",
+   "file2x": "05_ujegyke_kivalasztas@2x.png",
+   "width": 1080,
+   "height": 352,
+   "kind": "kepernyokep",
+   "caption": "Meghatalmazások, UJEGYKE, Kiválaszt.",
+   "alt": "A nyomtatványok listája: a Meghatalmazások csoport lenyitva, az UJEGYKE Kiválaszt gombja kiemelve.",
+   "source": {
+    "title": "ONYA nyomtatványtérkép – Meghatalmazások – UJEGYKE (azonosítás nélküli nézet)",
+    "url": "https://onya-public.nav.gov.hu/#!/",
+    "date": "2026-11-18"
+   },
+   "part": 2,
+   "sourceShort": "Képernyőkép: NAV ONYA, nyomtatványok listája, 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Nyisd le: Meghatalmazások",
+     "box": [
+      0.1069,
+      0.1153,
+      0.5623,
+      0.2734
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "UJEGYKE: Kiválaszt",
+     "box": [
+      0.7647,
+      0.3481,
+      0.8497,
+      0.4626
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_szerep",
+   "file": "06_meghatalmazo_szerep.png",
+   "file2x": "06_meghatalmazo_szerep@2x.png",
+   "width": 1080,
+   "height": 606,
+   "kind": "kepernyokep",
+   "caption": "Te vagy a meghatalmazó.",
+   "alt": "A szerepkör-választó ablak: a Meghatalmazó sor és a Tovább gomb kiemelve.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 2
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (2025.03.11., 1.1.1 Magánszemély meghatalmazó), 2. oldal.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Ezt válaszd: Meghatalmazó",
+     "box": [
+      0.1243,
+      0.2375,
+      0.2927,
+      0.3285
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Tovább",
+     "box": [
+      0.4805,
+      0.6034,
+      0.6141,
+      0.6862
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_szerep",
+   "file": "07_uj_bejelentes.png",
+   "file2x": "07_uj_bejelentes@2x.png",
+   "width": 1080,
+   "height": 696,
+   "kind": "kepernyokep",
+   "caption": "Új bejelentés.",
+   "alt": "A meghatalmazások listája elmosott sorokkal; az Új bejelentés gomb kiemelve.",
+   "source": {
+    "title": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "date": "2026-01-23",
+    "page": 10
+   },
+   "part": 2,
+   "sourceShort": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 10. dia. A mintaadatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Koppints: Új bejelentés",
+     "box": [
+      0.3567,
+      0.7476,
+      0.5008,
+      0.8146
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_meghatalmazott",
+   "file": "08_kepviselo_konyvelo.png",
+   "file2x": "08_kepviselo_konyvelo@2x.png",
+   "width": 1080,
+   "height": 508,
+   "kind": "kepernyokep",
+   "caption": "A könyvelőd neve és adóazonosító jele.",
+   "alt": "Az UJEGYKE űrlap Képviselő része: a Magánszemély neve és adóazonosító jele borostyán kerettel, a Szervezet rész szaggatottan.",
+   "source": {
+    "title": "UJEGYKE 13.0 – Képviselő (magánszemély, szervezet)",
+    "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: NAV ONYA, UJEGYKE 13.0 (azonosítás nélküli nézet), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "A könyvelőd neve és adóazonosító jele",
+     "box": [
+      0.1036,
+      0.1439,
+      0.7362,
+      0.351
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Szervezet: hagyd üresen",
+     "box": [
+      0.1085,
+      0.3813,
+      0.946,
+      0.6673
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_meghatalmazott",
+   "file": "09_jogcim_konyvelo.png",
+   "file2x": "09_jogcim_konyvelo@2x.png",
+   "width": 1080,
+   "height": 642,
+   "kind": "kepernyokep",
+   "caption": "Jogcím: 9 – Könyvelő.",
+   "alt": "A lenyitott jogcím-lista: a 9 – Könyvelő sor és a Nyilvántartási szám mező borostyán kerettel, a Kód mező tintakékkel.",
+   "source": {
+    "title": "UJEGYKE 13.0 – Képviselet elsődleges jogcíme, a kódlista lenyitva",
+    "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+    "date": "2026-11-18"
+   },
+   "part": 2,
+   "sourceShort": "Képernyőkép: NAV ONYA, UJEGYKE 13.0 (azonosítás nélküli nézet), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Nyisd le a Kód listát",
+     "box": [
+      0.1007,
+      0.1622,
+      0.2121,
+      0.2231
+     ]
+    },
+    {
+     "n": 2,
+     "style": "borostyan",
+     "label": "Válaszd: 9 – Könyvelő",
+     "box": [
+      0.1318,
+      0.5383,
+      0.8754,
+      0.6203
+     ]
+    },
+    {
+     "n": 3,
+     "style": "borostyan",
+     "label": "A könyvelő nyilvántartási száma",
+     "box": [
+      0.536,
+      0.1622,
+      0.8327,
+      0.2231
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_meghatalmazott",
+   "file": "10_kepviselt_te.png",
+   "file2x": "10_kepviselt_te@2x.png",
+   "width": 1080,
+   "height": 337,
+   "kind": "kepernyokep",
+   "caption": "Képviselt: te vagy, előre kitöltve.",
+   "alt": "A Képviselt rész előre kitöltött, elmosott névvel és adóazonosító jellel, tintakék kerettel.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 2
+   },
+   "part": 3,
+   "sourceShort": "Forrás: NAV – Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (2025.03.11., 1.1.1 Magánszemély meghatalmazó), 2. oldal. Személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Te vagy: előre kitöltve, csak nézd át",
+     "box": [
+      0.0361,
+      0.1306,
+      0.887,
+      0.5197
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_ugykorok",
+   "file": "11_idobeli_hataly.png",
+   "file2x": "11_idobeli_hataly@2x.png",
+   "width": 1080,
+   "height": 616,
+   "kind": "kepernyokep",
+   "caption": "Kezdete: ma. Vége: üres.",
+   "alt": "Az időbeli hatály rovatai: a kezdete mező borostyánnal, a vége mező és a csatolmány szaggatottan kiemelve.",
+   "source": {
+    "title": "UJEGYKE 13.0 – Képviseleti jogosultság időbeli hatálya",
+    "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+    "date": "2026-11-18"
+   },
+   "part": 1,
+   "sourceShort": "Képernyőkép: NAV ONYA, UJEGYKE 13.0 (azonosítás nélküli nézet), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Kezdete: a mai nap",
+     "box": [
+      0.1044,
+      0.2903,
+      0.3142,
+      0.449
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Vége: hagyd üresen",
+     "box": [
+      0.3196,
+      0.2941,
+      0.5234,
+      0.4452
+     ]
+    },
+    {
+     "n": 3,
+     "style": "ures",
+     "label": "Csatolmány nem kell",
+     "box": [
+      0.1066,
+      0.5828,
+      0.3033,
+      0.645
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_ugykorok",
+   "file": "12_adougyek.png",
+   "file2x": "12_adougyek@2x.png",
+   "width": 1080,
+   "height": 812,
+   "kind": "kepernyokep",
+   "caption": "ADÓÜGYEK: jelöld be.",
+   "alt": "A Fő ügycsoportok: az ADÓÜGYEK első jelölőnégyzete borostyán kerettel, a többi szaggatottan.",
+   "source": {
+    "title": "UJEGYKE 13.0 – Fő ügycsoportok",
+    "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+    "date": "2026-11-18"
+   },
+   "part": 2,
+   "sourceShort": "Képernyőkép: NAV ONYA, UJEGYKE 13.0 (azonosítás nélküli nézet), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "ADÓÜGYEK: Ügycsoport intézésére jogosult",
+     "box": [
+      0.1044,
+      0.1548,
+      0.445,
+      0.2512
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Ezt hagyd üresen",
+     "box": [
+      0.1066,
+      0.2621,
+      0.5632,
+      0.3092
+     ]
+    },
+    {
+     "n": 3,
+     "style": "ures",
+     "label": "Ezeket ne jelöld",
+     "box": [
+      0.1066,
+      0.32,
+      0.5632,
+      0.7368
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_ugykorok",
+   "file": "13_ev_nyilvantartas.png",
+   "file2x": "13_ev_nyilvantartas@2x.png",
+   "width": 1080,
+   "height": 682,
+   "kind": "kepernyokep",
+   "caption": "Egyéni vállalkozói nyilvántartás: jelöld be.",
+   "alt": "A Vegyes ügyek listája: az egyéni vállalkozói nyilvántartással kapcsolatos ügyek első jelölőnégyzete borostyán kerettel, a fenti sorok szaggatottan.",
+   "source": {
+    "title": "UJEGYKE 13.0 – Ügycsoportok részletezése > Vegyes ügyek",
+    "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+    "date": "2026-11-18"
+   },
+   "part": 3,
+   "sourceShort": "Képernyőkép: NAV ONYA, UJEGYKE 13.0 (azonosítás nélküli nézet), 2026.11.18. Belépés nélkül készült.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "borostyan",
+     "label": "Ezt jelöld be: Ügycsoport intézésére jogosult",
+     "box": [
+      0.1044,
+      0.5678,
+      0.6657,
+      0.6775
+     ]
+    },
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Ezeket ne jelöld",
+     "box": [
+      0.1066,
+      0.1844,
+      0.5632,
+      0.5532
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_bekuldes",
+   "file": "14_benyujtas.png",
+   "file2x": "14_benyujtas@2x.png",
+   "width": 1080,
+   "height": 684,
+   "kind": "kepernyokep",
+   "caption": "Ellenőrzés után: Tovább.",
+   "alt": "A Meghatalmazás benyújtása ablak: az ellenőrzés nem talált hibát; a Tovább gomb kiemelve.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 3
+   },
+   "part": 1,
+   "sourceShort": "Forrás: NAV – Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (2025.03.11., 1.1.1 Magánszemély meghatalmazó), 3. oldal.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Ha ezt látod, nincs hiba",
+     "box": [
+      0.3092,
+      0.2958,
+      0.6875,
+      0.4625
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Koppints: Tovább",
+     "box": [
+      0.2024,
+      0.6126,
+      0.4923,
+      0.7156
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_bekuldes",
+   "file": "15_sikeres_benyujtas.png",
+   "file2x": "15_sikeres_benyujtas@2x.png",
+   "width": 1080,
+   "height": 664,
+   "kind": "kepernyokep",
+   "caption": "Kész: kb. 20 perc múlva él.",
+   "alt": "A Sikeres benyújtás üzenet; a Vissza a meghatalmazások listájához gomb kiemelve.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 3
+   },
+   "part": 2,
+   "sourceShort": "Forrás: NAV – Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (2025.03.11., 1.1.1 Magánszemély meghatalmazó), 3. oldal.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "Sikerült",
+     "box": [
+      0.4324,
+      0.2851,
+      0.6929,
+      0.3813
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Vissza a listához",
+     "box": [
+      0.3285,
+      0.6092,
+      0.7969,
+      0.7139
+     ]
+    }
+   ]
+  },
+  {
+   "stepKey": "onya_bekuldes",
+   "file": "16_lista_megtekintes.png",
+   "file2x": "16_lista_megtekintes@2x.png",
+   "width": 1080,
+   "height": 1366,
+   "kind": "kepernyokep",
+   "caption": "Mentsd el, és töltsd fel az appba.",
+   "alt": "A beküldött meghatalmazás kártyája elmosott adatokkal; a Megtekintés gomb kiemelve.",
+   "source": {
+    "title": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "date": "2025-03-11",
+    "page": 4
+   },
+   "part": 3,
+   "sourceShort": "Forrás: NAV – Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (2025.03.11., 1.1.1 Magánszemély meghatalmazó), 4. oldal. Személyes adatok elmosva.",
+   "markers": [
+    {
+     "n": 1,
+     "style": "tinta",
+     "label": "A beküldött meghatalmazásod",
+     "box": [
+      0.217,
+      0.0229,
+      0.9397,
+      0.7698
+     ]
+    },
+    {
+     "n": 2,
+     "style": "tinta",
+     "label": "Megtekintés",
+     "box": [
+      0.2143,
+      0.796,
+      0.4557,
+      0.861
+     ]
+    }
+   ]
+  }
+ ],
+ "missing": [
+  "app_bekuldtem"
+ ]
+}

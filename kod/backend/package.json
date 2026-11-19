@@ -1,0 +1,51 @@
+{
+  "name": "@kezjegy/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Kézjegy API (Hono) + worker + Drizzle schema + demo seed. Contract: kod/SPEC.md.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sync-shared": "node ../shared/scripts/sync-shared.mjs src/_shared",
+    "prebuild": "node ../shared/scripts/sync-shared.mjs src/_shared",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "node ../shared/scripts/sync-shared.mjs src/_shared",
+    "test": "vitest run",
+    "start": "node dist/index.js",
+    "worker": "node dist/worker.js",
+    "migrate": "node dist/db/migrate-cli.js",
+    "seed": "node dist/seed/index.js",
+    "db:generate": "drizzle-kit generate",
+    "smoke": "node scripts/smoke-dist.mjs",
+    "seed:tulaj1118": "node dist/seed/tulaj1118.js",
+    "seed:tulaj1119": "node dist/seed/tulaj1119.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.8",
+    "@kezjegy/ado-motor": "file:../ado-motor",
+    "@kezjegy/nav-kliens": "file:../nav-kliens",
+    "@node-rs/argon2": "2.2.2",
+    "@pdf-lib/fontkit": "1.1.1",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.19",
+    "jose": "6.2.15",
+    "js-sha3": "0.15.0",
+    "nodemailer": "10.3.1",
+    "pdf-lib": "1.17.1",
+    "pg": "8.23.1",
+    "pino": "10.4.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.15",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11",
+    "typescript": "5.9.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  }
+}

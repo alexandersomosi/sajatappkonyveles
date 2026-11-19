@@ -1,0 +1,306 @@
+{
+ "forras": {
+  "b": "ikonlap_b_v1.webp",
+  "c": "ikonlap_c_v1.webp"
+ },
+ "fill": 0.86,
+ "ikonok": {
+  "fotozas_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    132,
+    212,
+    316,
+    355
+   ],
+   "negyzet_px": 221,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "masolas_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    411,
+    192,
+    569,
+    384
+   ],
+   "negyzet_px": 231,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "szamlaszam_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    654,
+    231,
+    827,
+    355
+   ],
+   "negyzet_px": 209,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "befizetve_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    914,
+    203,
+    1069,
+    374
+   ],
+   "negyzet_px": 206,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "szamolo_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    145,
+    481,
+    308,
+    681
+   ],
+   "negyzet_px": 240,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "ertesites_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    423,
+    490,
+    582,
+    659
+   ],
+   "negyzet_px": 204,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "irat_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    663,
+    483,
+    827,
+    670
+   ],
+   "negyzet_px": 225,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "nyugta_arnyektalan": {
+   "lap": "b",
+   "targy_doboz_px": [
+    909,
+    476,
+    1070,
+    696
+   ],
+   "negyzet_px": 263,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44
+   ],
+   "felskalazva_44pt@3x": false
+  },
+  "boritek": {
+   "lap": "c",
+   "targy_doboz_px": [
+    123,
+    239,
+    303,
+    364
+   ],
+   "negyzet_px": 217,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  },
+  "szamlak": {
+   "lap": "c",
+   "targy_doboz_px": [
+    383,
+    200,
+    582,
+    405
+   ],
+   "negyzet_px": 246,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  },
+  "bevallas": {
+   "lap": "c",
+   "targy_doboz_px": [
+    666,
+    215,
+    812,
+    395
+   ],
+   "negyzet_px": 217,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  },
+  "tepnaptar": {
+   "lap": "c",
+   "targy_doboz_px": [
+    927,
+    215,
+    1081,
+    404
+   ],
+   "negyzet_px": 227,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  },
+  "nyugta_uj": {
+   "lap": "c",
+   "targy_doboz_px": [
+    153,
+    468,
+    269,
+    684
+   ],
+   "negyzet_px": 259,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  },
+  "lakat": {
+   "lap": "c",
+   "targy_doboz_px": [
+    414,
+    487,
+    536,
+    663
+   ],
+   "negyzet_px": 212,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": true
+  },
+  "ora": {
+   "lap": "c",
+   "targy_doboz_px": [
+    648,
+    490,
+    824,
+    663
+   ],
+   "negyzet_px": 212,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": true
+  },
+  "kivonat": {
+   "lap": "c",
+   "targy_doboz_px": [
+    927,
+    481,
+    1077,
+    669
+   ],
+   "negyzet_px": 226,
+   "meretek_pt": [
+    24,
+    28,
+    36,
+    44,
+    56,
+    72
+   ],
+   "felskalazva_72pt@3x": false
+  }
+ },
+ "tepnaptar_3d": {
+  "forras_px": [
+   160,
+   195
+  ],
+  "magassag_pt": 96,
+  "szelesseg_pt": 78.77,
+  "felskalazva_3x": true
+ }
+}

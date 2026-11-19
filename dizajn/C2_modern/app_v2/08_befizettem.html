@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Befizettem</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { overflow: hidden; height: 844px; }
+  .fuggony { background: rgba(13,22,40,.30); }
+  /* a pillanat: Bence pecsétje üt le a lap közepén. 11-18: a vonalas, KB-monogramos tollkék bélyegző helyett a jóváhagyott
+     3D ibolya pecsét (B lap 4., „Befizetve/kész”), árnyék nélküli változat (befizetve_jel_84), 84 pt, középen; alatta a
+     .targy CSS-talpárnyéka. Megjelenéskor 1,15-ről 1-re „üt le” (180 ms). Bezáráskor ugyanez a pecsét kerül a levél
+     sarkára (44 pt); a lap mögött a levélen ezért még nincs ott. */
+  .sheet { text-align: center; padding-top: 22px; }
+  .sheet .targy { margin-bottom: 8px; --arnyek-sz: 70px; }
+  .sheet .targy > img.pecset-nagy { inset: auto; left: 38px; top: 18px; width: 84px; height: 84px;
+    transform-origin: 50% 60%; animation: leut .18s cubic-bezier(.3,1.5,.6,1) both; }
+  @keyframes leut { from { transform: scale(1.15); opacity: .4; } to { transform: scale(1); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .sheet .targy > img.pecset-nagy { animation: none; } }
+  .sheet h2 { padding: 0 8px; }
+  .sheet .bev { margin: 8px auto 0; max-width: 320px; }
+  .kovetkezo { display: flex; align-items: center; gap: 12px; margin: 18px 0 16px; padding: 12px 14px; border-radius: 14px; background: var(--nyomott); text-align: left; }
+  .kovetkezo .ikonkor, .kovetkezo .ikonkor img.i3 { width: 42px; height: 42px; }
+  /* 5. kör: a bezáró X kikerült; a lapot a „Rendben” zárja (egy lap, egy kilépés) */
+  .kovetkezo .mit { font-weight: 650; font-size: 15.5px; line-height: 1.35; }
+  .kovetkezo .mikor { font-size: 14.5px; color: var(--halvany); line-height: 1.4; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+<iframe class="hatter-keret" id="hatter" title="Főoldal befizetve állapotban" tabindex="-1" aria-hidden="true"></iframe>
+<script>document.getElementById('hatter').src = '03_fooldal.html?allapot=befizetve&rejt=pecset' + location.search.replace('?', '&');</script>
+<div class="fuggony"></div>
+
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="cim">
+  <div class="targy">
+    <img class="pecset-nagy" src="../assets/ikon3d/befizetve_jel_84@2x.png" srcset="../assets/ikon3d/befizetve_jel_84@2x.png 2x, ../assets/ikon3d/befizetve_jel_84@3x.png 3x" alt="Befizetve, 2026. október 9.">
+  </div>
+  <h2 id="cim">Feljegyeztük, hogy befizetted</h2>
+  <p class="bev">Október 9-én elutaltad mind a hármat. Bence a bankszámlakivonatodon nézi meg, hogy megérkezett-e.</p>
+  <div class="kovetkezo">
+    <span class="ikonkor"><img class="i3" src="../assets/ikon3d/hataridok_44@2x.png" srcset="../assets/ikon3d/hataridok_44@2x.png 2x, ../assets/ikon3d/hataridok_44@3x.png 3x" alt=""></span>
+    <div><div class="mit">Legközelebb november 12-ig</div><div class="mikor">várhatóan kb. 190&nbsp;000 Ft, Bence előtte megírja</div></div>
+  </div>
+  <button class="gomb-e">Rendben</button>
+</section>
+<div class="otthon-jel"></div>
+</body>
+</html>

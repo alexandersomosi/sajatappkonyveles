@@ -1,0 +1,9 @@
+[
+ {
+  "nev": "spot_meghatalmazas_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "Spot illustration for a calm private-banking app, drawn as a fine pen-and-ink line drawing like a modern etching. ONE ink colour only: deep navy ink-blue #1F2F5C, confident clean contour lines of even medium weight, plus sparse fine parallel hatching only on the shadow sides. ONE pale flat wash #D6E0F0 filling a few areas, slightly offset from the lines like a risograph print. Background: perfectly flat pure white #FFFFFF, no paper texture, no vignette, no ground shadow, no frame, no border. The object is centred, drawn at the same scale as the reference image, occupying roughly 40 to 50 percent of the frame width, with generous empty white space around it. Calm, adult, precise, quietly premium. Strictly no text, no letters, no numbers, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no other colours. Match the reference image exactly in line weight, hatching density, wash colour and drawing style; only the subject is different. Subject: a single sheet of document paper lying flat at a slight angle, seen from slightly above. On it only a few short abstract ruled lines (nothing readable), and near the bottom right a small looping signature flourish on a short line. A closed fountain pen with its cap on lies diagonally across the lower left corner of the sheet.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_nyers\\teszt_gem25_boritek.png"
+ }
+]

@@ -1,0 +1,45 @@
+{
+  "name": "@kezjegy/nav-kliens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only NAV Online Számla API v3.0 client (queryInvoiceDigest, queryInvoiceData, queryTaxpayer, queryInvoiceChainDigest) with a local DEMO mock. No write operations exist in this package. SPEC §8.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "kezjegy-nav-mock": "dist/mock/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sync-shared": "node ../shared/scripts/sync-shared.mjs src/_shared",
+    "prebuild": "npm run sync-shared",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "pretest": "npm run sync-shared",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "mock": "node dist/mock/cli.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "5.12.1",
+    "js-sha3": "0.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.0"
+  }
+}

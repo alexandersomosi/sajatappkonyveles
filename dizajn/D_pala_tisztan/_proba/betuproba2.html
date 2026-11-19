@@ -1,0 +1,20 @@
+<!doctype html><html lang="hu"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=Sofia+Sans+Condensed:wght@600&display=block" rel="stylesheet">
+<style>
+body{margin:0;padding:16px 20px;background:#DAE3E5;color:#132326;width:740px}
+.s4{font:400 26px "Sofia Sans","Courier New"} .s5{font:500 26px "Sofia Sans","Courier New"} .s6{font:600 26px "Sofia Sans","Courier New"}
+.c6{font:600 34px "Sofia Sans Condensed","Courier New";font-variant-numeric:tabular-nums lining-nums}
+.big{font:600 64px "Sofia Sans","Courier New";letter-spacing:-.012em}
+div{margin:4px 0}
+.rez{color:#7A5C24}
+</style></head><body>
+<div class="big">Ő ő Ű ű Győző</div>
+<div class="s4">400 Bőröndös Ödön fűtőszerelő, ŐŰ őű, határidő</div>
+<div class="s5">500 Szűcs Győző, Kimásoltad, Megmutatom, ŐŰ őű</div>
+<div class="s6">600 Szia, Kata! Feltöltöm a kivonatot. ŐŰ őű</div>
+<div class="c6">Cond 600: Október 12-ig fizess be 820&#8239;260&nbsp;Ft-ot. ŐŰ őű</div>
+<div class="s5 rez">Kovács Bence, a könyvelőd, mérlegképes könyvelő, 12 éve</div>
+<pre id="o" style="font:13px monospace"></pre>
+<script>
+document.fonts.ready.then(()=>{document.getElementById('o').textContent='loaded: '+[...document.fonts].filter(f=>f.status=='loaded').map(f=>f.family+' '+f.weight).join('; ')});
+</script></body></html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Tétel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .nav { height: 48px; display: flex; align-items: center; padding: 0 12px; }
+  .vissza { display: inline-flex; align-items: center; gap: 2px; color: var(--link); font: 700 17px/1 var(--sans); height: 44px; padding-right: 8px; }
+  .head { padding-top: 2px; }
+  .head .t2 + .lede { margin-top: 6px; }
+  .foto { padding: 10px; }
+  .foto svg.kep { display: block; width: 100%; height: auto; border-radius: 10px; }
+  .lapok { display: flex; align-items: center; gap: 10px; padding: 12px 4px 4px; }
+  .lapok .th { width: 40px; height: 50px; border-radius: 4px; background: #E9EEEB; border: 1.5px solid var(--line); display: grid; place-items: center; }
+  .lapok .th.on { border: 2px solid var(--brand); }
+  .lapok .th i { display: block; width: 24px; height: 32px; background: #fff linear-gradient(var(--line),var(--line)) 5px 9px/14px 2px no-repeat; border-radius: 1px; box-shadow: inset 0 0 0 1px #E1E7E4; }
+  .lapok .cap { margin-left: 6px; flex: 1; }
+  .megj .fej { display: flex; gap: 12px; align-items: center; }
+  .megj .cim { font-size: 14px; color: var(--muted); line-height: 1.35; }
+  .megj .nev { font-weight: 700; font-size: 16px; line-height: 1.25; }
+  .megj .ido { font-size: 14px; color: var(--muted); }
+  .megj p.szoveg { font-size: 17px; line-height: 1.5; margin-top: 12px; }
+  .megj .btn-t { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="sb"></div>
+<div class="nav"><button class="vissza"><i data-i="back" data-s="26"></i>Október</button></div>
+
+<header class="head">
+  <h1 class="t2">Kézi nyugták, 3 oldal</h1>
+  <p class="lede">Te töltötted fel fotóként, október 2-án.</p>
+</header>
+
+<div class="sheet foto">
+  <!-- kézzel rajzolt „fotó” egy nyugtatömb lapjáról (helyőrző, nem valódi irat) -->
+  <svg class="kep" viewBox="0 0 338 214" role="img" aria-label="Fotó: kézzel kitöltött nyugta">
+    <defs>
+      <linearGradient id="asztal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#848C87"/><stop offset="1" stop-color="#6A726D"/></linearGradient>
+      <filter id="arny" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+    <rect width="338" height="214" fill="url(#asztal)"/>
+    <g transform="rotate(-3.5 169 107)">
+      <rect x="66" y="16" width="206" height="188" fill="#1d2420" opacity=".35" filter="url(#arny)" transform="translate(4 6)"/>
+      <rect x="66" y="16" width="206" height="188" fill="#F5F3EB"/>
+      <g fill="#C9C6BA"><circle cx="76" cy="24" r="1.6"/><circle cx="86" cy="24" r="1.6"/><circle cx="96" cy="24" r="1.6"/><circle cx="106" cy="24" r="1.6"/><circle cx="116" cy="24" r="1.6"/><circle cx="126" cy="24" r="1.6"/><circle cx="136" cy="24" r="1.6"/><circle cx="146" cy="24" r="1.6"/><circle cx="156" cy="24" r="1.6"/><circle cx="166" cy="24" r="1.6"/><circle cx="176" cy="24" r="1.6"/><circle cx="186" cy="24" r="1.6"/><circle cx="196" cy="24" r="1.6"/><circle cx="206" cy="24" r="1.6"/><circle cx="216" cy="24" r="1.6"/><circle cx="226" cy="24" r="1.6"/><circle cx="236" cy="24" r="1.6"/><circle cx="246" cy="24" r="1.6"/><circle cx="256" cy="24" r="1.6"/><circle cx="266" cy="24" r="1.6"/></g>
+      <text x="169" y="46" text-anchor="middle" font-family="Atkinson Hyperlegible Next" font-weight="700" font-size="13" letter-spacing="2.5" fill="#3B403D">NYUGTA</text>
+      <text x="260" y="46" text-anchor="end" font-family="Atkinson Hyperlegible Next" font-size="7.5" fill="#B5473A">AB 412318</text>
+      <g font-family="Atkinson Hyperlegible Next" font-size="7.5" fill="#5D625F">
+        <text x="78" y="70">Befizető neve:</text>
+        <text x="78" y="94">Megnevezés:</text>
+        <text x="78" y="118">Összeg:</text>
+        <text x="78" y="142">azaz:</text>
+        <text x="78" y="172">Kelt:</text>
+        <text x="200" y="192">aláírás</text>
+      </g>
+      <g stroke="#B9B6AA" stroke-width=".8">
+        <path d="M134 72H260M128 96H260M114 120H260M104 144H260M98 174H170M184 182H260"/>
+      </g>
+      <!-- kézírás: kék golyóstoll -->
+      <g fill="none" stroke="#2D4C9C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M138 68c3-7 5-9 6-7s-3 8-2 8 4-6 6-6-1 6 1 6 3-5 5-5 0 5 2 5c3 0 4-6 7-6s0 6 3 5c3-1 4-5 6-5"/>
+        <path d="M184 66c2-6 4-7 5-5s-2 7 0 7 3-4 5-4 0 4 2 4 3-5 5-5-1 5 2 5 4-3 6-4"/>
+        <path d="M132 91c2-8 3-9 4-7s-1 8 1 8 3-5 5-5-1 5 2 5c2 0 4-6 6-6s-1 6 1 6 3-4 5-4 0 4 2 4c3 0 3-5 6-5"/>
+        <path d="M186 92c2-3 4-4 5-3s-1 4 1 4 3-3 5-3 0 3 2 3 3-3 5-3"/>
+        <path d="M120 112l3-3v11"/><path d="M134 109l-5 8h9M136 109v11"/>
+        <ellipse cx="150" cy="114.5" rx="3.2" ry="5.5"/><ellipse cx="160" cy="114.5" rx="3.2" ry="5.5"/><ellipse cx="170" cy="114.5" rx="3.2" ry="5.5"/>
+        <path d="M177.5 119.5l-1.2 3"/><path d="M181 117.5h7"/>
+        <path d="M110 139c3-6 5-8 6-6s-2 6 0 6 3-4 5-4 0 4 2 4c3 0 4-6 7-6s-1 6 1 6 3-4 6-4 0 4 2 4 3-5 6-5-1 5 1 5 4-3 6-4c2 0 0 4 2 4 3 0 4-4 7-4"/>
+        <path d="M103 168l3-2.2v10.4"/><ellipse cx="112.5" cy="171" rx="3" ry="5.2"/><circle cx="119" cy="176" r=".5" fill="#2D4C9C"/><ellipse cx="125.6" cy="171" rx="3" ry="5.2"/><path d="M133.4 168l3-2.2v10.4"/><circle cx="142" cy="176" r=".5" fill="#2D4C9C"/>
+        <path d="M190 178c4-10 7-12 8-9s-5 10-3 10 6-8 9-8-3 8 0 8 8-6 12-6c3 0 1 4 4 4s6-3 9-3"/>
+      </g>
+    </g>
+  </svg>
+  <div class="lapok">
+    <span class="th on"><i></i></span><span class="th"><i></i></span><span class="th"><i></i></span>
+    <span class="cap">1. oldal a 3-ból</span>
+  </div>
+</div>
+
+<h2 class="sect">Mi történt vele</h2>
+<div class="sheet">
+  <div class="lepesek">
+    <div class="lepes kesz">
+      <span class="jel"><i data-i="check" data-s="16"></i></span>
+      <div><p class="ln">Feltöltve</p><p class="ld">Te töltötted fel, október 2., péntek 18:42</p></div>
+    </div>
+    <div class="lepes kesz">
+      <span class="jel"><i data-i="check" data-s="16"></i></span>
+      <div><p class="ln">Bence látta</p><p class="ld">Október 5., hétfő 9:15</p></div>
+    </div>
+    <div class="lepes kesz">
+      <span class="jel"><i data-i="check" data-s="16"></i></span>
+      <div><p class="ln">Feldolgozva</p><p class="ld">Október 5., hétfő 14:05. Bekerült az októberi bevételedbe.</p></div>
+    </div>
+    <div class="lepes var">
+      <span class="jel"></span>
+      <div><p class="ln">Beadás a NAV-nak</p><p class="ld">A negyedéves bevallással megy be, január 12-ig.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="gap"></div>
+<div class="sheet pad megj">
+  <div class="fej">
+    <span class="arckep sm"></span>
+    <div><p class="nev">Kovács Bence, a könyvelőd</p><p class="ido">október 5., hétfő 14:05</p></div>
+  </div>
+  <p class="szoveg">Köszi, Kata! A három nyugta összesen <span class="inl">42&thinsp;000</span>&nbsp;Ft, ezt hozzáírtam az októberi bevételedhez. A tömb többi lapját elég a hónap végén egyben lefotóznod.</p>
+  <button class="btn-t">Válaszolok</button>
+</div>
+
+<div class="spacer-tab"></div>
+<nav class="tabbar" data-on="dosszie"></nav>
+<script src="kozos.js"></script>
+</body>
+</html>

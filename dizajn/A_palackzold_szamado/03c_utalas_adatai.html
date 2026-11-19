@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Utalás adatai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { height: 844px; overflow: hidden; }
+  .mogotte { position: absolute; inset: 0; width: 390px; height: 844px; border: 0; }
+  .homaly { position: absolute; inset: 0; background: rgba(22,35,30,.5); }
+  .also { position: absolute; left: 0; right: 0; bottom: 0; top: 92px; background: var(--ground); border-radius: 20px 20px 0 0; padding: 10px 0 0; }
+  .fogo { width: 40px; height: 5px; border-radius: 3px; background: #AEBDB5; margin: 0 auto 14px; }
+  .fej { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 0 20px; }
+  .fej .btn-t { margin-top: -6px; }
+  .bev { padding: 6px 20px 16px; }
+  .alja { padding: 16px 22px 0; font-size: 15px; line-height: 1.4; color: var(--muted); }
+</style>
+</head>
+<body>
+<iframe class="mogotte" src="03_fooldal.html" scrolling="no" aria-hidden="true" tabindex="-1"></iframe>
+<div class="homaly"></div>
+
+<section class="also" role="dialog" aria-label="Utalás adatai">
+  <div class="fogo"></div>
+  <div class="fej">
+    <h1 class="t2">Utalás adatai</h1>
+    <button class="btn-t">Bezárás</button>
+  </div>
+  <p class="bev lede">Ezt írd be a bankod appjába. Három utalás lesz, a kedvezményezett és a közlemény mindháromnál ugyanaz.</p>
+
+  <div class="sheet">
+    <div class="adat">
+      <div class="mi"><p class="c">Kedvezményezett</p><p class="ert nev">Nemzeti Adó- és Vámhivatal</p></div>
+      <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    </div>
+    <div class="adat">
+      <div class="mi"><p class="c">Közlemény mindháromhoz</p><p class="ert id">8412345678</p></div>
+      <span class="btn-s copy done"><i data-i="check" data-s="18"></i>Kimásolva</span>
+    </div>
+  </div>
+
+  <div class="gap"></div>
+  <div class="sheet">
+    <div class="adat">
+      <div class="mi"><p class="c">TB-járulék, <span class="inl">326&thinsp;340</span>&nbsp;Ft</p><p class="ert id">10032000-06055826</p></div>
+      <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    </div>
+    <div class="adat">
+      <div class="mi"><p class="c">Szocho, <span class="inl">229&thinsp;320</span>&nbsp;Ft</p><p class="ert id">10032000-06055912</p></div>
+      <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    </div>
+    <div class="adat">
+      <div class="mi"><p class="c">SZJA-előleg, <span class="inl">264&thinsp;600</span>&nbsp;Ft</p><p class="ert id">10032000-06056353</p></div>
+      <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    </div>
+  </div>
+
+  <p class="alja">Ha mindhárom utalás kész, nyomd meg a főoldalon a „Befizettem” gombot. Bence a NAV-nál is megnézi, hogy megérkezett-e.</p>
+</section>
+<div class="homebar"></div>
+<script src="kozos.js"></script>
+</body>
+</html>

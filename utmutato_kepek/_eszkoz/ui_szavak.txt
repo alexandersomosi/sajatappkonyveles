@@ -1,0 +1,32 @@
+# A NAV Vállalkozói Ügysegéd / ÜPO felületének szavai (2026-11-19: a NAV kisfilm-kockáinak és a rajzolt vázlatoknak
+# a szövegéből, kézzel tisztítva; név, cím, azonosító NINCS benne). A sajat_kepek.py az adatos lapokon (személyi
+# adatok, címadatok, ellenőrzés) minden olyan szót elmos, ami se itt, se az index.json szövegeiben nincs.
+# Egy sor = egy vagy több szó; az ékezet és a kis/nagybetű nem számít. Bővíthető.
+nav üpo ügyfélportál ügysegéd vállalkozói egyéni vállalkozó vállalkozás vállalkozók vállalkozás
+kezdőoldal dokumentumok befizetés képviseletek időpontfoglalás oldaltérkép akadálymentes használathoz információk
+bejelentkezett felhasználó kijelentkezés súgó nyelv
+bejelentéseim kérelmeim új bejelentés kérelem benyújtása tájékoztató
+egyéni vállalkozói tevékenység elkezdése bejelentheti elkezdését
+személyi adatok viselt neve születési neve anyja születési neve születési idő ország hely adóazonosító jel állampolgárság
+vállalkozó adatai vállalkozói címadatok tevékenységek adózási adatok nyilatkozatok ellenőrzés megtekintés
+mentés tovább vissza bezárás letöltés szűrés visszaállítás bejelentés megtétele mégse rendben figyelem
+székhely telephely fióktelep hozzáadása irányítószám település közterület neve jellege házszám épület lépcsőház emelet ajtó helyrajzi szám
+cím címe mire alapozod tulajdon bérlet használat engedély székhelyszolgáltatás székhelyszolgáltató
+főtevékenység egyéb tevékenységek tevékenység ek keresés övtj kód megnevezés szerint kiválasztott nem kötelező
+a munkavégzés jellege főfoglalkozásként főfoglalkozású mellékfoglalkozásként mellékfoglalkozású kiegészítő tevékenységet folytató
+heti legalább órás munkaviszony mellett nappali rendszerű tanulmányok saját jogú nyugdíj egt más tagállamában létesített
+a katával kapcsolatos nyilatkozat kisadózó vállalkozók tételes adóját katát választom kata
+az átalányadózás választásával átalányadózást átalányadózás szja tv bekezdés
+áfa áfamentesség áfa-mentesség áfafizetési kötelezettség megállapításának módja általános szabályok szerinti adómegállapítás
+viszonteladói alfejezet további pontok kizárólag közérdekű vagy egyéb sajátos jellegére jellegű tekintettel adómentes folytatok
+az alanyi adómentesség választása mezőgazdasági kompenzációs rendszer rendszerről lemondás kívüli tevékenységre
+közösségi adószám adószámot igénylése igénylek mnb ekb árfolyam árfolyamát alkalmazásának alkalmazom
+pénzforgalmi elszámolás elszámolást 49/a 89/a 96 § szerinti
+i ii iii iv büntetőjogi felelősségem tudatában kijelentem hogy személyemmel szemben kizáró fenti okok nem állnak fenn
+fentieket tudomásul veszem megadott ingatlanok megfelelnek feltételeknek
+kérem nyilvántartásába bejelentett adatokról szerint illetékes gazdasági kamarát értesítsék kamarai
+igen nem nincs megtekinthető korábbi webes ügysegéden február megelőzően lezárt ügyeket tekintheti meg
+dátum tól ig típus státusz rendezés sorrend csökkenő növekvő kérem válasszon azonosító benyújtás ideje elfogadva
+süti beállítások kapcsolatfelvétel adatvédelmi impresszum
+itt ellenőrizheted helyes tartalmazza-e értesítés pdf
+sikeres beküldés biztos bejelenti

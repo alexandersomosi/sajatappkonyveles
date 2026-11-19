@@ -1,0 +1,42 @@
+{
+ "nev": "ujegyke_terkep",
+ "url": "https://onya-public.nav.gov.hu/#!/",
+ "cim": "Nyomtatványok kitöltése - Online Nyomtatványkitöltő Alkalmazás",
+ "ido": "2026-11-18T09:53:48.857Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 900,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "meghatalmazasok": [
+   316,
+   624,
+   604,
+   656
+  ],
+  "ujegyke": [
+   306,
+   760,
+   1919,
+   796
+  ],
+  "kivalaszt": [
+   1949,
+   784,
+   2157,
+   864
+  ],
+  "meghatalmazasok_sor": [
+   182,
+   576,
+   2468,
+   704
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

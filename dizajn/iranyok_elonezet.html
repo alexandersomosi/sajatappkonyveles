@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privátbankos irányok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&family=Schibsted+Grotesk:wght@400..700&family=Libre+Caslon+Condensed:wght@400..700&family=Archivo:wdth,wght@62..125,100..900&family=Sofia+Sans:wght@400..700&family=Sofia+Sans+Condensed:wght@400..700&display=swap" rel="stylesheet">
+<style>
+/* Belső összehasonlító tábla a 4 változathoz. A hiányzó betűket a Courier New jelezné. */
+:root { --board:#F4F5F6; --boardink:#1d2226; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--board); color:var(--boardink); font:15px/1.4 "Archivo","Courier New",monospace; padding:28px; }
+.board { display:grid; grid-template-columns:repeat(4, 392px); gap:28px; align-items:start; }
+.panel { display:flex; flex-direction:column; gap:14px; }
+.vhead { padding:0 4px; }
+.vhead .betu { font-size:13px; color:#5b6267; }
+.vhead h2 { font-size:22px; line-height:1.15; margin-top:2px; }
+.vhead p { font-size:14px; color:#4a5156; margin-top:4px; }
+.swatches { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.sw { border-radius:8px; overflow:hidden; border:1px solid rgba(0,0,0,.08); background:#fff; }
+.sw i { display:block; height:34px; }
+.sw b { display:block; font:600 11px/1.2 "Archivo","Courier New"; padding:5px 6px 0; }
+.sw span { display:block; font:400 11px/1.2 "Archivo","Courier New"; padding:0 6px 6px; color:#5b6267; }
+.proof { background:#fff; border-radius:10px; padding:12px 14px; border:1px solid rgba(0,0,0,.08); }
+.proof .d { font-size:30px; line-height:1.15; }
+.proof .b { font-size:16px; margin-top:6px; }
+.proof .m { font-size:12px; color:#6a7176; margin-top:6px; font-family:"Archivo","Courier New"; }
+
+/* ---------- telefon ---------- */
+.phone { width:392px; border-radius:30px; overflow:hidden; border:1px solid #b9bfc4; background:var(--ground); color:var(--ink); position:relative; }
+.sb { display:flex; justify-content:space-between; padding:12px 22px 6px; font-size:14px; font-weight:600; }
+.scr { padding:4px 16px 18px; display:flex; flex-direction:column; gap:10px; }
+.title { font-size:32px; line-height:1.1; padding:6px 4px 2px; }
+.subtitle { font-size:15px; color:var(--muted); padding:0 4px 6px; }
+.sect { font-size:15px; font-weight:700; color:var(--ink); padding:10px 4px 0; }
+.sheet { background:var(--sheet); border-radius:var(--r-sheet); }
+.row { display:flex; align-items:center; gap:10px; padding:13px 16px; min-height:50px; }
+.row + .row { border-top:1px solid var(--line); }
+.row .l { flex:1; min-width:0; }
+.row .t { font-size:16px; }
+.row .s { font-size:13.5px; color:var(--muted); margin-top:1px; }
+.amt { font-variant-numeric:tabular-nums lining-nums; white-space:nowrap; font-size:16px; text-align:right; }
+.amt small { font-size:.78em; opacity:.72; margin-left:2px; }
+.chev { width:16px; height:16px; flex:none; stroke:var(--muted); fill:none; stroke-width:1.8; }
+.btn { display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; border:0; cursor:pointer; text-align:center; }
+.btn.p { background:var(--brand); color:#fff; height:54px; border-radius:var(--r-btn); width:100%; }
+.btn.s { background:var(--sheet); color:var(--brandtext); height:44px; border:1.5px solid var(--brand); border-radius:var(--r-btn); padding:0 18px; font-size:16px; }
+.btn.t { background:none; color:var(--brandtext); font-size:15.5px; font-weight:700; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1.5px; padding:6px 0; }
+.btn.d { background:none; color:var(--danger); font-size:15.5px; font-weight:700; text-decoration:underline; text-underline-offset:3px; padding:6px 0; }
+.meter { padding:14px 16px 16px; }
+.meter .big { font-size:18px; line-height:1.3; }
+.bar { height:8px; border-radius:4px; background:var(--line); margin:12px 0 6px; overflow:hidden; }
+.bar i { display:block; height:100%; width:42%; background:var(--brand); border-radius:4px; }
+.ends { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.avatar { width:40px; height:40px; border-radius:50%; flex:none; display:grid; place-items:center; font-weight:700; font-size:15px; background:var(--tint); color:var(--brandtext); position:relative; }
+.avatar::after { content:""; position:absolute; right:-1px; bottom:-1px; width:11px; height:11px; border-radius:50%; background:#2F8F5B; border:2px solid var(--sheet); }
+.todo { padding:14px 16px; display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+.todo .q { font-size:16px; }
+.todo .from { font-size:13.5px; color:var(--muted); }
+.tabbar { display:flex; justify-content:space-around; padding:9px 6px 16px; background:var(--tabbg); border-top:1px solid var(--tabline); }
+.tab { display:flex; flex-direction:column; align-items:center; gap:3px; font-size:12px; color:var(--tabmuted); width:72px; }
+.tab svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linejoin:round; stroke-linecap:round; }
+.tab.on { color:var(--tabon); font-weight:700; }
+.btnset { background:var(--ground); border-radius:16px; padding:12px; border:1px solid rgba(0,0,0,.06); }
+.btnset .sheet { padding:14px; display:flex; flex-direction:column; gap:10px; align-items:flex-start; }
+.btnset .cap { font-size:12.5px; color:#5b6267; padding:0 2px 8px; font-family:"Archivo","Courier New"; }
+.inline { display:flex; gap:18px; align-items:center; flex-wrap:wrap; }
+
+/* ---------- A: Számadó ---------- */
+.vA { --ground:#DCE5E0; --sheet:#FFFFFF; --brand:#14402F; --brandtext:#1B5A43; --ink:#16231E; --muted:#56655F; --line:#D5DED9; --tint:#E3EEE8; --danger:#B42318;
+      --r-sheet:14px; --r-btn:12px; --tabbg:#FFFFFF; --tabline:#D5DED9; --tabmuted:#56655F; --tabon:#14402F;
+      font-family:"Atkinson Hyperlegible Next","Courier New",monospace; }
+.vA .serif { font-family:"Literata","Courier New",serif; font-optical-sizing:auto; }
+.vA .title { font-family:"Literata","Courier New",serif; font-weight:500; }
+.vA .meter .big, .vA .ends, .vA .amt { font-family:"Literata","Courier New",serif; }
+.vA .meter .big { font-size:19px; line-height:1.3; }
+.kivonat { background:var(--brand); color:#fff; border-radius:16px; overflow:hidden; }
+.kivonat .guil { display:block; width:100%; height:30px; }
+.kivonat .in { padding:6px 18px 18px; }
+.kivonat .mondat { font-family:"Literata","Courier New",serif; font-weight:500; font-size:27px; line-height:1.18; letter-spacing:-.005em; }
+.kivonat .mondat .ft { font-variant-numeric:lining-nums tabular-nums; }
+.kivonat .hat { font-size:15px; color:#B8D0C5; margin-top:6px; }
+.kivonat .tbl { margin:14px 0 4px; border-top:1px solid #2E5E4C; }
+.kivonat .tr { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid #2E5E4C; font-size:16px; }
+.kivonat .tr .amt { font-family:"Literata","Courier New",serif; font-size:17px; }
+.kivonat .koz { display:flex; justify-content:space-between; align-items:center; padding:10px 0 14px; }
+.kivonat .koz .k1 { font-size:13.5px; color:#B8D0C5; }
+.kivonat .koz .k2 { font-size:17px; letter-spacing:.02em; }
+.kivonat .btn.t { color:#FFFFFF; }
+.kivonat .btn.p { background:#FFFFFF; color:var(--brand); }
+
+/* ---------- B: Rendben ---------- */
+.vB { --ground:#E6E2E8; --sheet:#FFFFFF; --brand:#4B1F45; --brandtext:#6A2D61; --ink:#241A23; --muted:#675C66; --line:#E2DBE0; --tint:#F3EAF1; --danger:#B42318;
+      --r-sheet:18px; --r-btn:999px; --tabbg:#FFFFFF; --tabline:#E2DBE0; --tabmuted:#675C66; --tabon:#4B1F45;
+      font-family:"Schibsted Grotesk","Courier New",monospace; }
+.vB .title { font-weight:600; letter-spacing:-.015em; }
+.vB .pay { padding:18px 18px 16px; }
+.vB .pay .lbl { font-size:15px; color:var(--muted); }
+.vB .pay .mondat { font-size:25px; line-height:1.22; font-weight:600; letter-spacing:-.012em; margin-top:2px; }
+.vB .pay .mondat .ft { color:var(--brand); font-variant-numeric:tabular-nums; }
+.vB .pay .tbl { margin:12px 0 6px; }
+.vB .pay .tr { display:flex; justify-content:space-between; padding:9px 0; border-top:1px solid var(--line); font-size:16px; }
+.vB .koz { display:flex; justify-content:space-between; align-items:center; padding:10px 0 12px; border-top:1px solid var(--line); }
+.vB .koz .k1 { font-size:13.5px; color:var(--muted); }
+.vB .koz .k2 { font-size:17px; font-variant-numeric:tabular-nums; }
+.vB .honap { display:flex; align-items:center; gap:12px; padding:12px 16px; min-height:64px; }
+.vB .honap + .honap { border-top:1px solid var(--line); }
+.vB .seal { width:88px; height:88px; flex:none; margin:-10px -6px -10px 0; }
+.vB .dots { display:flex; gap:3px; margin-top:6px; }
+.vB .dots i { width:22px; height:4px; border-radius:2px; background:var(--line); }
+.vB .dots i.on { background:var(--brand); }
+
+/* ---------- C: Kézjegy ---------- */
+.vC { --ground:#DDE3EC; --sheet:#FFFFFF; --brand:#17284A; --brandtext:#22396A; --ink:#151C2A; --muted:#596379; --line:#D6DCE5; --tint:#E6EBF3; --danger:#B42318; --pen:#2546A6;
+      --r-sheet:12px; --r-btn:8px; --tabbg:#FFFFFF; --tabline:#D6DCE5; --tabmuted:#596379; --tabon:#17284A;
+      font-family:"Archivo","Courier New",monospace; font-stretch:96%; }
+.vC .caslon { font-family:"Libre Caslon Condensed","Courier New",serif; }
+.vC .fejlec { background:var(--brand); color:#fff; padding-bottom:70px; }
+.vC .fejlec .sb { color:#fff; }
+.vC .fejlec .title { font-family:"Libre Caslon Condensed","Courier New",serif; font-weight:600; font-size:38px; padding:6px 20px 0; }
+.vC .fejlec .subtitle { color:#AEBBD2; padding:2px 20px 0; }
+.vC .scr { margin-top:-64px; }
+.vC .level { position:relative; padding:20px 20px 16px; }
+.vC .level::before { content:""; position:absolute; inset:6px; border:1px solid #C5CEDD; border-radius:7px; pointer-events:none; }
+.vC .level .kelt { text-align:right; font-size:13.5px; color:var(--muted); }
+.vC .level .megsz { font-family:"Libre Caslon Condensed","Courier New",serif; font-weight:600; font-size:26px; margin-top:6px; }
+.vC .level p { font-size:16px; line-height:1.5; margin-top:6px; }
+.vC .level .tbl { margin:10px 0 2px; }
+.vC .level .tr { display:flex; justify-content:space-between; padding:7px 0; border-top:1px solid var(--line); font-size:16px; }
+.vC .level .tr.ossz { font-weight:700; border-top:1.5px solid var(--ink); }
+.vC .level .tr .amt { font-family:"Libre Caslon Condensed","Courier New",serif; font-size:18px; }
+.vC .alairas { display:flex; align-items:flex-end; justify-content:space-between; margin-top:10px; }
+.vC .alairas svg { width:150px; height:52px; }
+.vC .alairas .nev { font-size:13.5px; color:var(--muted); text-align:right; }
+.vC .koz { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; }
+.vC .koz .k1 { font-size:13.5px; color:var(--muted); }
+.vC .koz .k2 { font-size:17px; font-variant-numeric:tabular-nums; }
+.vC .kj { font-family:"Libre Caslon Condensed","Courier New",serif; color:var(--pen); font-style:italic; font-size:18px; }
+
+/* ---------- D: Tisztán ---------- */
+.vD { --ground:#DAE3E5; --sheet:#FFFFFF; --brand:#2A4E57; --brandtext:#2A4E57; --ink:#132326; --muted:#536569; --line:#D3DDDF; --tint:#E3ECEE; --danger:#B42318; --grid:#DCE8EA;
+      --r-sheet:14px; --r-btn:14px; --tabbg:#1D373E; --tabline:#1D373E; --tabmuted:#A9BFC4; --tabon:#FFFFFF;
+      font-family:"Sofia Sans","Courier New",monospace; }
+.vD .cond { font-family:"Sofia Sans Condensed","Courier New",sans-serif; }
+.vD .title { font-family:"Sofia Sans Condensed","Courier New",sans-serif; font-weight:700; font-size:36px; letter-spacing:-.005em; }
+.vD .row .t, .vD .todo .q { font-size:17px; }
+.vD .pay { padding:16px 18px 16px; }
+.vD .pay .mondat { font-family:"Sofia Sans Condensed","Courier New",sans-serif; font-weight:600; font-size:28px; line-height:1.15; }
+.vD .pay .hat { font-size:15px; color:var(--muted); margin-top:4px; }
+.vD .kockas { margin:14px -18px 0; padding:10px 18px 12px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+   background-color:#FBFDFD;
+   background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+   background-size:18px 18px; background-position:-1px -1px; }
+.vD .kockas .h { display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:16px; margin-bottom:4px; }
+.vD .kockas .h span { font-weight:400; color:var(--muted); font-size:14px; }
+.vD .sor { display:grid; grid-template-columns:22px 1fr auto; align-items:baseline; height:27px; font-size:16px; }
+.vD .sor .op { color:var(--muted); font-weight:700; text-align:center; }
+.vD .sor .amt { font-family:"Sofia Sans","Courier New"; font-size:17px; }
+.vD .sor.alatt { border-top:1.5px solid var(--ink); }
+.vD .sor.ossz { border-top:3px double var(--ink); font-weight:700; }
+.vD .koz { display:flex; justify-content:space-between; align-items:center; padding:12px 0 14px; }
+.vD .koz .k1 { font-size:13.5px; color:var(--muted); }
+.vD .koz .k2 { font-size:17px; font-variant-numeric:tabular-nums; }
+.vD .lobby { background:#1D373E; color:#fff; border-radius:18px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+.vD .lobby .lt { font-family:"Sofia Sans Condensed","Courier New"; font-weight:600; font-size:24px; }
+.vD .lobby .ls { color:#A9BFC4; font-size:15px; }
+.vD .lobby .fld { background:#FFFFFF; color:#536569; border-radius:10px; height:48px; padding:0 14px; display:flex; align-items:center; font-size:16px; }
+.vD .lobby .btn.p { background:#FFFFFF; color:#1D373E; }
+.vD .lobby .btn.t { color:#FFFFFF; }
+</style>
+</head>
+<body>
+<div class="board">
+
+<!-- ===================== A ===================== -->
+<section class="panel vA" style="font-family:'Archivo','Courier New'">
+  <div class="vhead"><div class="betu">A változat</div><h2>Palackzöld kivonat</h2><p>Munkanév: Számadó. Literata + Atkinson Hyperlegible Next. Egy sötét lap: a befizetési kivonat, gilosmintás szegéllyel.</p></div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#14402F"></i><b>Palackzöld</b><span>#14402F</span></div>
+    <div class="sw"><i style="background:#DCE5E0"></i><b>Alap</b><span>#DCE5E0</span></div>
+    <div class="sw"><i style="background:#2E6650"></i><b>Gilosvonal</b><span>#2E6650</span></div>
+    <div class="sw"><i style="background:#16231E"></i><b>Tinta</b><span>#16231E</span></div>
+  </div>
+  <div class="proof vA"><div class="d serif" style="font-weight:500">Ő ő Ű ű dűlő, tőzsde, fűtő</div><div class="d serif" style="font-weight:700;font-size:22px">Őszi befizetés: 820&#8239;260 Ft</div><div class="b">Bőröndös Ödön fűtőszerelő, ŐŰ őű, 0 O 1 l I</div><div class="b" style="font-weight:700">Szűcs Győző, határidő: október 12.</div><div class="m">Literata 500/700, Atkinson Hyperlegible Next 400/700</div></div>
+
+  <div class="phone vA">
+    <div class="sb"><span>9:41</span><span>100%</span></div>
+    <div class="scr">
+      <div class="title">Október</div>
+      <div class="subtitle">Bence lezárta a szeptembert.</div>
+      <div class="kivonat">
+        <svg class="guil" id="guilA" viewBox="0 0 360 30" preserveAspectRatio="none"></svg>
+        <div class="in">
+          <div class="mondat">Október 12-ig fizess be <span class="ft">820&#8239;260&nbsp;Ft</span>-ot.</div>
+          <div class="hat">Három utalás a NAV-nak, hétfőig.</div>
+          <div class="tbl">
+            <div class="tr"><span>TB-járulék</span><span class="amt">326&#8239;340<small>Ft</small></span></div>
+            <div class="tr"><span>Szocho</span><span class="amt">229&#8239;320<small>Ft</small></span></div>
+            <div class="tr"><span>SZJA-előleg</span><span class="amt">264&#8239;600<small>Ft</small></span></div>
+          </div>
+          <div class="koz"><div><div class="k1">Közlemény mindháromhoz</div><div class="k2">8412345678</div></div><button class="btn t">Másolás</button></div>
+          <button class="btn p">Befizettem</button>
+        </div>
+      </div>
+      <div class="sect">Határok idén</div>
+      <div class="sheet meter"><div class="big">Még 11&#8239;580&#8239;000 Ft-ot számlázhatsz ÁFA nélkül.</div><div class="bar"><i></i></div><div class="ends"><span>8&#8239;420&#8239;000 Ft</span><span>20&#8239;000&#8239;000 Ft</span></div></div>
+      <div class="sect">Bence kéri</div>
+      <div class="sheet todo"><div class="q">Töltsd fel a szeptemberi bankszámlakivonatot.</div><button class="btn s">Feltöltés</button></div>
+      <div class="sheet"><div class="row"><div class="avatar">KB</div><div class="l"><div class="t">Kovács Bence, a könyvelőd</div><div class="s">Általában 4 órán belül válaszol.</div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6h-6v6H4z"/></svg>Főoldal</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></svg>Dosszié</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z"/></svg>Üzenetek</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1-5 15-5 16 0"/></svg>Fiók</div>
+    </div>
+  </div>
+  <div class="btnset vA"><div class="cap">Gombok: elsődleges, másodlagos, szöveges, veszélyes</div><div class="sheet"><button class="btn p">Befizettem</button><div class="inline"><button class="btn s">Feltöltés</button><button class="btn t">Emlékeztető beállítása</button></div><button class="btn d">Előfizetés lemondása</button></div></div>
+</section>
+
+<!-- ===================== B ===================== -->
+<section class="panel vB" style="font-family:'Archivo','Courier New'">
+  <div class="vhead"><div class="betu">B változat</div><h2>Szilva és szárazpecsét</h2><p>Munkanév: Rendben. Schibsted Grotesk, egy család. Nincs sötét felület; a lezárt hónapot dombornyomott pecsét jelzi.</p></div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#4B1F45"></i><b>Szilva</b><span>#4B1F45</span></div>
+    <div class="sw"><i style="background:#E6E2E8"></i><b>Alap</b><span>#E6E2E8</span></div>
+    <div class="sw"><i style="background:#F3EAF1"></i><b>Halvány</b><span>#F3EAF1</span></div>
+    <div class="sw"><i style="background:#241A23"></i><b>Tinta</b><span>#241A23</span></div>
+  </div>
+  <div class="proof vB"><div class="d" style="font-weight:600;letter-spacing:-.012em">Ő ő Ű ű dűlő, tőzsde, fűtő</div><div class="d" style="font-weight:400;font-size:22px">Őszi befizetés: 820&#8239;260 Ft</div><div class="b">Bőröndös Ödön fűtőszerelő, ŐŰ őű, 0 O 1 l I</div><div class="b" style="font-weight:700">Szűcs Győző, határidő: október 12.</div><div class="m">Schibsted Grotesk 400/600/700</div></div>
+
+  <div class="phone vB">
+    <div class="sb"><span>9:41</span><span>100%</span></div>
+    <div class="scr">
+      <div class="title">Október</div>
+      <div class="subtitle">Bence lezárta a szeptembert.</div>
+      <div class="sheet pay">
+        <div class="lbl">Ennyit kell fizetned</div>
+        <div class="mondat">Október 12-ig fizess be <span class="ft">820&#8239;260&nbsp;Ft</span>-ot.</div>
+        <div class="tbl">
+          <div class="tr"><span>TB-járulék</span><span class="amt">326&#8239;340<small>Ft</small></span></div>
+          <div class="tr"><span>Szocho</span><span class="amt">229&#8239;320<small>Ft</small></span></div>
+          <div class="tr"><span>SZJA-előleg</span><span class="amt">264&#8239;600<small>Ft</small></span></div>
+        </div>
+        <div class="koz"><div><div class="k1">Közlemény mindháromhoz</div><div class="k2">8412345678</div></div><button class="btn t">Másolás</button></div>
+        <button class="btn p">Befizettem</button>
+      </div>
+      <div class="sect">Dosszié</div>
+      <div class="sheet">
+        <div class="honap"><div class="l" style="flex:1"><div class="t" style="font-size:16px">Október</div><div class="s" style="font-size:13.5px;color:var(--muted)">2 tétel vár rád, 5 Bencénél van.</div><div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i></div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="honap"><div class="l" style="flex:1"><div class="t" style="font-size:16px">Szeptember</div><div class="s" style="font-size:13.5px;color:var(--muted)">Minden tétel beadva, október 2.</div></div><svg class="seal" id="sealB" viewBox="0 0 100 100"></svg></div>
+      </div>
+      <div class="sect">Határok idén</div>
+      <div class="sheet meter"><div class="big">Még 11&#8239;580&#8239;000 Ft-ot számlázhatsz ÁFA nélkül.</div><div class="bar"><i></i></div><div class="ends"><span>8&#8239;420&#8239;000 Ft</span><span>20&#8239;000&#8239;000 Ft</span></div></div>
+      <div class="sheet"><div class="row"><div class="avatar">KB</div><div class="l"><div class="t">Kovács Bence, a könyvelőd</div><div class="s">Általában 4 órán belül válaszol.</div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6h-6v6H4z"/></svg>Főoldal</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></svg>Dosszié</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z"/></svg>Üzenetek</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1-5 15-5 16 0"/></svg>Fiók</div>
+    </div>
+  </div>
+  <div class="btnset vB"><div class="cap">Gombok: elsődleges, másodlagos, szöveges, veszélyes</div><div class="sheet"><button class="btn p">Befizettem</button><div class="inline"><button class="btn s">Feltöltés</button><button class="btn t">Emlékeztető beállítása</button></div><button class="btn d">Előfizetés lemondása</button></div></div>
+</section>
+
+<!-- ===================== C ===================== -->
+<section class="panel vC" style="font-family:'Archivo','Courier New'">
+  <div class="vhead"><div class="betu">C változat</div><h2>Tintakék levélpapír</h2><p>Munkanév: Kézjegy. Libre Caslon Condensed + Archivo. Sötét fejléc; a könyvelő havi levele kék tintás kézjeggyel.</p></div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#17284A"></i><b>Tintakék</b><span>#17284A</span></div>
+    <div class="sw"><i style="background:#DDE3EC"></i><b>Alap</b><span>#DDE3EC</span></div>
+    <div class="sw"><i style="background:#2546A6"></i><b>Tollkék</b><span>#2546A6</span></div>
+    <div class="sw"><i style="background:#151C2A"></i><b>Tinta</b><span>#151C2A</span></div>
+  </div>
+  <div class="proof vC"><div class="d caslon" style="font-weight:600">Ő ő Ű ű dűlő, tőzsde, fűtő</div><div class="d caslon" style="font-weight:400;font-size:24px">Őszi befizetés: 820&#8239;260 Ft</div><div class="b">Bőröndös Ödön fűtőszerelő, ŐŰ őű, 0 O 1 l I</div><div class="b" style="font-weight:700">Szűcs Győző, határidő: október 12.</div><div class="m">Libre Caslon Condensed 400/600, Archivo 400/700</div></div>
+
+  <div class="phone vC">
+    <div class="fejlec">
+      <div class="sb"><span>9:41</span><span>100%</span></div>
+      <div class="title">Október</div>
+      <div class="subtitle">Bence levelet írt neked, ma 9:12-kor.</div>
+    </div>
+    <div class="scr">
+      <div class="sheet level">
+        <div class="kelt">Budapest, 2026. október 2.</div>
+        <div class="megsz">Kedves Kata!</div>
+        <p>Lezártam a szeptembert, minden számlád megvan. Október 12-ig ennyit kell befizetned:</p>
+        <div class="tbl">
+          <div class="tr"><span>TB-járulék</span><span class="amt">326&#8239;340<small>Ft</small></span></div>
+          <div class="tr"><span>Szocho</span><span class="amt">229&#8239;320<small>Ft</small></span></div>
+          <div class="tr"><span>SZJA-előleg</span><span class="amt">264&#8239;600<small>Ft</small></span></div>
+          <div class="tr ossz"><span>Összesen</span><span class="amt">820&#8239;260<small>Ft</small></span></div>
+        </div>
+        <p>Ha bármi nem világos, írj nyugodtan.</p>
+        <div class="alairas">
+          <button class="btn s">Kérdésem van</button>
+          <div><svg viewBox="0 0 150 52" id="sigC"></svg><div class="nev">Kovács Bence, könyvelő</div></div>
+        </div>
+      </div>
+      <div class="sect">Befizetés</div>
+      <div class="sheet">
+        <div class="koz"><div><div class="k1">Közlemény mindhárom utaláshoz</div><div class="k2">8412345678</div></div><button class="btn t">Másolás</button></div>
+        <div class="row"><div class="l"><div class="t">Számlaszámok tételenként</div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div style="padding:4px 16px 16px"><button class="btn p">Befizettem</button></div>
+      </div>
+      <div class="sect">Dosszié, október</div>
+      <div class="sheet">
+        <div class="row"><div class="l"><div class="t">Számla, Fekete Nyomda Kft.</div><div class="s">Feldolgozva, kedd 14:05</div></div><svg class="kjsvg" viewBox="0 0 44 28" width="44" height="28"><path d="M8 23 C9 16 10 9 11 5 M20 6 C16 10 12 13 10 15 C13 17 16 20 20 23 M27 22 C28 15 29 9 30 5 C35 4 37 7 34 10 C32 12 29 13 28 13 C34 12 39 15 37 19 C35 23 30 23 27 22" fill="none" stroke="#2546A6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="row"><div class="l"><div class="t">Benzinszámla, fotó</div><div class="s">Bence még nem látta</div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6h-6v6H4z"/></svg>Főoldal</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></svg>Dosszié</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z"/></svg>Üzenetek</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1-5 15-5 16 0"/></svg>Fiók</div>
+    </div>
+  </div>
+  <div class="btnset vC"><div class="cap">Gombok: elsődleges, másodlagos, szöveges, veszélyes</div><div class="sheet"><button class="btn p">Befizettem</button><div class="inline"><button class="btn s">Feltöltés</button><button class="btn t">Emlékeztető beállítása</button></div><button class="btn d">Előfizetés lemondása</button></div></div>
+</section>
+
+<!-- ===================== D ===================== -->
+<section class="panel vD" style="font-family:'Archivo','Courier New'">
+  <div class="vhead"><div class="betu">D változat</div><h2>Pala és kockás lap</h2><p>Munkanév: Tisztán. Sofia Sans Condensed + Sofia Sans. Sötét előtér (belépés, bekötés), világos napi képernyők; a számítás kockás lapon.</p></div>
+  <div class="swatches">
+    <div class="sw"><i style="background:#2A4E57"></i><b>Pala</b><span>#2A4E57</span></div>
+    <div class="sw"><i style="background:#1D373E"></i><b>Előtér</b><span>#1D373E</span></div>
+    <div class="sw"><i style="background:#DAE3E5"></i><b>Alap</b><span>#DAE3E5</span></div>
+    <div class="sw"><i style="background:#DCE8EA"></i><b>Rácsvonal</b><span>#DCE8EA</span></div>
+  </div>
+  <div class="proof vD"><div class="d cond" style="font-weight:700">Ő ő Ű ű dűlő, tőzsde, fűtő</div><div class="d cond" style="font-weight:600;font-size:24px">Őszi befizetés: 820&#8239;260 Ft</div><div class="b">Bőröndös Ödön fűtőszerelő, ŐŰ őű, 0 O 1 l I</div><div class="b" style="font-weight:700">Szűcs Győző, határidő: október 12.</div><div class="m">Sofia Sans Condensed 600/700, Sofia Sans 400/700</div></div>
+
+  <div class="phone vD">
+    <div class="sb"><span>9:41</span><span>100%</span></div>
+    <div class="scr">
+      <div class="title">Október</div>
+      <div class="subtitle">Bence lezárta a szeptembert.</div>
+      <div class="sheet pay">
+        <div class="mondat">Október 12-ig fizess be 820&#8239;260&nbsp;Ft-ot.</div>
+        <div class="hat">Három utalás a NAV-nak, a közlemény mindegyiknél ugyanaz.</div>
+        <div class="kockas">
+          <div class="h">Hogyan jött ki? <span>Július–szeptember</span></div>
+          <div class="sor"><span class="op"></span><span>Bevétel</span><span class="amt">2&#8239;940&#8239;000</span></div>
+          <div class="sor"><span class="op">−</span><span>40% költséghányad</span><span class="amt">1&#8239;176&#8239;000</span></div>
+          <div class="sor alatt"><span class="op">=</span><span>Jövedelem</span><span class="amt">1&#8239;764&#8239;000</span></div>
+          <div class="sor"><span class="op">×</span><span>15% SZJA-előleg</span><span class="amt">264&#8239;600</span></div>
+          <div class="sor"><span class="op">×</span><span>18,5% TB-járulék</span><span class="amt">326&#8239;340</span></div>
+          <div class="sor"><span class="op">×</span><span>13% szocho</span><span class="amt">229&#8239;320</span></div>
+          <div class="sor ossz"><span class="op">=</span><span>Fizetendő, Ft</span><span class="amt">820&#8239;260</span></div>
+        </div>
+        <div class="koz"><div><div class="k1">Közlemény</div><div class="k2">8412345678</div></div><button class="btn t">Másolás</button></div>
+        <button class="btn p">Befizettem</button>
+      </div>
+      <div class="sect">Határok idén</div>
+      <div class="sheet meter"><div class="big">Még 11&#8239;580&#8239;000 Ft-ot számlázhatsz ÁFA nélkül.</div><div class="bar"><i></i></div><div class="ends"><span>8&#8239;420&#8239;000 Ft</span><span>20&#8239;000&#8239;000 Ft</span></div></div>
+      <div class="sheet"><div class="row"><div class="avatar">KB</div><div class="l"><div class="t">Kovács Bence, a könyvelőd</div><div class="s">Általában 4 órán belül válaszol.</div></div><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab on"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9h-5v-6h-6v6H4z"/></svg>Főoldal</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M3 6h6l2 2h10v11H3z"/></svg>Dosszié</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4v-4H4z"/></svg>Üzenetek</div>
+      <div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1-5 15-5 16 0"/></svg>Fiók</div>
+    </div>
+  </div>
+  <div class="lobby"><div class="lt">Szia, újra itt vagy</div><div class="ls">Előtér: belépés, bekötés, befizetés megerősítése.</div><div class="fld">E-mail-cím</div><div class="fld">Jelszó</div><button class="btn p">Belépés</button><button class="btn t">Elfelejtetted a jelszavad?</button></div>
+  <div class="btnset vD"><div class="cap">Gombok: elsődleges, másodlagos, szöveges, veszélyes</div><div class="sheet"><button class="btn p">Befizettem</button><div class="inline"><button class="btn s">Feltöltés</button><button class="btn t">Emlékeztető beállítása</button></div><button class="btn d">Előfizetés lemondása</button></div></div>
+</section>
+
+</div>
+<script>
+// A: gilos szegély, matematikailag rajzolt hullámkötegek (nem kép)
+(function(){
+  const s=document.getElementById('guilA'); if(!s) return;
+  const W=360,H=30, ns='http://www.w3.org/2000/svg'; let out='';
+  for(let i=0;i<14;i++){
+    const ph=i*Math.PI/7; let d='';
+    for(let x=0;x<=W;x+=2){
+      const y=H/2 + 8*Math.sin(x/9+ph) + 4*Math.sin(x/23-ph*1.5);
+      d+=(x?'L':'M')+x+' '+y.toFixed(2);
+    }
+    out+=`<path d="${d}" fill="none" stroke="#2E6650" stroke-width="0.7"/>`;
+  }
+  s.innerHTML=out;
+})();
+// B: szárazpecsét, dombornyomásként (világos és árnyék vonal eltolva)
+(function(){
+  const s=document.getElementById('sealB'); if(!s) return;
+  const defs=`<defs>
+    <path id="felso" d="M17,50 A33,33 0 0 1 83,50"/>
+    <path id="also" d="M10.5,50 A39.5,39.5 0 0 0 89.5,50"/>
+    <radialGradient id="papir" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1E9EF"/></radialGradient>
+  </defs><circle cx="50" cy="50" r="46" fill="url(#papir)"/>`;
+  const g=(dx,dy,col,w)=>`<g transform="translate(${dx},${dy})" fill="none" stroke="${col}" stroke-width="${w}">
+     <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="42.5"/><circle cx="50" cy="50" r="27"/>
+     <path d="M39 50l8 8 15-17" stroke-width="${w*2.8}" stroke-linecap="round" stroke-linejoin="round"/>
+     <g font-family="Schibsted Grotesk" font-weight="600" font-size="8.6" letter-spacing=".5" fill="${col}" stroke="none" text-anchor="middle">
+       <text><textPath href="#felso" startOffset="50%">Kovács Bence könyvelő</textPath></text>
+       <text><textPath href="#also" startOffset="50%">2026. szeptember</textPath></text></g></g>`;
+  s.innerHTML = defs + g(-.9,-.9,'#FFFFFF',1.1) + g(1.1,1.1,'rgba(75,31,69,.42)',1.1) + g(0,0,'rgba(75,31,69,.16)',1.1);
+})();
+// C: kézjegy, kézzel rajzolt aláírásvonal (helyőrző; élesben a könyvelő saját aláírása)
+(function(){
+  const s=document.getElementById('sigC'); if(!s) return;
+  s.innerHTML=`<path d="M8 38 C12 18 16 8 20 10 C24 12 14 30 12 40 C18 26 30 20 30 28 C30 34 20 38 16 36 C26 34 34 30 40 30 C44 30 40 38 46 36 C52 34 54 26 58 28 C62 30 56 38 62 37 C68 36 70 26 76 28 C80 30 74 38 80 37 C88 35 92 24 98 26 C102 28 96 36 102 36 C110 36 118 28 126 30" fill="none" stroke="#2546A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 46 C50 42 96 44 140 40" fill="none" stroke="#2546A6" stroke-width="1.4" stroke-linecap="round"/>`;
+})();
+</script>
+</body>
+</html>

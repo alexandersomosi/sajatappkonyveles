@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Bekötés</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .fejlec h1 { font-size: 34px; line-height: 1.08; }
+  .tartalom { padding-bottom: 40px; }
+
+  /* a feladat a legerősebb lap: nagyobb cím, elsődleges gomb */
+  .teendo { padding: 18px 18px 10px; }
+  .teendo .mit { font-family: var(--betu-cim); font-weight: 600; font-size: 25px; line-height: 1.15; }
+  .teendo .miert { font-size: 16px; line-height: 1.45; color: var(--halvany); margin: 6px 0 16px; }
+  .teendo .gomb-sz { margin-top: 4px; }
+
+  .hivas { padding: 16px 18px 18px; }
+  .hivas .fent { display: flex; gap: 14px; align-items: center; }
+  .hivas .arckep { width: 52px; height: 52px; }
+  .hivas .mikor { font-weight: 700; font-size: 17px; line-height: 1.3; }
+  .hivas .hogyan { font-size: 15px; line-height: 1.4; color: var(--halvany); margin-top: 2px; }
+  .hivas .gombok { display: flex; align-items: center; gap: 18px; margin-top: 14px; }
+
+  /* lépéssor: valódi sorrend, ezért számozott; a kész lépés halvány, csak a mostani erős */
+  .lepesek { padding: 10px 18px 8px; }
+  .lepes { display: grid; grid-template-columns: 22px 1fr; column-gap: 14px; position: relative; padding: 7px 0 9px; }
+  .lepes .pont { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; position: relative; z-index: 1;
+    margin-top: 1px; color: var(--halvany); font-weight: 700; font-size: 12.5px; }
+  .lepes.kesz .pont { color: var(--kesz); }
+  .lepes.kesz .pont svg { width: 20px; height: 20px; }
+  .lepes.most .pont { background: var(--lap); border: 2px solid var(--tintakek); }
+  .lepes.most .pont::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--tintakek); }
+  .lepes.var .pont { background: var(--lap); border: 1.5px solid var(--mezo-keret); }
+  .lepes:not(:last-child)::after { content: ""; position: absolute; left: 10px; top: 32px; bottom: -8px; width: 2px; background: var(--keret); }
+  .lepes.kesz::after { background: var(--kesz); opacity: .45; }
+  .lepes .mi { font-size: 15.5px; line-height: 1.35; color: var(--halvany); }
+  .lepes .mikor { font-size: 14px; line-height: 1.4; color: var(--halvany); margin-top: 1px; }
+  .lepes.most .mi { font-weight: 700; font-size: 17px; color: var(--tinta); }
+  .lepes.most .mikor { color: var(--tinta); font-size: 15px; }
+</style>
+</head>
+<body class="sotet">
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <h1>Még 2 lépés, Bence intézi</h1>
+  <p>Addig ezt a kettőt kérjük tőled.</p>
+</header>
+
+<main class="tartalom">
+  <section class="lap teendo">
+    <div class="mit">Töltsd fel a tavalyi <span style="white-space:nowrap">SZJA-bevallásodat.</span></div>
+    <div class="miert">Ebből látja Bence, honnan indulsz. Ha az előző könyvelőd adta be, tőle elkérheted PDF-ben.</div>
+    <button class="gomb-e"><svg class="i"><use href="#feltolt"/></svg>Bevallás feltöltése</button>
+    <button class="gomb-sz">Most kezdtem, nincs ilyenem</button>
+  </section>
+
+  <section class="lap hivas">
+    <div class="fent">
+      <span class="arckep"><svg viewBox="0 0 64 64" role="img" aria-label="Kovács Bence fényképe"><use href="#bence"/></svg></span>
+      <div><div class="mikor">Csütörtök, 10:00</div><div class="hogyan">15 perces videóhívás Bencével, itt az appban. Előtte szólunk.</div></div>
+    </div>
+    <div class="gombok">
+      <button class="gomb-m"><svg class="i"><use href="#naptar"/></svg>Naptárba teszem</button>
+      <button class="gomb-sz">Másik időpont</button>
+    </div>
+  </section>
+
+  <div class="szakasz">Hol tartunk</div>
+  <section class="lap lepesek">
+    <div class="lepes kesz">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#kesz-jel"/></svg></span>
+      <div><div class="mi">Aláírtad a meghatalmazást</div><div class="mikor">hétfőn, Ügyfélkapuval</div></div>
+    </div>
+    <div class="lepes kesz">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#kesz-jel"/></svg></span>
+      <div><div class="mi">Elküldted az igazolványaidat</div><div class="mikor">kedden</div></div>
+    </div>
+    <div class="lepes most">
+      <span class="pont"></span>
+      <div><div class="mi">Bence bejelent a NAV-nál</div><div class="mikor">Általában 1–2 munkanap.</div></div>
+    </div>
+    <div class="lepes var">
+      <span class="pont">4</span>
+      <div><div class="mi">A számláid maguktól jönnek</div><div class="mikor">a bejelentés után, minden nap</div></div>
+    </div>
+  </section>
+</main>
+<div class="otthon-jel"></div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Üres dosszié</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .fejlec { --roz-x: 120px; --roz-y: 130px; padding-bottom: 22px; }
+  .fejlec h1 { padding-top: 18px; font-size: 29px; }
+
+  /* üres állapot: meghívás a cselekvésre. A tárgy: ÜRES mappa szemből, a fülön a hónap neve (HTML). */
+  .ures { padding: 18px 22px 20px; text-align: center; }
+  .ures .targy { margin-bottom: 10px; --arnyek-sz: 126px; }
+  .ures .targy .ho { top: 12.6px; left: 29px; width: 44px; font-size: 6.4px; font-weight: 700; letter-spacing: .09em; color: var(--tintakek-szoveg); }
+  .ures h2 { font-weight: 700; font-size: 22px; line-height: 1.25; letter-spacing: -.02em; }
+  .ures p { font-size: 16px; line-height: 1.5; color: var(--halvany); margin: 6px auto 18px; max-width: 300px; }
+  .ures .gomb-e { margin-bottom: 10px; }
+  .ures .gomb-m { width: 100%; height: 52px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>8:12</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="szegmens-sav" role="tablist" aria-label="Hónap">
+    <button class="on" role="tab" aria-selected="true">November</button>
+    <button role="tab">Október</button>
+    <button role="tab">Korábbiak</button>
+  </div>
+  <h1>Még üres a novemberi dosszié.</h1>
+</header>
+
+<main class="tartalom">
+  <section class="lap ures">
+    <div class="targy" aria-hidden="true">
+      <img src="illusztraciok/ures_mappa.svg" alt="">
+      <span class="rajta ho">NOVEMBER</span>
+    </div>
+    <h2>Fotózd le az első iratot</h2>
+    <p>Számlát vagy nyugtát, amit kaptál vagy adtál. Bence ebből könyvel.</p>
+    <button class="gomb-e">Fotózás</button>
+    <button class="gomb-m"><img class="i3" src="../assets/ikon3d/feltoltes_28@2x.png" srcset="../assets/ikon3d/feltoltes_28@2x.png 2x, ../assets/ikon3d/feltoltes_28@3x.png 3x" alt="">Fájl feltöltése</button>
+  </section>
+
+  <section class="lap" style="margin-top:12px">
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/szamlak_44@2x.png" srcset="../assets/ikon3d/szamlak_44@2x.png 2x, ../assets/ikon3d/szamlak_44@3x.png 3x" alt=""></span>
+      <div class="l"><div class="cim">A kiállított számláid maguktól jönnek</div>
+        <div class="al">a NAV-tól, minden reggel. Ezekkel nincs teendőd.</div></div>
+    </div>
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/nyugta_arnyektalan_44@2x.png" srcset="../assets/ikon3d/nyugta_arnyektalan_44@2x.png 2x, ../assets/ikon3d/nyugta_arnyektalan_44@3x.png 3x" alt=""></span>
+      <div class="l"><div class="cim">Pénztárgéppel adsz nyugtát?</div>
+        <div class="al">Elég a havi összesítőt lefotóznod a hónap végén, a nyugtákat nem kell egyenként.</div></div>
+    </div>
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../assets/ikon3d/dosszie_44@2x.png" srcset="../assets/ikon3d/dosszie_44@2x.png 2x, ../assets/ikon3d/dosszie_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../assets/ikon3d/befizetve_jel_20@2x.png" srcset="../assets/ikon3d/befizetve_jel_20@2x.png 2x, ../assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Október</div>
+        <div class="allapot kesz"><span><span class="szo">Lezárva</span>, 9 irat, befizetve</span></div></div>
+    </div>
+  </section>
+</main>
+
+<div class="alj-fatyol" aria-hidden="true"></div>
+<nav class="fulsor" aria-label="Fő navigáció">
+  <div class="fulek">
+    <a class="ful"><img class="i3 fooldal" src="../assets/ikon3d/fooldal_36@2x.png" srcset="../assets/ikon3d/fooldal_36@2x.png 2x, ../assets/ikon3d/fooldal_36@3x.png 3x" alt="">Főoldal</a>
+    <a class="ful on"><img class="i3 dosszie" src="../assets/ikon3d/dosszie_36@2x.png" srcset="../assets/ikon3d/dosszie_36@2x.png 2x, ../assets/ikon3d/dosszie_36@3x.png 3x" alt="">Dosszié</a>
+    <a class="ful"><img class="i3 uzenetek" src="../assets/ikon3d/uzenetek_36@2x.png" srcset="../assets/ikon3d/uzenetek_36@2x.png 2x, ../assets/ikon3d/uzenetek_36@3x.png 3x" alt="">Üzenetek</a>
+    <a class="ful"><img class="i3 fiok" src="../assets/ikon3d/fiok_36@2x.png" srcset="../assets/ikon3d/fiok_36@2x.png 2x, ../assets/ikon3d/fiok_36@3x.png 3x" alt="">Fiók</a>
+  </div>
+  <button class="fotogomb" aria-label="Fotózás: irat lefotózása"><img class="i3" src="../assets/ikon3d/fotozas_arnyektalan_36@2x.png" srcset="../assets/ikon3d/fotozas_arnyektalan_36@2x.png 2x, ../assets/ikon3d/fotozas_arnyektalan_36@3x.png 3x" alt="">Fotózás</button>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

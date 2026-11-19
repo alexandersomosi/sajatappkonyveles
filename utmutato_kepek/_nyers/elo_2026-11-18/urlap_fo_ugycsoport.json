@@ -1,0 +1,60 @@
+{
+ "nev": "urlap_fo_ugycsoport",
+ "url": "https://webnyk-public.nav.gov.hu/app/webnykKim#form",
+ "cim": "Kitöltés - Regisztráció nélküli nyomtatványkitöltő",
+ "ido": "2026-11-18T10:15:29.508Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 1000,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "fejlec": [
+   574,
+   390,
+   807,
+   438
+  ],
+  "adougyek": [
+   582,
+   549,
+   1170,
+   589
+  ],
+  "adougyek_jogosult": [
+   654,
+   605,
+   1067,
+   653
+  ],
+  "adougyek_irat": [
+   654,
+   689,
+   1394,
+   737
+  ],
+  "jovedeki": [
+   582,
+   773,
+   834,
+   813
+  ],
+  "vamugyek": [
+   582,
+   997,
+   753,
+   1037
+  ],
+  "fizetesi": [
+   582,
+   1221,
+   1301,
+   1261
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

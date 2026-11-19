@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belépés (Rendben)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .nyito { padding: 64px 24px 30px; }
+  /* A szójel az egyetlen hangos elem: talpas, 600-as, szilva, ponttal a végén. A pont a név része: „Rendben.” */
+  .szojel { font-family: var(--betu-cim); font-size: 48px; line-height: 52px; font-weight: 600; letter-spacing: -.018em; color: var(--szilva); font-variation-settings: "opsz" 60; }
+  .szojel-al { font-size: 17px; line-height: 24px; margin-top: 10px; color: var(--masod); font-weight: 400; }
+  .urlap { padding: 20px var(--belso) 20px; }
+  .urlap .gomb-szoveg { display: inline-block; margin: 4px 0 12px; }
+  .mutasd { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--szilva); }
+  .mutasd .ikon { width: 22px; height: 22px; }
+  .kulso { padding: 24px var(--margo) 0; display: grid; gap: 10px; }
+  .regisztral { padding: 26px 24px 0; font-size: 16px; line-height: 22px; color: var(--masod); }
+  .regisztral .gomb-szoveg { padding: 0; margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="kepernyo ful-nelkul">
+  <div class="allapotsor" aria-hidden="true"><span>9:41</span><span class="jelek">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0z"/><path d="M3.5 7.1a6.4 6.4 0 0 1 9 0l-1.3 1.3a4.6 4.6 0 0 0-6.4 0z"/><path d="M1.3 4.9a9.5 9.5 0 0 1 13.4 0l-1.3 1.3a7.7 7.7 0 0 0-10.8 0z"/></svg>
+    <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.8" height="11.8" rx="3.4" fill="none" stroke="#241A23" stroke-opacity=".4" stroke-width="1.1"/><rect x="2.3" y="2.3" width="17" height="8.4" rx="2"/><path d="M25 4.4v4.2a2.1 2.1 0 0 0 0-4.2z" fill-opacity=".45"/></svg>
+  </span></div>
+
+  <header class="nyito">
+    <h1 class="szojel">Rendben.</h1>
+    <p class="szojel-al">Saját könyvelő egyéni vállalkozóknak.</p>
+  </header>
+
+  <section class="lap urlap" aria-label="Belépés e-maillel">
+    <label class="mezo">
+      <span class="mezo-cimke">E-mail-cím</span>
+      <span class="mezo-doboz"><span class="ertek">kata@szabografika.hu</span></span>
+    </label>
+    <label class="mezo">
+      <span class="mezo-cimke">Jelszó</span>
+      <span class="mezo-doboz"><span class="ertek pont">●●●●●●●●●●</span><button class="mutasd" aria-label="Jelszó mutatása"><svg class="ikon"><use href="#i-szem"/></svg></button></span>
+    </label>
+    <button class="gomb-szoveg">Elfelejtettem a jelszavam</button>
+    <button class="gomb gomb-elso">Belépés</button>
+  </section>
+
+  <div class="kulso">
+    <button class="gomb gomb-masod teljes">Belépés Apple-fiókkal</button>
+    <button class="gomb gomb-masod teljes">Belépés Google-fiókkal</button>
+  </div>
+
+  <p class="regisztral">Még nincs fiókod?<button class="gomb-szoveg">Regisztrálok</button></p>
+</div>
+<script src="ikonok.js"></script>
+</body>
+</html>

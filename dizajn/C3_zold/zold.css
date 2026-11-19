@@ -1,0 +1,36 @@
+/* Kézjegy C3 zöld próba (11-18): a tulaj színe #1AE81A. A C2 tokenjeit írja felül, a C2 fájljaihoz nem nyúl.
+   Szabály: a neon csak kiemelés (gomb, aktív fül, sáv, kész-jel), rajta mindig sötét szöveg; fehér lapon a szöveg-zöld mélyebb. */
+:root {
+  --neon: #1AE81A;
+  --neon-sotet: #0B7F14;        /* zöld szöveg és link fehér lapon (kontraszt >= 4,5:1) */
+  --tintakek: #0B1A10;          /* fejlécsáv: majdnem fekete sötétzöld */
+  --tintakek-szoveg: #0B6E12;
+  --alap: #E3EAE4;              /* halvány mentás szürke alap */
+  --tinta: #111813;
+  --halvany: #4D5A51;
+  --halvany-alapon: #47534A;
+  --fejlec-halvany: #A3BDA9;
+  --keret: #C7D4CA;
+  --hajszal: #E1E9E3;
+  --mezo-keret: #7C8A80;
+  --mezo-alap: #F4F7F5;
+  --nyomott: #EDF2EE;
+  --gomb-m-alap: #D3F8CF;       /* másodlagos gomb: halvány neon */
+  --gomb-m-nyomott: #BDF2B7;
+  --ful-aktiv: #0B1A10;
+  --kek: #0B7F14;
+  --tollkek-savon: #8EF08E;
+  --arnyek-papir: 0 1px 1px rgba(11,26,16,.06), 0 10px 22px -14px rgba(11,26,16,.42);
+}
+.gomb-e { background: var(--neon); color: #07120A; font-weight: 700; }
+.gomb-m { color: #0A4D10; }
+.ful.on { color: #0B1A10; }
+.ful.on::after { background: var(--neon); height: 4px; width: 24px; margin-left: -12px; }
+.fotogomb { box-shadow: inset 0 0 0 3px var(--neon), 0 10px 22px -8px rgba(11,26,16,.45); }
+.sav i { background: var(--neon); }
+.sav i.varhato { background: repeating-linear-gradient(-45deg, var(--neon) 0 1.6px, transparent 1.6px 5px); }
+.alj-fatyol { background: linear-gradient(to bottom, rgba(227,234,228,0) 0, var(--alap) 12px, var(--alap) 100%); }
+/* a fejlécben egy neon pötty: a nagy összeg pénzneme */
+.vegosszeg .ft { color: var(--neon); }
+/* próba: a kék 3D tárgyak zöldre hangolva (a végleges változatban újragenerált ikonok lesznek) */
+img.i3.fooldal, img.i3.fiok, img.i3.feltoltes { filter: hue-rotate(-100deg) saturate(1.25) brightness(1.05); }

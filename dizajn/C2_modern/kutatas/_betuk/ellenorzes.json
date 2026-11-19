@@ -1,0 +1,547 @@
+{
+ "AlbertSans_wght.ttf": {
+  "name": "Albert Sans",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03",
+   "ss04",
+   "ss05"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 405
+ },
+ "BeVietnamPro-Black.ttf": {
+  "name": "Be Vietnam Pro Black",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {},
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 527
+ },
+ "BeVietnamPro-Bold.ttf": {
+  "name": "Be Vietnam Pro",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {},
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 527
+ },
+ "BeVietnamPro-ExtraBold.ttf": {
+  "name": "Be Vietnam Pro ExtraBold",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {},
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 527
+ },
+ "BeVietnamPro-Regular.ttf": {
+  "name": "Be Vietnam Pro",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {},
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 527
+ },
+ "DMSans_opsz_wght.ttf": {
+  "name": "DM Sans 9pt",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03",
+   "ss04",
+   "ss05",
+   "ss06",
+   "ss07",
+   "ss08"
+  ],
+  "axes": {
+   "opsz": [
+    9.0,
+    40.0
+   ],
+   "wght": [
+    100.0,
+    1000.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 486
+ },
+ "FamiljenGrotesk_wght.ttf": {
+  "name": "Familjen Grotesk",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss02",
+   "ss05"
+  ],
+  "axes": {
+   "wght": [
+    400.0,
+    700.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": true,
+  "glyphs": 698
+ },
+ "Figtree_wght.ttf": {
+  "name": "Figtree Light",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02"
+  ],
+  "axes": {
+   "wght": [
+    300.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 459
+ },
+ "FunnelDisplay_wght.ttf": {
+  "name": "Funnel Display Light",
+  "miss": "",
+  "tnum": true,
+  "ss": [],
+  "axes": {
+   "wght": [
+    300.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": true,
+  "glyphs": 370
+ },
+ "Gantari_wght.ttf": {
+  "name": "Gantari",
+  "miss": "",
+  "tnum": false,
+  "ss": [],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 373
+ },
+ "Geist_wght.ttf": {
+  "name": "Geist",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03",
+   "ss04",
+   "ss05",
+   "ss06",
+   "ss07",
+   "ss08",
+   "ss09",
+   "ss10",
+   "ss11"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 975
+ },
+ "GolosText_wght.ttf": {
+  "name": "Golos Text",
+  "miss": "",
+  "tnum": true,
+  "ss": [],
+  "axes": {
+   "wght": [
+    400.0,
+    900.0
+   ]
+  },
+  "nnbsp": true,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 643
+ },
+ "HankenGrotesk_wght.ttf": {
+  "name": "Hanken Grotesk",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": true,
+  "glyphs": 708
+ },
+ "HostGrotesk_wght.ttf": {
+  "name": "Host Grotesk Light",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss02",
+   "ss03"
+  ],
+  "axes": {
+   "wght": [
+    300.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": true,
+  "glyphs": 449
+ },
+ "InstrumentSans_wdth_wght.ttf": {
+  "name": "Instrument Sans",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03",
+   "ss04",
+   "ss05",
+   "ss06",
+   "ss07",
+   "ss08",
+   "ss09",
+   "ss10",
+   "ss11",
+   "ss12"
+  ],
+  "axes": {
+   "wdth": [
+    75.0,
+    100.0
+   ],
+   "wght": [
+    400.0,
+    700.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 501
+ },
+ "Inter_opsz_wght.ttf": {
+  "name": "Inter",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "cv01",
+   "cv02",
+   "cv03",
+   "cv04",
+   "cv05",
+   "cv06",
+   "cv07",
+   "cv08",
+   "cv09",
+   "cv10",
+   "cv11",
+   "cv12"
+  ],
+  "axes": {
+   "opsz": [
+    14.0,
+    32.0
+   ],
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": true,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 2933
+ },
+ "Manrope_wght.ttf": {
+  "name": "Manrope ExtraLight",
+  "miss": "",
+  "tnum": true,
+  "ss": [],
+  "axes": {
+   "wght": [
+    200.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 742
+ },
+ "MonaSans_wdth_wght.ttf": {
+  "name": "Mona Sans ExtraLight",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03",
+   "ss04",
+   "ss05",
+   "ss06",
+   "ss07",
+   "ss08"
+  ],
+  "axes": {
+   "wdth": [
+    75.0,
+    125.0
+   ],
+   "wght": [
+    200.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 756
+ },
+ "Onest_wght.ttf": {
+  "name": "Onest",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": true,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 876
+ },
+ "PlusJakartaSans_wght.ttf": {
+  "name": "Plus Jakarta Sans",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03"
+  ],
+  "axes": {
+   "wght": [
+    200.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 1188
+ },
+ "PublicSans_wght.ttf": {
+  "name": "Public Sans Thin",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 648
+ },
+ "RedHatDisplay_wght.ttf": {
+  "name": "Red Hat Display",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01",
+   "ss02"
+  ],
+  "axes": {
+   "wght": [
+    300.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 451
+ },
+ "RethinkSans_wght.ttf": {
+  "name": "Rethink Sans",
+  "miss": "",
+  "tnum": false,
+  "ss": [],
+  "axes": {
+   "wght": [
+    400.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": true,
+  "glyphs": 494
+ },
+ "SUSE_wght.ttf": {
+  "name": "SUSE Thin",
+  "miss": "",
+  "tnum": false,
+  "ss": [
+   "ss01",
+   "ss02",
+   "ss03"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": true,
+  "glyphs": 629
+ },
+ "SchibstedGrotesk_wght.ttf": {
+  "name": "Schibsted Grotesk",
+  "miss": "",
+  "tnum": true,
+  "ss": [],
+  "axes": {
+   "wght": [
+    400.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 583
+ },
+ "Sora_wght.ttf": {
+  "name": "Sora",
+  "miss": "",
+  "tnum": true,
+  "ss": [
+   "ss01"
+  ],
+  "axes": {
+   "wght": [
+    100.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": false,
+  "digits_tabular_default": false,
+  "glyphs": 513
+ },
+ "Urbanist_wght.ttf": {
+  "name": "Urbanist",
+  "miss": "",
+  "tnum": false,
+  "ss": [],
+  "axes": {
+   "wght": [
+    100.0,
+    900.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 496
+ },
+ "WixMadeforDisplay_wght.ttf": {
+  "name": "Wix Madefor Display",
+  "miss": "",
+  "tnum": false,
+  "ss": [],
+  "axes": {
+   "wght": [
+    400.0,
+    800.0
+   ]
+  },
+  "nnbsp": false,
+  "thin": true,
+  "digits_tabular_default": false,
+  "glyphs": 726
+ }
+}

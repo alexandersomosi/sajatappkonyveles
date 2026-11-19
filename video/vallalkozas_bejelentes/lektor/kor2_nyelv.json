@@ -1,0 +1,146 @@
+{
+ "talalatok": [
+  {
+   "id": "b07",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "A „DÁP” és „Ügyfélkapu plusz” a felirathoz képest eltér (+-szal toldalék a felirat, a mond szóban). A TTS-ben az „Ügyfélkapu plusz” rendben van, de a felirat „Ügyfélkapu+-szal” alakja és a mond nem egyezik. Egységesítés: mindkettőben a szóbeli alak.",
+   "javitott": "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu pluszszal."
+  },
+  {
+   "id": "b07",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat „Ügyfélkapu+-szal” alakja a mond szövegével nem egyezik; a szóbeli „Ügyfélkapu plusz” a feliratban is ugyanaz legyen, vagy a mond és felirat egyaránt a rövidített forma.",
+   "javitott": "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu+-szal."
+  },
+  {
+   "id": "b09",
+   "mezo": "mond",
+   "sulyossag": "javaslat",
+   "problema": "A képernyőn a menüpont neve idézőjelben van; a mondban a „részre” kifejezés természetesebb lenne a „részre” helyett a „pontra” vagy a „gombra” — de a menü neve miatt így is érthető. Nincs valódi hiba.",
+   "javitott": "Koppints az Új bejelentés, kérelem benyújtása részre."
+  },
+  {
+   "id": "b11",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "A mond „Az adataidat a NAV tölti ki” – a felirattal egyező, de a természetes szórend: „A NAV tölti ki az adataidat.” (a mondat-kezdő tárgy nehézkes hallás után).",
+   "javitott": "A NAV tölti ki az adataidat. Nézd át, és ha kéri, írd be a TAJ-számodat."
+  },
+  {
+   "id": "b14",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "„Ez a cím nyilvános lesz” – a jogi tartalom szempontjából pontosabb: a székhely a nyilvános nyilvántartásban látszik. A 'nyilvános' túlzó lehet; a felirat ugyanezt mondja, így mindkettőt kell javítani, ha változtatunk.",
+   "javitott": "Add meg a székhelyed. Ez a cím a nyilvántartásban is szerepel."
+  },
+  {
+   "id": "b16",
+   "mezo": "mond",
+   "sulyossag": "javaslat",
+   "problema": "„Az útmutatóban megírtuk, mit válassz” – természetesebb: „Az útmutatóban leírjuk, mit válassz.” (a múlt idő itt nem illik a jövőbeli segítségnyújtáshoz).",
+   "javitott": "Keresd ki a fő tevékenységedet. Az útmutatóban leírjuk, mit válassz."
+  },
+  {
+   "id": "b22",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "„Így a bevételed egy része eleve költségnek számít” – átalányadózásnál a költséghányad jogi fogalom; a laikus érthetőség kedvéért pontosabb: „a bevételed egy részét költségnek veheted”. Jelenleg félreérthető, mintha automatikus lenne.",
+   "javitott": "Az átalányadózást igen: így a bevételed egy részét költségként számolhatod el."
+  },
+  {
+   "id": "b24",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "A mond „második pontot” a feliratban „2. pontot” – a TTS-ben a számjegy betűvel szebben hangzik, de a mondat egyezése miatt mindkettőben a szóbeli alak kell. Ráadásul a mond szerint a második pont az alanyi mentesség, de a feliratban a „2.” formában az egyezés nem szembetűnő.",
+   "javitott": "Az áfamentességnél csak a második pontot jelöld: az alanyi adómentességet."
+  },
+  {
+   "id": "b24",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "A felirat „2. pontot” formája a mond szövegével szóban egyezik, de a 'felirat' a képernyőn lévő számozást követi; a mond „második pont” – egységesítés szükséges.",
+   "javitott": "Az áfamentességnél csak a 2. pontot jelöld: az alanyi adómentességet."
+  },
+  {
+   "id": "b25",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "„ÁFÁ-t” helyesen „áfát”: a magyar helyesírásban az ÁFA a rövidítés, a szóban az „áfa” ragozott alakja „áfát” (nagybetű nélkül, kisbetűs). A felirat „ÁFÁ-t” hibás.",
+   "javitott": "A legfontosabb pipa: így nem kell áfát felszámolnod."
+  },
+  {
+   "id": "b29",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "„alanyi ÁFA-mentesség” – a szabály szerint a rövidítés után kötőjel és a szóvégi ragozás helyes, de a mond „áfamentesség” alakkal összevetve egységes kell legyen: a feliratban „ÁFA-mentesség” a rövidítés nagybetűs, a mondban kisbetűs alak. Egységesítés: áfamentesség.",
+   "javitott": "Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem."
+  },
+  {
+   "id": "b33",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "„a vállalkozásod aznap indul” – a jogi pontosság miatt a bejelentés napja a kezdő nap lehet, de a szöveg ígéretet tesz; enyhítés: „aznap indulhat”.",
+   "javitott": "Ezután nem módosítható, és a vállalkozásod aznaptól indulhat."
+  },
+  {
+   "id": "b38",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "A mondatkezdő számjegy (5) helyett a mond betűs alakja „öt” – a felirat számjegyes alakja a mondattal nem egyezik. Egységesítés: a feliratban is betű a mondatkezdeten.",
+   "javitott": "Még egy dolog: öt munkanapon belül a kamaránál is regisztrálnod kell."
+  },
+  {
+   "id": "b39",
+   "mezo": "mindketto",
+   "sulyossag": "hiba",
+   "problema": "A „24–48 órán belül” tartomány szóban nehezen kezelhető a TTS-ben és a laikusnak; a mondban „huszonnégy-negyvennyolc” kötőjeles kiejtés félreérthető. Egységesítés a mond és felirat között: „huszonnégy-negyvennyolc” a mondban, a feliratban „24–48”.",
+   "javitott": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív."
+  },
+  {
+   "id": "m01",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "„5 perc” a feliratban – a mondban „öt perc”. Egységesítés a betűs alakra, mert a mondatkezdő/tagmondati számok a laikusnak is betűvel könnyebbek.",
+   "javitott": "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül öt perc."
+  },
+  {
+   "id": "m04",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "„ONYA-t” a feliratban, „Ónyát” a mondban – az alkalmazás neve nem egyezik. A szabály szerint a TTS-hez „Ónya” kell, a feliratban a rövidítés.",
+   "javitott": "Nyisd meg az ONYA-t, és koppints a „Bejelentkezés” gombra."
+  },
+  {
+   "id": "m09",
+   "mezo": "felirat",
+   "sulyossag": "javaslat",
+   "problema": "Az „UJEGYKE” rövidítés a feliratban nagybetűs, a mondban kisbetűs – szóbeli alak a TTS miatt jó, de a mond-felirat összhang érdekében a mondban az „ujegyke” helyett „Ujegyke” is hallható; itt maradhat, csak egységesítsd.",
+   "javitott": "Nyisd le a „Meghatalmazások” csoportot, és az UJEGYKE sorában koppints a „Kiválaszt” gombra."
+  },
+  {
+   "id": "m14",
+   "mezo": "mond",
+   "sulyossag": "hiba",
+   "problema": "„a kilencest” – a jogcímszám a feliratban „9-est”; a mondban a számnév szórend „kilencest” helyes, de a felirat és mond egyezéséhez egységesítés kell. A mondat így jó.",
+   "javitott": "Jogcímnek válaszd a kilencest: Könyvelő."
+  },
+  {
+   "id": "m21",
+   "mezo": "felirat",
+   "sulyossag": "hiba",
+   "problema": "„20 perc” – a mondban „húsz perc”. Egységesítés a betűs alakra.",
+   "javitott": "Kész. Körülbelül húsz perc múlva él."
+  },
+  {
+   "id": "m25",
+   "mezo": "mindketto",
+   "sulyossag": "hiba",
+   "problema": "Ugyanaz a visszahívás-mondat, mint a b39-ben; a feliratban „24–48 órán belül” a mondban „huszonnégy-negyvennyolc”. Egységesítés.",
+   "javitott": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív."
+  }
+ ],
+ "osszegzes": "A szövegek alapvetően természetesek és egyértelműek, a tegeződés következetes. A fő problémák: (1) a számok és rövidítések (5/20/24–48, ÁFA-alakok, 2. pont) mond–felirat eltérései, amelyek egységesítést igényelnek; (2) a 'felirat' helyesírási hibái (ÁFÁ-t → áfát); (3) néhány jogi-pontossági és szórendi javítás (átalányadózás költség-megfogalmazás, székhely nyilvános, 'megírtuk' → 'leírjuk', 'aznap indul'). A tilalmas elemek (terméknév, könyvelő neve, MI-említés) nem fordulnak elő. A hosszak a megadott időkereten belül maradnak.",
+ "_modell": "anthropic/claude-haiku-5.5"
+}

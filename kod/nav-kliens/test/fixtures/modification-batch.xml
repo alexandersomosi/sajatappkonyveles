@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Kitalált kötegelt módosító okirat (nem valódi): két számlát módosít egyszerre. -->
+<InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+  <invoiceNumber>MOD-2026-0007</invoiceNumber>
+  <invoiceIssueDate>2026-06-20</invoiceIssueDate>
+  <completenessIndicator>false</completenessIndicator>
+  <invoiceMain>
+    <batchInvoice>
+      <batchIndex>1</batchIndex>
+      <invoice>
+        <invoiceReference><originalInvoiceNumber>KSZ-2026-010</originalInvoiceNumber><modifyWithoutMaster>false</modifyWithoutMaster><modificationIndex>1</modificationIndex></invoiceReference>
+        <invoiceHead>
+          <supplierInfo>
+            <supplierTaxNumber><base:taxpayerId>68801234</base:taxpayerId><base:vatCode>1</base:vatCode><base:countyCode>41</base:countyCode></supplierTaxNumber>
+            <supplierName>Szabó Kata e.v.</supplierName>
+            <supplierAddress><base:simpleAddress><base:countryCode>HU</base:countryCode><base:postalCode>1136</base:postalCode><base:city>Budapest</base:city><base:additionalAddressDetail>Példa utca 7.</base:additionalAddressDetail></base:simpleAddress></supplierAddress>
+          </supplierInfo>
+          <customerInfo>
+            <customerVatStatus>DOMESTIC</customerVatStatus>
+            <customerVatData><customerTaxNumber><base:taxpayerId>99102036</base:taxpayerId></customerTaxNumber></customerVatData>
+            <customerName>Bodza Kiadó Kft.</customerName>
+          </customerInfo>
+          <invoiceDetail>
+            <invoiceCategory>NORMAL</invoiceCategory>
+            <invoiceDeliveryDate>2026-06-01</invoiceDeliveryDate>
+            <currencyCode>HUF</currencyCode>
+            <exchangeRate>1</exchangeRate>
+            <paymentMethod>TRANSFER</paymentMethod>
+            <invoiceAppearance>ELECTRONIC</invoiceAppearance>
+          </invoiceDetail>
+        </invoiceHead>
+        <invoiceLines>
+          <mergedItemIndicator>false</mergedItemIndicator>
+          <line>
+            <lineNumber>1</lineNumber>
+            <lineModificationReference><lineNumberReference>2</lineNumberReference><lineOperation>CREATE</lineOperation></lineModificationReference>
+            <lineExpressionIndicator>false</lineExpressionIndicator>
+            <lineDescription>Engedmény minőségi hiba miatt</lineDescription>
+            <lineAmountsNormal>
+              <lineNetAmountData><lineNetAmount>-20000</lineNetAmount><lineNetAmountHUF>-20000</lineNetAmountHUF></lineNetAmountData>
+              <lineVatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></lineVatRate>
+            </lineAmountsNormal>
+          </line>
+        </invoiceLines>
+        <invoiceSummary>
+          <summaryNormal>
+            <summaryByVatRate>
+              <vatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></vatRate>
+              <vatRateNetData><vatRateNetAmount>-20000</vatRateNetAmount><vatRateNetAmountHUF>-20000</vatRateNetAmountHUF></vatRateNetData>
+              <vatRateVatData><vatRateVatAmount>0</vatRateVatAmount><vatRateVatAmountHUF>0</vatRateVatAmountHUF></vatRateVatData>
+            </summaryByVatRate>
+            <invoiceNetAmount>-20000</invoiceNetAmount>
+            <invoiceNetAmountHUF>-20000</invoiceNetAmountHUF>
+            <invoiceVatAmount>0</invoiceVatAmount>
+            <invoiceVatAmountHUF>0</invoiceVatAmountHUF>
+          </summaryNormal>
+        </invoiceSummary>
+      </invoice>
+    </batchInvoice>
+    <batchInvoice>
+      <batchIndex>2</batchIndex>
+      <invoice>
+        <invoiceReference><originalInvoiceNumber>KSZ-2026-011</originalInvoiceNumber><modifyWithoutMaster>false</modifyWithoutMaster><modificationIndex>1</modificationIndex></invoiceReference>
+        <invoiceHead>
+          <supplierInfo>
+            <supplierTaxNumber><base:taxpayerId>68801234</base:taxpayerId><base:vatCode>1</base:vatCode><base:countyCode>41</base:countyCode></supplierTaxNumber>
+            <supplierName>Szabó Kata e.v.</supplierName>
+            <supplierAddress><base:simpleAddress><base:countryCode>HU</base:countryCode><base:postalCode>1136</base:postalCode><base:city>Budapest</base:city><base:additionalAddressDetail>Példa utca 7.</base:additionalAddressDetail></base:simpleAddress></supplierAddress>
+          </supplierInfo>
+          <customerInfo>
+            <customerVatStatus>DOMESTIC</customerVatStatus>
+            <customerVatData><customerTaxNumber><base:taxpayerId>99102036</base:taxpayerId></customerTaxNumber></customerVatData>
+            <customerName>Bodza Kiadó Kft.</customerName>
+          </customerInfo>
+          <invoiceDetail>
+            <invoiceCategory>NORMAL</invoiceCategory>
+            <invoiceDeliveryDate>2026-06-03</invoiceDeliveryDate>
+            <currencyCode>HUF</currencyCode>
+            <exchangeRate>1</exchangeRate>
+            <paymentMethod>TRANSFER</paymentMethod>
+            <invoiceAppearance>ELECTRONIC</invoiceAppearance>
+          </invoiceDetail>
+        </invoiceHead>
+        <invoiceLines>
+          <mergedItemIndicator>false</mergedItemIndicator>
+          <line>
+            <lineNumber>1</lineNumber>
+            <lineModificationReference><lineNumberReference>2</lineNumberReference><lineOperation>CREATE</lineOperation></lineModificationReference>
+            <lineExpressionIndicator>false</lineExpressionIndicator>
+            <lineDescription>Engedmény</lineDescription>
+            <lineAmountsNormal>
+              <lineNetAmountData><lineNetAmount>-5000</lineNetAmount><lineNetAmountHUF>-5000</lineNetAmountHUF></lineNetAmountData>
+              <lineVatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></lineVatRate>
+            </lineAmountsNormal>
+          </line>
+        </invoiceLines>
+        <invoiceSummary>
+          <summaryNormal>
+            <summaryByVatRate>
+              <vatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></vatRate>
+              <vatRateNetData><vatRateNetAmount>-5000</vatRateNetAmount><vatRateNetAmountHUF>-5000</vatRateNetAmountHUF></vatRateNetData>
+              <vatRateVatData><vatRateVatAmount>0</vatRateVatAmount><vatRateVatAmountHUF>0</vatRateVatAmountHUF></vatRateVatData>
+            </summaryByVatRate>
+            <invoiceNetAmount>-5000</invoiceNetAmount>
+            <invoiceNetAmountHUF>-5000</invoiceNetAmountHUF>
+            <invoiceVatAmount>0</invoiceVatAmount>
+            <invoiceVatAmountHUF>0</invoiceVatAmountHUF>
+          </summaryNormal>
+        </invoiceSummary>
+      </invoice>
+    </batchInvoice>
+  </invoiceMain>
+</InvoiceData>

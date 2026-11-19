@@ -1,0 +1,8 @@
+[
+ {
+  "nev": "teszt_gptmini_boritek",
+  "model": "openai/gpt-image-1-mini",
+  "prompt": "Spot illustration in the manner of a fine steel engraving or pen-and-ink etching on good letter paper. Drawn with ONE ink colour only, deep navy ink-blue (#1F2F5C), using precise thin contour lines and delicate parallel hatching and cross-hatching for shading. Exactly one additional flat colour: a very pale blue-grey wash (#D6E0F0), applied in a few soft flat areas like a watercolour tint, slightly offset from the lines as in risograph printing. Pure white background, the object centred with a generous empty white margin around it, no ground shadow, no frame, no border. Calm, adult, precise, quietly premium, like the stationery of a private bank. Strictly no text, no letters, no numbers, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not a cartoon, not cute, no sparkles. Subject: an opened paper envelope seen at a slight three-quarter angle, with a folded letter sheet half pulled out of it; on the letter only a few loose abstract wavy pen lines and a small signature-like flourish, nothing readable.",
+  "aspect_ratio": "3:2"
+ }
+]

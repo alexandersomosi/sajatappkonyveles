@@ -1,0 +1,36 @@
+<!doctype html><html lang="hu"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<style>
+body{margin:0;padding:20px;background:#fff;color:#132326;width:740px}
+.c6{font:600 34px "Sofia Sans Condensed","Courier New"} .c7{font:700 34px "Sofia Sans Condensed","Courier New"}
+.s4{font:400 24px "Sofia Sans","Courier New"} .s7{font:700 24px "Sofia Sans","Courier New"}
+.t{font-variant-numeric:tabular-nums}
+div{margin:6px 0}
+pre{font:13px monospace}
+</style></head><body>
+<div class="c7">Ő ő Ű ű dűlő, tőzsde, fűtő 700</div>
+<div class="c6">Őszi befizetés: 820&#8239;260 Ft 600</div>
+<div class="s4">Bőröndös Ödön fűtőszerelő, ŐŰ őű, 0 O 1 l I 400</div>
+<div class="s7">Szűcs Győző, határidő: október 12. 700</div>
+<div class="s4 t">1111111 / 0000000 / 8888888 tnum</div>
+<div class="s4">1111111 / 0000000 / 8888888 prop</div>
+<div class="s4">− × = ‹ › – … „idézet” ¾ % ,</div>
+<pre id="o"></pre>
+<script>
+document.fonts.ready.then(()=>{
+ const c=document.createElement('canvas').getContext('2d');
+ function w(font,s){c.font=font;return c.measureText(s).width.toFixed(2)}
+ const out=[];
+ for(const f of ['400 24px "Sofia Sans"','700 24px "Sofia Sans"','600 24px "Sofia Sans Condensed"','700 24px "Sofia Sans Condensed"']){
+   const ff=f.replace(/"([^"]+)"/,'"$1"');
+   for(const ch of ['\u202F','\u2212','\u00D7','\u2009','\u00A0','\u2013','\u201E','\u201D','\u203A','Ő','ű']){
+     out.push(f+' U+'+ch.codePointAt(0).toString(16)+' '+w(f+', "Courier New"','a'+ch+'a')+' vs '+w(f+', Arial','a'+ch+'a'));
+   }
+ }
+ // tnum check via spans
+ const sp=(t,tn)=>{const s=document.createElement('span');s.style.font='400 24px "Sofia Sans"';s.style.fontVariantNumeric=tn?'tabular-nums':'normal';s.textContent=t;document.body.appendChild(s);const r=s.getBoundingClientRect().width.toFixed(2);s.remove();return r};
+ out.push('tnum 1111: '+sp('1111',1)+' 0000: '+sp('0000',1)+' | prop 1111: '+sp('1111',0)+' 0000: '+sp('0000',0));
+ out.push('loaded: '+[...document.fonts].filter(f=>f.status=='loaded').map(f=>f.family+' '+f.weight).join('; '));
+ document.getElementById('o').textContent=out.join('\n');
+});
+</script></body></html>

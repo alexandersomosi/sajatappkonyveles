@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bekötés (Rendben)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .teendo { padding: 18px var(--belso) 14px; }
+  .teendo .sor-cim { font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -.008em; }
+  .teendo .torzs { font-size: 17px; line-height: 24px; margin: 6px 0 18px; }
+  .teendo .gomb-szoveg { display: block; margin: 6px auto 0; }
+
+  .hivas { display: flex; gap: 14px; align-items: flex-start; padding: 18px var(--belso) 4px; }
+  .hivas .sor-cim { font-weight: 600; }
+  .hivas .idopont { font-size: 17px; line-height: 24px; margin-top: 2px; }
+  .hivas-gombok { display: flex; align-items: center; gap: 22px; padding: 14px var(--belso) 16px; }
+</style>
+</head>
+<body>
+<div class="kepernyo">
+  <div class="allapotsor" aria-hidden="true"><span>9:41</span><span class="jelek">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0z"/><path d="M3.5 7.1a6.4 6.4 0 0 1 9 0l-1.3 1.3a4.6 4.6 0 0 0-6.4 0z"/><path d="M1.3 4.9a9.5 9.5 0 0 1 13.4 0l-1.3 1.3a7.7 7.7 0 0 0-10.8 0z"/></svg>
+    <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.8" height="11.8" rx="3.4" fill="none" stroke="#241A23" stroke-opacity=".4" stroke-width="1.1"/><rect x="2.3" y="2.3" width="17" height="8.4" rx="2"/><path d="M25 4.4v4.2a2.1 2.1 0 0 0 0-4.2z" fill-opacity=".45"/></svg>
+  </span></div>
+
+  <header class="fej">
+    <h1 class="cim">Szia, Kata!</h1>
+    <p class="alcim">Két lépés megvan. A NAV-os bejelentést most Bence intézi helyetted.</p>
+  </header>
+
+  <h2 class="szakasz">Rád vár</h2>
+  <section class="lap teendo">
+    <p class="sor-cim">Engedd, hogy Bence lássa a számláidat</p>
+    <p class="torzs">A NAV Online Számla oldalán kell neki jogosultságot adnod. Képekkel végigvezetünk, kb. 5 perc.</p>
+    <button class="gomb gomb-elso">Mutasd a lépéseket</button>
+    <button class="gomb-szoveg">Inkább a hívásban csináljuk meg együtt</button>
+  </section>
+
+  <h2 class="szakasz">Hol tart a bekötés?</h2>
+  <section class="lap">
+    <ol class="idovonal">
+      <li class="kesz"><span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <div class="egysor"><p class="sor-cim">Aláírva</p><p class="sor-al">szept. 7.</p></div></li>
+      <li class="kesz"><span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <div class="egysor"><p class="sor-cim">Azonosítva</p><p class="sor-al">szept. 8.</p></div></li>
+      <li class="most"><span class="pont"><svg class="ikon"><use href="#i-ora"/></svg></span>
+        <p class="sor-cim">NAV-nál bejelentve</p><p class="sor-al">Most ezen dolgozik Bence. Általában <span class="egyben">1–3 munkanap.</span></p></li>
+      <li class="kesobb"><span class="pont" aria-hidden="true"></span>
+        <p class="sor-cim">Számlák bekötve</p>
+        <p class="allapot rad-var"><i class="potty" aria-hidden="true"></i>Ehhez kell a fenti lépés tőled.</p></li>
+      <li class="kesobb"><span class="pont" aria-hidden="true"></span>
+        <p class="sor-cim">Kész, Bence átveszi a könyvelést</p></li>
+    </ol>
+  </section>
+
+  <section class="lap" style="margin-top:12px" aria-label="Videóhívás">
+    <div class="hivas">
+      <svg class="portre" role="img" aria-label="Kovács Bence fényképe"><use href="#i-portre"/></svg>
+      <div class="sor-t">
+        <p class="sor-cim">Videóhívás Bencével</p>
+        <p class="idopont">Holnap, csütörtök, <span class="egyben">szeptember 10., 10:00–10:15</span></p>
+        <p class="sor-al">Telefonon vagy gépen. A linket egy órával előtte elküldjük.</p>
+      </div>
+    </div>
+    <div class="hivas-gombok">
+      <button class="gomb gomb-masod"><svg class="ikon"><use href="#i-naptar"/></svg>Naptárba teszem</button>
+      <button class="gomb-szoveg">Másik időpont</button>
+    </div>
+  </section>
+
+  <nav class="fulsor" aria-label="Fő menü">
+    <a class="ful aktiv" aria-current="page"><span class="ful-ikon"><svg class="ikon"><use href="#i-haz"/></svg></span>Főoldal</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-dosszie"/></svg></span>Dosszié</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-uzenet"/></svg></span>Üzenetek</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-fiok"/></svg></span>Fiók</a>
+  </nav>
+  <div class="otthon-jel" aria-hidden="true"></div>
+</div>
+<script src="ikonok.js"></script>
+</body>
+</html>

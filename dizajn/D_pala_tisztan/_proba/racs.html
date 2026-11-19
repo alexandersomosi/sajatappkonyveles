@@ -1,0 +1,25 @@
+<!doctype html><html lang="hu"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<style>
+body{margin:0;padding:16px;background:#DAE3E5;color:#132326;font-family:"Sofia Sans";display:flex;gap:16px;align-items:flex-start}
+.sheet{width:358px;background:#fff;border-radius:14px;overflow:hidden;padding:16px 0}
+.k{background-color:#FBFDFD;background-image:linear-gradient(#DCE8EA 1px,transparent 1px),linear-gradient(90deg,#DCE8EA 1px,transparent 1px);background-size:18px 18px;background-position:17px 0;padding:0 17px;border-top:1px solid #D3DDDF;border-bottom:1px solid #D3DDDF}
+.r{display:grid;grid-template-columns:18px 144px 162px;align-items:center}
+.op{font-weight:700;color:#536569;text-align:center;font-size:17px}
+.lab{font-size:15px;padding-left:4px;white-space:nowrap}
+.n{display:flex;justify-content:flex-end;font-variant-numeric:tabular-nums;font-size:17px}
+.n i{font-style:normal;width:18px;text-align:center}
+.ul{box-shadow:0 1.5px 0 #132326}
+.dul{border-bottom:4px double #132326}
+.b .lab,.b .n{font-weight:700}
+.h18 .r{height:18px}
+.h36 .r{height:36px}
+.h27 .r{height:27px}
+</style></head><body>
+<div class="sheet"><div class="k h18" id="a"></div></div>
+<div class="sheet"><div class="k h36" id="b"></div></div>
+<script>
+const rows=[['','Bevétel','2940000'],['−','40% költséghányad','1176000','ul'],['=','Jövedelem','1764000'],['×','15% SZJA-előleg','264600'],['×','18,5% TB-járulék','326340'],['×','13% szocho','229320','ul'],['=','Fizetendő','820260','b dul']];
+function digits(s){const out=[];const r=s.split('').reverse();r.forEach((d,i)=>{if(i>0&&i%3==0)out.push('<i></i>');out.push('<i>'+d+'</i>')});return out.reverse().join('')}
+for(const id of ['a','b']){document.getElementById(id).innerHTML=rows.map(r=>`<div class="r ${r[3]||''}"><span class="op">${r[0]}</span><span class="lab">${r[1]}</span><span class="n">${digits(r[2])}</span></div>`).join('')}
+</script></body></html>

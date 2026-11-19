@@ -1,0 +1,41 @@
+{
+ "helyek": {
+  "tovabb": [
+   162,
+   306,
+   419,
+   360
+  ],
+  "megsem": [
+   438,
+   307,
+   691,
+   358
+  ],
+  "uzenet": [
+   28,
+   150,
+   829,
+   300
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": [
+  [
+   138,
+   290,
+   438,
+   369
+  ]
+ ],
+ "javitas": {
+  "mibol": "o03_benyujtas.png",
+  "eszkoz": "_eszkoz/benyujtas_teljes.py",
+  "feher_sav_bal_jobb": [
+   28,
+   28
+  ],
+  "potolt_oszlopok": 3,
+  "megjegyzes": "A NAV-segédlet ábrája a bal szélén levágva szerepel (a „Ha folytatja” H betűjének bal szára hiányzott). A hiányzó képpontoszlopok ugyanennek a segédletnek a 833x459-es ábrájából valók, ahol ugyanez a sor képpontra azonos rajzolattal teljes; a két szélen fehér sáv."
+ }
+}

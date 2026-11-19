@@ -1,0 +1,109 @@
+# Vak kiejtés-ellenőrzés – meghatalmazas
+
+21 sor, hibás: 0
+
+- **m01** OK (take 2)
+  - várt: Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül öt perc.
+  - 1. átirat: Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc.
+  - 2. átirat: Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc.
+  - 3. átirat: Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc.
+- **m04** OK (take 2)
+  - várt: Nyisd meg az Onyát, és koppints a Bejelentkezés gombra.
+  - 1. átirat: Nyisd meg az ONYÁT, és koppints a Bejelentkezés gombra!
+  - 2. átirat: nyisd meg az Onyát, és koppints a bejelentkezés gombra.
+  - 3. átirat: Nyisd meg az Onynát, és koppints a bejelentkezés gombra.
+- **m06** OK (take 1)
+  - várt: Lépj be DÁP-pal vagy Ügyfélkapu plusszal.
+  - 1. átirat: Lépj be DÁP-pal vagy Ügyfélkapu Plusszal!
+  - 2. átirat: Lépj be DÁP-pal vagy Ügyfélkapu+-szal!
+  - 3. átirat: lépj be DÁP-pal vagy Ügyfélkapu+-szal.
+- **m07** OK (take 1)
+  - várt: Jobb fent koppints a nevedre, és válaszd a saját profilod.
+  - 1. átirat: jobbfent koppints a nevedre és válaszd a saját profilod
+  - 2. átirat: jobbfent koppints a nevedre, és válaszd a Saját profilod
+  - 3. átirat: Jobbfent koppints a nevedre, és válaszd a saját profilod.
+- **m08** OK (take 1)
+  - várt: Koppints az Új nyomtatvány csempére.
+  - 1. átirat: koppints az új nyomtatvány csempére
+  - 2. átirat: koppints az új nyomtatvány csempére
+  - 3. átirat: koppincssz az új nyomtatvány csempére
+- **m09** OK (take 1)
+  - várt: Nyisd le a Meghatalmazásokat, és az ujegyke sorában koppints a Kiválaszt gombra.
+  - 1. átirat: Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!
+  - 2. átirat: Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!
+  - 3. átirat: Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!
+- **m10** OK (take 1)
+  - várt: A felugró ablakban válaszd: Meghatalmazó, majd Tovább.
+  - 1. átirat: a felugró ablakban válaszd meghatalmazó majd tovább
+  - 2. átirat: a felugró ablakban válaszd meghatalmazó majd tovább
+  - 3. átirat: a felugró ablakban válaszd meghatalmazó, majd tovább
+- **m11** OK (take 1)
+  - várt: Lent koppints az Új bejelentés gombra.
+  - 1. átirat: Lent koppints az Új bejelentés gombra.
+  - 2. átirat: Lent koppints az új bejelentés gombra.
+  - 3. átirat: Lent koppints az új bejelentés gombra.
+- **m12** OK (take 1)
+  - várt: Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod.
+  - 1. átirat: írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod.
+  - 2. átirat: írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod.
+  - 3. átirat: írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod
+- **m14** OK (take 1)
+  - várt: Jogcímnek válaszd a kilencest: Könyvelő.
+  - 1. átirat: jogcímnek válaszd a kilencest könyvelő
+  - 2. átirat: Jogcímnek válaszd a 9-est, könyvelő.
+  - 3. átirat: jogcímnek válaszd a kilencest, könyvelő
+- **m15** OK (take 1)
+  - várt: Mellé írd be a nyilvántartási számát.
+  - 1. átirat: mellé írd be a nyilvántartási számát.
+  - 2. átirat: Mellé írd be a nyilvántartási számát
+  - 3. átirat: mellé írd be a nyilvántartási számát
+- **m16** OK (take 1)
+  - várt: A Képviselt te vagy, előre kitöltve.
+  - 1. átirat: A képviselt te vagy. Előre kitöltve.
+  - 2. átirat: a képviselt te vagy előre kitöltve
+  - 3. átirat: a képviselt te vagy előre kitöltve
+- **m17** OK (take 1)
+  - várt: Kezdet: a mai nap. A végét hagyd üresen.
+  - 1. átirat: kezdet a mai nap a végét hagyd üresen
+  - 2. átirat: kezdd el a mai nap a végét hagyd üresen
+  - 3. átirat: kezdet a mai nap a végét hagyd üresen
+- **m18** OK (take 1)
+  - várt: Az ügycsoportoknál jelöld be az adóügyeket.
+  - 1. átirat: Az ügycsoportoknál jelöld be az adóügyeket,
+  - 2. átirat: az ügycsoportoknál jelöld be az adóügyeket
+  - 3. átirat: Az ügycsoportoknál jelöld be az adóügyeket.
+- **m19** OK (take 1)
+  - várt: A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.
+  - 1. átirat: A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.
+  - 2. átirat: A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.
+  - 3. átirat: A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne
+- **m20** OK (take 1)
+  - várt: Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.
+  - 1. átirat: Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.
+  - 2. átirat: Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.
+  - 3. átirat: Végül koppints az ellenőrzés és benyújtás gombra, majd a tovább gombra.
+- **m21** OK (take 3)
+  - várt: Kész. Körülbelül húsz perc múlva él.
+  - 1. átirat: kész. Körülbelül 20 perc múlva él
+  - 2. átirat: kész. Körülbelül 20 perc múlva él
+  - 3. átirat: kész, körülbelül 20 perc múlva él
+- **m23** OK (take 2)
+  - várt: Itt, az alkalmazásban koppints a Beküldtem gombra.
+  - 1. átirat: Itt az alkalmazásban koppints a beküldtem gombra
+  - 2. átirat: Itt az alkalmazásban koppints a beküldtem gombra
+  - 3. átirat: Itt az alkalmazásban koppints a beküldtem gombra
+- **m24** OK (take 1)
+  - várt: A könyvelőd megnézi, és szól, ha minden rendben.
+  - 1. átirat: a könyvelőd megnézi és szól, ha minden rendben.
+  - 2. átirat: A könyvelőd megnézi és szól, ha minden rendben.
+  - 3. átirat: A könyvelőd megnézi, és szól, ha minden rendben,
+- **m25** OK (take 1)
+  - várt: Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.
+  - 1. átirat: ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív
+  - 2. átirat: Ha elakadsz, kérj visszahívást! Csapatunk 24-48 órán belül hív
+  - 3. átirat: ha elakadsz kérj visszahívást csapatunk 24 48 órán belül hív
+- **m26** OK (take 2)
+  - várt: Ha egyedül nem megy, megcsináljuk helyetted: te csak jóváhagyod.
+  - 1. átirat: Ha egyedül nem megy, megcsináljuk helyetted, te csak jóváhagyod
+  - 2. átirat: ha egyedül nem megy megcsináljuk helyetted. Te csak jóváhagyod.
+  - 3. átirat: Ha egyedül nem megy, megcsináljuk helyetted. Te csak jóváhagyod,

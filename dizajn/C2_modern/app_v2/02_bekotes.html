@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Bekötés</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .fejlec { --roz-x: 110px; --roz-y: 96px; padding-bottom: 20px; }
+  .fejlec h1 { font-size: 29px; }
+  /* Bence bemutatkozik: név, szerep, nyilvántartási szám, a valódi fénykép helye */
+  .ki-o { display: flex; align-items: center; gap: 12px; margin: 16px 16px 0; padding: 12px 14px; border-radius: 14px;
+    background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  .ki-o .arckep { width: 48px; height: 48px; font-size: 17px; }
+  .ki-o .nev { font-weight: 650; font-size: 16.5px; line-height: 1.3; }
+  .ki-o .szerep { font-size: 14px; line-height: 1.4; color: var(--fejlec-halvany); }
+  /* biztonsági alsó sáv: a kezdőjel alatt üres hely marad, nem a szövegen ül */
+  .tartalom { padding-bottom: 64px; }
+
+  .teendo { padding: 20px 18px 8px; }
+  .teendo .mit { font-weight: 700; font-size: 21px; line-height: 1.28; letter-spacing: -.02em; }
+  .teendo .miert { font-size: 16px; line-height: 1.5; color: var(--halvany); margin: 6px 0 16px; }
+  .teendo .gomb-sz { margin-top: 4px; }
+
+  /* a hívás: egy 160 × 120-as tárgydoboz középen, alatta a lényeg.
+     11-18: a kézzel rajzolt SVG-naptár helyett a generált 3D tépőnaptár (ikonlap C, ugyanaz a stílus, mint az ikonoké):
+     ../assets/illusztraciok/tepnaptar_3d@2x|@3x.png, 79 × 96 pt, alapvonala 108-on. A lap üres, a szöveg valódi HTML:
+     a lapon „OKT. 15.” és „10:00” (a lap a kép 32–83 pt-jén). A tintakék fejlécen nincs szöveg: a karikák belelógnak.
+     A „csütörtök” a tárgy alatti mondatban áll. */
+  .hivas { padding: 14px 18px 18px; }
+  .hivas .targy { margin-bottom: 4px; --arnyek-sz: 84px; }
+  .hivas .targy > img.naptar { inset: auto; left: 40.5px; top: 12px; width: 79px; height: 96px; }
+  .hivas .targy .ho { top: 52px; font-size: 10.5px; font-weight: 750; letter-spacing: .1em; color: #3A4256; }
+  .hivas .targy .ora { top: 66px; font-size: 23px; font-weight: 800; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+  .hivas .mi { font-weight: 700; font-size: 19px; line-height: 1.25; letter-spacing: -.015em; }
+  .hivas .mikor { font-size: 16px; line-height: 1.45; margin-top: 4px; }
+  .hivas .hogyan { font-size: 15px; line-height: 1.5; color: var(--halvany); margin-top: 2px; }
+  .hivas .gombok { display: flex; align-items: center; gap: 18px; margin-top: 14px; }
+
+  /* lépéssor: valódi sorrend, ezért számozott; a kész lépés halvány, csak a mostani erős */
+  .lepesek { padding: 10px 18px 8px; }
+  .lepes { display: grid; grid-template-columns: 24px 1fr; column-gap: 14px; position: relative; padding: 8px 0 10px; }
+  .lepes .pont { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; position: relative; z-index: 1;
+    color: var(--halvany); font-weight: 700; font-size: 13px; background: var(--lap); }
+  .lepes.kesz .pont img.i3 { width: 24px; height: 24px; }
+  /* 11-18: a lépésjel tömör korong számmal, körvonal nincs (a gyűrű vonalas ikonnak hatott); akkora, mint a pecsét */
+  .lepes.most .pont, .lepes.var .pont { width: 23px; height: 23px; margin: .5px; font-size: 13px; font-weight: 750;
+    font-variant-numeric: tabular-nums lining-nums; line-height: 1; }
+  .lepes.most .pont { background: var(--tintakek); color: #fff; }
+  .lepes.var .pont { background: var(--alap); color: var(--tinta); }
+  .lepes:not(:last-child)::after { content: ""; position: absolute; left: 11px; top: 34px; bottom: -8px; width: 2px; background: var(--keret); }
+  .lepes.kesz::after { background: #7A62D9; opacity: .4; }  /* 5. kör: a kész lépéseket összekötő vonal a pecsét ibolyája */
+  .lepes .mi { font-size: 15.5px; line-height: 1.35; color: var(--halvany); }
+  .lepes .mikor { font-size: 14px; line-height: 1.4; color: var(--halvany); margin-top: 1px; }
+  .lepes.most .mi { font-weight: 650; font-size: 17px; color: var(--tinta); }
+  .lepes.most .mikor { color: var(--tinta); font-size: 15px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <h1>Még 2 dolog kell tőled,<br>a többit Bence intézi.</h1>
+  <div class="ki-o">
+    <img class="arckep" src="../assets/avatar/karakter_1_lapos@2x.png" srcset="../assets/avatar/karakter_1_lapos@2x.png 2x, ../assets/avatar/karakter_1_lapos@3x.png 3x" alt="Kovács Bence, a könyvelőd">
+    <div><div class="nev">Kovács Bence, a könyvelőd</div>
+      <div class="szerep">Mérlegképes könyvelő, nyilvántartási szám: 123456</div></div>
+  </div>
+</header>
+
+<main class="tartalom">
+  <section class="lap teendo">
+    <div class="mit">Töltsd fel az idei bankszámla&shy;kivonataidat.</div>
+    <div class="miert">Januártól szeptemberig, a bankod appjából PDF-ben. A tavalyi bevallásodat Bence maga tölti le a NAV-tól.</div>
+    <button class="gomb-e">Kivonatok feltöltése</button>
+    <button class="gomb-sz">Nincs külön vállalkozói számlám</button>
+  </section>
+
+  <section class="lap hivas">
+    <div class="targy" aria-hidden="true">
+      <img class="naptar" src="../assets/illusztraciok/tepnaptar_3d@2x.png" srcset="../assets/illusztraciok/tepnaptar_3d@2x.png 2x, ../assets/illusztraciok/tepnaptar_3d@3x.png 3x" alt="">
+      <span class="rajta ho">OKT. 15.</span>
+      <span class="rajta ora">10:00</span>
+    </div>
+    <div class="mi">Bemutatkozó hívás Bencével</div>
+    <div class="mikor">Csütörtök, október 15., 10:00</div>
+    <div class="hogyan">15 perc, telefonon vagy videón, ahogy neked kényelmes. Előtte emlékeztetünk.</div>
+    <div class="gombok">
+      <button class="gomb-m csak-szoveg">Naptárba teszem</button>
+      <button class="gomb-sz">Másik időpont</button>
+    </div>
+  </section>
+
+  <div class="szakasz">Hol tartunk</div>
+  <section class="lap lepesek">
+    <div class="lepes kesz">
+      <span class="pont"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"></span>
+      <div><div class="mi">Aláírtad a meghatalmazást</div><div class="mikor">hétfőn, Ügyfélkapuval</div></div>
+    </div>
+    <div class="lepes kesz">
+      <span class="pont"><img class="i3" src="../assets/ikon3d/befizetve_jel_24@2x.png" srcset="../assets/ikon3d/befizetve_jel_24@2x.png 2x, ../assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész"></span>
+      <div><div class="mi">Elküldted az igazolványaidat</div><div class="mikor">kedden. Titkosítva tároljuk, csak Bence látja.</div></div>
+    </div>
+    <div class="lepes most">
+      <span class="pont">3</span>
+      <div><div class="mi">Bence bejelenti magát a NAV-nál könyvelődként</div><div class="mikor">Általában 1–2 munkanap.</div></div>
+    </div>
+    <div class="lepes var">
+      <span class="pont">4</span>
+      <div><div class="mi">A számláid maguktól jönnek</div><div class="mikor">a bejelentés után, minden nap</div></div>
+    </div>
+  </section>
+</main>
+<div class="otthon-jel"></div>
+</body>
+</html>

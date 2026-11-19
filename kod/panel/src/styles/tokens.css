@@ -1,0 +1,47 @@
+/* Ported from dizajn/C2_modern/app_v2/tokens.css (Kézjegy C2, 2026-11-18). Same token names, desktop scale.
+   Owner rules kept: no line icons, no shape behind icons, capsule = button only, 18 px = sheet, 12 px = field/tile,
+   6 px = status label, 4 px = the letter; shadow only on floating layers (drawer, toast, letter, menus).
+   11-18 17:50 owner decision: brand colour = vivid blue #1428DB (dizajn/C3_zold/kek.css, dizajn/PALETTA.md). The token
+   NAME --tintakek stays for code stability; old values: kod/_regi/szinvaltas_kek_elotte_1817/panel/. */
+:root {
+  --tintakek: #1428DB;
+  --tintakek-szoveg: #1226B8;
+  --tollkek: #2546A6;
+  --tollkek-savon: #C9D2FF;
+  --alap: #E4E8F3;
+  --lap: #FFFFFF;
+  --tinta: #10152B;
+  --halvany: #505873;
+  --halvany-alapon: #4A5270;
+  --fejlec-halvany: #C9D2FF;
+  --keret: #C9D0E4;
+  --hajszal: #E2E6F1;
+  --mezo-keret: #7D879B;
+  --mezo-alap: #F5F7FA;
+  --nyomott: #EEF1F6;
+  --gomb-m-alap: #DFE4FD;
+  --gomb-m-nyomott: #C9D2FB;
+  --papir: #F4EFE4;
+  --papir-keret: #E2D9C6;
+  --veszely: #B42318;
+  --veszely-alap: #FBE9E7;
+  --fuggony: rgba(13, 22, 40, .48);
+  --kek: #1428DB;
+  --borostyan: #845300;
+  --borostyan-alap: #F7E8C6;
+  --ful-aktiv: #1428DB;
+
+  --betu: "Geist Variable", "Geist";
+  --betu-szoveg: var(--betu), "Segoe UI", Arial, sans-serif;
+
+  --r-lap: 18px;
+  --r-level: 4px;
+  --r-sheet: 26px;
+  --r-mezo: 12px;
+  --r-cimke: 6px;
+  --r-gomb: 999px;
+  --arnyek-papir: 0 1px 1px rgba(16,21,60,.06), 0 10px 22px -14px rgba(16,21,60,.42);
+  --arnyek-lebego: 0 0 0 1px rgba(16,21,60,.08), 0 18px 48px -12px rgba(13,22,40,.45);
+
+  --oldalsav: 252px;
+}

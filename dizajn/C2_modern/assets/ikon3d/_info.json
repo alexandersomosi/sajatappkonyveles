@@ -1,0 +1,290 @@
+{
+ "forras": {
+  "a": "ikonlap_a_v2.webp",
+  "b": "ikonlap_b_v1.webp"
+ },
+ "fill": 0.86,
+ "arnyek_szin": "#1A2233",
+ "meretek_pt": [
+  24,
+  28,
+  36,
+  44,
+  56,
+  72
+ ],
+ "ikonok": {
+  "feltoltes": {
+   "felirat": "Feltöltés",
+   "lap": "a",
+   "targy_doboz_px": [
+    77,
+    201,
+    292,
+    434
+   ],
+   "negyzet_px": [
+    49,
+    182,
+    271
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "kerdezek": {
+   "felirat": "Kérdezek",
+   "lap": "a",
+   "targy_doboz_px": [
+    376,
+    241,
+    568,
+    396
+   ],
+   "negyzet_px": [
+    360,
+    206,
+    224
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "igazolas": {
+   "felirat": "Igazolás",
+   "lap": "a",
+   "targy_doboz_px": [
+    660,
+    202,
+    843,
+    427
+   ],
+   "negyzet_px": [
+    620,
+    184,
+    262
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "hataridok": {
+   "felirat": "Határidők",
+   "lap": "a",
+   "targy_doboz_px": [
+    924,
+    210,
+    1145,
+    406
+   ],
+   "negyzet_px": [
+    906,
+    180,
+    257
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "fooldal": {
+   "felirat": "Főoldal",
+   "lap": "a",
+   "targy_doboz_px": [
+    93,
+    512,
+    270,
+    666
+   ],
+   "negyzet_px": [
+    78,
+    486,
+    206
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": true
+  },
+  "dosszie": {
+   "felirat": "Dosszié",
+   "lap": "a",
+   "targy_doboz_px": [
+    362,
+    484,
+    597,
+    683
+   ],
+   "negyzet_px": [
+    342,
+    446,
+    274
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "uzenetek": {
+   "felirat": "Üzenetek",
+   "lap": "a",
+   "targy_doboz_px": [
+    658,
+    521,
+    849,
+    652
+   ],
+   "negyzet_px": [
+    642,
+    475,
+    223
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "fiok": {
+   "felirat": "Fiók",
+   "lap": "a",
+   "targy_doboz_px": [
+    934,
+    465,
+    1148,
+    691
+   ],
+   "negyzet_px": [
+    910,
+    446,
+    263
+   ],
+   "arnyek": false,
+   "felskalazva_72pt@3x": false
+  },
+  "fotozas": {
+   "felirat": "Fotózás",
+   "lap": "b",
+   "targy_doboz_px": [
+    132,
+    212,
+    316,
+    355
+   ],
+   "negyzet_px": [
+    117,
+    192,
+    214
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": true
+  },
+  "masolas": {
+   "felirat": "Másolás",
+   "lap": "b",
+   "targy_doboz_px": [
+    411,
+    192,
+    569,
+    384
+   ],
+   "negyzet_px": [
+    378,
+    181,
+    224
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": false
+  },
+  "szamlaszam": {
+   "felirat": "Számlaszám",
+   "lap": "b",
+   "targy_doboz_px": [
+    654,
+    231,
+    827,
+    355
+   ],
+   "negyzet_px": [
+    640,
+    207,
+    202
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": true
+  },
+  "befizetve": {
+   "felirat": "Befizetve",
+   "lap": "b",
+   "targy_doboz_px": [
+    914,
+    203,
+    1069,
+    374
+   ],
+   "negyzet_px": [
+    888,
+    196,
+    208
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": true
+  },
+  "szamolo": {
+   "felirat": "Hogyan jött ki?",
+   "lap": "b",
+   "targy_doboz_px": [
+    145,
+    481,
+    308,
+    681
+   ],
+   "negyzet_px": [
+    110,
+    469,
+    233
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": false
+  },
+  "ertesites": {
+   "felirat": "Értesítés",
+   "lap": "b",
+   "targy_doboz_px": [
+    423,
+    490,
+    582,
+    659
+   ],
+   "negyzet_px": [
+    392,
+    483,
+    220
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": false
+  },
+  "irat": {
+   "felirat": "Irat / PDF",
+   "lap": "b",
+   "targy_doboz_px": [
+    663,
+    483,
+    827,
+    670
+   ],
+   "negyzet_px": [
+    633,
+    476,
+    224
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": false
+  },
+  "nyugta": {
+   "felirat": "Nyugta",
+   "lap": "b",
+   "targy_doboz_px": [
+    909,
+    476,
+    1070,
+    696
+   ],
+   "negyzet_px": [
+    862,
+    460,
+    256
+   ],
+   "arnyek": true,
+   "felskalazva_72pt@3x": false
+  }
+ }
+}

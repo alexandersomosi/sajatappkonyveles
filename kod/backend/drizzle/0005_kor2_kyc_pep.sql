@@ -1,0 +1,1 @@
+ALTER TABLE "kyc_records" ADD COLUMN "declarations_enc" text;

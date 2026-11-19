@@ -1,0 +1,77 @@
+# kezjegy-web: plain static file server behind the shared Caddy (TLS, headers and /api routing live in
+# kezjegy.caddy). :8080 = client web app (Expo web export, SPA), :8081 = accountant + admin panel (Vite SPA).
+#
+# QA kör 3: a missing hashed bundle (an old tab after a deploy asks for a chunk of the previous build) gets a
+# plain 404 – never index.html under a .js name, and never "immutable" on anything but a real file. The SPA
+# fallback (index.html) is only for page paths. feltolt.sh also keeps the previous release's hashed files for
+# one more deploy, so most old tabs keep working; the panel reloads itself on a failed chunk.
+{
+	admin off
+	auto_https off
+	persist_config off
+}
+
+(kezjegy_statikus) {
+	encode zstd gzip
+	# Dot-files (the release's own file list .sajat_fajlok.txt) are not served.
+	@rejtett path /.*
+	handle @rejtett {
+		error 404
+	}
+	# Hashed bundles never change under the same name: cached for a year, but only when the file exists.
+	@hashed path /_expo/static/* /assets/*
+	handle @hashed {
+		@van file
+		header @van Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+	# Anything else that looks like a file (has an extension) is served as is or answered 404.
+	@fajl path_regexp fajl \.[A-Za-z0-9]{1,8}$
+	handle @fajl {
+		header Cache-Control "no-cache"
+		file_server
+	}
+	# Page paths: the SPA shell, revalidated on every load.
+	handle {
+		header Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+	handle_errors {
+		header Cache-Control "no-store"
+		respond "Nem található." {err.status_code}
+	}
+}
+
+:8080 {
+	root * /srv/app
+	# SPEC §26.7.1: onboarding and guide videos, posters, captions and the annotated guide images
+	# (/srv/kezjegy/web/media → /srv/media, read-only). Before the SPA handlers (a path matcher sorts first);
+	# a missing file is a plain 404 (handle_errors below), never index.html. file_server answers Range
+	# requests (206); everything is revalidated (files may be replaced). Explicit types: the alpine image
+	# has no mime.types for .mp4/.vtt.
+	handle /media/* {
+		uri strip_prefix /media
+		root * /srv/media
+		@media_rejtett path /.*
+		error @media_rejtett 404
+		header Cache-Control "no-cache"
+		@mp4 path *.mp4
+		header @mp4 Content-Type "video/mp4"
+		@vtt path *.vtt
+		header @vtt Content-Type "text/vtt; charset=utf-8"
+		@json path *.json
+		header @json Content-Type "application/json"
+		@jpg path *.jpg *.jpeg
+		header @jpg Content-Type "image/jpeg"
+		@png path *.png
+		header @png Content-Type "image/png"
+		file_server
+	}
+	import kezjegy_statikus
+}
+
+:8081 {
+	root * /srv/panel
+	import kezjegy_statikus
+}

@@ -1,0 +1,104 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794957875390,
+      "tag": "0000_init",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794957880822,
+      "tag": "0001_audit_trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794960246718,
+      "tag": "0002_cost_ratio_2027",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794961621622,
+      "tag": "0003_consent_text_hash",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794970718615,
+      "tag": "0004_kor1_biztonsag",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794978311543,
+      "tag": "0005_kor2_kyc_pep",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794978457413,
+      "tag": "0006_kor2_audit_purge",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794985210012,
+      "tag": "0007_kor3_javitasok",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794997716510,
+      "tag": "0008_tulaj1118_enumok",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794997789783,
+      "tag": "0009_tulaj1118",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795068000000,
+      "tag": "0010_kor1_1119",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795083055901,
+      "tag": "0011_tulaj1119_enumok",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795083064685,
+      "tag": "0012_tulaj1119",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795086706866,
+      "tag": "0013_tulaj1119_tiltas",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+/* Kék próba (11-18, tulaj: #1428DB) a B szerkezetével: élénk kék fejlécsáv fehér számmal, ugyanilyen fő gomb.
+   A fehér szöveg rajta kb. 8,9:1. A meglévő kék 3D ikonok ehhez illenek, nem kell átszínezni őket. Csak a C2 tokenekre épül. */
+:root {
+  --neon: #1428DB;
+  --tintakek: #1428DB;
+  --tintakek-szoveg: #1226B8;
+  --alap: #E4E8F3;
+  --tinta: #10152B;
+  --halvany: #505873;
+  --halvany-alapon: #4A5270;
+  --fejlec-halvany: #C9D2FF;
+  --keret: #C9D0E4;
+  --hajszal: #E2E6F1;
+  --gomb-m-alap: #DFE4FD;
+  --gomb-m-nyomott: #C9D2FB;
+  --ful-aktiv: #1428DB;
+  --kek: #1428DB;
+  --tollkek-savon: #C9D2FF;
+  --arnyek-papir: 0 1px 1px rgba(16,21,60,.06), 0 10px 22px -14px rgba(16,21,60,.42);
+}
+.gomb-e { background: var(--neon); color: #fff; }
+.gomb-m { color: #1226B8; }
+.ful.on { color: #1428DB; }
+.ful.on::after { background: var(--neon); height: 4px; width: 24px; margin-left: -12px; }
+.fotogomb { box-shadow: inset 0 0 0 3px var(--neon), 0 10px 22px -8px rgba(16,21,60,.45); }
+.alj-fatyol { background: linear-gradient(to bottom, rgba(228,232,243,0) 0, var(--alap) 12px, var(--alap) 100%); }
+.vegosszeg .ft { color: #C9D2FF; }

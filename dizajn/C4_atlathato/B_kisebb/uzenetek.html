@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Üzenetek Bencével (B kisebb)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="b_kozos.css">
+<style>
+/* Üzenetek Bencével. Fent ugyanaz a fejléc, mint a főoldalon (kis arc, név), a beszélgetés lent,
+   a beviteli sor fölött. A fő gomb itt a „Küldés” (a dokkban, a fülsor fölött, ugyanott, ahol máshol a fő gomb).
+   A javasolt kérdések másodlagos kapszulák. A buborékok semlegesek: a színt egyedül a fő gomb viszi. */
+html, body { height: 844px; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+header { flex: none; border-bottom: 1px solid var(--hajszal); }
+
+/* rövid beszélgetés fentről indul (mint a telefonos csevegőkben); hosszabbnál az utolsó üzenet ül a beviteli sor fölött */
+main.cseveg { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; padding: 16px 16px 254px; }
+/* a beszélgetés eleje: ugyanaz a szakaszfej, mint mindenhol */
+.nyito { padding-bottom: 6px; }
+.nyito p { font-size: 15.5px; line-height: 1.4; margin-top: 4px; }
+.uz { display: flex; flex-direction: column; max-width: 300px; }
+.uz .bub { padding: 10px 14px 11px; border-radius: 18px; font-size: 15.5px; line-height: 1.4; }
+.uz .ido { font-size: 13px; line-height: 1.3; color: var(--halvany); margin-top: 4px; padding: 0 4px; }
+.uz.en { align-self: flex-end; align-items: flex-end; }
+.uz.en .bub { background: var(--alap); color: var(--tinta); border-bottom-right-radius: 6px; }
+.bence { display: flex; align-items: flex-end; gap: 8px; align-self: flex-start; }
+.bence img.arc-kicsi { width: 28px; height: 28px; margin-bottom: 22px; }
+.bence .bub { background: #fff; box-shadow: inset 0 0 0 1px var(--keret); border-bottom-left-radius: 6px; }
+
+/* ---------- dokk: javasolt kérdések + beviteli sor (a fő gomb: Küldés) + fülsor ---------- */
+.javaslat { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 16px 4px; }
+.javaslat .kis-gomb { height: 34px; padding: 0 13px; font-size: 14.5px; }
+.bevitel { display: flex; gap: 8px; padding: 8px 16px 10px; }
+.bevitel .mezo-b { flex: 1; min-width: 0; height: 50px; display: flex; align-items: center; padding: 0 16px;
+  border: 1px solid var(--mezo-keret); border-radius: var(--r-mezo); background: var(--mezo-alap);
+  font-size: 16px; color: var(--halvany); }
+.bevitel .gomb-e { width: auto; flex: none; height: 50px; padding: 0 20px; font-size: 16px; font-weight: 700; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="fej">
+    <div class="ki">
+      <img class="arckep" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt="">
+      <div><div class="nev">Kovács Bence</div><div class="szerep">a könyvelőd</div></div>
+      <span class="demo">DEMO</span>
+    </div>
+  </div>
+</header>
+
+<main class="cseveg">
+  <div class="nyito">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/kerdezek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/kerdezek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/kerdezek_28@3x.png 3x" alt=""><h2>Bence személyesen válaszol</h2></div>
+    <p>A lehető leggyorsabban válaszol.</p>
+  </div>
+  <div class="uz en">
+    <div class="bub">Szia! Levelet kaptam a NAV-tól, feltöltöttem a dossziéba.</div>
+    <div class="ido">tegnap 20:31</div>
+  </div>
+  <div class="bence">
+    <img class="arc-kicsi" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt="Bence">
+    <div class="uz">
+      <div class="bub">Megnéztem: csak értesítés, nincs vele teendőd. Nyugodtan elteheted.</div>
+      <div class="ido">ma 8:47</div>
+    </div>
+  </div>
+  <div class="uz en">
+    <div class="bub">Köszi! A novemberi számlákat elég a hónap végén feltölteni?</div>
+    <div class="ido">ma 9:02</div>
+  </div>
+</main>
+
+<div class="dokk">
+  <div class="javaslat" aria-label="Javasolt kérdések">
+    <button class="kis-gomb">Mennyit kell fizetnem?</button>
+    <button class="kis-gomb">Mikor jön a levél?</button>
+    <button class="kis-gomb">Leírhatom ezt a költséget?</button>
+  </div>
+  <div class="bevitel">
+    <div class="mezo-b">Írj Bencének…</div>
+    <button class="gomb-e">Küldés</button>
+  </div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

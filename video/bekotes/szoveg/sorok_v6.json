@@ -1,0 +1,173 @@
+{
+  "_mi_ez": "A bekötés-videó szövege (SPEC §26.7.4). 'szoveg' = felirat (a '|' feliratváltást jelöl, a hangban nem hallatszik), 'tts' = amit a hang kimond, ha eltér (számok betűvel). 'hangulat' = ../hang.json hangulatok kulcsa. 'jelenet' = a Remotion-jelenet. Terméknév és könyvelőnév SOHA nem kerül bele. Ha az [OWNER] a díjkezdést 'azonnal'-ra állítja (SPEC §26.1.7), csak az L11 sor harmadik részét kell átírni és újra hangosítani.",
+  "verzio": "v6-2026-11-18 (4 bírálati kör után, végleges)",
+  "szunet_utana_alap": 0.3,
+  "sorok": [
+    {
+      "id": "L01",
+      "jelenet": "koszonto",
+      "hangulat": "udvozlo",
+      "szunet_utana": 0.5,
+      "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat!"
+    },
+    {
+      "id": "L02",
+      "jelenet": "koszonto",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.5,
+      "szoveg": "Megmutatjuk, mire jó, | és mi kell a kezdéshez."
+    },
+    {
+      "id": "L03",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "Saját könyvelőd lesz, | aki intézi az adóidat."
+    },
+    {
+      "id": "L04",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "A számláid maguktól megérkeznek a NAV-tól."
+    },
+    {
+      "id": "L05",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szoveg": "A Főoldalon látod, mennyit, | mikorra és hova fizess."
+    },
+    {
+      "id": "L06",
+      "jelenet": "mire_jo",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.5,
+      "szoveg": "A nyugtákat pedig csak lefotózod."
+    },
+    {
+      "id": "L07",
+      "jelenet": "bekotes",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.5,
+      "szoveg": "A bekötés néhány lépés. | Mindegyiknél leírtuk, mi ez, miért kell, | és hol találod."
+    },
+    {
+      "id": "L08",
+      "jelenet": "lepes_adatok",
+      "hangulat": "lepes",
+      "szunet_utana": 0.5,
+      "szoveg": "Először az adataid kellenek: | ezekből számol a könyvelőd."
+    },
+    {
+      "id": "L09",
+      "jelenet": "lepes_inditas",
+      "hangulat": "lepes",
+      "szoveg": "Ha még nincs vállalkozásod, te magad jelented be | a NAV-nál, nagyjából negyedóra alatt."
+    },
+    {
+      "id": "L10",
+      "jelenet": "lepes_inditas",
+      "hangulat": "lepes",
+      "szoveg": "Az alkalmazás lépésről lépésre | megmutatja, mit hova jelölj."
+    },
+    {
+      "id": "L10b",
+      "jelenet": "lepes_inditas",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.5,
+      "szoveg": "A NAV-os igazolást feltöltöd, | mi pedig átnézzük."
+    },
+    {
+      "id": "L11",
+      "jelenet": "lepes_szerzodes",
+      "hangulat": "lepes",
+      "szoveg": "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat. | Új vállalkozásnál erre csak akkor van szükség, | ha már megvan az adószámod.",
+      "szunet_utana": 0.5
+    },
+    {
+      "id": "L13",
+      "jelenet": "lepes_meghatalmazas",
+      "hangulat": "lepes",
+      "szoveg": "Ezután NAV-meghatalmazást adsz a könyvelődnek. | Ebben is segít az alkalmazás."
+    },
+    {
+      "id": "L14",
+      "jelenet": "lepes_meghatalmazas",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.5,
+      "szoveg": "Így ő adhatja be helyetted | a bevallásaidat."
+    },
+    {
+      "id": "L15",
+      "jelenet": "lepes_azonositas",
+      "hangulat": "lepes",
+      "szoveg": "Lefotózod a személyidet | és a lakcímkártyád lakcímes oldalát."
+    },
+    {
+      "id": "L16",
+      "jelenet": "lepes_azonositas",
+      "hangulat": "magyarazo",
+      "szunet_utana": 0.5,
+      "szoveg": "A törvény szerint | azonosítanunk kell téged."
+    },
+    {
+      "id": "L17",
+      "jelenet": "lepes_szamlak",
+      "hangulat": "lepes",
+      "szunet_utana": 0.5,
+      "szoveg": "Végül a könyvelőd összeköti | a fiókodat a NAV-val."
+    },
+    {
+      "id": "L18",
+      "jelenet": "korlatozott",
+      "hangulat": "figyelem",
+      "szoveg": "Addig néhány rész még zárva van, | utána minden megnyílik."
+    },
+    {
+      "id": "L19",
+      "jelenet": "korlatozott",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.5,
+      "szoveg": "Onnantól a Főoldalon látod, mi a teendőd, | a többit a könyvelőd intézi."
+    },
+    {
+      "id": "L20",
+      "jelenet": "segitseg",
+      "hangulat": "megnyugtato",
+      "szoveg": "Ha elakadsz, kérj visszahívást: | csapatunk 24–48 órán belül felhív.",
+      "tts": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív."
+    },
+    {
+      "id": "L21",
+      "jelenet": "segitseg",
+      "hangulat": "megnyugtato",
+      "szunet_utana": 0.5,
+      "szoveg": "Az Üzenetekben bármikor írhatsz nekünk."
+    },
+    {
+      "id": "L22",
+      "jelenet": "zaro",
+      "hangulat": "zaro",
+      "szunet_utana": 1.6,
+      "szoveg": "Kezdjük is! Az első lépést lent találod."
+    }
+  ],
+  "biralat": {
+    "modszer": "két független bíráló, külön kontextusban, eszkoz/biralat.py: nyelv = google/gemini-3.8-flash (magyar szerkesztő), tények = anthropic/claude-haiku-5.5 (SPEC §26 részletei + FUNKCIOK.md). 4 kör, szoveg/biralat_1..4.json.",
+    "elfogadva": [
+      "L03/L04/L10b/L16/L18/L19: természetesebb, egyszerűbb szavak (nyelv)",
+      "L05: a Főoldal megnevezése; L19: 'mi történik utána' a Főoldallal (tények, §26.7.4)",
+      "L09: 'te magad jelented be' (nem 'jelentsd be magad'), negyedóra = az útmutató 'Kb. 10–15 perc'-e",
+      "L11: a kártya új vállalkozásnál csak az adószám után (§26.1.7 alapértelmezés), sorrend-szó nélkül",
+      "L15: lakcímkártya LAKCÍMES oldala marad; L17: 'beköti a számláidat' helyett 'összeköti a fiókodat a NAV-val' (bankszámla-félreértés)",
+      "L20: 'csapatunk' hív (nem feltétlenül a könyvelő)"
+    ],
+    "elutasitva": [
+      "L01 'letöltötted az alkalmazást': a tulaj saját szavai maradnak ('Köszönjük, hogy telepítetted az alkalmazásunkat')",
+      "L07/L18 'bekötés' helyett 'beállítás': az app minden szövege 'bekötés' (pl. 'A bekötés után nyílik meg'), egységes marad",
+      "L15 'lakcímkártyád hátoldalát' (3. kör): TILOS, Pmt. 7. § (8) a) – a hátoldalt soha nem kérjük",
+      "L20 '1-2 munkanap': a tulaj 24–48 órát mondott, a SPEC naptári órát ír",
+      "L08 költséghányad: új vállalkozásnál az adatok lépés csak a 'Rólad' oldal (§26.1.2), ezért általános maradt",
+      "L13 ONYA-zár: a képen 'ONYA' felirat van; a zár szövegét az app mutatja",
+      "L09 kamarai regisztráció: nem hangzik el (hossz), de a képen ott van (§26.6.3)"
+    ]
+  }
+}

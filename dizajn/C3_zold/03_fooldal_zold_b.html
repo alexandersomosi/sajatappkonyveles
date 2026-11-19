@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Főoldal</title>
+<link rel="stylesheet" href="../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="zold.css">
+<link rel="stylesheet" href="fejlec_b.css">
+<style>
+  .fejlec.fizet { --roz-x: 150px; --roz-y: 92px; padding-bottom: 16px; }
+  /* 11-18: az első képernyő a gyorsgomb-lap aljával zárul, és alatta legalább 12 pt tiszta alap marad a fülsor fölött
+     (a lap alja ≤ 748, a fülsor teteje 760); ehhez a levél, az utalás-lap és a gyorsgomb-lap pár pontot szorult */
+  .tartalom { padding-top: 12px; }
+  .fejlec.fizet .vegosszeg { padding-top: 6px; }
+  .fejlec .hatarido { color: #fff; font-size: 17px; line-height: 1.4; padding-top: 9px; }
+  .fejlec .hatarido .cimke { margin-left: 6px; }
+  .fejlec .gomb-sav { margin-top: 12px; }
+
+  .level { margin-bottom: 12px; padding-top: 16px; padding-bottom: 10px; }
+  .level .megszolitas { font-size: 26px; }
+  .alairas-sor { margin-top: 4px; }
+
+  /* három külön utalás: a fejléc mondja ki, hogy három; a számlaszámok egy alsó lapon, lépésenként, másológombokkal */
+  .fizetes { padding: 12px 0 12px; }
+  .fizetes .fej { font-size: 15px; font-weight: 600; color: var(--halvany); padding: 0 18px 2px; }
+  .fizetes .tetel { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 18px 8px; position: relative; }
+  .fizetes .tetel + .tetel::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; border-top: 1px solid var(--hajszal); }
+  .fizetes .mi { font-size: 16px; font-weight: 500; line-height: 1.3; }
+  .fizetes .mi small { font-size: 14px; font-weight: 400; color: var(--halvany); }
+  .fizetes .mi .teljes { display: block; font-size: 13.5px; font-weight: 400; color: var(--halvany); margin-top: 1px; }
+  .fizetes .mi .jel { display: none; width: 21px; height: 21px; vertical-align: -5px; margin-right: 7px; }
+  .fizetes .gombpar { padding: 8px 18px 0; }
+  .fizetes .gombpar .gomb-m { padding: 0 14px; }
+  .fizetes .kesz-sor { display: none; }
+
+  .gyors { margin-top: 12px; padding: 10px 4px 10px; }
+  .gyors .gy .tg { height: 50px; }
+
+  .keres { padding: 18px; }
+  .keres .mit { font-size: 17px; line-height: 1.4; font-weight: 650; letter-spacing: -.01em; }
+  .keres .miert { font-size: 15px; line-height: 1.5; color: var(--halvany); margin: 4px 0 14px; }
+
+  .mero .pipa-sor { display: flex; gap: 10px; align-items: flex-start; }
+  .mero .pipa-sor img.i3 { width: 24px; height: 24px; margin-top: 0; }
+
+  .sor.osszes .cim { color: var(--tintakek-szoveg); font-weight: 600; }
+
+  /* ===== befizetve állapot (?allapot=befizetve) – a 08-as képernyő háttere =====
+     Nincs áthúzott szám (az „törölt”-nek hatott): a szám helyén „Befizetted”, alatta az összeg és a dátum,
+     és őszintén: Bence még ellenőrzi (óra, nem zöld pipa). */
+  .befizetve-blokk { display: none; padding: 6px 20px 0; }
+  .all-befizetve .vegosszeg, .all-befizetve .fejlec .hatarido { display: none; }
+  .all-befizetve .befizetve-blokk { display: block; }
+  .befizetve-blokk .nagy { font-weight: 800; font-size: 52px; line-height: 1; letter-spacing: -.035em; }
+  .befizetve-blokk .mennyi { font-size: 17px; line-height: 1.4; margin-top: 10px; }
+  .befizetve-blokk .ellenoriz { display: flex; align-items: center; gap: 7px; font-size: 15.5px; color: var(--fejlec-halvany); margin-top: 3px; }
+  .all-befizetve .fizetes .gombpar { display: none; }
+  .all-befizetve .fizetes .mi .jel { display: inline-block; }
+  .all-befizetve .fizetes .fej .elotte { display: none; }
+  .fizetes .fej .utana { display: none; }
+  .all-befizetve .fizetes .fej .utana { display: inline; }
+  /* 11-18: egy sorban (dátum balra, visszavonás jobbra), így a 08_allapot képén a gyorsgomb-lap is teljesen a fülsor fölött áll */
+  .all-befizetve .fizetes .kesz-sor { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 8px 18px 0; font-size: 14.5px; color: var(--halvany); white-space: nowrap; }
+  /* 11-18: a vonalas, KB-monogramos bélyegző helyett a jóváhagyott 3D ibolya pecsét (B lap 4., „Befizetve/kész”), 44 pt,
+     a levél jobb felső sarkában, a megszólítás mellett; a szövegre nem lóg rá */
+  .pecset { display: none; position: absolute; right: 16px; top: 14px; width: 44px; height: 44px; }
+  .all-befizetve .pecset { display: block; }
+  .rejt-pecset .pecset { display: none !important; }
+</style>
+</head>
+<body>
+<script src="../C2_modern/app_v2/kezjegy_utak.js"></script>
+<script src="../C2_modern/app_v2/kozos.js"></script>
+
+<header class="fejlec fizet">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="vegosszeg">457&nbsp;380<span class="ft">Ft</span></div>
+  <p class="hatarido">Október 12-ig, hétfőig <span class="cimke ido">még 3 nap</span></p>
+  <div class="befizetve-blokk">
+    <div class="nagy">Befizetted</div>
+    <div class="mennyi"><span class="szam">457&nbsp;380</span> Ft, október 9-én.</div>
+    <div class="ellenoriz">Bence a kivonatodon ellenőrzi.</div>
+  </div>
+  <button class="gomb-sav"><img class="i3" src="../C2_modern/assets/ikon3d/szamolo_arnyektalan_24@2x.png" srcset="../C2_modern/assets/ikon3d/szamolo_arnyektalan_24@2x.png 2x, ../C2_modern/assets/ikon3d/szamolo_arnyektalan_24@3x.png 3x" alt="">Hogyan jött ki?</button>
+</header>
+
+<main class="tartalom">
+
+  <!-- A havi levél: rövid, aláírt. Monogramkör nincs: aláírás, nyomtatott név, dátum. -->
+  <article class="lap level">
+    <div class="megszolitas">Kedves Kata!</div>
+    <p>Kiszámoltam, mennyit kell most befizetned. Ez már a végleges összeg.</p>
+    <div class="alairas-sor">
+      <div class="ki-irta"><div class="nev">Kovács Bence</div><div class="mikor">könyvelőd, október 2.</div></div>
+      <svg class="alairas" viewBox="0 0 210 78" role="img" aria-label="Kovács Bence aláírása"><use href="#alairas"/></svg>
+    </div>
+    <!-- befizetve (11-18): a jóváhagyott 3D ibolya pecsét a levél sarkán (a 08 lapján ez üt le); vonalas bélyegző és KB nincs -->
+    <img class="pecset" src="../C2_modern/assets/ikon3d/befizetve_jel_44@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_44@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_44@3x.png 3x" alt="Befizetve, október 9.">
+  </article>
+
+  <!-- Három külön utalás; a „Számlaszámok” alsó lapon lépésenként mutatja a számlaszámot, a közleményt és a másológombot -->
+  <section class="lap fizetes" aria-label="Befizetés">
+    <div class="fej"><span class="elotte">3 külön utalás a NAV-nak, 3 számlaszámra</span><span class="utana">Mind a hármat elutaltad</span></div>
+    <div class="tetel"><span class="mi"><img class="i3 jel" src="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész">TB-járulék</span><span class="osszeg">113&nbsp;220<span class="ft">Ft</span></span></div>
+    <div class="tetel"><span class="mi"><img class="i3 jel" src="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész">Szocho<span class="teljes">szociális hozzájárulási adó</span></span><span class="osszeg">79&nbsp;560<span class="ft">Ft</span></span></div>
+    <div class="tetel"><span class="mi"><img class="i3 jel" src="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész">SZJA-előleg <small>III. negyedév</small></span><span class="osszeg">264&nbsp;600<span class="ft">Ft</span></span></div>
+    <div class="gombpar">
+      <button class="gomb-e" style="height:50px;font-size:16.5px">Számlaszámok</button>
+      <button class="gomb-m csak-szoveg" style="height:50px">Már befizettem</button>
+    </div>
+    <div class="kesz-sor"><span>Feljegyezve okt. 9., 10:24</span><button class="gomb-sz" style="padding:4px 0;font-size:15px">Mégsem fizettem be</button></div>
+  </section>
+
+  <!-- Gyorsműveletek: egy lap, négy cella; 5. kör: maga a 3D tárgy a felirat fölött, színes kör nélkül;
+       11-18: optikai méret (Kérdezek 50, Igazolás 58 pt) és közös talpvonal (.tg) -->
+  <nav class="gyors" aria-label="Gyors műveletek">
+    <button class="gy"><span class="tg"><img class="i3 feltoltes" src="../C2_modern/assets/ikon3d/feltoltes_56@2x.png" srcset="../C2_modern/assets/ikon3d/feltoltes_56@2x.png 2x, ../C2_modern/assets/ikon3d/feltoltes_56@3x.png 3x" alt=""></span>Feltöltés</button>
+    <button class="gy"><span class="tg"><img class="i3 kerdezek" src="../C2_modern/assets/ikon3d/kerdezek_56@2x.png" srcset="../C2_modern/assets/ikon3d/kerdezek_56@2x.png 2x, ../C2_modern/assets/ikon3d/kerdezek_56@3x.png 3x" alt=""></span>Kérdezek</button>
+    <button class="gy"><span class="tg"><img class="i3 igazolas" src="../C2_modern/assets/ikon3d/igazolas_72@2x.png" srcset="../C2_modern/assets/ikon3d/igazolas_72@2x.png 2x, ../C2_modern/assets/ikon3d/igazolas_72@3x.png 3x" alt=""></span>Igazolás</button>
+    <button class="gy"><span class="tg"><img class="i3 hataridok" src="../C2_modern/assets/ikon3d/hataridok_56@2x.png" srcset="../C2_modern/assets/ikon3d/hataridok_56@2x.png 2x, ../C2_modern/assets/ikon3d/hataridok_56@3x.png 3x" alt=""></span>Határidők</button>
+  </nav>
+
+  <div class="szakasz">Bence kéri</div>
+  <section class="lap keres">
+    <div class="mit">Töltsd fel a szeptemberi bankszámlakivonatodat.</div>
+    <div class="miert">Csak ellenőrzéshez kell, a befizetendő összeg nem változik. Elég a bankod appjából letöltött PDF.</div>
+    <button class="gomb-m"><img class="i3" src="../C2_modern/assets/ikon3d/feltoltes_28@2x.png" srcset="../C2_modern/assets/ikon3d/feltoltes_28@2x.png 2x, ../C2_modern/assets/ikon3d/feltoltes_28@3x.png 3x" alt="">Kivonat feltöltése</button>
+  </section>
+
+  <div class="szakasz">Idei kereteid</div>
+  <section class="lap">
+    <div class="mero">
+      <div class="mondat">Még <span class="szam">11&nbsp;580&nbsp;000</span> Ft-ot számlázhatsz ÁFA&nbsp;nélkül.</div>
+      <div class="mellek">Ennyi fér még az alanyi ÁFA-mentességbe. A csíkozott rész az, amennyit ilyen tempóban év végéig várhatóan számlázol.</div>
+      <div class="sav"><i style="width:42.1%"></i><i class="varhato" style="left:42.1%;width:14%"></i></div>
+      <div class="vegek"><span>eddig <span class="szam">8&nbsp;420&nbsp;000</span> Ft</span><span>a keret <span class="szam">20&nbsp;000&nbsp;000</span> Ft</span></div>
+    </div>
+    <div class="mero">
+      <div class="pipa-sor"><img class="i3" src="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_24@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_24@3x.png 3x" alt="kész">
+        <div><div class="mondat">Az adómentes részt áprilisban elérted.</div>
+        <div class="mellek">Az első <span class="szam">1&nbsp;936&nbsp;800</span> Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, ez így rendben van.</div></div></div>
+    </div>
+  </section>
+
+  <div class="szakasz">Októberi dosszié</div>
+  <section class="lap">
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../C2_modern/assets/ikon3d/nyugta_arnyektalan_44@2x.png" srcset="../C2_modern/assets/ikon3d/nyugta_arnyektalan_44@2x.png 2x, ../C2_modern/assets/ikon3d/nyugta_arnyektalan_44@3x.png 3x" alt=""><span class="jelveny"><img class="i3" src="../C2_modern/assets/ikon3d/befizetve_jel_20@2x.png" srcset="../C2_modern/assets/ikon3d/befizetve_jel_20@2x.png 2x, ../C2_modern/assets/ikon3d/befizetve_jel_20@3x.png 3x" alt="kész"></span></span>
+      <div class="l"><div class="cim">Nyugta, készpénzes eladás</div>
+        <div class="allapot kesz"><span><span class="szo">Feldolgozva</span>, hétfőn</span></div></div>
+    </div>
+    <div class="sor">
+      <span class="ikonkor"><img class="i3" src="../C2_modern/assets/ikon3d/irat_arnyektalan_44@2x.png" srcset="../C2_modern/assets/ikon3d/irat_arnyektalan_44@2x.png 2x, ../C2_modern/assets/ikon3d/irat_arnyektalan_44@3x.png 3x" alt=""></span>
+      <div class="l"><div class="cim">Szerződés, Bodza Kiadó</div>
+        <div class="allapot var"><span><span class="szo">Feltöltve</span>, tegnap</span></div></div>
+    </div>
+    <div class="sor osszes" style="min-height:54px">
+      <span class="ikonkor"><img class="i3" src="../C2_modern/assets/ikon3d/dosszie_44@2x.png" srcset="../C2_modern/assets/ikon3d/dosszie_44@2x.png 2x, ../C2_modern/assets/ikon3d/dosszie_44@3x.png 3x" alt=""></span>
+      <div class="l"><div class="cim">Az egész októberi dosszié</div></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="alj-fatyol" aria-hidden="true"></div>
+<nav class="fulsor" aria-label="Fő navigáció">
+  <div class="fulek">
+    <a class="ful on"><img class="i3 fooldal" src="../C2_modern/assets/ikon3d/fooldal_36@2x.png" srcset="../C2_modern/assets/ikon3d/fooldal_36@2x.png 2x, ../C2_modern/assets/ikon3d/fooldal_36@3x.png 3x" alt="">Főoldal</a>
+    <a class="ful"><img class="i3 dosszie" src="../C2_modern/assets/ikon3d/dosszie_36@2x.png" srcset="../C2_modern/assets/ikon3d/dosszie_36@2x.png 2x, ../C2_modern/assets/ikon3d/dosszie_36@3x.png 3x" alt="">Dosszié</a>
+    <a class="ful"><img class="i3 uzenetek" src="../C2_modern/assets/ikon3d/uzenetek_36@2x.png" srcset="../C2_modern/assets/ikon3d/uzenetek_36@2x.png 2x, ../C2_modern/assets/ikon3d/uzenetek_36@3x.png 3x" alt="">Üzenetek</a>
+    <a class="ful"><img class="i3 fiok" src="../C2_modern/assets/ikon3d/fiok_36@2x.png" srcset="../C2_modern/assets/ikon3d/fiok_36@2x.png 2x, ../C2_modern/assets/ikon3d/fiok_36@3x.png 3x" alt="">Fiók</a>
+  </div>
+  <button class="fotogomb" aria-label="Fotózás: irat lefotózása"><img class="i3" src="../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@2x.png" srcset="../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@2x.png 2x, ../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@3x.png 3x" alt="">Fotózás</button>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

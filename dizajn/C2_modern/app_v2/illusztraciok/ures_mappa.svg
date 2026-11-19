@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="480" height="360">
+<!-- Kézjegy C2, 4. kör: ÜRES irattartó mappa SZEMBŐL (kamera a mappa fél magasságában; a zseb belseje és a lapok teteje nem látszik).
+     Átlátszó háttér, árnyék nélkül (a talajárnyék CSS). A fül címkéje üres papírcímke: a „NOVEMBER” valódi HTML-szöveg fölötte.
+     A tárgy a 160 × 120-as doboz közepén: x 16–144, y 8–108 (a test 96 egység: 12–108), alapvonala y = 108. -->
+<defs>
+  <linearGradient id="hatso" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2F4675"/><stop offset="1" stop-color="#21345B"/>
+  </linearGradient>
+  <linearGradient id="elso" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#344C7D"/><stop offset=".6" stop-color="#2A3F6A"/><stop offset="1" stop-color="#22355B"/>
+  </linearGradient>
+  <linearGradient id="oldalfeny" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#000" stop-opacity=".14"/><stop offset=".07" stop-color="#000" stop-opacity="0"/>
+    <stop offset=".93" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/>
+  </linearGradient>
+  <linearGradient id="res" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#081124" stop-opacity="0"/><stop offset="1" stop-color="#081124" stop-opacity=".42"/>
+  </linearGradient>
+  <linearGradient id="hajtas" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#fff" stop-opacity=".07"/>
+    <stop offset="1" stop-color="#050B18" stop-opacity=".28"/>
+  </linearGradient>
+  <linearGradient id="cimke" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FAF7F0"/><stop offset="1" stop-color="#EEE8DB"/>
+  </linearGradient>
+  <filter id="karton" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency=".85 1.1" numOctaves="3" seed="21" result="z"/>
+    <feColorMatrix in="z" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .1 0 0 0 -.035" result="r"/>
+    <feComposite in="r" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <filter id="sotetrost" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="1.3 .7" numOctaves="2" seed="8" result="z"/>
+    <feColorMatrix in="z" type="matrix" values="0 0 0 0 0  0 0 0 0 .03  0 0 0 0 .1  .11 0 0 0 -.04" result="r"/>
+    <feComposite in="r" in2="SourceGraphic" operator="in"/>
+  </filter>
+  <path id="hatsoAlak" d="M16 106 V24 Q16 20 20 20 H22.6 L25.2 11.4 Q26.1 8.4 29.2 8.4 H72.8 Q75.9 8.4 76.8 11.4 L79.4 20 H140 Q144 20 144 24 V106 Z"/>
+  <path id="elsoAlak" d="M16 32.4 H69.6 Q71 32.4 71.6 33.6 Q74.4 38.4 80 38.4 Q85.6 38.4 88.4 33.6 Q89 32.4 90.4 32.4 H144 V103.2 Q144 108 139.2 108 H20.8 Q16 108 16 103.2 Z"/>
+  <clipPath id="hv"><use href="#hatsoAlak"/></clipPath>
+  <clipPath id="ev"><use href="#elsoAlak"/></clipPath>
+</defs>
+
+<!-- hátsó lap a füllel (amit a rövidebb első lap fölött látunk, az a belső oldala) -->
+<use href="#hatsoAlak" fill="url(#hatso)"/>
+<g clip-path="url(#hv)">
+  <rect x="16" y="8" width="128" height="100" fill="#fff" filter="url(#karton)"/>
+  <rect x="16" y="8" width="128" height="100" fill="url(#oldalfeny)"/>
+  <!-- a két lap közti rés: lefelé sötétedik, ide nem jut fény -->
+  <rect x="16" y="24" width="128" height="15" fill="url(#res)"/>
+</g>
+<path d="M22.9 19.6 L25.5 11.5 Q26.3 8.9 29.2 8.9 H72.8 Q75.7 8.9 76.5 11.5 L79.1 19.6" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width=".6"/>
+
+<!-- papírcímke a fülön (üres; a hónap neve HTML) -->
+<rect x="29" y="11.2" width="44" height="8.2" rx=".9" fill="#0B1428" opacity=".28" transform="translate(.25 .4)"/>
+<rect x="29" y="11.2" width="44" height="8.2" rx=".9" fill="url(#cimke)"/>
+
+<!-- első lap: hüvelykujj-bevágással, alul a hajtásvonallal -->
+<use href="#elsoAlak" fill="url(#elso)"/>
+<g clip-path="url(#ev)">
+  <rect x="16" y="32" width="128" height="76" fill="#fff" filter="url(#karton)"/>
+  <rect x="16" y="32" width="128" height="76" fill="#fff" filter="url(#sotetrost)"/>
+  <rect x="16" y="32" width="128" height="76" fill="url(#oldalfeny)"/>
+  <rect x="16" y="98" width="128" height="10" fill="url(#hajtas)"/>
+  <!-- bordázás a gerinc fölött (táguló mappa): két halk vonal -->
+  <path d="M16 97.6 H144" stroke="#050B18" stroke-opacity=".28" stroke-width=".45"/>
+  <path d="M16 98.2 H144" stroke="#fff" stroke-opacity=".09" stroke-width=".45"/>
+  <path d="M16 100.6 H144" stroke="#050B18" stroke-opacity=".22" stroke-width=".45"/>
+  <path d="M16 101.2 H144" stroke="#fff" stroke-opacity=".07" stroke-width=".45"/>
+</g>
+<!-- az első lap felső éle: vékony fény a karton vastagságán -->
+<path d="M16.4 32.75 H69.6 Q71 32.75 71.6 33.95 Q74.4 38.75 80 38.75 Q85.6 38.75 88.4 33.95 Q89 32.75 90.4 32.75 H143.6" fill="none" stroke="#fff" stroke-opacity=".24" stroke-width=".7" stroke-linecap="round"/>
+</svg>

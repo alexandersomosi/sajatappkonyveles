@@ -1,0 +1,38 @@
+{
+ "forras": "https://youtu.be/DQnbjo2lrv8",
+ "kocka_ido_mp": 21.6,
+ "kocka_fajl": "_forras2/kisfilm_kockak/kocka_t021.6_x190_y150.png",
+ "elmosva": [
+  [
+   1148,
+   46,
+   1268,
+   74
+  ],
+  [
+   818,
+   356,
+   928,
+   412
+  ]
+ ],
+ "kitoltve": [],
+ "meret": [
+  1560,
+  770
+ ],
+ "helyek": {
+  "adatok": [
+   150,
+   318,
+   1490,
+   590
+  ],
+  "leptek": [
+   150,
+   250,
+   1490,
+   310
+  ]
+ }
+}

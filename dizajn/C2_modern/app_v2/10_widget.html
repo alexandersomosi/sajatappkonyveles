@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Widget a kezdőképernyőn</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* a telefon kezdőképernyője: a háttérkép a felhasználóé (itt egy semleges, nyugodt színátmenet) */
+  html, body { background: #3F5477; }
+  body { height: 844px; overflow: hidden; color: #fff;
+    background: radial-gradient(120% 70% at 20% 0%, #5F7698 0%, rgba(95,118,152,0) 60%),
+                radial-gradient(90% 60% at 100% 100%, #22324D 0%, rgba(34,50,77,0) 70%),
+                linear-gradient(170deg, #4E6487 0%, #3A4F72 55%, #283A59 100%); }
+  .allapotsor { color: #fff; }
+  .racs { position: absolute; left: 24px; top: 64px; width: 342px; display: grid; grid-template-columns: repeat(4, 66px);
+    column-gap: calc((342px - 264px) / 3); row-gap: 24px; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; letter-spacing: -.01em;
+    text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  .ikon { width: 64px; height: 64px; border-radius: 15px; display: grid; place-items: center; overflow: hidden; position: relative;
+    box-shadow: 0 2px 8px -2px rgba(10,20,40,.35); }
+  .ikon img { width: 100%; height: 100%; display: block; }
+  /* semleges, márka nélküli helykitöltő appok, hogy a Kézjegy kiemelkedjen. 5. kör: vonalas ikon nincs rajtuk, csak a szín */
+  .h1 { background: linear-gradient(160deg, #F3F5F8, #DCE2EA); color: #4A5468; }
+  .h2 { background: linear-gradient(160deg, #A9B9CF, #8396B2); color: #fff; }
+  .h3 { background: linear-gradient(160deg, #C9D5C8, #A7B8A6); color: #fff; }
+  .h4 { background: linear-gradient(160deg, #E4D6C3, #CDB99F); color: #fff; }
+  .h5 { background: linear-gradient(160deg, #5F6E86, #46536A); color: #fff; }
+
+  /* a Kézjegy kis widgetje: 2 × 2 hely, tintakék sáv a guilloche-val, mint az appban */
+  .widget-hely { grid-column: 1 / span 2; grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .widget { width: 156px; height: 156px; border-radius: 24px; position: relative; overflow: hidden;
+    background: var(--tintakek); padding: 14px 14px 13px; display: flex; flex-direction: column; isolation: isolate;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 10px 26px -10px rgba(10,20,40,.6); }
+  /* ugyanaz a guilloche-rozetta, mint a sávon, kicsinyítve az összeg mögé */
+  .widget::before { content: ""; position: absolute; z-index: -1; width: 300px; height: 300px; left: -80px; top: -100px;
+    background: url("guilloche_rozetta.svg") 0 0 / 300px 300px no-repeat; opacity: 1; }
+  .widget .fej { display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 600; color: var(--fejlec-halvany); }
+  .widget .fej .appikon { width: 18px; height: 18px; box-shadow: 0 0 0 1px rgba(255,255,255,.2); }
+  .widget .osszeg-w { font-weight: 800; font-size: 29px; line-height: 1; letter-spacing: -.035em; margin-top: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .widget .osszeg-w small { font-size: .5em; font-weight: 600; color: var(--fejlec-halvany); margin-left: 3px; letter-spacing: 0; }
+  .widget .mikor { font-size: 13px; line-height: 1.3; color: #fff; margin-top: 6px; }
+  /* a homályos idővonal helyett egyetlen, egyértelmű címke: hány nap van hátra (a Határidők borostyánja) */
+  .widget .alja { margin-top: auto; }
+  .widget .alja .cimke { height: 24px; font-size: 13px; vertical-align: 0; }
+  .widget-nev { text-align: center; font-size: 12px; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+
+  .kereses { position: absolute; left: 50%; bottom: 128px; transform: translateX(-50%); height: 30px; padding: 0 14px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600;
+    background: rgba(255,255,255,.22); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  .dokk { position: absolute; left: 12px; width: 366px; bottom: 18px; height: 96px; border-radius: 34px; padding: 0 16px;
+    display: grid; grid-template-columns: repeat(4, 64px); justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,.2); -webkit-backdrop-filter: blur(24px) saturate(1.3); backdrop-filter: blur(24px) saturate(1.3); }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+
+<div class="racs">
+  <!-- a widget: a következő határidő és az összeg; koppintásra a befizetés nyílik -->
+  <div class="widget-hely">
+  <a class="widget" aria-label="Kézjegy: NAV-befizetés 457 380 forint, október 12-ig, még 3 nap">
+    <div class="fej"><svg class="appikon" viewBox="0 0 120 120" aria-hidden="true"><use href="#appikon"/></svg>NAV-befizetés</div>
+    <div class="osszeg-w">457&nbsp;380<small>Ft</small></div>
+    <div class="mikor">október 12-ig, hétfőig</div>
+    <div class="alja"><span class="cimke ido">még 3 nap</span></div>
+  </a>
+  <div class="widget-nev">Kézjegy</div>
+  </div>
+  <div class="app"><span class="ikon h1"></span>Naptár</div>
+  <div class="app"><span class="ikon h2"></span>Fotók</div>
+  <div class="app"><span class="ikon h4"></span>Levelek</div>
+  <div class="app"><span class="ikon h3"></span>Emlékeztető</div>
+
+  <div class="app"><span class="ikon"><svg class="appikon" viewBox="0 0 120 120" style="width:64px;height:64px" aria-hidden="true"><use href="#appikon"/></svg></span>Kézjegy</div>
+  <div class="app"><span class="ikon h5"></span>Bank</div>
+  <div class="app"><span class="ikon h1"></span>Számológép</div>
+  <div class="app"><span class="ikon h2"></span>Fájlok</div>
+</div>
+
+<div class="kereses">Keresés</div>
+<div class="dokk">
+  <span class="ikon h3"></span>
+  <span class="ikon h1"></span>
+  <span class="ikon h4"></span>
+  <span class="ikon h2"></span>
+</div>
+<div class="otthon-jel vilagos"></div>
+</body>
+</html>

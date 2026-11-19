@@ -1,0 +1,32 @@
+{
+ "nev": "onya_jovahagyas",
+ "dpr": 5,
+ "szel": 2060,
+ "mag": 3400,
+ "helyek": {
+  "meghatalmazott": [
+   155,
+   984,
+   1905,
+   1248
+  ],
+  "jovahagyas_gomb": [
+   1065,
+   2013,
+   1980,
+   2233
+  ],
+  "megerosites": [
+   130,
+   2600,
+   1930,
+   3307
+  ],
+  "megerosites_gomb": [
+   1065,
+   2997,
+   1840,
+   3217
+  ]
+ }
+}

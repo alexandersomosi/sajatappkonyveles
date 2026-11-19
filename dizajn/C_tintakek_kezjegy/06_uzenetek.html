@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Üzenetek</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .ki-o { display: flex; align-items: center; gap: 14px; padding: 10px 20px 0; }
+  .ki-o .arckep { width: 60px; height: 60px; box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+  .ki-o h1 { padding: 0; font-size: 30px; }
+  .ki-o .szerep { color: var(--fejlec-halvany); font-size: 14.5px; line-height: 1.4; margin-top: 3px; }
+  .kerj { padding: 14px 16px 14px; }
+  .kerj .mit { font-weight: 700; font-size: 16px; margin: 0 2px 10px; }
+  .kerj .gombok { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kerj .gomb-m { font-size: 15px; height: 40px; padding: 0 13px; }
+  .beszelgetes { display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; height: 366px; margin-top: 8px; padding: 0 0 6px; overflow: hidden; }
+  .buborek { max-width: 292px; padding: 11px 14px 10px; border-radius: 14px; font-size: 16px; line-height: 1.45; }
+  .tole { align-self: flex-start; background: var(--lap); border-top-left-radius: 4px; }
+  .tolem { align-self: flex-end; background: var(--sajat); border-top-right-radius: 4px; }
+  .ido { font-size: 13px; color: var(--halvany-alapon); margin: 2px 6px 8px; }
+  .ido.j { align-self: flex-end; }
+  .keres-kartya { align-self: flex-end; width: 292px; background: var(--lap); border-radius: 14px; border-top-right-radius: 4px;
+    padding: 12px 14px 12px; border: 1.5px solid var(--sajat); }
+  .keres-kartya .k1 { font-size: 13.5px; color: var(--halvany); }
+  .keres-kartya .k2 { font-weight: 700; font-size: 16px; margin-top: 1px; }
+  .keres-kartya .allapot { margin-top: 6px; }
+  .iro { position: fixed; left: 0; bottom: 84px; width: 390px; background: var(--lap); border-top: 1px solid var(--hajszal);
+    display: flex; align-items: center; gap: 8px; padding: 10px 12px; z-index: 5; }
+  .iro .csatol { width: 44px; height: 44px; padding: 0; flex: none; }
+  .iro .csatol svg.i { width: 22px; height: 22px; }
+  .iro .mezo-iro { flex: 1; height: 44px; border: 1px solid var(--mezo-keret); border-radius: var(--r-mezo); background: var(--mezo-alap);
+    display: flex; align-items: center; padding: 0 12px; color: var(--halvany); font-size: 16px; }
+  .iro .kuld { height: 44px; padding: 0 14px; border-radius: var(--r-gomb); font-weight: 700; font-size: 15.5px;
+    background: var(--hajszal); color: var(--halvany-alapon); }
+</style>
+</head>
+<body class="sotet">
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="ki-o">
+    <span class="arckep"><svg viewBox="0 0 64 64" role="img" aria-label="Kovács Bence fényképe"><use href="#bence"/></svg></span>
+    <div><h1>Kovács Bence</h1><div class="szerep">Mérlegképes könyvelő. Munkanapokon<br>4 órán belül válaszol.</div></div>
+  </div>
+</header>
+
+<main class="tartalom">
+  <section class="lap kerj">
+    <div class="mit">Kérj tőle egy gombnyomással:</div>
+    <div class="gombok">
+      <button class="gomb-m">Jövedelemigazolás</button>
+      <button class="gomb-m">Nullás igazolás</button>
+      <button class="gomb-m">Megváltozott egy adatom</button>
+    </div>
+  </section>
+
+  <div class="beszelgetes">
+    <div class="buborek tolem">Levelet kaptam a NAV-tól, megijedtem. Feltöltöttem a dossziéba.</div>
+    <div class="ido j">tegnap 20:31</div>
+
+    <div class="buborek tole">Megnéztem: csak értesítés, nincs vele teendőd. Elteheted.</div>
+    <div class="ido">ma 8:47</div>
+
+    <div class="keres-kartya">
+      <div class="k1">Kérésed</div>
+      <div class="k2">Jövedelemigazolás a 2025-ös évről</div>
+      <div class="allapot var"><svg><use href="#var-jel"/></svg><span><span class="szo">Bence látta</span>, pár napon belül kész</span></div>
+    </div>
+    <div class="ido j">ma 9:02</div>
+
+  </div>
+</main>
+
+<div class="iro">
+  <button class="gomb-m csatol" aria-label="Fájl csatolása"><svg class="i"><use href="#kapocs"/></svg></button>
+  <div class="mezo-iro">Írj Bencének…</div>
+  <button class="kuld" disabled>Küldés</button>
+</div>
+
+<nav class="fulsor">
+  <div class="ful"><svg class="i"><use href="#haz"/></svg>Főoldal</div>
+  <div class="ful"><svg class="i"><use href="#dosszie"/></svg>Dosszié</div>
+  <div class="ful on"><svg class="i"><use href="#uzenet"/></svg>Üzenetek</div>
+  <div class="ful"><svg class="i"><use href="#fiok"/></svg>Fiók</div>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

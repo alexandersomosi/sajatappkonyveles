@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Adószám (B: előbb a haladás)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<style>
+/* C4 átlátható – B irány, űrlap (2026-11-19). Ugyanazok a szabályok, mint a főoldalon: egy fő gomb ugyanott
+   (lent, a fülsor fölött), egy mező, egy i-gomb, egy szöveges link, két szövegszint, doboz a dobozban nincs. */
+html, body { background: #fff; }
+.allapotsor { color: var(--tinta); }
+
+/* ---------- felül: vissza, haladás, DEMO ---------- */
+.felso { display: flex; align-items: center; gap: 14px; padding: 2px 16px 0; min-height: 48px; }
+.vissza { height: 40px; padding: 0 16px; border-radius: var(--r-gomb); background: var(--nyomott); color: var(--tinta);
+  display: inline-flex; align-items: center; font-weight: 600; font-size: 16px; position: relative; }
+.vissza::after { content: ""; position: absolute; inset: -2px -2px; } /* 44 pt-os érintési terület */
+.csik { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.csik i { height: 8px; border-radius: 4px; background: #DCE2F7; }
+.csik i.k { background: var(--neon); }
+.demo { height: 26px; padding: 0 9px; border-radius: 6px; display: inline-flex; align-items: center;
+  background: var(--borostyan-alap); color: #5E3B00; font-weight: 750; font-size: 13px; letter-spacing: .04em; }
+
+.fej { padding: 28px 16px 0; }
+h1 { font-weight: 750; font-size: 32px; line-height: 1.12; letter-spacing: -.028em; }
+.fej p { font-size: 17px; line-height: 1.5; margin-top: 12px; color: var(--halvany); }
+
+/* ---------- a mező ---------- */
+.mezo-b { padding: 30px 16px 0; }
+.felirat-sor { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
+.felirat-sor label { font-weight: 650; font-size: 17px; }
+/* „Hol találom?”: kerek i-gomb felirattal; a korong a másodlagos gomb színe, az érintési terület 44 pt */
+.i-gomb { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-right: -2px;
+  color: var(--tintakek-szoveg); font-weight: 650; font-size: 16.5px; }
+.i-gomb span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gomb-m-alap); font-weight: 800; font-size: 16px; line-height: 1; }
+.nagy-mezo { display: flex; align-items: center; height: 66px; padding: 0 18px; margin-top: 6px;
+  border: 2px solid var(--neon); border-radius: 14px; background: #fff;
+  font-weight: 600; font-size: 26px; letter-spacing: .01em; font-variant-numeric: tabular-nums lining-nums; }
+
+/* ---------- a felugró megerősítés: egy lap, a mezőre mutat ---------- */
+.megerosit { position: relative; margin: 18px 16px 0; padding: 18px 18px 20px; border-radius: var(--r-lap); background: #fff;
+  box-shadow: 0 0 0 1px var(--hajszal), 0 2px 4px rgba(16,21,60,.05), 0 16px 32px -14px rgba(16,21,60,.30); }
+.megerosit::before { content: ""; position: absolute; top: -8px; left: 34px; width: 16px; height: 16px; background: #fff;
+  transform: rotate(45deg); border-radius: 3px 0 0 0; box-shadow: -1px -1px 0 0 var(--hajszal); }
+.szak-fej { display: flex; align-items: center; gap: 12px; min-height: 36px; position: relative; }
+.szak-fej img.i3 { width: 36px; height: 36px; }
+.szak-fej h2 { font-weight: 650; font-size: 20px; line-height: 1.25; letter-spacing: -.016em; color: var(--tintakek-szoveg); }
+.megerosit .ceg { font-size: 17px; line-height: 1.5; margin-top: 10px; }
+.megerosit .ceg b { font-weight: 650; }
+
+.link { display: inline-flex; align-items: center; min-height: 44px; margin: 14px 16px 0; font-weight: 550; font-size: 17px;
+  color: var(--tintakek-szoveg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+main { padding-bottom: 190px; }
+
+/* ---------- lent: ugyanott, mint a főoldalon ---------- */
+.dokk { position: fixed; left: 0; bottom: 0; width: 390px; z-index: 9; background: #fff; }
+.dokk::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
+.dokk .fo { padding: 8px 16px 12px; }
+.dokk .gomb-e { height: 56px; font-size: 17.5px; font-weight: 700; }
+.fulek { display: grid; grid-template-columns: repeat(5, 1fr); height: 56px; border-top: 1px solid var(--hajszal); }
+.fulek .f { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 12.5px; font-weight: 550; color: var(--halvany); letter-spacing: -.005em; }
+.fulek .f img.i3 { width: 28px; height: 28px; }
+.fulek .f.on { color: var(--neon); font-weight: 750; }
+.biztonsagi { height: 26px; }
+.otthon-jel { bottom: 8px; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="felso">
+    <button class="vissza">Vissza</button>
+    <div class="csik" role="img" aria-label="3 kérdésből az 1."><i class="k"></i><i></i><i></i></div>
+    <span class="demo">DEMO</span>
+  </div>
+  <div class="fej">
+    <h1>Add meg az adószámodat</h1>
+    <p>Ebből kikeressük a vállalkozásod adatait, neked csak rá kell bólintanod.</p>
+  </div>
+</header>
+
+<main>
+  <div class="mezo-b">
+    <div class="felirat-sor">
+      <label for="adoszam">Adószám</label>
+      <button class="i-gomb"><span>i</span>Hol találom?</button>
+    </div>
+    <div class="nagy-mezo" id="adoszam">12345678-1-41</div>
+  </div>
+
+  <section class="megerosit" aria-live="polite">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/bevallas_36@2x.png" srcset="../../C2_modern/assets/ikon3d/bevallas_36@2x.png 2x, ../../C2_modern/assets/ikon3d/bevallas_36@3x.png 3x" alt=""><h2>Ez a te vállalkozásod?</h2></div>
+    <p class="ceg"><b>Minta Márta e.v.</b><br>1136 Budapest, Példa utca 7.</p>
+  </section>
+
+  <a class="link" href="#">Most nem tudom</a>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Tovább</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

@@ -1,0 +1,715 @@
+{
+ "nev": "vallalkozas_bejelentes",
+ "utmutato": "vallalkozas_bejelentes",
+ "fejlec": "Vállalkozás bejelentése",
+ "cim": "Így jelentsd be a vállalkozásodat",
+ "alcim": "Lépésről lépésre, mit hova jelölj",
+ "megjegyzes": "mond = amit a hang mond (számok betűvel, Ügyfélkapu plusz); felirat = a beégetett és a VTT-felirat. jel.szo = a 'mond' szövegben az a szó, amelynél a jelölés megjelenik. kep = az utmutato_kepek/<utmutato>/ fájlneve .png nélkül.",
+ "jelenetek": [
+  {
+   "id": "cim",
+   "tipus": "cim",
+   "vizual": "befizetve_pecset",
+   "sorok": [
+    {
+     "id": "b01",
+     "mond": "Megmutatjuk, hogyan jelented be a vállalkozásodat. Ingyenes.",
+     "felirat": "Megmutatjuk, hogyan jelented be a vállalkozásodat. Ingyenes."
+    }
+   ]
+  },
+  {
+   "id": "elokeszit",
+   "tipus": "lista",
+   "cim": "Készítsd elő",
+   "felcim": "Mielőtt elkezded",
+   "elemek": [
+    {
+     "ikon": "igazolas",
+     "cim": "Ügyfélkapu+ vagy DÁP a telefonodon",
+     "megj": "Ezzel lépsz be a NAV oldalára."
+    },
+    {
+     "ikon": "fiok",
+     "cim": "Személyi igazolvány",
+     "megj": "A neved és a születési adataid ellenőrzéséhez."
+    },
+    {
+     "ikon": "boritek",
+     "cim": "Lakcímkártya",
+     "megj": "A lakcímes oldala kell."
+    },
+    {
+     "ikon": "igazolas",
+     "cim": "Adóigazolvány (adóazonosító jel)",
+     "megj": "Tízjegyű, 8-assal kezdődik."
+    },
+    {
+     "ikon": "igazolas",
+     "cim": "TAJ-kártya",
+     "megj": "Ha a képernyő kéri, te írod be.",
+     "nem_taroljuk": true
+    },
+    {
+     "ikon": "fiok",
+     "cim": "Anyukád születési neve",
+     "megj": "A születési helyeddel és időddel együtt.",
+     "cimke": "A NAV tölti ki"
+    },
+    {
+     "ikon": "irat",
+     "cim": "Mire alapozod a székhelyet",
+     "megj": "Saját, bérelt, a tulajdonos engedte,\nvagy székhelyszolgáltató."
+    },
+    {
+     "ikon": "dosszie",
+     "cim": "A tevékenységeid",
+     "megj": "Az útmutatóban ott lesznek a válaszaid alapján."
+    }
+   ],
+   "sorok": [
+    {
+     "id": "b03",
+     "mond": "Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.",
+     "felirat": "Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.",
+     "jel": [
+      {
+       "elem": 0,
+       "szo": "belépésedet"
+      },
+      {
+       "elem": 1,
+       "szo": "személyidet"
+      },
+      {
+       "elem": 2,
+       "szo": "lakcímkártyádat"
+      }
+     ]
+    },
+    {
+     "id": "b04",
+     "mond": "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki: csak nézd át.",
+     "felirat": "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki: csak nézd át.",
+     "jel": [
+      {
+       "elem": 3,
+       "szo": "adókártyád"
+      },
+      {
+       "elem": 4,
+       "szo": "adókártyád",
+       "kesleltet": 0.45
+      },
+      {
+       "elem": 5,
+       "szo": "Anyukád"
+      },
+      {
+       "elem": 6,
+       "szo": "nézd",
+       "kesleltet": 0.2
+      },
+      {
+       "elem": 7,
+       "szo": "nézd",
+       "kesleltet": 0.6
+      }
+     ]
+    }
+   ],
+   "kitart": 1.3
+  },
+  {
+   "id": "belepes",
+   "tipus": "kep",
+   "cim": "Belépés",
+   "sorok": [
+    {
+     "id": "b07",
+     "kep": "01_belepes",
+     "mond": "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu plusszal.",
+     "felirat": "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu+-szal.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "DÁP",
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.82
+       ]
+      },
+      {
+       "n": 2,
+       "szo": "Ügyfélkapu",
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.82
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "inditas",
+   "tipus": "kep",
+   "cim": "Új bejelentés",
+   "sorok": [
+    {
+     "id": "b09",
+     "kep": "02_ugyseged_fooldal",
+     "mond": "Koppints az Új bejelentés, kérelem benyújtása részre.",
+     "felirat": "Koppints az „Új bejelentés, kérelem benyújtása” részre.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Új"
+      }
+     ]
+    },
+    {
+     "id": "b10",
+     "kep": "03_ugyseged_ugytipus",
+     "mond": "Majd válaszd a kezdés bejelentését.",
+     "felirat": "Majd válaszd a kezdés bejelentését.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "kezdés"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "szemelyi",
+   "tipus": "kep",
+   "cim": "Személyi adatok",
+   "sorok": [
+    {
+     "id": "b11",
+     "kep": "04_szemelyi_adatok",
+     "mond": "A NAV tölti ki az adataidat: nézd át őket, és ha valami hibás, szólj a NAV-nak.",
+     "felirat": "A NAV tölti ki az adataidat: nézd át őket, és ha valami hibás, szólj a NAV-nak.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "nézd"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cimadatok",
+   "tipus": "kep",
+   "cim": "Címadatok",
+   "sorok": [
+    {
+     "id": "b14",
+     "kep": "05_cimadatok",
+     "mond": "Add meg a székhelyed. Ez a cím nyilvános lesz.",
+     "felirat": "Add meg a székhelyed. Ez a cím nyilvános lesz.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "székhelyed"
+      }
+     ]
+    },
+    {
+     "id": "b15",
+     "kep": "05_cimadatok",
+     "mond": "Telephely csak akkor kell, ha lesz üzleted, irodád vagy műhelyed egy másik címen.",
+     "felirat": "Telephely csak akkor kell, ha lesz üzleted, irodád vagy műhelyed egy másik címen.",
+     "jel": [
+      {
+       "n": 2,
+       "szo": "Telephely"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tevekenysegek",
+   "tipus": "kep",
+   "cim": "Tevékenységek",
+   "sorok": [
+    {
+     "id": "b16",
+     "kep": "06_tevekenysegek",
+     "mond": "Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.",
+     "felirat": "Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "fő"
+      },
+      {
+       "n": 2,
+       "szo": "melyik",
+       "csendben": true,
+       "kesleltet": 0.0
+      }
+     ]
+    }
+   ],
+   "kitart": 0.8
+  },
+  {
+   "id": "munkavegzes",
+   "tipus": "kep",
+   "cim": "Adózási adatok",
+   "sorok": [
+    {
+     "id": "b18",
+     "kep": "07_adozas_munkavegzes_fofoglalkozas",
+     "mond": "A munkavégzés jellegét kötelező megadni: ettől függ a járulékod.",
+     "felirat": "A munkavégzés jellegét kötelező megadni: ettől függ a járulékod.",
+     "jel": []
+    },
+    {
+     "id": "b19",
+     "kep": "07_adozas_munkavegzes_fofoglalkozas",
+     "mond": "Azt válaszd, ami rád igaz: főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.",
+     "felirat": "Azt válaszd, ami rád igaz: főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.",
+     "jel": [
+      {
+       "kep": "07_adozas_munkavegzes_fofoglalkozas",
+       "n": 1,
+       "szo": "főállás",
+       "kesleltet": -0.4,
+       "nezet": [
+        0.1,
+        0.1795,
+        0.9,
+        0.8595
+       ],
+       "skala": 0.535,
+       "nyito_arany": 1.0,
+       "all": true
+      },
+      {
+       "kep": "07_adozas_munkavegzes_munkaviszony_mellett",
+       "n": 1,
+       "szo": "munkaviszony",
+       "atusztat": true,
+       "nezet": [
+        0.1,
+        0.1795,
+        0.9,
+        0.8595
+       ],
+       "skala": 0.535,
+       "all": true
+      },
+      {
+       "kep": "07_adozas_munkavegzes_tanulmany_mellett",
+       "n": 1,
+       "szo": "tanulmányok",
+       "atusztat": true,
+       "nezet": [
+        0.1,
+        0.1795,
+        0.9,
+        0.8595
+       ],
+       "skala": 0.535,
+       "all": true
+      },
+      {
+       "kep": "07_adozas_munkavegzes_nyugdij_mellett",
+       "n": 1,
+       "szo": "nyugdíj",
+       "atusztat": true,
+       "nezet": [
+        0.1,
+        0.1795,
+        0.9,
+        0.8595
+       ],
+       "skala": 0.535,
+       "all": true
+      }
+     ],
+     "kitart": 0.7
+    }
+   ]
+  },
+  {
+   "id": "kata_atalany",
+   "tipus": "kep",
+   "cim": "Adózási adatok",
+   "sorok": [
+    {
+     "id": "b21",
+     "kep": "08_adozas_kata_atalany",
+     "mond": "A katát ne jelöld be.",
+     "felirat": "A katát ne jelöld be.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "katát"
+      }
+     ]
+    },
+    {
+     "id": "b22",
+     "kep": "08_adozas_kata_atalany",
+     "mond": "Az átalányadózást igen: így a bevételed egy része eleve költségnek számít.",
+     "felirat": "Az átalányadózást igen: így a bevételed egy része eleve költségnek számít.",
+     "jel": [
+      {
+       "n": 2,
+       "szo": "átalányadózást"
+      }
+     ],
+     "hangulat": "figyelem",
+     "felirat_sorok": [
+      [
+       "Az átalányadózást igen:"
+      ],
+      [
+       "így a bevételed egy része",
+       "eleve költségnek számít."
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "afa",
+   "tipus": "kep",
+   "cim": "Adózási adatok – áfa",
+   "sorok": [
+    {
+     "id": "b23",
+     "kep": "09_adozas_afa_mentesseg",
+     "mond": "Az áfafizetés módját hagyd üresen.",
+     "felirat": "Az áfafizetés módját hagyd üresen.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "áfafizetés"
+      }
+     ]
+    },
+    {
+     "id": "b24",
+     "kep": "09_adozas_afa_mentesseg",
+     "mond": "Az áfamentességnél csak a második pontot jelöld: az alanyi adómentességet.",
+     "felirat": "Az áfamentességnél csak a 2. pontot jelöld: az alanyi adómentességet.",
+     "jel": [
+      {
+       "n": 2,
+       "szo": "második"
+      }
+     ],
+     "hangulat": "figyelem"
+    },
+    {
+     "id": "b25",
+     "kep": "09_adozas_afa_mentesseg",
+     "mond": "A legfontosabb pipa: így áfamentes leszel.",
+     "felirat": "A legfontosabb pipa: így áfamentes leszel.",
+     "hangulat": "figyelem"
+    },
+    {
+     "id": "b26",
+     "kep": "10_adozas_afa_tobbi_eu_nem",
+     "mond": "Közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.",
+     "felirat": "Közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Közösségi"
+      }
+     ]
+    },
+    {
+     "id": "b27",
+     "kep": "10_adozas_afa_tobbi_eu_nem",
+     "mond": "A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.",
+     "felirat": "A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.",
+     "jel": [
+      {
+       "n": 3,
+       "szo": "pénzforgalmi",
+       "nezet": [
+        0.0,
+        0.165,
+        1.0,
+        0.822
+       ],
+       "skala": 0.415
+      },
+      {
+       "n": 2,
+       "szo": "többit",
+       "nezet": [
+        0.0,
+        0.165,
+        1.0,
+        0.822
+       ],
+       "skala": 0.415
+      },
+      {
+       "n": 4,
+       "szo": "hagyd",
+       "nezet": [
+        0.0,
+        0.165,
+        1.0,
+        0.822
+       ],
+       "skala": 0.415
+      }
+     ]
+    }
+   ],
+   "kitart": 0.8
+  },
+  {
+   "id": "nyilatkozatok",
+   "tipus": "kep",
+   "cim": "Nyilatkozatok",
+   "sorok": [
+    {
+     "id": "b28",
+     "kep": "11_nyilatkozatok",
+     "mond": "Jelöld be, hogy nincs kizáró ok, és a másik hármat is.",
+     "felirat": "Jelöld be, hogy nincs kizáró ok, és a másik hármat is.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Jelöld"
+      },
+      {
+       "n": 2,
+       "szo": "hármat"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ellenorzes",
+   "tipus": "kep",
+   "cim": "Ellenőrzés",
+   "sorok": [
+    {
+     "id": "b29",
+     "kep": "12_ellenorzes",
+     "mond": "Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem.",
+     "felirat": "Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "nézd",
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.8
+       ],
+       "skala": 0.522
+      },
+      {
+       "n": 2,
+       "szo": "pénzforgalmi",
+       "csendben": true,
+       "kesleltet": 0.6,
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.8
+       ],
+       "skala": 0.522
+      }
+     ],
+     "hangulat": "figyelem"
+    }
+   ],
+   "kitart": 1.0
+  },
+  {
+   "id": "bekuldes",
+   "tipus": "kep",
+   "cim": "Beküldés",
+   "sorok": [
+    {
+     "id": "b32",
+     "kep": "13_bekuldes",
+     "mond": "Ha minden stimmel, koppints a Bejelentés megtétele gombra.",
+     "felirat": "Ha minden stimmel, koppints a „Bejelentés megtétele” gombra.",
+     "jel": [
+      {
+       "n": 2,
+       "szo": "Ha minden",
+       "kesleltet": 0.0,
+       "nezet": [
+        0.62,
+        0.36,
+        0.99,
+        0.7
+       ],
+       "nyito_arany": 1.0
+      }
+     ],
+     "megjegyzes_javito2_1119": "A gomb jelölése és a ráközelítés a sor elején indul (eddig a sor végén, 112,8 s-nál)."
+    },
+    {
+     "id": "b33",
+     "kep": "13_bekuldes",
+     "mond": "Ezután nem módosítható, és a vállalkozásod aznap indul.",
+     "felirat": "Ezután nem módosítható, és a vállalkozásod aznap indul.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Ezután"
+      }
+     ],
+     "hangulat": "figyelem"
+    }
+   ]
+  },
+  {
+   "id": "megtekintes",
+   "tipus": "kep",
+   "cim": "Megtekintés",
+   "sorok": [
+    {
+     "id": "b34",
+     "kep": "14_megtekintes_pdf",
+     "mond": "A Megtekintés lapon töltsd le az értesítést PDF-ben.",
+     "felirat": "A „Megtekintés” lapon töltsd le az értesítést PDF-ben.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "töltsd"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "feltoltes",
+   "tipus": "app",
+   "cim": "Itt, az alkalmazásban",
+   "app": {
+    "ikon": "feltoltes",
+    "cim": "Töltsd fel a NAV-os értesítést",
+    "szoveg": "A letöltött PDF-et, vagy egy jól olvasható fotót.",
+    "gomb": "Feltöltöm az értesítést",
+    "allapot": "Megkaptuk. Átnézzük, és szólunk.",
+    "allapot_ikon": "irat",
+    "mezo": "NAV-os értesítés (PDF vagy fotó)"
+   },
+   "sorok": [
+    {
+     "id": "b36",
+     "mond": "Az alkalmazásban koppints a „Feltöltöm az értesítést” gombra, és töltsd fel.",
+     "felirat": "Az alkalmazásban koppints a „Feltöltöm az értesítést” gombra, és töltsd fel.",
+     "jel": [
+      {
+       "app": "gomb",
+       "szo": "Feltöltöm"
+      }
+     ]
+    },
+    {
+     "id": "b37",
+     "mond": "Átnézzük, és szólunk.",
+     "felirat": "Átnézzük, és szólunk.",
+     "jel": [
+      {
+       "app": "allapot",
+       "szo": "Átnézzük"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kamara",
+   "tipus": "kartya",
+   "cim": "Még egy dolog",
+   "kartya": {
+    "vizual": "hatarido_naptar",
+    "cim": "Kamarai regisztráció",
+    "sorok": [
+     "5 munkanapon belül",
+     "a területi gazdasági kamaránál,",
+     "külön űrlapon"
+    ],
+    "link": "mkik.hu/vallalkozoi-regisztracio"
+   },
+   "forras": "Forrás: NAV, A Vállalkozói Ügysegéd útmutatója (2026.03.19.), III.2.",
+   "sorok": [
+    {
+     "id": "b38",
+     "mond": "Még egy dolog: öt munkanapon belül a kamaránál is regisztrálnod kell.",
+     "felirat": "Még egy dolog: 5 munkanapon belül a kamaránál is regisztrálnod kell.",
+     "hangulat": "figyelem"
+    }
+   ]
+  },
+  {
+   "id": "zaro",
+   "tipus": "zaro",
+   "zaro": {
+    "ikon": "ora",
+    "cim": "Elakadtál?",
+    "gomb": "Kérj visszahívást",
+    "szoveg": "Csapatunk 24–48 órán belül hív.",
+    "helyettunk": {
+     "badge": "Ha egyedül nem megy",
+     "cim": "Intézzük helyetted",
+     "al": "A bejelentést és a meghatalmazást is."
+    }
+   },
+   "sorok": [
+    {
+     "id": "b39",
+     "mond": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.",
+     "felirat": "Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül hív."
+    },
+    {
+     "id": "b40",
+     "mond": "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+     "felirat": "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+     "hangulat": "megnyugtato",
+     "jel": [
+      {
+       "zaro_elem": "helyettunk",
+       "szo": "egyedül"
+      }
+     ]
+    }
+   ],
+   "cim": "Ha elakadsz"
+  }
+ ],
+ "lektor": {
+  "kor1": "nyelv: claude-haiku-5.5, tények: gemini-3.8-flash (lektor/kor1_*.json); elfogadva: b11 TAJ, b36 idézőjel a hangnak; elutasítva: 'pluszszal' (helyesen: plusszal), 'ÁFA-t' (az app-szövegekkel egyezően ÁFÁ-t), számok betűvel a feliratban (a számjegy gyorsabban olvasható)",
+  "kor2": "a végleges szövegen (lektor/kor2_*.json); elfogadva: b18 'kötelező' (tények), b11 szórend, b25 átfogalmazva (az 'ÁFÁ-t' alak vitatott); elutasítva: számok betűvel a feliratban, 'leírjuk' (az útmutató már megvan), 'költségként számolhatod el' (pontatlan), 'aznaptól indulhat' és 'a nyilvántartásban is szerepel' (a SPEC §26.1.4 szövege: aznap indul, a cím nyilvános)"
+ },
+ "vege": {
+  "cim": "Sok sikert!",
+  "al": "Minden lépést leírtunk lent, az útmutatóban."
+ },
+ "megjegyzes_k3c3": "2026-11-18 k3c3: b35 („Később a Bejelentéseim, kérelmeim alatt is megtalálod.”) kimaradt, és a b01 rövidebb, hogy a hosszabb, pontosabb telephely- és közösségi adószám-mondatok mellett is 150 s alatt maradjon (SPEC §26.7.1). Az eredeti: _regi/forgatokonyv_elotte_k3c3_*.json.",
+ "megjegyzes_hang_1119": "2026-11-19, a végleges (Umbriel) hanghoz: „kitart” = ennyi másodperc szünet a jelenet (vagy a sor) után, hogy a mondat végén megjelenő jelölés látsszon, mielőtt a kép vált. elokeszit 1,3 s (a lista utolsó két sora eddig soha nem világosodott ki: b04 elem 6/7 késleltetése 0,35/0,75), tevekenysegek 0,8 s (b16 2. jelölés), afa 0,5 s (b27 4. jelölés), ellenorzes 1,2 s (b29 2. jelölés a mondat UTÁN, késleltetés 1,75: a kamera ne hagyja ott a táblázatot, amíg a hang sorolja). b19 „főállás” -0,4 s: a jelölés a kettőspont utáni szünetben jelenik meg, így nem csak egy villanásra látszik. A szöveg nem változott. Az eredeti: _regi/forgatokonyv_elotte_kitart_20261119_0650.json.",
+ "megjegyzes_javitas_1119": "2026-11-19 ellenőrző kör után: b29 mindkét jelölése egy nézetben (a teljes táblázat az igen/nem oszloppal és mindkét gomb; eddig a „Vissza” jelölésnél a kamera ráközelített, és levágta az értékoszlopot meg a „Tovább” gombot), a 2. jelölés 0,6 s késleltetéssel (eddig 1,75) és az ellenorzes kitart 1,0 s (eddig 1,2): tovább látszik, rövidebb a néma szünet; b16 2. jelölés a „melyik” szónál (eddig a mondat végén), tevekenysegek kitart 0,8 s; b27 4. jelölés a „hagyd” szónál, afa kitart 0,8 s; a „Mire alapozod a székhelyet” megjegyzése két sorban (nem fut túl az oszlopon). Hang: b21 új felvétel (t4: a vak ellenőrzés a kattanás levágása után a t2-ben „kottát”-ot hallott). Az eredeti: _regi/forgatokonyv_elotte_javitas_20261119_0700.json.",
+ "megjegyzes_r2_1119": "2026-11-19, 2. ellenőrző kör: (1) b19 – a négy választógomb kiemelése egy álló nézetben vált (a teljes kártya a gombokkal), a változat a jelölésével együtt úszik be (\"atusztat\"), így mindegyik kiemelés a következőig látszik, az utolsó 0,7 s kitartással; (2) a feliratok a mondat tagolása szerint törnek (video/felirat_tores.py), a b22 kézi tördeléssel (\"felirat_sorok\"); (3) egy írásmód: áfamentes / áfamentesség (b25, b29 felirata és az „Adózási adatok – áfa” cím); (4) a nézet széle nem vág félbe sort / gombot (render.szel_igazit – automatikus, a jel-bejegyzésben \"szel_igazit\": false kapcsolja ki); (5) hang: a b11, b12, b25, b28, b29, b33 eleji kattanása levágva, a b26 soron belüli kattanása elnémítva (eszkoz/kattanas.py). A szöveg (mond) nem változott. Az eredeti: _regi/forgatokonyv_elotte_r2_20261119_r2.json.",
+ "megjegyzes_tulaj1119": "2026-11-19 (tulaj 1., 3., 4. kérés): b04 „anyukád” (eddig „anyád”); a Készítsd elő listában „Anyukád születési neve”, a címkéje „A NAV tölti ki” (eddig „Mi nem tároljuk” – nem igaz, az azonosításnál a Pmt. miatt elkérjük; a TAJ-sor címkéje marad); b28 a valódi NAV-kép négy nyilatkozata szerint („…és a másik hármat is”, 2. jelölés); a 02, 03, 04, 11, 13, 14 kép a NAV kisfilmjéből vett valódi képernyő lett, ezért a b11, b32, b33 rajzra hangolt kézi nézete kikerült; új b40 + kiemelt „Intézzük helyetted” kártya a záróképen. A régi: _regi/forgatokonyv_elotte_20261119_tulaj1119.json. A b11 + b12 egy mondat lett: „A NAV tölti ki az adataidat: nézd át őket, és ha valami hibás, szólj a NAV-nak.” (a valódi Személyi adatok lapon nincs TAJ-rovat; a TAJ a Készítsd elő listában marad, „ha a képernyő kéri”), így a videó a 150 s-os sávban marad.",
+ "megjegyzes_javito_1119": "11-19 javító kör: b04 – anyukád születési nevét a NAV tölti ki (csak nézd át), a TAJ csak a listán, „ha a képernyő kéri”; b36 + app-kártya – „Feltöltöm az értesítést” gomb, „NAV-os értesítés” (nem igazolás); a zárókép tovább áll, áttűnés helyett szinte vágás (render.py VEG/ZARO_KEP)."
+}

@@ -1,0 +1,292 @@
+{
+ "b01": {
+  "mond": "Megmutatjuk, hogyan jelented be a vállalkozásodat. Ingyenes.",
+  "take": 1,
+  "atiratok": [
+   "Megmutatjuk, hogyan jelented be a vállalkozásodat ingyenes.",
+   "Megmutatjuk, hogyan jelented be a vállalkozásodat, ingyenes.",
+   "megmutatjuk, hogyan jelented be a vállalkozásodat, ingyenes."
+  ],
+  "hibas_szavak": []
+ },
+ "b03": {
+  "mond": "Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.",
+  "take": 1,
+  "atiratok": [
+   "Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.",
+   "Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat!",
+   "Készítsd elő a belépésedet a személyidet és a lakcímkártyádat"
+  ],
+  "hibas_szavak": []
+ },
+ "b04": {
+  "mond": "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki: csak nézd át.",
+  "take": 1,
+  "atiratok": [
+   "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át!",
+   "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át.",
+   "Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át."
+  ],
+  "hibas_szavak": []
+ },
+ "b07": {
+  "mond": "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu plusszal.",
+  "take": 1,
+  "atiratok": [
+   "Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal!",
+   "Nyisd meg a vállalkozói ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal,",
+   "Nyisd meg a vállalkozói ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal,"
+  ],
+  "hibas_szavak": []
+ },
+ "b09": {
+  "mond": "Koppints az Új bejelentés, kérelem benyújtása részre.",
+  "take": 3,
+  "atiratok": [
+   "Koppints az Új bejelentés, kérelem benyújtása részre",
+   "koppints az új bejelentés, kérelem benyújtása részre",
+   "Koppints az új bejelentés kérelem benyújtása részre."
+  ],
+  "hibas_szavak": []
+ },
+ "b10": {
+  "mond": "Majd válaszd a kezdés bejelentését.",
+  "take": 1,
+  "atiratok": [
+   "Majd válaszd a kezdés bejelentését.",
+   "majd válaszd a kezdés bejelentését",
+   "majd válaszd a kezdés bejelentését"
+  ],
+  "hibas_szavak": []
+ },
+ "b11": {
+  "mond": "A NAV tölti ki az adataidat: nézd át őket, és ha valami hibás, szólj a NAV-nak.",
+  "take": 1,
+  "atiratok": [
+   "A NAV tölti ki az adataidat. Nézd át őket, és ha valami hibás, szólj a NAV-nak.",
+   "A NAV tölti ki az adataidat. Nézd át őket, és ha valami hibás, szólj a NAV-nak!",
+   "A NAV tölti ki az adataidat. Nézd át őket és ha valami hibás, szólj a NAV-nak."
+  ],
+  "hibas_szavak": []
+ },
+ "b14": {
+  "mond": "Add meg a székhelyed. Ez a cím nyilvános lesz.",
+  "take": 1,
+  "atiratok": [
+   "Add meg a székhelyed. Ez a cím nyilvános lesz.",
+   "Add meg a székhelyed. Ez a cím nyilvános lesz.",
+   "Add meg a székhelyed! Ez a cím nyilvános lesz."
+  ],
+  "hibas_szavak": []
+ },
+ "b15": {
+  "mond": "Telephely csak akkor kell, ha lesz üzleted, irodád vagy műhelyed egy másik címen.",
+  "take": 1,
+  "atiratok": [
+   "telephely csak akkor kell ha lesz üzleted irodád vagy műhelyed egy másik címen",
+   "Telephely csak akkor kell ha lesz üzleted, irodád vagy műhelyed egy másik címen.",
+   "Telephely csak akkor kell ha lesz üzleted, irodád vagy műhelyed egy másik címen."
+  ],
+  "hibas_szavak": []
+ },
+ "b16": {
+  "mond": "Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.",
+  "take": 1,
+  "atiratok": [
+   "Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.",
+   "Keresd ki a főtevékenységedet! Az útmutatóban megírjuk, melyik sort válaszd.",
+   "Keresd ki a főtevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd."
+  ],
+  "hibas_szavak": []
+ },
+ "b18": {
+  "mond": "A munkavégzés jellegét kötelező megadni: ettől függ a járulékod.",
+  "take": 1,
+  "atiratok": [
+   "A munkavégzés jellegét kötelező megadni. Ettől függ a járulékod",
+   "A munkavégzés jellegét kötelező megadni, ettől függ a járulékod.",
+   "A munkavégzés jellegét kötelező megadni. Ettől függ a járulékod."
+  ],
+  "hibas_szavak": []
+ },
+ "b19": {
+  "mond": "Azt válaszd, ami rád igaz: főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.",
+  "take": 1,
+  "atiratok": [
+   "Azt választ, ami rád igaz. Főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.",
+   "azt válaszd ami rád igaz főállású munkaviszony tanulmányok vagy nyugdíj mellett",
+   "azt válaszd ami rád igaz főállású munkaviszony tanulmányok vagy nyugdíj mellett"
+  ],
+  "hibas_szavak": []
+ },
+ "b21": {
+  "mond": "A katát ne jelöld be.",
+  "take": 4,
+  "atiratok": [
+   "A katát ne jelöld be.",
+   "A katát ne jelöld be.",
+   "A katát ne jelöld be"
+  ],
+  "hibas_szavak": []
+ },
+ "b22": {
+  "mond": "Az átalányadózást igen: így a bevételed egy része eleve költségnek számít.",
+  "take": 1,
+  "atiratok": [
+   "az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,",
+   "az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,",
+   "az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,"
+  ],
+  "hibas_szavak": []
+ },
+ "b23": {
+  "mond": "Az áfafizetés módját hagyd üresen.",
+  "take": 1,
+  "atiratok": [
+   "Az áfafizetés módját hagyd üresen!",
+   "az áfafizetés módját hagyd üresen",
+   "az áfafizetés módját hagyd üresen"
+  ],
+  "hibas_szavak": []
+ },
+ "b24": {
+  "mond": "Az áfamentességnél csak a második pontot jelöld: az alanyi adómentességet.",
+  "take": 1,
+  "atiratok": [
+   "Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet.",
+   "Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet.",
+   "Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet."
+  ],
+  "hibas_szavak": []
+ },
+ "b25": {
+  "mond": "A legfontosabb pipa: így áfamentes leszel.",
+  "take": 1,
+  "atiratok": [
+   "A legfontosabb, pipa. Így áfamentes leszel.",
+   "A legfontosabb pipa. Így áfamentes leszel.",
+   "A legfontosabb pipa. Így áfamentes leszel"
+  ],
+  "hibas_szavak": []
+ },
+ "b26": {
+  "mond": "Közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.",
+  "take": 1,
+  "atiratok": [
+   "közösségi adószám csak akkor kell ha más uniós ország cégének dolgozol vagy tőle veszel szolgáltatást például hirdetést",
+   "közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.",
+   "közösségi adószám csak akkor kell ha más uniós ország cégének dolgozol vagy tőle veszel szolgáltatást például hirdetést"
+  ],
+  "hibas_szavak": []
+ },
+ "b27": {
+  "mond": "A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.",
+  "take": 1,
+  "atiratok": [
+   "A pénzforgalmi elszámolást ne jelöld. A többit hagyd üresen.",
+   "A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.",
+   "A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen."
+  ],
+  "hibas_szavak": []
+ },
+ "b28": {
+  "mond": "Jelöld be, hogy nincs kizáró ok, és a másik hármat is.",
+  "take": 1,
+  "atiratok": [
+   "Jelöld be, hogy nincs kizáró ok, és a másik hármat is.",
+   "Jelöld be, hogy nincs kizáró ok, és a másik hármat is.",
+   "Jelöld be, hogy nincs kizáró ok, és a másik hármat is!"
+  ],
+  "hibas_szavak": []
+ },
+ "b29": {
+  "mond": "Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem.",
+  "take": 2,
+  "atiratok": [
+   "Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. Kata és pénzforgalmi: nem.",
+   "Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. KATA és pénzforgalmi: nem.",
+   "Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. Kata és pénzforgalmi: nem."
+  ],
+  "hibas_szavak": []
+ },
+ "b32": {
+  "mond": "Ha minden stimmel, koppints a Bejelentés megtétele gombra.",
+  "take": 1,
+  "atiratok": [
+   "Ha minden stimmel koppints a bejelentés megtétele gombra.",
+   "Ha minden stimmel koppintson a bejelentés megtétele gombra",
+   "Ha minden stimmel, koppintson a Bejelentés megtétele gombra."
+  ],
+  "hibas_szavak": []
+ },
+ "b33": {
+  "mond": "Ezután nem módosítható, és a vállalkozásod aznap indul.",
+  "take": 1,
+  "atiratok": [
+   "Ezután nem módosítható és a vállalkozásod aznap indul",
+   "Ezután nem módosítható és a vállalkozásod aznap indul",
+   "Ezután nem módosítható és a vállalkozásod aznap indul"
+  ],
+  "hibas_szavak": []
+ },
+ "b34": {
+  "mond": "A Megtekintés lapon töltsd le az értesítést PDF-ben.",
+  "take": 1,
+  "atiratok": [
+   "a megtekintés lapon töltsd le az értesítést PDF-ben",
+   "A megtekintés lapon töltsd le az értesítést PDF-ben",
+   "A megtekintés lapon töltsd le az értesítést PDF-ben"
+  ],
+  "hibas_szavak": []
+ },
+ "b36": {
+  "mond": "Az alkalmazásban koppints a „Feltöltöm az értesítést” gombra, és töltsd fel.",
+  "take": 2,
+  "atiratok": [
+   "Az alkalmazásban koppintson a feltöltöm az értesítést gombra és töltsd fel",
+   "az alkalmazásban koppintsa feltöltöm az értesítést gombra és töltsd fel",
+   "az alkalmazásban koppintsa feltöltöm az értesítést gombra és töltsd fel"
+  ],
+  "hibas_szavak": []
+ },
+ "b37": {
+  "mond": "Átnézzük, és szólunk.",
+  "take": 1,
+  "atiratok": [
+   "átnézzük és szólunk",
+   "átnézzük és szólunk",
+   "átnézzük és szólunk"
+  ],
+  "hibas_szavak": []
+ },
+ "b38": {
+  "mond": "Még egy dolog: öt munkanapon belül a kamaránál is regisztrálnod kell.",
+  "take": 1,
+  "atiratok": [
+   "Még egy dolog. 5 munkanapon belül a kamaránál is regisztrálnod kell.",
+   "még egy dolog 5 munkanapon belül a kamaránál is regisztrálnod kell",
+   "Még egy dolog, öt munkanapon belül a kamaránál is regisztrálnod kell,"
+  ],
+  "hibas_szavak": []
+ },
+ "b39": {
+  "mond": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.",
+  "take": 1,
+  "atiratok": [
+   "Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív",
+   "Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív.",
+   "Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív."
+  ],
+  "hibas_szavak": []
+ },
+ "b40": {
+  "mond": "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+  "take": 1,
+  "atiratok": [
+   "ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+   "ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+   "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted."
+  ],
+  "hibas_szavak": []
+ }
+}

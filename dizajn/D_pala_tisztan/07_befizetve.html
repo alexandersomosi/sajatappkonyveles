@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Befizetve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=Sofia+Sans+Condensed:wght@600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.megerosit { padding: 0 var(--perem); }
+.megerosit .cim { padding-top: 40px; }
+.megerosit .alcim { padding-top: 4px; }
+/* Az összeg: szűkített betű, aláhúzás nélkül (a dupla vonal csak a számolásé) */
+.vegosszeg { margin: 18px 4px 0; font-family: var(--szuk); font-weight: 600; font-size: 46px; line-height: 1; letter-spacing: -.004em; font-variant-numeric: lining-nums proportional-nums; white-space: nowrap; }
+.vegosszeg .ft { font-size: 28px; color: var(--masod-alap); margin-left: 6px; }
+.utalasok { list-style: none; margin-top: 22px; }
+.utalasok li { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; align-items: center; padding: 15px var(--belso); font-size: 17px; position: relative; }
+.utalasok li + li::before { content: ""; position: absolute; top: 0; left: var(--belso); right: 0; border-top: 1px solid var(--hajszal); }
+.utalasok .ikon { width: 22px; height: 22px; stroke-width: 2.4; color: var(--pala); }
+.bence { margin-top: 22px; padding: 0 4px; }
+.bence .mit { color: var(--tinta); }
+.kovetkezo { font-size: 16px; line-height: 1.48; color: var(--masod-alap); margin: 16px 4px 0; }
+.lent { position: absolute; left: var(--perem); right: var(--perem); bottom: 40px; text-align: center; }
+.lent .gomb.harmad { margin-top: 8px; }
+</style>
+</head>
+<body class="telefon">
+<div data-allapotsor></div>
+
+<main class="megerosit">
+  <h1 class="cim">Befizetve</h1>
+  <p class="alcim">október 12., hétfő</p>
+  <p class="vegosszeg">820 260<span class="ft">Ft</span></p>
+
+  <ul class="lap utalasok">
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>SZJA-előleg</span><span class="szam">264&#8239;600<span class="ft">Ft</span></span></li>
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>TB-járulék</span><span class="szam">326&#8239;340<span class="ft">Ft</span></span></li>
+    <li><svg class="ikon"><use href="#i-pipa"/></svg><span>Szocho</span><span class="szam">229&#8239;320<span class="ft">Ft</span></span></li>
+  </ul>
+
+  <div class="konyvelo bence">
+    <span class="portre" data-portre></span>
+    <div>
+      <div class="ki">Kovács Bence, a könyvelőd</div>
+      <p class="mit">Felírtuk. Bence pár napon belül a NAV-nál is megnézi, hogy megérkezett-e, és szól, ha valami nem stimmel.</p>
+    </div>
+  </div>
+  <p class="kovetkezo">Legközelebb januárban kell fizetned. Előtte egy héttel szólunk.</p>
+</main>
+
+<div class="lent">
+  <button class="gomb elso">Vissza a főoldalra</button>
+  <button class="gomb harmad">Mégsem fizettem be</button>
+</div>
+
+<script src="kozos.js"></script>
+</body>
+</html>

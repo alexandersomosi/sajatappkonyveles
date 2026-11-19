@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Dosszié</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .keres { padding: 16px 18px 18px; }
+  .keres .ki { font-size: 14px; color: var(--halvany); }
+  .keres .mit { font-size: 17px; line-height: 1.4; font-weight: 700; }
+  .keres .miert { font-size: 15px; line-height: 1.45; color: var(--halvany); margin: 3px 0 14px; }
+  .sor .ikon { margin-top: 0; }
+  .lap .lab { padding: 6px 16px 16px; }
+</style>
+</head>
+<body class="sotet">
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <h1>Október</h1>
+  <p>8 irat, ebből egy még Bencére vár.</p>
+</header>
+
+<main class="tartalom">
+
+  <section class="lap keres">
+    <div class="mit">Bence kéri a szeptemberi bankszámlakivonatodat.</div>
+    <div class="miert">Elég a bankod appjából letöltött PDF.</div>
+    <button class="gomb-m"><svg class="i"><use href="#feltolt"/></svg>Kivonat feltöltése</button>
+  </section>
+
+  <div class="szakasz">Tőled</div>
+  <section class="lap">
+    <div class="sor">
+      <svg class="i ikon"><use href="#foto"/></svg>
+      <div class="l"><div class="cim">Nyugta, készpénzes eladás</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, hétfőn</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="sor">
+      <svg class="i ikon"><use href="#foto"/></svg>
+      <div class="l"><div class="cim">Szerződés, Bodza Kiadó</div>
+        <div class="allapot var"><svg><use href="#var-jel"/></svg><span><span class="szo">Feltöltve</span>, tegnap</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="lab">
+      <button class="gomb-e"><svg class="i"><use href="#feltolt"/></svg>Új irat feltöltése</button>
+    </div>
+  </section>
+
+  <div class="szakasz">A NAV-tól jött, magától</div>
+  <section class="lap">
+    <div class="sor">
+      <svg class="i ikon"><use href="#szamla"/></svg>
+      <div class="l"><div class="cim">Kiállított számláid, 4 db</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, szerdán</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="sor">
+      <svg class="i ikon"><use href="#boritek"/></svg>
+      <div class="l"><div class="cim">Levél a NAV-tól</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, nincs teendőd</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+  </section>
+
+  <div class="szakasz">Bence beadta</div>
+  <section class="lap">
+    <div class="sor">
+      <svg class="i ikon"><use href="#bevallas"/></svg>
+      <div class="l"><div class="cim">Bevallás a III. negyedévről</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Beadva</span>, október 2-án</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+  </section>
+
+  <div class="szakasz">Korábbi hónapok</div>
+  <section class="lap">
+    <div class="sor">
+      <div class="l"><div class="cim">Szeptember</div>
+        <div class="allapot var"><svg><use href="#var-jel"/></svg><span>Bevallás beadva, a kivonat hiányzik</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="sor">
+      <div class="l"><div class="cim">Augusztus</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Lezárva</span>, minden beadva</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+  </section>
+
+</main>
+
+<nav class="fulsor">
+  <div class="ful"><svg class="i"><use href="#haz"/></svg>Főoldal</div>
+  <div class="ful on"><svg class="i"><use href="#dosszie"/></svg>Dosszié</div>
+  <div class="ful"><svg class="i"><use href="#uzenet"/></svg>Üzenetek</div>
+  <div class="ful"><svg class="i"><use href="#fiok"/></svg>Fiók</div>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

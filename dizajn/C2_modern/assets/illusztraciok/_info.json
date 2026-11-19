@@ -1,0 +1,88 @@
+{
+ "vaszon_pt": [
+  160,
+  120
+ ],
+ "forras": {
+  "level_boritek": {
+   "forras": "_nyers\\valos_szembol_egyedi_11_v1.png",
+   "targy_px": [
+    542,
+    511
+   ],
+   "nagyitas_3x": 0.564,
+   "felskalazva_3x": false
+  },
+  "meghatalmazas_alairva": {
+   "forras": "_nyers\\valos_szembol_egyedi_12_v1.png",
+   "targy_px": [
+    568,
+    488
+   ],
+   "nagyitas_3x": 0.554,
+   "felskalazva_3x": false
+  },
+  "videohivas_laptop": {
+   "forras": "_nyers\\valos_szembol_egyedi_13_v1.png",
+   "targy_px": [
+    575,
+    391
+   ],
+   "nagyitas_3x": 0.688,
+   "felskalazva_3x": false
+  },
+  "dosszie_mappa": {
+   "forras": "_nyers\\valos_szembol_egyedi_21_v1.png",
+   "targy_px": [
+    592,
+    442
+   ],
+   "nagyitas_3x": 0.568,
+   "felskalazva_3x": false
+  },
+  "hatarido_naptar": {
+   "forras": "_nyers\\valos_szembol_egyedi_22_v1.png",
+   "targy_px": [
+    391,
+    474
+   ],
+   "nagyitas_3x": 0.565,
+   "felskalazva_3x": false
+  },
+  "befizetve_pecset": {
+   "forras": "_nyers\\valos_szembol_egyedi_23_v1.png",
+   "targy_px": [
+    357,
+    342
+   ],
+   "nagyitas_3x": 0.693,
+   "felskalazva_3x": false
+  }
+ },
+ "lapmeret_px": {
+  "11": [
+   265,
+   226
+  ],
+  "12": [
+   248,
+   212
+  ],
+  "13": [
+   316,
+   212
+  ],
+  "21": [
+   290,
+   197
+  ],
+  "22": [
+   194,
+   210
+  ],
+  "23": [
+   221,
+   186
+  ]
+ }
+}

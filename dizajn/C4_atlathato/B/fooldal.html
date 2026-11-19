@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Főoldal (B: előbb a haladás)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<style>
+/* C4 átlátható – B irány („előbb a haladás”), 2026-11-19.
+   Szabályok: egy fő gomb, mindig lent, a fülsor fölött rögzítve; minden szakasz ugyanígy kezdődik (3D ikon + kék cím,
+   egy mondat, legfeljebb egy művelet); szakaszon belül két szövegszint (cím, szöveg) + nagy szám; nincs kis szürke
+   nagybetűs címke; képernyőnként legfeljebb egy szöveges link; doboz a dobozban nincs (térköz + egy hajszálvonal);
+   csak a „Most” és a „Következő” lépés látszik; ki lép: egy kis jel a sor elején; minden üzenet egyszer. */
+
+/* fehér alap: nincs fehér doboz halvány alapon, így a színt egyedül a fő gomb viszi */
+html, body { background: #fff; }
+.allapotsor { color: var(--tinta); }
+
+/* ---------- fejléc: ki a könyvelőd, hol tartasz, mi jön ---------- */
+.fej { padding: 0 16px 24px; }
+.ki { display: flex; align-items: center; gap: 12px; min-height: 46px; }
+.ki img.arckep { width: 44px; height: 44px; box-shadow: 0 0 0 1px var(--hajszal); }
+.ki .nev { font-weight: 650; font-size: 17px; line-height: 1.25; letter-spacing: -.01em; }
+.ki .szerep { font-size: 16px; line-height: 1.3; color: var(--halvany); }
+.demo { margin-left: auto; align-self: flex-start; margin-top: 4px; height: 26px; padding: 0 9px; border-radius: 6px;
+  display: inline-flex; align-items: center; background: var(--borostyan-alap); color: #5E3B00;
+  font-weight: 750; font-size: 13px; letter-spacing: .04em; }
+
+.halad { display: flex; align-items: baseline; gap: 8px; margin-top: 22px; }
+.halad .nagy { font-weight: 800; font-size: 28px; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums lining-nums; }
+.halad .mi { font-size: 16.5px; color: var(--halvany); }
+.csik { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin-top: 12px; }
+.csik i { height: 8px; border-radius: 4px; background: #DCE2F7; }
+.csik i.k { background: var(--neon); }
+
+h1 { font-weight: 750; font-size: 31px; line-height: 1.12; letter-spacing: -.028em; margin-top: 22px; }
+
+/* ---------- szakasz: lap nélkül, egy hajszálvonal választ ---------- */
+.szak { padding: 22px 16px 22px; border-top: 1px solid var(--hajszal); }
+.szak-fej { display: flex; align-items: center; gap: 12px; min-height: 36px; }
+.szak-fej img.i3 { width: 36px; height: 36px; }
+.szak-fej h2 { font-weight: 650; font-size: 20px; line-height: 1.25; letter-spacing: -.016em; color: var(--tintakek-szoveg); }
+.szak p { font-size: 17px; line-height: 1.5; margin-top: 10px; color: var(--tinta); }
+
+/* lépéssorok: ki lép = egy kis jel a sor elején */
+.lepesek { margin-top: 10px; margin-bottom: -8px; }
+.lepes { display: flex; align-items: center; gap: 14px; min-height: 60px; }
+.lepes img.i3 { width: 36px; height: 36px; }
+.lepes .l { flex: 1; min-width: 0; }
+.lepes .c { font-weight: 600; font-size: 17px; line-height: 1.3; }
+.lepes .a { font-size: 16px; line-height: 1.35; color: var(--halvany); margin-top: 2px; }
+.tobb { display: flex; align-items: center; min-height: 44px; padding-left: 50px; width: 100%;
+  font-weight: 650; font-size: 17px; color: var(--tintakek-szoveg); }
+
+/* „Mi ez?” helyett kerek i-gomb (44 pt-os érintési terület, a korong a másodlagos gomb színe) */
+.i-gomb { width: 44px; height: 44px; flex: none; display: grid; place-items: center; margin-right: -7px; }
+.i-gomb span { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gomb-m-alap); color: var(--tintakek-szoveg); font-weight: 800; font-size: 16px; line-height: 1; }
+
+/* a képernyő egyetlen szöveges linkje */
+.link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 4px; font-weight: 550; font-size: 17px;
+  color: var(--tintakek-szoveg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+.szak .gomb-m { height: 48px; margin-top: 16px; padding: 0 20px; font-size: 16.5px; }
+
+main { padding-bottom: 190px; }
+
+/* ---------- lent: a fő gomb mindig ugyanott, a fülsor fölött ---------- */
+.dokk { position: fixed; left: 0; bottom: 0; width: 390px; z-index: 9; background: #fff; }
+.dokk::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
+.dokk .fo { padding: 8px 16px 12px; }
+.dokk .gomb-e { height: 56px; font-size: 17.5px; font-weight: 700; }
+.fulek { display: grid; grid-template-columns: repeat(5, 1fr); height: 56px; border-top: 1px solid var(--hajszal); }
+.fulek .f { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 12.5px; font-weight: 550; color: var(--halvany); letter-spacing: -.005em; }
+.fulek .f img.i3 { width: 28px; height: 28px; }
+.fulek .f.on { color: var(--neon); font-weight: 750; }
+.biztonsagi { height: 26px; }
+.otthon-jel { bottom: 8px; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="fej">
+    <div class="ki">
+      <img class="arckep" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt="">
+      <div><div class="nev">Kovács Bence</div><div class="szerep">a könyvelőd</div></div>
+      <span class="demo">DEMO</span>
+    </div>
+
+    <div class="halad"><span class="nagy">2 / 12</span><span class="mi">lépés kész</span></div>
+    <div class="csik" role="img" aria-label="12 lépésből 2 kész"><i class="k"></i><i class="k"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+    <h1>Jöhet a szerződés</h1>
+  </div>
+</header>
+
+<main>
+  <section class="szak">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/irat_arnyektalan_36@2x.png" srcset="../../C2_modern/assets/ikon3d/irat_arnyektalan_36@2x.png 2x, ../../C2_modern/assets/ikon3d/irat_arnyektalan_36@3x.png 3x" alt=""><h2>Most te jössz</h2></div>
+    <p>Bencével kötöd: olvasd el, és ha rendben van, fogadd el. Kb. 3 perc.</p>
+    <div class="lepesek">
+      <div class="lepes">
+        <img class="i3" src="../../C2_modern/assets/ikon3d/fiok_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_36@3x.png 3x" alt="Te">
+        <div class="l"><div class="c">Meghatalmazás a NAV-nál</div><div class="a">Következő, kb. 5 perc</div></div>
+        <button class="i-gomb" aria-label="Mi ez?"><span>i</span></button>
+      </div>
+      <button class="tobb">Még 10 lépés</button>
+    </div>
+  </section>
+
+  <section class="szak">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/ora_36@2x.png" srcset="../../C2_modern/assets/ikon3d/ora_36@2x.png 2x, ../../C2_modern/assets/ikon3d/ora_36@3x.png 3x" alt=""><h2>Közben mi dolgozunk</h2></div>
+    <p>Általában 1 munkanapon belül megírjuk, melyik tevékenységet jelöld be a NAV-nál.</p>
+    <a class="link" href="#">Addig nézd meg a bemutató videót (1:47)</a>
+  </section>
+
+  <section class="szak">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/kerdezek_36@2x.png" srcset="../../C2_modern/assets/ikon3d/kerdezek_36@2x.png 2x, ../../C2_modern/assets/ikon3d/kerdezek_36@3x.png 3x" alt=""><h2>Ha elakadsz</h2></div>
+    <p>Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.</p>
+    <button class="gomb-m csak-szoveg">Kérj visszahívást</button>
+  </section>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Elolvasom a szerződést</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

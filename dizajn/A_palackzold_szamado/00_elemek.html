@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Elemek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .note { font-size: 14px; color: var(--muted); margin-top: 8px; }
+  .gsor { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .field.err { border-color: var(--danger); }
+  .hiba { font-size: 15px; color: var(--danger); margin-top: 6px; }
+  .dim { background: rgba(22,35,30,.45); padding: 40px 0 0; margin-top: 4px; }
+  .lap-also { background: #fff; border-radius: 20px 20px 0 0; padding: 10px 20px 22px; }
+  .lap-also .fogo { width: 40px; height: 5px; border-radius: 3px; background: var(--off); margin: 0 auto 16px; }
+  .lap-also .small { margin-top: 6px; }
+  .lap-also .btn-p { margin-top: 18px; }
+  .lap-also .btn-t { margin-top: 6px; }
+  .allapotok .row { min-height: 0; padding-top: 12px; padding-bottom: 12px; }
+  .allapotok .ttl { font-size: 15px; color: var(--muted); }
+  .chat { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; background: var(--ground); }
+  .b { max-width: 280px; padding: 10px 14px 8px; border-radius: 18px; font-size: 17px; line-height: 1.42; }
+  .b .ido { display: block; font-size: 13.5px; color: var(--muted); margin-top: 3px; text-align: right; }
+  .b.o { background: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .b.en { background: var(--mine); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .b.en .ido { color: var(--mine-ido); }
+  .iro { display: flex; align-items: center; gap: 8px; }
+  .iro .field { flex: 1; height: 44px; font-size: 16px; }
+  .kuld { height: 44px; padding: 0 14px; border-radius: var(--r-btn); font: 700 16px/1 var(--sans); flex: none; background: var(--brand); color: #fff; }
+  .kuld:disabled { background: #E6ECE9; color: var(--chev); }
+  .mini .kv { padding: 28px 28px 26px; }
+  .mini .mondat { font-size: 24px; }
+</style>
+</head>
+<body>
+<div class="sb"></div>
+<header class="head">
+  <h1 class="t1">Elemek</h1>
+  <p class="lede">A Számadó gombjai, sorai és állapotai egy helyen.</p>
+</header>
+
+<h2 class="sect">Elsődleges gomb</h2>
+<div class="sheet pad">
+  <button class="btn-p">Feltöltöm a 2. oldalt</button>
+  <p class="note">Kitöltött palackzöld, teljes szélesség, 54 px, 8 px-es sarok. Képernyőnként egy.</p>
+</div>
+
+<h2 class="sect">Másodlagos, szöveges, veszélyes</h2>
+<div class="sheet pad">
+  <div class="gsor">
+    <button class="btn-s"><i data-i="camera" data-s="20"></i>Feltöltés</button>
+    <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    <span class="btn-s copy done"><i data-i="check" data-s="18"></i>Kimásolva</span>
+  </div>
+  <div class="gsor" style="margin-top:8px">
+    <button class="btn-t">Másik időpont</button>
+    <button class="btn-d">Előfizetés lemondása</button>
+  </div>
+  <p class="note">A „Másolás” megnyomás után 3 másodpercig „Kimásolva” lesz, halványzöld alapon, keret nélkül.</p>
+</div>
+
+<h2 class="sect">Ha nem a NAV-nak fizetsz</h2>
+<section class="kivonat mini" aria-label="Iparűzési adó">
+  <svg class="keret" aria-hidden="true"></svg>
+  <div class="kv">
+    <p class="mondat">Március 16-ig (kedd) fizess be 48&thinsp;000&nbsp;Ft-ot.</p>
+    <p class="kv-sub">Iparűzési adó. Ez nem a NAV-nak megy, hanem a lakóhelyed önkormányzatának, külön utalással.</p>
+    <div class="gombok">
+      <button class="btn-s on-card">Utalás adatai</button>
+      <button class="btn-p inv">Befizettem</button>
+    </div>
+  </div>
+</section>
+<div class="gap"></div>
+<div class="sheet">
+  <div class="adat">
+    <div class="mi"><p class="c">Kedvezményezett</p><p class="ert nev">Mintaváros Önkormányzata</p></div>
+    <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+  </div>
+  <div class="adat">
+    <div class="mi"><p class="c">Iparűzési adó, <span class="inl">48&thinsp;000</span>&nbsp;Ft</p><p class="ert id">11773030-15398005</p></div>
+    <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+  </div>
+  <div class="adat">
+    <div class="mi"><p class="c">Közlemény</p><p class="ert id" style="white-space:normal">8412345678 iparűzési adó</p></div>
+    <button class="btn-s copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+  </div>
+</div>
+<p class="note" style="padding:8px 20px 0">Mintaadat: az önkormányzat neve és számlaszáma kitalált.</p>
+
+<h2 class="sect">Megerősítő lap</h2>
+<div class="dim">
+  <div class="lap-also">
+    <div class="fogo"></div>
+    <p class="t3">Biztosan lemondod?</p>
+    <p class="small">Október 31-ig Bence még intézi az ügyeidet. Utána a meghatalmazása megszűnik, és a dossziédat letöltheted.</p>
+    <button class="btn-p red">Lemondom az előfizetést</button>
+    <button class="btn-t">Mégsem, maradok</button>
+  </div>
+</div>
+
+<h2 class="sect">Állapot a sorokban: csak szó</h2>
+<div class="sheet allapotok">
+  <div class="row"><div class="main"><p class="ttl">Amit feltöltöttél</p><p class="state">Feltöltötted, október 2.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row pressed"><div class="main"><p class="ttl">Lenyomott sor</p><p class="state">Bence látta, október 5.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row"><div class="main"><p class="ttl">Bence dolgozott vele</p><p class="state">Feldolgozva, október 5.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row"><div class="main"><p class="ttl">Bence beadta</p><p class="state">Beadva október 6-án, a NAV visszaigazolta.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row"><div class="main"><p class="ttl">Rád vár</p><p class="state w">Bence kéri a 2. oldalt.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+</div>
+<p class="note" style="padding:8px 20px 0">Feltöltött irat: feltöltve, Bence látta, feldolgozva, beadva. A lépések sora csak a tétel képernyőjén látszik.</p>
+
+<h2 class="sect">Bejövő NAV-levél: saját állapotsor</h2>
+<div class="sheet allapotok">
+  <div class="row"><div class="main"><p class="ttl">Egyenlegértesítő a NAV-tól</p><p class="state">Megérkezett, ma</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row"><div class="main"><p class="ttl">Egyenlegértesítő a NAV-tól</p><p class="state">Bence elolvasta, nincs vele teendőd.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+  <div class="row"><div class="main"><p class="ttl">Felhívás a NAV-tól</p><p class="state w">Bence elolvasta, teendőd van vele.</p></div><i data-i="chev" data-s="16" class="chev"></i></div>
+</div>
+<p class="note" style="padding:8px 20px 0">Megérkezett, Bence elolvasta, és vagy nincs teendő (ez a vége), vagy teendő van. Beadva állapota nincs.</p>
+
+<h2 class="sect">Folyamatban lévő lépés</h2>
+<div class="sheet">
+  <div class="lepesek">
+    <div class="lepes kesz"><span class="jel"><i data-i="check" data-s="16"></i></span><div><p class="ln">Azonosítva</p><p class="ld">Kész lépés: zöld kör, pipa.</p></div></div>
+    <div class="lepes most"><span class="jel"><i data-i="clock" data-s="18"></i></span><div><p class="ln">Bejelentés a NAV-nál <span class="most-szo">folyamatban</span></p><p class="ld">Most zajlik: óra a halványzöld körben, a név főnév, nem befejezett alak.</p></div></div>
+    <div class="lepes var"><span class="jel"></span><div><p class="ln">Számlák bekötése</p><p class="ld">Hátralévő: szaggatott szürke kör.</p></div></div>
+  </div>
+</div>
+
+<h2 class="sect">Üzenetek</h2>
+<div class="sheet">
+  <div class="chat">
+    <div class="b en">A bank jövedelemigazolást kér. Tőled kérjem?<span class="ido">8:52</span></div>
+    <div class="b o">Igen, én kérem le neked.<span class="ido">9:20</span></div>
+  </div>
+  <div style="padding:12px 12px 14px">
+    <div class="iro"><div class="field"><span class="v" style="color:var(--muted)">Írj Bencének…</span></div><button class="kuld" disabled>Küldés</button></div>
+    <div class="iro" style="margin-top:10px"><div class="field focus"><span class="v">Köszönöm!</span></div><button class="kuld">Küldés</button></div>
+  </div>
+</div>
+<p class="note" style="padding:8px 20px 0">A „Küldés” csak akkor zöld, ha van mit elküldeni. Üresen szürke lap, nem aláhúzott szöveg.</p>
+
+<h2 class="sect">A könyvelő</h2>
+<div class="sheet">
+  <div class="row konyvelo-sor">
+    <span class="arckep"></span>
+    <div class="main">
+      <p class="nev">Kovács Bence, a könyvelőd</p>
+      <p class="cim">Mérlegképes könyvelő</p>
+      <p class="cim">Nyilvántartási szám: 184205</p>
+      <p class="cim">Ma 9–17-ig elérhető.</p>
+    </div>
+  </div>
+</div>
+<p class="note" style="padding:8px 20px 0">A szürke alak helyére Bence valódi fotója kerül (igazolványkép-arány, nem kör). Monogram és zöld pötty nincs.</p>
+
+<h2 class="sect">Határ 80% fölött</h2>
+<div class="sheet">
+  <div class="meter" style="padding:20px 20px 20px">
+    <p class="t3">Még <span class="num">3&thinsp;600&thinsp;000</span>&nbsp;Ft-ot számlázhatsz ÁFA nélkül.</p>
+    <div class="bar warn"><i style="width:82%"></i></div>
+    <div class="ends"><span>Idén eddig <span class="amt">16&thinsp;400&thinsp;000</span>&nbsp;Ft</span><span>A határ <span class="amt">20&thinsp;000&thinsp;000</span>&nbsp;Ft</span></div>
+    <p class="small" style="margin-top:10px;color:var(--warn)">Közel vagy a határhoz. Bence még ebben a hónapban felhív, és megbeszélitek, mi a teendő.</p>
+  </div>
+</div>
+
+<h2 class="sect">Beviteli mező</h2>
+<div class="sheet pad">
+  <label class="lbl">Adóazonosító jel</label>
+  <div class="field err"><span class="v id">841234567</span></div>
+  <p class="hiba">Ez 9 számjegy. Az adóazonosító jel 10 számjegyű, 8-cal kezdődik.</p>
+</div>
+<div style="height:40px"></div>
+<script src="kozos.js"></script>
+</body>
+</html>

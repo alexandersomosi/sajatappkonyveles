@@ -1,0 +1,51 @@
+<!doctype html><html lang="hu"><head><meta charset="utf-8"><style>
+@font-face { font-family: "Inter"; src: url("../../_betu/Inter_opsz_wght.ttf") format("truetype"); font-weight: 100 900; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F3F5F8; }
+body { width: 412px; font-family: "Inter", Arial, sans-serif; color: #1D2433; font-size: 15px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+.top { height: 54px; background: #fff; border-bottom: 1px solid #D9DEE6; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+.top b { font-size: 15px; letter-spacing: .5px; color: #1F3B63; }
+.top span { font-size: 13px; color: #4B5567; font-weight: 600; }
+.lap { padding: 16px 16px 56px; }
+.lepes { font-size: 12.5px; color: #4B5567; font-weight: 600; margin-bottom: 4px; }
+.sav { display: flex; gap: 4px; margin: 6px 0 14px; }
+.urlapcim { font-size: 15px; font-weight: 700; color: #1D2433; margin-bottom: 10px; }
+.lepesek { display: flex; align-items: center; margin: 0 2px 6px; }
+.lepesek .k { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #C3CAD6; background: #fff; color: #6B7487; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.lepesek .k.most { background: #0A5FA8; border-color: #0A5FA8; color: #fff; }
+.lepesek .k.kesz { background: #2E9B45; border-color: #2E9B45; color: #fff; font-size: 14px; }
+.lepesek .v { flex: 1; height: 2px; background: #C3CAD6; margin: 0 3px; }
+.lepesnev { font-size: 12.5px; font-weight: 700; color: #1D2433; margin: 2px 0 14px; }
+.sav i { flex: 1; height: 5px; border-radius: 3px; background: #D3D9E3; }
+.sav i.kesz { background: #6E8FC0; } .sav i.most { background: #0A66C2; }
+h1 { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -.2px; }
+h2 { font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+.kartya { background: #fff; border: 1px solid #D9DEE6; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.mezo { margin-bottom: 10px; } .mezo:last-child { margin-bottom: 0; }
+.mezo label { display: block; font-size: 12.5px; font-weight: 600; color: #3A4352; margin-bottom: 4px; }
+.input { height: 40px; border: 1px solid #8E98A9; border-radius: 6px; background: #fff; display: flex; align-items: center; padding: 0 10px; color: #6B7487; font-size: 14px; }
+.input.ro { background: #EEF1F5; border-color: #C9D0DB; }
+.adat { display: inline-block; height: 11px; border-radius: 6px; background: #B7C0CE; }
+.sor { display: flex; gap: 10px; } .sor > * { flex: 1; }
+.pipa { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid #EDF0F4; }
+.pipa:first-of-type { border-top: 0; }
+.doboz { flex: none; width: 22px; height: 22px; border: 2px solid #5B6578; border-radius: 4px; background: #fff; color: #fff; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.doboz.be { background: #0A66C2; border-color: #0A66C2; }
+.kor { flex: none; width: 22px; height: 22px; border: 2px solid #5B6578; border-radius: 50%; background: #fff; margin-top: 1px; display: flex; align-items: center; justify-content: center; }
+.kor.be { border-color: #0A66C2; } .kor.be::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #0A66C2; }
+.pipa span { font-size: 14px; }
+.pont { font-weight: 700; margin-right: 2px; }
+.kicsi { font-size: 12.5px; color: #4B5567; }
+.info { background: #E8F1FB; border: 1px solid #BCD4EF; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #24364F; margin-bottom: 12px; }
+.figyel { background: #FFF4DC; border: 1px solid #E9C77A; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #4A3608; margin-bottom: 12px; }
+.gombok { display: flex; gap: 10px; margin-top: 14px; }
+.gomb { flex: 1; height: 44px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14.5px; }
+.gomb.elso { background: #0A66C2; color: #fff; } .gomb.masod { background: #fff; color: #0A66C2; border: 2px solid #0A66C2; }
+.csempe { background: #fff; border: 1px solid #D9DEE6; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.csempe b { display: block; font-size: 16px; margin-bottom: 4px; color: #123A6B; }
+.lista .elem { background: #fff; border: 1px solid #D9DEE6; border-radius: 8px; padding: 14px; margin-bottom: 8px; font-size: 14.5px; font-weight: 600; color: #123A6B; }
+.osszes { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid #EDF0F4; font-size: 13.5px; }
+.osszes:first-child { border-top: 0; } .osszes em { font-style: normal; font-weight: 700; }
+.link { color: #0A66C2; font-weight: 700; text-decoration: underline; font-size: 14px; }
+.sor-gomb { height: 40px; border: 2px dashed #9AA6B8; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #0A66C2; font-weight: 700; font-size: 14px; }
+</style></head><body><div class="top"><b>NAV ÜPO</b><span>Vállalkozói Ügysegéd</span></div><div class="lap"><h1>Megtekintés</h1><div class="kartya" data-jel="ertesites"><h2>Értesítés</h2><div style="padding:5px 0"><span class="adat" style="width:260px"></span></div><div style="padding:5px 0"><span class="adat" style="width:220px"></span></div><div style="padding:5px 0"><span class="adat" style="width:240px"></span></div><div style="padding:5px 0"><span class="adat" style="width:150px"></span></div><div class="gombok"><div class="gomb elso" data-jel="pdf">Letöltés (PDF)</div></div></div><div style="text-align:center;padding:6px" data-jel="bejelenteseim"><span class="link">Bejelentéseim, kérelmeim</span></div></div></body></html>

@@ -1,0 +1,433 @@
+{
+ "fps": 30,
+ "hossz": 3211,
+ "nema": false,
+ "marka": {
+  "nev": "Kézjegy",
+  "havidij": "20 000"
+ },
+ "sorok": [
+  {
+   "id": "L01",
+   "jelenet": "koszonto",
+   "tol": 18,
+   "ig": 100
+  },
+  {
+   "id": "L02",
+   "jelenet": "koszonto",
+   "tol": 115,
+   "ig": 215
+  },
+  {
+   "id": "L03",
+   "jelenet": "mire_jo",
+   "tol": 230,
+   "ig": 330
+  },
+  {
+   "id": "L04",
+   "jelenet": "mire_jo",
+   "tol": 339,
+   "ig": 497
+  },
+  {
+   "id": "L05",
+   "jelenet": "mire_jo",
+   "tol": 506,
+   "ig": 634
+  },
+  {
+   "id": "L06",
+   "jelenet": "mire_jo",
+   "tol": 643,
+   "ig": 706
+  },
+  {
+   "id": "L07",
+   "jelenet": "bekotes",
+   "tol": 721,
+   "ig": 897
+  },
+  {
+   "id": "L08",
+   "jelenet": "lepes_adatok",
+   "tol": 912,
+   "ig": 1018
+  },
+  {
+   "id": "L09",
+   "jelenet": "lepes_inditas",
+   "tol": 1033,
+   "ig": 1195
+  },
+  {
+   "id": "L10",
+   "jelenet": "lepes_inditas",
+   "tol": 1204,
+   "ig": 1317
+  },
+  {
+   "id": "L10b",
+   "jelenet": "lepes_inditas",
+   "tol": 1326,
+   "ig": 1430
+  },
+  {
+   "id": "L11",
+   "jelenet": "lepes_szerzodes",
+   "tol": 1445,
+   "ig": 1708
+  },
+  {
+   "id": "L13",
+   "jelenet": "lepes_meghatalmazas",
+   "tol": 1723,
+   "ig": 1879
+  },
+  {
+   "id": "L14",
+   "jelenet": "lepes_meghatalmazas",
+   "tol": 1888,
+   "ig": 1970
+  },
+  {
+   "id": "L15",
+   "jelenet": "lepes_azonositas",
+   "tol": 1985,
+   "ig": 2107
+  },
+  {
+   "id": "L16",
+   "jelenet": "lepes_azonositas",
+   "tol": 2116,
+   "ig": 2203
+  },
+  {
+   "id": "L17",
+   "jelenet": "lepes_szamlak",
+   "tol": 2218,
+   "ig": 2314
+  },
+  {
+   "id": "L18",
+   "jelenet": "korlatozott",
+   "tol": 2329,
+   "ig": 2439
+  },
+  {
+   "id": "L19",
+   "jelenet": "korlatozott",
+   "tol": 2448,
+   "ig": 2584
+  },
+  {
+   "id": "L20",
+   "jelenet": "segitseg",
+   "tol": 2599,
+   "ig": 2772
+  },
+  {
+   "id": "L20b",
+   "jelenet": "segitseg",
+   "tol": 2781,
+   "ig": 2946
+  },
+  {
+   "id": "L21",
+   "jelenet": "segitseg",
+   "tol": 2955,
+   "ig": 3042
+  },
+  {
+   "id": "L22",
+   "jelenet": "zaro",
+   "tol": 3057,
+   "ig": 3151
+  }
+ ],
+ "cues": [
+  {
+   "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat!",
+   "tol": 18,
+   "ig": 100
+  },
+  {
+   "szoveg": "Megmutatjuk, mire jó,",
+   "tol": 115,
+   "ig": 166
+  },
+  {
+   "szoveg": "és mi kell a kezdéshez.",
+   "tol": 166,
+   "ig": 215
+  },
+  {
+   "szoveg": "Saját könyvelőd lesz,",
+   "tol": 230,
+   "ig": 277
+  },
+  {
+   "szoveg": "aki intézi az adóidat.",
+   "tol": 277,
+   "ig": 330
+  },
+  {
+   "szoveg": "A kiállított számláid maguktól megjelennek",
+   "tol": 339,
+   "ig": 415
+  },
+  {
+   "szoveg": "az alkalmazásban – nem kell feltöltened őket.",
+   "tol": 415,
+   "ig": 497
+  },
+  {
+   "szoveg": "A Főoldalon látod, mennyit,",
+   "tol": 506,
+   "ig": 566
+  },
+  {
+   "szoveg": "mikorra és hova kell fizetned.",
+   "tol": 566,
+   "ig": 634
+  },
+  {
+   "szoveg": "A nyugtákat pedig csak lefotózod.",
+   "tol": 643,
+   "ig": 706
+  },
+  {
+   "szoveg": "A bekötés néhány lépés.",
+   "tol": 721,
+   "ig": 780
+  },
+  {
+   "szoveg": "Mindegyiknél leírtuk, mi ez, miért kell,",
+   "tol": 780,
+   "ig": 840
+  },
+  {
+   "szoveg": "és hol találod.",
+   "tol": 840,
+   "ig": 897
+  },
+  {
+   "szoveg": "Először az adataid kellenek:",
+   "tol": 912,
+   "ig": 967
+  },
+  {
+   "szoveg": "ezekből számol a könyvelőd.",
+   "tol": 967,
+   "ig": 1018
+  },
+  {
+   "szoveg": "Ha még nincs vállalkozásod, te magad jelented be",
+   "tol": 1033,
+   "ig": 1140
+  },
+  {
+   "szoveg": "a NAV-nál, nagyjából negyedóra alatt.",
+   "tol": 1140,
+   "ig": 1195
+  },
+  {
+   "szoveg": "Az alkalmazás lépésről lépésre",
+   "tol": 1204,
+   "ig": 1263
+  },
+  {
+   "szoveg": "megmutatja, mit hova jelölj.",
+   "tol": 1263,
+   "ig": 1317
+  },
+  {
+   "szoveg": "A NAV-os igazolást feltöltöd,",
+   "tol": 1326,
+   "ig": 1390
+  },
+  {
+   "szoveg": "mi pedig átnézzük.",
+   "tol": 1390,
+   "ig": 1430
+  },
+  {
+   "szoveg": "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat.",
+   "tol": 1445,
+   "ig": 1582
+  },
+  {
+   "szoveg": "Új vállalkozásnál erre csak akkor van szükség,",
+   "tol": 1582,
+   "ig": 1654
+  },
+  {
+   "szoveg": "ha már megvan az adószámod.",
+   "tol": 1654,
+   "ig": 1708
+  },
+  {
+   "szoveg": "Ezután NAV-meghatalmazást adsz a könyvelődnek.",
+   "tol": 1723,
+   "ig": 1822
+  },
+  {
+   "szoveg": "Ebben is segít az alkalmazás.",
+   "tol": 1822,
+   "ig": 1879
+  },
+  {
+   "szoveg": "Így ő adhatja be helyetted",
+   "tol": 1888,
+   "ig": 1931
+  },
+  {
+   "szoveg": "a bevallásaidat.",
+   "tol": 1931,
+   "ig": 1970
+  },
+  {
+   "szoveg": "Lefotózod a személyidet",
+   "tol": 1985,
+   "ig": 2037
+  },
+  {
+   "szoveg": "és a lakcímkártyád lakcímes oldalát.",
+   "tol": 2037,
+   "ig": 2107
+  },
+  {
+   "szoveg": "A törvény szerint",
+   "tol": 2116,
+   "ig": 2151
+  },
+  {
+   "szoveg": "azonosítanunk kell téged.",
+   "tol": 2151,
+   "ig": 2203
+  },
+  {
+   "szoveg": "Végül a könyvelőd összeköti",
+   "tol": 2218,
+   "ig": 2272
+  },
+  {
+   "szoveg": "a fiókodat a NAV-val.",
+   "tol": 2272,
+   "ig": 2314
+  },
+  {
+   "szoveg": "Addig néhány rész még zárva van,",
+   "tol": 2329,
+   "ig": 2394
+  },
+  {
+   "szoveg": "utána minden megnyílik.",
+   "tol": 2394,
+   "ig": 2439
+  },
+  {
+   "szoveg": "Onnantól a Főoldalon látod, mi a teendőd,",
+   "tol": 2448,
+   "ig": 2532
+  },
+  {
+   "szoveg": "a többit a könyvelőd intézi.",
+   "tol": 2532,
+   "ig": 2584
+  },
+  {
+   "szoveg": "Ha elakadsz, kérj visszahívást:",
+   "tol": 2599,
+   "ig": 2674
+  },
+  {
+   "szoveg": "csapatunk 24–48 órán belül felhív.",
+   "tol": 2674,
+   "ig": 2772
+  },
+  {
+   "szoveg": "Ha egyedül nem megy, a bejelentést",
+   "tol": 2781,
+   "ig": 2826
+  },
+  {
+   "szoveg": "és a meghatalmazást is elintézzük helyetted.",
+   "tol": 2826,
+   "ig": 2946
+  },
+  {
+   "szoveg": "Az Üzenetekben bármikor írhatsz nekünk.",
+   "tol": 2955,
+   "ig": 3042
+  },
+  {
+   "szoveg": "Kezdjük is! Az első lépést lent találod.",
+   "tol": 3057,
+   "ig": 3151
+  }
+ ],
+ "jelenetek": [
+  {
+   "id": "koszonto",
+   "tol": 0,
+   "ig": 222
+  },
+  {
+   "id": "mire_jo",
+   "tol": 222,
+   "ig": 713
+  },
+  {
+   "id": "bekotes",
+   "tol": 713,
+   "ig": 904
+  },
+  {
+   "id": "lepes_adatok",
+   "tol": 904,
+   "ig": 1025
+  },
+  {
+   "id": "lepes_inditas",
+   "tol": 1025,
+   "ig": 1437
+  },
+  {
+   "id": "lepes_szerzodes",
+   "tol": 1437,
+   "ig": 1715
+  },
+  {
+   "id": "lepes_meghatalmazas",
+   "tol": 1715,
+   "ig": 1977
+  },
+  {
+   "id": "lepes_azonositas",
+   "tol": 1977,
+   "ig": 2210
+  },
+  {
+   "id": "lepes_szamlak",
+   "tol": 2210,
+   "ig": 2321
+  },
+  {
+   "id": "korlatozott",
+   "tol": 2321,
+   "ig": 2591
+  },
+  {
+   "id": "segitseg",
+   "tol": 2591,
+   "ig": 3049
+  },
+  {
+   "id": "zaro",
+   "tol": 3049,
+   "ig": 3211
+  }
+ ]
+}

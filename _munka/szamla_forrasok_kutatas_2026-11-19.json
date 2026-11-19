@@ -1,0 +1,426 @@
+{
+ "nav": {
+  "findings": [
+   {
+    "topic": "Hatókör: jogalap",
+    "fact": "Az Áfa tv. 10. melléklet 1. és 6. pontja szerint az adóalany az Áfa tv. számlázási szabályai alá tartozó (158/A. § szerinti) termékértékesítéséről és szolgáltatásnyújtásáról kibocsátott számláról és számlával egy tekintet alá eső okiratról adatot szolgáltat a NAV-nak az Online Számla felületen. Kivétel a másik tagállamban teljesített, az egyablakos (távolról nyújtott szolgáltatás) különös szabályai szerint adózó szolgáltatásnyújtás. 2021. január 4. óta a kör nem csak a belföldi áfaalany vevőre vonatkozik, hanem a magánszemélyre és a külföldi vevőre kiállított számlára is.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/docs/API%20docs/en/EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20(2026.02.12.).pdf (Introduction, idézi az Áfa tv. 10. mell. 1. és 6. pontját); https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231",
+    "certainty": "official"
+   },
+   {
+    "topic": "Hatókör: ki a kötelezett",
+    "fact": "Az alanyi adómentes és a katás adóalany is adatszolgáltatásra kötelezett. A kötelezettség az adóalanyt terheli akkor is, ha a számlát meghatalmazott vagy önszámlázó vevő állítja ki. A meghatalmazott az adóalany nevében teljesítheti, de ehhez felhasználói jogosultság kell az adóalany Online Számla fiókjában. Az API-dokumentáció szerint az adatszolgáltató lehet az adóalany, a meghatalmazottja, vagy önszámlázás esetén a vevő.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 ; EN spec 2026.02.12 Glossary (Data Reporter)",
+    "certainty": "official"
+   },
+   {
+    "topic": "Hatókör: mikor kell magyar számlázási szabály (158/A.)",
+    "fact": "Belföldi teljesítési helynél az Áfa tv. szabályai szerint kell számlázni. Külföldi teljesítési helynél is, ha (a) a teljesítési hely a Közösségen kívül van és az adóalany székhelye belföldön van, vagy (b) a teljesítési hely másik tagállam, a vevő fizeti az adót (fordított adózás), és nem önszámlázás történik. Ezekről számlát is kell adni, és adatot is kell szolgáltatni. Ha a teljesítési hely szerinti tagállam szabályai alkalmazandók, a számla nem esik magyar adatszolgáltatás alá.",
+    "source": "https://hbkik.hu/wp-content/uploads/2025/02/18Aszamlanyugtakibocsatasanakalapvetoszabalyai2025.02.03.pdf (NAV információs füzet, 2025.02.01, 1.1. fejezet); https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 1. EU-s üzleti vevő, szolgáltatás, teljesítési hely másik tagállam (fordított adózás)",
+    "fact": "BEKERÜL az Online Számlába. A NAV listája szerint adatot kell szolgáltatni a belföldi adóalany által az Áfa tv. területi hatályán kívül, másik tagállamban teljesített szolgáltatásról, ha a vevő köteles az adót megfizetni. Az API-ban vatOutOfScope/case = EUFAD37 (az Áfa tv. 37. § (1) szerinti szolgáltatás másik tagállami adóalanynak), customerVatStatus = OTHER, és a vevő közösségi adószáma kötelező. Az alkalmazás ezt a tételt bevételként kezelje akkor is, ha áfa szempontjából területi hatályon kívüli.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 ; EN spec 2026.02.12, 2.2.3.2 (case value table: EUFAD37) és customerVatStatus táblázat",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 1. kivétel: a vevő önszámláz",
+    "fact": "Ha a számlát meghatalmazás alapján a másik tagállami vevő állítja ki (önszámlázás), az nem adatszolgáltatás-köteles, mert a teljesítés helye szerinti tagállam szabályai szerint készül. Ilyen számla nem lesz az Online Számlában.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (2. pont, [4] lábjegyzet és a kivételek listája)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 1. alanyi mentes különlegesség",
+    "fact": "Az Áfa tv. 193. § (1) mai szövegében már nincs külön kizárás a külföldi teljesítési helyű szolgáltatásra (a d) pontot a 2024. évi LV. tv. hatályon kívül helyezte), tehát 2025-től ilyen szolgáltatásnál az alanyi mentesség fennmarad. Az MKIK 2026-os tájékoztatója szerint közösségi adóalanynak nyújtott szolgáltatásnál közösségi adószám és összesítő nyilatkozat is kellhet. Ez az összesítő nyilatkozat külön bevallás, nem látszik az Online Számlából. Az adózóna szerint a vevő közösségi adószámát a számlára és a nyilatkozatba is fel kell venni.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/2007-127-00-00 (193. § és 496. lábjegyzet); https://mkik.hu/download/113/2026-evi-altalanos-adozasi-tajekoztato-kis-es-koezepvallalkozasok-reszere (6.15.1); https://adozona.hu/afa/alanyi_adomentes_egyeni_vallalkozo_kulfoldi_A7DPSA",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "A) 2. Harmadik országbeli (nem EU) üzleti vevő, szolgáltatás",
+    "fact": "BEKERÜL, ha a kibocsátó székhelye, illetve a teljesítéssel legközvetlenebbül érintett telephelye belföldön van. A NAV listája szerint adatot kell szolgáltatni a belföldi székhelyű adóalany által az Áfa tv. területi hatályán kívül, a Közösségen kívül teljesített ügyletről. API-kód: vatOutOfScope/case = HO (harmadik országban teljesített ügylet), customerVatStatus = OTHER. A harmadik országbeli vevő adószáma csak a fordított adózású esetben, és csak ha van ilyen, szerepeltetendő.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (2. és 3.2. pont); EN spec 2026.02.12, 2.2.3.2 (HO)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 3. Termékexport (Közösségen kívülre)",
+    "fact": "BEKERÜL. A NAV listája kifejezetten említi a belföldről küldeményként feladott, fuvarozott terméknél a Közösség területén kívülre irányuló (export) értékesítést. API: vatExemption/case = EAM vagy NAM. Alanyi mentes kibocsátónál is belföldi teljesítési helyű ügylet, ezért adatszolgáltatás-köteles.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 ; EN spec 2026.02.12 (vatExemption case table)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 3. Közösségen belüli termékértékesítés (EU-ba, B2B)",
+    "fact": "BEKERÜL (a NAV listája: adómentes Közösségen belüli termékértékesítés). Normál áfás/mentes cégnél vatExemption/case = KBAET és a vevő közösségi adószáma kötelező. Alanyi mentes EV-nél az MKIK 2026-os útmutatója szerint a termékértékesítés alanyi mentességi alapon (AAM) mentes, nem Közösségen belüli mentes értékesítésként. Ilyenkor nem kell közösségi adószám, a számlán az alanyi mentességre kell hivatkozni, és az ellenérték beleszámít az alanyi mentességi értékhatárba. Mivel belföldi (indulási hely szerinti) teljesítés, a számla ettől még adatszolgáltatás-köteles.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 ; https://mkik.hu/download/113/2026-evi-altalanos-adozasi-tajekoztato-kis-es-koezepvallalkozasok-reszere (6.15.1, 102. oldal)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "A) 4. EU-s fogyasztóknak: mi kerül be és mi nem (10 000 EUR)",
+    "fact": "A 10 000 EUR-os küszöb alatt (az árfolyam-függetlenül összeadott, EU-n belüli távértékesítés és B2C telekommunikációs/elektronikus/sugárzott szolgáltatás nettó ellenértéke, az adott és az előző naptári évben, a letelepedési tagállamból) a teljesítési hely a kibocsátó tagállama, vagyis magyar belföldi ügylet. Ez nem vihető be az OSS-be, magyar szabály szerint számlázandó, és BEKERÜL az Online Számlába. Magyarországról másik tagállamba teljesített távértékesítésről adatot kell szolgáltatni, ha Magyarországon keletkezik adófizetési kötelezettség. A küszöb átlépése, választás vagy OSS-regisztráció esetén a teljesítési hely a rendeltetési tagállam, az adót az OSS-ben kell bevallani, és az ügylet NEM kell az Online Számlába (kivétel: Magyarországról teljesített távértékesítés, ha nem Magyarországon keletkezik adófizetési kötelezettség, illetve az OSS-ben teljesített távolról nyújtott szolgáltatás).",
+    "source": "https://vat-one-stop-shop.ec.europa.eu/document/download/55f4ec9d-83e6-4942-9e8d-11d44c243087_en?filename=OSS+Guidelines_revised_1Jan2027_0.pdf (Background pont 9); https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (2. pont, kivételek listája)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 4. A 10 000 EUR részletszabályai",
+    "fact": "A küszöb feltétele, hogy a szállító csak egy tagállamban letelepedett, kizárólag a letelepedési tagállamból induló távértékesítés és B2C TBE szolgáltatás számít bele, az összeg közös (nem külön áru és szolgáltatás). Az OSS-regisztráció automatikusan a rendeltetési hely szerinti szabályt vonja maga után (a küszöb figyelmen kívül marad). A küszöb alatti, rendeltetési helyes adózás választása két naptári évre köt. Az átlépés után a főszabály kivétel nélkül érvényes. A küszöb nem vonatkozik az egyéb (nem TBE) szolgáltatásokra.",
+    "source": "https://vat-one-stop-shop.ec.europa.eu/document/download/55f4ec9d-83e6-4942-9e8d-11d44c243087_en?filename=OSS+Guidelines_revised_1Jan2027_0.pdf ; https://mkik.hu/download/113/2026-evi-altalanos-adozasi-tajekoztato-kis-es-koezepvallalkozasok-reszere (6.x Közösségen belüli távértékesítés)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 4. Használhat-e OSS-t az alanyi mentes EV?",
+    "fact": "Igen. Az EU Bizottság OSS-útmutatója (2026. júliusi, 2027-re frissített változat, 15. kérdés) szerint a kisvállalkozói különös szabályt (SME scheme, nálunk az alanyi mentesség) alkalmazó, EU-ban letelepedett adóalany nincs kizárva az uniós OSS-ből, és nem kell kilépnie az SME-szabályból. Kell hozzá a letelepedési tagállam áfa-azonosítója. A NAV szerint az OSS/IOSS használata választható, nem kötelező, és a belföldön letelepedett adózó használhatja.",
+    "source": "https://vat-one-stop-shop.ec.europa.eu/document/download/55f4ec9d-83e6-4942-9e8d-11d44c243087_en?filename=OSS+Guidelines_revised_1Jan2027_0.pdf (Part 1a, 15. kérdés); https://nav.gov.hu/ado/afa/Az_OSS_IOSS_egyablako20210602",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 4. Egyéb B2C szolgáltatás EU-s magánszemélynek (nem TBE)",
+    "fact": "Az általános B2C szabály szerint a teljesítési hely a szolgáltató székhelye, ezért belföldi ügylet: az Online Számlába kerül (customerVatStatus = PRIVATE_PERSON, vevő neve és címe nélkül). A 10 000 EUR-os küszöb ezekre nem vonatkozik. Ez levezetett következtetés, a Bizottság útmutatója csak azt rögzíti, hogy a küszöb nem TBE-szolgáltatásokra nem vonatkozik, az Áfa tv. 38. §-át nem néztem meg.",
+    "source": "https://vat-one-stop-shop.ec.europa.eu/document/download/55f4ec9d-83e6-4942-9e8d-11d44c243087_en?filename=OSS+Guidelines_revised_1Jan2027_0.pdf ; EN spec 2026.02.12 (PRIVATE_PERSON szabály)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "A) 4. OSS-bevallás elérhetősége",
+    "fact": "Az OSS-ben bevallott ügyletek az OSS-portálon (oss.nav.gov.hu) jelennek meg, nem az Online Számlában. Nem találtam nyilvános, harmadik fél által hívható API-t az OSS-bevallásokhoz. Az alkalmazásnak az ügyféltől (OSS-bevallás, bevételi kimutatás) kell bekérnie.",
+    "source": "https://nav.gov.hu/ado/afa/Az_OSS_IOSS_egyablako20210602 (portál említése; API hiánya: negatív keresési eredmény)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "A) 1/4. Más tagállamban választott SME-mentesség (EX azonosító)",
+    "fact": "2025. január 1-től a belföldön letelepedett adóalany más tagállamban is választhat kisvállalkozói mentességet (Áfa tv. 195/A. §, 100 000 EUR uniós árbevétel-határ, EX utótagú egyedi azonosító, negyedéves adatszolgáltatás a tagállami árbevételről). Az ilyen ügyleteket a teljesítési hely szerinti tagállam számlázási szabályai és az EX azonosító szerint kell bizonylatolni. A magyar számlázási szabály ilyenkor nem alkalmazandó, ezért valószínűleg nem kerül az Online Számlába. A \"nem kerül be\" következtetés saját levezetés, nem találtam rá kifejezett NAV-állásfoglalást.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/2007-127-00-00 (195/A–195/B. §); https://hbkik.hu/wp-content/uploads/2025/02/18Aszamlanyugtakibocsatasanakalapvetoszabalyai2025.02.03.pdf (5.1. fejezet)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "A) 5. Nyugta az Online Számlában",
+    "fact": "A nyugta NEM része az Online Számlának. A pénztárgép-adatok átvételét leíró API-függelék szerint az online pénztárgépről csak a P20 típusú egyszerűsített számlák (invoiceCategory = SIMPLIFIED), valamint a számlához köthető P17/P18 módosító bizonylatok kerülnek át (2021. október 2-tól, naponta egyszer). A \"NY/\" jelű nyugtára hivatkozó vagy számlaszám nélküli stornó és visszáru nem kerül át. A pénztárgépes nyugta tehát egy másik rendszerben (OPG) él.",
+    "source": "EN spec 2026.02.12, Annex IV (https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/docs/API%20docs/en/EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20(2026.02.12.).pdf)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 5. Online pénztárgép és e-pénztárgép adatai: elérhető API",
+    "fact": "Van hivatalos API: az Online Pénztárgépnapló-lekérdező (OPF) SOAP-szolgáltatás, queryCashRegisterFile művelet (spec 1.3, 2026.07.05, az e-pénztárgépet is lefedi). Az adózó csak a saját pénztárgépeinek naplóját éri el, pénztárgépenként (AP-szám + állománysorszám-tartomány), kérésenként kb. 10 MB tömörített adatig. A hívó az Online Számla rendszerben létrehozott, lekérdezési jogosultságú technikai felhasználó (aláírókulccsal). A naplóállományok csak korlátozott ideig érhetők el (induláskor 14 nap), ezért rendszeresen le kell tölteni és archiválni. A P7B naplók a nyugtákat is tartalmazzák (48/2013. NGM rendelet 4. melléklet), az e-pénztárgép ZIP-je wrap.xml-t és a hiányzó dokumentumok listáját is.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Cash-Register-Logfile/master/docs/OPF_specifik%C3%A1cio_v1.3.pdf",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 5. Kézi és számítógéppel kiállított nyugta: 2026. szeptember 1-től adatszolgáltatás",
+    "fact": "2026. szeptember 1-től a kézi (nyomdai úton előállított) és a számítógéppel előállított nyugtákról is adatot kell szolgáltatni a kibocsátást követő 3 naptári napon belül, napi szinten összesítve, adómértékek szerinti bontásban (Áfa tv. 257/G. § és 11. melléklet B) pont). Nem tartozik ide a pénztárgéppel kiállított nyugta, az e-nyugta és az e-pénztárgépes okirat. Beküldés: kézi rögzítéssel a Pénztárgép Portálon (KOBAK), vagy gépi interfészen (M2M, /receipt-if). Bírság nincs 2026. december 31-ig, 2027. január 1-től lehet. A beküldés tételes nyugta helyett csak napi összesítő, tehát nyugtánként nem látszik semmi.",
+    "source": "https://nav.gov.hu/ado/enyugta/nyugtaadat-szolgaltatas ; https://nav.gov.hu/sajtoszoba/hirek/A_NAV_segit_negy_honapos_atallasi_idoszak_a_nyugtaadat-szolgaltatasban (2026.08.04) ; https://raw.githubusercontent.com/nav-gov-hu/eRECEIPT/master/docs/specification/NAV_Nyugta_adatszolgaltatas_IF_specifikacio_v1.3.pdf",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 5. A nyugtaadat-interfész visszaolvasása",
+    "fact": "A /receipt-if REST API (v1.3, 2026.08.31) tartalmaz lekérdező műveleteket (/receipt/list, /receipt/detail), amelyek a korábban beküldött nyugta-adatszolgáltatásokat adják vissza. Technikai felhasználó kell (NAV Felhasználókezelőben, KAÜ-s belépéssel az elsődleges felhasználó hozza létre) aláíró- és cserekulccsal. A visszaolvasható adat az adózó saját, napi összesített beküldése, nem a tételes nyugta. Ha az ügyfél nem küld adatot, nincs mit olvasni. Nem tisztázott, hogy a KOBAK-on kézzel rögzített összesítők is megjelennek-e a /receipt/list válaszában.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/eRECEIPT/master/docs/specification/NAV_Nyugta_adatszolgaltatas_IF_specifikacio_v1.3.pdf (1.1, 2.1.2, 2.1.4)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 5. KOBAK kézi rögzítés visszaolvashatósága",
+    "fact": "Nem találtam forrást arra, hogy a KOBAK (Pénztárgép Portál) kézzel rögzített nyugta-összesítői ugyanazon /receipt/list végponton elérhetők-e. A spec a gépi beküldést írja le.",
+    "source": "https://nav.gov.hu/ado/enyugta/nyugtaadat-szolgaltatas (a kézi rögzítés oldala nem volt elérhető)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "A) 5. E-nyugta és NAV ePénztárgép",
+    "fact": "Az e-nyugta kizárólag elektronikusan állítható ki, a nyugtatárba érkezéssel minősül kibocsátottnak, a vevő vevői alkalmazással éri el (Áfa tv.). A NAV ePénztárgép okostelefonos alkalmazás 2025 júliusa óta ingyenes, az adatot automatikusan továbbítja a NAV-nak. A vevő oldalán elérhető a NAV eNyugta alkalmazás, de az a vevőé, nem az eladó adatforrása. Az eladó e-pénztárgépes adatait az OPF API 1.3 adja.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/2007-127-00-00 (174. § (1a)–(2)); https://nav.gov.hu/sajtoszoba/hirek/A_NAV_segit_negy_honapos_atallasi_idoszak_a_nyugtaadat-szolgaltatasban ; OPF spec 1.3",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 5. Mikor nyugta, mikor számla (alanyi mentes EV is)",
+    "fact": "Az alanyi mentes adóalanyt is terheli számla- és nyugtaadási kötelezettség. Áfával számított 900 000 Ft alatt, ha a vevő nem adóalany (nem jogi személy) és nem kér számlát, nyugta is elég. Nyugtát kizárólag pénztárgéppel kell adni a Pénztárgéprendelet 1. mellékletében felsorolt TEÁOR-kategóriákban (pl. kiskereskedelem, vendéglátás, szálláshely, javítás), egyébként nyugtatömb vagy számítógépes nyugta is lehet. A nyugta bevétele az átalányadózónál is bevétel.",
+    "source": "https://hbkik.hu/wp-content/uploads/2025/02/18Aszamlanyugtakibocsatasanakalapvetoszabalyai2025.02.03.pdf (4., 4.2., 5.1. fejezet; NAV információs füzet 2025.02.01)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 6. Készpénzes/kártyás eladás magánszemélynek bizonylat nélkül",
+    "fact": "Nincs olyan NAV-rendszer, amelyben az ilyen bevétel látszana. A törvény szerint nyugtát vagy számlát kellene adni. Ha nem adnak, az árbevétel sehol sem szerepel. A bevételi nyilvántartásban viszont szerepelnie kell. Kockázat: az Szja tv. 55. § szerint az átalányadózásra való jogosultság megszűnik, ha az egyéni vállalkozóra számla- vagy nyugtaadási kötelezettség elmulasztásáért véglegesen mulasztási bírságot szabnak ki. A bankkártya-terminál napi összesítője nem nyugta, róla nem kell nyugtaadatot szolgáltatni.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/1995-117-00-00 (55. §, 51. § (3)); https://adozona.hu/adozas_rendje/nyugtaadatszolgaltatas_22AUQ5 (terminál-összesítő, keresési kivonat alapján)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "A) 7. Platformkifizetések: a NAV DAC7-en át látja, az alkalmazás nem",
+    "fact": "A digitális platformüzemeltetők 2023. január 1-től adatot szolgáltatnak a NAV-nak az eladókról és szolgáltatókról (Aktv. II/A. fejezet, DAC7, DPI űrlap). A NAV tehát láthatja a platformról kapott kifizetéseket, de ez nem az Online Számla, és az alkalmazás nem fér hozzá. Az ügyfél bevételi nyilvántartásában ezeknek szerepelniük kell, akkor is, ha számla nem készült.",
+    "source": "https://nav.gov.hu/ado/egyeb/a-digitalis-platformuzemeltetok-uj-kotelezettsegei",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 7. Platform három számlázási modellje (az alkalmazás ezt kérdezze meg)",
+    "fact": "(a) Az EV számláz a platformnak (pl. YouTube/AdSense: Google Ireland, EU-s B2B szolgáltatás, fordított adózás; nem EU-s platformnál harmadik országos). Ha a számlát az EV számlázó programja adja ki, az Online Számlában ott lesz (EUFAD37 vagy HO). (b) A platform az EV nevében önszámláz (Áfa tv. 161. § meghatalmazás): a számla az EV számlája, az adatszolgáltatási kötelezettség az EV-é, a platform csak az EV Online Számla fiókjához kapott jogosultsággal teljesítheti. Ha nem teljesíti, a számla nincs az Online Számlában. (c) A platform csak fizetési közvetítő, az EV számláz a végső vevőnek (szállásadók, marketplace-eladók): a számla/nyugta az EV dolga, a kifizetés kivonatán a jutalék már levonva szerepel.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (meghatalmazotti/önszámlázás); https://adozona.hu/tarsasagi_ado_innovacios_jarulek/Kozossegi_platformtol_szerzett_bevetelek_a__O6AE4Q ; EN spec Glossary (Data Reporter)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "A) 7. Konkrét platformok",
+    "fact": "A YouTube/AdSense: az adózóna szakértői válasza szerint az EV a platform felületén látszó összegről számláz a Google-nak, fordított adózással. Booking.com: a platform a jutalékról számláz a szállásadónak, a szállásadónak a vendégnek kell számláznia (keresési kivonat). Uber: a kifizetések a platform külföldi cégén át mennek, a sofőr egy magyar cégnek és egy uniós Uber-cégnek fizet díjat (keresési kivonat). Wolt, Bolt, Etsy, Amazon, Airbnb, Patreon és az alkalmazásboltok önszámlázási gyakorlatára nem találtam ellenőrzött forrást. Platformonként az ügyféltől kell bekérni a kifizetési kimutatást és azt, hogy ki állítja ki a számlát.",
+    "source": "https://adozona.hu/tarsasagi_ado_innovacios_jarulek/Kozossegi_platformtol_szerzett_bevetelek_a__O6AE4Q ; https://adozona.hu/szja_ekho_kulonado/Bookingcom_szallasdijdokumentalasi_koteleze_074RUT (keresési kivonat) ; https://adozona.hu/afa/Uber_Niveus_Consulting_Group_AFA_szamlazas__46638D (keresési kivonat)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "A) 8. Papír számlatömb",
+    "fact": "A nyomdai úton előállított nyomtatvánnyal (számlatömbbel) kibocsátott számlát is be kell jelenteni. Az adatot az Online Számla rendszerben kell rögzíteni: a számla kibocsátását követő naptári napon belül, ha az áthárított adó eléri vagy meghaladja az 500 000 Ft-ot, egyébként négy naptári napon belül (Áfa tv. 10. melléklet 3. pont). A kézi számlát használóknak is az Online Számlában kell adatot szolgáltatniuk. A számlatömb szigorú számadású, csak áfaalany vásárolhatja.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (4. pont) ; https://nav.gov.hu/Elethelyzetek-adozasa/vallalkozas/Regisztracio-az-Online-Szamla-rendszerben ; https://hbkik.hu/wp-content/uploads/2025/02/18Aszamlanyugtakibocsatasanakalapvetoszabalyai2025.02.03.pdf",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 8. Papírszámla az API-ban",
+    "fact": "A kézzel rögzített papírszámla ugyanabban az adattárban él, mint a szoftveres. Az invoiceDigest source mezője (SourceType): WEB = webes adatszolgáltatás, XML = kézi XML-feltöltés, MGM = gép-gép, OPG = online pénztárgép, OSZ = NAV Online Számlázó. Az invoiceAppearance értéke PAPER / ELECTRONIC / EDI / UNKNOWN. A queryInvoiceDigest/queryInvoiceData tehát visszaadja őket, ha az ügyfél (vagy a könyvelő) ténylegesen rögzítette. Kockázat: kézi gépelési hiba (sorszám, dátum, összeg, vevő adószáma), és hogy a rögzítés elmarad.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/src/schemas/nav/gov/hu/OSA/invoiceApi.xsd (SourceType) ; EN spec 2026.02.12 (2.3.5 InvoiceAppearanceType, queryInvoiceDigest mezők)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 9. NAV Online Számlázó (ingyenes program)",
+    "fact": "A NAV Online Számlázó a számlákat az ÁSZF 3.2. pontja szerint automatikusan továbbítja az Online Számla rendszerbe, a rekordok source = OSZ. Mindig látszanak az API-ban. Régi (2018–2020-as) másodlagos források szerint nem tud minden számlatípust (pl. egyszerűsített, önszámlázási, különbözeti, gyűjtőszámla). Ezt nem ellenőriztem 2026-ra.",
+    "source": "https://szamlazo.nav.gov.hu/api/files/container/download/Online_Sz%C3%A1ml%C3%A1z%C3%B3%20%C3%81SZF.pdf (3.2.) ; https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/src/schemas/nav/gov/hu/OSA/invoiceApi.xsd",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 9. Bármely számlázóprogram: nem biztos, hogy minden számla látszik",
+    "fact": "A számlázóprogramnak a számla kiállításakor azonnal, emberi beavatkozás nélkül XML-ben kell továbbítania az adatot (23/2014. NGM rendelet 13/A. §). Az adatszolgáltatás csak akkor teljesített, ha az adat beérkezett és a rendszer a sikeres feldolgozást visszaigazolta. A KPMG szerint 2025. szeptember 15-től 15 korábbi WARN üzenet blokkoló ERROR lett (pl. szélsőséges deviza-árfolyam), ilyenkor az adat nem kerül be, számlánként akár 1 000 000 Ft mulasztási bírság járhat. Egy számla tehát létezhet a Számlázz.hu/Billingo-ban, de hiányozhat az Online Számlából. Az alkalmazásnak célszerű összevetnie a számlázóprogram API-jával.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (4. pont) ; https://net.jogtar.hu/jogszabaly?docid=a1400023.ngm (13/A. §) ; https://kpmg.com/hu/hu/home/tanulmanyok/2025/09/taxalert-2025-09-02.html",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "A) 10. Stornó és módosító számla",
+    "fact": "Minden módosító (MODIFY) és érvénytelenítő/stornó (STORNO) okirat adatszolgáltatás-köteles, külön tételként jelenik meg invoiceReference-szel (originalInvoiceNumber, modificationIndex). A módosító okirat mindig az előző állapothoz képesti változást tartalmazza, ezért a nettó bevételhez a lánc összes tagját össze kell adni (queryInvoiceChainDigest). Ha előbb stornó, utána új számla készül, az új számla az eredetire hivatkozó módosítónak számít. Ha az eredeti számla soha nem lett jelentve (pl. 2018. július 1. előtti), akkor modifyWithoutMaster = true.",
+    "source": "EN spec 2026.02.12, 2.5 és 2.5.1 (https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/docs/API%20docs/en/EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20(2026.02.12.).pdf)",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 10. Technikai érvénytelenítés és duplikátum",
+    "fact": "A technikai érvénytelenítés (manageAnnulment, ANNUL) nem azonos a stornóval: hibás adatszolgáltatást érvénytelenít, ha a számla maga helyes. Jóváhagyás kell hozzá az Online Számlában. A queryInvoiceDigest egyedül listázhat több érvényes példányt ugyanarra a számlaszámra, ez ügyféloldali hiba jele (tranzakció-azonosítóval megkülönböztethető). Az alkalmazás ne duplán számolja.",
+    "source": "EN spec 2026.02.12, 1.8.6.2 és 2.4",
+    "certainty": "official"
+   },
+   {
+    "topic": "A) 10. Előleg és végszámla (dupla számolás veszélye)",
+    "fact": "A teljesítésről kiállított végszámla adatszolgáltatásában a teljes végösszeg mellett szerepel az előleg figyelembevételével adódó különbözet is. Az előlegszámla külön tétel, tehát az összes kimenő számla bruttó/nettó összegének egyszerű összeadása az előleges ügyleteknél duplán számol.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 (3.3. pont)",
+    "certainty": "official"
+   },
+   {
+    "topic": "Mit nem tud az Online Számla: fizetési adat",
+    "fact": "Az Online Számla a kiállított számla adatait tartalmazza, a tényleges befizetés dátumát és összegét nem. A paymentDate a fizetési határidő, a paymentMethod nem kötelező. Egy kiszámlázott, de ki nem fizetett tétel az Online Számlában ott van, az átalányadózónál viszont még nem bevétel.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/src/schemas/nav/gov/hu/OSA/invoiceData.xsd (paymentDate: Fizetési határidő) ; EN spec 2026.02.12",
+    "certainty": "official"
+   },
+   {
+    "topic": "API lekérdezés feltételei (kimenő számlák)",
+    "fact": "A kimenő számlákhoz queryInvoiceDigest (invoiceDirection = OUTBOUND), majd queryInvoiceData. Az adózónak technikai felhasználót kell létrehoznia (csak az elsődleges felhasználó), aláíró- és cserekulccsal, és be kell állítania, hogy a technikai felhasználó lekérdezhet. A digest keresésnél a kiállítási dátum vagy a feldolgozási idő (insDate) intervalluma legfeljebb 35 nap, oldalanként legfeljebb 100 tétel. A web felületi felhasználóval az interfész nem érhető el.",
+    "source": "EN spec 2026.02.12, Conditions of use for taxpayers és 1.8.6",
+    "certainty": "official"
+   },
+   {
+    "topic": "Bevételi nyilvántartás: mi számít bevételnek az átalányadózónál",
+    "fact": "Az átalányadózó a pénztárkönyv (naplófőkönyv) bevételi adatait vezeti (Szja tv. 51. § (3)), költségekkel nem kell elszámolni. A BKIK (NAV-tájékoztatóra épülő) összefoglalója szerint bevétel a vállalkozói tevékenység ellenértékeként vagy előlegeként kiszámlázott összegből az adott időszakban ténylegesen befolyt, kézhez vett, jóváírt, áfa nélküli összeg, függetlenül a számla keltétől és az áfa-teljesítési időponttól, és a nyugtával bizonylatolt bevétel is. A pénzbevétel megszerzési időpontja az Szja tv. 9. § (2) a) szerint a birtokbavétel vagy a jóváírás napja. Az Szja tv. 10. mellékletének szövegét nem tudtam ellenőrizni.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/1995-117-00-00 (51. §, 9. §) ; https://bkik.hu/uploads/documents/szja-atalanyado-2025-1739369371.pdf",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Számla nélküli bevételek a bevételi nyilvántartásban",
+    "fact": "Az átalányadózás bevételei közé tartozik minden végleges, vissza nem fizetendő bevétel, amit az EV egyéni vállalkozóként kap, számla nélkül is: vállalkozói bankszámlán jóváírt kamat, kártérítés, kötbér, vállalkozóként kötött biztosítás összege. Bevétel a nem pénzben kapott ellenérték piaci értéke is, valamint a támogatások, kivéve a költségek fedezetére vagy fejlesztési célra jogszabály alapján folyósított, vissza nem térítendő támogatást. A nem forintban kapott bevételt az MNB hivatalos árfolyamán kell átszámítani a megszerzés napján. Az áfa-bevallásban szereplő ügyletnél az áfa-alapnál használt árfolyam is alkalmazható.",
+    "source": "https://bkik.hu/uploads/documents/szja-atalanyado-2025-1739369371.pdf ; https://mkik.hu/download/113/2026-evi-altalanos-adozasi-tajekoztato-kis-es-koezepvallalkozasok-reszere (1.10.1)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Külön küszöbök, eltérő mérték",
+    "fact": "Az alanyi adómentesség határa 2026-ban 20 000 000 Ft (Áfa tv. 188. § (2)) és a megtérített vagy megtérítendő ellenértékre számít, tehát számlák alapján. Az átalányadó bevételi határa 2026-ban az éves minimálbér tízszerese (MKIK: 38 736 000 Ft), és a ténylegesen befolyt bevételre számít. A két mérték nem azonos, ezért az Online Számla számlaösszege nem elég az átalányadó-határ figyeléséhez.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/2007-127-00-00 (188. §) ; https://njt.jog.gov.hu/jogszabaly/1995-117-00-00 (52. §) ; https://mkik.hu/download/113/2026-evi-altalanos-adozasi-tajekoztato-kis-es-koezepvallalkozasok-reszere",
+    "certainty": "official"
+   },
+   {
+    "topic": "NAV szja-előtöltés 2026-ban",
+    "fact": "A 2026-os (2025. évre szóló) szja-bevallási tervezetben a NAV minden egyéni vállalkozónál az online számla- és online pénztárgép-rendszerbe beérkezett bevételi adatokat mutatja. A költségeket és a kedvezményeket az adózónak kell megadnia. Ami nincs ezekben a rendszerekben (kézi nyugta, platformkifizetés, számla nélküli bevétel, kamat), az nincs az előtöltésben sem.",
+    "source": "https://nav.gov.hu/print/sajtoszoba/hirek/A_NAV_adatkiajanlassal_segiti_az_egyeni_vallalkozok_szja-bevallasat ; https://www.economx.hu/gazdasag/2026/04/27/adobevallas-egyeni-vallalkozok-automatizalas-nav/",
+    "certainty": "official"
+   },
+   {
+    "topic": "Források aktualitása",
+    "fact": "A NAV 2020-as Online Számla GYIK oldala archivált (2025. július 29-től nem hatályos). A hatókört leíró NAV-oldal (A számlakibocsátók számlaadat-szolgáltatásának 2021. január 4-től hatályos szabályai) nem jelzett archiváltnak, de nem találtam 2026-os dátumú pótlását. A 2026. február 12-i API-specifikáció ugyanazt a jogalapot idézi (Áfa tv. 10. melléklet 1. és 6. pont). A 10. melléklet szövegét az njt.jog.gov.hu oldalon nem tudtam megnyitni, ezért a spec idézetére támaszkodtam. Az Szja tv. 10. mellékletét sem ellenőriztem.",
+    "source": "https://nav.gov.hu/ado/afa/Gyakran_ismetelt_kerd20200728 ; https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231",
+    "certainty": "uncertain"
+   }
+  ],
+  "summary": "Rövid válasz a felvetésre: a NAV Online Számla önmagában nem elég, de nagyobb része kerül bele, mint gondolnád. A külföldre értékesítés BEKERÜL. A magyar székhelyű kibocsátó 2021. január 4. óta jelenti az EU-s üzleti vevőnek (fordított adózás, EUFAD37), a harmadik országbeli vevőnek (HO), az exportról (EAM/NAM), a Közösségen belüli termékértékesítésről és a magánszemélyeknek kiállított számlákat is. Alanyi mentes és katás kibocsátóra is vonatkozik. Az OSS KIMARAD, de csak a 10 000 EUR feletti (vagy OSS-t választó) B2C távértékesítés és B2C elektronikus szolgáltatás, mert az a rendeltetési tagállam ügylete és az OSS-ben kell bevallani. A 10 000 EUR alatti rész belföldi ügylet, az bekerül. Az alanyi mentes EV is regisztrálhat OSS-re (EU Bizottság OSS-útmutató 15. kérdés). Be is kerül: számlatömb (kézzel, 1 vagy 4 naptári napon belül rögzítve, source WEB/XML, invoiceAppearance PAPER), a NAV Online Számlázó (source OSZ), bármely számlázóprogram, valamint a stornó és módosító számlák (delta-szemlélet, láncban összeadandó; az előlegnél a végszámla dupla számolást okozhat). Nem kerül be vagy nem megbízható: (a) a nyugta (az Online Számlába csak a pénztárgép P20 egyszerűsített számlái jutnak át); (b) a platform önszámlázása, ha a platform nem jelent az EV nevében; (c) a vevő által kiállított (önszámlázott) EU-s számla; (d) az OSS-ben bevallott ügylet; (e) a más tagállamban választott EX-mentességű ügylet (valószínűleg); (f) a számlázóprogramban létező, de az Online Számla által elutasított számla (2025. szeptember 15. óta 15 korábbi WARN blokkoló ERROR); (g) minden, amiről nem készült bizonylat. Nyugtához két valódi forrás van: online pénztárgép/e-pénztárgép esetén az OPF SOAP API (pénztárgépenként, technikai felhasználóval, csak rövid ideig visszakérhető, 14 nap induláskor, ezért folyamatosan archiválni kell), és 2026. szeptember 1-től a kézi/számítógépes nyugták napi összesítői (KOBAK vagy /receipt-if; ez utóbbi /receipt/list és /receipt/detail végpontjával visszaolvasható, bírság 2027. január 1-től). Fontos: az Online Számla nem ismeri a tényleges befizetés dátumát (a paymentDate a fizetési határidő), az átalányadózó bevétele viszont a ténylegesen befolyt, áfa nélküli összeg. Ezért az alkalmazásnak a következőket kell kézzel bekérnie az ügyféltől. (1) Befizetések: bankszámla- és pénztárkivonat, melyik kiszámlázott tétel mikor folyt be teljesen/részben, előlegek, és a következő évben fizetett számlák. (2) Minden nyugtás bevétel: pénztárgép AP-száma (OPF), nyugtatömb vagy számítógépes nyugták napi összesítői, e-pénztárgép. (3) Bizonylat nélküli készpénzes és kártyás eladás (jogi kockázat: Szja tv. 55. §, az átalányadózás elveszhet). (4) Platformok: platformonként a kifizetési kimutatás, ki állít számlát (EV, platform önszámlázás meghatalmazással, vagy az EV a végső vevőnek), és hogy a bevétel bruttó vagy a jutalékkal csökkentett összeg (platformonkénti gyakorlatot nem találtam ellenőrzött forrásban). (5) OSS-bevallás adatai (a küszöb feletti B2C forgalom), valamint a más tagállami EX-mentesség alatti forgalom. (6) Devizás bevétel: a befolyás napi MNB-árfolyam (vagy az áfa-alapnál használt árfolyam, ha az ügylet áfa-bevallásban szerepel). (7) Egyéb végleges bevétel számla nélkül: vállalkozói számlán jóváírt kamat, kártérítés, kötbér, biztosítói kifizetés, nem pénzbeli ellenérték piaci értéke, nem költségfedezeti támogatás. (8) Papírszámla-sorszámok hiány- és rögzítés-ellenőrzése. (9) Az Online Számlából kihagyható ügyletek összevetése a számlázóprogram (Számlázz.hu/Billingo) API-jával. Nem találtam ellenőrzött forrást: Wolt/Bolt/Etsy/Amazon/Airbnb/Patreon/alkalmazásbolt önszámlázási gyakorlatára, OSS-bevallás API-ra, arra hogy a KOBAK kézi nyugtaösszesítők visszaolvashatók-e, és az Szja tv. 10. mellékletének pontos szövegére. Ezeket az ügyféltől vagy könyvelőtől kell megerősíttetni."
+ },
+ "api": {
+  "summary": "Rövid válasz. BILLINGO: igen, van használható listázó API (GET https://api.billingo.hu/v3/documents), az ügyfél a saját fiókjában generál API-kulcsot (X-API-KEY), és a kulcshoz olvasási jogosultság is választható (a forrás 2021-es). Dátum, fizetési státusz, fizetés dátuma, típus (számla, díjbekérő, nyugta, sztornó) szerint lehet szűrni. Pénznem, árfolyam, kifizetések, PDF és NAV-státusz is lekérhető. Nincs OAuth és nincs publikus partnerprogram, csak API-kulcs. Nyitott kérdések: az olvasáshoz kell-e fizetős API-előfizetés (a spec 402-es hibát ír, ha nincs), és az ÁSZF a kulcsot egy ügyfélhez köti, az automatizált letöltést pedig korlátozhatja. Ezt írásban érdemes tisztázni a Billingóval. SZÁMLÁZZ.HU: nincs listázó vagy dátum szerinti kereső API. A Számla Agent csak számlaszám, rendelésszám vagy külső azonosító alapján ad vissza számla-XML-t, PDF-et vagy nyugtát (kifizetések és PDF is benne van). Az Agent-kulcs nem korlátozható olvasásra: minden kulcs ugyanazokat a műveleteket engedi, tehát a harmadik fél számlát is kiállíthatna vagy sztornózhatna. A listázás a NAV-ból jöhet, a számlázós hívás csak kiegészíti. A másik út a Pénzügyi adatkapcsolat: push, az ügyfélnek #profi csomag kell, és az alkalmazást a Számlázz.hu-nál regisztrálni kell (nyilvános típushoz jóváhagyás). A harmadik a könyvelői meghívás, amely csak kézi felületi hozzáférés. A többi eszköznél (Kulcs-Számla, Octopus, Számlaközpont, Billzone, NAV ingyenes számlázó) nem találtam dokumentált, nyilvános olvasó API-t. A NAV NEM elég mindenre. Hiányzik belőle a kifizetés ténye és dátuma, a PDF, a díjbekérő/szállítólevél/árajánlat, az egyes nyugták. Átalányadónál a bevétel jellemzően pénzforgalmi, ezért a fizetési dátum fontos (a jogszabályi hivatkozást nem ellenőriztem). A felvetett külföldre értékesítés viszont nagyrészt BENNE VAN a NAV-ban: a NAV 2021-es tájékoztatója szerint a külföldi adóalanynak, magánszemélynek, EU-n belüli mentes értékesítésről és exportról kiállított számlát is jelenteni kell, az alanyi adómentes is adatszolgáltatásra kötelezett. Kimarad az OSS-ben teljesített, más tagállamban teljesülő ügylet (NAV, 2026.01.21), valamint az OSS-nél gyakran elég nyugta. 2026.09.01-től a nyugtákról napi, áfakulcsonkénti összesített adatot kell küldeni a NAV-nak, egyedi nyugtát nem. Javaslat: a NAV marad az alap és a teljességi ellenőrzés, a Billingo-kulcs opcionális gazdagítás (olvasási jogú kulccsal, egyeztetés után). Számlázz.hu-nál a NAV-lista számlaszám szerinti Agent-lekérdezéssel egészíthető ki, de csak a teljes jogú kulcs kockázatának vállalásával, vagy #profi csomaggal és a push-kapcsolattal.",
+  "findings": [
+   {
+    "topic": "Billingo: listázó végpont és hitelesítés",
+    "fact": "GET https://api.billingo.hu/v3/documents (list_document) listázza az ügyfél kiállított dokumentumait. Hitelesítés: X-API-KEY fejléc, a kulcsot az ügyfél generálja a saját fiókjában (app.billingo.hu/api-key, Beállítások > API kulcsok), V3 kulcs kell. A spec JSON/REST, OpenAPI 3.0.",
+    "source": "https://developers.billingo.hu/ ; https://raw.githubusercontent.com/client-api/billingo-python/main/README.md (OpenAPI spec 3.0.14-ből generált SDK)",
+    "certainty": "official"
+   },
+   {
+    "topic": "Billingo: GET /documents szűrők",
+    "fact": "Paraméterek: page, per_page (alapértelmezett 25), block_id, partner_id, payment_method, payment_status (expired | none | outstanding | paid | partially_paid), start_date/end_date (kiállítás dátuma), start_number/end_number + start_year/end_year, type, query (szabad szöveg), paid_start_date/paid_end_date (fizetés dátuma), fulfillment_start_date/fulfillment_end_date (teljesítés), last_modified_date (inkrementális szinkronhoz).",
+    "source": "https://raw.githubusercontent.com/client-api/billingo-python/main/docs/DocumentApi.md",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Billingo: dokumentumtípusok",
+    "fact": "A type enum: invoice, advance, cancellation (sztornó), modification, proforma, receipt, receipt_cancellation, draft, draft_offer, offer, order_form, draft_order_form, waybill, draft_waybill, cert_of_completion, d_cert_of_completion, dossier. Tehát díjbekérő, nyugta, nyugta-sztornó, árajánlat, vázlat is listázható.",
+    "source": "https://raw.githubusercontent.com/client-api/billingo-python/main/docs/DocumentType.md",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Billingo: a Document objektum mezői (többlet a NAV-hoz képest)",
+    "fact": "Mezők: invoice_number, type, cancelled, payment_status, payment_method, gross_total, currency, conversion_rate, invoice_date, fulfillment_date, due_date, paid_date, document_partner, electronic, comment, tags, items, summary, settings, online_szamla_status, related_documents, correction_type, notification_status.",
+    "source": "https://raw.githubusercontent.com/client-api/billingo-python/main/docs/Document.md",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Billingo: további olvasó végpontok",
+    "fact": "GET /documents/{id}; GET /documents/{id}/payments (kifizetési előzmény); GET /documents/{id}/download (PDF); GET /documents/{id}/public-url; GET /documents/{id}/online-szamla (NAV beküldési státusz); GET /documents/vendor/{vendor_id}. Íróak is vannak (create, cancel, send, update_payment, delete_payment stb.), ezért fontos az olvasási jogú kulcs.",
+    "source": "https://github.com/client-api/billingo-python/blob/main/docs/DocumentApi.md",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Billingo: kulcs jogosultsága (olvasás-only)",
+    "fact": "Kulcslétrehozáskor jogosultság választható; az 'Olvasás' kulccsal csak adatot lehet kikérni, beszúrni/módosítani nem. A cikk 2021.11.18-i, a mostani felületen ellenőrizni kell (a Minup-útmutató olvasás+írás kulcsot kér, de az számlát is kiállít).",
+    "source": "https://support.billingo.hu/content/446136358",
+    "certainty": "official"
+   },
+   {
+    "topic": "Billingo: rate limit",
+    "fact": "A v3 válaszok X-RateLimit-Limit ('request limit per minute'), X-RateLimit-Remaining, X-RateLimit-Reset fejlécet hordoznak, túllépéskor 429 + Retry-After. A konkrét szám: egy 2025.04.22-i support cikk szerint 300 kérés/perc hitelesítve, 60/perc hitelesítés nélkül, de a cikk X-API-TOKEN fejlécet említ, így v3-ra nem biztos. A developers.billingo.hu nem közöl limitet.",
+    "source": "https://support.billingo.hu/content/2091253949 ; https://github.com/client-api/billingo-python/blob/main/docs/DocumentApi.md",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Billingo: csomag és ár, kell-e fizetős API olvasáshoz",
+    "fact": "Az árak oldal szerint a korlátlan API-kulcs generálás minden csomagban (Free is) benne van, a 'Számlagenerálás API-n keresztül' és a tömeges generálás viszont extra díjas minden csomagnál ('API és tömeges számlagenerálás' kiegészítő, 1 999 Ft + ÁFA/hótól). A /szolgaltatasok/api oldal sávjai (éves díj, ÁFA nélkül): Basic 2 390 Ft/hó (1-50 bizonylat/hó), Standard 5 990 (51-500), Pro 8 990 (501-3000), Max 14 990 (korlátlan); a két oldal összege eltér. Egyik oldal sem mondja ki, hogy az olvasás is az add-on része. A spec viszont GET /documents-nél 402-t ír ('Authenticated user doesn't have subscription'), a developers oldal szerint a 402 azt jelenti, hogy az előfizetés nem tartalmaz API-használatot. Következtetés: valószínű, hogy olvasáshoz is API-t tartalmazó előfizetés kell; teszttel vagy a Billingo ügyfélszolgálatával tisztázandó.",
+    "source": "https://www.billingo.hu/arak ; https://www.billingo.hu/szolgaltatasok/api ; https://developers.billingo.hu/ ; https://github.com/client-api/billingo-python/blob/main/docs/DocumentApi.md",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Billingo: ÁSZF a harmadik fél általi hozzáférésről",
+    "fact": "Hatályos 2025.12.15-től. 4.10 (Billingo API): egy API-kulcs egy Előfizetői Szerződéssel csak egy Ügyfél által használható; ha több Ügyfél akarja ugyanazt a kulcsot használni, mindegyiknek külön szerződés és díj kell. A 6.6 az API-t az Ügyfél 'saját rendszereivel' való összekötésként írja le; Billingo az API-t bármikor módosíthatja. Általános rész: a szolgáltatás harmadik személynek továbbértékesítése Billingo hozzájárulása nélkül tilos, és Billingo korlátozhatja a szolgáltatást rendeltetésellenes használatnál (példa: adatok automatizált letöltése, rendszert megterhelő használat). A harmadik fél általi olvasást az ÁSZF nem tiltja és nem engedi kifejezetten. Ügyfelenkénti saját kulcs megfelel az egy-kulcs-egy-ügyfél szabálynak, de érdemes írásban egyeztetni.",
+    "source": "https://www.billingo.hu/felhasznalasi-feltetelek ; https://www.billingo.hu/pdf/billingo_aszf.pdf (2025.01.06-i változat, ugyanaz a tartalom)",
+    "certainty": "official"
+   },
+   {
+    "topic": "Billingo: OAuth, partnerprogram",
+    "fact": "Hitelesítés csak API-kulccsal; OAuth nincs dokumentálva. Publikus könyvelői/fejlesztői partnerprogramot nem találtam: a developers.billingo.hu csak kész integrációkat és egy űrlapot sorol (saját integráció beküldése a Marketplace-re), az API-oldal csak általános ajánlói programokat említ. Hiányt igazoló megállapítás.",
+    "source": "https://developers.billingo.hu/ ; https://www.billingo.hu/szolgaltatasok/api",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Billingo: harmadik fél által használt kulcsok (precedens)",
+    "fact": "A Billingo saját súgója Marketplace-összekötéseket ír le, ahol az ügyfél a saját fiókjában generál kulcsot, és beilleszti a harmadik fél rendszerébe (pl. QUiCK: a Billingo-bevételek megjelennek a QUiCK-ben). A Novitax NTAX könyvelőprogram a kiállított számlákat az ügyfél API v3 kulcsával importálja, szűrhető kelt vagy teljesítés dátum szerint, és csak az új számlákat is behozza.",
+    "source": "https://support.billingo.hu/content/933494806 ; https://tudastar.novitax.hu/billingo-import-kettos-konyvviteli-rendszerben/?pdf=15616",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Billingo: hivatalos könyvelői fiók (nem API)",
+    "fact": "Az ügyfél a Beállítások > Jogosultságkezelés > Könyvelők kezelése alatt hív meg könyvelőt, a könyvelőnek regisztrált Billingo-fiók kell. A könyvelő a Számlák, Kiadások, Adatexportok menüt látja, exportot készíthet kelt/teljesítés/időszak/számlatömb/fizetési mód/pénznem szerint. Minden csomagban ingyenes, de az Adatexport funkció a Basic+ csomagokhoz kötött. A cikkek nem említenek API-t, ez kézi felület.",
+    "source": "https://www.billingo.hu/tudastar/olvas/billingo-konyveloi-fiok ; https://www.billingo.hu/funkciok/konyveloi-osszekotes ; https://support.billingo.hu/content/2092499104",
+    "certainty": "official"
+   },
+   {
+    "topic": "Billingo: v2 kivezetése",
+    "fact": "A v2 integráció új beállítása már nem lehetséges, a v3-ra átállás ajánlott 2026.04.30-ig; új v3 kulcs kell. Csak v3-mal érdemes számolni. A határidő harmadik fél súgójából van, Billingo hivatalos közleményt nem találtam.",
+    "source": "https://intercom.help/salesautopilot-kft/hu/articles/14701736",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Számlázz.hu: Agent hívások és lekérdezés",
+    "fact": "A Számla Agent XML-alapú (multipart POST a https://www.szamlazz.hu/szamla/ címre), nem REST. Lekérdezések: számla XML (action-szamla_agent_xml / xmlszamlaxml), számla PDF (action-szamla_agent_pdf), nyugta lekérdezés (action-szamla_agent_nyugta_get), adózó lekérdezés. Azonosítás csak szamlaszam, rendelesSzam (több egyezésnél az utolsó) vagy szamlaKulsoAzon alapján, plusz opcionális pdf=true. Listázás vagy dátum szerinti keresés nincs dokumentálva. Csak a Számlázz.hu-ban kiállított ('internal outgoing') dokumentum kérhető le.",
+    "source": "https://docs.szamlazz.hu/agent/ ; https://docs.szamlazz.hu/agent/querying_xml/request ; https://docs.szamlazz.hu/agent/querying_xml/xml ; https://docs.szamlazz.hu/agent/querying_pdf/request ; https://docs.szamlazz.hu/agent/querying_receipt/request",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: mit ad vissza az xmlszamlaxml",
+    "fact": "szamla.xsd szerinti XML: szallito, alap (szamlaszam, tipus: SZ/ES/VS/HS/SS/JS/D/SL, eszamla 0/1/3/2, kelt, telj, fizh, fizmod, devizanem, devizaarf, penzforg, kata, teszt), vevo, tetelek, osszegek, kifizetesek (dátum, jogcím, összeg, megjegyzés, bankszámla; csak ha van kifizetés) és base64 PDF. Külön 'kifizetve' flag nincs, a fizetettség a kifizetesek-ből következtethető. A devizaarf forrását (MNB-e) az oldal nem mondja ki. Hiba: sikeres=false, hibakod, 7-es kód ha nem találja.",
+    "source": "https://docs.szamlazz.hu/agent/querying_xml/response",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: Agent-kulcs és jogosultság",
+    "fact": "42 karakteres kulcs, csak tulajdonos/adminisztrátor generálhat a Vezérlőpult 'Számla Agent kulcsok' részén, #free csomaggal is működik, nem jár le, nem lehet vele belépni. Minden kulcs azonos jogosultságú, nincs olvasás-only vagy hatókör szerinti korlátozás, ezért a kulcs a kiállítást és sztornózást is lehetővé tenné a harmadik félnek. Fiókonként legfeljebb 17 kulcs; külön kulcs javasolt rendszerenként. Integrált rendszer automatikusan is létrehozhat kulcsot.",
+    "source": "https://tudastar.szamlazz.hu/en/gyik/how-do-i-create-and-manage-a-sz%C3%A1mla-agent-api-key ; https://docs.szamlazz.hu/agent/basics/authentication ; https://tudastar.szamlazz.hu/en/gyik/kulcs",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: Agent díj és limit",
+    "fact": "Az Agent minden csomagon, #free-n is külön díjas, a kiállított bizonylatok előző havi száma szerint, utólag (ÁFA nélkül): 1-50 db: 2 690 Ft; 51-3 000: 9 990 Ft; 3 001-10 000: 14 990 Ft; 10 000 fölött megkezdett 10 000-enként +14 990 Ft. A díj a kiállított bizonylatok után esedékes; hogy a lekérdezések beszámítanak-e, az oldal nem mondja ki (a díjalap a kiállítás, ezért az olvasás valószínűleg nem számít, de nem megerősített). Rate limitet vagy párhuzamossági korlátot a docs nem említ. E-számlához legalább #start kell.",
+    "source": "https://www.szamlazz.hu/szamla-agent-api/ ; https://tudastar.szamlazz.hu/en/gyik/invoices-through-my-own-website-automatically ; https://docs.szamlazz.hu/agent/basics/authentication",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: Pénzügyi adatkapcsolat (push, v5.0)",
+    "fact": "A Számlázz.hu az eseményekre (kiállítás, fizetési státusz változása, főkönyvi mezők módosítása) teljes XML-t PUSH-ol a regisztrált fogadó rendszerhez: kimenő számlák (SZ, SS, HS, ES, VS, D, SL, JS), bejövő számlák, banki tranzakciók és nyugták. Tartalmaz kifizetesek-et (dátum, jogcím, összeg, banki tranzakció azonosító), devizanem/devizaarf mezőt, opcionális PDF-et. Hivatalosan: a fogadó rendszer nem tud lekérdezni ('There is no option for the receiving system to query').",
+    "source": "https://docs.szamlazz.hu/penzugyi-adatkapcsolat/ ; https://docs.szamlazz.hu/penzugyi-adatkapcsolat/kimeno-szamlak",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: Pénzügyi adatkapcsolat feltételei",
+    "fact": "Az ügyfél oldalán #profi csomag kell (3 790 Ft/hó + ÁFA, éves fizetéssel 3 290 Ft/hó), mind nyilvános, mind rejtett kapcsolatnál. Az alkalmazást e-mailben kell regisztrálni a Számlázz.hu-nál (fogadó URL-ek, kulcs-utótag, kapcsolattartó). Nyilvános kapcsolat: minden ügyfélnek elérhető, előzetes jóváhagyás, alapos tesztelés és marketing-együttműködés kell. Rejtett kapcsolat: saját ERP/CRM-hez, csak a megadott fiókokban működik. Az azonosító kulcs az X-Szamlazzhu-Key fejlécben érkezik. A többügyfeles könyvelőapp valószínűleg nyilvános típust igényel; ezt a Számlázz.hu-val egyeztetni kell. Precedens: a Novitax NTAX így kap számlákat (az ügyfél kiválasztja a fogadó rendszert és beírja a kulcsot, max. ~15 perc késéssel).",
+    "source": "https://docs.szamlazz.hu/penzugyi-adatkapcsolat/kezdd-el ; https://docs.szamlazz.hu/penzugyi-adatkapcsolat/registration ; https://www.szamlazz.hu/csomagok-es-arak ; https://tudastar.novitax.hu/szamlazz-hu-kozvetlen-import-kapcsolat/?pdf=5505",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: hivatalos könyvelői hozzáférés",
+    "fact": "Vezérlőpult > Fiók hozzáférések > Meghívó küldése (14 napig érvényes). Szerepek: Könyvelő (csak olvasás: számlák, riportok, listák, könyvelési adatexportok), Könyvelő (számlát is kiállíthat, #start+), Auditor, egyedi jogok. Az olvasó szerep minden csomagon, #free-n is elérhető. A Listák menüben főkönyvi adatexport (név szerinti könyvelőprogramokhoz), 'összes számlaadat' (CSV/TSV), adóhatósági XML, Pénzforgalom (Excel), Forgalom (számla + díjbekérő + szállítólevél), könyvvizsgálói ZIP. Az automatikus, folyamatos átadás (könyvelői/pénzügyi adatkapcsolat) #profi. Mindez kézi felület, nem API.",
+    "source": "https://tudastar.szamlazz.hu/en/gyik/how-can-i-manage-users-and-multiple-companies-in-one-sz%C3%A1ml%C3%A1zz.hu-account ; https://www.szamlazz.hu/blog/2026/07/lekerdezesek-es-exportok-a-szamlazz-hu-ban ; https://tudastar.szamlazz.hu/gyik/szamlak-importja-konyveloi-rendszerbe",
+    "certainty": "official"
+   },
+   {
+    "topic": "Számlázz.hu: nincs újabb REST/listázó API",
+    "fact": "A docs.szamlazz.hu csak a Számla Agentet, a PHP API-t (az Agent adaptere), a Third-party invoicing-ot és a Pénzügyi adatkapcsolatot sorolja. Újabb nyilvános REST vagy listázó API-t nem találtam. Hiányt igazoló megállapítás, ügyfélszolgálattal ellenőrizendő. Gyakorlati kombináció: a számlák listáját a NAV queryInvoiceDigest adja (dátum szerint), a kiegészítést (kifizetesek, PDF) számlaszám szerinti xmlszamlaxml hívás, feltéve hogy a NAV-os számlaszám megegyezik a Számlázz.hu számlaszámmal (következtetés, nem tesztelt). A teljes jogú kulcs kockázata fennáll.",
+    "source": "https://docs.szamlazz.hu/ ; https://www.apideck.com/accounting-software/sz-ml-zz-hu",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Más hazai eszközök: dokumentált olvasó API",
+    "fact": "Kulcs-Számla (Kulcs-Soft), Octopus, Számlaközpont, Billzone: nem találtam nyilvános, dokumentált számlalistázó API-t. Billzone: egy közösségi Drupal-modul csak createInvoice és downloadInvoice(számlaszám) hívást használ, listázás nincs (sandbox.billzone.eu). Számlaközpont: csak vevői kézikönyv, API nincs. Kulcs-Soft: számlaletöltés XML/XSD folyamat és NAV Online Számlaimport modul a könyvelőprogramban, REST dokumentáció nem. BillCity: a súgó szerint x-api-key fejlécű REST v1 (POST /v1/sales_invoice, GET /v1/sales_invoice/{id}), listázó végpont nem megerősített, az oldalak 403-at adtak. Az 'Octopus' nevű számlázót nem sikerült azonosítani.",
+    "source": "https://www.drupal.org/project/billzone/ ; https://www.szamlakozpont.hu/letoltes/sugo/vevoi_kezikonyv.pdf ; https://tudasbazis.kulcs-soft.hu/konyvelo-programok/wp-content/uploads/2020/07/K%C3%B6nyvel%C3%A9s_NAV-Online-Sz%C3%A1mlaimport-modul_Le%C3%ADr%C3%A1s.pdf ; https://help.billcity.hu/hc/hu/articles/7020199297042",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "NAV saját ingyenes Online Számlázó és nyugtás források",
+    "fact": "Az ingyenes NAV Online Számlázóhoz külső olvasó API-t nem találtam; az itt kiállított számlák eleve a NAV adatai között vannak, a technikai felhasználós gépi interfész (queryInvoiceDigest/Data) pedig ugyanaz. Külön szolgáltatás az online pénztárgép napló lekérdezése (OPG-napló-lekérdezés): SOAP, ugyanazzal a technikai felhasználóval, külön jogosultsággal, P7B naplóállományok, induláskor 14 napra visszamenőleg (2023.02.06). Csak online pénztárgépet használóknál releváns.",
+    "source": "https://nav.gov.hu/ado/egyeb/jelentosen-megkonnyiti-a-konyvelok-dolgat-a-nav-azzal-hogy-letolthetok-az-online-penztargepek-adatai ; https://github.com/nav-gov-hu/Online-Invoice",
+    "certainty": "official"
+   },
+   {
+    "topic": "Többlet a NAV-hoz képest: kifizetés ténye és dátuma",
+    "fact": "A NAV invoiceData XSD (v3.0) paymentDate mezője 'Deadline for payment', azaz fizetési határidő, nem kifizetési dátum; kifizetett státuszt nem tartalmaz (csak előlegszámlán van advancePaymentDate). A számlázók ezt adják: Billingo payment_status, paid_date, GET /payments; Számlázz.hu kifizetesek és push-értesítés státuszváltozásra. A Számlázz.hu egyik útmutatója szerint a bevételi nyilvántartás kiválasztása fizetési dátum szerint történik (hiányában kiállítás + 45 nap). Átalányadónál a pénzforgalmi bevételi szemlélet miatt ez lényeges; a jogszabályi hivatkozást ebben a feladatban nem ellenőriztem.",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/src/schemas/nav/gov/hu/OSA/invoiceData.xsd ; https://www.szamlazz.hu/blog/2026/07/lekerdezesek-es-exportok-a-szamlazz-hu-ban",
+    "certainty": "official"
+   },
+   {
+    "topic": "Többlet a NAV-hoz képest: PDF, deviza",
+    "fact": "A NAV adatai XML-ek, számlakép (PDF) nincs; Billingo (GET /download, /public-url) és Számlázz.hu (pdf=true, Pénzügyi adatkapcsolat PDF opció) adja. Devizás számlánál a NAV is tartalmaz currencyCode-ot és exchangeRate-et, valamint HUF-összegeket, tehát ebben nincs jelentős előny; Billingo: currency, conversion_rate, Számlázz.hu: devizanem, devizaarf (forrása nem dokumentált).",
+    "source": "https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/src/schemas/nav/gov/hu/OSA/invoiceData.xsd ; https://raw.githubusercontent.com/client-api/billingo-python/main/docs/Document.md ; https://docs.szamlazz.hu/agent/querying_xml/response",
+    "certainty": "official"
+   },
+   {
+    "topic": "Többlet a NAV-hoz képest: nem számla jellegű dokumentumok",
+    "fact": "A 23/2014 NGM rendelet 13/A-13/C. § a számlára és a számlával egy tekintet alá eső okiratra írja elő az adatszolgáltatást, nyugtát nem nevez meg. A díjbekérő (Számlázz.hu: nem számla, 'D' típus), szállítólevél ('SL'), árajánlat, megrendelő, vázlat tehát nincs a NAV-ban, de a számlázókban igen: Billingo type=proforma/offer/order_form/waybill/draft, Számlázz.hu D/SL, Forgalom lista. A nem bevételt jelentő dokumentumokat a bevételi számításnál ki kell szűrni.",
+    "source": "https://njt.jog.gov.hu/jogszabaly/2014-23-20-2X ; https://docs.szamlazz.hu/agent/generating_invoice/settings_and_rules/document-types ; https://raw.githubusercontent.com/client-api/billingo-python/main/docs/DocumentType.md",
+    "certainty": "official"
+   },
+   {
+    "topic": "Nyugták és a NAV",
+    "fact": "Nyugta nem része az Online Számla adatszolgáltatásnak. 2026.09.01-től viszont a kézi és számítógéppel előállított nyugtákról (ha nem online/e-pénztárgéppel készültek) 3 naptári napon belül napi, áfakulcsonként összesített adatot kell küldeni a NAV-nak (KOBAK portal vagy gépi /receipt-if); a GYIK szerint egyedi nyugtaadat nem megy, kulcsok: 0/5/18/27%, alanyi adómentes, egyéb. A spec csak beküldést ír le, lekérdezést nem említ. Ezért az egyes nyugták listája csak a számlázóból jön: Billingo type=receipt/receipt_cancellation, Számlázz.hu action-szamla_agent_nyugta_get és a v5.0 push. Online pénztárgépnél OPG-napló.",
+    "source": "https://nav.gov.hu/ado/enyugta/nyugtaadat-szolgaltatas ; https://nav.gov.hu/ado/enyugta/kerdesek-es-valaszok/nyugtaadat-szolgaltatas ; https://nav.gov.hu/ado/enyugta/nyugtaadat-szolgaltatas/GitHubon_a_nyugtaadat-szolgaltatasi_interfesz_dokumentacioja",
+    "certainty": "official"
+   },
+   {
+    "topic": "Külföldi értékesítés és OSS a NAV-ban (a felhasználó kérdéséhez)",
+    "fact": "A NAV 2021.01.04-i tájékoztatója szerint adatszolgáltatásra kötelezett a külföldi adóalanynak és nem adóalanynak kiállított számla, az EU-s mentes termékértékesítés és az export is; az alanyi adómentes adóalany szintén. Nem jelentendő: a belföldi teljesítési helyű közösségi beszerzés és az import, és a Magyarországról teljesített, de Magyarországon adókötelezettséget nem keletkeztető távértékesítés. A NAV 2026.01.21-i OSS-tájékoztatója: aki az OSS-ben teljesít, mentesül az online számlaadat-szolgáltatás alól a más tagállamban teljesülő ügyleteknél, a belföldi teljesítési helyű ügyleteknél nem; OSS-ben a vevőnek gyakran elég nyugtát adni (kifizetett, nem kért számlát, magánszemélynél 900 000 Ft alatt). Tehát a 'külföldre értékesítés nem kerül a NAV-ba' állítás nagyrészt téves; csak az OSS-es más tagállami ügyletek és a nyugták hiányozhatnak. Részletes elemzés a másik kutatási ágra tartozik.",
+    "source": "https://nav.gov.hu/ado/afa/A_szamlakibocsatok_sz20201231 ; https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fnezzen-utana%2Finf_fuz%2F2026%2F98.-A-nem-unios-es-unios-egyablakos-rendszerre-valamint-a-platformokra-vonatkozo-afaszabalyok-2026.-01.-21",
+    "certainty": "official"
+   },
+   {
+    "topic": "Többlet a NAV-hoz képest: NAV-státusz és eltérések",
+    "fact": "Billingo: online_szamla_status mező és GET /documents/{id}/online-szamla; a könyvelői felület is mutatja a NAV-ba küldés sikerességét. Ezzel a NAV-val való összevetésnél kimutatható, ha egy számlázóban meglévő számla nem jutott be a NAV-ba (hibás beküldés). Számlázz.hu a fiókban kezeli a NAV-kapcsolatot; push-ban a <forras> mező jelöli a NAV-ból származó (nem Számlázz.hu-s) számlákat.",
+    "source": "https://raw.githubusercontent.com/client-api/billingo-python/main/docs/Document.md ; https://www.billingo.hu/funkciok/konyveloi-osszekotes ; https://docs.szamlazz.hu/penzugyi-adatkapcsolat/kimeno-szamlak",
+    "certainty": "official"
+   }
+  ]
+ }
+}

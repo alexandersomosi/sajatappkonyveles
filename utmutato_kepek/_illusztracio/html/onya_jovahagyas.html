@@ -1,0 +1,40 @@
+<!doctype html><html lang="hu"><head><meta charset="utf-8"><style>
+@font-face { font-family: "Inter"; src: url("../../_betu/Inter_opsz_wght.ttf") format("truetype"); font-weight: 100 900; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F2F4F8; }
+body { width: 412px; font-family: "Inter", Arial, sans-serif; color: #1D2433; font-size: 14.5px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+.top { height: 54px; background: #fff; border-bottom: 1px solid #D9DEE6; display: flex; align-items: center; gap: 10px; padding: 0 16px; }
+.logo { width: 30px; height: 30px; border-radius: 50%; border: 5px solid #1C4FD8; }
+.top b { font-size: 16px; } .top span { margin-left: auto; font-size: 12.5px; color: #4B5567; }
+.lap { padding: 16px 16px 26px; }
+h1 { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+.al { font-size: 12.5px; color: #4B5567; margin-bottom: 12px; }
+.kartya { background: #fff; border: 1px solid #D9DEE6; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.sor { padding: 7px 0; border-top: 1px solid #EDF0F4; } .sor:first-child { border-top: 0; }
+.sor label { display: block; font-size: 12.5px; font-weight: 700; color: #3A4352; }
+.adat { display: inline-block; height: 10px; border-radius: 6px; background: #B7C0CE; }
+.gombok { display: flex; gap: 10px; margin-top: 6px; }
+.gomb { flex: 1; height: 44px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; letter-spacing: .3px; }
+.elso { background: #1C4FD8; color: #fff; } .masod { background: #fff; color: #1C4FD8; border: 2px solid #1C4FD8; }
+.utana { margin: 4px 16px 8px; font-size: 12.5px; font-weight: 700; color: #4B5567; }
+.ablakhely { margin: 0 16px 24px; padding: 18px 10px; border-radius: 10px; background: rgba(16, 21, 43, .38); }
+.ablak { background: #fff; border-radius: 10px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+.ablak b { display: block; font-size: 16px; margin-bottom: 6px; }
+.ablak p { font-size: 13.5px; color: #3A4352; margin-bottom: 14px; }
+</style></head><body>
+<div class="top"><span class="logo"></span><b>ONYA</b><span>Meghatalmazások</span></div>
+<div class="lap">
+<h1>Egységes Képviseleti Adatlap</h1>
+<div class="al">Jóváhagyásra vár</div>
+<div class="kartya">
+<div class="sor"><label>Meghatalmazó</label><span class="adat" style="width:170px"></span></div>
+<div class="sor" data-jel="meghatalmazott"><label>Meghatalmazott</label><span class="adat" style="width:150px"></span></div>
+<div class="sor"><label>Ügycsoportok</label><span class="adat" style="width:230px"></span><br><span class="adat" style="width:190px"></span></div>
+<div class="sor"><label>Érvényesség</label><span class="adat" style="width:110px"></span></div>
+</div>
+<div class="gombok"><div class="gomb masod">VISSZA</div><div class="gomb elso" data-jel="jovahagyas_gomb">JÓVÁHAGYÁS</div></div>
+</div>
+<div class="utana">Utána ez a kis ablak ugrik fel:</div>
+<div class="ablakhely"><div class="ablak" data-jel="megerosites"><b>Megerősítés</b><p>Biztosan jóváhagyod a meghatalmazást?</p>
+<div class="gombok"><div class="gomb masod">MÉGSEM</div><div class="gomb elso" data-jel="megerosites_gomb">JÓVÁHAGYÁS</div></div></div></div>
+</body></html>

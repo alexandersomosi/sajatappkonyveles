@@ -1,0 +1,186 @@
+/* Rendben (B változat: Szilva, második kör, 2026-11-17)
+   Közös tokenek és komponensek. Minden képernyő ezt az egy fájlt használja.
+   Betű: Schibsted Grotesk (szöveg, gomb) és Source Serif 4 (szójel, képernyőcím, összeg),
+   mindkettő SIL OFL 1.1, helyben a fonts/ mappából, hogy a képernyőkép ne függjön a hálózattól. */
+
+@font-face { font-family: "Schibsted Grotesk"; src: url("fonts/SchibstedGrotesk-400.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("fonts/SchibstedGrotesk-500.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("fonts/SchibstedGrotesk-600.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Schibsted Grotesk"; src: url("fonts/SchibstedGrotesk-700.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Source Serif 4"; src: url("fonts/SourceSerif4-valtozo.ttf") format("truetype"); font-weight: 200 900; font-style: normal; font-display: block; }
+
+:root {
+  /* Színek */
+  --szilva: #4B1F45;          /* márka: elsődleges gomb, szójel, aktív fül, kész lépés pipája */
+  --szilva-szoveg: #6A2D61;   /* szöveges gomb, vissza-link */
+  --alap: #DFE1E3;            /* hideg kőszürke háttér: a szilva tintának hat rajta, nem rózsaszínnek */
+  --lap: #FFFFFF;             /* lapok */
+  --halvany: #F3EAF1;         /* kész lépés köre, saját üzenet */
+  --tinta: #241A23;           /* szöveg, számlaszám, összeg */
+  --masod: #5E5B63;           /* másodlagos szöveg */
+  --vonal: #E3E4E7;           /* hajszálvonal a lapon */
+  --ures: #CBCED3;            /* mérő alja, még nem kész lépés pöttye */
+  --sav: #D3D6DA;             /* a hónapválasztó sávja */
+  --mezo-keret: #858891;      /* beviteli mező kerete, sor nyila (3,5:1) */
+  --buborek-keret: #DCCCD8;   /* saját üzenet széle */
+  --lenyomva: #F4F4F6;        /* sor megnyomva */
+  --csempe: #EEEFF1;          /* ikoncsempe, elmaradó lépés köre */
+  --veszely: #B42318;
+  --figyel: #8A5A00;          /* egyetlen jelentése: RÁD VÁR. Pötty, állapotmondat, számjelvény. */
+
+  --betu: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --betu-cim: "Source Serif 4", Georgia, serif;
+
+  /* Formák: a gomb mindig pirula, a lap 16, ami a lapon belül van, kisebb */
+  --r-lap: 16px;
+  --r-mezo: 10px;
+  --r-kep: 6px;
+  --r-gomb: 999px;
+
+  /* Térköz */
+  --margo: 16px;   /* lap a képernyő szélétől */
+  --belso: 18px;   /* tartalom a lap szélétől */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+/* A fej nélküli Chrome Windowson nem enged 500 px-nél keskenyebb ablakot, ezért a képernyő balra zárt és 390 px széles. */
+body {
+  font-family: var(--betu); font-size: 17px; line-height: 1.42; color: var(--tinta);
+  background: var(--alap); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a { color: inherit; }
+
+/* ---------- Telefonképernyő ---------- */
+.kepernyo { position: relative; width: 390px; min-height: 844px; margin: 0; background: var(--alap); padding-bottom: 112px; }
+.kepernyo.ful-nelkul { padding-bottom: 40px; }
+
+.allapotsor { height: 47px; display: flex; align-items: center; justify-content: space-between; padding: 6px 24px 0 34px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.allapotsor .jelek { display: flex; gap: 6px; align-items: center; }
+.allapotsor svg { display: block; fill: var(--tinta); }
+
+/* ---------- Fejléc: a cím talpas, 500-as, levegővel ---------- */
+.fej { padding: 18px 20px 4px; }
+.cim { font-family: var(--betu-cim); font-size: 32px; line-height: 38px; font-weight: 500; letter-spacing: -.008em; }
+.cim-2 { font-family: var(--betu-cim); font-size: 26px; line-height: 32px; font-weight: 500; letter-spacing: -.006em; }
+.cim-3 { font-size: 20px; line-height: 26px; font-weight: 600; letter-spacing: -.008em; }
+.alcim { font-size: 17px; line-height: 24px; margin-top: 8px; }
+.vissza { text-decoration: none; display: inline-flex; align-items: center; gap: 2px; height: 44px; margin-left: -6px; color: var(--szilva-szoveg); font-weight: 600; font-size: 17px; }
+.vissza .ikon { width: 22px; height: 22px; }
+
+/* ---------- Szakaszcím az alapon (csak ahol a lap első sora nem mondja meg) ---------- */
+.szakasz { font-size: 17px; line-height: 22px; font-weight: 600; padding: 30px 20px 10px; letter-spacing: -.005em; }
+.szakasz-megj { font-size: 15px; line-height: 20px; color: var(--masod); padding: 0 20px 10px; margin-top: -6px; }
+
+/* ---------- Lap ---------- */
+.lap { background: var(--lap); border-radius: var(--r-lap); margin: 0 var(--margo); }
+.lap + .lap { margin-top: 12px; }
+.lap-belso { padding: 16px var(--belso) 18px; }
+
+/* ---------- Sor: kitöltés és keret nélkül, hajszálvonal és nyíl ---------- */
+.sor { display: flex; align-items: center; gap: 14px; margin: 0 var(--belso); padding: 14px 0; min-height: 62px; }
+.sor + .sor, .sor-vonal { border-top: 1px solid var(--vonal); }
+.sor-t { flex: 1; min-width: 0; }
+.sor-cim { font-size: 17px; line-height: 23px; }
+.sor-al { font-size: 15px; line-height: 20px; color: var(--masod); margin-top: 2px; }
+.sor .nyil { width: 18px; height: 18px; flex: none; color: var(--mezo-keret); stroke-width: 2; }
+.sor.lenyomva { background: var(--lenyomva); }
+
+/* ---------- Összeg: talpas, táblázatos számjegy, a „Ft” ugyanakkora, rendes szóközzel ---------- */
+.osszeg { font-family: var(--betu-cim); font-weight: 500; font-size: 18px; line-height: 23px; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; text-align: right; }
+.szam { font-variant-numeric: tabular-nums lining-nums; }
+
+/* ---------- Állapotmondat: egy jel + egy mondat. Szegmenssor nincs. ----------
+   pötty (okker) = rád vár · óra (szürke) = Bencénél van · pipa (szilva) = kész */
+.allapot { display: flex; align-items: flex-start; gap: 7px; font-size: 15px; line-height: 20px; color: var(--masod); margin-top: 3px; }
+.allapot .ikon { width: 16px; height: 16px; margin-top: 2px; stroke-width: 2; }
+.allapot.kesz .ikon { color: var(--szilva); stroke-width: 2.4; }
+.allapot.rad-var { color: var(--figyel); font-weight: 500; }
+.potty { display: inline-block; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--figyel); }
+.allapot .potty { margin: 6px 1px 0 0; }
+
+/* ---------- Gombok: mindig pirula ---------- */
+.gomb { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--betu); font-weight: 600; border-radius: var(--r-gomb); white-space: nowrap; text-decoration: none; letter-spacing: -.003em; }
+.gomb .ikon { width: 20px; height: 20px; stroke-width: 2; }
+.gomb-elso { height: 48px; width: 100%; background: var(--szilva); color: #FFFFFF; font-size: 17px; }
+.gomb-masod { height: 44px; padding: 0 18px; background: var(--lap); color: var(--szilva); border: 1.5px solid var(--szilva); font-size: 16px; }
+.gomb-masod.teljes { width: 100%; height: 48px; }
+/* Kis gomb a sorban (Másolás, Letöltés, Megnyitás): 36 px látszik, a lenyomható terület 44 px */
+.gomb-kicsi { position: relative; height: 36px; padding: 0 14px 0 11px; gap: 6px; background: var(--lap); color: var(--szilva); border: 1.5px solid var(--szilva); font-size: 15px; }
+.gomb-kicsi::after { content: ""; position: absolute; inset: -4px -2px; }
+.gomb-kicsi .ikon { width: 18px; height: 18px; }
+.gomb-kicsi.kimasolva { border-color: var(--szilva); background: var(--halvany); }
+.gomb-szoveg { white-space: nowrap; color: var(--szilva-szoveg); font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; padding: 11px 0; }
+.gomb-veszely { color: var(--veszely); font-weight: 600; font-size: 16px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; padding: 11px 0; }
+.gomb-veszely-elso { height: 48px; width: 100%; background: var(--veszely); color: #FFFFFF; font-size: 17px; border-radius: var(--r-gomb); }
+.gomb-kor { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+.gomb-kor.keretes { border: 1.5px solid var(--szilva); color: var(--szilva); background: var(--lap); }
+.gomb-kor.kitoltott { background: var(--szilva); color: #FFFFFF; }
+.gomb-kor .ikon { width: 22px; height: 22px; stroke-width: 2; }
+.gomb:focus-visible, .gomb-szoveg:focus-visible, .gomb-kor:focus-visible { outline: 3px solid var(--szilva-szoveg); outline-offset: 3px; }
+
+/* ---------- Beviteli mező: szögletes, hogy ne legyen gomb ---------- */
+.mezo { display: block; }
+.mezo + .mezo { margin-top: 18px; }
+.mezo-cimke { display: block; font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.mezo-doboz { height: 52px; border: 1.5px solid var(--mezo-keret); border-radius: var(--r-mezo); padding: 0 6px 0 14px; display: flex; align-items: center; gap: 10px; font-size: 17px; background: var(--lap); }
+.mezo-doboz .ertek { flex: 1; min-width: 0; }
+.mezo-doboz .pont { letter-spacing: .14em; font-size: 15px; }
+
+/* ---------- Bélyegkép, ikoncsempe ---------- */
+.belyeg { width: 40px; height: 48px; border-radius: var(--r-kep); flex: none; display: block; overflow: hidden; }
+.csempe { width: 40px; height: 40px; border-radius: var(--r-kep); background: var(--csempe); color: var(--masod); display: grid; place-items: center; flex: none; }
+
+/* ---------- A könyvelő arcképe ----------
+   Élesben a könyvelő saját fényképe kerül ide (ő adja, nem generált). A mintában kézzel rajzolt, szürke helyőrző. */
+.portre { width: 40px; height: 40px; border-radius: 50%; flex: none; display: block; }
+.portre.kicsi { width: 32px; height: 32px; }
+.portre.nagy { width: 48px; height: 48px; }
+
+/* ---------- Határ-mérő ---------- */
+.mero { height: 8px; border-radius: 4px; background: var(--ures); overflow: hidden; margin: 14px 0 8px; }
+.mero i { display: block; height: 100%; background: var(--szilva); border-radius: 4px; }
+.mero-vegek { display: flex; justify-content: space-between; font-size: 15px; line-height: 20px; color: var(--masod); }
+
+/* ---------- Idővonal: csak valódi sorrendnél (bekötés, egy tétel útja) ----------
+   kész: halvány kör, szilva pipa · most: kitöltött szilva kör, fehér óra · később: kis szürke pötty
+   elmarad: szürke csempe-kör „–” jellel. Egyik sem hasonlít választógombra. */
+.idovonal { list-style: none; padding: 18px var(--belso) 6px; }
+.idovonal li { position: relative; padding: 2px 0 18px 44px; min-height: 50px; }
+.idovonal li::before { content: ""; position: absolute; left: 13px; top: 32px; bottom: 4px; width: 2px; border-radius: 1px; background: var(--ures); }
+.idovonal li.kesz::before { background: var(--szilva); }
+.idovonal li.kesz.utolso-kesz::before { background: var(--ures); }
+.idovonal li:last-child::before { display: none; }
+.idovonal .pont { position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; }
+.idovonal li.kesz .pont { background: var(--halvany); color: var(--szilva); }
+.idovonal li.kesz .pont .ikon { width: 18px; height: 18px; stroke-width: 2.4; }
+.idovonal li.most .pont { background: var(--szilva); color: #FFFFFF; }
+.idovonal li.most .pont .ikon { width: 18px; height: 18px; stroke-width: 2.1; }
+.idovonal li.kesobb .pont::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--ures); }
+.idovonal li.elmarad .pont { background: var(--csempe); color: var(--masod); font-weight: 600; }
+.idovonal .sor-cim { font-weight: 600; }
+.idovonal li.kesobb .sor-cim, .idovonal li.elmarad .sor-cim { font-weight: 400; }
+.idovonal .egysor { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.idovonal .egysor .sor-al { margin: 0; }
+
+/* ---------- Ikonok (kézzel rajzolt SVG, ikonok.js) ---------- */
+.ikon { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; display: block; }
+
+/* ---------- Alsó sáv ---------- */
+.fulsor { position: fixed; left: 0; width: 390px; bottom: 0; height: 84px; background: var(--lap); border-top: 1px solid var(--vonal); display: flex; justify-content: space-around; padding: 8px 10px 0; z-index: 5; }
+.ful { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 3px; width: 82px; font-size: 13px; line-height: 16px; color: var(--masod); font-weight: 500; }
+.ful .ikon { width: 26px; height: 26px; }
+.ful-ikon { position: relative; display: block; }
+.ful.aktiv { color: var(--szilva); font-weight: 600; }
+.ful.aktiv .ikon { stroke-width: 2; }
+/* Számjelvény: csak a rád váró dolgok száma, okkerrel */
+.jelzes { position: absolute; top: -5px; left: 17px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--figyel); color: #FFFFFF; border: 2px solid var(--lap); font-size: 12px; line-height: 16px; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+.otthon-jel { position: fixed; bottom: 8px; left: 195px; width: 134px; height: 5px; border-radius: 3px; background: var(--tinta); transform: translateX(-50%); z-index: 6; }
+
+/* ---------- Ragadós elsődleges gomb a fülsor fölött ---------- */
+.ragado { position: fixed; left: 0; width: 390px; bottom: 84px; padding: 12px var(--margo) 12px; background: var(--alap); z-index: 4; }
+
+/* ---------- Segédek ---------- */
+.egyben { white-space: nowrap; }
+.mutat { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

@@ -1,0 +1,9 @@
+[
+ {
+  "nev": "egyedi_11_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the top row, left cell of that sheet (an opened paper envelope with a folded letter sheet half pulled out of it; on the letter only two short wavy pen lines and a small signature-like flourish, nothing readable), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ }
+]

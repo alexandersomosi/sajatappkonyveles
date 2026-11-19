@@ -1,0 +1,1 @@
+ALTER TABLE "consents" ADD COLUMN "text_sha256" text;

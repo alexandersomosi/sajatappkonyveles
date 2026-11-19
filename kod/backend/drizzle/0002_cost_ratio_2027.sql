@@ -1,0 +1,2 @@
+ALTER TABLE "client_tax_profiles" DROP CONSTRAINT "client_tax_profiles_cost_ratio_chk";--> statement-breakpoint
+ALTER TABLE "client_tax_profiles" ADD CONSTRAINT "client_tax_profiles_cost_ratio_chk" CHECK ("client_tax_profiles"."cost_ratio" in (45, 50, 80, 90));

@@ -1,0 +1,205 @@
+[
+ {
+  "severity": "major",
+  "area": "app",
+  "where": "kod/app/src/ui/Ut.tsx:597 (undo always sends mode:'onallo') + kod/backend/src/services/pathchange.ts enterInditas()/leaveInditas() (assist closed with 'utvaltas' is never reopened). Shots: _qa/k5c3_átláthatóság-és-váltás_F02_valtas_lap_segitett_390.png, F03_segitett_utan_van_390.png, F05_vissza_inditas_fooldal_390.png, F06_segitett_visszavonom_utan_390.png",
+  "what": "Undo does not undo a switch away from the assisted path. Test: 'Még nincs' → 'Intézzétek helyettem / Ezt kérem' → 'Kérem a visszahívást' (path inditas, mode segitett, assist visszahivas_kerve) → row 1 'Módosítom' → 'Igen, már van' → 'Visszavonom' within 5 s. The toast says 'Visszaállítottuk: most indítod a vállalkozásodat.', but the API returns mode onallo, variant inditas_onallo, and assist status lezarva ('Lezártuk a kérésedet: már van vállalkozásod.'). Row 1 shows 'Most indítom' instead of '– ti intézitek', the Visszahívás row is gone, and the Főoldal offers 'Nem boldogulsz vele? … Ezt kérem' again. Meanwhile the open callback strip still says 'Megkaptuk. Kollégánk 24–48 órán belül hív…' (topic: Intézzétek helyettem). A slower round trip (segitett → van → inditas) also drops the request without telling the client. Order 2 says data must be kept; Order 3 says the assisted request must stand out.",
+  "fix": "On an undo within 30 s, restore the previous state exactly. The app sends the previous mode (OnboardingState.registrationMode / pathChange.mode) instead of the hard-coded 'onallo'. The backend reopens an assist it closed with reason 'utvaltas' in that window (same status, same linked callback) and sets mode 'segitett'. For a non-undo switch, the change sheet and toast say plainly that the 'Intézzük helyetted' request ends and can be asked for again. When switching back to inditas while that callback is still open, offer 'Ezt kérem' as 'Újra kérem' and link it to the open callback."
+ },
+ {
+  "severity": "major",
+  "area": "app",
+  "where": "kod/app/src/app/bekotes/vallalkozas/index.tsx (hub), …/vallalkozas/adatlap.tsx (kérdőív + gate, lines ~332-345, 385), …/vallalkozas/utmutato.tsx, kod/app/src/app/helyettunk.tsx (fajta=vallalkozas_bejelentes). Shots: D11_valtas_utan_bongeszo_vissza_390, D10_regi_kapu_megis_van_lap_390, D01/D03_van_ugyfel_*_390, D08_van_ugyfel_kerdoiv_tovabb_390, D09_van_ugyfel_helyettunk_bekuldes_390",
+  "what": "The new-business screens do not check the path. They render the starter UI for a client who is on 'van', and the browser Back button lands there right after a switch. Example: on kérdőív page 1, 'Mégis van vállalkozásom' → 'Igen, már van' → browser Back shows the kérdőív gate 'Előbb pár adat rólad … Megadom az adataimat' (his data are already saved). Its 'Mégis van vállalkozásom' link opens a sheet whose big button is 'Igen, még nincs vállalkozásom', the opposite, so one more tap flips him back. A van client whose adószám makes the switch blocked, opening an old link: the hub says 'Még nem töltötted ki a kérdőívet… Kitöltöm'. Then kérdőív 'Tovább' gives 'Előbb válaszd: „Még nincs, most indítanám”', which he cannot do. Then 'Ezt kérem' → 'Kérem a visszahívást' fails with 'Ezt itt már nem tudod módosítani… Kérj visszahívást, és segítünk.' right above the same failing 'Kérem a visszahívást' button. That is a loop / dead end.",
+  "fix": "In these routes, when onboarding.path !== 'inditas', do not show the starter UI. Either router.replace('/bekotes'), or show one card: 'Most az áll itt: már van vállalkozásod' + 'Vissza a Főoldalra' (+ 'Módosítom' only when pathChange.canChange). Hide the 'Mégis van vállalkozásom' link when the path is already 'van'. On /helyettunk?fajta=vallalkozas_bejelentes with a blocked path, send a plain callback (source 'utvaltas', topic 'bekotes') instead of calling PUT business-status first."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "kod/app/src/ui/Ut.tsx ValtasTartalom GombE (PATH_CHANGE_TEXTS.toInditasButton). Shot: _qa/k5c3_átláthatóság-és-váltás_A06_valtas_lap_320.png",
+  "what": "At 320×640 the main button of the change sheet is cut off: 'Igen, még nincs vállalkozás…'. The deciding word is hidden.",
+  "fix": "Let the label wrap to 2 lines, or use a shorter label below 360 pt ('Igen, még nincs')."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "kod/app/src/ui/Ut.tsx ModValasztoTartalom (rovid = height < 760). Shots: A07_hogyan_jelentsuk_be_320.png, C11_mod_lap_adatokbol_320.png",
+  "what": "On short screens the 'Hogyan jelentsük be?' sheet drops 'Ügyfélkapu+ vagy DÁP kell hozzá' from both options and the line 'Bármelyiket választod, később módosíthatod.'. A small-phone user chooses without knowing that a login is needed, or that the choice can be undone.",
+  "fix": "Keep a short 'Ügyfélkapu+ vagy DÁP kell.' line on both cards, and the one-line 'később módosíthatod'."
+ },
+ {
+  "severity": "minor",
+  "area": "panel",
+  "where": "kod/panel/src/pages/csapat/Uzenetek.tsx:69-72; kod/backend/src/services/pathchange.ts:223. Shots: P01_csapat_uzenetek_feri.png, P03_konyvelo_bekotes_feri.png",
+  "what": "(a) The team's Üzenetek list shows 'Vállalkozás: elállt' for clients who only switched to 'Már van vállalkozása' (registration.pathChanged), and 'Következik: <milestone>' for others. §27.16 says a path change never shows as 'Elállt', and 'most ez jön nála' is used everywhere, messages included; the header of the same page already says 'most ez jön nála: Szerződés'. (b) The path history marks a re-answer after 'Meggondoltam magam' (NULL → Most indítja) as „Első válasz”.",
+  "fix": "(a) In the list row use journeyNext ('most ez jön nála: …'), and 'Útvonalat váltott' when the registration is elallt with pathChanged. (b) Label 'Első válasz' only for the very first business_status.set; otherwise 'Újra válaszolt'."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "kod/app/src/app/bekotes/vallalkozas/index.tsx (kitoltes status text) + adatlap.tsx resume. Shots: A08_utana_390.png, C12_utana_390.png",
+  "what": "The hub says 'Még nem töltötted ki a kérdőívet. Ott folytathatod, ahol abbahagytad.' to someone who has never opened it. 'Folytatom a kérdőívet' always reopens page 1/5 (the answers are kept), not the page where she stopped.",
+  "fix": "Before any answer, show 'Pár kérdés a vállalkozásodról, kb. 5–8 perc.'. Resume at the first unanswered page."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "Főoldal journey on the self-service starter path (kod/backend/src/services/journey.ts row actor + kod/app/src/ui/Ut.tsx MostEzJonKartya). Shot: A14_fooldal_utmutato_utan_390_teljes.png",
+  "what": "While the ÖVTJ line is being written, the card says 'MOST EZ JÖN · 8. LÉPÉS · Szerződés' while rows 4–7 are still open. Row 4 'Bejelentés a NAV-nál' has the actor chip 'Te' while its status says 'Előbb megírjuk a tevékenység-sorodat (Csapatunk)'. A first-time 60-year-old reads this as 'did I skip steps 4–7?' and 'is it me or them?'.",
+  "fix": "On a waiting row, show the actor who works now (Csapatunk). When the current row is not the lowest open number, the kicker should say 'Közben ezt is megcsinálhatod' instead of a bare '8. lépés'."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "Főoldal status strips (kod/app/src/app/bekotes/index.tsx, ui/Ut.tsx SegitsegAllapot/VarakozasCsik). Shots: F01_segitett_kerve_390.png, E_levente_fooldal_390.png, E_peter_fooldal_390.png, F03_segitett_utan_van_390.png",
+  "what": "(a) After an assisted request, two cards say the same thing: 'Visszahívást kértél. Kollégánk 24–48 órán belül hív.' and directly below 'Közben: Hamarosan hívunk · 24–48 órán belül'. (b) At 390 the callback strip is cut off with '…' in the middle of the phone number. (c) On the escalation day itself the waiting card says 'Ha november 19-ig nem történik semmi…' on November 19 (Péter seed); 'ma' would be clearer. (d) After leaving the assisted path, the still-open callback strip gives no hint that it was about the cancelled 'Intézzétek helyettem' request.",
+  "fix": "Show one strip per wait. Let the callback strip wrap to 2 lines. Write 'ma' on the escalation day. After the path change, add 'a hívásban megbeszéljük, mi legyen' to the callback strip."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "Főoldal branch question 'Igen, van – Már van adószámom.' + explainer vallalkozas_van_e (kod/shared/src/bekotes.ts:115). Shots: A02_mi_ez_kerdes_390.png, A03b_igen_van_utan_teljes_390.png",
+  "what": "Persona A (60, first business) has an adóigazolvány and tapped 'Igen, van' because of the word 'adószám'. Neither the answer line nor 'Mi ez?' separates adószám from adóazonosító jel. Recovery now works ('Még nincs adószámom – most indítanám' on Adataid page 2, Rólad data kept, 3 taps), but the trap remains.",
+  "fix": "Sub-line 'Már van adószámom (a vállalkozásé, nem az adóazonosító jel).', or one sentence in the 'Mi ez?'."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "Hub 'Mégsem most?' → 'Meggondoltam magam' → Főoldal. Shot: C22_meggondoltam_fooldal_390.png",
+  "what": "After 'Meggondoltam magam – Nem indítasz vállalkozást' the client lands on 'Kezdjük egy kérdéssel.' with the branch question again. Only a short toast says what happened, and there is no next step for someone who does not want a business now (what happens to the account, is there any charge).",
+  "fix": "Show a one-time card on the Főoldal: 'Leállítottuk az indítást. A válaszaid megmaradtak; ha mégis indítasz, válaszolj újra. Nem fizetsz semmit.' + a link to the Fiók (account deletion)."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "kod/media/bekotes.vtt cues 20, 22–25 (+ video/bekotes narration)",
+  "what": "The intro video still says 'A NAV-os igazolást feltöltöd' (the §27.4.1 name is 'NAV-os értesítés'). It also tells the old order, card before meghatalmazás, while the app's journey is Szerződés → NAV-meghatalmazás → Igazolványok → Előfizetés. This is already an open owner decision (SPEC §27.15); a reminder, because the order it gives differs from the one-list Főoldal.",
+  "fix": "After the owner's yes: re-voice the two lines with the existing voice and re-render."
+ },
+ {
+  "severity": "minor",
+  "area": "panel",
+  "where": "kod/panel/src/lib/labels.ts:245 ('NAV-lehívás'), pages/acc/ugyfel/Bekotes.tsx:503-627 ('Lehívás most', 'Lehívások'), pages/admin/Rendszer.tsx:12 ('Kiállított számlák napi lehívása')",
+  "what": "The team-facing panel still uses 'lehívás' for the daily download. The §27.5.2 glossary verb is 'letöltjük (a NAV rendszeréből)' / 'A NAV Online Számlából naponta letöltve'. It does not say the invoices come from NAV, but it is not the one consistent wording Order 5 asks for.",
+  "fix": "Rename to 'Letöltés a NAV rendszeréből' / 'Letöltöm most' / 'Kiállított számlák napi letöltése'."
+ },
+ {
+  "severity": "major",
+  "area": "backend",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/assist.ts:96-98 evEnabled() is called only in requestAssist (:298). Not in giveConsent (:781), GET /client/assist/:id/consent canConsent, mhLive (:596, sends the request to 'meghatalmazas_el' = consent needed) or prepareEvFiled (:925)",
+  "what": "The EV kill switch (ASSIST_EV_ENABLED, the guard for the [JOGI] zugírászat/Üttv. question) and the 2026-12-31 cut-off (ASSIST_EV_VALID_UNTIL) only block NEW requests. Requests already open keep going all the way to the EV filing. On the local harness I moved the clock to 2027-01-04. A new EV request was refused (409 assist_disabled), which is correct. But Kiss Marika's open request still went on: Jóváhagytam → Bence 'Él a meghatalmazás' → consent screen 'Kezdés napja: A beküldés napja, várhatóan január 5.' with canConsent:true → POST consent 200 → status ugyfel_engedelyezte, 'Engedélyezted. Bence általában 1 munkanapon belül beküldi a bejelentésedet.' Bence is then asked to file in the NAV Vállalkozói Ügysegéd after the register has moved to the chamber. ÁSZF 4/C.8 promises that we say so in the app and help by callback; that does not happen. The same applies if the owner turns the switch off after the lawyer's answer: in-flight EV filings continue.",
+  "fix": "Call evEnabled() in GET consent (canConsent false + reason), giveConsent and prepareEvFiled. In mhLive, when the EV part is disabled, convert the request (convertToMh → 'kesz' after the meghatalmazás is live), set the registration back to 'onallo', and notify the client: 'A bejelentést most nem tudjuk helyetted intézni – visszahívunk'. Show a panel banner on open EV rows, and on the cut-off day list the open EV requests to the team. Add a test with the clock at 2027-01-02 and with ASSIST_EV_ENABLED=false."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/ui/Ut.tsx:221-235 VarakozasCsik (no escalateText) + the assist strip on app/src/app/bekotes/index.tsx; screenshots kod/_qa/k5c3_helyettunk_m01_david_kesunk_390.png vs …_m02_david_meghatalmazas_kesunk_390.png",
+  "what": "The round-2 'we are late' fix shows only in VarakozasKartya, which is used when the client has no step of his own. On the van path the client almost always has one (Igazolványok), so the Főoldal shows the thin 'Közben:' strip instead. Example: Molnár Dávid on 11-24, 4 days past Bence's UJEGYKE target of 11-20. Above the fold he still reads 'Beszéltünk. Bence hamarosan beküldi a meghatalmazást' and 'Közben: Bence beküldi a meghatalmazást · általában 1 munkanap'. The journey row says the same. 'Késünk vele, elnézést. Bence már tud róla.' appears only on /bekotes/meghatalmazas. (The staff side works: assist_overdue reminded Bence and Anna once on 11-23 and once on 11-24.)",
+  "fix": "When the waiting item is overdue (escalateText is the no-date 'Késünk vele…' variant, or add w.overdue), render it in VarakozasCsik and replace its timeText with 'késik'. Change the assist strip text and the journey row statusText the same way."
+ },
+ {
+  "severity": "minor",
+  "area": "backend",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/journey.ts:188-191 (nav_bekotes row); onboarding.ts:135 locks nav_bekotes until the registration is 'kesz'",
+  "what": "On the assisted new-business path the meghatalmazás goes live BEFORE the bejelentés. From then on, row 12 reads 'Kiállított számlák bekötése · Bence · Bence beköti a kiállított számláidat · általában 1–2 munkanap' (state 'var', wait addWd 3). At that point there is no business or adószám yet, so nothing can be connected. Seen for Teszt Ernő after mh-live and after his consent, next to row 8 'Bence beküldi a bejelentésedet'. If the filing or the NAV takes over 3 working days, this row can even turn 'late'.",
+  "fix": "In buildJourney, for path 'inditas' with the registration not 'kesz', keep nav_bekotes 'kesobb' with the lock text (as onboarding.ts does). Start the 'var' wait only from registration kesz."
+ },
+ {
+  "severity": "minor",
+  "area": "backend",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/team-helyettunk.ts:206-214 (ev-filed filedOn: any day of the last 60)",
+  "what": "The EV filing day can be earlier than the client's written consent, or even than the day the meghatalmazás went live. On the harness, Bence recorded filedOn 11-19 for a consent given on 11-20. It was accepted. The client then saw 'Elment a NAV-hoz (november 19-én)' next to 'Bejelentés a NAV-nál – Kész, november 20.', and the kamara deadline was computed from 11-19. The filing day is the business start day, so a typo here sets a false start date.",
+  "fix": "Refuse filedOn earlier than todayBudapest(row.consentAt), and earlier than the mhLiveAt day ('A beküldés napja nem lehet korábbi, mint az ügyfél engedélye'). Set that day as min on the panel date input."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts:1449 actionLabel 'Megnézem a két lehetőséget' (new in javító kör 2); screenshot kod/_qa/k5c3_helyettunk_c03_van_fooldal_szerzodes_utan_320.png",
+  "what": "At 320 width the main 'Most ez jön · NAV-meghatalmazás' button is cut to 'Megnézem a két lehető…', so the button that leads to the highlighted 'Megcsináljuk helyetted' option loses its meaning.",
+  "fix": "Use a shorter label (for example 'Megnézem'), or let the main button wrap to 2 lines below 360 pt."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/kepernyok/Utmutato.tsx:509 SegitsegCsik; screenshots kod/_qa/k5c3_helyettunk_o01_onallo_utmutato_bevezeto_390.png, …_b01_utmutato_zarolt_390.png",
+  "what": "The highlighted 'Nem boldogulsz vele? Intézzük helyetted' strip in the guide is visible above the fold, as required. At 390 it still uses the cramped row layout that round 2 flagged (the fix covered KiemeltSor only): the title wraps to 3 lines and the body to 5 lines next to the 'Ezt kérem' pill. On the intro its border also touches the video card (no gap).",
+  "fix": "Below 400 pt, stack the pill under the text as KiemeltSor does now, and add a 12 pt bottom margin."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "Főoldal while the assist is 'visszahivas_kerve': app/src/app/bekotes/index.tsx (assist strip + VarakozasCsik) and backend journey row 'visszahivas'; screenshots kod/_qa/k5c3_helyettunk_d02_kerve_390.png, …_f01_kliens_fooldal_390.png",
+  "what": "Before any call, the Főoldal says the same thing twice: 'Visszahívást kértél. Kollégánk 24–48 órán belül hív.' and 'Közben: Hamarosan hívunk · 24–48 órán belül'. After 'Nem vette fel', the strip correctly reads 'ma 18:21 kerestünk, de nem értünk el. Újra próbáljuk.' But the 'Közben:' line and journey row 2 ('Visszahívás · Csapatunk · Hamarosan hívunk') still read as if nobody had tried. The 'Másik számot adok meg' action is only on the Vállalkozás-központ.",
+  "fix": "Hide VarakozasCsik when the assist strip already shows the same waiting item. When the linked callback has a failed lastAttempt, use its statusText for row 2 and add the 'Másik számot adok meg' link to the strip."
+ },
+ {
+  "severity": "minor",
+  "area": "backend",
+  "where": "content of the last-day / 'Ma még' texts (assist approval, journey meghatalmazas row) vs ASSIST_RULES.expireGraceHours; screenshot kod/_qa/k5c3_helyettunk_l01_marika_masnap_390.png",
+  "what": "Marika's UJEGYKE was filed on 11-18 at 18:13. On 11-22 the app says 'Ma még jóváhagyhatod, de siess: ha ma nem hagyod jóvá, a NAV törli.' But our own auto-expiry ran at about 20:13 that day (filing + 4×24 h + 2 h), and NAV counts from the filing time. A client who approves that evening, believing 'ma' means until midnight, finds it already 'Lejárt a 4 nap'.",
+  "fix": "On the 'Ma még' day, give the hour taken from approvalExpiresAt, minus a margin ('ma 17 óráig'). Use the same hour in the push and e-mail."
+ },
+ {
+  "severity": "major",
+  "area": "media",
+  "where": "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_eszkoz/video_nezet_alap.json (keszult 2026-11-19T09:44) + _eszkoz/video_ujra.py:75-86; live https://app.45-94-65-74.sslip.io/media/vallalkozas_bejelentes.mp4 at 56-61 s, 89.5-93.5 s, 107.9-110 s",
+  "what": "Regression in the live new-business video. The video was re-rendered in fix round 2 with video_ujra.py, which drops a hand-tuned camera view whenever the image's hash differs from the hash in video_nezet_alap.json. That baseline still holds the 09:44 hashes, so all 17 bejelentés images 02-14 count as changed (I re-hashed every one), and every hand-tuned view was dropped: b19, b27, b29 and the new b32 view. I compared frames from the 16:00 render (_regi/kimenet_20261119_173443_sajat_kepek) with the live file. b29 at 108.0-109.4 s: the camera zooms onto the Vissza mark while the voice is still saying 'kata és pénzforgalmi nem', so the igen/nem column is gone and the button is cut to 'Bejelentés megte…'. In the 16:00 render the whole table and both buttons were visible. b27 at about 92.8 s: the first Áfa card is cut at the top, where 16:00 showed all four cards with the buttons. b19 no longer holds one still view: the camera re-frames between the variants. The owner's one command will drop these views the same way. Its test video also cuts labels at the right edge at 66 s, 75 s and 91 s.",
+  "fix": "Rebuild video_nezet_alap.json from the current @2x hashes, or store the image hash next to each hand-tuned view in forgatokonyv.json. Then re-render bejelentés with the existing audio (epit.py vallalkozas_bejelentes or video_ujra.py, no TTS). Check frames at 55-62, 88-94 and 104-114 s, run videok-json.mjs and feltolt.sh --media, and check Gardoko health before and after."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/sajat_kepek.py (automatic marks), check sheet saved as kod/_qa/k5c3_képek-és-videók_sajat_kepek_ellenorzo_lap_proba.png",
+  "what": "I ran the one command with no arguments on a temp copy, using owner-style inputs: real NAV header with two fake logged-in names, the drawn content, and a fake address and activity code. It finished with exit 0 in 345 s, OCR found none of the fake data in any output, the cost log did not change, and no real file changed (2709 files checked). But the automatic marks need manual fixing in several places, and the command gave no warning. 05: both boxes cover only about 3/4 of the section width. 06: box 2 starts mid-button and runs over Mentés/Tovább. 07: the '1' badge sits on the radio button of the next option. 10: the '2' badge covers the MNB checkbox. 05: the blur covers the input borders, so the fields look broken. A 07 capture with a radio already selected went through without a warning, so all four variants show Főfoglalkozású selected.",
+  "fix": "Clip mark boxes to the detected card or section bounds and keep badges off controls. Warn when a 07 or 10 capture already has a selected radio or checkbox. Blur inside the field box instead of across its border."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/SAJAT_KEPEK.md:8, :35, :47-49",
+  "what": "The kit (65 lines) is mostly doable, with three gaps. Line 8 says the start form 'nem indul el' in the owner's account, but line 47 says a 'Kitöltés alatt' draft was left in his account on 11-19. The two read as contradictory, and nothing tells the owner to delete his own draft. Win + Shift + S only copies to the clipboard: there is no step for saving the capture as 05.png. Nothing says how the helper's files reach the owner's PC.",
+  "fix": "Reword line 8, for example 'it starts, but you cannot submit it', and add 'delete your own draft too'. Add one line: click the screenshot pop-up, Save as, NN.png, then send the files by e-mail or USB."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "live meghatalmazas.mp4 34.6-37.4 s (m11) and 52-55 s (m16)",
+  "what": "m11, the fix from round 2: the '1' badge is cut in half at the left edge of the frame, and the top 40% of the picture is still a blank, blurred block. m16 'Képviselt': the card is a thin strip about 300 px tall in an otherwise empty frame. Its text is unreadable on a phone.",
+  "fix": "Shift the m11 view right or down so the badge is fully in frame. For m16, use a tighter view or a higher skala on the Képviselt card."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "utmutato_kepek/_illusztracio (05_cimadatok, 09_adozas_afa_mentesseg, 12_ellenorzes)",
+  "what": "The drawn images are honestly labelled, but three differ from what is known or said: 05 has no 'Az iratok őrzésének helye' or 'Levelezési cím' fields, yet app step 4 tells the user what to do with both. 09 row 1 paraphrases a NAV wording we already have from the kisfilm ('…sajátos jellegére tekintettel adómentes tevékenységet folytatok'). 12 shows only Vissza and Bejelentés megtétele, while the real 13 that follows shows Vissza, Mentés and Bejelentés megtétele.",
+  "fix": "Add the two fields to the 05 drawing, use the known real wording on 09, and add Mentés to 12. Re-render with annotate.py and copy to the app."
+ },
+ {
+  "severity": "minor",
+  "area": "app",
+  "where": "kod/shared/src/enums.ts:587 ('Kattints rá') vs utmutato_kepek/vallalkozas_bejelentes/index.json:189 ('Koppints ide'); new-business guide steps 2, 11, 12",
+  "what": "One guide step mixes the words for 'tap' and 'click'. On step 2 the instruction says 'Koppints az „Új bejelentés…” fülre', the field chip says 'Kattints rá', and the image legend says 'Koppints ide'.",
+  "fix": "Pick one word for the NAV web steps, for example 'Kattints' (the Ügysegéd is a desktop site), and use it in the chips, the step texts and the image legends."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "live vallalkozas_bejelentes.vtt cue 29 (103.845 s)",
+  "what": "One caption switches late. 'alanyi áfamentesség igen, kata és pénzforgalmi nem.' appears 0.31 s after the speech starts at 103.53 s, measured with silencedetect. The other 34 matched cues of this video lead the speech by 0 to 0.11 s, and the explainer and meghatalmazás cues lead by 0.01 to 0.17 s.",
+  "fix": "Move the cue-29 split to the pause at 103.41-103.53 s, in the burned-in captions and the VTT."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "live bekotes.mp4 about 44-47 s (L10b) and the step order at 48-75 s",
+  "what": "The explainer video still says 'A NAV-os igazolást feltöltöd' and shows the card 'Feltöltöd a NAV-os igazolást'. The app button and the bejelentés video b36 now say 'Feltöltöm az értesítést' / 'NAV-os értesítés'. The video also still shows the old order (card before meghatalmazás and igazolványok). Both are listed as open, waiting for the owner, in SPEC §27.4.1.",
+  "fix": "Once the owner says yes: re-voice L10b with 'értesítést' and reorder L11, about 0.01 USD."
+ },
+ {
+  "severity": "minor",
+  "area": "media",
+  "where": "utmutato_kepek/vallalkozas_bejelentes (owner order 1)",
+  "what": "Order 1 is still partly open. 7 of 18 pictures are real (01, 02, 03, 04, 11, 13, 14) and 11 are drawn, including the key tax pages 08 kata/átalány and 09 áfamentesség. They are honestly labelled, with sources recorded. The rest waits for the owner to find a helper who has no business yet (owner chose to wait at 11:50).",
+  "fix": "No code change. Keep it as an open owner item; the kit is ready."
+ }
+]

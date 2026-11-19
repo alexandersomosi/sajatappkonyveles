@@ -1,0 +1,13 @@
+{
+  "name": "@kezjegy/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Contracts from kod/SPEC.md: brand.json (the one product-name value), enums, API DTO types, demo fixtures. Source-only, copied into consumers by scripts/sync-shared.mjs.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}

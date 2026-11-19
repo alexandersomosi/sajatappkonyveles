@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`request XML (snapshots + structure) > queryInvoiceChainDigest 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?>
+<QueryInvoiceChainDigestRequest xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+  <common:header><common:requestId>KJ00000000000000000000000001</common:requestId><common:timestamp>2026-11-17T05:30:00.000Z</common:timestamp><common:requestVersion>3.0</common:requestVersion><common:headerVersion>1.0</common:headerVersion></common:header>
+  <common:user><common:login>demo68801234</common:login><common:passwordHash cryptoType="SHA-512">E6EE4B13CCA0548D242BA1EE93CD1D246169379E3289B66003321B65DA54B3A2E04F3DC8EDCA714EC4E34FE9F02B850E7662CB97B4674065B988A2857710673D</common:passwordHash><common:taxNumber>68801234</common:taxNumber><common:requestSignature cryptoType="SHA3-512">0BBF451A18FB6C92A3867623C7E4301DFE390B9438BA1BED400CA3C8D8D96323DA55F7A721D28106C30EDC4EA55E618FF2AFF8CB8834836DDAD27B7103B2CA8F</common:requestSignature></common:user>
+  <software><softwareId>HU00000000KEZJEGY1</softwareId><softwareName>Kézjegy</softwareName><softwareOperation>ONLINE_SERVICE</softwareOperation><softwareMainVersion>1.0</softwareMainVersion><softwareDevName>Somosi Kft.</softwareDevName><softwareDevContact>demo@demo.kezjegy.test</softwareDevContact><softwareDevCountryCode>HU</softwareDevCountryCode></software>
+  <page>1</page>
+  <invoiceChainQuery><invoiceNumber>MINTA-2026-004</invoiceNumber><invoiceDirection>OUTBOUND</invoiceDirection></invoiceChainQuery>
+</QueryInvoiceChainDigestRequest>
+"
+`;
+
+exports[`request XML (snapshots + structure) > queryInvoiceData 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?>
+<QueryInvoiceDataRequest xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+  <common:header><common:requestId>KJ00000000000000000000000001</common:requestId><common:timestamp>2026-11-17T05:30:00.000Z</common:timestamp><common:requestVersion>3.0</common:requestVersion><common:headerVersion>1.0</common:headerVersion></common:header>
+  <common:user><common:login>demo68801234</common:login><common:passwordHash cryptoType="SHA-512">E6EE4B13CCA0548D242BA1EE93CD1D246169379E3289B66003321B65DA54B3A2E04F3DC8EDCA714EC4E34FE9F02B850E7662CB97B4674065B988A2857710673D</common:passwordHash><common:taxNumber>68801234</common:taxNumber><common:requestSignature cryptoType="SHA3-512">0BBF451A18FB6C92A3867623C7E4301DFE390B9438BA1BED400CA3C8D8D96323DA55F7A721D28106C30EDC4EA55E618FF2AFF8CB8834836DDAD27B7103B2CA8F</common:requestSignature></common:user>
+  <software><softwareId>HU00000000KEZJEGY1</softwareId><softwareName>Kézjegy</softwareName><softwareOperation>ONLINE_SERVICE</softwareOperation><softwareMainVersion>1.0</softwareMainVersion><softwareDevName>Somosi Kft.</softwareDevName><softwareDevContact>demo@demo.kezjegy.test</softwareDevContact><softwareDevCountryCode>HU</softwareDevCountryCode></software>
+  <invoiceNumberQuery><invoiceNumber>KSZ-2026-001</invoiceNumber><invoiceDirection>OUTBOUND</invoiceDirection></invoiceNumberQuery>
+</QueryInvoiceDataRequest>
+"
+`;
+
+exports[`request XML (snapshots + structure) > queryInvoiceDigest with insDate window 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?>
+<QueryInvoiceDigestRequest xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+  <common:header><common:requestId>KJ00000000000000000000000001</common:requestId><common:timestamp>2026-11-17T05:30:00.000Z</common:timestamp><common:requestVersion>3.0</common:requestVersion><common:headerVersion>1.0</common:headerVersion></common:header>
+  <common:user><common:login>demo68801234</common:login><common:passwordHash cryptoType="SHA-512">E6EE4B13CCA0548D242BA1EE93CD1D246169379E3289B66003321B65DA54B3A2E04F3DC8EDCA714EC4E34FE9F02B850E7662CB97B4674065B988A2857710673D</common:passwordHash><common:taxNumber>68801234</common:taxNumber><common:requestSignature cryptoType="SHA3-512">0BBF451A18FB6C92A3867623C7E4301DFE390B9438BA1BED400CA3C8D8D96323DA55F7A721D28106C30EDC4EA55E618FF2AFF8CB8834836DDAD27B7103B2CA8F</common:requestSignature></common:user>
+  <software><softwareId>HU00000000KEZJEGY1</softwareId><softwareName>Kézjegy</softwareName><softwareOperation>ONLINE_SERVICE</softwareOperation><softwareMainVersion>1.0</softwareMainVersion><softwareDevName>Somosi Kft.</softwareDevName><softwareDevContact>demo@demo.kezjegy.test</softwareDevContact><softwareDevCountryCode>HU</softwareDevCountryCode></software>
+  <page>2</page>
+  <invoiceDirection>INBOUND</invoiceDirection>
+  <invoiceQueryParams><mandatoryQueryParams><insDate><dateTimeFrom>2026-11-16T05:30:00.000Z</dateTimeFrom><dateTimeTo>2026-11-17T05:30:00.000Z</dateTimeTo></insDate></mandatoryQueryParams></invoiceQueryParams>
+</QueryInvoiceDigestRequest>
+"
+`;
+
+exports[`request XML (snapshots + structure) > queryInvoiceDigest with issue-date window 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?>
+<QueryInvoiceDigestRequest xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+  <common:header><common:requestId>KJ00000000000000000000000001</common:requestId><common:timestamp>2026-11-17T05:30:00.000Z</common:timestamp><common:requestVersion>3.0</common:requestVersion><common:headerVersion>1.0</common:headerVersion></common:header>
+  <common:user><common:login>demo68801234</common:login><common:passwordHash cryptoType="SHA-512">E6EE4B13CCA0548D242BA1EE93CD1D246169379E3289B66003321B65DA54B3A2E04F3DC8EDCA714EC4E34FE9F02B850E7662CB97B4674065B988A2857710673D</common:passwordHash><common:taxNumber>68801234</common:taxNumber><common:requestSignature cryptoType="SHA3-512">0BBF451A18FB6C92A3867623C7E4301DFE390B9438BA1BED400CA3C8D8D96323DA55F7A721D28106C30EDC4EA55E618FF2AFF8CB8834836DDAD27B7103B2CA8F</common:requestSignature></common:user>
+  <software><softwareId>HU00000000KEZJEGY1</softwareId><softwareName>Kézjegy</softwareName><softwareOperation>ONLINE_SERVICE</softwareOperation><softwareMainVersion>1.0</softwareMainVersion><softwareDevName>Somosi Kft.</softwareDevName><softwareDevContact>demo@demo.kezjegy.test</softwareDevContact><softwareDevCountryCode>HU</softwareDevCountryCode></software>
+  <page>1</page>
+  <invoiceDirection>OUTBOUND</invoiceDirection>
+  <invoiceQueryParams><mandatoryQueryParams><invoiceIssueDate><dateFrom>2026-01-01</dateFrom><dateTo>2026-02-04</dateTo></invoiceIssueDate></mandatoryQueryParams></invoiceQueryParams>
+</QueryInvoiceDigestRequest>
+"
+`;
+
+exports[`request XML (snapshots + structure) > queryTaxpayer 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?>
+<QueryTaxpayerRequest xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common">
+  <common:header><common:requestId>KJ00000000000000000000000001</common:requestId><common:timestamp>2026-11-17T05:30:00.000Z</common:timestamp><common:requestVersion>3.0</common:requestVersion><common:headerVersion>1.0</common:headerVersion></common:header>
+  <common:user><common:login>demo68801234</common:login><common:passwordHash cryptoType="SHA-512">E6EE4B13CCA0548D242BA1EE93CD1D246169379E3289B66003321B65DA54B3A2E04F3DC8EDCA714EC4E34FE9F02B850E7662CB97B4674065B988A2857710673D</common:passwordHash><common:taxNumber>68801234</common:taxNumber><common:requestSignature cryptoType="SHA3-512">0BBF451A18FB6C92A3867623C7E4301DFE390B9438BA1BED400CA3C8D8D96323DA55F7A721D28106C30EDC4EA55E618FF2AFF8CB8834836DDAD27B7103B2CA8F</common:requestSignature></common:user>
+  <software><softwareId>HU00000000KEZJEGY1</softwareId><softwareName>Kézjegy</softwareName><softwareOperation>ONLINE_SERVICE</softwareOperation><softwareMainVersion>1.0</softwareMainVersion><softwareDevName>Somosi Kft.</softwareDevName><softwareDevContact>demo@demo.kezjegy.test</softwareDevContact><softwareDevCountryCode>HU</softwareDevCountryCode></software>
+  <taxNumber>68801234</taxNumber>
+</QueryTaxpayerRequest>
+"
+`;

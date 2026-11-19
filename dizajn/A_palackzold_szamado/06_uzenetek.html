@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Üzenetek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { height: 844px; overflow: hidden; }
+  .top { background: #fff; border-bottom: 1px solid var(--line); }
+  .kfej { display: flex; gap: 12px; align-items: center; padding: 2px 18px 12px; }
+  .kfej .nev { font: 600 19px/1.25 var(--serif); }
+  .kfej .ig { font-size: 15px; line-height: 1.35; color: var(--muted); }
+  .kfej .ig b { color: var(--ink); font-weight: 700; }
+  .folyam { position: absolute; left: 0; right: 0; top: 140px; bottom: 211px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 16px 12px; gap: 8px; }
+  .nap { text-align: center; font-size: 14px; color: var(--muted); padding: 4px 0 0; }
+  .b { max-width: 300px; padding: 10px 14px 8px; border-radius: 18px; font-size: 17px; line-height: 1.42; }
+  .b .ido { display: block; font-size: 13.5px; color: var(--muted); margin-top: 3px; text-align: right; }
+  .b.o { background: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+  .b.en { background: var(--mine); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .b.en .ido { color: var(--mine-ido); }
+  .keres { align-self: stretch; background: #fff; border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: center; margin: 2px 0; border: 1.5px solid var(--line); }
+  .keres .ik { width: 36px; height: 36px; border-radius: 8px; background: var(--tint); color: var(--brand); display: grid; place-items: center; flex: none; }
+  .keres .ttl { font-weight: 700; font-size: 16px; line-height: 1.3; }
+  .keres .state { margin-top: 2px; font-size: 14.5px; }
+  .kerek { position: absolute; left: 0; right: 0; bottom: 147px; height: 64px; padding: 0 16px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #C9D4CE; background: var(--ground); }
+  .iro { position: absolute; left: 0; right: 0; bottom: 83px; height: 64px; background: #fff; border-top: 1px solid var(--line); display: flex; align-items: center; gap: 8px; padding: 0 12px 0 6px; }
+  .iro .clip { width: 44px; height: 44px; display: grid; place-items: center; color: var(--link); flex: none; }
+  .iro .field { flex: 1; height: 44px; color: var(--muted); font-size: 16px; }
+  .kuld { height: 44px; padding: 0 14px; border-radius: var(--r-btn); font: 700 16px/1 var(--sans); flex: none; background: var(--brand); color: #fff; }
+  .kuld:disabled { background: #E6ECE9; color: var(--chev); cursor: default; }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="sb"></div>
+  <div class="kfej">
+    <span class="arckep sm"></span>
+    <div>
+      <p class="nev">Kovács Bence, a könyvelőd</p>
+      <p class="ig"><b>Ma 9–17-ig elérhető.</b></p>
+      <p class="ig">Munkanapokon 4 órán belül válaszol.</p>
+    </div>
+  </div>
+</div>
+
+<div class="folyam">
+  <p class="nap">Tegnap</p>
+  <div class="b en">Este feltöltöm a kivonat 2. oldalát.<span class="ido">16:48</span></div>
+  <p class="nap">Ma</p>
+  <div class="b en">A bank jövedelemigazolást kér a lakáshitelhez. Tőled kérjem?<span class="ido">8:52</span></div>
+  <div class="b o">Igen, a NAV adja ki, én kérem le neked. Nyomd meg lent az „Igazolást kérek” gombot, holnap délig feltöltöm a dossziéba.<span class="ido">9:20</span></div>
+  <div class="keres">
+    <span class="ik"><i data-i="doc" data-s="20"></i></span>
+    <div><p class="ttl">Jövedelemigazolást kértél (2025)</p>
+      <p class="state">Bence látta, ma 9:26</p></div>
+  </div>
+</div>
+
+<div class="kerek">
+  <button class="btn-s"><i data-i="doc" data-s="20"></i>Igazolást kérek</button>
+  <button class="btn-s">Változást jelentek</button>
+</div>
+
+<div class="iro">
+  <button class="clip" aria-label="Fájl csatolása"><i data-i="clip" data-s="24"></i></button>
+  <div class="field"><span class="v">Írj Bencének…</span></div>
+  <button class="kuld" disabled>Küldés</button>
+</div>
+
+<nav class="tabbar" data-on="uzenetek"></nav>
+<script src="kozos.js"></script>
+</body>
+</html>

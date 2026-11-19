@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Főoldal (A)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<style>
+  /* C4 / A irány – „egy nyugodt kártya” (2026-11-19).
+     Szabályok: egy fő gomb, mindig ugyanott (teljes szélesség, a fülsor fölött rögzítve); egy kártya az alapon
+     (a „Most”), minden más sor doboz nélkül, egyetlen hajszálvonallal; két szövegszint (cím, szöveg); egy kör alakú
+     „i” gomb a „Mi ez?” linkek helyett; ki lép: egy kis 3D ikon / Bence arca a sor elején, nem szöveges címke. */
+  :root { --kek-szoveg: #1226B8; --mezo-keret: #7D879B; }
+  body { padding-bottom: 190px; }
+
+  /* --- fejléc: rövid köszönés + az egyetlen előrehaladás-jel --- */
+  .fej { padding: 4px 16px 0; }
+  .fej-sor { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+  .udv { font-size: 30px; line-height: 1.15; font-weight: 700; letter-spacing: -.026em; }
+  .demo { display: inline-flex; align-items: center; height: 26px; padding: 0 9px; border-radius: 6px;
+    background: #F7E8C6; color: #5E3B00; font-size: 13px; font-weight: 750; letter-spacing: .05em; }
+  .halad { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .halad .csik { flex: 1; display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; }
+  .halad .csik i { height: 6px; border-radius: 3px; background: #C9D0E4; }
+  .halad .csik i.k { background: var(--neon); }
+  .halad .csik i.m { background: #8E9BEF; }
+  .halad .mennyi { font-size: 16px; line-height: 1.3; color: var(--halvany-alapon); white-space: nowrap; }
+  .halad .mennyi b { color: var(--tinta); font-weight: 700; }
+
+  /* --- a „Most” kártya: az egyetlen doboz a képernyőn --- */
+  .most { margin: 18px 16px 0; padding: 20px 20px 22px; background: #fff; border-radius: 20px;
+    box-shadow: 0 1px 1px rgba(16,21,60,.05), 0 14px 30px -18px rgba(16,21,60,.45); }
+  .most-fej { display: flex; align-items: center; gap: 14px; }
+  .most-fej img.i3 { width: 48px; height: 48px; }
+  .most-fej h2 { flex: 1; min-width: 0; font-size: 26px; line-height: 1.15; font-weight: 700; letter-spacing: -.022em; color: var(--neon); }
+  .most p { font-size: 17px; line-height: 1.5; margin-top: 12px; color: var(--tinta); }
+  .most p b { font-weight: 650; }
+
+  /* kör alakú „i” gomb: 32 pt látszik, 44 pt érinthető */
+  .info { position: relative; width: 32px; height: 32px; border-radius: 50%; flex: none; display: grid; place-items: center;
+    background: var(--gomb-m-alap); color: var(--kek-szoveg); font-weight: 800; font-size: 17px; line-height: 1; }
+  .info::after { content: ""; position: absolute; inset: -6px; }
+
+  /* --- sorok az alapon: nincs doboz; egy hajszálvonal választja el a lépéseket a segítségtől --- */
+  .sorok { list-style: none; margin: 20px 16px 0; }
+  .s { display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 12px 0; }
+  .s .ki { width: 40px; height: 40px; flex: none; position: relative; }
+  .s .ki img.i3 { width: 40px; height: 40px; }
+  .s .sz { flex: 1; min-width: 0; }
+  .s .cim { display: block; font-size: 17px; line-height: 1.3; font-weight: 650; letter-spacing: -.01em; color: var(--tinta); }
+  .s .tx { display: block; font-size: 16px; line-height: 1.4; color: var(--halvany-alapon); margin-top: 2px; }
+  .valaszto { height: 1px; background: #CDD3E3; margin: 12px 0; }
+  /* a sor egyetlen művelete: kis világoskék kapszula (44 pt érintési felület) */
+  .kis { position: relative; flex: none; display: inline-flex; align-items: center; height: 38px; padding: 0 15px; border-radius: 999px;
+    background: var(--gomb-m-alap); color: var(--kek-szoveg); font-weight: 650; font-size: 15.5px; letter-spacing: -.005em; white-space: nowrap; }
+  .kis::after { content: ""; position: absolute; left: -4px; right: -4px; top: -4px; bottom: -4px; }
+
+  /* ki lép: csapatunk = két 3D alak egymás mögött; te = egy alak; Bence = az arca */
+  .ki.csapat img.i3 { position: absolute; width: 30px; height: 30px; }
+  .ki.csapat img.hatso { left: 12px; top: 0; filter: brightness(1.32) saturate(.75); }
+  .ki.csapat img.elso { left: 0; top: 10px; }
+  .ki img.arckep { width: 40px; height: 40px; }
+  /* videó: kis bélyegkép a hosszával, nem ikon */
+  .ki.video { border-radius: 10px; background: linear-gradient(160deg, #F4F6FD 0%, #D3DAF6 100%); overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(16,21,60,.10); }
+  .ki.video span { position: absolute; right: 3px; bottom: 3px; padding: 1px 4px; border-radius: 4px; background: rgba(8,12,40,.72);
+    color: #fff; font-size: 11.5px; line-height: 1.25; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  /* --- az egyetlen fő gomb: teljes szélesség, a fülsor fölött rögzítve (minden képernyőn itt) --- */
+  .fo-gomb { position: fixed; left: 16px; width: 358px; bottom: 96px; z-index: 9; }
+  .alj-fatyol { height: 176px; background: linear-gradient(to bottom, rgba(228,232,243,0) 0, var(--alap) 18px, var(--alap) 100%); }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="terero" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".7"/><rect x="5" y="5.6" width="3" height="6.4" rx=".7"/><rect x="10" y="3" width="3" height="9" rx=".7"/><rect x="15" y="0" width="3" height="12" rx=".7"/></symbol>
+  <symbol id="akku" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.6" height="11.8" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".45"/><rect x="2.4" y="2.4" width="17" height="8.2" rx="1.8"/><path d="M24.6 4.4v4.2c.9-.3 1.5-1.1 1.5-2.1s-.6-1.8-1.5-2.1z" opacity=".5"/></symbol>
+</svg>
+
+<div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+
+<header class="fej">
+  <div class="fej-sor">
+    <h1 class="udv">Szia, Márta!</h1>
+    <span class="demo">DEMO</span>
+  </div>
+  <div class="halad" aria-label="12 lépésből 2 kész">
+    <div class="csik" aria-hidden="true"><i class="k"></i><i class="k"></i><i class="m"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="mennyi"><b>2</b> kész a 12-ből</span>
+  </div>
+</header>
+
+<main>
+  <section class="most" aria-labelledby="most-cim">
+    <div class="most-fej">
+      <img class="i3" src="../../C2_modern/assets/ikon3d/bevallas_56@2x.png" srcset="../../C2_modern/assets/ikon3d/bevallas_56@2x.png 2x, ../../C2_modern/assets/ikon3d/bevallas_56@3x.png 3x" alt="">
+      <h2 id="most-cim">Szerződés</h2>
+      <button class="info" aria-label="Mi ez a szerződés?">i</button>
+    </div>
+    <p><b>Most te jössz:</b> olvasd el, és fogadd el. Kb. 3 perc.</p>
+  </section>
+
+  <ul class="sorok">
+    <li class="s">
+      <span class="ki csapat" role="img" aria-label="A csapatunk">
+        <img class="i3 hatso" src="../../C2_modern/assets/ikon3d/fiok_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_36@3x.png 3x" alt="">
+        <img class="i3 elso" src="../../C2_modern/assets/ikon3d/fiok_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_36@3x.png 3x" alt="">
+      </span>
+      <div class="sz">
+        <span class="cim">Következő: a tevékenységed</span>
+        <span class="tx">A csapatunk megírja, melyiket válaszd.</span>
+      </div>
+    </li>
+    <li class="s">
+      <span class="ki"><img class="i3" src="../../C2_modern/assets/ikon3d/tepnaptar_44@2x.png" srcset="../../C2_modern/assets/ikon3d/tepnaptar_44@2x.png 2x, ../../C2_modern/assets/ikon3d/tepnaptar_44@3x.png 3x" alt=""></span>
+      <div class="sz">
+        <span class="cim">Még 8 lépés</span>
+        <span class="tx">Ki mit csinál, és mikor.</span>
+      </div>
+      <button class="kis">Mutasd</button>
+    </li>
+    <li class="valaszto" aria-hidden="true"></li>
+    <li class="s">
+      <span class="ki"><img class="arckep" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt="Kovács Bence"></span>
+      <div class="sz">
+        <span class="cim">Bence, a könyvelőd</span>
+        <span class="tx">Elakadtál? 24–48 órán belül visszahívunk.</span>
+      </div>
+      <button class="kis">Visszahívás</button>
+    </li>
+    <li class="s">
+      <span class="ki video" role="img" aria-label="Videó, 1 perc 47 másodperc"><span>1:47</span></span>
+      <div class="sz">
+        <span class="cim">Bemutató videó</span>
+        <span class="tx">Így megy a bekötés.</span>
+      </div>
+      <button class="kis">Lejátszás</button>
+    </li>
+  </ul>
+</main>
+
+<div class="alj-fatyol" aria-hidden="true"></div>
+<button class="gomb-e fo-gomb">Szerződés elolvasása</button>
+<nav class="fulsor" aria-label="Fő navigáció">
+  <div class="fulek">
+    <a class="ful on"><img class="i3 fooldal" src="../../C2_modern/assets/ikon3d/fooldal_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_36@3x.png 3x" alt="">Főoldal</a>
+    <a class="ful"><img class="i3 dosszie" src="../../C2_modern/assets/ikon3d/dosszie_36@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_36@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_36@3x.png 3x" alt="">Dosszié</a>
+    <a class="ful"><img class="i3 uzenetek" src="../../C2_modern/assets/ikon3d/uzenetek_36@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_36@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_36@3x.png 3x" alt="">Üzenetek</a>
+    <a class="ful"><img class="i3 fiok" src="../../C2_modern/assets/ikon3d/fiok_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_36@3x.png 3x" alt="">Fiók</a>
+  </div>
+  <button class="fotogomb" aria-label="Fotózás: irat lefotózása"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_36@3x.png 3x" alt="">Fotózás</button>
+</nav>
+<div class="otthon-jel"></div>
+<script>
+  // ?meres=1: a teljes hosszú képhez a tartalom valódi magassága (--dump-dom)
+  if (/[?&]meres=1/.test(location.search)) addEventListener('load', function () {
+    document.body.setAttribute('data-magassag', Math.ceil(document.documentElement.scrollHeight));
+  });
+</script>
+</body>
+</html>

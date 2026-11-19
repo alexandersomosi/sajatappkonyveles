@@ -1,0 +1,330 @@
+{
+ "f": {
+  "findings": [
+   {
+    "topic": "Countries and languages",
+    "fact": "Active in Germany (accountable.de, German + English version) and Belgium (accountable.eu/en-be, also nl-be and fr-be). The iOS app is localized DE/EN/FR/NL. The footer on the About page links Italy and Spain sites, but no launch announcement was found for either; Spain only has a store listing of the same app. Registered legal entity is Accountable SA in Brussels (Saint-Josse-ten-Noode); German office Accountable SA Deutschland, Wattstrasse 11, 13355 Berlin (Ahoy! Berlin). The company says it is a payment institution authorised by the National Bank of Belgium (PSD2), supervised by BaFin in Germany.",
+    "source": "https://www.accountable.de/uber-uns/ ; https://play.google.com/store/apps/details?id=com.hivearts.accountable&hl=de&gl=DE ; https://www.accountable.eu/en-be/",
+    "certainty": "high (no IT/ES launch: medium)"
+   },
+   {
+    "topic": "Target customers",
+    "fact": "Germany: Selbststaendige, Freiberufler, Einzelunternehmer, Kleinunternehmer, Gewerbetreibende; the site explicitly says it is not (yet) optimised for UG/GmbH (corporate tax is not offered; a reviewer could not open a bank account for a GmbH). Also employees with side self-employment income. Belgium: self-employed, complementary self-employed, students, and per FAQ also BV/NV/VZW companies; a free 'Accountable Expert' interface lets Belgian accountants access client data. Not supported: limited tax liability, people with more than one tax number, Soll-Versteuerung (only Ist), double-entry bookkeeping, margin scheme, agriculture.",
+    "source": "https://www.accountable.de/ ; https://www.accountable.de/programmumfang-accountable/ ; https://www.accountable.eu/en-be/ ; iTunes DE reviews feed",
+    "certainty": "high"
+   },
+   {
+    "topic": "Invoicing",
+    "fact": "Unlimited invoices and e-invoices even on the free plan (ZUGFeRD, XRechnung, Peppol incl. free Peppol registration; can also receive e-invoices). Own templates with logo and colours (three styles seen: Einfach, Dezent, Abgerundet), offers (quotes), instalment and recurring invoices, foreign customers in any currency, reverse-charge notes, payment notifications and automatic payment reminders (one reviewer still says a dunning system is missing, so it may be hidden). Free plan: no web access, no offers, no recurring invoices. Complaints: invoice design too limited, numbering options limited, hidden save button bug, Peppol invoices sometimes not delivered (BE).",
+    "source": "https://www.accountable.de/ ; https://www.accountable.de/preise/ ; App Store description ; reviews feeds",
+    "certainty": "high"
+   },
+   {
+    "topic": "Expense capture (photo/OCR)",
+    "fact": "Scan or upload receipts with the phone camera, text recognition (OCR) recognises the category and automatically matches it to the bank transaction; every expense gets a personalised tax tip ('can I deduct this?'); receipts stored; reviewers call the receipt reading very accurate. Free plan is capped at 5 receipts/month (reviewers call this a 'Kostenfalle'); unlimited from the Buchhaltung plan. Import also from other devices (help article); users ask for Google Drive/cloud import and larger upload size.",
+    "source": "https://play.google.com/store/apps/details?id=com.hivearts.accountable&hl=de&gl=DE ; https://www.accountable.de/preise/ ; https://omr.com/de/reviews/product/accountable",
+    "certainty": "high"
+   },
+   {
+    "topic": "Bank connection and business account",
+    "fact": "Connect existing bank accounts (1 on Free/Plus, 5 on Buchhaltung/Steuern, 10 on Max), plus PayPal, CSV import. Own free business account (Accountable Banking) delivered by Swan.io, funds held at BNP Paribas France: German IBAN, virtual or physical Mastercard (physical card 7.50 EUR one-off, free on Max), Apple Pay/Google Pay, real-time SEPA, 0 EUR account fee and 0 EUR per transaction, Tap to Pay on phone (1.35 % for EEA consumer cards, 2.6 % + 0.20 EUR otherwise), 0.5 % cashback up to 10 EUR/month (Max: extra 5 % in one category up to 25 EUR), deposit guarantee up to 100,000 EUR (French FGDR), opening online with ID photo + selfie, activated within 2 working days, pay invoices and the tax office from the app. Belgium launch of Accountable Banking: 9 Feb 2026. Reviewer complaints about the bank: slow account opening, stale balance, failed transfers, card activation, rejected incoming EU payments, no phone support, bank login re-required.",
+    "source": "https://www.accountable.de/banking/ ; https://www.accountable.de/preise/ ; iTunes DE/BE reviews feeds ; https://www.accountable.eu/en-be/press/accountable-banking/ (via search)",
+    "certainty": "high"
+   },
+   {
+    "topic": "VAT, income tax, EUeR, trade tax, ELSTER",
+    "fact": "Prepares and sends directly to the Finanzamt through Accountable's own certified ELSTER interface (no own ELSTER account needed): monthly/quarterly VAT advance returns (UStVA), Zusammenfassende Meldung (EC sales list), annual VAT return, EUeR (Anlage EUeR + AVEUeR asset register), trade tax return, income tax return incl. employment income (upload of Lohnsteuerbescheinigung), capital income over 1,000 EUR (Anlage KAP as add-on 19.90/24.90 EUR), rental income (Anlage V from 2025, add-on), children (Anlage Kind), insurance/donation/household-service deductions, joint assessment with an employed or self-employed spouse (from 2023), small-business check under section 19 UStG incl. mid-year switch, monthly BWA, past years back to 2020. Not supported: Anlage R, L, N-AUS/AUS, Unterhalt, special cases (these go to the coaches). Reviewers miss: joint return when one spouse is a trader (partly), degressive depreciation, cash book, BWA print, DATEV export problems.",
+    "source": "https://www.accountable.de/programmumfang-accountable/ ; https://www.accountable.de/einkommensteuererklaerung/ ; https://www.accountable.de/preise/",
+    "certainty": "high"
+   },
+   {
+    "topic": "Tax reserve and real-time tax estimate",
+    "fact": "Core selling point. The home screen shows big numbers 'Gewinn' (profit so far in the year) and 'Bisherige Einkommensteuer' (income tax so far), updated in real time as bookings arrive; marketing line 'Sieh immer in Echtzeit, wie viel dir nach Steuern bleibt'. A 'Steuerpflichten' tab lists upcoming payments by quarter and a 'Tipps' tab lists saving tips. Store screenshots show a purple banner card 'Bitte ueberweise 2.459,11 EUR bis zum 10. Februar' with payee Finanzamt, IBAN and reference ready to pay, and a seal 'Steuer Garantie'. Tax-reserve sub-account with its own IBAN: the app calculates the amount from income/expenses and moves it automatically from the business account (automatic transfer only with Accountable Banking, per release notes); progress ring (e.g. 25 %), 'zur Seite legen' amounts, up to 10 Spaces (sub-accounts) on Max. Blog guidance: set aside 20-45 % of profit plus VAT. Push notifications for deadlines (trade, corporate, income, annual tax) added in Oct 2026 update. Free web tax calculator exists.",
+    "source": "App Store DE screenshots (screen1-6) viewed in browser ; https://www.accountable.de/blog/wie-viel-geld-sollte-ich-als-selbstandiger-fur-steuern-beiseite-legen/ ; Google Play changelog ; https://www.accountable.de/banking/",
+    "certainty": "high"
+   },
+   {
+    "topic": "AI tax advisor ('KI Steuerberater') and legal dispute",
+    "fact": "Chat assistant trained on German tax law, expert commentary and 'thousands' of real cases, answers 24/7, uses the user's own data, checks returns before sending, claims knowledge is manually reviewed by experts; servers in Frankfurt; chats may be reviewed. Disclaimer: AI can be wrong. Free plan has no AI access per pricing page (a competitor claims 5 questions/month), unlimited from Rechnungen Plus. Reviewers: some call it 'mindblowing', others report wrong answers and calculations. Legal risk: the Berlin Chamber of Tax Advisers (Steuerberaterkammer Berlin) sued in 2026 at Landgericht Berlin II (case 61 O 90/26) to ban the name 'KI-Steuerberater' (and objects to 'Steuercoaches'); Accountable rejects the claim; no ruling found.",
+    "source": "https://www.accountable.de/ki-steuerberater/ ; https://www.accountable.de/presse/ ; https://www.startbase.de/news/klage-gegen-accountable-wegen-ki-steuerberater-eingereicht/ ; https://www.iww.de/kp/berufsrecht/digitalisierung-steuerberaterkammer-klagt-gegen-ki-tool-von-accountable-n173873",
+    "certainty": "high (lawsuit); medium (AI quality)"
+   },
+   {
+    "topic": "Human help: Steuer-Coaches",
+    "fact": "Coaches are explicitly NOT licensed tax advisors, cannot give individual legally binding tax/legal advice and cannot represent the user before the Finanzamt; they help with app questions and understanding letters. Contact by in-app chat or e-mail, target answer within 24 hours on working days (Max: priority within 12 hours, personal coach, onboarding call, 4 coach conversations/year); outside hours the AI answers. Coach chat is included from the Steuern plan (FAQ says Buchhaltung gets it only for non-VAT small businesses; table and FAQ conflict). Some reviewers praise quick answers (even 22:00), others complain every chat reply takes at least 24 h, which hurts right before filing deadlines.",
+    "source": "https://www.accountable.de/steuer-coaches/ ; https://www.accountable.de/preise/ ; Google Play reviews",
+    "certainty": "high"
+   },
+   {
+    "topic": "Tax-advisor service and prices",
+    "fact": "Real tax advisors are independent partner firms, not Accountable staff (Accountable states it is not liable for their work); needs a paid subscription; coach hands over, answer within 3 working days. Advisor prices (plus VAT, billed by the advisor): 30-min phone call 79 EUR, income tax return prepared by advisor 475 EUR, document check 3 EUR per document, tax-audit support 158 EUR/hour, profit statement for visa or landlord 165 EUR. Users can also invite their own Steuerberater and export DATEV/PDF/CSV. Corporate tax not available.",
+    "source": "https://www.accountable.de/steuerberater/ ; https://www.accountable.de/preise/",
+    "certainty": "high"
+   },
+   {
+    "topic": "Tax guarantee (Steuer-Garantie)",
+    "fact": "Reimburses back-payments (and section 233a AO interest) caused by errors of the app: up to 500 EUR on the Steuern plan, up to 10,000 EUR on Max; valid 2 years after filing; requires a 'Safety-Score' (bank linked, all transactions classified). Excludes fraud, late filing, double-entry books, mixed VAT, margin scheme, agriculture. Third-party pages and older store text show 5,000 EUR, so the figures have been inconsistent; a reviewer calls the guarantee 'ein Witz' after a missed error and no support reply. Belgium: 500/10,000 EUR too, marketed as the first such guarantee there.",
+    "source": "https://www.accountable.de/blog/steuer-garantie/ (updated 18 Nov 2025) ; https://www.accountable.de/preise/ ; iTunes DE reviews",
+    "certainty": "high"
+   },
+   {
+    "topic": "Onboarding",
+    "fact": "Sign-up via app or web; 'Selbststaendig machen' flow at registrierung.accountable.de: online 'Fragebogen zur steuerlichen Erfassung' sent free to the Finanzamt via ELSTER, tax number arrives by post, progress autosaved, optional help and tips; then a free Starter-Paket (100 EUR off annual plans within 12 months of founding, two 30-minute webinars with coaches, e-book, community). Gewerbeanmeldung guide page. Max plan includes a personal onboarding call. Reviewers say beginners find it easy ('Begleitung ab Phase 0'); one reported the registration was sent to the wrong tax office. The in-app onboarding itself is behind the sign-up and was not inspected.",
+    "source": "https://registrierung.accountable.de ; https://www.accountable.de/starter-paket/ ; App Store reviews",
+    "certainty": "medium"
+   },
+   {
+    "topic": "Pricing plans (Germany, net of VAT, prices per month)",
+    "fact": "Yearly billing / monthly billing: Rechnungen Free 0 / 0; Rechnungen Plus 9.90 / 12.40; Buchhaltung 19.90 / 24.90; Steuern 29.90 / 37.40; Max 59.90 / 74.90 EUR (all plus 19 % VAT; yearly saves 20 %). Belgium shows same yearly prices (9.9/19.9/29.9/59.9). Black Friday promo 90 % off for first 3 months for new payers until 30 Nov 2026 (FAQ elsewhere says 85 %). Free: mobile only, 1 bank, unlimited e-invoices, 5 receipts/month, free business account. Plus: web, offers, instalment/recurring invoices, unlimited AI. Buchhaltung: web+mobile, 5 banks, unlimited receipts, annual closing for small businesses (income tax, EUeR, trade tax, annual VAT). Steuern: VAT advance returns, annual closing, 500 EUR guarantee, coach chat. Max: personal coach, 12 h priority, onboarding call, 4 coach talks/year, KAP+V included, 10,000 EUR guarantee, free physical card; 12-month minimum term. 30-day money-back, no setup fee. Cancel monthly plans any time. iOS in-app prices are higher than web (e.g. TAXES 44.49, PRO MAX 54.00 EUR listed). OMR says a 14-day trial; the pricing page states no trial length.",
+    "source": "https://www.accountable.de/preise/ ; https://omr.com/de/reviews/product/accountable ; App Store DE",
+    "certainty": "high"
+   },
+   {
+    "topic": "Free-plan changes and paywall anger",
+    "fact": "Several 2026 reviews complain that features moved behind a paywall: offers were removed from the free plan (Sep 2026), web access requires a paid plan even if one signed up on the web, exports and support are paywalled after downgrading, templates lost without warning when the free plan changed (BE, Oct 2026), and a second tax number needs a second subscription. This is the biggest trust risk in their model.",
+    "source": "iTunes DE and BE review feeds (Sep-Nov 2026)",
+    "certainty": "high"
+   },
+   {
+    "topic": "Company facts",
+    "fact": "Founded in Brussels in 2017 by Nicolas Quarre (CEO), Alexis Eggermont (CPO) and Hassan Ayed, Tino Keller (CMO, MD Germany) joined later; some Berlin sources say 2020 for the German entity and the press page says 'since 2019'. App first released on the App Store in Sep 2018. HQ Brussels, German office Berlin. Team: theorg.com lists 73 people (range 11-50 staff), team from 10+ countries; no official headcount. Other leaders: Juan Zone (CTO), Isabel Senden (CRO), Simon Castex (Chief Customer Officer). Revenue not public.",
+    "source": "https://manda.be/articles/visma-acquires-minority-stake-in-belgian-fintech-start-up-accountable/ ; https://theorg.com/org/accountable-eu ; https://www.accountable.de/presse/",
+    "certainty": "medium (founding year, headcount)"
+   },
+   {
+    "topic": "Users",
+    "fact": "Accountable's own claims: more than 40,000 self-employed in Germany and more than 80,000 across Europe, 175,000+ tax returns processed (press page, Nov 2026); Belgium page claims 50,000+ users and '68 % of digital VAT declarations in Belgium'. Older/third-party figures: 26,000 clients (Apr 2025 news), 100,000+ (Visma interview). Google Play shows 500,000+ downloads.",
+    "source": "https://www.accountable.de/presse/ ; https://www.accountable.eu/en-be/ ; https://play.google.com/store/apps/details?id=com.hivearts.accountable&hl=de&gl=DE",
+    "certainty": "medium (self-reported)"
+   },
+   {
+    "topic": "Funding and owners",
+    "fact": "Pre-seed/seed 1.7 M EUR (Dec 2018, led by Connect Ventures); Series A 5.7-6 M EUR (Sep 2021, Stride.VC + Connect Ventures), extended to about 10 M EUR total with 10x Founders, Billie founders and ex-Deliveroo/Wise angels; on 25 Apr 2025 Visma (Hg-backed Nordic software group) took a minority stake with primary and secondary money and says it intends to acquire the company fully later; Accountable stays founder-led and independent. Valuation undisclosed (German press: high double-digit million EUR). No 2026 full takeover found.",
+    "source": "https://www.startbase.com/news/accountable-erweitert-finanzierung-auf-zehn-millionen-euro/ ; https://manda.be/articles/visma-acquires-minority-stake-in-belgian-fintech-start-up-accountable/ ; https://www.connectventures.co/opinions/accountable-joins-the-visma-family ; https://tech.eu/2018/12/11/belgian-startup-accountable-raises-e1-7-million-for-its-self-employed-administration-app/",
+    "certainty": "medium-high"
+   },
+   {
+    "topic": "Store ratings",
+    "fact": "Checked 19 Nov 2026. iOS Germany: 4.67 from 3,954 ratings (iTunes lookup), rank #126 Finance, version 1.303.0 released 2 Nov 2026, 232 MB, iOS 16.4+, free with in-app purchases. iOS Belgium: 4.69 from 6,350 ratings (this is the 6,339 figure shown on the website). Google Play Germany: 4.6 with about 5,200-5,400 reviews, 500,000+ downloads, updated 30 Oct 2026, '#7 top grossing finance'. Google Play Belgium: 4.5 per Belgian site. Reviews.io 4.9 (564, DE), 4.8 (914, BE); OMR 4.8 (86 reviews, 79 five-star, 14-day trial noted).",
+    "source": "https://itunes.apple.com/lookup?id=1384729810&country=de ; https://itunes.apple.com/lookup?id=1384729810&country=be ; Google Play page ; https://omr.com/de/reviews/product/accountable ; https://www.reviews.io/company-reviews/store/www.accountable.de",
+    "certainty": "high"
+   },
+   {
+    "topic": "Review praise",
+    "fact": "Most common: clear, simple interface that guides beginners; fast and friendly support (named agents in BE); receipts read accurately and booked in seconds; invoices from the phone; deadlines, reserves and VAT returns in one place; webinars; bank link; real humans available besides the AI; replaces a tax advisor for simple cases. OMR scores: usability 96 %, setup 95 %, support 93 %. Switchers from Lexoffice are happy.",
+    "source": "https://omr.com/de/reviews/product/accountable ; https://www.reviews.io/company-reviews/store/www.accountable.de ; iTunes review feeds",
+    "certainty": "high"
+   },
+   {
+    "topic": "Review complaints (latest 50 DE reviews: 21 five-star, 15 one-star; BE: 30 five-star, 10 one-star)",
+    "fact": "1) Bank account: delayed opening, wrong or old balance, failed transfers, GmbH not possible, no phone support. 2) Paywalls and plan changes, 5-booking cap. 3) Invoice bugs: paid invoices still shown open, profit stuck at 0, cannot save or create customer, data lost after logout (BE), Peppol not delivered, GoBD doubts, limited design/numbering. 4) Tax accuracy: AI wrong answers, registration sent to wrong tax office, DATEV export garbled, no degressive depreciation, no cash book. 5) Support slow or silent for email, 24 h+ coach replies. 6) Missing: dark mode, iPad landscape, Mac app, OSS cross-border VAT, cloud import. 7) One person was angry about repeated review prompts.",
+    "source": "iTunes DE and BE review feeds ; Google Play reviews (Aug-Sep 2026) ; OMR",
+    "certainty": "high"
+   },
+   {
+    "topic": "Look and feel (visual)",
+    "fact": "Brand: Accountable with a paw-print A and a sunglasses-wearing dog mascot (Aldo) on the Mastercard and illustrations; soft lilac/violet main colour with very dark violet text, headline font in a heavy rounded grotesque, big rounded cards. Product is colour-coded by area: green = Einnahmen/invoices, purple = Steuern, pink = Ausgaben, light blue = Banking. Dashboard: hamburger menu top-left, search and settings icons top-right, a coloured header block with two big numbers, then lists/accordions by quarter, small tag chips ('Pruefe 15 Rechnungen'), floating '+' button bottom-right. No bottom tab bar visible in store screenshots; dense, many small elements, small text; light mode only. Trust badges: GoBD, Hosted in Germany, official ELSTER interface, BaFin, e-invoice logos. Marketing screenshots use phone mockups with a bold headline.",
+    "source": "App Store DE screenshots and https://www.accountable.de/ viewed in browser 19 Nov 2026",
+    "certainty": "high (web/store visuals); not seen: in-app onboarding and signed-in screens"
+   },
+   {
+    "topic": "Marketing and growth playbook",
+    "fact": "Free e-invoice template and quote template pages, 'Kann ich das absetzen?' deductibility checker, tax calculator, free webinars, e-book, Starter-Paket, tax blog, press-release engine with data stories (income by state, freelancer cities, tax-advisor density; one every 2-4 weeks), partner channel (IONOS, ING, N26, Malt), ambassador programme, Finanzfluss awards, Black Friday 90 % discount, 'Hosted in Germany' trust label, ad campaign with a freelancer (Sep 2026).",
+    "source": "https://www.accountable.de/ ; https://www.accountable.de/presse/",
+    "certainty": "high"
+   },
+   {
+    "topic": "Gaps in what could be verified",
+    "fact": "Not publicly available without sign-up: signed-in app screens, exact in-app navigation beyond store screenshots, onboarding steps inside the app, web-app interior. Not found: official employee number, revenue, Trustpilot overall score, Google Play Belgium live score (only site claim 4.5). Tax guarantee and coach-inclusion statements differ between pages. App Store BE page was rate-limited (HTTP 429) so BE numbers come from the iTunes lookup API.",
+    "source": "n/a",
+    "certainty": "high"
+   }
+  ],
+  "summary_hu": "Mi ez: az Accountable német-belga adóapp önálló vállalkozóknak (Berlin + Brüsszel, 2017-ben indult), 2025 áprilisa óta a Visma kisebbségi tulajdonában; kb. 40 ezer német, 80 ezer európai felhasználó.\nKinézet: halvány lila alap, sötét lila betű, kutya-kabala; színkódolt részek (zöld számlák, lila adó, rózsaszín kiadás, kék bank), felül két nagy szám (nyereség, eddigi adó), hamburger menü, sok apró elem, nincs sötét mód. A mi nyugodt kék, egy gombos, 5 füles felületünk egyszerűbb.\nTudás: korlátlan számla és e-számla, blokk-fotózás kategóriával és adótippel, bankkapcsolat, ingyenes üzleti számla Mastercarddal és automatikus adótartalékkal, ÁFA-, jövedelemadó-, EÜR-, iparűzési bevallás közvetlenül az adóhivatalnak, élő adóbecslés, AI-chat és \"adócoach\" chat.\nÁr (havi, nettó, éves díjjal): Free 0, Plus 9,90, Könyvelés 19,90, Adó 29,90, Max 59,90 euró; mi 19 999 Ft (kb. 50 euró) valódi könyvelővel.\nFontos különbség: az ő coachaik NEM könyvelők, nem képviselhetnek az adóhivatalnál; igazi adótanácsadó csak külön fizetve (hívás 79 €, bevallás 475 €). A berlini adótanácsadó-kamara perli őket a \"KI-Steuerberater\" névért.\nGarancia: hibáért csak 500 € (Adó csomag), 10 000 € csak a Max-ban; sokan szerint a garancia gyenge.\nÉrtékelés: iOS 4,7 (DE 3 954, BE 6 350 vélemény), Google Play 4,6 (500 ezer+ letöltés). Dicsérik: egyszerű, gyors, jó támogatás. Panasz: bankszámla-hibák, fizetős fal (ami ingyenes volt, fizetős lett), számlázási hibák, az AI néha téved, a chat 24+ óra, GmbH nem megy.\nMit másoljunk: a főoldali két nagy szám (mennyi a nyereség, mennyi az adó), kész \"fizess ennyit eddig\" kártya NAV-adatokkal, automatikus adótartalék és \"mennyi költhető\" kijelző, határidő-értesítések, blokk-fotó automatikus kategóriával, 30 napos pénzvisszafizetés, bizalmi jelvények, ingyenes eszközök és webinárok (adókalkulátor, \"leírhatom?\").\nHol vagyunk jobbak: valódi, meghatalmazott könyvelő névvel és arccal, fix ár rejtett fal nélkül, magyar szabályokra (átalányadó, KATA) szabva, nyugodt, nagy betűs, lépésről lépésre vezető felület.\nMire figyeljünk: nálunk ne legyen \"kostenfalle\" (hirtelen fizetős funkció), ne ígérjünk \"AI adótanácsadót\" (jogi per), a garancia szövege legyen egyértelmű.\nNem láttuk: a bejelentkezett app belsejét és az app belső bevezetőjét (regisztráció nélkül nem nyilvános)."
+ },
+ "d": {
+  "findings": [
+   {
+    "topic": "What Accountable is",
+    "fact": "Accountable SA is based in Brussels (Sint-Josse-ten-Noode) and has an office in Berlin (Wattstrasse 11). It makes a mobile and web app for freelancers and sole traders in Germany and Belgium. The app covers invoicing and e-invoicing, expenses with receipt scanning, filing tax returns directly with the tax office (no ELSTER account or tax adviser needed in Germany), a free business account with a Mastercard and automatic tax reserves, an 'AI tax adviser' chat, and human 'tax coaches'. It holds a PSD2 payment-institution licence from the National Bank of Belgium and is also supervised by BaFin in Germany. The model is do-it-yourself with AI plus optional coaching; no human accountant does the books for you (accountant access is free, and in Belgium the company can refer you to a partner accountant).",
+    "source": "https://apps.apple.com/de/app/id1384729810 ; https://play.google.com/store/apps/details?id=com.hivearts.accountable ; https://www.accountable.eu/en-be/pricing/",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Scale and ratings (Nov 2026)",
+    "fact": "iOS DE: 4.7 from 3,955 ratings, #126 in Finance, version 1.303.0, 232.1 MB. Google Play DE: 4.6 from 5,400 reviews, 500,000+ downloads, updated 30.10.2026, '#7 top grossing – Finance'. The website shows 4.7 from 6,339 App Store ratings, probably counted across all countries. The store text claims 100,000+ self-employed users in DE and BE; the German homepage says 40,000+ in Germany. Reviews praise how clear the app is and how fast support replies. One review notes the iPad app works only in portrait. JustUseApp's small DE sample calls it 'too buggy to trust'.",
+    "source": "https://apps.apple.com/de/app/id1384729810 ; https://play.google.com/store/apps/details?id=com.hivearts.accountable&hl=de ; https://www.accountable.de/ ; https://justuseapp.com/en/app/1384729810/accountable-self-employed/reviews",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Pricing in Germany",
+    "fact": "Prices per month excluding VAT, yearly billing (monthly billing in brackets). Rechnungen Free 0 € (mobile only, unlimited e-invoices, 5 expenses/month, 1 bank account). Rechnungen Plus 9.90 € (12.40 €). Buchhaltung 19.90 € (24.90 €): web access, unlimited expenses, annual returns for small businesses. Steuern 29.90 € (37.40 €), marked 'most chosen': adds VAT advance returns, chat with tax coaches and a tax guarantee up to 500 € per return. Max 59.90 € (74.90 €): personal tax coach, replies within 12 h, onboarding call, 4 coach calls a year, guarantee up to 10,000 €, 12-month minimum term. A Black Friday offer currently gives new customers 90% off for 3 months (the homepage banner says until 30.11). For comparison, Adózz at 19,999 Ft gross is roughly 40 € net. That is close to Steuern on monthly billing (37.40 €) and well below Max, which includes the personal coach.",
+    "source": "https://www.accountable.de/preise/ ; https://www.accountable.de/",
+    "certainty": "confirmed (HUF/EUR comparison approximate)"
+   },
+   {
+    "topic": "Pricing in Belgium",
+    "fact": "Same tiers in Belgium: Free 0, Invoicing Plus 9.90, Bookkeeping 19.90, Taxes 29.90 (20.90 for businesses not subject to VAT), Max 59.90 per month excluding VAT, yearly billing. Max includes a personal coach and 5,000 € tax-audit protection (ARAG). Belgium adds Peppol e-invoicing (mandatory for B2B since 2026), intra-EU and client listings, and social contributions shown as an obligation next to VAT. That is the closest analogue to Hungarian TB/szocho. All plans have a 30-day money-back guarantee.",
+    "source": "https://www.accountable.eu/en-be/pricing/ ; App Store EN screenshot 6 (local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/appstore_ios_en.png)",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Auto tax reserve ('put aside') feature",
+    "fact": "With the Accountable business account, 'Automatisch beiseitelegen' moves the calculated tax from the main account to a tax-reserve sub-account. The user picks 90%, 100% or 110% of the calculated amount and can switch individual tax types on or off. If the balance is too low, the user gets an email with a QR code for topping up, plus a push notification. Before this feature (help article updated 18.11.2026), a bar only showed how much to put aside.",
+    "source": "https://www.accountable.de/help-center/automatische-steuerruecklagen-so-funktionierts/",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Onboarding",
+    "fact": "Signup asks step by step about business model, tax type and income sources, then unlocks the relevant features. The help centre's 'first steps' then has the user: (1) Account > Settings > Taxes: calculation basis (default 'extrapolation'), start year, VAT status (standard / Kleinunternehmer / exempt), VAT frequency; (2) enter income-tax prepayments from the tax-office letter, after which the app sends a reminder with transfer details for each one; (3) add revenues and expenses in 4 ways: create an invoice, drag and drop on the web, email-forward to revenues@ and expenses@ addresses, or enter manually; (4) review the tax obligations list and mark past items as not paid or not submitted. Extra support: live 'step-by-step app walkthrough' webinars, and an onboarding call on Max. No public screenshots of the signup screens were found.",
+    "source": "https://help.accountable.eu/en/articles/8886205-what-should-i-do-first-when-i-start-using-accountable ; https://www.ki-syndikat.de/tools/accountable/",
+    "certainty": "confirmed (step list); likely (signup question wording)"
+   },
+   {
+    "topic": "Design: home/tax screen and how the tax amount is shown",
+    "fact": "The tax screen has a full-width pastel-violet header. It shows a small rounded pill label with an (i) ('Gewinn 2025' / Profit), then a very large heavy number (5.241,86 €), then a second pill ('Bisherige Einkommensteuer' / income tax to date) and a second, slightly smaller big number (12.390,15 €). The header uses no other text. Below it, a two-option segmented control switches between 'Steuerpflichten | Tipps' (tax obligations | tips). The obligations view has the line 'All your 2025 deadlines' with a year dropdown, then collapsible quarter rows (Q1–Q4 2025). Each obligation row shows its name, a date on the right, a small amount chip (e.g. 'Umsatzsteuer-Vorauszahlung 10.07.2025 · 173,03 €') and a 'Details anzeigen >' link. The web version shows obligations as cards: 'Fällig am 10.03.2026' (due) chip, the obligation name, the amount, and an 'Überprüfen und Abschicken' (review and send) button. An amber '! Prüfe 15 Rechnungen >' (check 15 invoices) pill floats at the top as the one attention item.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/appstore_ios_de.png, kivagas_fooldal_szamok.png, web_de_hero_produktkep.png, web_de_steuern_kartya.png",
+    "certainty": "confirmed (marketing renders of real screens)"
+   },
+   {
+    "topic": "Design: the 'pay this' card",
+    "fact": "When a payment is due, a card says it as one sentence: 'Bitte überweise 2.459,11 € bis zum 10. Februar' / 'Please transfer 2459,11 € until the 10th February', in white bold text on a violet band. Below it is a three-row key/value table: Receiver (Finanzamt Charlottenburg / tax office), IBAN, Reference (tax number + 'USt.'). A rosette 'Steuer-Garantie' seal is pinned to the corner. The amount, deadline and everything needed to make the transfer fit on one card.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/kivagas_utalasi_kartya.png; appstore_ios_de.png (screen 6)",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Design: how the 'put aside' figure is shown",
+    "fact": "The Bank tab has a pale-blue header with the total across all accounts ('Alle Bankverbindungen – Externe Bank und Accountable Bank 8.200,00 €'). Next comes a section 'Für Steuern zurücklegen' (set aside for taxes) with one row: a circular progress ring labelled '25%', the bold line 'Noch 1.200 € zur Seite legen' (still 1,200 € to set aside), the grey subline 'Für deine Steuerzahlungen' (for your tax payments), and a chevron. Below that, each account is a tinted tile with a small label plus chevron and a big amount (Hauptkonto 2.400 €, Konto für Steuerrücklagen 4.000 €, DKB 1.600 €). Each tile has a doodle icon. The tax-reserve account detail shows the big balance, then a split into two bars ('2.000 € zur Seite legen' / '1.200 € für Steuerzahlungen'), then '30 Bankzahlungen' (bank payments) with the transaction list. Store copy promises 'see in real time how much remains after taxes'.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/web_de_banking_telefon.png, kivagas_felreteves_gyuru.png, kivagas_tranzakcio_lista.png",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Design: lists (transactions, invoices, expenses)",
+    "fact": "Transaction rows have two lines: an outline icon on the left; the merchant (AWS, Google, Apple) with a grey reference code below; the bold amount right-aligned with a grey date below it. A section header shows a count chip ('30 Bankzahlungen'). Invoices (green 'Einnahmen' header with 'Gesamtumsatz 2024 5.241,86 €' total revenue and a Q4 figure) have a search field, status tabs with counters ('Noch nicht verschickt 23' not yet sent | 'Bezahlt' paid), and rows with number + customer + grey email. Expenses (pink 'Ausgaben' header with 'Absetzbare Kosten 2024' deductible costs + Q4) have status tabs 'Zu prüfen 11' (to check) | 'Bezahlt' and columns supplier / date / category. Each list is split by status with counts, so the to-do part is always one tap away.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/web_de_einnahmen.png, web_de_ausgaben.png, kivagas_tranzakcio_lista.png",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Design: expense photo flow",
+    "fact": "Entry points: the '+' on the Bank tab ('Neue Ausgabe scannen') or the '+' on the Ausgaben tab ('Beleg scannen'). The camera is full screen. While scanning, floating chips appear over the live receipt: an AI-suggested category with a sparkle ('Hardware' / 'Elektronik/IT' / 'Bar & Restaurant'), the amount ('€ 19.00') and a 'Pre-filled by AI' / 'Vor-ausgefüllt mit KI' banner. The round shutter sits bottom centre, the last-capture thumbnail bottom left, and 'Save (3)' bottom right for batch capture. The app reads date, merchant, amounts and VAT rate. The user checks the data before saving and can add more pages or the back with '+'. Each expense also gets a personalised tax tip. The free plan allows 5 receipts a month.",
+    "source": "https://www.accountable.de/?p=10165 (help, updated 10.11.2026) ; local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/kivagas_fotozas_ai_elotoltes.png, googleplay_de.png, appstore_ios_be_nl.png",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Design: navigation",
+    "fact": "In the public phone shot, the bottom bar has 4 tabs (BANK, EINNAHMEN, AUSGABEN, STEUERN) with thin line icons and tiny uppercase labels; the active tab is in the accent colour, above a hairline. There is a hamburger menu top left, search and settings/€ icons top right, and an outlined circular '+' button floating bottom right for adding things. There is no fixed main button. The AI chat opens as its own screen with a back arrow. The website shot may show an older layout, and newer builds may add a tab.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/web_de_banking_telefon.png ; appstore_ios_de.png ; googleplay_de.png",
+    "certainty": "likely (4 tabs seen in the website product shot; store shots crop the bar)"
+   },
+   {
+    "topic": "Design: typography",
+    "fact": "The website CSS uses 'Degular Display' (heavy, rounded grotesque) for headings and Inter for UI text. In the app, the big numbers use the heavy display face. Estimated sizes (iPhone points): hero number about 28–30, second number about 20–22, pill labels about 11, list titles about 13–14, grey metadata about 11. That is denser and smaller than our B_kisebb (17px body, 31px H1, 20px section title, 12.5px tab labels). The screens read through contrast of size and weight: numbers are much bigger than words, and labels are tiny pills.",
+    "source": "https://www.accountable.de/wp-content/themes/accountable/assets/rebranding-js/dist/css/bundle.min.css ; local screenshots; C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/B_kisebb/fooldal.html",
+    "certainty": "confirmed (fonts); likely (point sizes are estimates from renders)"
+   },
+   {
+    "topic": "Design: colours, icons, illustration",
+    "fact": "Most-used website CSS colours: primary violet #7E4ADE, dark aubergine ink #291547, lavender backgrounds #F6F3FE / #EEEAFB, pastel violet #C6B5F4, pastel pink #F8CDED, pastel green #CBF0B2, pastel blue #CAE3F6. Each area has its own colour: Steuern = violet, Einnahmen = green, Ausgaben = pink, Bank = blue (the help centre calls them 'the blue Bank screen' and 'the pink Ausgaben screen'). UI icons are thin monochrome outlines. Decoration is hand-drawn dark-outline doodles (peace-sign hand, clocks, coins, piggy bank) and the dog mascot 'Aldo', added in the 2025 rebrand. The rebrand post says contrast and accessibility were improved.",
+    "source": "https://www.accountable.de/blog/accountable-rebranding/ ; https://www.accountable.de/?p=10165 ; bundle.min.css (above)",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Design: how they keep dense screens readable",
+    "fact": "(1) One coloured header per area with at most 2 big numbers; everything else is white. (2) Labels are tiny pills with an (i), not sentences. (3) A segmented control splits facts from advice ('obligations | tips'). (4) Collapsed quarter rows show only one period's detail at a time. (5) Status tabs with counts ('to check 11'). (6) Two-line rows with numbers right-aligned. (7) A single amber attention pill at the top. (8) Actions sit on the item ('Review and send') or in one '+' button. (9) Due dates are chips, not prose. Weak spots: small grey 11pt text, uppercase micro-labels, decorative doodles competing with data.",
+    "source": "Synthesis of the local screenshots in C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/",
+    "certainty": "likely (design interpretation)"
+   },
+   {
+    "topic": "AI chat and human help",
+    "fact": "The 'KI Steuerberater' (AI tax adviser) is a chat screen with an intro and a 3-tick list of promises ('Ask any tax question', 'Knowledge vetted by tax experts' with a German flag, 'Real-time 24/7'). Two suggested-question cards sit above the composer ('What is reverse charge…', 'How does deducting a car work?'). The composer has attachment and mic icons. Paid tiers add human tax coaches by chat; Max adds a personal coach and calls.",
+    "source": "Local: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/kivagas_ai_chat_javaslatok.png ; https://www.accountable.de/preise/",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Comparison with our approved B_kisebb",
+    "fact": "Ours: a task-first home (accountant's face + name, '2/12 lépés kész' segmented progress, H1 'Jöhet a szerződés', sections with 3D icon + blue title + one sentence + one action). There is one full-width main button fixed above a flat 5-tab bar (Főoldal, Dosszié, Fotózás, Üzenetek, Fiók), white background, 17px body, no mascot. The form is one question per screen with a lookup popover ('Ez a te vállalkozásod?'). Accountable: a numbers-first home (profit + tax to date), a different colour per area, denser and smaller type, a mascot and doodles, a '+' button and hamburger instead of a fixed main button, and do-it-yourself with AI. The two are complementary. Our onboarding and human-accountant framing is clearer for beginners. Accountable shows better how to present money (amount due, deadline, put-aside progress, pay-by details) once the user is set up. This is exactly the 'after onboarding' home that B_kisebb doesn't design yet.",
+    "source": "C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/B_kisebb/fooldal.png ; urlap.png ; fooldal.html ; C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/VALASZTAS.md",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Idea 1 – 'Utalási kártya' (transfer card)",
+    "fact": "For each quarterly átalányadó payment (or the monthly KATA one), state the job in one sentence on our single white card: 'Utalj 87 450 Ft-ot április 12-ig'. Below it put 3 plain rows: Kinek (to whom), Számlaszám (account number), Közlemény (reference), each with a copy action. Make the fixed main button the answer: 'Elutaltam' (I've paid). Leave out the violet band and the rosette; keep the 'sentence + three rows' pattern. Exact NAV account numbers and references must come from the accountant, not be hard-coded.",
+    "source": "Pattern from kivagas_utalasi_kartya.png",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 2 – numbers-first home after onboarding",
+    "fact": "Once the 12 steps are done, switch the home top to the Accountable structure in our style. One label with our round 'i' button, e.g. 'Idei bevétel' (revenue this year), then the big number (our 28px 'nagy szám'). Then a second label + number, 'Eddig ennyi adó' (tax so far). Only two numbers, no other header text. It follows our rule 4 ('big number where it matters') and uses no grey uppercase labels.",
+    "source": "Pattern from kivagas_fooldal_szamok.png / web_de_steuern_kartya.png",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 3 – 'Félretenni' (put aside) row with a progress ring",
+    "fact": "One row: a progress ring with % + bold line 'Még 48 000 Ft-ot tegyél félre' (put aside 48,000 Ft more) + one sentence 'a következő negyedéves adóra' (for the next quarterly tax) + chevron. Optionally add their 90/100/110% idea as 'biztonsági ráhagyás' (safety margin: none / +10%). We have no bank account, so this is a reminder and tracker, not automatic transfers.",
+    "source": "Pattern from web_de_banking_telefon.png ; https://www.accountable.de/help-center/automatische-steuerruecklagen-so-funktionierts/",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 4 – deadlines grouped by quarter, with due-date chips",
+    "fact": "In Dosszié, show the current quarter open and the other quarters as single collapsed rows (matches our rule 6: only 'Most' and 'Következő', the rest as 'Még N'). Each obligation row: name (SZJA-előleg / TB-járulék / szocho), a due chip ('ápr. 12.'), the amount, and who acts (a small Bence face if the accountant files, a person icon if the user pays). Hungarian TB/szocho fit here like Belgian social contributions do in Accountable.",
+    "source": "Pattern from appstore_ios_en.png screen 1 and 6",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 5 – photo flow with pre-filled chips and batch capture",
+    "fact": "On the Fotózás tab, keep the camera full screen. While scanning, show 1–2 pre-filled chips over the paper (type: 'Számla' (invoice) / 'NAV-levél' (tax office letter), amount, date), plus a 'Kész (3)' counter for several pages and a '+ oldal' (add page) action. Then show one review screen whose main button is 'Elküldöm Bencének' (send to Bence). Label the pre-fill honestly ('Előtöltöttük, Bence ellenőrzi': pre-filled, Bence checks it) so the human check stays the promise. Use our 3D icon, not sparkles.",
+    "source": "Pattern from kivagas_fotozas_ai_elotoltes.png ; https://www.accountable.de/?p=10165",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 6 – status tabs with counts plus two-line rows",
+    "fact": "In the Dosszié lists, use a two-option segmented control with counts, 'Ellenőrzésre vár (2) | Rendben' (waiting for check | OK), so the to-do part is one tap away. Row anatomy: 3D type icon left; title (partner / document) with one quieter line below; amount right-aligned in tabular numerals with the date below. Keep our ≥16px text, so fewer columns than Accountable.",
+    "source": "Pattern from web_de_einnahmen.png, web_de_ausgaben.png, kivagas_tranzakcio_lista.png",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 7 – personal forwarding email address",
+    "fact": "Accountable takes documents by email (revenues@ / expenses@ from the registered address). We could give each user an address, e.g. 'bizonylat+azonosito@…', so emailed invoices and NAV PDFs land in Dosszié without photographing. Show it once in onboarding and in Fiók.",
+    "source": "https://help.accountable.eu/en/articles/8886205-what-should-i-do-first-when-i-start-using-accountable",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 8 – suggested questions in Üzenetek",
+    "fact": "Above the empty message box, show 2 tappable question cards in our style, e.g. 'Mikor kell fizetnem a TB-t?' (when do I pay TB?) and 'Mennyi lehet idén a bevételem?' (how much can I earn this year?), plus one trust line. Our version is stronger than theirs: 'Bence válaszol, munkanapon 24 órán belül' (Bence answers within 24 h on workdays), a real person, against their 'knowledge vetted by experts'.",
+    "source": "Pattern from kivagas_ai_chat_javaslatok.png",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 9 – one attention pill and question-shaped tips",
+    "fact": "When something needs the user, show a single amber-dot pill at the top of the home ('Nézd át: 2 dokumentum >', i.e. review 2 documents) instead of several alerts. Write tips as a question about the user's situation, the way Accountable does ('Du hast keinen extra Raum für dein Home Office?' – you don't have a separate home-office room?). Show at most one tip at a time, in a section, never as a second card.",
+    "source": "Pattern from web_de_steuern_kartya.png and web_de_hero_produktkep.png (Tipps tab)",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Idea 10 – 'what's left for you'",
+    "fact": "Accountable sells 'see in real time how much remains after taxes'. A plain line or number on the post-onboarding home, 'Adó után kb. ennyi a tiéd: 412 000 Ft' (after tax, roughly this much is yours), estimated by the accountant's rules, would be very valuable for átalányadó users. Mark it as an estimate with the 'i' button.",
+    "source": "App Store DE screen 4 caption 'Sieh immer in Echtzeit, wie viel dir nach Steuern bleibt' (see in real time what's left after tax)",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "What NOT to borrow",
+    "fact": "The violet palette and the different pastel colour per area (it conflicts with our single vivid blue, where only the main button and card lead with colour). The dog mascot, doodles and peace-sign hand (our rule: 3D icons only, no decorative mascot). Degular-style heavy display headings. Small grey uppercase labels like 'FÜR STEUERN ZURÜCKLEGEN' (banned by our rule 4). 11–13pt text (we keep ≥16px). The floating '+' and hamburger instead of our fixed main button and 5 tabs. A 'Garantie' seal unless we actually offer a written guarantee.",
+    "source": "C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/VALASZTAS.md (rules 1–8) vs Accountable screenshots",
+    "certainty": "recommendation"
+   },
+   {
+    "topic": "Saved reference images (internal only)",
+    "fact": "The images were made with headless Chrome rendering of public pages (no logins, no built-in browser tabs used) and saved to C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/. Store sheets: appstore_ios_de.png, appstore_ios_be_nl.png, appstore_ios_be_fr.png, appstore_ios_en.png, googleplay_de.png. Single-screen crops: kivagas_fooldal_szamok.png, kivagas_utalasi_kartya.png, kivagas_felreteves_gyuru.png, kivagas_tranzakcio_lista.png, kivagas_fotozas_ai_elotoltes.png, kivagas_ai_chat_javaslatok.png. Website: web_accountable_de_desktop.png, web_accountable_be_desktop.png, web_de_hero_produktkep.png, web_de_steuern_kartya.png, web_de_banking_telefon.png, web_de_einnahmen.png, web_de_ausgaben.png. For internal reference only; do not redistribute.",
+    "source": "Local folder above",
+    "certainty": "confirmed"
+   },
+   {
+    "topic": "Gaps",
+    "fact": "No public UX case study or design-system write-up exists. The only design info is the rebrand blog post (updated Aug 2025) and job ads for a UI Product Designer who would own the design system. The store images are stylised marketing composites, and real signup screens are not public. Tab count and exact type sizes come from renders and may differ in the current build. Seeing the live app would need a signup, which was not done.",
+    "source": "https://www.accountable.de/blog/accountable-rebranding/ ; https://join.com/companies/accountable/13947049-ui-product-designer",
+    "certainty": "confirmed"
+   }
+  ],
+  "summary_hu": "Accountable: belga–német (Brüsszel + Berlin) app egyéni vállalkozóknak DE-ben és BE-ben. Tudja: számla és e-számla, blokkfotó MI-előtöltéssel, adóbevallás egyenesen az adóhivatalnak, ingyenes üzleti számla automatikus adó-félretevéssel (90/100/110%), MI-adótanácsadó chat és emberi „adócoach”. Nincs saját könyvelő, a felhasználó maga csinálja MI-vel.\nSzámok: kb. 100 ezer felhasználó, iOS 4,7, Play 4,6 (500 ezer+ letöltés, frissítve 2026-10-30). DE árak havonta nettó, éves fizetéssel: 0 / 9,90 / 19,90 / 29,90 (Steuern) / 59,90 € (Max, személyes coach). A mi 19 999 Ft-unk a Steuern havi díjához (37,40 €) közel esik.\nKinézet: lila fő szín, minden területnek saját pasztell színe (adó lila, bevétel zöld, kiadás rózsaszín, bank kék), kutya-kabala és firkák, Degular Display + Inter betű, a miénknél sűrűbb és kisebb szöveg.\nFőoldal: színes fejléc két nagy számmal („Nyereség”, „Eddigi jövedelemadó”), alatta „Kötelezettségek | Tippek” kapcsoló és negyedévenként lenyitható határidő-sorok összeg-címkékkel.\nUtalandó adónál egy kártya: „Utalj 2459 €-t február 10-ig” + Kinek / IBAN / Közlemény.\nFélretevés: gyűrű + „Még 1200 €-t tegyél félre”. Listák: státusz-fülek darabszámmal, kétsoros sorok, jobbra igazított összeg.\nFotózás: teljes képernyős kamera, MI-kategória és összeg-címke a papíron, „Mentés (3)” több oldalhoz, ellenőrzés mentés előtt.\nNavigáció: 4 vonalikonos fül, hamburger menü és „+” lebegő gomb, rögzített fő gomb nincs.\nÁtvehető minták, a mi kék, nyugodt stílusunkban: utalási kártya „Elutaltam” fő gombbal; két nagy szám a főoldalon a 12 lépés után; félretevés-gyűrű; negyedéves határidő-csoportok; fotózás előtöltéssel, „Bence ellenőrzi” felirattal; státusz-fülek darabszámmal; saját továbbító e-mail-cím; javasolt kérdések az Üzenetekben; egyetlen figyelmeztető kapszula; „adó után ennyi a tiéd”.\nNe vegyük át: lilát, pasztell színkódolást, kabalát, nagybetűs szürke címkéket, apró betűt, „+” gombot és hamburger menüt.\nKépek csak belső használatra: C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/_inspiracio/accountable/ (24 fájl). Nyilvános UX esettanulmányt nem találtam, és be sem regisztráltam."
+ }
+}

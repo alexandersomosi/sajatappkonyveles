@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Tétel</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .vissza { display: flex; align-items: center; gap: 2px; height: 44px; padding: 0 12px 0 8px;
+    color: var(--tintakek-szoveg); font-weight: 700; font-size: 16px; }
+  .vissza .nyil { stroke: var(--tintakek-szoveg); width: 22px; height: 22px; }
+  .fej { padding: 2px 20px 16px; }
+  .fej h1 { font-family: var(--betu-cim); font-weight: 600; font-size: 30px; line-height: 1.1; }
+  .fej .allapot { font-size: 15px; margin-top: 8px; }
+  .fej .allapot svg { width: 18px; height: 18px; }
+  .foto { display: block; width: 100%; border-radius: var(--r-lap) var(--r-lap) 0 0; }
+  .adat { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 18px; font-size: 16px; }
+  .adat + .adat { border-top: 1px solid var(--hajszal); }
+  .adat .c { color: var(--halvany); font-size: 15px; }
+  /* idővonal: a négy állapot, a dosszié szavaival; kész = zöld pipa, hátravan = óra */
+  .ido { padding: 8px 18px 6px; }
+  .lepes { display: grid; grid-template-columns: 22px 1fr auto; column-gap: 14px; position: relative; padding: 10px 0 12px; }
+  .lepes .pont { width: 22px; height: 22px; margin-top: 0; position: relative; z-index: 1; color: var(--kesz); background: var(--lap); border-radius: 50%; }
+  .lepes .pont svg { width: 22px; height: 22px; display: block; }
+  .lepes.var .pont { color: var(--halvany); }
+  .lepes:not(:last-child)::after { content: ""; position: absolute; left: 10px; top: 33px; bottom: -11px; width: 2px;
+    background: var(--kesz); opacity: .45; }
+  .lepes.utolso-kesz::after { background: var(--keret); opacity: 1; }
+  .lepes .mi { font-weight: 700; font-size: 16px; line-height: 1.35; }
+  .lepes.var .mi { font-weight: 600; color: var(--halvany); }
+  .lepes .mikor { font-size: 14px; line-height: 1.4; color: var(--halvany); margin-top: 1px; }
+  .lepes .szignal { margin-top: 2px; }
+  .jegyzet { padding: 18px 18px 16px; }
+  .jegyzet p { font-size: 16px; line-height: 1.5; }
+  .jegyzet .ala { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .jegyzet .ala .ki { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--halvany); }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+
+<div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+<a class="vissza"><svg class="nyil"><use href="#balra"/></svg>Október</a>
+<div class="fej">
+  <h1>Nyugta, készpénzes eladás</h1>
+  <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, hétfő 9:20</span></div>
+</div>
+
+<main class="tartalom sima">
+  <section class="lap">
+    <img class="foto" src="nyugta_foto.svg" alt="Lefotózott nyugta: 3 darab, 18 000 Ft, 2026. október 3.">
+    <div class="adat"><span class="c">Összeg</span><span class="osszeg">18&#8239;000<span class="ft">Ft</span></span></div>
+    <div class="adat"><span class="c">Hová került</span><span>az októberi bevételedhez</span></div>
+    <div class="adat"><span class="c">Feltöltötted</span><span>szombaton, fotóként, 1 oldal</span></div>
+  </section>
+
+  <div class="szakasz">Hol tart</div>
+  <section class="lap ido">
+    <div class="lepes">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#kesz-jel"/></svg></span>
+      <div><div class="mi">Feltöltve</div><div class="mikor">Szombat, október 3., 18:40</div></div><span></span>
+    </div>
+    <div class="lepes">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#kesz-jel"/></svg></span>
+      <div><div class="mi">Bence látta</div><div class="mikor">Hétfő, október 5., 9:05</div></div><span></span>
+    </div>
+    <div class="lepes utolso-kesz">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#kesz-jel"/></svg></span>
+      <div><div class="mi">Feldolgozva</div><div class="mikor">Hétfő, október 5., 9:20</div></div>
+      <svg class="szignal" viewBox="0 0 46 30" role="img" aria-label="Kovács Bence szignója"><use href="#monogram"/></svg>
+    </div>
+    <div class="lepes var">
+      <span class="pont"><svg viewBox="0 0 16 16"><use href="#var-jel"/></svg></span>
+      <div><div class="mi">Beadva</div><div class="mikor">A IV. negyedéves bevallással, legkésőbb január 12-én.</div></div><span></span>
+    </div>
+  </section>
+
+  <div class="szakasz">Bence megjegyzése</div>
+  <section class="lap jegyzet">
+    <p>Rendben, hozzáadtam az októberi bevételedhez. Ha lesz még vásár, elég a nap végén egyszerre lefotóznod a nyugtatömb lapjait.</p>
+    <div class="ala">
+      <span class="ki"><svg class="szignal" viewBox="0 0 46 30" role="img" aria-label="Kovács Bence szignója"><use href="#monogram"/></svg>hétfő 9:20</span>
+      <button class="gomb-m"><svg class="i"><use href="#valasz"/></svg>Válaszolok</button>
+    </div>
+  </section>
+</main>
+
+<nav class="fulsor">
+  <div class="ful"><svg class="i"><use href="#haz"/></svg>Főoldal</div>
+  <div class="ful on"><svg class="i"><use href="#dosszie"/></svg>Dosszié</div>
+  <div class="ful"><svg class="i"><use href="#uzenet"/></svg>Üzenetek</div>
+  <div class="ful"><svg class="i"><use href="#fiok"/></svg>Fiók</div>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

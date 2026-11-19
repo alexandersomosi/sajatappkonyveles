@@ -1,0 +1,505 @@
+{"ido": "2026-11-18T11:41:32", "tipus": "chat", "tag": "lektor_nyelv_kor1 (mindkét videó)", "modell": "anthropic/claude-haiku-5.5", "be_tok": 7311, "ki_tok": 6000, "usd": 0.003731, "probalkozas": 1}
+{"ido": "2026-11-18T11:42:11", "tipus": "chat", "tag": "lektor_tenyek_kor1 (mindkét videó)", "modell": "google/gemini-3.8-flash", "be_tok": 21698, "ki_tok": 5996, "usd": 0.038759, "probalkozas": 1}
+{"ido": "2026-11-18T11:42:46", "tipus": "chat", "tag": "lektor_nyelv_kor1 (mindkét videó)", "modell": "anthropic/claude-haiku-5.5", "be_tok": 7309, "ki_tok": 2626, "usd": 0.002044, "probalkozas": 1}
+{"ido": "2026-11-18T11:42:55", "tipus": "chat", "tag": "lektor_tenyek_kor1 (mindkét videó)", "modell": "google/gemini-3.8-flash", "be_tok": 21698, "ki_tok": 940, "usd": 0.019799, "probalkozas": 1}
+{"ido": "2026-11-18T11:58:47", "tipus": "chat", "tag": "lektor_nyelv_kor2 (mindkét videó)", "modell": "anthropic/claude-haiku-5.5", "be_tok": 6983, "ki_tok": 3791, "usd": 0.002594, "probalkozas": 1}
+{"ido": "2026-11-18T11:58:55", "tipus": "chat", "tag": "lektor_tenyek_kor2 (mindkét videó)", "modell": "google/gemini-3.8-flash", "be_tok": 21467, "ki_tok": 530, "usd": 0.018088, "probalkozas": 1}
+{"ido": "2026-11-18T11:59:44", "tipus": "chat", "tag": "vak:minta.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 300, "ki_tok": 42, "usd": 0.000382, "probalkozas": 1}
+{"ido": "2026-11-18T12:21:11", "tipus": "tts_hiba", "kod": 402, "usd": 0, "db": 6, "szoveg": "6 TTS-kísérlet (google/gemini-3.8-flash-tts, Charon) 11:5x–12:11 között: mind 402 'Insufficient credits' (egyenleg ~0,85 USD; max_tokens 120–300 sem segít). Díjat nem vont le."}
+{"ido": "2026-11-18T19:34:42", "tipus": "tts", "tag": "b01_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 60, "mp": 4.32, "usd": 0.001244, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "bdc91545bb3aae3f"}
+{"ido": "2026-11-18T19:34:51", "tipus": "tts", "tag": "b03_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 63, "mp": 4.84, "usd": 0.001394, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "2a75c304bbdde40b"}
+{"ido": "2026-11-18T19:35:00", "tipus": "tts", "tag": "b04_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 62, "mp": 5.56, "usd": 0.001601, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "22e342e88e8abd97"}
+{"ido": "2026-11-18T19:35:09", "tipus": "tts", "tag": "b07_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 77, "mp": 5.88, "usd": 0.001693, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "dc11b338f527dc82"}
+{"ido": "2026-11-18T19:35:19", "tipus": "tts", "tag": "b09_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 53, "mp": 4.32, "usd": 0.001244, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "a552f254fecea9b5"}
+{"ido": "2026-11-18T19:35:27", "tipus": "tts", "tag": "b10_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 35, "mp": 3.2, "usd": 0.000922, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "1e5f4526cdf28e6f"}
+{"ido": "2026-11-18T19:35:37", "tipus": "tts", "tag": "b11_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 77, "mp": 6.28, "usd": 0.001809, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "4a8291f92d872b89"}
+{"ido": "2026-11-18T19:35:45", "tipus": "tts", "tag": "b12_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 33, "mp": 3.0, "usd": 0.000864, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "f31a80af7871040a"}
+{"ido": "2026-11-18T19:35:55", "tipus": "tts", "tag": "b14_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 46, "mp": 3.72, "usd": 0.001071, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "9d38456b6d64bf5f"}
+{"ido": "2026-11-18T19:36:04", "tipus": "tts", "tag": "b15_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 81, "mp": 5.32, "usd": 0.001532, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "67b64002edb7a157"}
+{"ido": "2026-11-18T19:36:13", "tipus": "tts", "tag": "b16_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 77, "mp": 5.6, "usd": 0.001613, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "27e2a3c336e42244"}
+{"ido": "2026-11-18T19:36:23", "tipus": "tts", "tag": "b18_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 64, "mp": 4.68, "usd": 0.001348, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "7ea5cd902c61a094"}
+{"ido": "2026-11-18T19:36:32", "tipus": "tts", "tag": "b19_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 83, "mp": 6.28, "usd": 0.001809, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "a77be5c9d2463877"}
+{"ido": "2026-11-18T19:36:40", "tipus": "tts", "tag": "b21_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 21, "mp": 1.88, "usd": 0.000541, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "be70d37cdc249de4"}
+{"ido": "2026-11-18T19:36:50", "tipus": "tts", "tag": "b22_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 74, "mp": 5.56, "usd": 0.001601, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "3dbff5ecfc9d5fd0"}
+{"ido": "2026-11-18T19:37:00", "tipus": "tts", "tag": "b23_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 34, "mp": 3.0, "usd": 0.000864, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "3987732f007031ff"}
+{"ido": "2026-11-18T19:37:10", "tipus": "tts", "tag": "b24_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 74, "mp": 5.52, "usd": 0.00159, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "5c1338253d798e1c"}
+{"ido": "2026-11-18T19:37:18", "tipus": "tts", "tag": "b25_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 42, "mp": 3.8, "usd": 0.001094, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "24bd7b8779de6bbb"}
+{"ido": "2026-11-18T19:37:28", "tipus": "tts", "tag": "b26_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 123, "mp": 9.0, "usd": 0.002592, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "e45719911467b67a"}
+{"ido": "2026-11-18T19:37:38", "tipus": "tts", "tag": "b27_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 60, "mp": 4.6, "usd": 0.001325, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "b2e81ebd84e26dc9"}
+{"ido": "2026-11-18T19:37:46", "tipus": "tts", "tag": "b28_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 32, "mp": 2.72, "usd": 0.000783, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "b25685d14ec1d1d2"}
+{"ido": "2026-11-18T19:37:57", "tipus": "tts", "tag": "b29_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 97, "mp": 10.84, "usd": 0.003122, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "d6897ce87f287bad"}
+{"ido": "2026-11-18T19:38:06", "tipus": "tts", "tag": "b32_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 58, "mp": 4.48, "usd": 0.00129, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "cf393547566f58ba"}
+{"ido": "2026-11-18T19:38:15", "tipus": "tts", "tag": "b33_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 55, "mp": 4.92, "usd": 0.001417, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "de9662191b1e2fd3"}
+{"ido": "2026-11-18T19:38:25", "tipus": "tts", "tag": "b34_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 52, "mp": 3.96, "usd": 0.00114, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "8ea797c722e6cd84"}
+{"ido": "2026-11-18T19:38:34", "tipus": "tts", "tag": "b36_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 73, "mp": 5.4, "usd": 0.001555, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "c7cb9d4f912b8a55"}
+{"ido": "2026-11-18T19:38:43", "tipus": "tts", "tag": "b37_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 21, "mp": 2.36, "usd": 0.00068, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "a1081067ee6f90bf"}
+{"ido": "2026-11-18T19:38:52", "tipus": "tts", "tag": "b38_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 69, "mp": 4.96, "usd": 0.001428, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "720e48e2be6bcebf"}
+{"ido": "2026-11-18T19:39:01", "tipus": "tts", "tag": "b39_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 81, "mp": 6.08, "usd": 0.001751, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "65b12003d4f6e5ce"}
+{"ido": "2026-11-19T05:16:28", "tipus": "chat", "tag": "vak:b01.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 162, "ki_tok": 19, "usd": 0.000193, "probalkozas": 1}
+{"ido": "2026-11-19T05:16:30", "tipus": "chat", "tag": "vak:b01.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 162, "ki_tok": 19, "usd": 0.000193, "probalkozas": 1}
+{"ido": "2026-11-19T05:16:32", "tipus": "chat", "tag": "vak:b01.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 162, "ki_tok": 18, "usd": 0.000189, "probalkozas": 1}
+{"ido": "2026-11-19T05:16:35", "tipus": "chat", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:18:53", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:18:58", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:19:04", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:19:12", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:19:23", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:19:26", "tipus": "chat", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 24, "usd": 0.000215, "probalkozas": 2}
+{"ido": "2026-11-19T05:19:29", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:19:35", "tipus": "chat", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:19:39", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:19:43", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:19:48", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:19:56", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:20:06", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:09", "tipus": "chat_blokk", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:20:16", "tipus": "chat", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 24, "usd": 0.000215, "probalkozas": 3}
+{"ido": "2026-11-19T05:20:19", "tipus": "chat", "tag": "vak:b04.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 23, "usd": 0.000228, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:22", "tipus": "chat", "tag": "vak:b04.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 24, "usd": 0.000232, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:25", "tipus": "chat", "tag": "vak:b04.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 23, "usd": 0.000228, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:41", "tipus": "chat", "tag": "vak:b07.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 32, "usd": 0.000268, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:43", "tipus": "chat", "tag": "vak:b07.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 32, "usd": 0.000268, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:48", "tipus": "chat", "tag": "vak:b07.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 32, "usd": 0.000268, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:51", "tipus": "chat", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 19, "usd": 0.000197, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:53", "tipus": "chat", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 19, "usd": 0.000197, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:55", "tipus": "chat", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 18, "usd": 0.000193, "probalkozas": 1}
+{"ido": "2026-11-19T05:20:58", "tipus": "chat", "tag": "vak:b10.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 130, "ki_tok": 11, "usd": 0.000139, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:00", "tipus": "chat", "tag": "vak:b10.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 130, "ki_tok": 11, "usd": 0.000139, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:05", "tipus": "chat", "tag": "vak:b10.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 130, "ki_tok": 12, "usd": 0.000142, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:08", "tipus": "chat", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 28, "usd": 0.00026, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:14", "tipus": "chat", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 26, "usd": 0.000252, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:16", "tipus": "chat", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 28, "usd": 0.00026, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:20", "tipus": "chat", "tag": "vak:b12.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 132, "ki_tok": 10, "usd": 0.000137, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:22", "tipus": "chat", "tag": "vak:b12.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 132, "ki_tok": 12, "usd": 0.000144, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:24", "tipus": "chat", "tag": "vak:b12.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 132, "ki_tok": 12, "usd": 0.000144, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:31", "tipus": "chat", "tag": "vak:b14.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 140, "ki_tok": 16, "usd": 0.000165, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:34", "tipus": "chat", "tag": "vak:b14.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 140, "ki_tok": 16, "usd": 0.000165, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:37", "tipus": "chat", "tag": "vak:b14.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 140, "ki_tok": 16, "usd": 0.000165, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:40", "tipus": "chat", "tag": "vak:b15.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 183, "ki_tok": 21, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:43", "tipus": "chat", "tag": "vak:b15.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 183, "ki_tok": 24, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:45", "tipus": "chat", "tag": "vak:b15.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 183, "ki_tok": 21, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:47", "tipus": "chat", "tag": "vak:b16.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 190, "ki_tok": 30, "usd": 0.000255, "probalkozas": 1}
+{"ido": "2026-11-19T05:21:55", "tipus": "chat", "tag": "vak:b16.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 190, "ki_tok": 30, "usd": 0.000255, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:02", "tipus": "chat", "tag": "vak:b16.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 190, "ki_tok": 30, "usd": 0.000255, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:06", "tipus": "chat", "tag": "vak:b18.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 170, "ki_tok": 24, "usd": 0.000218, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:11", "tipus": "chat", "tag": "vak:b18.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 170, "ki_tok": 22, "usd": 0.00021, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:15", "tipus": "chat", "tag": "vak:b18.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 170, "ki_tok": 22, "usd": 0.00021, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:18", "tipus": "chat", "tag": "vak:b19.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 26, "usd": 0.000252, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:20", "tipus": "chat", "tag": "vak:b19.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 29, "usd": 0.000263, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:25", "tipus": "chat", "tag": "vak:b19.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 206, "ki_tok": 28, "usd": 0.00026, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:31", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 102, "ki_tok": 7, "usd": 0.000103, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:35", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 102, "ki_tok": 9, "usd": 0.00011, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:37", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 102, "ki_tok": 7, "usd": 0.000103, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:41", "tipus": "chat", "tag": "vak:b22.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 27, "usd": 0.000243, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:43", "tipus": "chat", "tag": "vak:b22.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 28, "usd": 0.000247, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:50", "tipus": "chat", "tag": "vak:b22.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 189, "ki_tok": 27, "usd": 0.000243, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:53", "tipus": "chat", "tag": "vak:b23.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 124, "ki_tok": 12, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:57", "tipus": "chat", "tag": "vak:b23.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 124, "ki_tok": 12, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T05:22:59", "tipus": "chat", "tag": "vak:b23.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 124, "ki_tok": 12, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:07", "tipus": "chat", "tag": "vak:b24.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 191, "ki_tok": 25, "usd": 0.000237, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:12", "tipus": "chat", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 191, "ki_tok": 25, "usd": 0.000237, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:14", "tipus": "chat", "tag": "vak:b24.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 191, "ki_tok": 25, "usd": 0.000237, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:21", "tipus": "chat", "tag": "vak:b25.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 149, "ki_tok": 16, "usd": 0.000172, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:26", "tipus": "chat", "tag": "vak:b25.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 149, "ki_tok": 16, "usd": 0.000172, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:30", "tipus": "chat", "tag": "vak:b25.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 149, "ki_tok": 16, "usd": 0.000172, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:39", "tipus": "chat", "tag": "vak:b26.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 36, "usd": 0.000345, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:41", "tipus": "chat", "tag": "vak:b26.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 33, "usd": 0.000334, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:44", "tipus": "chat", "tag": "vak:b26.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 34, "usd": 0.000338, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:46", "tipus": "chat", "tag": "vak:b27.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 165, "ki_tok": 25, "usd": 0.000218, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:52", "tipus": "chat", "tag": "vak:b27.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 165, "ki_tok": 25, "usd": 0.000218, "probalkozas": 1}
+{"ido": "2026-11-19T05:23:56", "tipus": "chat", "tag": "vak:b27.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 165, "ki_tok": 25, "usd": 0.000218, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:00", "tipus": "chat", "tag": "vak:b28.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 125, "ki_tok": 11, "usd": 0.000135, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:08", "tipus": "chat", "tag": "vak:b28.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 125, "ki_tok": 11, "usd": 0.000135, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:13", "tipus": "chat", "tag": "vak:b28.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 125, "ki_tok": 11, "usd": 0.000135, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:27", "tipus": "chat", "tag": "vak:b29.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:32", "tipus": "chat", "tag": "vak:b29.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:39", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:43", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:24:49", "tipus": "chat", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 317, "ki_tok": 39, "usd": 0.000384, "probalkozas": 3}
+{"ido": "2026-11-19T05:24:53", "tipus": "chat", "tag": "vak:b32.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 15, "usd": 0.000177, "probalkozas": 1}
+{"ido": "2026-11-19T05:24:59", "tipus": "chat", "tag": "vak:b32.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 17, "usd": 0.000185, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:04", "tipus": "chat", "tag": "vak:b32.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 17, "usd": 0.000185, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:08", "tipus": "chat", "tag": "vak:b33.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 18, "usd": 0.000198, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:13", "tipus": "chat", "tag": "vak:b33.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 16, "usd": 0.00019, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:17", "tipus": "chat_blokk", "tag": "vak:b33.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:22", "tipus": "chat", "tag": "vak:b33.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 15, "usd": 0.000187, "probalkozas": 2}
+{"ido": "2026-11-19T05:25:26", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:30", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:25:36", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:25:44", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:25:54", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:25:58", "tipus": "chat", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 145, "ki_tok": 19, "usd": 0.00018, "probalkozas": 2}
+{"ido": "2026-11-19T05:26:05", "tipus": "chat", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:10", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:15", "tipus": "chat", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 152, "ki_tok": 19, "usd": 0.000185, "probalkozas": 2}
+{"ido": "2026-11-19T05:26:21", "tipus": "chat", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 21, "usd": 0.00022, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:23", "tipus": "chat", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 22, "usd": 0.000224, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:26", "tipus": "chat_blokk", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:29", "tipus": "chat_blokk", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:26:35", "tipus": "chat", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 23, "usd": 0.000227, "probalkozas": 3}
+{"ido": "2026-11-19T05:26:44", "tipus": "chat", "tag": "vak:b37.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 109, "ki_tok": 9, "usd": 0.000116, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:46", "tipus": "chat", "tag": "vak:b37.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 109, "ki_tok": 7, "usd": 0.000108, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:49", "tipus": "chat", "tag": "vak:b37.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 109, "ki_tok": 7, "usd": 0.000108, "probalkozas": 1}
+{"ido": "2026-11-19T05:26:58", "tipus": "chat", "tag": "vak:b38.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 24, "usd": 0.000223, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:05", "tipus": "chat", "tag": "vak:b38.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 24, "usd": 0.000223, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:14", "tipus": "chat", "tag": "vak:b38.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 23, "usd": 0.000219, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:23", "tipus": "chat", "tag": "vak:b39.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 203, "ki_tok": 28, "usd": 0.000257, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:27", "tipus": "chat_blokk", "tag": "vak:b39.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:31", "tipus": "chat_blokk", "tag": "vak:b39.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:27:37", "tipus": "chat", "tag": "vak:b39.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 203, "ki_tok": 27, "usd": 0.000253, "probalkozas": 3}
+{"ido": "2026-11-19T05:27:43", "tipus": "chat", "tag": "vak:b39.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 203, "ki_tok": 28, "usd": 0.000257, "probalkozas": 1}
+{"ido": "2026-11-19T05:27:53", "tipus": "tts", "tag": "b11_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 77, "mp": 5.48, "usd": 0.001578, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "e747c233eb5fe3d9"}
+{"ido": "2026-11-19T05:28:04", "tipus": "tts", "tag": "b29_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 97, "mp": 10.52, "usd": 0.00303, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "4b605e4b2ddb55f9"}
+{"ido": "2026-11-19T05:28:13", "tipus": "tts", "tag": "b36_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 73, "mp": 5.08, "usd": 0.001463, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "030060f2afccf2c9"}
+{"ido": "2026-11-19T05:28:18", "tipus": "chat_blokk", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:28:23", "tipus": "chat", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 30, "usd": 0.000253, "probalkozas": 2}
+{"ido": "2026-11-19T05:28:29", "tipus": "chat_blokk", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:28:34", "tipus": "chat_blokk", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:28:40", "tipus": "chat_blokk", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:28:48", "tipus": "chat_blokk", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:28:57", "tipus": "chat", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 181, "ki_tok": 28, "usd": 0.000241, "probalkozas": 1}
+{"ido": "2026-11-19T05:28:59", "tipus": "chat_blokk", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:03", "tipus": "chat_blokk", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:29:09", "tipus": "chat_blokk", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:29:17", "tipus": "chat_blokk", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:29:26", "tipus": "chat", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 181, "ki_tok": 25, "usd": 0.000229, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:31", "tipus": "chat_blokk", "tag": "vak:b29.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:36", "tipus": "chat", "tag": "vak:b29.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 314, "ki_tok": 39, "usd": 0.000382, "probalkozas": 2}
+{"ido": "2026-11-19T05:29:38", "tipus": "chat", "tag": "vak:b29.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 314, "ki_tok": 39, "usd": 0.000382, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:42", "tipus": "chat", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 314, "ki_tok": 39, "usd": 0.000382, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:47", "tipus": "chat", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 182, "ki_tok": 24, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:49", "tipus": "chat", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 182, "ki_tok": 21, "usd": 0.000215, "probalkozas": 1}
+{"ido": "2026-11-19T05:29:52", "tipus": "chat", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 182, "ki_tok": 21, "usd": 0.000215, "probalkozas": 1}
+{"ido": "2026-11-19T05:30:54", "tipus": "tts", "tag": "b09_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 53, "mp": 4.32, "usd": 0.001244, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "cbc21ca8a5c446bd"}
+{"ido": "2026-11-19T05:31:02", "tipus": "tts", "tag": "b21_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 21, "mp": 2.36, "usd": 0.00068, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "77eb11cbdd2bfe8f"}
+{"ido": "2026-11-19T05:31:10", "tipus": "chat", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 156, "ki_tok": 18, "usd": 0.000185, "probalkozas": 1}
+{"ido": "2026-11-19T05:31:14", "tipus": "chat_blokk", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:31:18", "tipus": "chat_blokk", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:31:24", "tipus": "chat_blokk", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:31:32", "tipus": "chat_blokk", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:31:42", "tipus": "chat", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 148, "ki_tok": 17, "usd": 0.000175, "probalkozas": 1}
+{"ido": "2026-11-19T05:31:47", "tipus": "chat_blokk", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:31:50", "tipus": "chat_blokk", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:31:56", "tipus": "chat_blokk", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:32:06", "tipus": "chat", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 156, "ki_tok": 19, "usd": 0.000188, "probalkozas": 4}
+{"ido": "2026-11-19T05:32:10", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 116, "ki_tok": 7, "usd": 0.000113, "probalkozas": 1}
+{"ido": "2026-11-19T05:32:12", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 116, "ki_tok": 7, "usd": 0.000113, "probalkozas": 1}
+{"ido": "2026-11-19T05:32:15", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 116, "ki_tok": 7, "usd": 0.000113, "probalkozas": 1}
+{"ido": "2026-11-19T05:32:50", "tipus": "tts", "tag": "b09_t3", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 53, "mp": 5.2, "usd": 0.001498, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "7e9efa99e95b2efa"}
+{"ido": "2026-11-19T05:32:56", "tipus": "chat", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 17, "usd": 0.000203, "probalkozas": 1}
+{"ido": "2026-11-19T05:32:59", "tipus": "chat", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 17, "usd": 0.000203, "probalkozas": 1}
+{"ido": "2026-11-19T05:33:01", "tipus": "chat", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 17, "usd": 0.000203, "probalkozas": 1}
+{"ido": "2026-11-19T05:48:47", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:48:51", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:48:58", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:49:06", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:49:17", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:49:20", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:49:27", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:49:34", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:49:49", "tipus": "chat_ures", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1, "finish": "content_filter"}
+{"ido": "2026-11-19T05:49:54", "tipus": "chat_ures", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 2, "finish": "content_filter"}
+{"ido": "2026-11-19T05:50:00", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:50:11", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:50:22", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:50:28", "tipus": "chat_ures", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 2, "finish": "content_filter"}
+{"ido": "2026-11-19T05:50:34", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:50:42", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:50:52", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:50:56", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T05:51:06", "tipus": "chat_ures", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 3, "finish": "content_filter"}
+{"ido": "2026-11-19T05:51:13", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:51:25", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:51:28", "tipus": "chat", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 152, "ki_tok": 19, "usd": 0.000185, "probalkozas": 2}
+{"ido": "2026-11-19T05:56:30", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T05:56:38", "tipus": "chat_ures", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 2, "finish": "content_filter"}
+{"ido": "2026-11-19T05:56:43", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T05:56:51", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T05:57:03", "tipus": "chat", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 167, "ki_tok": 24, "usd": 0.000215, "probalkozas": 1}
+{"ido": "2026-11-19T06:36:54", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vallalkozas_bejelentes.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:36:59", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vallalkozas_bejelentes.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:37:05", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vallalkozas_bejelentes.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:39:12", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vallalkozas_bejelentes.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:45:55", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r1.wav", "modell": "google/gemini-3.8-flash", "usd": 0.004796, "usd_forras": "usage.cost", "be": 1435, "ki": 992, "veg": "stop"}
+{"ido": "2026-11-19T06:46:02", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:06", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:10", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:17", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:38", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r3.wav", "modell": "google/gemini-3.8-flash", "usd": 0.010392, "usd_forras": "usage.cost", "be": 1306, "ki": 2510, "veg": "stop"}
+{"ido": "2026-11-19T06:46:49", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:53", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:46:56", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:47:00", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:47:06", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_0_vb_r2b.wav", "modell": "google/gemini-3.8-flash", "usd": 0.003328, "usd_forras": "usage.cost", "be": 648, "ki": 758, "veg": "stop"}
+{"ido": "2026-11-19T06:47:30", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_simab_0_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.002543, "usd_forras": "usage.cost", "be": 615, "ki": 555, "veg": "stop"}
+{"ido": "2026-11-19T06:48:45", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_1_vb_r1.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:48:55", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_1_vb_r1.wav", "modell": "google/gemini-3.8-flash", "usd": 0.006975, "usd_forras": "usage.cost", "be": 1435, "ki": 1573, "veg": "stop"}
+{"ido": "2026-11-19T06:49:07", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_simab_1_vb_r2a.wav", "modell": "google/gemini-3.8-flash", "usd": 0.00297, "usd_forras": "usage.cost", "be": 615, "ki": 669, "veg": "stop"}
+{"ido": "2026-11-19T06:49:23", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_1_vb_r2b.wav", "modell": "google/gemini-3.8-flash", "usd": 0.002182, "usd_forras": "usage.cost", "be": 649, "ki": 452, "veg": "stop"}
+{"ido": "2026-11-19T06:49:27", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_1_vb_r3.wav", "modell": "google/gemini-3.8-flash", "usd": 0.0, "usd_forras": "usage.cost", "be": 0, "ki": 0, "veg": "content_filter"}
+{"ido": "2026-11-19T06:49:33", "tipus": "atiras_ellenor", "tag": "fuggetlen_ellenorzes_sima_1_vb_r3.wav", "modell": "google/gemini-3.8-flash", "usd": 0.003068, "usd_forras": "usage.cost", "be": 1306, "ki": 557, "veg": "stop"}
+{"ido": "2026-11-19T07:17:46", "tipus": "chat_blokk", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T07:17:50", "tipus": "chat", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 19, "usd": 0.000204, "probalkozas": 2}
+{"ido": "2026-11-19T07:17:53", "tipus": "chat", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 19, "usd": 0.000204, "probalkozas": 1}
+{"ido": "2026-11-19T07:17:55", "tipus": "chat", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 20, "usd": 0.000208, "probalkozas": 1}
+{"ido": "2026-11-19T07:17:58", "tipus": "chat", "tag": "vak:b12.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 12, "usd": 0.000142, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:02", "tipus": "chat", "tag": "vak:b12.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 12, "usd": 0.000142, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:04", "tipus": "chat", "tag": "vak:b12.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 11, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:08", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 111, "ki_tok": 8, "usd": 0.000113, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:14", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 111, "ki_tok": 8, "usd": 0.000113, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:16", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 111, "ki_tok": 7, "usd": 0.00011, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:23", "tipus": "chat", "tag": "vak:b22.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 26, "usd": 0.000238, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:25", "tipus": "chat", "tag": "vak:b22.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 28, "usd": 0.000246, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:28", "tipus": "chat", "tag": "vak:b22.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 28, "usd": 0.000246, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:30", "tipus": "chat", "tag": "vak:b24.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 25, "usd": 0.000233, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:33", "tipus": "chat", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 25, "usd": 0.000233, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:35", "tipus": "chat", "tag": "vak:b24.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 25, "usd": 0.000233, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:37", "tipus": "chat", "tag": "vak:b28.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 121, "ki_tok": 11, "usd": 0.000132, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:39", "tipus": "chat", "tag": "vak:b28.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 121, "ki_tok": 11, "usd": 0.000132, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:42", "tipus": "chat", "tag": "vak:b28.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 121, "ki_tok": 11, "usd": 0.000132, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:45", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T07:18:49", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T07:18:54", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T07:19:04", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T07:19:14", "tipus": "chat", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 142, "ki_tok": 19, "usd": 0.000178, "probalkozas": 1}
+{"ido": "2026-11-19T07:19:16", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T07:19:21", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T07:19:29", "tipus": "chat_ures", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 3, "finish": "content_filter"}
+{"ido": "2026-11-19T07:19:38", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T07:19:48", "tipus": "chat", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 142, "ki_tok": 19, "usd": 0.000178, "probalkozas": 1}
+{"ido": "2026-11-19T07:19:51", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T07:19:55", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T07:20:05", "tipus": "chat_ures", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 3, "finish": "content_filter"}
+{"ido": "2026-11-19T07:20:14", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T07:20:24", "tipus": "chat", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 142, "ki_tok": 19, "usd": 0.000178, "probalkozas": 1}
+{"ido": "2026-11-19T07:20:28", "tipus": "chat_ures", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1, "finish": "content_filter"}
+{"ido": "2026-11-19T07:20:33", "tipus": "chat_blokk", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T07:20:39", "tipus": "chat_blokk", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T07:20:47", "tipus": "chat_blokk", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T07:20:57", "tipus": "chat", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 170, "ki_tok": 23, "usd": 0.000214, "probalkozas": 1}
+{"ido": "2026-11-19T07:20:59", "tipus": "chat_blokk", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T07:21:04", "tipus": "chat_blokk", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T07:21:13", "tipus": "chat", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 22, "usd": 0.000215, "probalkozas": 3}
+{"ido": "2026-11-19T07:21:20", "tipus": "chat", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 178, "ki_tok": 25, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T07:21:23", "tipus": "chat", "tag": "vak:b38.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 24, "usd": 0.00022, "probalkozas": 1}
+{"ido": "2026-11-19T07:21:25", "tipus": "chat", "tag": "vak:b38.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 24, "usd": 0.00022, "probalkozas": 1}
+{"ido": "2026-11-19T07:21:27", "tipus": "chat", "tag": "vak:b38.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 174, "ki_tok": 24, "usd": 0.00022, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:06", "tipus": "tts", "tag": "b21_t3", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 21, "mp": 2.24, "usd": 0.000645, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "2e926c543e8c56e5"}
+{"ido": "2026-11-19T07:23:08", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 106, "ki_tok": 7, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:10", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 106, "ki_tok": 7, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:12", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 106, "ki_tok": 7, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:20", "tipus": "tts", "tag": "b21_t4", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 21, "mp": 1.88, "usd": 0.000541, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "2cde98e3dd70afa9"}
+{"ido": "2026-11-19T07:23:25", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 8, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:27", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 7, "usd": 0.000102, "probalkozas": 1}
+{"ido": "2026-11-19T07:23:29", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 7, "usd": 0.000102, "probalkozas": 1}
+{"ido": "2026-11-19T08:01:44", "tipus": "chat", "tag": "vegso_atiras:vallalkozas_bejelentes:1/4", "modell": "google/gemini-3.8-flash", "be_tok": 958, "ki_tok": 157, "usd": 0.001307, "probalkozas": 1}
+{"ido": "2026-11-19T08:01:50", "tipus": "chat", "tag": "vegso_atiras:vallalkozas_bejelentes:2/4", "modell": "google/gemini-3.8-flash", "be_tok": 847, "ki_tok": 145, "usd": 0.001179, "probalkozas": 1}
+{"ido": "2026-11-19T08:01:54", "tipus": "chat", "tag": "vegso_atiras:vallalkozas_bejelentes:3/4", "modell": "google/gemini-3.8-flash", "be_tok": 1191, "ki_tok": 193, "usd": 0.001617, "probalkozas": 1}
+{"ido": "2026-11-19T08:01:58", "tipus": "chat", "tag": "vegso_atiras:vallalkozas_bejelentes:4/4", "modell": "google/gemini-3.8-flash", "be_tok": 855, "ki_tok": 136, "usd": 0.001151, "probalkozas": 1}
+{"ido": "2026-11-19T08:27:45", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:1/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 1039, "ki_tok": 173, "usd": 0.001428, "probalkozas": 1}
+{"ido": "2026-11-19T08:27:50", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:2/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 901, "ki_tok": 155, "usd": 0.001257, "probalkozas": 1}
+{"ido": "2026-11-19T08:27:55", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:3/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 1064, "ki_tok": 165, "usd": 0.001417, "probalkozas": 1}
+{"ido": "2026-11-19T08:27:58", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:4/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 914, "ki_tok": 139, "usd": 0.001207, "probalkozas": 1}
+{"ido": "2026-11-19T08:29:05", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:5/5:1", "modell": "google/gemini-3.8-flash", "be_tok": 113, "ki_tok": 7, "usd": 0.000111, "probalkozas": 1}
+{"ido": "2026-11-19T08:29:08", "tipus": "chat", "tag": "r2_vak:vallalkozas_bejelentes:5/5:2", "modell": "google/gemini-3.8-flash", "be_tok": 113, "ki_tok": 8, "usd": 0.000115, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:01", "tipus": "chat", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 31, "usd": 0.000256, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:04", "tipus": "chat", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 31, "usd": 0.000256, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:06", "tipus": "chat", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 31, "usd": 0.000256, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:09", "tipus": "chat", "tag": "vak:b12.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 127, "ki_tok": 11, "usd": 0.000137, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:11", "tipus": "chat", "tag": "vak:b12.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 127, "ki_tok": 13, "usd": 0.000144, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:14", "tipus": "chat", "tag": "vak:b12.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 127, "ki_tok": 10, "usd": 0.000133, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:17", "tipus": "chat", "tag": "vak:b25.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 148, "ki_tok": 16, "usd": 0.000171, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:23", "tipus": "chat", "tag": "vak:b25.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 148, "ki_tok": 16, "usd": 0.000171, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:26", "tipus": "chat", "tag": "vak:b25.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 148, "ki_tok": 15, "usd": 0.000167, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:29", "tipus": "chat", "tag": "vak:b26.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 33, "usd": 0.000334, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:31", "tipus": "chat", "tag": "vak:b26.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 38, "usd": 0.000353, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:33", "tipus": "chat", "tag": "vak:b26.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 280, "ki_tok": 38, "usd": 0.000353, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:36", "tipus": "chat", "tag": "vak:b28.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 119, "ki_tok": 11, "usd": 0.000131, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:40", "tipus": "chat", "tag": "vak:b28.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 119, "ki_tok": 11, "usd": 0.000131, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:42", "tipus": "chat", "tag": "vak:b28.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 119, "ki_tok": 11, "usd": 0.000131, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:45", "tipus": "chat", "tag": "vak:b29.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 312, "ki_tok": 38, "usd": 0.000376, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:47", "tipus": "chat", "tag": "vak:b29.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 312, "ki_tok": 39, "usd": 0.00038, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:51", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T09:04:55", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T09:05:02", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T09:05:17", "tipus": "chat_ures", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 4, "finish": "content_filter"}
+{"ido": "2026-11-19T09:05:27", "tipus": "chat", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 305, "ki_tok": 38, "usd": 0.000371, "probalkozas": 1}
+{"ido": "2026-11-19T09:05:39", "tipus": "chat", "tag": "vak:b33.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 15, "usd": 0.000186, "probalkozas": 1}
+{"ido": "2026-11-19T09:05:45", "tipus": "chat", "tag": "vak:b33.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 16, "usd": 0.00019, "probalkozas": 1}
+{"ido": "2026-11-19T09:05:51", "tipus": "chat", "tag": "vak:b33.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 16, "usd": 0.00019, "probalkozas": 1}
+{"ido": "2026-11-19T10:07:51", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:1/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 1036, "ki_tok": 177, "usd": 0.001441, "probalkozas": 1}
+{"ido": "2026-11-19T10:08:05", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:2/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 919, "ki_tok": 156, "usd": 0.001274, "probalkozas": 1}
+{"ido": "2026-11-19T10:08:09", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:3/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 1060, "ki_tok": 166, "usd": 0.001417, "probalkozas": 1}
+{"ido": "2026-11-19T10:08:12", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:4/4:0", "modell": "google/gemini-3.8-flash", "be_tok": 913, "ki_tok": 137, "usd": 0.001198, "probalkozas": 1}
+{"ido": "2026-11-19T10:23:58", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:12/4:30.60-35.80", "modell": "google/gemini-3.8-flash", "be_tok": 196, "ki_tok": 31, "usd": 0.000263, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:04", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:13/4:35.80-38.75", "modell": "google/gemini-3.8-flash", "be_tok": 140, "ki_tok": 10, "usd": 0.000142, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:05", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:26/4:80.89-84.54", "modell": "google/gemini-3.8-flash", "be_tok": 158, "ki_tok": 16, "usd": 0.000179, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:07", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:29/4:98.60-101.60", "modell": "google/gemini-3.8-flash", "be_tok": 141, "ki_tok": 12, "usd": 0.000151, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:10", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:30/4:101.60-112.30", "modell": "google/gemini-3.8-flash", "be_tok": 334, "ki_tok": 38, "usd": 0.000393, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:12", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:34/4:117.46-122.25", "modell": "google/gemini-3.8-flash", "be_tok": 186, "ki_tok": 15, "usd": 0.000196, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:14", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:27/4:84.54-93.50", "modell": "google/gemini-3.8-flash", "be_tok": 290, "ki_tok": 33, "usd": 0.000341, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:35", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:13/4:35.82-38.72", "modell": "google/gemini-3.8-flash", "be_tok": 139, "ki_tok": 8, "usd": 0.000134, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:36", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:13/4:35.84-38.70", "modell": "google/gemini-3.8-flash", "be_tok": 138, "ki_tok": 10, "usd": 0.000141, "probalkozas": 1}
+{"ido": "2026-11-19T10:24:40", "tipus": "chat", "tag": "r3_vak:vallalkozas_bejelentes:13/4:35.86-38.68", "modell": "google/gemini-3.8-flash", "be_tok": 137, "ki_tok": 12, "usd": 0.000148, "probalkozas": 1}
+{"ido": "2026-11-19T10:27:26", "tipus": "chat", "tag": "r3_vak_src:b12:0", "modell": "google/gemini-3.8-flash", "be_tok": 131, "ki_tok": 12, "usd": 0.000143, "probalkozas": 1}
+{"ido": "2026-11-19T10:27:28", "tipus": "chat", "tag": "r3_vak_src:b12:1", "modell": "google/gemini-3.8-flash", "be_tok": 131, "ki_tok": 11, "usd": 0.00014, "probalkozas": 1}
+{"ido": "2026-11-19T10:27:29", "tipus": "chat", "tag": "r3_vak_src:b12:2", "modell": "google/gemini-3.8-flash", "be_tok": 131, "ki_tok": 10, "usd": 0.000136, "probalkozas": 1}
+{"ido": "2026-11-19T10:27:32", "tipus": "chat", "tag": "r3_vak_src:b12:3", "modell": "google/gemini-3.8-flash", "be_tok": 131, "ki_tok": 13, "usd": 0.000147, "probalkozas": 1}
+{"ido": "2026-11-19T10:28:49", "tipus": "chat", "tag": "r3_vak_sor:b03:0", "modell": "google/gemini-3.8-flash", "be_tok": 184, "ki_tok": 24, "usd": 0.000228, "probalkozas": 1}
+{"ido": "2026-11-19T10:28:51", "tipus": "chat", "tag": "r3_vak_sor:b07:0", "modell": "google/gemini-3.8-flash", "be_tok": 208, "ki_tok": 32, "usd": 0.000276, "probalkozas": 1}
+{"ido": "2026-11-19T10:28:53", "tipus": "chat_blokk", "tag": "r3_vak_sor:b09:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T10:28:58", "tipus": "chat", "tag": "r3_vak_sor:b09:0", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 20, "usd": 0.000215, "probalkozas": 2}
+{"ido": "2026-11-19T10:28:59", "tipus": "chat_blokk", "tag": "r3_vak_sor:b14:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:04", "tipus": "chat_blokk", "tag": "r3_vak_sor:b14:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T10:29:10", "tipus": "chat_blokk", "tag": "r3_vak_sor:b14:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T10:29:18", "tipus": "chat_blokk", "tag": "r3_vak_sor:b14:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T10:29:28", "tipus": "chat", "tag": "r3_vak_sor:b16:0", "modell": "google/gemini-3.8-flash", "be_tok": 200, "ki_tok": 30, "usd": 0.000262, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:30", "tipus": "chat", "tag": "r3_vak_sor:b19:0", "modell": "google/gemini-3.8-flash", "be_tok": 217, "ki_tok": 22, "usd": 0.000245, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:32", "tipus": "chat", "tag": "r3_vak_sor:b21:0", "modell": "google/gemini-3.8-flash", "be_tok": 111, "ki_tok": 7, "usd": 0.00011, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:35", "tipus": "chat", "tag": "r3_vak_sor:b24:0", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 25, "usd": 0.000241, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:37", "tipus": "chat", "tag": "r3_vak_sor:b27:0", "modell": "google/gemini-3.8-flash", "be_tok": 175, "ki_tok": 25, "usd": 0.000225, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:40", "tipus": "chat", "tag": "r3_vak_sor:b32:0", "modell": "google/gemini-3.8-flash", "be_tok": 172, "ki_tok": 16, "usd": 0.000189, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:43", "tipus": "chat", "tag": "r3_vak_sor:b36:0", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 23, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T10:29:45", "tipus": "chat", "tag": "r3_vak_sor:b38:0", "modell": "google/gemini-3.8-flash", "be_tok": 184, "ki_tok": 24, "usd": 0.000228, "probalkozas": 1}
+{"ido": "2026-11-19T10:31:57", "tipus": "chat", "tag": "r3_vak_sor:b36:1", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 24, "usd": 0.000231, "probalkozas": 1}
+{"ido": "2026-11-19T10:31:59", "tipus": "chat", "tag": "r3_vak_sor:b36:2", "modell": "google/gemini-3.8-flash", "be_tok": 188, "ki_tok": 22, "usd": 0.000224, "probalkozas": 1}
+{"ido": "2026-11-19T14:04:54", "tipus": "tts", "tag": "b04_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 64, "mp": 5.68, "usd": 0.001636, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "0311fa01235a4f66"}
+{"ido": "2026-11-19T14:05:04", "tipus": "tts", "tag": "b11_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 79, "mp": 6.48, "usd": 0.001866, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "bc634cff4ccddabf"}
+{"ido": "2026-11-19T14:05:13", "tipus": "tts", "tag": "b28_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 54, "mp": 4.2, "usd": 0.00121, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "445881e88fde5738"}
+{"ido": "2026-11-19T14:05:22", "tipus": "tts", "tag": "b40_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 79, "mp": 5.88, "usd": 0.001693, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "66c2f81122e7ec04"}
+{"ido": "2026-11-19T14:05:25", "tipus": "chat", "tag": "vak:b04.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 194, "ki_tok": 22, "usd": 0.000228, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:28", "tipus": "chat", "tag": "vak:b04.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 194, "ki_tok": 24, "usd": 0.000236, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:31", "tipus": "chat", "tag": "vak:b04.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 194, "ki_tok": 21, "usd": 0.000224, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:33", "tipus": "chat", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 213, "ki_tok": 29, "usd": 0.000269, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:36", "tipus": "chat", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 213, "ki_tok": 29, "usd": 0.000269, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:39", "tipus": "chat", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 213, "ki_tok": 29, "usd": 0.000269, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:41", "tipus": "chat", "tag": "vak:b28.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 156, "ki_tok": 20, "usd": 0.000192, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:43", "tipus": "chat", "tag": "vak:b28.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 156, "ki_tok": 20, "usd": 0.000192, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:46", "tipus": "chat", "tag": "vak:b28.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 156, "ki_tok": 17, "usd": 0.000181, "probalkozas": 1}
+{"ido": "2026-11-19T14:05:58", "tipus": "chat", "tag": "vak:b40.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 199, "ki_tok": 23, "usd": 0.000236, "probalkozas": 1}
+{"ido": "2026-11-19T14:06:00", "tipus": "chat", "tag": "vak:b40.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 198, "ki_tok": 24, "usd": 0.000238, "probalkozas": 1}
+{"ido": "2026-11-19T14:06:02", "tipus": "chat", "tag": "vak:b40.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 198, "ki_tok": 25, "usd": 0.000242, "probalkozas": 1}
+{"ido": "2026-11-19T15:40:56", "tipus": "tts", "tag": "b04_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 77, "mp": 6.08, "usd": 0.001751, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "086c1d0afab7fccf"}
+{"ido": "2026-11-19T15:41:06", "tipus": "tts", "tag": "b36_t1", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 76, "mp": 5.48, "usd": 0.001578, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "0e4e9ac2fc2f07bf"}
+{"ido": "2026-11-19T15:41:08", "tipus": "chat", "tag": "vak:b01.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 19, "usd": 0.000192, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:10", "tipus": "chat", "tag": "vak:b01.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 20, "usd": 0.000196, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:12", "tipus": "chat", "tag": "vak:b01.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 161, "ki_tok": 20, "usd": 0.000196, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:15", "tipus": "chat_blokk", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:21", "tipus": "chat", "tag": "vak:b03.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 26, "usd": 0.000227, "probalkozas": 2}
+{"ido": "2026-11-19T15:41:23", "tipus": "chat_blokk", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:29", "tipus": "chat", "tag": "vak:b03.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 26, "usd": 0.000227, "probalkozas": 2}
+{"ido": "2026-11-19T15:41:33", "tipus": "chat", "tag": "vak:b03.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 173, "ki_tok": 24, "usd": 0.00022, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:35", "tipus": "chat", "tag": "vak:b04.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 27, "usd": 0.000252, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:40", "tipus": "chat", "tag": "vak:b04.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 9, "usd": 0.000185, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:42", "tipus": "chat", "tag": "vak:b04.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 194, "ki_tok": 27, "usd": 0.000247, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:45", "tipus": "chat", "tag": "vak:b04.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 27, "usd": 0.000252, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:49", "tipus": "chat", "tag": "vak:b07.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 195, "ki_tok": 34, "usd": 0.000274, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:52", "tipus": "chat", "tag": "vak:b07.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 195, "ki_tok": 32, "usd": 0.000266, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:55", "tipus": "chat", "tag": "vak:b07.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 195, "ki_tok": 32, "usd": 0.000266, "probalkozas": 1}
+{"ido": "2026-11-19T15:41:58", "tipus": "chat", "tag": "vak:b09.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 175, "ki_tok": 19, "usd": 0.000202, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:02", "tipus": "chat", "tag": "vak:b09.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 175, "ki_tok": 17, "usd": 0.000195, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:05", "tipus": "chat", "tag": "vak:b09.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 175, "ki_tok": 18, "usd": 0.000199, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:12", "tipus": "chat", "tag": "vak:b10.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 12, "usd": 0.000142, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:14", "tipus": "chat", "tag": "vak:b10.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 11, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:16", "tipus": "chat", "tag": "vak:b10.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 129, "ki_tok": 11, "usd": 0.000138, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:19", "tipus": "chat", "tag": "vak:b11.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 210, "ki_tok": 29, "usd": 0.000266, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:21", "tipus": "chat", "tag": "vak:b11.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 210, "ki_tok": 29, "usd": 0.000266, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:25", "tipus": "chat", "tag": "vak:b11.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 210, "ki_tok": 28, "usd": 0.000262, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:30", "tipus": "chat", "tag": "vak:b14.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 139, "ki_tok": 16, "usd": 0.000164, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:34", "tipus": "chat", "tag": "vak:b14.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 139, "ki_tok": 16, "usd": 0.000164, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:36", "tipus": "chat", "tag": "vak:b14.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 139, "ki_tok": 16, "usd": 0.000164, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:38", "tipus": "chat", "tag": "vak:b15.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 181, "ki_tok": 21, "usd": 0.000215, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:42", "tipus": "chat", "tag": "vak:b15.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 181, "ki_tok": 23, "usd": 0.000222, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:45", "tipus": "chat", "tag": "vak:b15.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 181, "ki_tok": 23, "usd": 0.000222, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:48", "tipus": "chat", "tag": "vak:b16.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 29, "usd": 0.000249, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:52", "tipus": "chat", "tag": "vak:b16.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 30, "usd": 0.000253, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:54", "tipus": "chat", "tag": "vak:b16.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 30, "usd": 0.000253, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:57", "tipus": "chat", "tag": "vak:b18.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 168, "ki_tok": 23, "usd": 0.000212, "probalkozas": 1}
+{"ido": "2026-11-19T15:42:59", "tipus": "chat", "tag": "vak:b18.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 168, "ki_tok": 24, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:01", "tipus": "chat", "tag": "vak:b18.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 168, "ki_tok": 24, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:04", "tipus": "chat", "tag": "vak:b19.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 204, "ki_tok": 26, "usd": 0.000251, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:06", "tipus": "chat", "tag": "vak:b19.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 204, "ki_tok": 23, "usd": 0.000239, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:12", "tipus": "chat", "tag": "vak:b19.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 204, "ki_tok": 23, "usd": 0.000239, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:14", "tipus": "chat", "tag": "vak:b21.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 8, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:16", "tipus": "chat", "tag": "vak:b21.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 8, "usd": 0.000106, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:18", "tipus": "chat", "tag": "vak:b21.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 101, "ki_tok": 7, "usd": 0.000102, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:21", "tipus": "chat", "tag": "vak:b22.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 185, "ki_tok": 26, "usd": 0.000236, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:26", "tipus": "chat", "tag": "vak:b22.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 185, "ki_tok": 26, "usd": 0.000236, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:28", "tipus": "chat", "tag": "vak:b22.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 185, "ki_tok": 26, "usd": 0.000236, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:30", "tipus": "chat", "tag": "vak:b23.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 123, "ki_tok": 13, "usd": 0.000141, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:32", "tipus": "chat", "tag": "vak:b23.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 123, "ki_tok": 12, "usd": 0.000137, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:34", "tipus": "chat", "tag": "vak:b23.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 123, "ki_tok": 12, "usd": 0.000137, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:37", "tipus": "chat", "tag": "vak:b24.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 184, "ki_tok": 25, "usd": 0.000232, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:40", "tipus": "chat_blokk", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:43:44", "tipus": "chat_blokk", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:43:50", "tipus": "chat_blokk", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T15:44:00", "tipus": "chat_ures", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 4, "finish": "content_filter"}
+{"ido": "2026-11-19T15:44:10", "tipus": "chat", "tag": "vak:b24.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 177, "ki_tok": 25, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:13", "tipus": "chat_ures", "tag": "vak:b24.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1, "finish": "content_filter"}
+{"ido": "2026-11-19T15:44:18", "tipus": "chat_blokk", "tag": "vak:b24.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:44:24", "tipus": "chat", "tag": "vak:b24.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 184, "ki_tok": 25, "usd": 0.000232, "probalkozas": 3}
+{"ido": "2026-11-19T15:44:26", "tipus": "chat", "tag": "vak:b25.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 146, "ki_tok": 17, "usd": 0.000173, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:29", "tipus": "chat", "tag": "vak:b25.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 146, "ki_tok": 16, "usd": 0.00017, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:31", "tipus": "chat", "tag": "vak:b25.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 146, "ki_tok": 15, "usd": 0.000166, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:34", "tipus": "chat", "tag": "vak:b26.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 276, "ki_tok": 33, "usd": 0.000331, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:36", "tipus": "chat", "tag": "vak:b26.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 276, "ki_tok": 37, "usd": 0.000346, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:38", "tipus": "chat", "tag": "vak:b26.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 276, "ki_tok": 33, "usd": 0.000331, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:44", "tipus": "chat", "tag": "vak:b27.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 163, "ki_tok": 25, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:46", "tipus": "chat", "tag": "vak:b27.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 163, "ki_tok": 25, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:49", "tipus": "chat", "tag": "vak:b27.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 163, "ki_tok": 25, "usd": 0.000216, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:51", "tipus": "chat", "tag": "vak:b28.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 155, "ki_tok": 20, "usd": 0.000191, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:53", "tipus": "chat", "tag": "vak:b28.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 155, "ki_tok": 20, "usd": 0.000191, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:56", "tipus": "chat", "tag": "vak:b28.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 155, "ki_tok": 20, "usd": 0.000191, "probalkozas": 1}
+{"ido": "2026-11-19T15:44:58", "tipus": "chat", "tag": "vak:b29.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 307, "ki_tok": 38, "usd": 0.000373, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:00", "tipus": "chat_blokk", "tag": "vak:b29.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:04", "tipus": "chat", "tag": "vak:b29.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 307, "ki_tok": 39, "usd": 0.000376, "probalkozas": 2}
+{"ido": "2026-11-19T15:45:09", "tipus": "chat_blokk", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:15", "tipus": "chat", "tag": "vak:b29.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 307, "ki_tok": 38, "usd": 0.000373, "probalkozas": 2}
+{"ido": "2026-11-19T15:45:28", "tipus": "chat", "tag": "vak:b32.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 160, "ki_tok": 16, "usd": 0.00018, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:30", "tipus": "chat", "tag": "vak:b32.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 160, "ki_tok": 16, "usd": 0.00018, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:32", "tipus": "chat", "tag": "vak:b32.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 160, "ki_tok": 18, "usd": 0.000188, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:34", "tipus": "chat_blokk", "tag": "vak:b33.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:38", "tipus": "chat_blokk", "tag": "vak:b33.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:45:44", "tipus": "chat", "tag": "vak:b33.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 171, "ki_tok": 16, "usd": 0.000188, "probalkozas": 3}
+{"ido": "2026-11-19T15:45:46", "tipus": "chat", "tag": "vak:b33.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 171, "ki_tok": 16, "usd": 0.000188, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:49", "tipus": "chat_blokk", "tag": "vak:b33.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:45:56", "tipus": "chat", "tag": "vak:b33.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 171, "ki_tok": 16, "usd": 0.000188, "probalkozas": 2}
+{"ido": "2026-11-19T15:46:00", "tipus": "chat_ures", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1, "finish": "content_filter"}
+{"ido": "2026-11-19T15:46:04", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:46:14", "tipus": "chat_ures", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 3, "finish": "content_filter"}
+{"ido": "2026-11-19T15:46:22", "tipus": "chat_blokk", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T15:46:31", "tipus": "chat", "tag": "vak:b34.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 141, "ki_tok": 19, "usd": 0.000177, "probalkozas": 1}
+{"ido": "2026-11-19T15:46:34", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:46:38", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:46:44", "tipus": "chat_blokk", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T15:46:56", "tipus": "chat_ures", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 4, "finish": "content_filter"}
+{"ido": "2026-11-19T15:47:07", "tipus": "chat", "tag": "vak:b34.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 141, "ki_tok": 19, "usd": 0.000177, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:11", "tipus": "chat_ures", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 0, "ki_tok": 0, "usd": 0.0, "probalkozas": 1, "finish": "content_filter"}
+{"ido": "2026-11-19T15:47:15", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:47:21", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T15:47:30", "tipus": "chat_blokk", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 4}
+{"ido": "2026-11-19T15:47:40", "tipus": "chat", "tag": "vak:b34.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 141, "ki_tok": 19, "usd": 0.000177, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:42", "tipus": "chat", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 23, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:44", "tipus": "chat", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 23, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:47", "tipus": "chat", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 187, "ki_tok": 23, "usd": 0.000227, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:49", "tipus": "chat", "tag": "vak:b37.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 108, "ki_tok": 7, "usd": 0.000107, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:52", "tipus": "chat", "tag": "vak:b37.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 108, "ki_tok": 7, "usd": 0.000107, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:54", "tipus": "chat", "tag": "vak:b37.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 108, "ki_tok": 7, "usd": 0.000107, "probalkozas": 1}
+{"ido": "2026-11-19T15:47:59", "tipus": "chat", "tag": "vak:b38.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 172, "ki_tok": 24, "usd": 0.000219, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:01", "tipus": "chat", "tag": "vak:b38.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 172, "ki_tok": 22, "usd": 0.000211, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:04", "tipus": "chat", "tag": "vak:b38.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 172, "ki_tok": 23, "usd": 0.000215, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:11", "tipus": "chat", "tag": "vak:b39.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 27, "usd": 0.000252, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:13", "tipus": "chat", "tag": "vak:b39.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 28, "usd": 0.000256, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:18", "tipus": "chat", "tag": "vak:b39.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 201, "ki_tok": 28, "usd": 0.000256, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:24", "tipus": "chat", "tag": "vak:b40.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 25, "usd": 0.000241, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:29", "tipus": "chat", "tag": "vak:b40.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 25, "usd": 0.000241, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:34", "tipus": "chat", "tag": "vak:b40.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 197, "ki_tok": 25, "usd": 0.000241, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:45", "tipus": "tts", "tag": "b36_t2", "modell": "google/gemini-3.8-flash-tts", "hang": "Umbriel", "karakter": 76, "mp": 5.76, "usd": 0.001659, "usd_forras": "becsult_0.000288_usd_per_s", "probalkozas": 1, "cache": "f3f0f95ae1224e83"}
+{"ido": "2026-11-19T15:48:47", "tipus": "chat", "tag": "vak:b36.wav:0", "modell": "google/gemini-3.8-flash", "be_tok": 191, "ki_tok": 23, "usd": 0.000229, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:49", "tipus": "chat_blokk", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:48:53", "tipus": "chat_blokk", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:49:01", "tipus": "chat", "tag": "vak:b36.wav:1", "modell": "google/gemini-3.8-flash", "be_tok": 192, "ki_tok": 22, "usd": 0.000227, "probalkozas": 3}
+{"ido": "2026-11-19T15:49:04", "tipus": "chat_blokk", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 1}
+{"ido": "2026-11-19T15:49:07", "tipus": "chat_blokk", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 2}
+{"ido": "2026-11-19T15:49:13", "tipus": "chat_blokk", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "usd": 0.0, "probalkozas": 3}
+{"ido": "2026-11-19T15:49:21", "tipus": "chat", "tag": "vak:b36.wav:2", "modell": "google/gemini-3.8-flash", "be_tok": 191, "ki_tok": 22, "usd": 0.000226, "probalkozas": 4}

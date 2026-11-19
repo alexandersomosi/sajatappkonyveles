@@ -1,0 +1,83 @@
+{
+  "_mi_ez": "A Kézjegy-videók KÖZÖS hangja (bekotes, vallalkozas_bejelentes, meghatalmazas). Mindhárom videó ezt a hangot, ezt az alapstílust és ezt a kérésformát használja. Író: a bekötés-videó építője, 2026-11-18 11:35.",
+  "allapot": "VÉGLEGES - a tulaj választotta 2026-11-18 18:45 (\"3 a legjobb\") a 3 mintából (Charon, Sulafat, Umbriel; mind 1,0 vak átírás): hang/minta/hangminta_Umbriel.mp3",
+  "modell": "google/gemini-3.8-flash-tts",
+  "url": "https://openrouter.ai/api/v1/audio/speech",
+  "hang": "Umbriel",
+  "alap_stilus": "Warm, calm and reassuring, like a trusted private banker personally welcoming a new client: unhurried, friendly, clear, a gentle smile in the voice",
+  "nativ_vege": "Native Hungarian speaker born and raised in Budapest: strictly Hungarian phonetics and intonation, stress always on the first syllable, long and short vowels kept distinct, no foreign accent at all.",
+  "instructions_kepzes": "alap_stilus + ', ' + hangulatok[<sor hangulata>] + '. ' + nativ_vege   (a hangulat elhagyható: akkor alap_stilus + '. ' + nativ_vege)",
+  "hangulatok": {
+    "udvozlo": "welcoming and grateful, a little brighter at the start",
+    "magyarazo": "explaining simply and patiently, one idea at a time",
+    "lepes": "guiding through a step, steady and clear, short pause after the step name",
+    "megnyugtato": "reassuring and kind, slightly slower",
+    "figyelem": "gently emphasising an important point, calm, never alarming",
+    "zaro": "warm closing, encouraging, a soft smile"
+  },
+  "keres_forma": {
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer <OPENROUTER_API_KEY – HKCU\\Environment, csak a folyamaton belül olvasva, soha ki nem írva>",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "model": "google/gemini-3.8-flash-tts",
+      "response_format": "pcm",
+      "voice": "Umbriel",
+      "input": "<egy sor magyar szöveg, a számok betűvel>",
+      "instructions": "<instructions_kepzes szerint>"
+    },
+    "valasz": "nyers 24 kHz, mono, s16le PCM (WAV-fejléc nélkül)"
+  },
+  "szoveg_szabalyok": [
+    "Soronként egy kérés (egy-két mondat), a sorok közé a vágó tesz szünetet.",
+    "A kimondott szövegben a számok betűvel: 'huszonnégy–negyvennyolc órán belül'; a felirat maradhat számjegyes.",
+    "Rövidítések: a kimondott szövegbe úgy írjuk, ahogy mondjuk (pl. 'NAV' marad, ha az átírás 'náv'-nak hallja; ha betűzi, 'Náv'). A vak átírás dönt.",
+    "Terméknév és a könyvelő neve SOHA nem hangzik el ('az alkalmazás', 'a könyvelőd', 'csapatunk'); MI/AI soha."
+  ],
+  "keveres": "beszéd: MONO hangsáv mindhárom videóban, -16 LUFS integrált CSATORNÁNKÉNT mérve (±0,7), a valódi csúcs a KÉSZ mp4-ben legfeljebb -1,5 dBTP (a keverés plafonja -2,6 dBTP, mert az AAC 0,3–0,9 dB-t rálő); kétmenetes ffmpeg loudnorm + csúcshatároló, 48 kHz AAC 128 kb/s; zene nincs (licencmentes, ellenőrzött zene nélkül). A három kész videó csatornánkénti hangossága legfeljebb 1 LU-val térhet el: video/hang_ellenorzes.py (2026-11-19: a bekötés-videó sztereó volt, ezért csatornánként 3 dB-lel halkabban szólt a két útmutatónál).",
+  "kod": "C:/Users/UpgradePC/konyvelo_app/video/bekotes/eszkoz/or_hang.py – tts(szöveg, hang, instructions, tag) cache-sel és költségnaplóval, pcm_wav(), atir() vak átírás (google/gemini-3.8-flash, input_audio).",
+  "ar": "mért: ~0,000227 USD / hangmásodperc (2026-10-22, 195 kimeneti token 7,8 s-re, OpenRouter generation cost); vak átírás ~0,001 USD / sor",
+  "valasztas_alapja": {
+    "forras": "D:/Atvitel/Desktop/kukutyini-studio/projects/kepes_csatorna_proba/hang/HANGOK.md (2026-10-22, ugyanez a modell, magyar szöveg, 45–50 s, 3 vak átirat/klip)",
+    "jeloltek": [
+      {
+        "hang": "Charon",
+        "f0_hz": 110,
+        "szotag_s": 4.41,
+        "szunetek_45s": 10,
+        "szin_hz": 967,
+        "vak_atirasi_hiba": 0,
+        "megjegyzes": "a legmelegebb, legnyugodtabb dallam, a legtöbb lélegző szünet – EZ"
+      },
+      {
+        "hang": "Umbriel",
+        "f0_hz": 99,
+        "szotag_s": 4.25,
+        "szunetek_45s": 8,
+        "szin_hz": 1208,
+        "vak_atirasi_hiba": 0,
+        "megjegyzes": "mélyebb, kicsit hűvösebb"
+      },
+      {
+        "hang": "Orus",
+        "f0_hz": 113,
+        "szotag_s": 4.13,
+        "szunetek_45s": 8,
+        "szin_hz": 1223,
+        "vak_atirasi_hiba": 0,
+        "megjegyzes": "tartalék"
+      }
+    ],
+    "meghallgathato": [
+      "C:/Users/UpgradePC/konyvelo_app/video/bekotes/hang/minta/korabbi_gemini_charon_9s.mp3",
+      "C:/Users/UpgradePC/konyvelo_app/video/bekotes/hang/minta/korabbi_gemini_umbriel_9s.mp3",
+      "C:/Users/UpgradePC/konyvelo_app/video/bekotes/hang/minta/korabbi_gemini_orus_9s.mp3"
+    ],
+    "figyelem": "Ezek a minták más szöveggel (kenyértörténet) és 'deep documentary narrator' stílussal készültek; a hangszín és a magyar érthetőség összevethető, a privátbanki hangnem még nem."
+  },
+  "koltseg_keret": "a hangra összesen 0,60 USD: bekötés-videó 0,30, útmutató-videók 0,30 (egyenleg 18:40-kor 5,83 USD)",
+  "frissitve": "2026-11-19T09:40 (keveres: mono + csatornánkénti mérés; a hang és a stílus változatlan)",
+  "koltseg_1119_delutan": "2026-11-19 14:00 (tulaj 3., 4., 5. kérés): 7 új hangsor ugyanezzel a hanggal (L04, L20b, b04, b11, b28, b40, m26) + vak átiratok: 0,0226 USD a külön 0,20 USD-s keretből (bekötés 0,0114, bejelentés 0,0092, meghatalmazás 0,0020); a három videó összesen 0,6141 USD. A hang és a stílus változatlan."
+}

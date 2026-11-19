@@ -1,0 +1,16 @@
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/03_fooldal.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/01_belepes.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/02_bekotes.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/04_dosszie.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/05_tetel.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/06_uzenetek.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/07_hogyan_jott_ki.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/08_befizettem.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/09_fotozas.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/10_widget.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/11_ures_dosszie.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/08_befizettem_allapot.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/03_fooldal_teljes.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/02_bekotes_teljes.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/04_dosszie_teljes.png
+C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/app_v2/05_tetel_teljes.png

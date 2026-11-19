@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tétel: toner és papír (Rendben)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .fej { padding-top: 2px; }
+  .foto { display: block; width: 100%; height: 272px; border-radius: var(--r-lap) var(--r-lap) 0 0; }
+  .foto-alatt { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px var(--belso) 14px; }
+  .foto-alatt .sor-al { margin: 0; }
+
+  .megjegyzes { padding: 16px var(--belso) 18px; }
+  .megj-fej { display: flex; align-items: center; gap: 12px; }
+  .megj-szoveg { font-size: 17px; line-height: 25px; margin-top: 12px; }
+  .megjegyzes .gomb-masod { margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="kepernyo">
+  <div class="allapotsor" aria-hidden="true"><span>9:41</span><span class="jelek">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0z"/><path d="M3.5 7.1a6.4 6.4 0 0 1 9 0l-1.3 1.3a4.6 4.6 0 0 0-6.4 0z"/><path d="M1.3 4.9a9.5 9.5 0 0 1 13.4 0l-1.3 1.3a7.7 7.7 0 0 0-10.8 0z"/></svg>
+    <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.8" height="11.8" rx="3.4" fill="none" stroke="#241A23" stroke-opacity=".4" stroke-width="1.1"/><rect x="2.3" y="2.3" width="17" height="8.4" rx="2"/><path d="M25 4.4v4.2a2.1 2.1 0 0 0 0-4.2z" fill-opacity=".45"/></svg>
+  </span></div>
+
+  <header class="fej">
+    <a class="vissza" href="04_dosszie.html"><svg class="ikon"><use href="#i-nyil-b"/></svg>November</a>
+    <h1 class="cim-2" style="margin-top:6px">Toner és papír</h1>
+    <p class="alcim" style="color:var(--masod);margin-top:4px">Papír-Írószer Bt., <span class="egyben szam">18&#8239;990&nbsp;Ft</span></p>
+  </header>
+
+  <!-- A lefotózott nyugta (kézzel rajzolt SVG, a kiegyenesített állapot) -->
+  <section class="lap" style="margin-top:16px">
+    <svg class="foto" viewBox="0 0 358 272" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A lefotózott nyugta kiegyenesítve">
+      <defs>
+        <linearGradient id="asztal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D3D6DA"/><stop offset="1" stop-color="#C1C5CA"/></linearGradient>
+      </defs>
+      <rect width="358" height="272" fill="url(#asztal)"/>
+      <path d="M94 12h170v236l-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6-7.08 6-7.08-6L94 248z" fill="#FBFBFC" stroke="#A7ABB1" stroke-width=".6"/>
+      <g font-family="Schibsted Grotesk, sans-serif" fill="#3A3C40" font-size="8.4">
+        <text x="179" y="32" text-anchor="middle" font-weight="700" font-size="10">PAPÍR-ÍRÓSZER BT.</text>
+        <text x="179" y="45" text-anchor="middle">1065 Budapest, Révay u. 9.</text>
+        <text x="179" y="56" text-anchor="middle">Adószám: 21345678-1-42</text>
+        <path d="M106 66h146" stroke="#3A3C40" stroke-width=".7" stroke-dasharray="2.4 2"/>
+        <text x="179" y="81" text-anchor="middle" font-weight="700" font-size="9.4">NYUGTA</text>
+        <text x="106" y="97">TONER, FEKETE</text><text x="252" y="97" text-anchor="end">14 990</text>
+        <text x="106" y="110">NYOMTATÓPAPÍR A4</text><text x="252" y="110" text-anchor="end">4 000</text>
+        <path d="M106 120h146" stroke="#3A3C40" stroke-width=".7" stroke-dasharray="2.4 2"/>
+        <text x="106" y="135" font-weight="700" font-size="9.4">ÖSSZESEN</text><text x="252" y="135" text-anchor="end" font-weight="700" font-size="9.4">18 990 Ft</text>
+        <text x="106" y="149">BANKKÁRTYA</text><text x="252" y="149" text-anchor="end">18 990 Ft</text>
+        <text x="106" y="166">2026.11.03.</text><text x="252" y="166" text-anchor="end">18:31</text>
+        <text x="106" y="179">NYUGTASZÁM: 0412/00387</text>
+        <text x="106" y="192">AP A12345678</text>
+        <path d="M106 203h146" stroke="#3A3C40" stroke-width=".7" stroke-dasharray="2.4 2"/>
+        <text x="179" y="219" text-anchor="middle">KÖSZÖNJÜK A VÁSÁRLÁST!</text>
+      </g>
+    </svg>
+    <div class="foto-alatt">
+      <p class="sor-al">Kiegyenesítve, így látja Bence is.</p>
+      <button class="gomb gomb-kicsi"><svg class="ikon"><use href="#i-nagyit"/></svg>Megnyitás</button>
+    </div>
+  </section>
+
+  <!-- Állapot: a teljes négy lépés csak itt, a tétel lapján látszik -->
+  <h2 class="szakasz">Hol tart?</h2>
+  <section class="lap">
+    <ol class="idovonal">
+      <li class="kesz"><span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <p class="sor-cim">Feltöltötted</p><p class="sor-al">November 3., kedd, 18:42</p></li>
+      <li class="kesz"><span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <p class="sor-cim">Bence látta</p><p class="sor-al">November 4., szerda, 9:15</p></li>
+      <li class="kesz utolso-kesz"><span class="pont"><svg class="ikon"><use href="#i-pipa"/></svg></span>
+        <p class="sor-cim">Feldolgozta</p><p class="sor-al">November 6., péntek, 11:02</p></li>
+      <li class="elmarad"><span class="pont" aria-hidden="true">–</span>
+        <p class="sor-cim">Beadni nem kell</p><p class="sor-al">A vásárlásaid nem kerülnek a bevallásba.</p></li>
+    </ol>
+  </section>
+
+  <!-- A könyvelő megjegyzése: a lap első sora megmondja, kitől jön -->
+  <section class="lap megjegyzes" style="margin-top:12px">
+    <div class="megj-fej">
+      <svg class="portre" role="img" aria-label="Kovács Bence fényképe"><use href="#i-portre"/></svg>
+      <div><p class="sor-cim" style="font-weight:600">Bence megjegyzése</p><p class="sor-al" style="margin-top:0">November 6., 11:02</p></div>
+    </div>
+    <p class="megj-szoveg">Megkaptam, köszönöm. Átalányadósként a vásárlásaid nem csökkentik az adódat, ezt a 40%-os költséghányad már lefedi. Ilyet nem kötelező feltöltened, de nem baj, ha itt van.</p>
+    <button class="gomb gomb-masod">Kérdezek róla</button>
+  </section>
+
+  <nav class="fulsor" aria-label="Fő menü">
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-haz"/></svg></span>Főoldal</a>
+    <a class="ful aktiv" aria-current="page" aria-label="Dosszié, 2 dolog vár rád"><span class="ful-ikon"><svg class="ikon"><use href="#i-dosszie"/></svg><span class="jelzes">2</span></span>Dosszié</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-uzenet"/></svg></span>Üzenetek</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-fiok"/></svg></span>Fiók</a>
+  </nav>
+  <div class="otthon-jel" aria-hidden="true"></div>
+</div>
+<script src="ikonok.js"></script>
+</body>
+</html>

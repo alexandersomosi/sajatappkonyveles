@@ -1,0 +1,815 @@
+{
+ "utmutato": "meghatalmazas_jovahagyas",
+ "cim": "A meghatalmazás jóváhagyása az ONYA-ban („Intézzük helyetted”: a könyvelőd küldte be, te hagyod jóvá)",
+ "verzio": "2026-11-19",
+ "leiras": "SPEC §27.3.6. 2026-11-19 (első kör): a belépés és a profil a meghatalmazás-útmutató valódi NAV-képei (01–03). 2026-11-19 javító kör: 04 = az ONYA Főoldala (bemutató 7. dia) + az Értesítések ikon a piros számlálóval (11. dia jobb fele), 05 = a „Jóváhagyásra vár” csempe (UJEGYKE-segédlet 10. oldala; minden név és azonosító elmosva), 06 = a JÓVÁHAGYÁS gomb és a megerősítő ablak RAJZOLT vázlata (nincs róla hivatalos NAV-kép). Így minden ONYA-lépésnek van képe.",
+ "jelmagyarazat": {
+  "tinta": "tintakék keret: erre koppints / ezt válaszd",
+  "borostyan": "borostyán keret: ezt jelöld be / ide írj",
+  "ures": "szaggatott keret: hagyd üresen / ne jelöld"
+ },
+ "kimenet": {
+  "szel": 1080,
+  "szel_2x": 2160,
+  "fajlnev": "<NN>_<slug>.png és <NN>_<slug>@2x.png"
+ },
+ "koordinatak": "alap/sajat .vagas, .homalyos, jelolesek[].doboz: a FORRÁSKÉP pixelében [x0,y0,x1,y1], vagy \"@kulcs\" a forráskép melletti .json helyek-listájából. kimenet.jelolesek_kimeneten: a KIMENETI képen 0–1 arányban (videóhoz).",
+ "lepes_kulcsok_megjegyzes": "lepes_kulcs = kod/shared GUIDE_STEP_KEYS; egy kulcshoz több kép is tartozhat (resz szerint sorban); valtozat = csak az adott válasznál mutasd.",
+ "jelolve": "2026-11-19T17:19:25",
+ "kep_nelkuli_lepes_kulcsok": {
+  "app_jovahagytam": "saját app (a gomb itt, az alkalmazásban van)"
+ },
+ "lepesek": [
+  {
+   "sorszam": 1,
+   "slug": "onya_nyitooldal",
+   "lepes_kulcs": "onya_belepes",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "ONYA – nyitóoldal",
+   "mit_csinalj": "Nyisd meg az onya.nav.gov.hu oldalt, és koppints a Bejelentkezés gombra. Azonosítás nélkül nem megy.",
+   "mezok": [
+    {
+     "mezo": "Bejelentkezés",
+     "mit": "kattints",
+     "ertek": null
+    },
+    {
+     "mezo": "Belépés azonosítás nélkül",
+     "mit": "ne_jelold",
+     "ertek": null
+    }
+   ],
+   "felirat": "Bejelentkezés, nem azonosítás nélkül.",
+   "alt": "Az ONYA nyitóoldala: Bejelentkezés gomb kiemelve, a Belépés azonosítás nélkül gomb szaggatottan.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "elo_onya_nyito",
+    "cim": "ONYA nyitóoldal (Bejelentkezés)",
+    "url": "https://onya.nav.gov.hu/",
+    "datum": "2026-11-18",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep_belepes_nelkul"
+   },
+   "forras_rovid": "Képernyőkép: onya.nav.gov.hu, 2026.11.18. Belépés nélkül készült.",
+   "alap": {
+    "kep": "_nyers/elo_2026-11-18/onya_nyito.png",
+    "vagas": [
+     100,
+     60,
+     1350,
+     650
+    ]
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@bejelentkezes",
+     "stilus": "tinta",
+     "cimke": "Koppints: Bejelentkezés",
+     "cimke_hely": "lent",
+     "parna": 30
+    },
+    {
+     "n": 2,
+     "doboz": "@azonositas_nelkul",
+     "stilus": "ures",
+     "cimke": "Ezt ne: így nem tudod beküldeni",
+     "cimke_hely": "lent",
+     "parna": 30
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "01_onya_nyitooldal.png",
+    "fajl_2x": "01_onya_nyitooldal@2x.png",
+    "szel": 1080,
+    "mag": 674,
+    "szel_2x": 2160,
+    "mag_2x": 1347,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Koppints: Bejelentkezés",
+      "doboz": [
+       0.097,
+       0.6104,
+       0.2901,
+       0.7036
+      ],
+      "korong": [
+       0.0563,
+       0.6446
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "ures",
+      "cimke": "Ezt ne: így nem tudod beküldeni",
+      "doboz": [
+       0.3503,
+       0.6104,
+       0.6861,
+       0.7036
+      ],
+      "korong": [
+       0.3096,
+       0.6446
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 2,
+   "slug": "kau_belepes",
+   "lepes_kulcs": "onya_belepes",
+   "resz": 2,
+   "valtozat": null,
+   "kepernyo": "Belépés (Központi Azonosítási Ügynök)",
+   "mit_csinalj": "Lépj be DÁP-pal vagy Ügyfélkapu+-szal. A jelszavadat soha senkinek ne add meg.",
+   "mezok": [
+    {
+     "mezo": "DÁP mobilalkalmazás",
+     "mit": "valaszd",
+     "ertek": null
+    },
+    {
+     "mezo": "Ügyfélkapu+",
+     "mit": "valaszd",
+     "ertek": null
+    }
+   ],
+   "felirat": "Belépés: DÁP vagy Ügyfélkapu+.",
+   "alt": "A kormányzati belépő oldal: DÁP mobilalkalmazás gomb, alatta Ügyfélkapu+.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "elo_kau_belepes",
+    "cim": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+    "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+    "datum": "2026-11-18",
+    "oldal": null,
+    "fajta": "sajat_kepernyokep_belepes_nelkul"
+   },
+   "forras_rovid": "Képernyőkép: a NAV-szolgáltatások belépő oldala (kau.gov.hu), 2026.11.18. Belépés nélkül készült.",
+   "alap": {
+    "kep": "_nyers/elo_2026-11-18/kau_belepes.png",
+    "vagas": [
+     0,
+     0,
+     1170,
+     1290
+    ],
+    "bovites": [
+     90,
+     0,
+     0,
+     0
+    ],
+    "jel_meret": 1.5
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@dap",
+     "stilus": "tinta",
+     "cimke": "DÁP mobilalkalmazással",
+     "cimke_hely": "lent",
+     "parna": 12
+    },
+    {
+     "n": 2,
+     "doboz": "@ugyfelkapu_szoveg",
+     "stilus": "tinta",
+     "cimke": "vagy Ügyfélkapu+-szal",
+     "cimke_hely": "lent",
+     "parna": 12
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "02_kau_belepes.png",
+    "fajl_2x": "02_kau_belepes@2x.png",
+    "szel": 1080,
+    "mag": 1238,
+    "szel_2x": 2160,
+    "mag_2x": 2477,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "DÁP mobilalkalmazással",
+      "doboz": [
+       0.1423,
+       0.5578,
+       0.9247,
+       0.6607
+      ],
+      "korong": [
+       0.0812,
+       0.5837
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "vagy Ügyfélkapu+-szal",
+      "doboz": [
+       0.3364,
+       0.7133,
+       0.7238,
+       0.7886
+      ],
+      "korong": [
+       0.2753,
+       0.7392
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 3,
+   "slug": "onya_profil",
+   "lepes_kulcs": "onya_profil",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "Képviseltek – profil kiválasztása",
+   "mit_csinalj": "A jobb felső sarokban, a neved alatt válaszd a saját profilodat: a neved, „Magánszemély”.",
+   "mezok": [
+    {
+     "mezo": "Profil",
+     "mit": "valaszd",
+     "ertek": "a saját adóazonosító jeledhez tartozó profil (Magánszemély)"
+    }
+   ],
+   "felirat": "A saját profilodat válaszd.",
+   "alt": "Az ONYA Képviseltek oldala elmosott nevekkel; a jobb felső felhasználói rész és a Magánszemély kártya kiemelve.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "onya_bemutato_dia8",
+    "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "datum": "2026-01-23",
+    "oldal": 8,
+    "fajta": "hivatalos_segedlet"
+   },
+   "forras_rovid": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 8. dia. A mintaadatok elmosva.",
+   "alap": {
+    "kep": "_nyers/onya_bemutato_2026-01-23/dia08_kepviseltek.png",
+    "vagas": [
+     1132,
+     0,
+     1865,
+     420
+    ],
+    "bovites": [
+     120,
+     64,
+     0,
+     0
+    ]
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@felhasznalo",
+     "stilus": "tinta",
+     "cimke": "Koppints a nevedre a jobb felső sarokban",
+     "cimke_hely": "bal",
+     "parna": 4,
+     "szam_hely": "fent"
+    },
+    {
+     "n": 2,
+     "doboz": [
+      1142,
+      114,
+      1718,
+      170
+     ],
+     "stilus": "borostyan",
+     "cimke": "A saját neved: ezt válaszd (Kiválasztva)",
+     "cimke_hely": "lent",
+     "parna": 4
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "03_onya_profil.png",
+    "fajl_2x": "03_onya_profil@2x.png",
+    "szel": 1080,
+    "mag": 771,
+    "szel_2x": 2160,
+    "mag_2x": 1542,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Koppints a nevedre a jobb felső sarokban",
+      "doboz": [
+       0.5665,
+       0.1365,
+       0.8059,
+       0.2382
+      ],
+      "korong": [
+       0.5897,
+       0.0794
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "borostyan",
+      "cimke": "A saját neved: ezt válaszd (Kiválasztva)",
+      "doboz": [
+       0.1686,
+       0.3109,
+       0.8125,
+       0.4033
+      ],
+      "korong": [
+       0.1278,
+       0.3407
+      ]
+     }
+    ]
+   },
+   "megjegyzes_r2_1119": "2. ellenőrző kör: az 1. jelölés korongja a keret FÖLÖTT van (felül 64 képpont fehér sáv a fejlécben), hogy ne takarja a „Hátralévő idő” feliratot."
+  },
+  {
+   "sorszam": 4,
+   "slug": "onya_fooldal_meghatalmazasok",
+   "lepes_kulcs": "onya_ertesites",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "ONYA – Főoldal",
+   "mit_csinalj": "A Főoldalon nyisd meg a Meghatalmazások csempét. Ha valami jóváhagyásra vár, piros pötty is jelzi.",
+   "mezok": [
+    {
+     "mezo": "Meghatalmazások",
+     "mit": "kattints",
+     "ertek": null
+    }
+   ],
+   "felirat": "Meghatalmazások – itt vár a jóváhagyás.",
+   "alt": "Az ONYA Főoldala: a Meghatalmazások csempe tintakékkel, a fejlécben az értesítés-harang borostyánnal kiemelve; a felhasználó neve elmosva.",
+   "tipus": "valodi",
+   "forras": {
+    "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "datum": "2026-01-23",
+    "fajta": "hivatalos_segedlet",
+    "id": "onya_bemutato_dia7",
+    "oldal": 7
+   },
+   "forras_rovid": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 7. dia. A felhasználó neve elmosva.",
+   "alap": {
+    "kep": "_nyers/onya_bemutato_2026-01-23/dia07_fooldal.png",
+    "vagas": [
+     700,
+     0,
+     1853,
+     380
+    ],
+    "jel_meret": 1.4
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": [
+      1236,
+      146,
+      1700,
+      364
+     ],
+     "stilus": "tinta",
+     "cimke": "Koppints: Meghatalmazások",
+     "cimke_hely": "lent",
+     "parna": 6
+    },
+    {
+     "n": 2,
+     "doboz": [
+      1728,
+      8,
+      1776,
+      54
+     ],
+     "stilus": "borostyan",
+     "cimke": "Itt is jelez: Értesítések (harang)",
+     "cimke_hely": "lent",
+     "parna": 6
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "04_onya_fooldal_meghatalmazasok.png",
+    "fajl_2x": "04_onya_fooldal_meghatalmazasok@2x.png",
+    "szel": 1080,
+    "mag": 528,
+    "szel_2x": 2160,
+    "mag_2x": 1055,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Koppints: Meghatalmazások",
+      "doboz": [
+       0.4639,
+       0.2932,
+       0.851,
+       0.6716
+      ],
+      "korong": [
+       0.4074,
+       0.3501
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "borostyan",
+      "cimke": "Itt is jelez: Értesítések (harang)",
+      "doboz": [
+       0.8685,
+       0.0609,
+       0.9135,
+       0.1497
+      ],
+      "korong": [
+       0.8981,
+       0.2653
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 4,
+   "slug": "onya_ertesitesek_jel",
+   "lepes_kulcs": "onya_ertesites",
+   "resz": 2,
+   "valtozat": null,
+   "kepernyo": "ONYA – Értesítések",
+   "mit_csinalj": "A piros szám azt jelzi, hogy új értesítésed van – például egy meghatalmazás jóváhagyásra vár.",
+   "mezok": [
+    {
+     "mezo": "Értesítések",
+     "mit": "kattints",
+     "ertek": null
+    }
+   ],
+   "felirat": "A piros szám: új értesítésed van.",
+   "alt": "Az ONYA Értesítések ikonja piros 1-es számlálóval, tintakék kerettel kiemelve.",
+   "tipus": "valodi",
+   "forras": {
+    "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+    "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+    "datum": "2026-01-23",
+    "fajta": "hivatalos_segedlet",
+    "id": "onya_bemutato_dia11",
+    "oldal": 11
+   },
+   "forras_rovid": "Forrás: NAV – Az ONYA általános bemutatása (2026.01.23.), 11. dia (a dia jobb fele).",
+   "alap": {
+    "kep": "_nyers/onya_bemutato_2026-01-23/dia11_ertesitesek.png",
+    "vagas": null,
+    "bovites": [
+     60,
+     20,
+     60,
+     20
+    ],
+    "jel_meret": 1.6
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@ertesitesek",
+     "stilus": "tinta",
+     "cimke": "Értesítések: a piros szám az új üzenet",
+     "cimke_hely": "lent",
+     "parna": 8
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "04_onya_ertesitesek_jel.png",
+    "fajl_2x": "04_onya_ertesitesek_jel@2x.png",
+    "szel": 1080,
+    "mag": 538,
+    "szel_2x": 2160,
+    "mag_2x": 1077,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "Értesítések: a piros szám az új üzenet",
+      "doboz": [
+       0.3547,
+       0.2131,
+       0.6362,
+       0.6676
+      ],
+      "korong": [
+       0.2899,
+       0.2753
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "sorszam": 5,
+   "slug": "onya_jovahagyasra_var",
+   "lepes_kulcs": "onya_jovahagyasra_var",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "ONYA – Meghatalmazások: „Jóváhagyásra vár”",
+   "mit_csinalj": "Keresd meg a csempét, amelyiken a „Jóváhagyásra vár” felirat áll, és nyisd meg. Nézd meg, hogy a könyvelőd neve áll-e rajta.",
+   "mezok": [
+    {
+     "mezo": "Jóváhagyásra vár",
+     "mit": "kattints",
+     "ertek": null
+    },
+    {
+     "mezo": "Meghatalmazott",
+     "mit": "ellenorizd",
+     "ertek": "{konyveloNev}"
+    }
+   ],
+   "felirat": "Ezt a csempét nyisd meg. A te képernyődön a „Meghatalmazott” alatt a könyvelőd neve áll (ezen a mintán ez a sor üres).",
+   "alt": "Egy UJEGYKE-csempe az ONYA-ban „Véglegesítve – Jóváhagyásra vár” állapottal; a felirat tintakékkel, a „Meghatalmazott” címke borostyánnal kiemelve (a mintán alatta még nincs név, nálad ott a könyvelőd neve áll). A nevek és azonosítók elmosva.",
+   "tipus": "valodi",
+   "forras": {
+    "id": "segedlet_ujegyke_onya_o10",
+    "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+    "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+    "datum": "2025-03-11",
+    "oldal": 10,
+    "fajta": "hivatalos_segedlet"
+   },
+   "forras_rovid": "Forrás: NAV – UJEGYKE ONYA-segédlet (2025.03.11.), 10. oldal. A nevek és az azonosítók elmosva.",
+   "alap": {
+    "kep": "_nyers/segedlet_ujegyke_2025-03-11/o10_jovahagyasra_var.png",
+    "vagas": null,
+    "bovites": [
+     70,
+     10,
+     10,
+     10
+    ],
+    "jel_meret": 1.5
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@jovahagyasra_var",
+     "stilus": "tinta",
+     "cimke": "„Jóváhagyásra vár”: ezt nyisd meg",
+     "cimke_hely": "lent",
+     "parna": 6
+    },
+    {
+     "n": 2,
+     "doboz": [
+      14,
+      222,
+      172,
+      245
+     ],
+     "stilus": "borostyan",
+     "cimke": "„Meghatalmazott”: alatta a könyvelőd neve áll – ha nem, ne hagyd jóvá",
+     "cimke_hely": "lent",
+     "parna": 6
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "05_onya_jovahagyasra_var.png",
+    "fajl_2x": "05_onya_jovahagyasra_var@2x.png",
+    "szel": 1080,
+    "mag": 1471,
+    "szel_2x": 2160,
+    "mag_2x": 2942,
+    "forras_hasznalt": "alap",
+    "tipus": "valodi",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "tinta",
+      "cimke": "„Jóváhagyásra vár”: ezt nyisd meg",
+      "doboz": [
+       0.3294,
+       0.0624,
+       0.5826,
+       0.1024
+      ],
+      "korong": [
+       0.2683,
+       0.0824
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "borostyan",
+      "cimke": "„Meghatalmazott”: alatta a könyvelőd neve áll – ha nem, ne hagyd jóvá",
+      "doboz": [
+       0.16,
+       0.2945,
+       0.423,
+       0.3261
+      ],
+      "korong": [
+       0.0989,
+       0.3103
+      ]
+     }
+    ]
+   },
+   "megjegyzes_javito2_1119": "A 2-es jelölés csak a „Meghatalmazott” címkét keretezi, nem a minta üres („Jelenleg nincs adat”) sorát; a felirat megmondja, hogy nálad ott a könyvelő neve áll."
+  },
+  {
+   "sorszam": 6,
+   "slug": "onya_jovahagyas",
+   "lepes_kulcs": "onya_jovahagyas",
+   "resz": 1,
+   "valtozat": null,
+   "kepernyo": "ONYA – Jóváhagyás",
+   "mit_csinalj": "Nézd át, majd az oldal alján nyomd meg a Jóváhagyás gombot, és a felugró ablakban erősítsd meg.",
+   "mezok": [
+    {
+     "mezo": "Jóváhagyás",
+     "mit": "kattints",
+     "ertek": null
+    },
+    {
+     "mezo": "Megerősítés a felugró ablakban",
+     "mit": "kattints",
+     "ertek": null
+    }
+   ],
+   "felirat": "Jóváhagyás, majd a kis ablakban még egyszer.",
+   "alt": "Rajz: az ONYA meghatalmazás-oldalának alja a JÓVÁHAGYÁS gombbal, alatta a megerősítő kis ablak; a Meghatalmazott sor borostyánnal kiemelve.",
+   "tipus": "illusztracio",
+   "forras": {
+    "id": "nav_ujegyke_gyik",
+    "cim": "NAV – UJEGYKE: gyakori kérdések (jóváhagyás 4 napon belül)",
+    "url": "https://nav.gov.hu/ugyfeliranytu/eljarasi-kerdesek",
+    "datum": "2026-11-19",
+    "oldal": null,
+    "fajta": "rajzolt_vazlat"
+   },
+   "forras_rovid": "Rajzolt vázlat – a valódi képernyő kicsit eltérhet. A gombról és a felugró ablakról nincs hivatalos NAV-kép.",
+   "alap": {
+    "kep": "_illusztracio/png/onya_jovahagyas.png",
+    "vagas": null,
+    "bovites": [
+     230,
+     0,
+     0,
+     0
+    ],
+    "jel_meret": 1.7
+   },
+   "jelolesek": [
+    {
+     "n": 1,
+     "doboz": "@meghatalmazott",
+     "stilus": "borostyan",
+     "cimke": "Itt a könyvelőd neve áll",
+     "cimke_hely": "lent",
+     "parna": 8
+    },
+    {
+     "n": 2,
+     "doboz": "@jovahagyas_gomb",
+     "stilus": "tinta",
+     "cimke": "Koppints: Jóváhagyás",
+     "cimke_hely": "lent",
+     "parna": 8
+    },
+    {
+     "n": 3,
+     "doboz": "@megerosites_gomb",
+     "stilus": "tinta",
+     "cimke": "A kis ablakban még egyszer: Jóváhagyás",
+     "cimke_hely": "lent",
+     "parna": 8
+    }
+   ],
+   "sajat": {
+    "kep": null,
+    "vagas": null,
+    "homalyos": null,
+    "jelolesek": [],
+    "megjegyzes": "Ha a tulaj saját képernyőképet készít: _sajat/<útmutató>/<NN>_<slug>.png; a homalyos listát KÖTELEZŐ kitölteni (a személyes adatok helye)."
+   },
+   "kimenet": {
+    "fajl": "06_onya_jovahagyas.png",
+    "fajl_2x": "06_onya_jovahagyas@2x.png",
+    "szel": 1080,
+    "mag": 1833,
+    "szel_2x": 2160,
+    "mag_2x": 3666,
+    "forras_hasznalt": "alap",
+    "tipus": "illusztracio",
+    "jelolesek_kimeneten": [
+     {
+      "n": 1,
+      "stilus": "borostyan",
+      "cimke": "Itt a könyvelőd neve áll",
+      "doboz": [
+       0.1816,
+       0.2531,
+       0.9136,
+       0.3219
+      ],
+      "korong": [
+       0.1126,
+       0.2725
+      ]
+     },
+     {
+      "n": 2,
+      "stilus": "tinta",
+      "cimke": "Koppints: Jóváhagyás",
+      "doboz": [
+       0.5584,
+       0.5042,
+       0.9447,
+       0.5622
+      ],
+      "korong": [
+       0.4894,
+       0.5235
+      ]
+     },
+     {
+      "n": 3,
+      "stilus": "tinta",
+      "cimke": "A kis ablakban még egyszer: Jóváhagyás",
+      "doboz": [
+       0.5584,
+       0.7442,
+       0.8867,
+       0.8022
+      ],
+      "korong": [
+       0.4894,
+       0.7636
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

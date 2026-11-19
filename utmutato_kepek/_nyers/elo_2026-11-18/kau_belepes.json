@@ -1,0 +1,43 @@
+{
+ "nev": "kau_belepes",
+ "url": "https://kau.gov.hu/proxy/saml/authservice?x=ID_46873ca8-1ceb-4153-974f-bf895fc202ef",
+ "cim": "Központi Azonosítási Ügynök",
+ "ido": "2026-11-18T09:57:01.365Z",
+ "dpr": 3,
+ "viewport": {
+  "width": 390,
+  "height": 844,
+  "deviceScaleFactor": 3,
+  "isMobile": true,
+  "hasTouch": true
+ },
+ "helyek": {
+  "dap": [
+   72,
+   823,
+   1097,
+   965
+  ],
+  "ugyfelkapu": [
+   72,
+   1038,
+   1098,
+   1182
+  ],
+  "cim": [
+   72,
+   480,
+   813,
+   630
+  ],
+  "ugyfelkapu_szoveg": [
+   330,
+   1060,
+   830,
+   1160
+  ]
+ },
+ "kert_url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

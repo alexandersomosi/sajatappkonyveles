@@ -1,0 +1,10 @@
+/* C: világos mentás fejléc sötét szöveggel, a neon csak a gombokon */
+:root { --tintakek: #0B1A10; }
+.fejlec { background: #D9F7D4; color: var(--tinta); }
+.fejlec .allapotsor, .fejlec .hatarido { color: var(--tinta); }
+.fejlec p, .fejlec .ft { color: #3F5A45; }
+.vegosszeg .ft { color: #0B7F14; }
+.fejlec::before { filter: invert(1); opacity: .35; }
+.fejlec .gomb-sav { box-shadow: inset 0 0 0 1.5px rgba(11,26,16,.55); color: var(--tinta); }
+.otthon-jel { background: var(--tinta); }
+body .fejlec .hatarido { color: var(--tinta); }

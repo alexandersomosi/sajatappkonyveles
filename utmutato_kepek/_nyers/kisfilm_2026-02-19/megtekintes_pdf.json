@@ -1,0 +1,38 @@
+{
+ "forras": "https://youtu.be/DQnbjo2lrv8",
+ "kocka_ido_mp": 42.5,
+ "kocka_fajl": "_forras2/kisfilm_kockak/kocka_t042.5_x190_y300.png",
+ "elmosva": [
+  [
+   106,
+   325,
+   192,
+   347
+  ]
+ ],
+ "kitoltve": [],
+ "meret": [
+  1560,
+  590
+ ],
+ "helyek": {
+  "megtekintes": [
+   92,
+   349,
+   192,
+   398
+  ],
+  "bejelenteseim": [
+   70,
+   50,
+   254,
+   90
+  ],
+  "bejelenteseim_ful": [
+   60,
+   44,
+   528,
+   96
+  ]
+ }
+}

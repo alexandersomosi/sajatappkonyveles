@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Belépés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=Sofia+Sans+Condensed:wght@600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.belepes { padding: 0 var(--perem); }
+/* Szóvédjegy: csendes, pala, aláhúzás nélkül */
+.szovedjegy { display: block; margin: 44px 4px 0; font-weight: 600; font-size: 34px; line-height: 1; letter-spacing: -.02em; color: var(--pala); }
+.szlogen { font-weight: 400; font-size: 19px; line-height: 1.42; margin: 14px 4px 0; max-width: 18.5em; }
+.urlap { margin-top: 30px; padding: 20px var(--belso) 10px; }
+.urlap .mezo + .mezo-cimke { margin-top: 18px; }
+.jelszo { justify-content: space-between; padding-right: 6px; }
+.jelszo .pontok { letter-spacing: .16em; font-size: 20px; }
+.megmutat { display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 8px; color: var(--pala); font-weight: 600; font-size: 15.5px; }
+.megmutat .ikon { width: 20px; height: 20px; }
+.urlap .gomb.elso { margin-top: 22px; }
+.urlap .gomb.harmad { display: flex; margin: 6px auto 0; }
+.kulso { display: grid; gap: 10px; margin-top: 16px; }
+.kulso .gomb.masod { width: 100%; height: 50px; }
+.uj { text-align: center; font-size: 16px; color: var(--masod-alap); margin-top: 18px; }
+.uj .gomb.harmad { margin-left: 4px; }
+</style>
+</head>
+<body class="telefon">
+<div data-allapotsor></div>
+
+<main class="belepes">
+  <p class="szovedjegy">Tisztán</p>
+  <h1 class="szlogen">Saját könyvelőd van, és minden befizetésnél látod, miből jött ki az összeg.</h1>
+
+  <form class="lap urlap" onsubmit="return false">
+    <label class="mezo-cimke" for="email">E-mail-cím</label>
+    <div class="mezo" id="email">szabokata@pelda.hu</div>
+    <label class="mezo-cimke" for="jelszo">Jelszó</label>
+    <div class="mezo jelszo" id="jelszo"><span class="pontok" aria-label="rejtett jelszó">••••••••••</span><button type="button" class="megmutat"><svg class="ikon"><use href="#i-szem"/></svg>Megmutatom</button></div>
+    <button type="submit" class="gomb elso">Belépek</button>
+    <button type="button" class="gomb harmad">Elfelejtetted a jelszavad?</button>
+  </form>
+
+  <div class="kulso">
+    <button class="gomb masod">Belépek Google-fiókkal</button>
+    <button class="gomb masod">Belépek Apple-fiókkal</button>
+  </div>
+
+  <p class="uj">Még nincs fiókod?<button class="gomb harmad">Regisztrálok</button></p>
+</main>
+
+<script src="kozos.js"></script>
+</body>
+</html>

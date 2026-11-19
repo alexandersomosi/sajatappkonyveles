@@ -1,0 +1,170 @@
+/* Kézjegy (C változat, tintakék levélpapír) – közös tokenek és elemek.
+   Minden képernyő ezt tölti be. Betűk: Google Fonts, OFL licenc.
+   2. kör (2026-11-17): nincs rálógó lap, színezett másodlagos gomb, állapotszó + jel. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@90..100,400..700&family=Libre+Caslon+Condensed:wght@400..700&display=block');
+
+:root {
+  /* --- szín --- */
+  --tintakek: #17284A;          /* márka: fejlécsáv, elsődleges gomb, aktív fül */
+  --tintakek-szoveg: #22396A;   /* link, szöveges gomb, másodlagos gomb felirata */
+  --tollkek: #2546A6;           /* KIZÁRÓLAG aláírás és monogram */
+  --alap: #DDE3EC;              /* háttér (fehér lappal 1,29:1) */
+  --lap: #FFFFFF;
+  --tinta: #151C2A;             /* szöveg */
+  --halvany: #596379;           /* másodlagos szöveg fehér lapon (6,0:1) */
+  --halvany-alapon: #4A5468;    /* másodlagos szöveg az alapon (5,9:1) */
+  --fejlec-halvany: #AEBBD2;    /* másodlagos szöveg a fejlécsávon (7,5:1) */
+  --keret: #C5CEDD;             /* várakozó idővonal, a mérő alja */
+  --hajszal: #D6DCE5;           /* sorelválasztó */
+  --mezo-keret: #7D879B;        /* beviteli mező kerete (3,6:1) */
+  --mezo-alap: #F5F7FA;         /* beviteli mező belseje */
+  --nyomott: #EEF1F6;           /* megnyomott sor */
+  --gomb-m-alap: #D6E0F0;       /* másodlagos gomb kitöltése (keret nincs) */
+  --gomb-m-nyomott: #C3D0E8;    /* ugyanez megnyomva */
+  --sajat: #C3CEE0;             /* a saját üzenet buboréka */
+  --kesz: #2B6744;              /* kész állapot: Feldolgozva, Beadva, Kimásolva (6,6:1) */
+  --kesz-alap: #E2EFE6;         /* a „Kimásolva” gomb alapja */
+  --veszely: #B42318;
+  --figyelem: #8A5A00;
+  --figyelem-alap: #FBF3E2;
+
+  /* --- betű --- */
+  --betu-cim: "Libre Caslon Condensed", Georgia, "Segoe UI", serif;
+  --betu-szoveg: "Archivo", "Segoe UI", Arial, sans-serif;
+
+  /* --- forma --- */
+  --r-lap: 12px;
+  --r-level: 4px;               /* a levél papír: szögletesebb, mint a lapok */
+  --r-gomb: 8px;
+  --r-mezo: 6px;
+  --margo: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--alap); }
+body {
+  width: 390px; min-height: 844px; position: relative; overflow-x: hidden;
+  color: var(--tinta);
+  font-family: var(--betu-szoveg); font-stretch: 96%; font-size: 16px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+svg.i { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7;
+        stroke-linecap: round; stroke-linejoin: round; }
+.szam { font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+
+/* --- állapotsor (rendszer) --- */
+.allapotsor { height: 47px; display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 26px 0 34px; font-weight: 700; font-size: 16px; font-stretch: 100%; letter-spacing: -.01em; }
+.allapotsor .jelek { display: flex; gap: 6px; align-items: center; }
+.allapotsor svg { height: 13px; fill: currentColor; }
+.sotet .allapotsor { color: #fff; }
+
+/* --- fejlécsáv: cím és egy mondat, gomb nincs benne; a lapok NEM lógnak rá --- */
+.fejlec { background: var(--tintakek); color: #fff; padding-bottom: 22px; }
+.fejlec h1 { font-family: var(--betu-cim); font-weight: 600; font-size: 38px; line-height: 1.05;
+  letter-spacing: .003em; padding: 10px 20px 0; }
+.fejlec p { color: var(--fejlec-halvany); font-size: 15px; line-height: 1.4; padding: 6px 20px 0; max-width: 360px; }
+.fejlec .ft { color: var(--fejlec-halvany); }
+
+/* --- tartalom az alapon --- */
+.tartalom { padding: 14px var(--margo) 116px; position: relative; }
+.tartalom.sima { padding-top: 0; }
+.szakasz { font-weight: 700; font-size: 15px; line-height: 1.3; color: var(--tinta); padding: 24px 4px 9px; }
+.megjegyzes { font-size: 14px; line-height: 1.4; color: var(--halvany-alapon); padding: 10px 4px 0; }
+.lap + .lap { margin-top: 12px; }
+
+/* --- lap --- */
+.lap { background: var(--lap); border-radius: var(--r-lap); position: relative; overflow: hidden; }
+.lap .belso { padding: 18px 18px 18px; }
+
+/* --- a levél: papír, belső keret és helységnév nélkül --- */
+.level { border-radius: var(--r-level); padding: 20px 20px 16px; }
+.level .megszolitas { font-family: var(--betu-cim); font-weight: 600; font-size: 26px; line-height: 1.15; }
+.level p { font-size: 16px; line-height: 1.5; margin-top: 6px; }
+.alairas-sor { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; margin-top: 12px; }
+.ki-irta { display: flex; align-items: center; gap: 10px; }
+.ki-irta .nev { font-weight: 600; font-size: 15px; line-height: 1.3; }
+.ki-irta .mikor { font-size: 13.5px; line-height: 1.3; color: var(--halvany); }
+.alairas { width: 112px; height: 42px; display: block; margin: 0 -2px -2px 0; fill: var(--tollkek); flex: none; }
+
+/* --- összegek --- */
+.osszeg { font-family: var(--betu-cim); font-size: 20px; line-height: 1.1; font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.ft { font-size: .7em; color: var(--halvany); margin-left: 3px; font-weight: 400; }
+
+/* --- sorok: kitöltés és keret nélkül, hajszálvonal és nyíl --- */
+.sor { display: flex; align-items: center; gap: 12px; padding: 13px 16px; min-height: 58px; position: relative; }
+.sor + .sor::before { content: ""; position: absolute; top: 0; left: 16px; right: 0; border-top: 1px solid var(--hajszal); }
+.sor .l { flex: 1; min-width: 0; }
+.sor .cim { font-size: 16px; line-height: 1.35; }
+.sor .al { font-size: 14px; line-height: 1.35; color: var(--halvany); margin-top: 2px; }
+.sor .ikon { color: var(--halvany); align-self: flex-start; margin-top: 1px; }
+.nyil { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--halvany); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; }
+.sor.nyomott { background: var(--nyomott); }
+
+/* --- gombok: négy szint, egyik sem hasonlít sorra --- */
+.gomb-e { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 54px;
+  background: var(--tintakek); color: #fff; border-radius: var(--r-gomb);
+  font-weight: 700; font-size: 17px; letter-spacing: .005em; }
+.gomb-e.veszely { background: var(--veszely); }
+.gomb-m { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 16px 0 14px;
+  background: var(--gomb-m-alap); color: var(--tintakek-szoveg);
+  border-radius: var(--r-gomb); font-weight: 700; font-size: 16px; white-space: nowrap; }
+.gomb-m.nyomva { background: var(--gomb-m-nyomott); }
+.gomb-m.csak-szoveg { padding: 0 16px; }
+.gomb-m svg.i { width: 20px; height: 20px; stroke-width: 1.9; }
+/* másolás: kompakt másodlagos gomb, minden érték mellett saját */
+.gomb-masol { height: 40px; padding: 0 13px 0 11px; font-size: 15px; gap: 6px; }
+.gomb-masol svg.i { width: 18px; height: 18px; }
+.gomb-masol.kimasolva { background: var(--kesz-alap); color: var(--kesz); }
+.gomb-sz, .gomb-v { display: inline-block; padding: 10px 0; font-weight: 700; font-size: 15.5px; line-height: 1.2;
+  color: var(--tintakek-szoveg); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+.gomb-v { color: var(--veszely); }
+
+/* --- mező --- */
+.mezo { display: block; }
+.mezo + .mezo { margin-top: 14px; }
+.mezo .felirat { display: block; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.mezo .doboz { display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 14px;
+  border: 1px solid var(--mezo-keret); border-radius: var(--r-mezo); background: var(--mezo-alap); font-size: 17px; }
+.mezo .doboz.fokusz { border: 2px solid var(--tintakek); padding: 0 13px; }
+.mezo .doboz .ertek { flex: 1; min-width: 0; }
+.mezo .doboz .gomb-sz { font-size: 15px; }
+
+/* --- határ-mérő: a mondat a cím, a szakszó lent, a sáv végén --- */
+.mero { padding: 16px 18px 15px; }
+.mero + .mero { border-top: 1px solid var(--hajszal); }
+.mero .mondat { font-weight: 700; font-size: 17px; line-height: 1.4; }
+.mero .mellek { font-size: 15px; line-height: 1.45; color: var(--halvany); margin-top: 2px; }
+.sav { height: 8px; border-radius: 4px; background: var(--hajszal); margin: 12px 0 7px; overflow: hidden; }
+.sav i { display: block; height: 100%; background: var(--tintakek); border-radius: 4px; }
+.vegek { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; line-height: 1.35; color: var(--halvany);
+  font-variant-numeric: tabular-nums lining-nums; }
+.vegek span:last-child { text-align: right; }
+
+/* --- állapot: mindig a négy szó egyike elöl, jellel; utána a dátum ---
+   Feltöltve, Bence látta: óra (várakozik). Feldolgozva, Beadva: zöld pipa (kész). */
+.allapot { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 14px; line-height: 1.35; color: var(--halvany); }
+.allapot svg { width: 16px; height: 16px; flex: none; }
+.allapot .szo { font-weight: 600; color: var(--tinta); }
+.allapot.var svg { color: var(--halvany); }
+.allapot.kesz svg, .allapot.kesz .szo { color: var(--kesz); }
+
+/* --- monogram (szignálás): csak a tétel-részleten és Bence megjegyzése alatt --- */
+.szignal { width: 42px; height: 27px; flex: none; fill: var(--tollkek); }
+
+/* --- Bence fényképe (helyőrző rajz; élesben valódi fotó) --- */
+.arckep { width: 44px; height: 44px; border-radius: 50%; flex: none; overflow: hidden; display: block; }
+.arckep svg { width: 100%; height: 100%; display: block; }
+
+/* --- alsó fülsor --- */
+.fulsor { position: fixed; left: 0; bottom: 0; width: 390px; height: 84px; background: var(--lap);
+  border-top: 1px solid var(--hajszal); display: grid; grid-template-columns: repeat(4, 1fr); z-index: 5; }
+.ful { display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 9px;
+  color: var(--halvany); font-size: 12.5px; font-weight: 600; position: relative; }
+.ful svg.i { width: 26px; height: 26px; stroke-width: 1.6; }
+.ful.on { color: var(--tintakek); font-weight: 700; }
+.ful.on svg.i { stroke-width: 2.1; }
+.otthon-jel { position: fixed; bottom: 8px; left: 128px; width: 134px; height: 5px; border-radius: 3px; background: var(--tinta); z-index: 6; }

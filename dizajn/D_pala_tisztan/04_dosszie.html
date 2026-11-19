@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Dosszié</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;600&family=Sofia+Sans+Condensed:wght@600&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.honap { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+.honap .gomb.masod { width: 46px; padding: 0; }
+.honap .gomb.masod .ikon { width: 20px; height: 20px; stroke-width: 2.2; }
+.honap .nev { font-weight: 600; font-size: 21px; line-height: 1.15; text-align: center; letter-spacing: -.005em; }
+.honap .nev small { display: block; font-weight: 400; font-size: 15px; color: var(--masod-alap); margin-top: 3px; letter-spacing: 0; }
+.tetel { align-items: flex-start; padding-top: 14px; padding-bottom: 14px; }
+.tetel .ikon.tipus { margin-top: 1px; }
+.tetel .nyil { margin-top: 5px; }
+.fejsor { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.fejsor .fo { min-width: 0; }
+.fejsor .osszeg { font-size: 17px; }
+.var-rad .gomb.masod { margin-top: 14px; }
+.var-rad .fo { font-weight: 600; }
+/* A rögzített feltöltés a háttéren ül, alatta a fehér alsó sáv: ez az egyetlen sötét tömb a képernyőn */
+.ragado { position: absolute; left: 0; right: 0; bottom: 86px; padding: 12px var(--perem) 12px; background: var(--alap); border-top: 1px solid var(--hajszal-alap); z-index: 4; }
+.ragado .ikon { width: 22px; height: 22px; }
+</style>
+</head>
+<body class="telefon" data-ful="dosszie">
+<div data-allapotsor></div>
+
+<main class="tartalom" style="padding-bottom:200px">
+  <h1 class="cim">Dosszié</h1>
+  <p class="alcim">Amit ide teszel, Bence is látja.</p>
+
+  <div class="honap">
+    <button class="gomb masod" aria-label="Szeptember"><svg class="ikon"><use href="#i-balra"/></svg></button>
+    <div class="nev">Október<small>7 tétel, 1 hiányzik</small></div>
+    <button class="gomb masod" aria-label="November" disabled><svg class="ikon"><use href="#i-jobbra"/></svg></button>
+  </div>
+
+  <h3 class="szakasz">Vár rád</h3>
+  <section class="lap">
+    <div class="sor tetel var-rad">
+      <svg class="ikon tipus"><use href="#i-irat"/></svg>
+      <div class="bal">
+        <div class="fo">Szeptemberi bankszámlakivonat</div>
+        <div class="allapot figy"><span class="szegmens"><i></i><i></i><i></i><i></i></span>Hiányzik, Bence kérte</div>
+        <button class="gomb masod"><svg class="ikon"><use href="#i-kamera"/></svg>Feltöltöm a kivonatot</button>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="szakasz">Számláid a NAV-ból</h3>
+  <section class="lap">
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-szamla"/></svg>
+      <div class="bal">
+        <div class="fejsor"><span class="fo">Fekete Nyomda Kft.</span><span class="osszeg szam">180&#8239;000<span class="ft">Ft</span></span></div>
+        <div class="al">Kiállítottad okt. 2-án</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i class="tele"></i><i></i><i></i></span>Bence látta, okt. 5.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-szamla"/></svg>
+      <div class="bal">
+        <div class="fejsor"><span class="fo">Lila Ajtó Kávézó Bt.</span><span class="osszeg szam">64&#8239;000<span class="ft">Ft</span></span></div>
+        <div class="al">Kiállítottad okt. 6-án</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i></i><i></i><i></i></span>Megjött a NAV-ból, okt. 7.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-szamla"/></svg>
+      <div class="bal">
+        <div class="fejsor"><span class="fo">Varga Péter</span><span class="osszeg szam">35&#8239;000<span class="ft">Ft</span></span></div>
+        <div class="al">Kiállítottad okt. 7-én</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i></i><i></i><i></i></span>Ma jött meg a NAV-ból</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+  </section>
+
+  <h3 class="szakasz">Feltöltötted</h3>
+  <section class="lap">
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-foto"/></svg>
+      <div class="bal">
+        <div class="fejsor"><span class="fo">Nyugtatömb, 4 nyugta</span><span class="osszeg szam">42&#8239;000<span class="ft">Ft</span></span></div>
+        <div class="al">Fotó, 2 oldal, okt. 3.</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i class="tele"></i><i class="tele"></i><i></i></span>Bence feldolgozta, okt. 5.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-foto"/></svg>
+      <div class="bal">
+        <div class="fo">Műterem bérleti díja</div>
+        <div class="al">Fotó, okt. 4. Ezt nem kell beadni, a 40% fedezi.</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i class="tele"></i><i></i><i></i></span>Bence látta, okt. 5.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+  </section>
+
+  <h3 class="szakasz">Bevallások és levelek</h3>
+  <section class="lap">
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-irat"/></svg>
+      <div class="bal">
+        <div class="fo">Bevallás, harmadik negyedév</div>
+        <div class="al">PDF, a NAV visszaigazolásával</div>
+        <div class="allapot"><span class="szegmens"><i class="tele"></i><i class="tele"></i><i class="tele"></i><i class="tele"></i></span>Bence beadta, okt. 7.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+    <div class="sor tetel">
+      <svg class="ikon tipus"><use href="#i-level"/></svg>
+      <div class="bal">
+        <div class="fo">Levél a NAV-tól</div>
+        <div class="al">Érkezett okt. 5-én</div>
+        <div class="allapot">Bence elolvasta: nincs teendőd.</div>
+      </div>
+      <svg class="nyil"><use href="#i-jobbra"/></svg>
+    </div>
+  </section>
+</main>
+
+<div class="ragado">
+  <button class="gomb elso"><svg class="ikon"><use href="#i-feltolt"/></svg>Feltöltök egy fotót vagy fájlt</button>
+</div>
+
+<script src="kozos.js"></script>
+</body>
+</html>

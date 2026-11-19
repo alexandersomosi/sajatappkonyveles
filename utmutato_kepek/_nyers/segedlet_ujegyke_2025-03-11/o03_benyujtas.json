@@ -1,0 +1,31 @@
+{
+ "helyek": {
+  "tovabb": [
+   134,
+   306,
+   391,
+   360
+  ],
+  "megsem": [
+   410,
+   307,
+   663,
+   358
+  ],
+  "uzenet": [
+   0,
+   150,
+   801,
+   300
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": [
+  [
+   110,
+   290,
+   410,
+   369
+  ]
+ ]
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Főoldal, aktív ügyfél (B kisebb)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="b_kozos.css">
+<style>
+/* Aktív ügyfél főoldala (a beköszönés kész). Fent a két nagy szám, alatta a teendő (utalás) a három NAV-számlával,
+   majd a félretevés. A fő gomb a teendő válasza: „Elutaltam”. Bence jóváhagyása az utalás alatt, kis arccal. */
+
+/* ---------- a két nagy szám ---------- */
+.szamok { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 6px 16px 16px; }
+.szamok .mi { font-size: 14px; line-height: 1.35; color: var(--halvany); white-space: nowrap; }
+.szamok .nagy { font-weight: 750; font-size: 26px; line-height: 1.15; letter-spacing: -.025em; margin-top: 2px;
+  font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.szamok .nagy .ft { font-size: .6em; font-weight: 600; color: var(--halvany); margin-left: 4px; letter-spacing: 0; }
+
+/* ---------- az utalás: három sor, mindegyik a saját NAV-számlájával és egy Másolás-kapszulával ---------- */
+.utal { margin-top: 6px; }
+.usor { display: flex; align-items: center; gap: 10px; min-height: 50px; }
+.usor .l { flex: 1; min-width: 0; }
+.usor .c { font-weight: 600; font-size: 15.5px; line-height: 1.3; }
+.usor .a { font-size: 14px; line-height: 1.35; color: var(--halvany); margin-top: 1px; font-variant-numeric: tabular-nums lining-nums; letter-spacing: -.005em; }
+.usor .o { font-weight: 650; font-size: 15.5px; line-height: 1.3; text-align: right; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.usor .o .ft { font-size: .86em; margin-left: 3px; }
+
+/* Bence jóváhagyása: a közös vékony Bence-sor (b_kozos.css), kis arc a sor elején (ki lépett) */
+.utal + .bence-sor { margin-top: 4px; }
+
+/* ---------- félretevés: gyűrű + egy mondat ---------- */
+.gyuru-sor { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.gyuru { position: relative; width: 56px; height: 56px; flex: none; }
+.gyuru svg { display: block; width: 56px; height: 56px; transform: rotate(-90deg); }
+.gyuru span { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 13.5px;
+  letter-spacing: -.01em; font-variant-numeric: tabular-nums lining-nums; }
+.gyuru-sor p { margin-top: 0; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header>
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="fej">
+    <div class="ki">
+      <img class="arckep" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt="">
+      <div><div class="nev">Kovács Bence</div><div class="szerep">a könyvelőd</div></div>
+      <span class="demo">DEMO</span>
+    </div>
+  </div>
+  <div class="szamok">
+    <div><div class="mi">Idei bevételed</div><div class="nagy">8&nbsp;242&nbsp;000<span class="ft">Ft</span></div></div>
+    <div><div class="mi">Eddigi adód · becslés</div><div class="nagy">1&nbsp;512&nbsp;300<span class="ft">Ft</span></div></div>
+  </div>
+</header>
+
+<main>
+  <section class="szak">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/szamlaszam_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/szamlaszam_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/szamlaszam_arnyektalan_28@3x.png 3x" alt=""><h2>Utalj <span class="nt">392&nbsp;661 Ft-ot</span> január 12-ig</h2></div>
+    <p>Három NAV-számlára, a közleménybe írd az adóazonosító jeledet.</p>
+    <div class="utal">
+      <div class="usor">
+        <div class="l"><div class="c">TB-járulék</div><div class="a">10032000-06055912</div></div>
+        <div class="o">148&nbsp;740<span class="ft">Ft</span></div>
+        <button class="kis-gomb"><img class="i3" src="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png" srcset="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png 2x, ../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@3x.png 3x" alt="">Másolás</button>
+      </div>
+      <div class="usor">
+        <div class="l"><div class="c">Szocho</div><div class="a">10032000-06055826</div></div>
+        <div class="o">117&nbsp;585<span class="ft">Ft</span></div>
+        <button class="kis-gomb"><img class="i3" src="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png" srcset="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png 2x, ../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@3x.png 3x" alt="">Másolás</button>
+      </div>
+      <div class="usor">
+        <div class="l"><div class="c">SZJA-előleg</div><div class="a">10032000-06056353</div></div>
+        <div class="o">126&nbsp;336<span class="ft">Ft</span></div>
+        <button class="kis-gomb"><img class="i3" src="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png" srcset="../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@2x.png 2x, ../../C2_modern/assets/ikon3d/masolas_arnyektalan_24@3x.png 3x" alt="">Másolás</button>
+      </div>
+    </div>
+    <div class="bence-sor"><img class="arc-kicsi" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" srcset="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png 2x, ../../C2_modern/assets/avatar/karakter_1_lapos@3x.png 3x" alt=""><span><b>Bence jóváhagyta</b> · október 2.</span></div>
+  </section>
+
+  <section class="szak">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/lakat_28@2x.png" srcset="../../C2_modern/assets/ikon3d/lakat_28@2x.png 2x, ../../C2_modern/assets/ikon3d/lakat_28@3x.png 3x" alt=""><h2>Még <span class="nt">120&nbsp;000 Ft-ot</span> tegyél félre</h2></div>
+    <div class="gyuru-sor">
+      <div class="gyuru" role="img" aria-label="60 százalék megvan">
+        <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#DCE2F7" stroke-width="6"/><circle cx="28" cy="28" r="24" fill="none" stroke="#1428DB" stroke-width="6" stroke-linecap="round" stroke-dasharray="90.48 150.80"/></svg>
+        <span>60%</span>
+      </div>
+      <p>Áprilisban 300&nbsp;000 Ft kell, ebből 180&nbsp;000&nbsp;Ft már megvan.</p>
+    </div>
+  </section>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Elutaltam</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>

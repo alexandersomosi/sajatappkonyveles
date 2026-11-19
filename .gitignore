@@ -1,0 +1,63 @@
+# Adózz / Kézjegy – mi NEM megy fel a GitHubra (2026-11-19)
+
+# titkok, belépések
+DEMO_BELEPESEK.txt
+**/.env
+**/.env.*
+!**/env.example
+!**/.env.example
+**/*.pem
+**/*.key
+**/*.p12
+**/*.keystore
+**/*.jks
+**/*.dump
+**/*.gpg
+
+# személyes adatok (a tulaj és a húga NAV-képei, nyers fotók)
+_privat/
+utmutato_kepek/sajat/
+utmutato_kepek/_forras/
+utmutato_kepek/_forras2/
+dizajn/C4_atlathato/_inspiracio/
+
+# archívum (a régi változatok helyben maradnak, a git története úgyis megőrzi)
+**/_regi/
+
+# fordítások, függőségek, gépi kimenet
+**/node_modules/
+**/dist/
+**/dist-*/
+**/build/
+**/.expo/
+**/.gradle/
+**/.cxx/
+kod/app/android/app/build/
+**/coverage/
+**/*.log
+**/.DS_Store
+**/Thumbs.db
+
+# nagy bináris kimenetek
+apk/*.apk
+**/*.aab
+video/**/kep/
+video/**/kockak/
+video/**/_tmp/
+video/**/out/
+video/**/*.wav
+
+# tesztképek
+_qa/
+kod/_qa/*.png
+kod/_qa/**/*.png
+kod/app/_kepek/
+kod/panel/_kepek/
+
+# videó-előnézetek és kódoló naplók
+video/**/_elonezet/
+**/*.mbtree
+utmutato_kepek/_elonezet/sajat_*
+_munka/**/*.png
+_munka/**/*.jpg
+dizajn/kutatas/

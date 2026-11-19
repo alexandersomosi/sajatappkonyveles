@@ -1,0 +1,101 @@
+{
+ "kor": "4",
+ "forgatokonyv": "L01 [koszonto] Köszönjük, hogy telepítetted az alkalmazásunkat!\nL02 [koszonto] Megmutatjuk, mire jó, és mi kell a kezdéshez.\nL03 [mire_jo] Valódi könyvelőd lesz, aki intézi az adóidat.\nL04 [mire_jo] A számláid maguktól megérkeznek a NAV-tól.\nL05 [mire_jo] A Főoldalon látod, mennyit, mikorra és hova fizess.\nL06 [mire_jo] A nyugtákat pedig csak lefotózod.\nL07 [bekotes] A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod.\nL08 [lepes_adatok] Először az adataid kellenek: ezekből számol a könyvelőd.\nL09 [lepes_inditas] Ha még nincs vállalkozásod, te magad jelented be a NAV-nál, nagyjából negyedóra alatt.\nL10 [lepes_inditas] Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj.\nL10b [lepes_inditas] A NAV-os igazolást feltöltöd, mi pedig átnézzük.\nL11 [lepes_szerzodes] Elfogadod a szerződést. A havidíjhoz a kártyádat is megadod: új vállalkozásnál csak akkor, ha már megvan az adószámod.\nL13 [lepes_meghatalmazas] Ezután NAV-meghatalmazást adsz a könyvelődnek. Ebben is segít az alkalmazás.\nL14 [lepes_meghatalmazas] Így ő adhatja be helyetted a bevallásaidat.\nL15 [lepes_azonositas] Lefotózod a személyidet és a lakcímkártyád lakcímes oldalát.\nL16 [lepes_azonositas] A törvény szerint azonosítanunk kell téged.\nL17 [lepes_szamlak] Végül a könyvelőd összeköti a fiókodat a NAV-val.\nL18 [korlatozott] Addig néhány funkció még nem érhető el, utána minden megnyílik.\nL19 [korlatozott] Onnantól a könyvelőd jelzi, ha tenned kell valamit.\nL20 [segitseg] Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül felhív.   (kimondva: Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív.)\nL21 [segitseg] Az Üzenetekben pedig bármikor írhatsz nekünk.\nL22 [zaro] Kezdjük is! Az első lépést lent találod.",
+ "nyelv": {
+  "osszkep": "A szöveg felépítése logikus és barátságos, de helyenként kissé rideg, sűrített vagy ügyintézői hangvételű. Néhány mondat gördülékenyebbé tételével természetesebb, nyugodt és megbízható beszédhang érhető el.",
+  "javaslatok": [
+   {
+    "id": "L01",
+    "gond": "Kissé gépies nyitás; a szabályzat szerint a kifejezés 'az alkalmazás', nem pedig 'az alkalmazásunkat'.",
+    "uj_szoveg": "Örülünk, hogy letöltötted az alkalmazást!"
+   },
+   {
+    "id": "L03",
+    "gond": "A 'valódi könyvelőd lesz' kissé reklámosan és kétkedést keltően hangzik, a 'segít' vagy 'vigyáz rád' hangulat melegebb.",
+    "uj_szoveg": "Saját könyvelőd lesz, aki kézben tartja az adóügyeidet."
+   },
+   {
+    "id": "L05",
+    "gond": "A 'mikorra és hova fizess' szófordulat beszédben kissé darabos és túl feszes.",
+    "uj_szoveg": "A Főoldalon mindig látod, mikor, hova és mennyit kell utalnod."
+   },
+   {
+    "id": "L07",
+    "gond": "A 'A bekötés néhány lépés' magyartalan, tőmondatos szerkezet. A 'mi ez' szintén túl rideg.",
+    "uj_szoveg": "A beállítás csak néhány lépés. Mindegyiknél pontosan elmagyarázzuk, mit kell tenned."
+   },
+   {
+    "id": "L09",
+    "gond": "A 'te magad jelented be' hangsúlyozása feleslegesen riasztó lehet egy kezdőnek, mintha magára hagynánk.",
+    "uj_szoveg": "Ha még nincs vállalkozásod, a NAV-nál indíthatod el, nagyjából negyedóra alatt."
+   },
+   {
+    "id": "L11",
+    "gond": "Túl sok információ és feltétel került egyetlen mondatba, beszédben nehezen követhető.",
+    "uj_szoveg": "Ezután elfogadod a szerződést, és megadod a bankkártyádat a havidíjhoz. Új vállalkozásnál erre csak az adószámod után lesz szükség."
+   },
+   {
+    "id": "L16",
+    "gond": "A 'törvény szerint azonosítanunk kell téged' túlzottan hatósági, rideg megfogalmazás.",
+    "uj_szoveg": "Erre a törvényi előírások miatt van szükség, hogy biztonságban legyenek az adataid."
+   },
+   {
+    "id": "L18",
+    "gond": "A 'funkció még nem érhető el' informatikai szakzsargon, nem illik a privátbanki közvetlenséghez.",
+    "uj_szoveg": "Addig néhány dolgot még nem érsz el, de amint elkészül, minden megnyílik előtted."
+   },
+   {
+    "id": "L20",
+    "gond": "A '24–48 óra' lassúnak hat és távolságtartó, kimondva nehézkes. Élőbeszédben a napokban megadott időtartam természetesebb.",
+    "uj_szoveg": "Ha elakadsz, kérj bátran visszahívást, és csapatunk egy-két munkanapon belül felhív."
+   }
+  ]
+ },
+ "tenyek": {
+  "summary": "The script is largely accurate: no product name, accountant name or AI mention, no forbidden documents, no booking or mandatory call, and the callback promise matches the contract. The main gaps are the charge timing for the new-business path, the omitted chamber-registration deadline, and a few outline items that are missing or only partly covered.",
+  "issues": [
+   {
+    "id": "L11",
+    "severity": "medium",
+    "issue": "The charge step is placed right after szerzodes, as if it came straight after the contract. On the 'inditas' path, elofizetes must come after azonositas and stays locked until the registration is kesz (default policy), so the narration gives the wrong step order and timing for that path.",
+    "evidence": "SPEC §26.1.6 (inditas order: fiok, adatok, vallalkozas_inditas, szerzodes, meghatalmazas, azonositas, elofizetes, nav_bekotes); §26.1.7 (default adoszam_utan, elofizetes locked until kesz)",
+    "fix": "Split the charge sentence from the contract step, e.g. at the end: \"Ha új vállalkozást indítasz, a havidíjhoz a kártyádat csak a bejelentés után, az adószámod megléte után adod meg.\""
+   },
+   {
+    "id": "L09",
+    "severity": "medium",
+    "issue": "The line promises the self-registration takes about a quarter hour, but it omits that the new EV must also be registered with the területi gazdasági kamara within 5 working days. The contract requires this fact in every guide text and video, and it is the guide's last step.",
+    "evidence": "SPEC §26.1.4 (kamarai regisztráció within 5 working days, last guide step kamarai_regisztracio); §26.6.3 (must stay true in every guide text, caption and video); FUNKCIOK 37",
+    "fix": "Add after L10b: \"A bejelentés után a kamarai regisztrációt is el kell intézned, öt munkanapon belül.\" Also keep the time phrase tied to the guide, e.g. \"Az útmutató kb. 10–15 percet vesz igénybe.\""
+   },
+   {
+    "id": "L08",
+    "severity": "low",
+    "issue": "The outline asks for the adataid step to name its purpose (tax and cost ratio). The script only says the accountant calculates from it, so the reason is incomplete.",
+    "evidence": "SPEC §26.7.4 (bekotes outline: adataid (tax and cost ratio)); FUNKCIOK 2 (adószám, tevékenység → költséghányad)",
+    "fix": "Rewrite L08: \"Először az adataid kellenek: ebből állapítjuk meg az adódat és a költséghányadodat, és ezzel számol a könyvelőd.\""
+   },
+   {
+    "id": "L19",
+    "severity": "medium",
+    "issue": "The outline asks for 'what happens after' with the Főoldal showing what to pay. The post-activation section only mentions the accountant's tasks, and the Főoldal's payment information is not stated there.",
+    "evidence": "SPEC §26.7.4 (bekotes: what happens after (Főoldal shows what to pay)); FUNKCIOK 8 and 11",
+    "fix": "Extend L19: \"Onnantól a Főoldalon látod, mennyit és mikorra kell befizetned, a könyvelőd pedig jelzi, ha tenned kell valamit.\""
+   },
+   {
+    "id": "L13",
+    "severity": "low",
+    "issue": "The meghatalmazás step is not tied to the NAV ONYA portal, and the script does not mention that on the new-business path this step only opens after the bejelentés is submitted.",
+    "evidence": "SPEC §26.7.4 (NAV-meghatalmazás given by you in ONYA with the in-app guide); §26.1.6 (locks on inditas path for meghatalmazas until beadva)",
+    "fix": "Change L13 to: \"Ezután a NAV ONYA felületén NAV-meghatalmazást adsz a könyvelődnek. Ebben az alkalmazás lépésről lépésre segít. Ha új vállalkozást indítasz, ez a bejelentés beküldése után nyílik meg.\""
+   },
+   {
+    "id": "L22",
+    "severity": "low",
+    "issue": "The first step card is the branch question ('Van már egyéni vállalkozásod?'), not a generic step, so 'Az első lépést lent találod' is slightly inaccurate, and the script never mentions the branch question at all.",
+    "evidence": "SPEC §26.1.1 (branch question shown as first card on the onboarding page; other step cards below it)",
+    "fix": "Change L22 to: \"Kezdjük is! Előbb azt kell megmondanod, van-e már egyéni vállalkozásod. A kérdést lent találod.\""
+   }
+  ]
+ }
+}

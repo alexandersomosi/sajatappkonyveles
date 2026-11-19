@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Főoldal</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* fejlécsáv: a végösszeg a cím, a határidő a mondat */
+  .fejlec.fizet h1 { font-size: 46px; line-height: 1.04; padding-top: 8px; letter-spacing: 0; }
+  .fejlec.fizet h1 .ft { font-size: .5em; margin-left: 6px; }
+  .fejlec.fizet p { color: #fff; font-size: 17px; line-height: 1.35; padding-top: 4px; }
+
+  .level { padding: 18px 20px 14px; }
+  .level p { margin-top: 4px; }
+  .level .alairas-sor { margin-top: 10px; }
+  .fejlec.fizet { padding-bottom: 18px; }
+  .tartalom { padding-top: 12px; }
+
+  /* utalások: tételenként összeg, számlaszám és saját másológomb */
+  .utalas .tetel { padding: 10px 16px 10px 18px; position: relative; }
+  .utalas .tetel + .tetel::before { content: ""; position: absolute; top: 0; left: 18px; right: 0; border-top: 1px solid var(--hajszal); }
+  .utalas .fent { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .utalas .mi { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .utalas .lent { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 2px; }
+  .utalas .ertek { font-size: 17px; letter-spacing: .015em; }
+  .utalas .kozlemeny .mi { font-weight: 400; color: var(--halvany); }
+  .utalas .lab { padding: 6px 18px 16px; }
+  .utalas .lab .emlek { font-size: 14px; color: var(--halvany); line-height: 1.4; margin-top: 9px; }
+  .utalas .lab .gomb-m { margin-top: 12px; }
+
+  .keres { padding: 16px 18px 18px; }
+  .keres .mit { font-size: 17px; line-height: 1.4; font-weight: 700; }
+  .keres .miert { font-size: 15px; line-height: 1.45; color: var(--halvany); margin: 3px 0 14px; }
+</style>
+</head>
+<body class="sotet">
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+
+<header class="fejlec fizet">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <h1 class="szam">457&#8239;380<span class="ft">Ft</span></h1>
+  <p>Október 12-ig (hétfő) utald el a NAV-nak.</p>
+</header>
+
+<main class="tartalom">
+
+  <!-- A havi levél: rövid, aláírt, fényképpel -->
+  <article class="lap level">
+    <div class="megszolitas">Kedves Kata!</div>
+    <p>Kiszámoltam, mennyit kell most befizetned. Szeptemberből csak a kivonatod hiányzik.</p>
+    <div class="alairas-sor">
+      <div class="ki-irta">
+        <span class="arckep"><svg viewBox="0 0 64 64" role="img" aria-label="Kovács Bence fényképe"><use href="#bence"/></svg></span>
+        <div><div class="nev">Kovács Bence</div><div class="mikor">könyvelőd, október 2.</div></div>
+      </div>
+      <svg class="alairas" viewBox="0 0 210 78" role="img" aria-label="Kovács Bence aláírása"><use href="#alairas"/></svg>
+    </div>
+  </article>
+
+  <!-- Három utalás: mindegyiknél összeg, számlaszám, másolás; a közlemény közös -->
+  <section class="lap utalas">
+    <div class="tetel">
+      <div class="fent"><span class="mi">TB-járulék</span><span class="osszeg">113&#8239;220<span class="ft">Ft</span></span></div>
+      <div class="lent"><span class="ertek szam">10032000-06055802</span>
+        <button class="gomb-m gomb-masol" aria-label="A TB-járulék számlaszámának másolása"><svg class="i"><use href="#masol"/></svg>Másolás</button></div>
+    </div>
+    <div class="tetel">
+      <div class="fent"><span class="mi">Szocho</span><span class="osszeg">79&#8239;560<span class="ft">Ft</span></span></div>
+      <div class="lent"><span class="ertek szam">10032000-06055912</span>
+        <button class="gomb-m gomb-masol" aria-label="A szocho számlaszámának másolása"><svg class="i"><use href="#masol"/></svg>Másolás</button></div>
+    </div>
+    <div class="tetel">
+      <div class="fent"><span class="mi">SZJA-előleg, III. negyedév</span><span class="osszeg">264&#8239;600<span class="ft">Ft</span></span></div>
+      <div class="lent"><span class="ertek szam">10032000-06056353</span>
+        <button class="gomb-m gomb-masol" aria-label="Az SZJA-előleg számlaszámának másolása"><svg class="i"><use href="#masol"/></svg>Másolás</button></div>
+    </div>
+    <div class="tetel kozlemeny">
+      <div class="fent"><span class="mi">Közlemény, mind a három utaláshoz</span></div>
+      <div class="lent"><span class="ertek szam">8412345678</span>
+        <button class="gomb-m gomb-masol" aria-label="A közlemény másolása"><svg class="i"><use href="#masol"/></svg>Másolás</button></div>
+    </div>
+    <div class="lab">
+      <button class="gomb-e">Befizettem</button>
+      <div class="emlek">Vasárnap este emlékeztetünk, ha addig nem jelölöd.</div>
+      <button class="gomb-m"><svg class="i"><use href="#uzenet"/></svg>Kérdésem van</button>
+    </div>
+  </section>
+
+  <div class="szakasz">Bence kéri</div>
+  <section class="lap keres">
+    <div class="mit">Töltsd fel a szeptemberi bankszámlakivonatodat.</div>
+    <div class="miert">Elég a bankod appjából letöltött PDF.</div>
+    <button class="gomb-m"><svg class="i"><use href="#feltolt"/></svg>Kivonat feltöltése</button>
+  </section>
+
+  <div class="szakasz">Idei határaid</div>
+  <section class="lap">
+    <div class="mero">
+      <div class="mondat">Még <span class="szam">11&#8239;580&#8239;000</span> Ft-ot számlázhatsz ÁFA&nbsp;nélkül.</div>
+      <div class="mellek">Ennyi fér még az alanyi ÁFA-mentességbe.</div>
+      <div class="sav"><i style="width:42.1%"></i></div>
+      <div class="vegek"><span>eddig <span class="szam">8&#8239;420&#8239;000</span> Ft</span><span>határ <span class="szam">20&#8239;000&#8239;000</span> Ft</span></div>
+    </div>
+    <div class="mero">
+      <div class="mondat">Az adómentes részt áprilisban elérted.</div>
+      <div class="mellek">Azóta fizetsz SZJA-előleget, ez így rendben van.</div>
+      <div class="sav"><i style="width:100%"></i></div>
+      <div class="vegek"><span>elfogyott április 30-án</span><span><span class="szam">1&#8239;936&#8239;800</span> Ft</span></div>
+    </div>
+  </section>
+
+  <div class="szakasz">Októberi dosszié</div>
+  <section class="lap">
+    <div class="sor">
+      <div class="l"><div class="cim">Nyugta, készpénzes eladás</div>
+        <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, hétfőn</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="sor">
+      <div class="l"><div class="cim">Szerződés, Bodza Kiadó</div>
+        <div class="allapot var"><svg><use href="#var-jel"/></svg><span><span class="szo">Feltöltve</span>, tegnap</span></div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+    <div class="sor" style="min-height:52px">
+      <div class="l"><div class="cim" style="color:var(--tintakek-szoveg);font-weight:700">Az egész októberi dosszié</div></div>
+      <svg class="nyil"><use href="#jobbra"/></svg>
+    </div>
+  </section>
+
+</main>
+
+<nav class="fulsor">
+  <div class="ful on"><svg class="i"><use href="#haz"/></svg>Főoldal</div>
+  <div class="ful"><svg class="i"><use href="#dosszie"/></svg>Dosszié</div>
+  <div class="ful"><svg class="i"><use href="#uzenet"/></svg>Üzenetek</div>
+  <div class="ful"><svg class="i"><use href="#fiok"/></svg>Fiók</div>
+</nav>
+<div class="otthon-jel"></div>
+</body>
+</html>

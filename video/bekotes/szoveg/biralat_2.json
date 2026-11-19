@@ -1,0 +1,113 @@
+{
+ "kor": "2",
+ "forgatokonyv": "L01 [koszonto] Köszönjük, hogy telepítetted az alkalmazásunkat!\nL02 [koszonto] Megmutatjuk, mire jó, és mi kell a kezdéshez.\nL03 [mire_jo] Valódi könyvelőd lesz, aki intézi az adóidat.\nL04 [mire_jo] A számláid maguktól megjönnek a NAV-tól.\nL05 [mire_jo] A Főoldalon látod, mennyit, mikorra és hova fizess.\nL06 [mire_jo] A nyugtákat pedig csak lefotózod.\nL07 [bekotes] A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod.\nL08 [lepes_adatok] Először az adataid: ezekből dolgozik a könyvelőd.\nL09 [lepes_inditas] Ha még nincs vállalkozásod, te magad jelented be a NAV-nál.\nL10 [lepes_inditas] Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj.\nL10b [lepes_inditas] A NAV-os igazolást feltöltöd, mi pedig átnézzük.\nL11 [lepes_szerzodes] Aztán elfogadod a szerződést, és megadod a kártyádat.\nL12 [lepes_szerzodes] Új vállalkozásnál a kártyát csak akkor kérjük, ha már megvan az adószámod.\nL13 [lepes_meghatalmazas] Ezután NAV-meghatalmazást adsz a könyvelődnek. Ebben is végigvezet az alkalmazás.\nL14 [lepes_meghatalmazas] Így ő adhatja be helyetted a bevallásaidat.\nL15 [lepes_azonositas] Lefotózod a személyidet és a lakcímkártyád lakcímes oldalát.\nL16 [lepes_azonositas] Ezt a törvény írja elő: azonosítanunk kell téged.\nL17 [lepes_szamlak] Végül a könyvelőd beköti a számláidat.\nL18 [korlatozott] Addig néhány funkció zárva van. Utána minden megnyílik.\nL19 [korlatozott] Onnantól a könyvelőd szól, ha tenned kell valamit.\nL20 [segitseg] Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül felhív.   (kimondva: Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív.)\nL21 [segitseg] Az Üzenetekben pedig bármikor írhatsz nekünk.\nL22 [zaro] Kezdjük is! Az első lépést lent találod.",
+ "nyelv": {
+  "osszkep": "A szöveg összességében tiszta, közvetlen és jól felépített, de néhány helyen túlságosan szakzsargonos, darabos vagy feleslegesen bürokratikus. Kis simításokkal még melegebb, gördülékenyebb és természetesebben kimondható lesz.",
+  "javaslatok": [
+   {
+    "id": "L01",
+    "gond": "A 'telepítetted az alkalmazásunkat' kicsit idegenül, gépiesen cseng; a szabályzat szerint érdemes simán 'az alkalmazás'-t mondani a birtokos forma helyett.",
+    "uj_szoveg": "Köszönjük, hogy letöltötted az alkalmazást!"
+   },
+   {
+    "id": "L04",
+    "gond": "A 'maguktól megjönnek' kifejezés pongyola és kissé furcsán hat egy pénzügyi szolgáltatás narrációjában.",
+    "uj_szoveg": "A számláid automatikusan megérkeznek a NAV-tól."
+   },
+   {
+    "id": "L07",
+    "gond": "A 'bekötés' belső szakmai szleng, egy átlagos felhasználónak nem mond semmit. Az 'elindulás' vagy 'beállítás' sokkal természetesebb.",
+    "uj_szoveg": "A beállítás csak néhány egyszerű lépés. Mindegyiknél pontosan leírtuk, mit kell tenned."
+   },
+   {
+    "id": "L11",
+    "gond": "A 'megadod a kártyádat' kissé nyers, nem hozza a megbízható privátbanki nyugalmat.",
+    "uj_szoveg": "Ezután elfogadod a szerződést, és megadod a bankkártyaadataidat a havidíjhoz."
+   },
+   {
+    "id": "L12",
+    "gond": "Az előző sor utáni ismétlés ('kártya'), illetve a hangnem kissé rideg.",
+    "uj_szoveg": "Új vállalkozás esetén az adatokat csak akkor kérjük, ha már megkaptad az adószámodat."
+   },
+   {
+    "id": "L15",
+    "gond": "A 'személyidet és a lakcímkártyád lakcímes oldalát' kifejezés nyakatekert és nehezen kimondható beszédben.",
+    "uj_szoveg": "Lefotózod a személyi igazolványodat és a lakcímkártyádat."
+   },
+   {
+    "id": "L16",
+    "gond": "A megfogalmazás hivatali, kissé fenyegető hangulatú.",
+    "uj_szoveg": "Erre a törvény kötelez minket, hogy biztonságban tudhassuk a fiókodat."
+   },
+   {
+    "id": "L17",
+    "gond": "A 'beköti a számláidat' műszaki zsargon, félreérthető (a bankszámlára vagy a NAV-számlákra utal?).",
+    "uj_szoveg": "Végül a könyvelőd összeköti a számlázódat a rendszerrel."
+   },
+   {
+    "id": "L18",
+    "gond": "A 'funkció zárva van' kifejezés magyartalan és technikai jellegű.",
+    "uj_szoveg": "Addig néhány funkció még nem elérhető, de utána minden megnyílik."
+   },
+   {
+    "id": "L20",
+    "gond": "A 'huszonnégy-negyvennyolc órán belül' túl hivatalos és rideg határidő egy segítőkész szakasznál.",
+    "uj_szoveg": "Ha elakadsz, kérj visszahívást, és csapatunk egy-két munkanapon belül felhív."
+   }
+  ]
+ },
+ "tenyek": {
+  "summary": "The script is broadly faithful to the contract on the core promises (self-filed new-business registration, no booking, callback within 24–48 hours, KYC address side only, no product or accountant name, no AI mention). The main problems are the payment step timing, which is inconsistent with the default charge policy and the step order for the new-business path, and an incomplete 'adataid' description.",
+  "issues": [
+   {
+    "id": "L11",
+    "severity": "high",
+    "issue": "Presents the card payment as the step immediately after the contract, for all clients. On the 'inditas' path the order is fiok, adatok, vallalkozas_inditas, szerzodes, meghatalmazas, azonositas, elofizetes, nav_bekotes, so elofizetes comes after azonositas, not right after szerzodes. The card step is also locked until the business is registered.",
+    "evidence": "SPEC §26.1.6 (ONBOARDING_STEP_ORDER, inditas path); §26.1.7 (default adoszam_utan; elofizetes locked until registration kesz)",
+    "fix": "Make the sentence path-specific, e.g.: \"Aztán elfogadod a szerződést. Ha van vállalkozásod, megadod a kártyádat; ha most indítod, a kártyát később, a bejelentés után kérjük.\" Or move the card mention to after the azonosítás line (L15–L16) and add the new-business qualifier there."
+   },
+   {
+    "id": "L12",
+    "severity": "medium",
+    "issue": "States that the card is requested once the tax number exists (\"ha már megvan az adószámod\"). The default charge policy says the card step opens only when the registration is kész, not when the adószám exists. The contract's own lock copy uses the adószám wording, so the source is inconsistent, but the script should match the policy that the owner decided.",
+    "evidence": "SPEC §26.1.7 (default adoszam_utan: locked until registration is kesz); §26.1.6 lock text 'Akkor kérjük a kártyádat, ha már megvan az adószámod.'; outline §26.7.4 'előfizetés (for new businesses only once the tax number exists)'",
+    "fix": "Keep the timing tied to the business being fully registered, e.g.: \"Új vállalkozásnál a kártyát csak akkor kérjük, amikor a bejelentésed már kész, és megvan az adószámod.\" Flag the wording conflict to the owner/integrator."
+   },
+   {
+    "id": "L08",
+    "severity": "medium",
+    "issue": "The outline requires the adataid step to explain why it is needed. The contract requires the tax and cost ratio (adószám-related data, tevékenység, költséghányad) to be explained. The line only says the accountant works from it, and does not say what data is requested or why.",
+    "evidence": "SPEC §26.7.4 (bekotes outline: 'adataid (tax and cost ratio)'); FUNKCIOK.md point 2 (költséghányad from tevékenység)",
+    "fix": "Add: \"Először az adataid: ezekből számolja ki a könyvelőd az adódat, a költséghányadod miatt is. A kérdőív csak pár perc.\""
+   },
+   {
+    "id": "L09",
+    "severity": "low",
+    "issue": "The outline wants the new-business path described as 'the app shows you step by step how to register it yourself in a few minutes'. The script omits the 'few minutes' time frame and the fact that the app's guide is personalised. This is not a false claim, but the contract's description is incomplete.",
+    "evidence": "SPEC §26.7.4 (bekotes outline, new-business bullet); FUNKCIOK.md point 37 (personalised 'Mit hova jelölj' guide)",
+    "fix": "Change to: \"Ha még nincs vállalkozásod, az alkalmazás néhány perc alatt, lépésről lépésre megmutatja, hogyan jelentsd be a NAV-nál.\""
+   },
+   {
+    "id": "L13",
+    "severity": "low",
+    "issue": "On the 'inditas' path the NAV-meghatalmazás is locked until the registration is beadva. The script presents it as an immediate next step, with no mention of the lock or of ONYA. The outline also says the authorisation is given in ONYA.",
+    "evidence": "SPEC §26.1.6 (locks on inditas: meghatalmazas until registration beadva, 'Ha beküldted a bejelentést, ez is megnyílik.'); §26.7.4 (ONYA login); FUNKCIOK.md point 4",
+    "fix": "Add the ONYA reference and the new-business condition, e.g.: \"Ezután NAV-meghatalmazást adsz a könyvelődnek az ONYA-ban. Ha most indítod a vállalkozásod, ez a bejelentés beküldése után nyílik meg.\""
+   },
+   {
+    "id": "L20",
+    "severity": "low",
+    "issue": "The outline wording is 'csapatunk 24–48 órán belül hív'. The script uses 'felhív', which is a minor deviation. More importantly, the required line that the call does not necessarily come from the accountant first is missing from the callback promise, and the same line is missing from L20/L21.",
+    "evidence": "SPEC §26.7.4 (outline: 'csapatunk 24–48 órán belül hív'); §26.2.2 promise text ('Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.'); FUNKCIOK.md point 6",
+    "fix": "Use the outline wording and add the team sentence, e.g.: \"Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül hív. Nem feltétlenül a könyvelőd hív elsőként.\""
+   },
+   {
+    "id": "L21",
+    "severity": "low",
+    "issue": "'bármikor írhatsz nekünk' promises unrestricted availability. The feature list says the chat shows a response-time commitment, and the team answers during onboarding. The script states no response time, so it neither contradicts nor fully supports the feature.",
+    "evidence": "FUNKCIOK.md point 16 (látható válaszidő-vállalás; a bekötés alatt a csapatunk is válaszol)",
+    "fix": "Refer to the visible response time, e.g.: \"Az Üzenetekben pedig írhatsz nekünk; a választ az alkalmazásban látod, mikorra várhatod.\""
+   }
+  ]
+ }
+}

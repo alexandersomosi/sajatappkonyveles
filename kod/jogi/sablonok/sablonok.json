@@ -1,0 +1,11 @@
+[
+  {
+    "nev": "ev_bejelentes_utasitas",
+    "file": "sablonok/ev_bejelentes_utasitas.md",
+    "version": "2026-11-19",
+    "title": "Utasítás a vállalkozásom bejelentésére",
+    "audience": "ugyfel",
+    "draft": true,
+    "leiras": "SPEC §27.3.3 / §27.10: az ügyfél írásos utasítása a könyvelőnek az egyéni vállalkozás bejelentésére („Intézzük helyetted”). A backend tölti ki és szedi PDF-be az engedély (POST /client/assist/:id/consent) után; dokumentum: szerzodes_alairt, kozos. AssistConsentSummary.version = ez a version."
+  }
+]

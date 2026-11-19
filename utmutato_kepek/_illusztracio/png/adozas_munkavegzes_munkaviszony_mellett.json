@@ -1,0 +1,56 @@
+{
+ "nev": "adozas_munkavegzes_munkaviszony_mellett",
+ "dpr": 5,
+ "szel": 2060,
+ "mag": 3230,
+ "helyek": {
+  "munkavegzes": [
+   80,
+   929,
+   1980,
+   2659
+  ],
+  "mv_fofoglalkozas": [
+   155,
+   1260,
+   1905,
+   1460
+  ],
+  "mv_munkaviszony_mellett": [
+   155,
+   1460,
+   1905,
+   1741
+  ],
+  "mv_tanulmany_mellett": [
+   155,
+   1741,
+   1905,
+   2022
+  ],
+  "mv_nyugdij_mellett": [
+   155,
+   2022,
+   1905,
+   2303
+  ],
+  "mv_egt": [
+   155,
+   2303,
+   1905,
+   2584
+  ],
+  "gomb_0": [
+   80,
+   2729,
+   1015,
+   2949
+  ],
+  "gomb_1": [
+   1065,
+   2729,
+   1980,
+   2949
+  ]
+ }
+}

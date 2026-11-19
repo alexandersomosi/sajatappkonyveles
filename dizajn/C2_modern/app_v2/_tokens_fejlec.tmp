@@ -1,0 +1,15 @@
+/* Kézjegy C2 – közös tokenek és elemek (app_v2, 2026-11-17).
+   A C (tintakék levélpapír) identitása marad: fejlécsáv, levél, aláírás, színezett alap fehér lapokkal.
+   Új: egyetlen modern groteszk (a Caslon és az Archivo kikerült), alakrend a gombokhoz
+   (kapszula = gomb, lekerekített lap = tartalom, 4 px-es papír = a levél), lebegő fülsor külön Fotózás-gombbal,
+   alsó lapok (sheet), kerek gyorsgombok.
+   Betűk helyben (fontok/), OFL licenc; Google Fonts nem kell a lövéshez. */
+
+@font-face { font-family: "Onest"; src: url("fontok/Onest_wght.ttf") format("truetype"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Inter"; src: url("fontok/Inter_opsz_wght.ttf") format("truetype"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Geist"; src: url("fontok/Geist_wght.ttf") format("truetype"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Golos Text"; src: url("fontok/GolosText_wght.ttf") format("truetype"); font-weight: 400 900; font-display: block; }
+@font-face { font-family: "Figtree"; src: url("fontok/Figtree_wght.ttf") format("truetype"); font-weight: 300 900; font-display: block; }
+/* Ezres tagolás: nem törő szóköz (U+00A0). A keskeny U+202F az Onestben csak 0,11 em, a nagy összegnél
+   a „457 380” így egybefolyt; a Geistből és a Figtree-ből ráadásul hiányzik. */
+

@@ -1,0 +1,192 @@
+// NAV Online Számla sync (SPEC §8.3, §15): reads OUTBOUND invoices, stores them, creates the
+// revenue items (§5.5 rule), recalculates the estimate and flags. Read-only towards NAV.
+import { and, eq, sql } from 'drizzle-orm';
+import type { Deps } from '../deps.js';
+import { clients, navCredentials, navInvoices, navSyncRuns, revenueItems } from '../db/schema.js';
+import { isNavError, NavError, type NavCredentials, type NormalizedInvoice } from '../nav/types.js';
+import { todayBudapest } from '../lib/dates.js';
+import { log, safeErr } from '../log.js';
+import { audit } from '../audit.js';
+import { ensureDossier } from './documents.js';
+import { checkCompletion, setStep, stepStatus } from './onboarding.js';
+import { computeFlags } from './flags.js';
+import { recalcYear } from './tax.js';
+
+export interface StoredCreds {
+  login: string;
+  password: string;
+  signatureKey: string;
+  exchangeKey?: string;
+}
+
+export function credsFor(deps: Deps, row: typeof navCredentials.$inferSelect): NavCredentials {
+  const s = deps.navKey.decJson<StoredCreds>(row.secretEnc, `nav_credentials:${row.clientId}`);
+  return { ...s, taxNumber: row.taxNumber };
+}
+
+/** §5.5: CASH/CARD/VOUCHER → issue date; otherwise payment date (or issue date), marked estimated. */
+export function receivedOnOf(inv: Pick<NormalizedInvoice, 'paymentMethod' | 'paymentDate' | 'issueDate'>): { receivedOn: string; estimated: boolean } {
+  const pm = (inv.paymentMethod ?? '').toUpperCase();
+  if (pm === 'CASH' || pm === 'CARD' || pm === 'VOUCHER') return { receivedOn: inv.issueDate, estimated: false };
+  return { receivedOn: inv.paymentDate ?? inv.issueDate, estimated: true };
+}
+
+export async function storeInvoice(deps: Deps, clientId: string, inv: NormalizedInvoice, rawXml: string | null): Promise<boolean> {
+  return deps.db.transaction(async (tx) => {
+    const modKey = inv.modificationIndex ?? 0;
+    const [exists] = await tx
+      .select({ id: navInvoices.id })
+      .from(navInvoices)
+      .where(and(eq(navInvoices.clientId, clientId), eq(navInvoices.invoiceNumber, inv.invoiceNumber), eq(navInvoices.modKey, modKey), eq(navInvoices.operation, inv.operation)))
+      .limit(1);
+    if (exists) return false;
+    let rawId: string | null = null;
+    if (rawXml) {
+      const f = await deps.storage.put(tx, { ownerClientId: clientId, kind: 'nav_xml', mime: 'application/xml', displayName: `${inv.invoiceNumber}.xml`.slice(0, 120), data: Buffer.from(rawXml, 'utf8'), now: deps.now() });
+      rawId = f.id;
+    }
+    const month = inv.issueDate.slice(0, 7);
+    const demo = inv.source === 'DEMO';
+    const [row] = await tx
+      .insert(navInvoices)
+      .values({
+        clientId,
+        invoiceNumber: inv.invoiceNumber,
+        batchIndex: inv.batchIndex ?? null,
+        operation: inv.operation,
+        category: inv.category,
+        issueDate: inv.issueDate,
+        deliveryDate: inv.deliveryDate ?? null,
+        paymentDate: inv.paymentDate ?? null,
+        paymentMethod: inv.paymentMethod ?? null,
+        currency: inv.currency,
+        netHuf: inv.netAmountHuf,
+        vatHuf: inv.vatAmountHuf,
+        grossHuf: inv.grossAmountHuf,
+        customerName: inv.customer?.name ?? inv.customerName ?? null,
+        customerTaxNumber: inv.customer?.taxNumber ?? inv.customerTaxNumber ?? null,
+        originalInvoiceNumber: inv.originalInvoiceNumber ?? null,
+        modificationIndex: inv.modificationIndex ?? null,
+        modKey,
+        insDate: inv.insDate ? new Date(inv.insDate) : null,
+        transactionId: inv.transactionId ?? null,
+        data: inv as unknown as Record<string, unknown>,
+        rawXmlFileId: rawId,
+        dossierMonth: month,
+        demo,
+      })
+      .returning({ id: navInvoices.id });
+    const rec = receivedOnOf(inv);
+    await tx.insert(revenueItems).values({
+      clientId,
+      source: 'nav_szamla',
+      navInvoiceId: row!.id,
+      receivedOn: rec.receivedOn,
+      receivedOnEstimated: rec.estimated,
+      deliveryDate: inv.deliveryDate ?? inv.issueDate,
+      amountHuf: inv.grossAmountHuf,
+      description: `${inv.invoiceNumber}${inv.customer?.name ? ` – ${inv.customer.name}` : ''}`.slice(0, 200),
+    });
+    await ensureDossier(tx, clientId, month);
+    return true;
+  });
+}
+
+export interface SyncOutcome {
+  runId: string;
+  status: 'ok' | 'hiba';
+  digestsSeen: number;
+  invoicesNew: number;
+  errorCode?: string;
+  messageHu?: string;
+}
+
+export async function syncClient(deps: Deps, clientId: string, o: { asOf?: string; by?: string | null } = {}): Promise<SyncOutcome> {
+  const asOf = o.asOf ?? todayBudapest(deps.now());
+  const [cred] = await deps.db.select().from(navCredentials).where(eq(navCredentials.clientId, clientId)).limit(1);
+  if (!cred) throw new NavError({ code: 'NO_CREDENTIALS', kind: 'config', messageHu: 'Ehhez az ügyfélhez még nincs NAV-kapcsolat megadva.' });
+  // One running sync per client (partial unique index); stale runs (> 2 h) are closed first.
+  await deps.db
+    .update(navSyncRuns)
+    .set({ status: 'hiba', finishedAt: deps.now(), errorCode: 'STALE' })
+    .where(and(eq(navSyncRuns.clientId, clientId), eq(navSyncRuns.status, 'fut'), sql`${navSyncRuns.startedAt} < now() - interval '2 hours'`));
+  let runId: string;
+  try {
+    const [run] = await deps.db.insert(navSyncRuns).values({ clientId, startedAt: deps.now() }).returning({ id: navSyncRuns.id });
+    runId = run!.id;
+  } catch {
+    throw new NavError({ code: 'SYNC_RUNNING', kind: 'unknown', messageHu: 'Már fut egy lekérdezés ennél az ügyfélnél.' });
+  }
+  let seen = 0;
+  let added = 0;
+  let maxIns: string | null = cred.syncCursorInsDate?.toISOString() ?? null;
+  try {
+    const client = deps.navClient(cred.environment, credsFor(deps, cred));
+    for await (const item of client.syncOutbound({ since: cred.syncCursorInsDate?.toISOString() ?? null, asOf })) {
+      seen++;
+      if (item.digest.insDate && (!maxIns || item.digest.insDate > maxIns)) maxIns = item.digest.insDate;
+      const modKey = item.digest.modificationIndex ?? 0;
+      const [exists] = await deps.db
+        .select({ id: navInvoices.id })
+        .from(navInvoices)
+        .where(and(eq(navInvoices.clientId, clientId), eq(navInvoices.invoiceNumber, item.digest.invoiceNumber), eq(navInvoices.modKey, modKey), eq(navInvoices.operation, item.digest.operation)))
+        .limit(1);
+      if (exists) continue;
+      const data = await item.data();
+      if (await storeInvoice(deps, clientId, data.invoice, data.rawXml)) added++;
+    }
+    const now = deps.now();
+    await deps.db.update(navSyncRuns).set({ status: 'ok', finishedAt: now, digestsSeen: seen, invoicesNew: added }).where(eq(navSyncRuns.id, runId));
+    await deps.db
+      .update(navCredentials)
+      .set({ lastSyncAt: now, lastSyncStatus: 'ok', lastSyncError: null, status: 'rendben', syncCursorInsDate: maxIns ? new Date(maxIns) : cred.syncCursorInsDate })
+      .where(eq(navCredentials.id, cred.id));
+    await audit(deps.db, { action: 'nav.sync', actorUserId: o.by ?? null, actorRole: o.by ? 'accountant' : 'system', targetType: 'client', targetId: clientId, clientId, details: { ok: true, seen, added } });
+    if ((await stepStatus(deps.db, clientId, 'nav_bekotes')) !== 'kesz') {
+      await setStep(deps, deps.db, clientId, 'nav_bekotes', 'kesz', { by: o.by ?? null });
+      await checkCompletion(deps, deps.db, clientId);
+    }
+    const years = new Set([Number(asOf.slice(0, 4))]);
+    for (const y of years) await recalcYear(deps, deps.db, clientId, y, { asOf });
+    await computeFlags(deps, deps.db, clientId);
+    return { runId, status: 'ok', digestsSeen: seen, invoicesNew: added };
+  } catch (err) {
+    const e = isNavError(err) ? err : new NavError({ code: 'INTERNAL', kind: 'unknown', messageHu: 'Váratlan hiba a lekérdezés közben.' });
+    if (!isNavError(err)) log().error({ err: safeErr(err) }, 'nav sync failed');
+    else log().warn({ nav: err.toJSON() }, 'nav sync error');
+    const now = deps.now();
+    const authErr = e.kind === 'auth' || e.kind === 'permission';
+    await deps.db.update(navSyncRuns).set({ status: 'hiba', finishedAt: now, digestsSeen: seen, invoicesNew: added, errorCode: e.code }).where(eq(navSyncRuns.id, runId));
+    await deps.db
+      .update(navCredentials)
+      .set({ lastSyncAt: now, lastSyncStatus: 'hiba', lastSyncError: e.messageHu || e.code, ...(authErr ? { status: 'hibas' as const } : {}) })
+      .where(eq(navCredentials.id, cred.id));
+    await audit(deps.db, { action: 'nav.sync', actorUserId: o.by ?? null, actorRole: o.by ? 'accountant' : 'system', targetType: 'client', targetId: clientId, clientId, details: { ok: false, code: e.code, seen, added } });
+    if (added > 0) await recalcYear(deps, deps.db, clientId, Number(asOf.slice(0, 4)), { asOf });
+    await computeFlags(deps, deps.db, clientId);
+    return { runId, status: 'hiba', digestsSeen: seen, invoicesNew: added, errorCode: e.code, messageHu: e.messageHu };
+  }
+}
+
+/** Daily job: every client with working credentials, serially. */
+export async function syncAll(deps: Deps): Promise<{ ok: number; failed: number }> {
+  const rows = await deps.db
+    .select({ clientId: navCredentials.clientId })
+    .from(navCredentials)
+    .innerJoin(clients, eq(clients.id, navCredentials.clientId))
+    .where(and(eq(navCredentials.status, 'rendben'), sql`${clients.lifecycle} <> 'megszunt'`));
+  let ok = 0;
+  let failed = 0;
+  for (const r of rows) {
+    try {
+      const res = await syncClient(deps, r.clientId);
+      if (res.status === 'ok') ok++;
+      else failed++;
+    } catch (err) {
+      failed++;
+      log().warn({ code: isNavError(err) ? err.code : 'INTERNAL' }, 'nav sync skipped');
+    }
+    await new Promise((res) => setTimeout(res, deps.cfg.isTest ? 0 : 1100));
+  }
+  return { ok, failed };
+}

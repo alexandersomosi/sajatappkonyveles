@@ -1,0 +1,149 @@
+# Vak kiejtés-ellenőrzés – vallalkozas_bejelentes
+
+29 sor, hibás: 0
+
+- **b01** OK (take 1)
+  - várt: Megmutatjuk, hogyan jelented be a vállalkozásodat. Ingyenes.
+  - 1. átirat: Megmutatjuk, hogyan jelented be a vállalkozásodat ingyenes.
+  - 2. átirat: Megmutatjuk, hogyan jelented be a vállalkozásodat, ingyenes.
+  - 3. átirat: megmutatjuk, hogyan jelented be a vállalkozásodat, ingyenes.
+- **b03** OK (take 1)
+  - várt: Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.
+  - 1. átirat: Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat.
+  - 2. átirat: Készítsd elő a belépésedet, a személyidet és a lakcímkártyádat!
+  - 3. átirat: Készítsd elő a belépésedet a személyidet és a lakcímkártyádat
+- **b04** OK (take 1)
+  - várt: Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki: csak nézd át.
+  - 1. átirat: Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át!
+  - 2. átirat: Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át.
+  - 3. átirat: Kell még az adókártyád. Anyukád születési nevét a NAV tölti ki, csak nézd át.
+- **b07** OK (take 1)
+  - várt: Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu plusszal.
+  - 1. átirat: Nyisd meg a Vállalkozói Ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal!
+  - 2. átirat: Nyisd meg a vállalkozói ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal,
+  - 3. átirat: Nyisd meg a vállalkozói ügysegédet, lépj be DÁP-pal vagy Ügyfélkapu Plusszal,
+- **b09** OK (take 3)
+  - várt: Koppints az Új bejelentés, kérelem benyújtása részre.
+  - 1. átirat: Koppints az Új bejelentés, kérelem benyújtása részre
+  - 2. átirat: koppints az új bejelentés, kérelem benyújtása részre
+  - 3. átirat: Koppints az új bejelentés kérelem benyújtása részre.
+- **b10** OK (take 1)
+  - várt: Majd válaszd a kezdés bejelentését.
+  - 1. átirat: Majd válaszd a kezdés bejelentését.
+  - 2. átirat: majd válaszd a kezdés bejelentését
+  - 3. átirat: majd válaszd a kezdés bejelentését
+- **b11** OK (take 1)
+  - várt: A NAV tölti ki az adataidat: nézd át őket, és ha valami hibás, szólj a NAV-nak.
+  - 1. átirat: A NAV tölti ki az adataidat. Nézd át őket, és ha valami hibás, szólj a NAV-nak.
+  - 2. átirat: A NAV tölti ki az adataidat. Nézd át őket, és ha valami hibás, szólj a NAV-nak!
+  - 3. átirat: A NAV tölti ki az adataidat. Nézd át őket és ha valami hibás, szólj a NAV-nak.
+- **b14** OK (take 1)
+  - várt: Add meg a székhelyed. Ez a cím nyilvános lesz.
+  - 1. átirat: Add meg a székhelyed. Ez a cím nyilvános lesz.
+  - 2. átirat: Add meg a székhelyed. Ez a cím nyilvános lesz.
+  - 3. átirat: Add meg a székhelyed! Ez a cím nyilvános lesz.
+- **b15** OK (take 1)
+  - várt: Telephely csak akkor kell, ha lesz üzleted, irodád vagy műhelyed egy másik címen.
+  - 1. átirat: telephely csak akkor kell ha lesz üzleted irodád vagy műhelyed egy másik címen
+  - 2. átirat: Telephely csak akkor kell ha lesz üzleted, irodád vagy műhelyed egy másik címen.
+  - 3. átirat: Telephely csak akkor kell ha lesz üzleted, irodád vagy műhelyed egy másik címen.
+- **b16** OK (take 1)
+  - várt: Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.
+  - 1. átirat: Keresd ki a fő tevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.
+  - 2. átirat: Keresd ki a főtevékenységedet! Az útmutatóban megírjuk, melyik sort válaszd.
+  - 3. átirat: Keresd ki a főtevékenységedet. Az útmutatóban megírjuk, melyik sort válaszd.
+- **b18** OK (take 1)
+  - várt: A munkavégzés jellegét kötelező megadni: ettől függ a járulékod.
+  - 1. átirat: A munkavégzés jellegét kötelező megadni. Ettől függ a járulékod
+  - 2. átirat: A munkavégzés jellegét kötelező megadni, ettől függ a járulékod.
+  - 3. átirat: A munkavégzés jellegét kötelező megadni. Ettől függ a járulékod.
+- **b19** OK (take 1)
+  - várt: Azt válaszd, ami rád igaz: főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.
+  - 1. átirat: Azt választ, ami rád igaz. Főállás, munkaviszony, tanulmányok vagy nyugdíj mellett.
+  - 2. átirat: azt válaszd ami rád igaz főállású munkaviszony tanulmányok vagy nyugdíj mellett
+  - 3. átirat: azt válaszd ami rád igaz főállású munkaviszony tanulmányok vagy nyugdíj mellett
+- **b21** OK (take 4)
+  - várt: A katát ne jelöld be.
+  - 1. átirat: A katát ne jelöld be.
+  - 2. átirat: A katát ne jelöld be.
+  - 3. átirat: A katát ne jelöld be
+- **b22** OK (take 1)
+  - várt: Az átalányadózást igen: így a bevételed egy része eleve költségnek számít.
+  - 1. átirat: az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,
+  - 2. átirat: az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,
+  - 3. átirat: az átalányadózást, igen, így a bevételed egy része eleve költségnek számít,
+- **b23** OK (take 1)
+  - várt: Az áfafizetés módját hagyd üresen.
+  - 1. átirat: Az áfafizetés módját hagyd üresen!
+  - 2. átirat: az áfafizetés módját hagyd üresen
+  - 3. átirat: az áfafizetés módját hagyd üresen
+- **b24** OK (take 1)
+  - várt: Az áfamentességnél csak a második pontot jelöld: az alanyi adómentességet.
+  - 1. átirat: Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet.
+  - 2. átirat: Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet.
+  - 3. átirat: Az áfamentességnél csak a második pontot jelöld, az alanyi adómentességet.
+- **b25** OK (take 1)
+  - várt: A legfontosabb pipa: így áfamentes leszel.
+  - 1. átirat: A legfontosabb, pipa. Így áfamentes leszel.
+  - 2. átirat: A legfontosabb pipa. Így áfamentes leszel.
+  - 3. átirat: A legfontosabb pipa. Így áfamentes leszel
+- **b26** OK (take 1)
+  - várt: Közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.
+  - 1. átirat: közösségi adószám csak akkor kell ha más uniós ország cégének dolgozol vagy tőle veszel szolgáltatást például hirdetést
+  - 2. átirat: közösségi adószám csak akkor kell, ha más uniós ország cégének dolgozol, vagy tőle veszel szolgáltatást, például hirdetést.
+  - 3. átirat: közösségi adószám csak akkor kell ha más uniós ország cégének dolgozol vagy tőle veszel szolgáltatást például hirdetést
+- **b27** OK (take 1)
+  - várt: A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.
+  - 1. átirat: A pénzforgalmi elszámolást ne jelöld. A többit hagyd üresen.
+  - 2. átirat: A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.
+  - 3. átirat: A pénzforgalmi elszámolást ne jelöld, a többit hagyd üresen.
+- **b28** OK (take 1)
+  - várt: Jelöld be, hogy nincs kizáró ok, és a másik hármat is.
+  - 1. átirat: Jelöld be, hogy nincs kizáró ok, és a másik hármat is.
+  - 2. átirat: Jelöld be, hogy nincs kizáró ok, és a másik hármat is.
+  - 3. átirat: Jelöld be, hogy nincs kizáró ok, és a másik hármat is!
+- **b29** OK (take 2)
+  - várt: Az Ellenőrzésnél nézd át: átalányadózás igen, alanyi áfamentesség igen, kata és pénzforgalmi nem.
+  - 1. átirat: Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. Kata és pénzforgalmi: nem.
+  - 2. átirat: Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. KATA és pénzforgalmi: nem.
+  - 3. átirat: Az ellenőrzésnél nézd át! Átalányadózás: igen. Alanyi áfamentesség: igen. Kata és pénzforgalmi: nem.
+- **b32** OK (take 1)
+  - várt: Ha minden stimmel, koppints a Bejelentés megtétele gombra.
+  - 1. átirat: Ha minden stimmel koppints a bejelentés megtétele gombra.
+  - 2. átirat: Ha minden stimmel koppintson a bejelentés megtétele gombra
+  - 3. átirat: Ha minden stimmel, koppintson a Bejelentés megtétele gombra.
+- **b33** OK (take 1)
+  - várt: Ezután nem módosítható, és a vállalkozásod aznap indul.
+  - 1. átirat: Ezután nem módosítható és a vállalkozásod aznap indul
+  - 2. átirat: Ezután nem módosítható és a vállalkozásod aznap indul
+  - 3. átirat: Ezután nem módosítható és a vállalkozásod aznap indul
+- **b34** OK (take 1)
+  - várt: A Megtekintés lapon töltsd le az értesítést PDF-ben.
+  - 1. átirat: a megtekintés lapon töltsd le az értesítést PDF-ben
+  - 2. átirat: A megtekintés lapon töltsd le az értesítést PDF-ben
+  - 3. átirat: A megtekintés lapon töltsd le az értesítést PDF-ben
+- **b36** OK (take 2)
+  - várt: Az alkalmazásban koppints a „Feltöltöm az értesítést” gombra, és töltsd fel.
+  - 1. átirat: Az alkalmazásban koppintson a feltöltöm az értesítést gombra és töltsd fel
+  - 2. átirat: az alkalmazásban koppintsa feltöltöm az értesítést gombra és töltsd fel
+  - 3. átirat: az alkalmazásban koppintsa feltöltöm az értesítést gombra és töltsd fel
+- **b37** OK (take 1)
+  - várt: Átnézzük, és szólunk.
+  - 1. átirat: átnézzük és szólunk
+  - 2. átirat: átnézzük és szólunk
+  - 3. átirat: átnézzük és szólunk
+- **b38** OK (take 1)
+  - várt: Még egy dolog: öt munkanapon belül a kamaránál is regisztrálnod kell.
+  - 1. átirat: Még egy dolog. 5 munkanapon belül a kamaránál is regisztrálnod kell.
+  - 2. átirat: még egy dolog 5 munkanapon belül a kamaránál is regisztrálnod kell
+  - 3. átirat: Még egy dolog, öt munkanapon belül a kamaránál is regisztrálnod kell,
+- **b39** OK (take 1)
+  - várt: Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.
+  - 1. átirat: Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív
+  - 2. átirat: Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív.
+  - 3. átirat: Ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív.
+- **b40** OK (take 1)
+  - várt: Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.
+  - 1. átirat: ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.
+  - 2. átirat: ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.
+  - 3. átirat: Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.

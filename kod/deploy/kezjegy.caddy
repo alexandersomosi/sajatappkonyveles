@@ -1,0 +1,86 @@
+# Kézjegy site blocks for the SHARED Caddy of appok-1 (container appok-caddy-1) – SPEC §20.3.
+# Mounted read-only at /etc/caddy/kezjegy.caddy and pulled in by ONE line in /srv/appok/deploy/Caddyfile:
+#     import /etc/caddy/kezjegy.caddy
+# The Gardoko site (45-94-65-74.sslip.io) is not touched. Caddy reaches kezjegy-api / kezjegy-web over
+# the kezjegy_edge network. Let's Encrypt certificates are issued automatically for the three names.
+# Fallback if ACME fails: add "tls internal" inside a site block (browser warning) or switch to paths.
+# Access logs are off on purpose (query strings can hold tokens and signed file links).
+
+(kezjegy_fejlecek) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+		-Server
+	}
+}
+
+# CSP only on the static pages (the API answers JSON with Cache-Control: no-store and sets its own CSP
+# on the one HTML page it serves, the DEMO payment page).
+# Client web app: Google sign-in; blob:/data: in connect-src only so a locally made image (blob:) can be read
+# by the page itself – the app no longer needs it since kör 2 (canvas → Blob), kept as a safety net.
+(kezjegy_csp) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: https://accounts.google.com; frame-src https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; script-src 'self' https://accounts.google.com/gsi/client; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+}
+
+# Accountant + admin panel: no Google sign-in there, so no Google origins at all.
+(kezjegy_csp_panel) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+}
+
+(kezjegy_api) {
+	handle /api/* {
+		# Only the multipart upload routes may send up to 60 MB; the one-file routes (message attachments) 26 MB;
+		# everything else 1 MB (the API checks the same per route while streaming: refresh 8 KB, IPN 64 KB –
+		# backend/src/app.ts bodyLimitFor). Round 1 (2026-11-19): /attachments was 60 MB for a 25 MB file.
+		@kezjegy_egy_fajl path_regexp ^/api/v1/(client|acc|team)/attachments/?$
+		@kezjegy_feltoltes path_regexp ^/api/v1/(client/(kyc|documents(/[^/]+/versions)?|business-registration/filed)|acc/(clients/[^/]+/documents|documents/[^/]+/versions))/?$
+		@kezjegy_nem_feltoltes not path_regexp ^/api/v1/(client/(kyc|attachments|documents(/[^/]+/versions)?|business-registration/filed)|acc/(attachments|clients/[^/]+/documents|documents/[^/]+/versions)|team/attachments)/?$
+		request_body @kezjegy_egy_fajl {
+			max_size 26MB
+		}
+		request_body @kezjegy_feltoltes {
+			max_size 60MB
+		}
+		request_body @kezjegy_nem_feltoltes {
+			max_size 1MB
+		}
+		# Caddy sets X-Forwarded-For to the real client IP (incoming values from untrusted clients are
+		# replaced); the API reads the last entry (TRUST_PROXY_HOPS=1).
+		reverse_proxy kezjegy-api:8080
+	}
+}
+
+# Client web app (Expo web export) + same-origin API (first-party refresh cookie, no CORS).
+app.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_api
+	handle {
+		import kezjegy_csp
+		reverse_proxy kezjegy-web:8080
+	}
+}
+
+# Accountant + admin panel (React + Vite) + same-origin API.
+konyvelo.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_api
+	handle {
+		import kezjegy_csp_panel
+		reverse_proxy kezjegy-web:8081
+	}
+}
+
+# API for the native app (Android/iOS), the SimplePay IPN and back URL. Nothing else is served here.
+api.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_api
+	handle {
+		respond "Not found" 404
+	}
+}

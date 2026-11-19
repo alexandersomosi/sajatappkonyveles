@@ -1,0 +1,595 @@
+{
+ "nev": "meghatalmazas",
+ "utmutato": "meghatalmazas",
+ "fejlec": "NAV-meghatalmazás",
+ "cim": "Így add meg a NAV-meghatalmazást",
+ "alcim": "Az ONYA-ban, kb. 5 perc",
+ "megjegyzes": "mond = amit a hang mond (számok betűvel, Ónya, ujegyke, Ügyfélkapu plusz); felirat = a beégetett és a VTT-felirat. jel.szo = a 'mond' szövegben az a szó, amelynél a jelölés megjelenik. kep = az utmutato_kepek/<utmutato>/ fájlneve .png nélkül.",
+ "jelenetek": [
+  {
+   "id": "cim",
+   "tipus": "cim",
+   "vizual": "meghatalmazas_alairva",
+   "sorok": [
+    {
+     "id": "m01",
+     "mond": "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül öt perc.",
+     "felirat": "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc."
+    }
+   ]
+  },
+  {
+   "id": "belepes",
+   "tipus": "kep",
+   "cim": "Belépés",
+   "sorok": [
+    {
+     "id": "m04",
+     "kep": "01_onya_nyitooldal",
+     "mond": "Nyisd meg az Onyát, és koppints a Bejelentkezés gombra.",
+     "felirat": "Nyisd meg az ONYA-t, és koppints a „Bejelentkezés” gombra.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Bejelentkezés",
+       "nezet": [
+        0.02,
+        0.5,
+        0.81,
+        0.8
+       ]
+      },
+      {
+       "n": 2,
+       "szo": "gombra",
+       "csendben": true,
+       "nezet": [
+        0.02,
+        0.5,
+        0.81,
+        0.8
+       ]
+      }
+     ],
+     "kitart": 0.6
+    },
+    {
+     "id": "m06",
+     "kep": "02_kau_belepes",
+     "mond": "Lépj be DÁP-pal vagy Ügyfélkapu plusszal.",
+     "felirat": "Lépj be DÁP-pal vagy Ügyfélkapu+-szal.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "DÁP",
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.82
+       ]
+      },
+      {
+       "n": 2,
+       "szo": "Ügyfélkapu",
+       "nezet": [
+        0.04,
+        0.5,
+        0.97,
+        0.82
+       ]
+      }
+     ],
+     "hangulat": "figyelem"
+    }
+   ]
+  },
+  {
+   "id": "profil",
+   "tipus": "kep",
+   "cim": "Profil",
+   "sorok": [
+    {
+     "id": "m07",
+     "kep": "03_onya_profil",
+     "mond": "Jobb fent koppints a nevedre, és válaszd a saját profilod.",
+     "felirat": "Jobb fent koppints a nevedre, és válaszd a saját profilod.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "nevedre",
+       "nezet": [
+        0.398,
+        0.0,
+        0.981,
+        0.5
+       ],
+       "skala": 0.8576,
+       "nyito_arany": 1.0,
+       "all": true
+      },
+      {
+       "n": 2,
+       "szo": "saját",
+       "kesleltet": -0.3,
+       "nezet": [
+        0.1,
+        0.03,
+        0.82,
+        0.5
+       ],
+       "skala": 0.69,
+       "all": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "nyomtatvany",
+   "tipus": "kep",
+   "cim": "Új nyomtatvány",
+   "sorok": [
+    {
+     "id": "m08",
+     "kep": "04_onya_uj_nyomtatvany",
+     "mond": "Koppints az Új nyomtatvány csempére.",
+     "felirat": "Koppints az „Új nyomtatvány” csempére.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Új",
+       "nezet": [
+        0.191,
+        0.25,
+        0.76,
+        0.78
+       ],
+       "skala": 0.879,
+       "nyito_arany": 1.0
+      }
+     ]
+    },
+    {
+     "id": "m09",
+     "kep": "05_ujegyke_kivalasztas",
+     "mond": "Nyisd le a Meghatalmazásokat, és az ujegyke sorában koppints a Kiválaszt gombra.",
+     "felirat": "Nyisd le a Meghatalmazásokat, és az UJEGYKE sorában koppints a „Kiválaszt” gombra.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Meghatalmazásokat",
+       "nezet": [
+        0.03,
+        0.0,
+        0.6,
+        0.6
+       ],
+       "skala": 0.877,
+       "nyito_arany": 1.0
+      },
+      {
+       "n": 2,
+       "szo": "ujegyke",
+       "nezet": [
+        0.6,
+        0.0,
+        0.985,
+        0.6
+       ],
+       "skala": 1.29,
+       "csak_ez": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "szerep",
+   "tipus": "kep",
+   "cim": "Meghatalmazó",
+   "sorok": [
+    {
+     "id": "m10",
+     "kep": "06_meghatalmazo_szerep",
+     "mond": "A felugró ablakban válaszd: Meghatalmazó, majd Tovább.",
+     "felirat": "A felugró ablakban válaszd: „Meghatalmazó”, majd „Tovább”.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Meghatalmazó",
+       "nezet": [
+        0.03,
+        0.0,
+        0.648,
+        0.72
+       ],
+       "skala": 0.80906,
+       "nyito_arany": 1.0,
+       "all": true
+      },
+      {
+       "n": 2,
+       "szo": "majd",
+       "skala": 1.85,
+       "csak_ez": true,
+       "all": true
+      }
+     ],
+     "kitart": 0.6
+    },
+    {
+     "id": "m11",
+     "kep": "07_uj_bejelentes",
+     "mond": "Lent koppints az Új bejelentés gombra.",
+     "felirat": "Lent koppints az „Új bejelentés” gombra.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Új",
+       "nezet": [
+        0.3,
+        0.7,
+        0.64,
+        0.84
+       ],
+       "skala": 1.45,
+       "nyito_arany": 1.0,
+       "szel_igazit": false
+      }
+     ],
+     "megjegyzes_javito2_1119": "Közelebb a gombsorhoz: a nagy, elmosott minta-lista helyett a Találatok sora és a két gomb látszik."
+    }
+   ]
+  },
+  {
+   "id": "konyvelo",
+   "tipus": "kep",
+   "cim": "A könyvelőd adatai",
+   "sorok": [
+    {
+     "id": "m12",
+     "kep": "08_kepviselo_konyvelo",
+     "mond": "Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod.",
+     "felirat": "Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Írd",
+       "nezet": [
+        0.027,
+        0.1,
+        0.739,
+        0.38
+       ],
+       "skala": 0.7022,
+       "nyito_arany": 1.0,
+       "all": true
+      },
+      {
+       "n": 2,
+       "szo": "kimásolod",
+       "csendben": true,
+       "kesleltet": 0.2,
+       "nezet": [
+        0.03,
+        0.0,
+        0.97,
+        0.75
+       ],
+       "skala": 0.532,
+       "all": true
+      }
+     ],
+     "kitart": 1.1
+    },
+    {
+     "id": "m14",
+     "kep": "09_jogcim_konyvelo",
+     "mond": "Jogcímnek válaszd a kilencest: Könyvelő.",
+     "felirat": "Jogcímnek válaszd a 9-est: Könyvelő.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Jogcímnek",
+       "nezet": [
+        0.028,
+        0.0,
+        0.903,
+        0.7
+       ],
+       "skala": 0.5714,
+       "all": true,
+       "nyito_arany": 1.0
+      },
+      {
+       "n": 2,
+       "szo": "kilencest",
+       "nezet": [
+        0.028,
+        0.0,
+        0.903,
+        0.7
+       ],
+       "skala": 0.5714,
+       "all": true
+      }
+     ],
+     "hangulat": "figyelem"
+    },
+    {
+     "id": "m15",
+     "kep": "09_jogcim_konyvelo",
+     "mond": "Mellé írd be a nyilvántartási számát.",
+     "felirat": "Mellé írd be a nyilvántartási számát.",
+     "jel": [
+      {
+       "n": 3,
+       "szo": "nyilvántartási",
+       "csak_ez": true,
+       "nezet": [
+        0.028,
+        0.0,
+        0.903,
+        0.7
+       ],
+       "skala": 0.5714,
+       "all": true
+      }
+     ]
+    },
+    {
+     "id": "m16",
+     "kep": "10_kepviselt_te",
+     "mond": "A Képviselt te vagy, előre kitöltve.",
+     "felirat": "A „Képviselt” te vagy, előre kitöltve.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Képviselt",
+       "nezet": [
+        0.0,
+        0.0,
+        1.0,
+        0.62
+       ],
+       "skala": 0.52,
+       "nyito_arany": 1.0
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ugykorok",
+   "tipus": "kep",
+   "cim": "Időtartam és ügyek",
+   "sorok": [
+    {
+     "id": "m17",
+     "kep": "11_idobeli_hataly",
+     "mond": "Kezdet: a mai nap. A végét hagyd üresen.",
+     "felirat": "Kezdet: a mai nap. A végét hagyd üresen.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Kezdet",
+       "nezet": [
+        0.03,
+        0.19,
+        0.62,
+        0.5
+       ],
+       "skala": 0.85,
+       "nyito_arany": 1.0
+      },
+      {
+       "n": 2,
+       "szo": "végét",
+       "nezet": [
+        0.03,
+        0.19,
+        0.62,
+        0.5
+       ],
+       "skala": 0.85
+      }
+     ]
+    },
+    {
+     "id": "m18",
+     "kep": "12_adougyek",
+     "mond": "Az ügycsoportoknál jelöld be az adóügyeket.",
+     "felirat": "Az ügycsoportoknál jelöld be az adóügyeket.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "ügycsoportoknál",
+       "nezet": [
+        0.03,
+        0.06,
+        0.57,
+        0.36
+       ],
+       "skala": 0.92,
+       "nyito_arany": 1.0
+      }
+     ],
+     "kitart": 0.5
+    },
+    {
+     "id": "m19",
+     "kep": "13_ev_nyilvantartas",
+     "mond": "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+     "felirat": "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "egyéni",
+       "nezet": [
+        0.035,
+        0.52,
+        0.685,
+        0.7
+       ]
+      },
+      {
+       "n": 2,
+       "szo": "A többit",
+       "nezet": [
+        0.035,
+        0.52,
+        0.685,
+        0.7
+       ]
+      }
+     ],
+     "kitart": 0.7
+    }
+   ]
+  },
+  {
+   "id": "benyujtas",
+   "tipus": "kep",
+   "cim": "Benyújtás",
+   "sorok": [
+    {
+     "id": "m20",
+     "kep": "14_benyujtas",
+     "mond": "Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.",
+     "felirat": "Végül koppints az „Ellenőrzés és benyújtás” gombra, majd a „Tovább” gombra.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "gombra",
+       "nezet": [
+        0.0,
+        0.0,
+        1.0,
+        0.72
+       ],
+       "pirula": "Ezután ezt látod: nincs hiba"
+      },
+      {
+       "n": 2,
+       "szo": "Tovább",
+       "nezet": [
+        0.0,
+        0.0,
+        1.0,
+        0.72
+       ]
+      }
+     ],
+     "kitart": 0.8,
+     "pirula_elotte": "Az űrlap alján: „Ellenőrzés és benyújtás”"
+    },
+    {
+     "id": "m21",
+     "kep": "15_sikeres_benyujtas",
+     "mond": "Kész. Körülbelül húsz perc múlva él.",
+     "felirat": "Kész. Körülbelül 20 perc múlva él.",
+     "jel": [
+      {
+       "n": 1,
+       "szo": "Kész",
+       "nezet": [
+        0.0,
+        0.02,
+        1.0,
+        0.75
+       ]
+      }
+     ],
+     "hangulat": "figyelem"
+    }
+   ]
+  },
+  {
+   "id": "app",
+   "tipus": "app",
+   "cim": "Itt, az alkalmazásban",
+   "app": {
+    "ikon": "igazolas",
+    "cim": "Megadtad a meghatalmazást?",
+    "szoveg": "Ha elmentetted a visszaigazolást, töltsd fel. Ez nem kötelező.",
+    "gomb": "Beküldtem",
+    "allapot": "A könyvelőd megnézi a NAV-nál, és szól.",
+    "allapot_ikon": "irat",
+    "mezo": "Visszaigazolás (nem kötelező)"
+   },
+   "sorok": [
+    {
+     "id": "m23",
+     "mond": "Itt, az alkalmazásban koppints a Beküldtem gombra.",
+     "felirat": "Itt, az alkalmazásban koppints a „Beküldtem” gombra.",
+     "jel": [
+      {
+       "app": "gomb",
+       "szo": "Beküldtem"
+      }
+     ]
+    },
+    {
+     "id": "m24",
+     "mond": "A könyvelőd megnézi, és szól, ha minden rendben.",
+     "felirat": "A könyvelőd megnézi, és szól, ha minden rendben.",
+     "jel": [
+      {
+       "app": "allapot",
+       "szo": "könyvelőd"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "zaro",
+   "tipus": "zaro",
+   "zaro": {
+    "ikon": "ora",
+    "cim": "Elakadtál?",
+    "gomb": "Kérj visszahívást",
+    "szoveg": "Csapatunk 24–48 órán belül hív.",
+    "helyettunk": {
+     "badge": "Ha egyedül nem megy",
+     "cim": "Megcsináljuk helyetted",
+     "al": "Te csak jóváhagyod az ONYA-ban."
+    }
+   },
+   "sorok": [
+    {
+     "id": "m25",
+     "mond": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.",
+     "felirat": "Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül hív."
+    },
+    {
+     "id": "m26",
+     "mond": "Ha egyedül nem megy, megcsináljuk helyetted: te csak jóváhagyod.",
+     "felirat": "Ha egyedül nem megy, megcsináljuk helyetted: te csak jóváhagyod.",
+     "jel": [
+      {
+       "zaro_elem": "helyettunk",
+       "szo": "egyedül"
+      }
+     ],
+     "megjegyzes_1119": "11-19 javító kör: a „megnyugtato” hangulattal ~150 Hz-en, a szomszéd sorok ~95–100 Hz-en szóltak; újravétel a jelenet alap (zaro) hangulatával."
+    }
+   ],
+   "cim": "Ha elakadsz"
+  }
+ ],
+ "lektor": {
+  "kor1": "nyelv: claude-haiku-5.5, tények: gemini-3.8-flash (vallalkozas_bejelentes/lektor/kor1_*.json); elfogadva: m16 Képviselt vissza, m20 sorrend, m02/m21 'Körülbelül' a feliratban; elutasítva: 'pluszszal', számok betűvel a feliratban",
+  "kor2": "a végleges szövegen (vallalkozas_bejelentes/lektor/kor2_*.json); elfogadva: m12 'egy gombbal' (tények); elutasítva: számok és ONYA/UJEGYKE betűvel a feliratban"
+ },
+ "vege": {
+  "cim": "Ennyi az egész!",
+  "al": "Minden lépést leírtunk lent, az útmutatóban."
+ },
+ "megjegyzes_k3c3": "2026-11-18 k3c3: jelölésenkénti nezet (m04, m06, m09, m10, m12, m15, m16, m18, m19, m20, m21), m15 csak_ez (a jogcím-lenyíló jelölése eltűnik, amikor a nyilvántartási szám jön), „Onyát” rövid o-val. Az eredeti: _regi/forgatokonyv_elotte_k3c3_*.json.",
+ "megjegyzes_hang_1119": "2026-11-19, a végleges (Umbriel) hanghoz: „kitart” = ennyi másodperc szünet a sor után, hogy a mondat végén megjelenő jelölés látsszon, mielőtt a kép vált: m04 0,6 s („Ezt ne: így nem tudod beküldeni”), m12 1,0 s („Szervezet: hagyd üresen” – eddig egyáltalán nem jelent meg, mert a következő kép előbb jött). A szöveg nem változott. Az eredeti: _regi/forgatokonyv_elotte_kitart_20261119_0650.json.",
+ "megjegyzes_javitas_1119": "2026-11-19 ellenőrző kör után: m18 az „adóügyek” jelölése a mondat elejétől látszik (eddig 0,6 s), szorosabb nézettel és 0,5 s kitartással; m10 („Tovább”), m19 („Ezeket ne jelöld”), m20 („Koppints: Tovább”) kitartás 0,6–0,8 s és korábbi horgony; m07 2. jelölés egy szóval korábban; m12 a „Szervezet” a bal részére közelítve; m16 a „Képviselt” címsorra és a névre közelítve; m10, m17, m18 szorosabb nézet (telefonon olvasható betű); m09 felirata = a hang („Nyisd le a Meghatalmazásokat”). A 08, 10–14 kép újrajelölve (a keret nem lóg a szövegre; a 14-es forrásképe kiegészítve). Az eredeti: _regi/forgatokonyv_elotte_javitas_20261119_0700.json.",
+ "megjegyzes_r2_1119": "2026-11-19, 2. ellenőrző kör: m07 – az 1. jelölés korongja a keret fölött (a 03-as kép újrajelölve), a nézet a homokórától a lap jobb széléig; m08 – a csempe nézete nem vágja félbe a „Főoldal” szót; m09 – a „Meghatalmazások” sor kerete a sor bal részén (05-ös kép újrajelölve), a „Kiválaszt” gombnál a korábbi jelölés eltűnik (csak_ez); m10 – a választógomb kerete csak a gombot és a feliratát fogja körbe (06-os kép újrajelölve), a nézet jobb széle két szó közé esik, a „Tovább” közelijében nincs üres keret (csak_ez; a váltás átúszik); m12 – az 1. jelölés kerete és a két mező egészben, a „Szervezet” teljes szélességben; m14–m15 – a jogcímlista teljes szélességben (a hosszú sorok így nem vágódnak félbe); m16 – a „Képviselt” kerete egészben; m20 – szám nélküli bevezető pirula („pirula_elotte”: „Az űrlap alján: „Ellenőrzés és benyújtás”” – a gombról nincs kép), az 1. jelölés a „gombra” szónál, „Ezután ezt látod: nincs hiba” felirattal („pirula”); a 14–15. kép ikonjának köre teljes (utmutato_kepek/_eszkoz/ikon_teljes.py); „all”: true = a nyugvó kamera nem közelít rá (a nézet széle szavak / mezők közti keskeny résben áll); a feliratok a mondat tagolása szerint törnek (video/felirat_tores.py); hang: az m03 eleji kattanása levágva. A szöveg (mond) nem változott. Az eredeti: _regi/forgatokonyv_elotte_r2_20261119_r2.json.",
+ "megjegyzes_tulaj1119": "2026-11-19 (tulaj 3. kérés): új m26 + kiemelt „Megcsináljuk helyetted” kártya a záróképen. A régi: _regi/forgatokonyv_elotte_20261119_tulaj1119.json. Az m03 („Hozzád kötődik, ezért induló vállalkozásnál is jó.”) kimaradt – a README szerinti első rövidítés –, hogy az új m26-tal is a 100 s-os sávban maradjon (a §27 szerint új vállalkozásnál a meghatalmazás a bejelentés után jön)."
+}

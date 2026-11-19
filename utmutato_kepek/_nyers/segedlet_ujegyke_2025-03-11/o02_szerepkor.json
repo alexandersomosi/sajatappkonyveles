@@ -1,0 +1,25 @@
+{
+ "helyek": {
+  "meghatalmazo": [
+   18,
+   290,
+   1162,
+   352
+  ],
+  "tovabb": [
+   505,
+   571,
+   677,
+   625
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": [
+  [
+   8,
+   280,
+   300,
+   350
+  ]
+ ]
+}

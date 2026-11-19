@@ -1,0 +1,2497 @@
+{
+ "_note": "KITALÁLT DEMÓADAT. Valódi személyhez vagy céghez nem tartozik. A 99-cel kezdődő vevői törzsszámok és a 68xxxxxx ügyfél-adószámok csak formailag helyesek (ellenőrző számjegy), nem valódiak. Forrás: kod/SPEC.md 19. pont; generálta a SPEC-író 2026-11-17-én. A NAV-mock és a seed EZT használja; ne írd át kézzel, csak együtt a SPEC 7.6 várt értékeivel.",
+ "today": "2026-11-17",
+ "taxIds": {
+  "bence": {
+   "adoazonositoJel": "8428621233"
+  },
+  "kata": {
+   "adoszam": "68801234-1-41",
+   "adoazonositoJel": "8417104569"
+  },
+  "reka": {
+   "adoszam": "68904564-1-10",
+   "adoazonositoJel": "8450772176"
+  },
+  "peter": {
+   "adoszam": "68707893-1-06",
+   "adoazonositoJel": "8463473385"
+  }
+ },
+ "navInvoices": {
+  "68801234": [
+   {
+    "invoiceNumber": "KSZ-2026-001",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-01-02",
+    "deliveryDate": "2026-01-02",
+    "paymentDate": "2026-01-10",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 167000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 167000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 167000,
+      "netAmountHuf": 167000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-002",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-01-06",
+    "deliveryDate": "2026-01-06",
+    "paymentDate": "2026-01-14",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 201000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 201000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Fecskefészek Utazási Kft.",
+     "taxNumber": "99305064",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 201000,
+      "netAmountHuf": 201000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-003",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-01-09",
+    "deliveryDate": "2026-01-09",
+    "paymentDate": "2026-01-17",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 242000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 242000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Mókusvár Játékbolt Kft.",
+     "taxNumber": "99406079",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 242000,
+      "netAmountHuf": 242000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-004",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-02-02",
+    "deliveryDate": "2026-02-02",
+    "paymentDate": "2026-02-10",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 158000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 158000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 158000,
+      "netAmountHuf": 158000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-005",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-02-03",
+    "deliveryDate": "2026-02-03",
+    "paymentDate": "2026-02-11",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 189000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 189000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 189000,
+      "netAmountHuf": 189000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-006",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-02-13",
+    "deliveryDate": "2026-02-13",
+    "paymentDate": "2026-02-21",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 193000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 193000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Mókusvár Játékbolt Kft.",
+     "taxNumber": "99406079",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 193000,
+      "netAmountHuf": 193000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-007",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-06",
+    "deliveryDate": "2026-03-06",
+    "paymentDate": "2026-03-14",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 211000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 211000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 211000,
+      "netAmountHuf": 211000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-008",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-07",
+    "deliveryDate": "2026-03-07",
+    "paymentDate": "2026-03-15",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 280000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 280000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 280000,
+      "netAmountHuf": 280000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-009",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-17",
+    "deliveryDate": "2026-03-17",
+    "paymentDate": "2026-03-25",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 229000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 229000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 229000,
+      "netAmountHuf": 229000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-010",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-07",
+    "deliveryDate": "2026-04-07",
+    "paymentDate": "2026-04-15",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 308000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 308000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 308000,
+      "netAmountHuf": 308000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-011",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-09",
+    "deliveryDate": "2026-04-09",
+    "paymentDate": "2026-04-17",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 318000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 318000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 318000,
+      "netAmountHuf": 318000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-012",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-19",
+    "deliveryDate": "2026-04-19",
+    "paymentDate": "2026-04-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 254000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 254000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 254000,
+      "netAmountHuf": 254000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-013",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-05-04",
+    "deliveryDate": "2026-05-04",
+    "paymentDate": "2026-05-12",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 191000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 191000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 191000,
+      "netAmountHuf": 191000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-014",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-05-06",
+    "deliveryDate": "2026-05-06",
+    "paymentDate": "2026-05-14",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 222000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 222000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 222000,
+      "netAmountHuf": 222000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-015",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-05-19",
+    "deliveryDate": "2026-05-19",
+    "paymentDate": "2026-05-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 347000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 347000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 347000,
+      "netAmountHuf": 347000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-016",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-07",
+    "deliveryDate": "2026-06-07",
+    "paymentDate": "2026-06-15",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 276000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 276000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 276000,
+      "netAmountHuf": 276000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-017",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-11",
+    "deliveryDate": "2026-06-11",
+    "paymentDate": "2026-06-19",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 247000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 247000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 247000,
+      "netAmountHuf": 247000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-018",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-19",
+    "deliveryDate": "2026-06-19",
+    "paymentDate": "2026-06-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 417000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 417000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Fecskefészek Utazási Kft.",
+     "taxNumber": "99305064",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 417000,
+      "netAmountHuf": 417000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-019",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-06",
+    "deliveryDate": "2026-07-06",
+    "paymentDate": "2026-07-14",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 271000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 271000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 271000,
+      "netAmountHuf": 271000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-020",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-10",
+    "deliveryDate": "2026-07-10",
+    "paymentDate": "2026-07-18",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 211000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 211000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Mókusvár Játékbolt Kft.",
+     "taxNumber": "99406079",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 211000,
+      "netAmountHuf": 211000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-021",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-13",
+    "deliveryDate": "2026-07-13",
+    "paymentDate": "2026-07-21",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 338000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 338000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 338000,
+      "netAmountHuf": 338000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-022",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-08-11",
+    "deliveryDate": "2026-08-11",
+    "paymentDate": "2026-08-19",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 178000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 178000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 178000,
+      "netAmountHuf": 178000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-023",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-08-17",
+    "deliveryDate": "2026-08-17",
+    "paymentDate": "2026-08-25",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 293000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 293000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 293000,
+      "netAmountHuf": 293000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-024",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-08-18",
+    "deliveryDate": "2026-08-18",
+    "paymentDate": "2026-08-26",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 179000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 179000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Mókusvár Játékbolt Kft.",
+     "taxNumber": "99406079",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 179000,
+      "netAmountHuf": 179000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-025",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-08",
+    "deliveryDate": "2026-09-08",
+    "paymentDate": "2026-09-16",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 310000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 310000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Mókusvár Játékbolt Kft.",
+     "taxNumber": "99406079",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 310000,
+      "netAmountHuf": 310000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-026",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-13",
+    "deliveryDate": "2026-09-13",
+    "paymentDate": "2026-09-21",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 390000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 390000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 390000,
+      "netAmountHuf": 390000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-027",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-15",
+    "deliveryDate": "2026-09-15",
+    "paymentDate": "2026-09-23",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 320000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 320000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 320000,
+      "netAmountHuf": 320000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-028",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-07",
+    "deliveryDate": "2026-10-07",
+    "paymentDate": "2026-10-15",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 305000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 305000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 305000,
+      "netAmountHuf": 305000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-029",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-10",
+    "deliveryDate": "2026-10-10",
+    "paymentDate": "2026-10-18",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 348000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 348000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 348000,
+      "netAmountHuf": 348000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-030",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-11",
+    "deliveryDate": "2026-10-11",
+    "paymentDate": "2026-10-19",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 229000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 229000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Zöldág Alapítvány",
+     "taxNumber": "99507084",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 229000,
+      "netAmountHuf": 229000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-031",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-05",
+    "deliveryDate": "2026-11-05",
+    "paymentDate": "2026-11-13",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 162000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 162000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Csipkebogyó Pékség Bt.",
+     "taxNumber": "99204059",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 162000,
+      "netAmountHuf": 162000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-032",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-18",
+    "deliveryDate": "2026-11-18",
+    "paymentDate": "2026-11-26",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 218000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 218000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Fecskefészek Utazási Kft.",
+     "taxNumber": "99305064",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Grafikai tervezés és illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 218000,
+      "netAmountHuf": 218000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "KSZ-2026-033",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-12",
+    "deliveryDate": "2026-11-12",
+    "paymentDate": "2026-11-20",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 240000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 240000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68801234",
+    "customer": {
+     "name": "Bodza Kiadó Kft.",
+     "taxNumber": "99102036",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Könyvborító illusztráció",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 240000,
+      "netAmountHuf": 240000
+     }
+    ]
+   }
+  ],
+  "68904564": [
+   {
+    "invoiceNumber": "VR-2026-001",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-04",
+    "deliveryDate": "2026-03-04",
+    "paymentDate": "2026-03-12",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 96000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 96000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68904564",
+    "customer": {
+     "name": "Gyöngyvirág Rendezvényház Kft.",
+     "taxNumber": "99608099",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Esküvői frizurák (csoportos)",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 96000,
+      "netAmountHuf": 96000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "VR-2026-002",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-03",
+    "deliveryDate": "2026-06-03",
+    "paymentDate": "2026-06-11",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 118000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 118000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68904564",
+    "customer": {
+     "name": "Gyöngyvirág Rendezvényház Kft.",
+     "taxNumber": "99608099",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Esküvői frizurák (csoportos)",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 118000,
+      "netAmountHuf": 118000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "VR-2026-003",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-12",
+    "deliveryDate": "2026-09-12",
+    "paymentDate": "2026-09-20",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 84000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 84000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68904564",
+    "customer": {
+     "name": "Gyöngyvirág Rendezvényház Kft.",
+     "taxNumber": "99608099",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Esküvői frizurák (csoportos)",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 84000,
+      "netAmountHuf": 84000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "VR-2026-004",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-13",
+    "deliveryDate": "2026-11-13",
+    "paymentDate": "2026-11-21",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 145000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 145000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68904564",
+    "customer": {
+     "name": "Gyöngyvirág Rendezvényház Kft.",
+     "taxNumber": "99608099",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Esküvői frizurák (csoportos)",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 145000,
+      "netAmountHuf": 145000
+     }
+    ]
+   }
+  ],
+  "68707893": [
+   {
+    "invoiceNumber": "NP-2026-001",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-01-03",
+    "deliveryDate": "2026-01-03",
+    "paymentDate": "2026-01-11",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 256000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 256000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 256000,
+      "netAmountHuf": 256000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-002",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-01-18",
+    "deliveryDate": "2026-01-18",
+    "paymentDate": "2026-01-26",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 164000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 164000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 164000,
+      "netAmountHuf": 164000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-003",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-02-08",
+    "deliveryDate": "2026-02-08",
+    "paymentDate": "2026-02-16",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 230000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 230000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 230000,
+      "netAmountHuf": 230000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-004",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-02-17",
+    "deliveryDate": "2026-02-17",
+    "paymentDate": "2026-02-25",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 150000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 150000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 150000,
+      "netAmountHuf": 150000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-005",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-08",
+    "deliveryDate": "2026-03-08",
+    "paymentDate": "2026-03-16",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 134000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 134000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 134000,
+      "netAmountHuf": 134000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-006",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-17",
+    "deliveryDate": "2026-03-17",
+    "paymentDate": "2026-03-25",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 158000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 158000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 158000,
+      "netAmountHuf": 158000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-007",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-03-19",
+    "deliveryDate": "2026-03-19",
+    "paymentDate": "2026-03-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 218000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 218000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 218000,
+      "netAmountHuf": 218000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-008",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-16",
+    "deliveryDate": "2026-04-16",
+    "paymentDate": "2026-04-24",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 205000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 205000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 205000,
+      "netAmountHuf": 205000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-009",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-19",
+    "deliveryDate": "2026-04-19",
+    "paymentDate": "2026-04-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 238000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 238000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 238000,
+      "netAmountHuf": 238000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-010",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-04-20",
+    "deliveryDate": "2026-04-20",
+    "paymentDate": "2026-04-28",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 157000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 157000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 157000,
+      "netAmountHuf": 157000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-011",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-05-08",
+    "deliveryDate": "2026-05-08",
+    "paymentDate": "2026-05-16",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 288000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 288000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 288000,
+      "netAmountHuf": 288000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-012",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-05-14",
+    "deliveryDate": "2026-05-14",
+    "paymentDate": "2026-05-22",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 162000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 162000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 162000,
+      "netAmountHuf": 162000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-013",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-02",
+    "deliveryDate": "2026-06-02",
+    "paymentDate": "2026-06-10",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 207000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 207000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 207000,
+      "netAmountHuf": 207000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-014",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-06",
+    "deliveryDate": "2026-06-06",
+    "paymentDate": "2026-06-14",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 311000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 311000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 311000,
+      "netAmountHuf": 311000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-015",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-06-20",
+    "deliveryDate": "2026-06-20",
+    "paymentDate": "2026-06-28",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 182000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 182000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 182000,
+      "netAmountHuf": 182000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-016",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-09",
+    "deliveryDate": "2026-07-09",
+    "paymentDate": "2026-07-17",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 187000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 187000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 187000,
+      "netAmountHuf": 187000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-017",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-14",
+    "deliveryDate": "2026-07-14",
+    "paymentDate": "2026-07-22",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 158000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 158000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 158000,
+      "netAmountHuf": 158000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-018",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-07-15",
+    "deliveryDate": "2026-07-15",
+    "paymentDate": "2026-07-23",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 175000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 175000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 175000,
+      "netAmountHuf": 175000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-019",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-08-03",
+    "deliveryDate": "2026-08-03",
+    "paymentDate": "2026-08-11",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 290000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 290000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 290000,
+      "netAmountHuf": 290000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-020",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-08-15",
+    "deliveryDate": "2026-08-15",
+    "paymentDate": "2026-08-23",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 190000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 190000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 190000,
+      "netAmountHuf": 190000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-021",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-03",
+    "deliveryDate": "2026-09-03",
+    "paymentDate": "2026-09-11",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 239000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 239000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 239000,
+      "netAmountHuf": 239000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-022",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-05",
+    "deliveryDate": "2026-09-05",
+    "paymentDate": "2026-09-13",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 166000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 166000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 166000,
+      "netAmountHuf": 166000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-023",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-09-12",
+    "deliveryDate": "2026-09-12",
+    "paymentDate": "2026-09-20",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 245000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 245000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 245000,
+      "netAmountHuf": 245000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-024",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-02",
+    "deliveryDate": "2026-10-02",
+    "paymentDate": "2026-10-10",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 174000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 174000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 174000,
+      "netAmountHuf": 174000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-025",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-12",
+    "deliveryDate": "2026-10-12",
+    "paymentDate": "2026-10-20",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 243000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 243000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 243000,
+      "netAmountHuf": 243000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-026",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-10-19",
+    "deliveryDate": "2026-10-19",
+    "paymentDate": "2026-10-27",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 193000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 193000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 193000,
+      "netAmountHuf": 193000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-027",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-04",
+    "deliveryDate": "2026-11-04",
+    "paymentDate": "2026-11-12",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 186000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 186000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Napfolt Webáruház Kft.",
+     "taxNumber": "99800019",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 186000,
+      "netAmountHuf": 186000
+     }
+    ]
+   },
+   {
+    "invoiceNumber": "NP-2026-028",
+    "operation": "CREATE",
+    "category": "NORMAL",
+    "issueDate": "2026-11-07",
+    "deliveryDate": "2026-11-07",
+    "paymentDate": "2026-11-15",
+    "paymentMethod": "TRANSFER",
+    "currency": "HUF",
+    "netAmountHuf": 114000,
+    "vatAmountHuf": 0,
+    "grossAmountHuf": 114000,
+    "vatExemption": {
+     "case": "AAM",
+     "reason": "Alanyi adómentes"
+    },
+    "supplierTaxNumber": "68707893",
+    "customer": {
+     "name": "Kékmadár Szoftver Kft.",
+     "taxNumber": "99709004",
+     "vatStatus": "DOMESTIC"
+    },
+    "lines": [
+     {
+      "lineNo": 1,
+      "description": "Weboldal-fejlesztés és karbantartás",
+      "quantity": 1,
+      "unit": "db",
+      "unitPriceHuf": 114000,
+      "netAmountHuf": 114000
+     }
+    ]
+   }
+  ]
+ },
+ "manualRevenue": {
+  "kata": [
+   {
+    "receivedOn": "2026-10-03",
+    "amountHuf": 18000,
+    "description": "Nyugta, készpénzes eladás (kézi nyugtatömb)"
+   }
+  ],
+  "reka": [
+   {
+    "receivedOn": "2026-01-31",
+    "amountHuf": 1480000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-02-28",
+    "amountHuf": 1420000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-03-31",
+    "amountHuf": 1454000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-04-30",
+    "amountHuf": 1620000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-05-31",
+    "amountHuf": 1590000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-06-30",
+    "amountHuf": 1592000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-07-31",
+    "amountHuf": 1760000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-08-31",
+    "amountHuf": 1510000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-09-30",
+    "amountHuf": 1606000,
+    "description": "Pénztárgép havi összesítő"
+   },
+   {
+    "receivedOn": "2026-10-31",
+    "amountHuf": 1840000,
+    "description": "Pénztárgép havi összesítő"
+   }
+  ],
+  "peter": []
+ },
+ "expectedReceivedByMonth": {
+  "kata": [
+   610000,
+   540000,
+   720000,
+   880000,
+   760000,
+   940000,
+   820000,
+   650000,
+   1020000,
+   900000,
+   162000,
+   0
+  ],
+  "reka": [
+   1480000,
+   1420000,
+   1550000,
+   1620000,
+   1590000,
+   1710000,
+   1760000,
+   1510000,
+   1690000,
+   1840000,
+   0,
+   0
+  ],
+  "peter": [
+   420000,
+   380000,
+   510000,
+   600000,
+   450000,
+   700000,
+   520000,
+   480000,
+   650000,
+   610000,
+   300000,
+   0
+  ]
+ },
+ "expectedAfaKeretUsedAsOfToday": {
+  "kata": 8242000,
+  "reka": 16315000,
+  "peter": 5620000
+ },
+ "expectedTax2026": {
+  "kata": [
+   {
+    "q": 1,
+    "revenue": 1870000,
+    "income": 1028500,
+    "ytdIncome": 1028500,
+    "taxableYtd": 0,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     322800,
+     322800,
+     322800
+    ],
+    "tb": 179154,
+    "szocho": 125892,
+    "szjaAdvance": 0,
+    "total": 305046
+   },
+   {
+    "q": 2,
+    "revenue": 2580000,
+    "income": 1419000,
+    "ytdIncome": 2447500,
+    "taxableYtd": 510700,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     322800,
+     322800,
+     322800
+    ],
+    "tb": 179154,
+    "szocho": 125892,
+    "szjaAdvance": 76605,
+    "total": 381651
+   },
+   {
+    "q": 3,
+    "revenue": 2490000,
+    "income": 1369500,
+    "ytdIncome": 3817000,
+    "taxableYtd": 1880200,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     322800,
+     322800,
+     322800
+    ],
+    "tb": 179154,
+    "szocho": 125892,
+    "szjaAdvance": 205425,
+    "total": 510471
+   },
+   {
+    "q": 4,
+    "revenue": 1062000,
+    "income": 584100,
+    "ytdIncome": 4401100,
+    "taxableYtd": 2464300,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     322800,
+     322800,
+     322800
+    ],
+    "tb": 179154,
+    "szocho": 125892,
+    "szjaAdvance": 87615,
+    "total": 392661
+   }
+  ],
+  "reka": [
+   {
+    "q": 1,
+    "revenue": 4450000,
+    "income": 890000,
+    "ytdIncome": 890000,
+    "taxableYtd": 0,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     373200,
+     373200,
+     373200
+    ],
+    "tb": 207126,
+    "szocho": 145548,
+    "szjaAdvance": 0,
+    "total": 352674
+   },
+   {
+    "q": 2,
+    "revenue": 4920000,
+    "income": 984000,
+    "ytdIncome": 1874000,
+    "taxableYtd": 0,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     373200,
+     373200,
+     373200
+    ],
+    "tb": 207126,
+    "szocho": 145548,
+    "szjaAdvance": 0,
+    "total": 352674
+   },
+   {
+    "q": 3,
+    "revenue": 4960000,
+    "income": 992000,
+    "ytdIncome": 2866000,
+    "taxableYtd": 929200,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     373200,
+     373200,
+     373200
+    ],
+    "tb": 207126,
+    "szocho": 145548,
+    "szjaAdvance": 139380,
+    "total": 492054
+   },
+   {
+    "q": 4,
+    "revenue": 1840000,
+    "income": 368000,
+    "ytdIncome": 3234000,
+    "taxableYtd": 1297200,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     373200,
+     373200,
+     373200
+    ],
+    "tb": 207126,
+    "szocho": 145548,
+    "szjaAdvance": 55200,
+    "total": 407874
+   }
+  ],
+  "peter": [
+   {
+    "q": 1,
+    "revenue": 1310000,
+    "income": 720500,
+    "ytdIncome": 720500,
+    "taxableYtd": 0,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     0,
+     0,
+     0
+    ],
+    "tb": 0,
+    "szocho": 0,
+    "szjaAdvance": 0,
+    "total": 0
+   },
+   {
+    "q": 2,
+    "revenue": 1750000,
+    "income": 962500,
+    "ytdIncome": 1683000,
+    "taxableYtd": 0,
+    "gongyoltBasePerMonth": 0.0,
+    "monthlyBases": [
+     0,
+     0,
+     0
+    ],
+    "tb": 0,
+    "szocho": 0,
+    "szjaAdvance": 0,
+    "total": 0
+   },
+   {
+    "q": 3,
+    "revenue": 1650000,
+    "income": 907500,
+    "ytdIncome": 2590500,
+    "taxableYtd": 653700,
+    "gongyoltBasePerMonth": 217900.0,
+    "monthlyBases": [
+     217900,
+     217900,
+     217900
+    ],
+    "tb": 120936,
+    "szocho": 84981,
+    "szjaAdvance": 98055,
+    "total": 303972
+   },
+   {
+    "q": 4,
+    "revenue": 910000,
+    "income": 500500,
+    "ytdIncome": 3091000,
+    "taxableYtd": 1154200,
+    "gongyoltBasePerMonth": 166833.33,
+    "monthlyBases": [
+     166833,
+     166833,
+     166833
+    ],
+    "tb": 92592,
+    "szocho": 65064,
+    "szjaAdvance": 75075,
+    "total": 232731
+   }
+  ]
+ }
+}

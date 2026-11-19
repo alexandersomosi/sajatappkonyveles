@@ -1,0 +1,27 @@
+{
+ "talalatok": [
+  {
+   "id": "b12",
+   "sulyossag": "javaslat",
+   "problema": "A SPEC és az útmutató sablon szerint a TAJ-számot a személyi adatoknál csak akkor kell beírni, ha a felület külön kéri (a sablon szerint: 'TAJ-szám: a TAJ-kártyádról, ha a képernyő kéri; Mi nem kérjük el és nem tároljuk'). A b04-ben előkészítteti a TAJ-kártyát, de a képernyőnél nem említi, hogy azt szükség esetén be kell írni.",
+   "forras": "utmutato_sablonok_bekotes_ts (szemelyi_adatok: 'TAJ-szám a TAJ-kártyádról, ha a képernyő kéri')",
+   "javitott": "Ha valami hibás, ne itt javítsd: szólj a NAV-nak. Ha kéri, a TAJ-számodat írd be."
+  },
+  {
+   "id": "m16",
+   "sulyossag": "hiany",
+   "problema": "Kimaradt a 10_kepviselt_te képernyő (Képviselt – te vagy, előre kitöltve), amely a könyvelő adatai és az időbeli hatály között szerepel a képek indexében.",
+   "forras": "nav_kepek_index_meghatalmazas (10_kepviselt_te) és nav_kivonat ('Képviselt: előre kitöltve')",
+   "javitott": "Új sor beillesztése m15 és m17 közé (id: m15b, kep: 10_kepviselt_te): mond: 'A Képviselt résznél a te adataid szerepelnek, ezt csak nézd át.', felirat: 'A Képviselt résznél a te adataid szerepelnek.'"
+  },
+  {
+   "id": "m20",
+   "sulyossag": "pontatlansag",
+   "problema": "A források és a képindex alapján az 'Ellenőrzés' és a 'Benyújtás' két külön művelet/gomb (sablon: 'Kattints az Ellenőrzésre, majd a Benyújtásra'), illetve a képen az űrlap alján 'Ellenőrzés és benyújtás', majd a felugró ablakban 'Tovább'. A videó ezt jól mondja ('Ellenőrzés és benyújtás gombra, majd a Tovább gombra'), de az Ellenőrzés futtatása és a hibaellenőrzés ténye nincs külön kimondva.",
+   "forras": "spec_26_6_3 és nav_kepek_index_meghatalmazas (14_benyujtas)",
+   "javitott": "Végül koppints az Ellenőrzés és benyújtás gombra, és ha nincs hiba, a Tovább gombra."
+  }
+ ],
+ "osszegzes": "A videószövegek kiválóan fedik a specifikációt és a NAV képernyőket. Minden kritikus adózási szabály (alanyi ÁFA-mentesség igen, átalányadó igen, kata nem, pénzforgalmi nem, munkavégzés jellege kötelező, közösségi adószám feltételes, kamarai regisztráció 5 napon belül, visszavonhatatlan beküldés) és ONYA meghatalmazási lépés (profil, Meghatalmazó szerep, 9-es könyvelő jogcím, megadott ügykörök, határozatlan idő) pontosan szerepel. Egyetlen strukturális hiányosság az m10_kepviselt_te képernyő átugrása a meghatalmazás videóban.",
+ "_modell": "google/gemini-3.8-flash"
+}

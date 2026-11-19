@@ -1,0 +1,40 @@
+{
+ "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat! Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát.",
+ "stilus": "Warm, calm and reassuring, like a trusted private banker personally welcoming a new client: unhurried, friendly, clear, a gentle smile in the voice, welcoming and grateful, a little brighter at the start. Native Hungarian speaker born and raised in Budapest: strictly Hungarian phonetics and intonation, stress always on the first syllable, long and short vowels kept distinct, no foreign accent at all.",
+ "mintak": [
+  {
+   "hang": "Charon",
+   "mp": 8.24,
+   "pont": 1.0,
+   "hianyzo": [],
+   "atiratok": [
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát.",
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát."
+   ],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\minta\\Charon.wav"
+  },
+  {
+   "hang": "Sulafat",
+   "mp": 8.28,
+   "pont": 1.0,
+   "hianyzo": [],
+   "atiratok": [
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát.",
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát."
+   ],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\minta\\Sulafat.wav"
+  },
+  {
+   "hang": "Umbriel",
+   "mp": 8.6,
+   "pont": 1.0,
+   "hianyzo": [],
+   "atiratok": [
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát.",
+    "Köszönjük, hogy telepítetted az alkalmazásunkat. Megmutatjuk, mire jó, és mi kell ahhoz, hogy a könyvelőd elkezdhesse a munkát."
+   ],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\minta\\Umbriel.wav"
+  }
+ ],
+ "gyoztes": "Charon"
+}

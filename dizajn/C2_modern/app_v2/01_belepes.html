@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Belépés</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* a belépés is a tintakék sávval nyit: app-ikon, szóvédjegy a kék tollvonással, és egy mondat arról, mi ez */
+  .fejlec { --roz-x: 120px; --roz-y: 112px; padding-bottom: 22px; }
+  .jegy { display: flex; align-items: center; gap: 14px; padding: 18px 20px 0; }
+  .jegy .appikon { width: 56px; height: 56px; box-shadow: 0 0 0 1px rgba(255,255,255,.14); }
+  .szojegy { position: relative; padding-bottom: 12px; }
+  .szojegy b { display: block; font-weight: 800; font-size: 40px; line-height: 1; letter-spacing: -.04em; color: #fff; }
+  .szojegy svg { position: absolute; left: -2px; bottom: -3px; width: 168px; height: 20px; fill: var(--tollkek-savon); }
+  .fejlec p.mi-ez { font-size: 16.5px; line-height: 1.45; color: var(--fejlec-halvany); padding: 16px 20px 0; max-width: 340px; }
+  .fejlec p.mi-ez b { color: #fff; font-weight: 600; }
+
+  .belep { padding: 18px 18px 18px; }
+  .elfelejt { margin: 2px 0 8px; }
+  .elfelejt .gomb-sz { font-size: 15px; }
+
+  .vagy { display: flex; align-items: center; gap: 12px; padding: 13px 6px 10px; font-size: 14.5px; color: var(--halvany-alapon); }
+  .vagy::before, .vagy::after { content: ""; flex: 1; border-top: 1px solid #C2CBD9; }
+  /* a két cég gombja azonos: fehér, 1 px-es sötét keret, a cég saját logója balra */
+  .gomb-k { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 50px; border-radius: 999px;
+    background: #fff; color: #1F1F1F; font-weight: 600; font-size: 16px; box-shadow: inset 0 0 0 1px #3C4043; }
+  .gomb-k + .gomb-k { margin-top: 10px; }
+  .gomb-k svg { width: 20px; height: 20px; flex: none; }
+
+  .uj { margin-top: 14px; padding: 14px 16px 14px 18px; display: flex; align-items: center; gap: 14px; }
+  .uj .l { flex: 1; min-width: 0; }
+  .uj .k1 { font-weight: 650; font-size: 16px; line-height: 1.3; }
+  .uj .k2 { font-size: 14px; line-height: 1.4; color: var(--halvany); margin-top: 1px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+
+<header class="fejlec">
+  <div class="allapotsor"><span>10:24</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="jegy">
+    <svg class="appikon" viewBox="0 0 120 120" aria-hidden="true"><use href="#appikon"/></svg>
+    <div class="szojegy"><b>Kézjegy</b><svg viewBox="0 0 220 26" aria-hidden="true"><use href="#kezvonas-szojegy"/></svg></div>
+  </div>
+  <p class="mi-ez"><b>Saját könyvelő,</b> aki név szerint ismer. Egyéni vállalkozóknak, havi <span class="nt">20&nbsp;000 Ft.</span></p>
+</header>
+
+<main class="tartalom" style="padding-bottom:40px">
+  <section class="lap belep">
+    <label class="mezo"><span class="felirat">E-mail-cím</span>
+      <span class="doboz"><span class="ertek">szabo.kata@freemail.hu</span></span></label>
+    <label class="mezo"><span class="felirat">Jelszó</span>
+      <span class="doboz fokusz"><span class="ertek">●●●●●●●●●●</span><button class="gomb-sz">Mutasd</button></span></label>
+    <div class="elfelejt"><button class="gomb-sz">Elfelejtettem a jelszavam</button></div>
+    <button class="gomb-e">Belépés</button>
+  </section>
+
+  <div class="vagy">vagy</div>
+  <button class="gomb-k">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+    Belépés Google-fiókkal</button>
+  <button class="gomb-k">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M16.37 12.6c-.02-2.33 1.9-3.45 1.99-3.5-1.08-1.59-2.77-1.8-3.37-1.83-1.43-.15-2.8.84-3.53.84-.73 0-1.85-.82-3.04-.8-1.56.02-3 .91-3.81 2.31-1.62 2.82-.41 6.98 1.17 9.27.77 1.12 1.69 2.37 2.9 2.33 1.16-.05 1.6-.75 3.01-.75 1.4 0 1.8.75 3.03.73 1.25-.02 2.04-1.14 2.81-2.26.88-1.3 1.25-2.55 1.27-2.62-.03-.01-2.43-.93-2.43-3.72zM14.06 5.75c.64-.78 1.08-1.86.96-2.94-.93.04-2.05.62-2.71 1.39-.6.69-1.12 1.79-.98 2.85 1.03.08 2.09-.53 2.73-1.3z"/></svg>
+    Belépés Apple-fiókkal</button>
+
+  <!-- új látogató: ár és ember, és egy valódi gomb a regisztrációhoz -->
+  <section class="lap uj">
+    <div class="l"><div class="k1">Még nem vagy ügyfél?</div><div class="k2">15 perces hívással kezdünk.</div></div>
+    <button class="gomb-m csak-szoveg">Regisztrálok</button>
+  </section>
+</main>
+<div class="otthon-jel"></div>
+</body>
+</html>

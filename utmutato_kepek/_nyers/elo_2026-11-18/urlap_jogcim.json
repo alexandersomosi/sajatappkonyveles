@@ -1,0 +1,42 @@
+{
+ "nev": "urlap_jogcim",
+ "url": "https://webnyk-public.nav.gov.hu/app/webnykKim#form",
+ "cim": "Kitöltés - Regisztráció nélküli nyomtatványkitöltő",
+ "ido": "2026-11-18T10:14:24.807Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 1000,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "kod_mezo": [
+   582,
+   1073,
+   803,
+   1137
+  ],
+  "opcio_9": [
+   658,
+   1549,
+   2336,
+   1627
+  ],
+  "nyilv_cimke": [
+   1490,
+   1031,
+   2098,
+   1065
+  ],
+  "megnevezes_cimke": [
+   841,
+   1031,
+   1450,
+   1065
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

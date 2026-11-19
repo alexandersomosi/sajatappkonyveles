@@ -1,0 +1,994 @@
+{
+ "keszult": "2026-11-19T10:10:16",
+ "megjegyzes": "Minden letöltés csak a nav.gov.hu-ról. A „sajat_kepernyokep_belepes_nelkul” tételek a NAV nyilvános, belépés előtti oldalairól headless Chrome-mal készültek (onya.nav.gov.hu, onya-public.nav.gov.hu → webnyk-public.nav.gov.hu, ugyfelportal.nav.gov.hu → kau.gov.hu): nem léptünk be, adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el (az ONYA süti-ablakát a saját böngészőnkben a kép elől eltávolítottuk). 2026-11-19: a NAV hivatalos kisfilmjéből („Megújul az Ügysegéd”, YouTube, NAVgovHu) a beépített böngészőben, lejátszás közben rögzített kockák (videót nem töltöttünk le), és a nav.gov.hu „Egyéni vállalkozás lépésről lépésre” oldalának letöltött fájljai (_forras2/).",
+ "letoltott_fajlok": [
+  {
+   "id": "nav_ugyseged_utmutato",
+   "fajl": "_forras/vallalkozoi_ugyseged_utmutato.pdf",
+   "cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "datum": "2026-03-19",
+   "pdf_keszult": "2026-03-23",
+   "url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "oldalak": 30,
+   "kepernyokep_benne": 0,
+   "mire_hasznaltuk": "A képernyők neve és a rovatok/pontok megnevezése a rajzolt illusztrációkhoz (III.3., 10–16. oldal). Képernyőképet nem tartalmaz.",
+   "meret_bajt": 836333,
+   "sha256": "5e5f9a252adc2cb4c2924b397d8fda34b4fa7aca117d5d580dfe4fef22cd7949",
+   "letoltve": "2026-11-18"
+  },
+  {
+   "id": "segedlet_ujegyke_onya",
+   "fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf",
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal_honlap": "https://nav.gov.hu/ugyfeliranytu/eljarasi-kerdesek/Segitseg_a_15-os_es_18-as_jogcimu_szervezetek_ONYA-s_kepviseleti_bejelentesehez",
+   "oldalak": 20,
+   "mire_hasznaltuk": "1.1.1 „Bejelentés magánszemély meghatalmazóként” (2–4. oldal): szerepkör-választó, Képviselt, benyújtás, sikeres benyújtás, a lista kártyája. A képek 2025-ös ONYA-felületet mutatnak.",
+   "meret_bajt": 1208394,
+   "sha256": "673187911158ee76f7a3f7b2ea22d5be433ae325896b6d1cecd73876794100b6",
+   "letoltve": "2026-11-18"
+  },
+  {
+   "id": "onya_altalanos_bemutato",
+   "fajl": "_forras/onya_altalanos_bemutato.pptx",
+   "cim": "Online Nyomtatványkitöltő Alkalmazás – Általános bemutató (ONYA általános bemutatás.pptx; címdia: „Az ONYA és az azonosítás nélküli ONYA általános bemutatása | 2025”)",
+   "datum": "2026-01-23",
+   "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "oldal_honlap": "https://nav.gov.hu/nyomtatvanyok/letoltesek_egyeb/onya-segedletek",
+   "oldalak": "38 dia",
+   "mire_hasznaltuk": "7. dia (Főoldal), 8. dia (Képviseltek), 10. dia (meghatalmazások listája, Új bejelentés).",
+   "meret_bajt": 3571958,
+   "sha256": "f4e6bb5a60e74fdbd3dd2d3ce9978e744c25e08d995bd319415a3a51cf586b17",
+   "letoltve": "2026-11-18"
+  },
+  {
+   "id": "nav_lepesrol_lepesre_pdf",
+   "fajl": "_forras2/nav_lepesrol_lepesre/egyeni_vallalkozas_lepesrol_lepesre.pdf",
+   "cim": "Egyéni vállalkozás lépésről lépésre (NAV, Élethelyzetek adózása)",
+   "datum": "2026-02-19",
+   "url": "https://nav.gov.hu/pfile/file?path=/Elethelyzetek-adozasa/vallalkozas/-egyeni-vallalkozas-lepesrol-lepesre-pdf",
+   "sha256": "42da08e1eac6e7cf9cbc10d64f37de19ebe564e470756ee39b46dc0616c8e5fb",
+   "mire_hasznaltuk": "Semmire: ugyanaz a 15 tájékoztató kártya, mint az oldalon; a kártyákon csak a régi Webes Ügysegéd apró képei vannak."
+  },
+  {
+   "id": "nav_lepesrol_lepesre_kartyak",
+   "fajl": "_forras2/nav_lepesrol_lepesre/kep_*.bin (15 PNG + 1 HTML-válasz)",
+   "cim": "Egyéni vállalkozás lépésről lépésre – a galéria 15 kártyája",
+   "datum": "2026-02-19",
+   "url": "https://nav.gov.hu/Elethelyzetek-adozasa/vallalkozas/-egyeni-vallalkozas-lepesrol-lepesre",
+   "mire_hasznaltuk": "Semmire (lásd fent). Megnézve: _forras2 nem megbízható adat, semmit nem futtattunk belőle."
+  }
+ ],
+ "forraskepek": [
+  {
+   "id": "elo_onya_nyito",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya.nav.gov.hu/",
+   "oldal": null,
+   "cim": "ONYA nyitóoldal (Bejelentkezés)",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/onya_nyito.png",
+   "meret": [
+    2560,
+    1800
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_kau_belepes",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+   "oldal": null,
+   "cim": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/kau_belepes.png",
+   "meret": [
+    1170,
+    2532
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_ujegyke_terkep",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/",
+   "oldal": null,
+   "cim": "ONYA nyomtatványtérkép – Meghatalmazások – UJEGYKE (azonosítás nélküli nézet)",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/ujegyke_terkep.png",
+   "meret": [
+    2560,
+    1800
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_urlap_kepviselo",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "oldal": null,
+   "cim": "UJEGYKE 13.0 – Képviselő (magánszemély, szervezet)",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/urlap_kepviselo.png",
+   "meret": [
+    2560,
+    2000
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_urlap_jogcim",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "oldal": null,
+   "cim": "UJEGYKE 13.0 – Képviselet elsődleges jogcíme, a kódlista lenyitva",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/urlap_jogcim.png",
+   "meret": [
+    2560,
+    2000
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_urlap_idobeli",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "oldal": null,
+   "cim": "UJEGYKE 13.0 – Képviseleti jogosultság időbeli hatálya",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/urlap_idobeli.png",
+   "meret": [
+    2560,
+    2000
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_urlap_fo_ugycsoport",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "oldal": null,
+   "cim": "UJEGYKE 13.0 – Fő ügycsoportok",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/urlap_fo_ugycsoport.png",
+   "meret": [
+    2560,
+    2000
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "elo_urlap_vegyes",
+   "fajta": "sajat_kepernyokep_belepes_nelkul",
+   "datum": "2026-11-18",
+   "url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "oldal": null,
+   "cim": "UJEGYKE 13.0 – Ügycsoportok részletezése > Vegyes ügyek",
+   "megjegyzes": "Belépés nélkül, nyilvános oldalról készült (headless Chrome). Adatot nem írtunk be, semmit nem küldtünk be, sütit nem fogadtunk el.",
+   "kep": "_nyers/elo_2026-11-18/urlap_vegyes.png",
+   "meret": [
+    2560,
+    2600
+   ],
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "id": "onya_bemutato_dia7",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2026-01-23",
+   "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "oldal": 7,
+   "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "mit": "ONYA főoldal: Új nyomtatvány, Dokumentumok, Meghatalmazások csempe",
+   "megjegyzes": "A NAV ONYA-segédletek oldaláról (https://nav.gov.hu/nyomtatvanyok/letoltesek_egyeb/onya-segedletek). A diák 2025-ös címlapúak, a fájl dátuma 2026.01.23.",
+   "kep": "_nyers/onya_bemutato_2026-01-23/dia07_fooldal.png",
+   "meret": [
+    1853,
+    875
+   ],
+   "szemelyes_adat_elmosva": true,
+   "letoltott_fajl": "_forras/onya_altalanos_bemutato.pptx"
+  },
+  {
+   "id": "onya_bemutato_dia8",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2026-01-23",
+   "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "oldal": 8,
+   "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "mit": "ONYA Képviseltek: a profil (képviselt adózó) kiválasztása",
+   "megjegyzes": "A NAV ONYA-segédletek oldaláról (https://nav.gov.hu/nyomtatvanyok/letoltesek_egyeb/onya-segedletek). A diák 2025-ös címlapúak, a fájl dátuma 2026.01.23.",
+   "kep": "_nyers/onya_bemutato_2026-01-23/dia08_kepviseltek.png",
+   "meret": [
+    1865,
+    690
+   ],
+   "szemelyes_adat_elmosva": true,
+   "letoltott_fajl": "_forras/onya_altalanos_bemutato.pptx"
+  },
+  {
+   "id": "onya_bemutato_dia10",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2026-01-23",
+   "url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "oldal": 10,
+   "cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "mit": "A meghatalmazások aktuális listája, Új bejelentés gomb",
+   "megjegyzes": "A NAV ONYA-segédletek oldaláról (https://nav.gov.hu/nyomtatvanyok/letoltesek_egyeb/onya-segedletek). A diák 2025-ös címlapúak, a fájl dátuma 2026.01.23.",
+   "kep": "_nyers/onya_bemutato_2026-01-23/dia10_meghatalmazasok_listaja.png",
+   "meret": [
+    705,
+    482
+   ],
+   "szemelyes_adat_elmosva": true,
+   "letoltott_fajl": "_forras/onya_altalanos_bemutato.pptx"
+  },
+  {
+   "id": "segedlet_o2",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal": 2,
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "mit": "Meghatalmazói szerepkör kiválasztása (Meghatalmazó / Meghatalmazott, Tovább)",
+   "megjegyzes": "1.1.1 „Bejelentés magánszemély meghatalmazóként”. A PDF-be ágyazott eredeti képen a NAV fekete sávja alatt valódinak látszó adatok is vannak – ezeket a _nyers másolaton elmostuk.",
+   "kep": "_nyers/segedlet_ujegyke_2025-03-11/o02_szerepkor.png",
+   "meret": [
+    1173,
+    633
+   ],
+   "szemelyes_adat_elmosva": false,
+   "letoltott_fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf"
+  },
+  {
+   "id": "segedlet_o2",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal": 2,
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "mit": "Képviselt: a rendszer előre kitölti (név, adóazonosító jel)",
+   "megjegyzes": "1.1.1 „Bejelentés magánszemély meghatalmazóként”. A PDF-be ágyazott eredeti képen a NAV fekete sávja alatt valódinak látszó adatok is vannak – ezeket a _nyers másolaton elmostuk.",
+   "kep": "_nyers/segedlet_ujegyke_2025-03-11/o02_kepviselt.png",
+   "meret": [
+    987,
+    118
+   ],
+   "szemelyes_adat_elmosva": true,
+   "letoltott_fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf"
+  },
+  {
+   "id": "segedlet_o3",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal": 3,
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "mit": "Ellenőrzés és benyújtás után: Meghatalmazás benyújtása! – TOVÁBB",
+   "megjegyzes": "1.1.1 „Bejelentés magánszemély meghatalmazóként”. A PDF-be ágyazott eredeti képen a NAV fekete sávja alatt valódinak látszó adatok is vannak – ezeket a _nyers másolaton elmostuk.",
+   "kep": "_nyers/segedlet_ujegyke_2025-03-11/o03_benyujtas.png",
+   "meret": [
+    801,
+    369
+   ],
+   "szemelyes_adat_elmosva": false,
+   "letoltott_fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf"
+  },
+  {
+   "id": "segedlet_o3",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal": 3,
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "mit": "Sikeres benyújtás! – Vissza a meghatalmazások listájához",
+   "megjegyzes": "1.1.1 „Bejelentés magánszemély meghatalmazóként”. A PDF-be ágyazott eredeti képen a NAV fekete sávja alatt valódinak látszó adatok is vannak – ezeket a _nyers másolaton elmostuk.",
+   "kep": "_nyers/segedlet_ujegyke_2025-03-11/o03_sikeres.png",
+   "meret": [
+    765,
+    346
+   ],
+   "szemelyes_adat_elmosva": false,
+   "letoltott_fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf"
+  },
+  {
+   "id": "segedlet_o4",
+   "fajta": "hivatalos_segedlet",
+   "datum": "2025-03-11",
+   "url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "oldal": 4,
+   "cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "mit": "A Meghatalmazások listája alatt megjelenik a bejelentés (Megtekintés)",
+   "megjegyzes": "1.1.1 „Bejelentés magánszemély meghatalmazóként”. A PDF-be ágyazott eredeti képen a NAV fekete sávja alatt valódinak látszó adatok is vannak – ezeket a _nyers másolaton elmostuk.",
+   "kep": "_nyers/segedlet_ujegyke_2025-03-11/o04_lista_kartya.png",
+   "meret": [
+    515,
+    744
+   ],
+   "szemelyes_adat_elmosva": true,
+   "letoltott_fajl": "_forras/segedlet_15_18_ujegyke_onya.pdf"
+  },
+  {
+   "id": "nav_kisfilm_ugyseged_fooldal",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "31.6 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/ugyseged_fooldal.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t031.6_x190_y90.png",
+   "meret": [
+    1560,
+    590
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [
+    [
+     1058,
+     54,
+     1202,
+     86
+    ]
+   ],
+   "fejlesztoi_buborek_eltuntetve": []
+  },
+  {
+   "id": "nav_kisfilm_ugyseged_ugytipus",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "27.5 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/ugyseged_ugytipus.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t027.5_x190_y90.png",
+   "meret": [
+    1560,
+    880
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [
+    [
+     1046,
+     54,
+     1192,
+     86
+    ],
+    [
+     828,
+     284,
+     952,
+     347
+    ]
+   ],
+   "fejlesztoi_buborek_eltuntetve": []
+  },
+  {
+   "id": "nav_kisfilm_szemelyi_adatok",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "21.6 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/szemelyi_adatok.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t021.6_x190_y150.png",
+   "meret": [
+    1560,
+    770
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [
+    [
+     1148,
+     46,
+     1268,
+     74
+    ],
+    [
+     818,
+     356,
+     928,
+     412
+    ]
+   ],
+   "fejlesztoi_buborek_eltuntetve": []
+  },
+  {
+   "id": "nav_kisfilm_nyilatkozatok",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "24.0 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/nyilatkozatok.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t024.0_x190_y150.png",
+   "meret": [
+    1560,
+    770
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [
+    [
+     1188,
+     40,
+     1308,
+     66
+    ]
+   ],
+   "fejlesztoi_buborek_eltuntetve": [
+    [
+     466,
+     528,
+     784,
+     574
+    ]
+   ]
+  },
+  {
+   "id": "nav_kisfilm_bekuldes",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "37.3 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/bekuldes.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t037.3_x190_y380.png",
+   "meret": [
+    1560,
+    590
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [],
+   "fejlesztoi_buborek_eltuntetve": [
+    [
+     1266,
+     372,
+     1501,
+     399
+    ]
+   ]
+  },
+  {
+   "id": "nav_kisfilm_megtekintes_pdf",
+   "fajta": "hivatalos_kisfilm_kocka",
+   "datum": "2026-02-19",
+   "url": "https://youtu.be/DQnbjo2lrv8",
+   "oldal": "42.5 s",
+   "cim": "NAV: „Megújul az Ügysegéd” (kisfilm, NAVgovHu YouTube-csatorna)",
+   "megjegyzes": "A NAV 2026.02.19-i sajtóközleménye („Mától elérhető a Vállalkozói Ügysegéd”) és a nav.gov.hu „Új ügysegéd” csempéjének „Segédlet” linkje mutat rá. Rögzítés: beépített böngésző, hd1080, a kocka canvasra rajzolva, 1:1-es képernyőképekből összerakva; videót nem töltöttünk le. A NAV bemutató-felülete, tesztadatokkal.",
+   "kep": "_nyers/kisfilm_2026-02-19/megtekintes_pdf.png",
+   "eredeti_kocka": "_forras2/kisfilm_kockak/kocka_t042.5_x190_y300.png",
+   "meret": [
+    1560,
+    590
+   ],
+   "szemelyes_adat_elmosva": true,
+   "elmosva": [
+    [
+     106,
+     325,
+     192,
+     347
+    ]
+   ],
+   "fejlesztoi_buborek_eltuntetve": []
+  }
+ ],
+ "kimeneti_kepek": [
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/01_belepes.png",
+   "fajl_2x": "vallalkozas_bejelentes/01_belepes@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "belepes",
+   "forras_kep": "_nyers/elo_2026-11-18/kau_belepes.png",
+   "forras_id": "elo_kau_belepes",
+   "forras_cim": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+   "forras_url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/02_ugyseged_fooldal.png",
+   "fajl_2x": "vallalkozas_bejelentes/02_ugyseged_fooldal@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "ugyseged_inditas",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/ugyseged_fooldal.png",
+   "forras_id": "nav_kisfilm_ugyseged_fooldal",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "31.6 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:32. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/03_ugyseged_ugytipus.png",
+   "fajl_2x": "vallalkozas_bejelentes/03_ugyseged_ugytipus@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "ugyseged_inditas",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/ugyseged_ugytipus.png",
+   "forras_id": "nav_kisfilm_ugyseged_ugytipus",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "27.5 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:28. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/04_szemelyi_adatok.png",
+   "fajl_2x": "vallalkozas_bejelentes/04_szemelyi_adatok@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "szemelyi_adatok",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/szemelyi_adatok.png",
+   "forras_id": "nav_kisfilm_szemelyi_adatok",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "21.6 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:22. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/05_cimadatok.png",
+   "fajl_2x": "vallalkozas_bejelentes/05_cimadatok@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "cimadatok",
+   "forras_kep": "_illusztracio/png/cimadatok.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/06_tevekenysegek.png",
+   "fajl_2x": "vallalkozas_bejelentes/06_tevekenysegek@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "tevekenysegek",
+   "forras_kep": "_illusztracio/png/tevekenysegek.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/07_adozas_munkavegzes_fofoglalkozas.png",
+   "fajl_2x": "vallalkozas_bejelentes/07_adozas_munkavegzes_fofoglalkozas@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_munkavegzes",
+   "forras_kep": "_illusztracio/png/adozas_munkavegzes_fofoglalkozas.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/07_adozas_munkavegzes_munkaviszony_mellett.png",
+   "fajl_2x": "vallalkozas_bejelentes/07_adozas_munkavegzes_munkaviszony_mellett@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_munkavegzes",
+   "forras_kep": "_illusztracio/png/adozas_munkavegzes_munkaviszony_mellett.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/07_adozas_munkavegzes_tanulmany_mellett.png",
+   "fajl_2x": "vallalkozas_bejelentes/07_adozas_munkavegzes_tanulmany_mellett@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_munkavegzes",
+   "forras_kep": "_illusztracio/png/adozas_munkavegzes_tanulmany_mellett.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/07_adozas_munkavegzes_nyugdij_mellett.png",
+   "fajl_2x": "vallalkozas_bejelentes/07_adozas_munkavegzes_nyugdij_mellett@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_munkavegzes",
+   "forras_kep": "_illusztracio/png/adozas_munkavegzes_nyugdij_mellett.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/08_adozas_kata_atalany.png",
+   "fajl_2x": "vallalkozas_bejelentes/08_adozas_kata_atalany@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_kata_atalany",
+   "forras_kep": "_illusztracio/png/adozas_kata_atalany.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/09_adozas_afa_mentesseg.png",
+   "fajl_2x": "vallalkozas_bejelentes/09_adozas_afa_mentesseg@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_afa",
+   "forras_kep": "_illusztracio/png/adozas_afa_mentesseg.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/10_adozas_afa_tobbi_eu_igen.png",
+   "fajl_2x": "vallalkozas_bejelentes/10_adozas_afa_tobbi_eu_igen@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_afa",
+   "forras_kep": "_illusztracio/png/adozas_afa_tobbi_eu_igen.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/10_adozas_afa_tobbi_eu_nem.png",
+   "fajl_2x": "vallalkozas_bejelentes/10_adozas_afa_tobbi_eu_nem@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "adozas_afa",
+   "forras_kep": "_illusztracio/png/adozas_afa_tobbi_eu_nem.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/11_nyilatkozatok.png",
+   "fajl_2x": "vallalkozas_bejelentes/11_nyilatkozatok@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "nyilatkozatok",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/nyilatkozatok.png",
+   "forras_id": "nav_kisfilm_nyilatkozatok",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "24.0 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:24. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/12_ellenorzes.png",
+   "fajl_2x": "vallalkozas_bejelentes/12_ellenorzes@2x.png",
+   "tipus": "illusztracio",
+   "lepes_kulcs": "ellenorzes",
+   "forras_kep": "_illusztracio/png/ellenorzes.png",
+   "forras_id": "nav_ugyseged_utmutato",
+   "forras_cim": "A NAV ÜPO Vállalkozói Ügysegédjének útmutatója",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+   "forras_datum": "2026-03-19",
+   "oldal": "10–16 (III.3.)",
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/13_bekuldes.png",
+   "fajl_2x": "vallalkozas_bejelentes/13_bekuldes@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "bekuldes",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/bekuldes.png",
+   "forras_id": "nav_kisfilm_bekuldes",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "37.3 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:37. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "vallalkozas_bejelentes",
+   "fajl": "vallalkozas_bejelentes/14_megtekintes_pdf.png",
+   "fajl_2x": "vallalkozas_bejelentes/14_megtekintes_pdf@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "megtekintes_pdf",
+   "forras_kep": "_nyers/kisfilm_2026-02-19/megtekintes_pdf.png",
+   "forras_id": "nav_kisfilm_megtekintes_pdf",
+   "forras_cim": "NAV: „Megújul az Ügysegéd” – kisfilm a Vállalkozói Ügysegédről (YouTube, NAVgovHu csatorna)",
+   "forras_url": "https://youtu.be/DQnbjo2lrv8",
+   "forras_datum": "2026-02-19",
+   "oldal": "42.5 s",
+   "szemelyes_adat_elmosva": false,
+   "forras_rovid": "Képernyőkép: NAV, „Megújul az Ügysegéd” kisfilm (2026.02.19.), 0:42. A NAV bemutató-felülete, a mintaadatok elmosva.",
+   "frissitve": "2026-11-19"
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/01_onya_nyitooldal.png",
+   "fajl_2x": "meghatalmazas/01_onya_nyitooldal@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_belepes",
+   "forras_kep": "_nyers/elo_2026-11-18/onya_nyito.png",
+   "forras_id": "elo_onya_nyito",
+   "forras_cim": "ONYA nyitóoldal (Bejelentkezés)",
+   "forras_url": "https://onya.nav.gov.hu/",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/02_kau_belepes.png",
+   "fajl_2x": "meghatalmazas/02_kau_belepes@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_belepes",
+   "forras_kep": "_nyers/elo_2026-11-18/kau_belepes.png",
+   "forras_id": "elo_kau_belepes",
+   "forras_cim": "A Vállalkozói Ügysegéd belépő oldala – KAÜ azonosítási mód választása (átirányítás: kau.gov.hu)",
+   "forras_url": "https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/03_onya_profil.png",
+   "fajl_2x": "meghatalmazas/03_onya_profil@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_profil",
+   "forras_kep": "_nyers/onya_bemutato_2026-01-23/dia08_kepviseltek.png",
+   "forras_id": "onya_bemutato_dia8",
+   "forras_cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "forras_datum": "2026-01-23",
+   "oldal": 8,
+   "szemelyes_adat_elmosva": true
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/04_onya_uj_nyomtatvany.png",
+   "fajl_2x": "meghatalmazas/04_onya_uj_nyomtatvany@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_uj_nyomtatvany",
+   "forras_kep": "_nyers/onya_bemutato_2026-01-23/dia07_fooldal.png",
+   "forras_id": "onya_bemutato_dia7",
+   "forras_cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "forras_datum": "2026-01-23",
+   "oldal": 7,
+   "szemelyes_adat_elmosva": true
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/05_ujegyke_kivalasztas.png",
+   "fajl_2x": "meghatalmazas/05_ujegyke_kivalasztas@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_uj_nyomtatvany",
+   "forras_kep": "_nyers/elo_2026-11-18/ujegyke_terkep.png",
+   "forras_id": "elo_ujegyke_terkep",
+   "forras_cim": "ONYA nyomtatványtérkép – Meghatalmazások – UJEGYKE (azonosítás nélküli nézet)",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/06_meghatalmazo_szerep.png",
+   "fajl_2x": "meghatalmazas/06_meghatalmazo_szerep@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_szerep",
+   "forras_kep": "_nyers/segedlet_ujegyke_2025-03-11/o02_szerepkor.png",
+   "forras_id": "segedlet_o2",
+   "forras_cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "forras_datum": "2025-03-11",
+   "oldal": 2,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/07_uj_bejelentes.png",
+   "fajl_2x": "meghatalmazas/07_uj_bejelentes@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_szerep",
+   "forras_kep": "_nyers/onya_bemutato_2026-01-23/dia10_meghatalmazasok_listaja.png",
+   "forras_id": "onya_bemutato_dia10",
+   "forras_cim": "Az ONYA és az azonosítás nélküli ONYA általános bemutatása (Online Nyomtatványkitöltő Alkalmazás – Általános bemutató, ONYA általános bemutatás.pptx)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/nyomtatvanyok/letoltesek_egyeb/onya-segedletek/online-nyomtatvanykitolto-alkalmazas--altalanos-bemutato",
+   "forras_datum": "2026-01-23",
+   "oldal": 10,
+   "szemelyes_adat_elmosva": true
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/08_kepviselo_konyvelo.png",
+   "fajl_2x": "meghatalmazas/08_kepviselo_konyvelo@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_meghatalmazott",
+   "forras_kep": "_nyers/elo_2026-11-18/urlap_kepviselo.png",
+   "forras_id": "elo_urlap_kepviselo",
+   "forras_cim": "UJEGYKE 13.0 – Képviselő (magánszemély, szervezet)",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/09_jogcim_konyvelo.png",
+   "fajl_2x": "meghatalmazas/09_jogcim_konyvelo@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_meghatalmazott",
+   "forras_kep": "_nyers/elo_2026-11-18/urlap_jogcim.png",
+   "forras_id": "elo_urlap_jogcim",
+   "forras_cim": "UJEGYKE 13.0 – Képviselet elsődleges jogcíme, a kódlista lenyitva",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/10_kepviselt_te.png",
+   "fajl_2x": "meghatalmazas/10_kepviselt_te@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_meghatalmazott",
+   "forras_kep": "_nyers/segedlet_ujegyke_2025-03-11/o02_kepviselt.png",
+   "forras_id": "segedlet_o2",
+   "forras_cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "forras_datum": "2025-03-11",
+   "oldal": 2,
+   "szemelyes_adat_elmosva": true
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/11_idobeli_hataly.png",
+   "fajl_2x": "meghatalmazas/11_idobeli_hataly@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_ugykorok",
+   "forras_kep": "_nyers/elo_2026-11-18/urlap_idobeli.png",
+   "forras_id": "elo_urlap_idobeli",
+   "forras_cim": "UJEGYKE 13.0 – Képviseleti jogosultság időbeli hatálya",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/12_adougyek.png",
+   "fajl_2x": "meghatalmazas/12_adougyek@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_ugykorok",
+   "forras_kep": "_nyers/elo_2026-11-18/urlap_fo_ugycsoport.png",
+   "forras_id": "elo_urlap_fo_ugycsoport",
+   "forras_cim": "UJEGYKE 13.0 – Fő ügycsoportok",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/13_ev_nyilvantartas.png",
+   "fajl_2x": "meghatalmazas/13_ev_nyilvantartas@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_ugykorok",
+   "forras_kep": "_nyers/elo_2026-11-18/urlap_vegyes.png",
+   "forras_id": "elo_urlap_vegyes",
+   "forras_cim": "UJEGYKE 13.0 – Ügycsoportok részletezése > Vegyes ügyek",
+   "forras_url": "https://onya-public.nav.gov.hu/#!/ → UJEGYKE → Kiválaszt (webnyk-public.nav.gov.hu)",
+   "forras_datum": "2026-11-18",
+   "oldal": null,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/14_benyujtas.png",
+   "fajl_2x": "meghatalmazas/14_benyujtas@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_bekuldes",
+   "forras_kep": "_nyers/segedlet_ujegyke_2025-03-11/o03_benyujtas.png",
+   "forras_id": "segedlet_o3",
+   "forras_cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "forras_datum": "2025-03-11",
+   "oldal": 3,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/15_sikeres_benyujtas.png",
+   "fajl_2x": "meghatalmazas/15_sikeres_benyujtas@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_bekuldes",
+   "forras_kep": "_nyers/segedlet_ujegyke_2025-03-11/o03_sikeres.png",
+   "forras_id": "segedlet_o3",
+   "forras_cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "forras_datum": "2025-03-11",
+   "oldal": 3,
+   "szemelyes_adat_elmosva": false
+  },
+  {
+   "utmutato": "meghatalmazas",
+   "fajl": "meghatalmazas/16_lista_megtekintes.png",
+   "fajl_2x": "meghatalmazas/16_lista_megtekintes@2x.png",
+   "tipus": "valodi",
+   "lepes_kulcs": "onya_bekuldes",
+   "forras_kep": "_nyers/segedlet_ujegyke_2025-03-11/o04_lista_kartya.png",
+   "forras_id": "segedlet_o4",
+   "forras_cim": "Segédlet a 15-ös és 18-as jogcímű szervezetek ONYA-s képviseleti bejelentéséhez (Segedlet_15_18_UJEGYKE_ONYA_honlapra.pdf)",
+   "forras_url": "https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/eljarasi-kerdesek/segedlet_15_18_ujegyke_onya_honlapra",
+   "forras_datum": "2025-03-11",
+   "oldal": 4,
+   "szemelyes_adat_elmosva": true
+  }
+ ],
+ "nem_letoltott_hivatkozasok": [
+  {
+   "cim": "NAV – Állandó meghatalmazás (GYIK, ONYA-lépések)",
+   "url": "https://nav.gov.hu/ugyfeliranytu/valaszol-a-nav/allando-meghatalmazas"
+  },
+  {
+   "cim": "UJEGYKE nyomtatvány és kitöltési útmutató (ÁNYK)",
+   "url": "https://nav.gov.hu/nyomtatvanyok/letoltesek/nyomtatvanykitolto_programok/nyomtatvanykitolto_programok_nav/UJEGYKE"
+  },
+  {
+   "cim": "A megújult ügysegédről (2026.02.19.)",
+   "url": "https://nav.gov.hu/fooldal-elemei/fooldali-csempek/uj-ugyseged/tajekoztatok/a-megujult-ugysegedrol"
+  }
+ ]
+}

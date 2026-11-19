@@ -1,0 +1,10 @@
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_a02_meg_nincs_lap_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_átláthatóság-és-váltás_A14_fooldal_utmutato_utan_390_teljes.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_átláthatóság-és-váltás_C03_valtas_lap_inditasbol_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_átláthatóság-és-váltás_C04_toast_van_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_c04_van_meghatalmazas_szerzodes_utan_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_d02_kerve_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_h01_kliens_fooldal_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_i04_engedely_utan_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_képek-és-videók_utmutato_lepes9_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k5c3_helyettunk_e01_panel_anna_helyettunk_1440.png

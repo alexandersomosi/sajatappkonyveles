@@ -1,0 +1,82 @@
+/* C4 átlátható – B_kisebb közös stílus (2026-11-19 este).
+   A tulaj által jóváhagyott fooldal.html + urlap.html VÉGSŐ méretskálája egy helyen, az új képernyőkhöz
+   (aktiv_fooldal, dosszie, uzenetek, fotozas). A két jóváhagyott fájl változatlan, ez csak kigyűjtés.
+   Szabályok: egy fő gomb lent, a fülsor fölött rögzítve; szakaszfej = 3D ikon + kék cím + egy mondat + legfeljebb
+   egy művelet; két szövegszint (+ nagy szám, ahol számít); legfeljebb egy szöveges link; doboz a dobozban nincs
+   (térköz + egy hajszálvonal); ki lép: kis ikon/arc a sor elején; minden üzenet egyszer; DEMO jel; csak kitalált adat. */
+
+html, body { background: #fff; }
+.allapotsor { color: var(--tinta); }
+.szam { font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+
+/* ---------- DEMO jel ---------- */
+.demo { flex: none; margin-left: auto; height: 22px; padding: 0 7px; border-radius: 6px; display: inline-flex; align-items: center;
+  background: var(--borostyan-alap); color: #5E3B00; font-weight: 750; font-size: 11.5px; letter-spacing: .04em; }
+
+/* ---------- fejléc: Bence kis arca + név (a jóváhagyott főoldal fejléce) ---------- */
+.fej { padding: 0 16px 12px; }
+.ki { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.ki img.arckep { width: 32px; height: 32px; box-shadow: 0 0 0 1px var(--hajszal); }
+.ki .nev { font-weight: 650; font-size: 15px; line-height: 1.25; letter-spacing: -.01em; }
+.ki .szerep { font-size: 14px; line-height: 1.3; color: var(--halvany); }
+.ki .demo { align-self: flex-start; margin-top: 4px; }
+h1 { font-weight: 750; font-size: 24px; line-height: 1.12; letter-spacing: -.02em; }
+
+/* ---------- felső sor űrlap-jellegű képernyőn (mint az urlap.html) ---------- */
+.felso { display: flex; align-items: center; gap: 12px; padding: 2px 16px 0; min-height: 44px; }
+.vissza { height: 36px; padding: 0 14px; border-radius: var(--r-gomb); background: var(--nyomott); color: var(--tinta);
+  display: inline-flex; align-items: center; font-weight: 600; font-size: 15px; position: relative; }
+.vissza::after { content: ""; position: absolute; inset: -4px -2px; } /* 44 pt-os érintési terület */
+
+/* ---------- szakasz: lap nélkül, egy hajszálvonal választ ---------- */
+.szak { padding: 13px 16px; border-top: 1px solid var(--hajszal); }
+.szak-fej { display: flex; align-items: center; gap: 10px; min-height: 28px; }
+.szak-fej img.i3 { width: 28px; height: 28px; }
+.szak-fej h2 { font-weight: 650; font-size: 17px; line-height: 1.25; letter-spacing: -.016em; color: var(--tintakek-szoveg); }
+.szak p { font-size: 15.5px; line-height: 1.4; margin-top: 4px; color: var(--tinta); }
+
+/* sor: ki lép / mi ez = kis jel a sor elején; két szövegszint */
+.sor2 { display: flex; align-items: center; gap: 12px; min-height: 48px; }
+.sor2 img.i3 { width: 28px; height: 28px; }
+.sor2 .l { flex: 1; min-width: 0; }
+.sor2 .c { font-weight: 600; font-size: 15.5px; line-height: 1.3; }
+.sor2 .a { font-size: 14px; line-height: 1.35; color: var(--halvany); margin-top: 1px; }
+
+/* „Még N …” – szöveges gomb a sorok alatt (nem link) */
+.tobb { display: flex; align-items: center; min-height: 44px; padding-left: 40px; width: 100%;
+  font-weight: 650; font-size: 15.5px; color: var(--tintakek-szoveg); }
+
+/* a képernyő egyetlen szöveges linkje */
+.link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 2px; font-weight: 550; font-size: 15.5px;
+  color: var(--tintakek-szoveg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+/* másodlagos kapszula (világoskék, csak ez) */
+.szak .gomb-m { height: 42px; margin-top: 8px; padding: 0 18px; font-size: 15px; }
+.kis-gomb { display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 7px; flex: none; position: relative;
+  border-radius: var(--r-gomb); background: var(--gomb-m-alap); color: var(--tintakek-szoveg);
+  font-weight: 650; font-size: 14px; letter-spacing: -.005em; white-space: nowrap; }
+.kis-gomb img.i3 { width: 20px; height: 20px; }
+.kis-gomb::after { content: ""; position: absolute; inset: -6px -2px; } /* 44 pt-os érintési terület */
+
+/* kis arc (Bence) a sor elején */
+img.arc-kicsi { box-shadow: 0 0 0 1px var(--hajszal); }
+/* vékony Bence-sor: kis arc + egy sor („Bence jóváhagyta · október 2.”, „Bence ellenőrzi, …”) */
+.bence-sor { display: flex; align-items: center; gap: 8px; min-height: 36px; font-size: 14px; line-height: 1.3; color: var(--halvany); }
+.bence-sor img.arc-kicsi { width: 22px; height: 22px; }
+.bence-sor b { font-weight: 650; color: var(--tinta); }
+
+main { padding-bottom: 150px; }
+
+/* ---------- lent: a fő gomb mindig ugyanott, a fülsor fölött ---------- */
+.dokk { position: fixed; left: 0; bottom: 0; width: 390px; z-index: 9; background: #fff; }
+.dokk::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
+.dokk .fo { padding: 8px 16px 10px; }
+.dokk .gomb-e { height: 50px; font-size: 16px; font-weight: 700; }
+.fulek { display: grid; grid-template-columns: repeat(5, 1fr); height: 52px; border-top: 1px solid var(--hajszal); }
+.fulek .f { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 11.5px; font-weight: 550; color: var(--halvany); letter-spacing: -.005em; }
+.fulek .f img.i3 { width: 24px; height: 24px; }
+.fulek .f.on { color: var(--neon); font-weight: 750; }
+.biztonsagi { height: 26px; }
+.otthon-jel { bottom: 8px; }

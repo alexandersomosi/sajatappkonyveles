@@ -1,0 +1,39 @@
+{
+ "forras": "https://youtu.be/DQnbjo2lrv8",
+ "kocka_ido_mp": 24.0,
+ "kocka_fajl": "_forras2/kisfilm_kockak/kocka_t024.0_x190_y150.png",
+ "elmosva": [
+  [
+   1188,
+   40,
+   1308,
+   66
+  ]
+ ],
+ "kitoltve": [
+  [
+   466,
+   528,
+   784,
+   574
+  ]
+ ],
+ "meret": [
+  1560,
+  770
+ ],
+ "helyek": {
+  "kizaro": [
+   158,
+   428,
+   830,
+   465
+  ],
+  "tobbi": [
+   150,
+   482,
+   1488,
+   726
+  ]
+ }
+}

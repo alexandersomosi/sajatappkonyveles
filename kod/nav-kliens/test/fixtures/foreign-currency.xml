@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Kitalált devizás tesztszámla (nem valódi). -->
+<InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base">
+  <invoiceNumber>DEV-2026-0002</invoiceNumber>
+  <invoiceIssueDate>2026-09-15</invoiceIssueDate>
+  <completenessIndicator>false</completenessIndicator>
+  <invoiceMain>
+    <invoice>
+      <invoiceHead>
+        <supplierInfo>
+          <supplierTaxNumber><base:taxpayerId>68707893</base:taxpayerId><base:vatCode>1</base:vatCode><base:countyCode>06</base:countyCode></supplierTaxNumber>
+          <supplierName>Németh Péter e.v.</supplierName>
+          <supplierAddress><base:simpleAddress><base:countryCode>HU</base:countryCode><base:postalCode>6720</base:postalCode><base:city>Szeged</base:city><base:additionalAddressDetail>Kitalált köz 12.</base:additionalAddressDetail></base:simpleAddress></supplierAddress>
+        </supplierInfo>
+        <customerInfo>
+          <customerVatStatus>OTHER</customerVatStatus>
+          <customerVatData><communityVatNumber>ATU99999999</communityVatNumber></customerVatData>
+          <customerName>Erfunden GmbH</customerName>
+        </customerInfo>
+        <invoiceDetail>
+          <invoiceCategory>NORMAL</invoiceCategory>
+          <invoiceDeliveryDate>2026-09-15</invoiceDeliveryDate>
+          <currencyCode>EUR</currencyCode>
+          <exchangeRate>391.83</exchangeRate>
+          <paymentMethod>TRANSFER</paymentMethod>
+          <paymentDate>2026-09-30</paymentDate>
+          <invoiceAppearance>ELECTRONIC</invoiceAppearance>
+        </invoiceDetail>
+      </invoiceHead>
+      <invoiceLines>
+        <mergedItemIndicator>false</mergedItemIndicator>
+        <line>
+          <lineNumber>1</lineNumber>
+          <lineExpressionIndicator>true</lineExpressionIndicator>
+          <lineNatureIndicator>SERVICE</lineNatureIndicator>
+          <lineDescription>Webfejlesztés</lineDescription>
+          <quantity>12.5</quantity>
+          <unitOfMeasure>HOUR</unitOfMeasure>
+          <unitPrice>40.10</unitPrice>
+          <unitPriceHUF>15712.38</unitPriceHUF>
+          <lineAmountsNormal>
+            <lineNetAmountData><lineNetAmount>501.25</lineNetAmount><lineNetAmountHUF>196404.79</lineNetAmountHUF></lineNetAmountData>
+            <lineVatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></lineVatRate>
+          </lineAmountsNormal>
+        </line>
+      </invoiceLines>
+      <invoiceSummary>
+        <summaryNormal>
+          <summaryByVatRate>
+            <vatRate><vatExemption><case>AAM</case><reason>Alanyi adómentes</reason></vatExemption></vatRate>
+            <vatRateNetData><vatRateNetAmount>501.25</vatRateNetAmount><vatRateNetAmountHUF>196404.79</vatRateNetAmountHUF></vatRateNetData>
+            <vatRateVatData><vatRateVatAmount>0</vatRateVatAmount><vatRateVatAmountHUF>0</vatRateVatAmountHUF></vatRateVatData>
+          </summaryByVatRate>
+          <invoiceNetAmount>501.25</invoiceNetAmount>
+          <invoiceNetAmountHUF>196404.79</invoiceNetAmountHUF>
+          <invoiceVatAmount>0</invoiceVatAmount>
+          <invoiceVatAmountHUF>0</invoiceVatAmountHUF>
+        </summaryNormal>
+        <summaryGrossData><invoiceGrossAmount>501.25</invoiceGrossAmount><invoiceGrossAmountHUF>196404.79</invoiceGrossAmountHUF></summaryGrossData>
+      </invoiceSummary>
+    </invoice>
+  </invoiceMain>
+</InvoiceData>

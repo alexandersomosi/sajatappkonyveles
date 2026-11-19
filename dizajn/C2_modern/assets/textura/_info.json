@@ -1,0 +1,32 @@
+{
+ "guilloche_doboz": [
+  103,
+  121,
+  637,
+  647
+ ],
+ "papir_doboz": [
+  695,
+  121,
+  1241,
+  647
+ ],
+ "guilloche_periodus_px": [
+  12,
+  91
+ ],
+ "guilloche_csempe_px": [
+  375,
+  455
+ ],
+ "guilloche_szel_hiba": [
+  13.85,
+  6.64
+ ],
+ "papir_csempe_px": [
+  506,
+  506
+ ],
+ "papir_szoras": 1.17,
+ "papir_pottyok_px": 44
+}

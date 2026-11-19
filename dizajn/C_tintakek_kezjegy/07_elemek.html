@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Elemek</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { min-height: 0; }
+  .cimke { font-size: 14px; color: var(--halvany-alapon); padding: 18px 4px 8px; }
+  .minta { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .sorban { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .allapotok { padding: 12px 18px 14px; display: grid; grid-template-columns: 1fr 1fr; row-gap: 6px; column-gap: 12px; }
+  .allapotok .allapot { margin-top: 0; font-size: 15px; }
+  .megerosit { padding: 20px 18px 18px; }
+  .megerosit h2 { font-family: var(--betu-cim); font-weight: 600; font-size: 26px; line-height: 1.15; }
+  .megerosit p { font-size: 16px; line-height: 1.5; margin: 6px 0 16px; }
+  .megerosit .vissza { text-align: center; margin-top: 6px; }
+  h1.elemcim { font-family: var(--betu-cim); font-weight: 600; font-size: 30px; padding: 22px 20px 0; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="ikonok.js"></script>
+<h1 class="elemcim">Gombok, állapotok, sorok</h1>
+<main class="tartalom sima" style="padding-bottom:24px">
+  <div class="cimke">Gombszintek. Képernyőnként legfeljebb egy kitöltött sötét.</div>
+  <section class="lap minta">
+    <button class="gomb-e">Befizettem</button>
+    <div class="sorban"><button class="gomb-m"><svg class="i"><use href="#feltolt"/></svg>Kivonat feltöltése</button><button class="gomb-sz">Másik időpont</button></div>
+    <div class="sorban"><button class="gomb-m gomb-masol"><svg class="i"><use href="#masol"/></svg>Másolás</button>
+      <button class="gomb-m gomb-masol kimasolva"><svg class="i"><use href="#pipa"/></svg>Kimásolva</button></div>
+    <button class="gomb-v">Előfizetés lemondása</button>
+  </section>
+
+  <div class="cimke">A négy állapot. Elöl mindig a szó, utána a dátum.</div>
+  <section class="lap allapotok">
+    <div class="allapot var"><svg><use href="#var-jel"/></svg><span class="szo">Feltöltve</span></div>
+    <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span class="szo">Feldolgozva</span></div>
+    <div class="allapot var"><svg><use href="#var-jel"/></svg><span class="szo">Bence látta</span></div>
+    <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span class="szo">Beadva</span></div>
+  </section>
+
+  <div class="cimke">Sor: kitöltés és keret nélkül, hajszálvonal és nyíl.</div>
+  <section class="lap">
+    <div class="sor"><svg class="i ikon"><use href="#foto"/></svg><div class="l"><div class="cim">Nyugta, készpénzes eladás</div>
+      <div class="allapot kesz"><svg><use href="#kesz-jel"/></svg><span><span class="szo">Feldolgozva</span>, hétfőn</span></div></div><svg class="nyil"><use href="#jobbra"/></svg></div>
+    <div class="sor nyomott"><svg class="i ikon"><use href="#foto"/></svg><div class="l"><div class="cim">Megnyomott sor</div>
+      <div class="allapot var"><svg><use href="#var-jel"/></svg><span><span class="szo">Feltöltve</span>, tegnap</span></div></div><svg class="nyil"><use href="#jobbra"/></svg></div>
+  </section>
+
+  <div class="cimke">Veszélyes művelet megerősítése: itt piros a kitöltött gomb.</div>
+  <section class="lap megerosit">
+    <h2>Lemondod az előfizetést?</h2>
+    <p>December 31-ig Bence még intézi az ügyeidet. Utána a NAV-os meghatalmazást visszavonjuk, a dossziédat letöltheted.</p>
+    <button class="gomb-e veszely">Lemondom</button>
+    <div class="vissza"><button class="gomb-sz">Mégsem mondom le</button></div>
+  </section>
+</main>
+</body>
+</html>

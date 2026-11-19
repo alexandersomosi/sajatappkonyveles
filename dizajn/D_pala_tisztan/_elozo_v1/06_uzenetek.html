@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Üzenetek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.fej { position: absolute; top: 47px; left: 0; right: 0; height: 66px; display: flex; align-items: center; gap: 12px; padding: 0 20px; }
+.fej .monogram { width: 46px; height: 46px; font-size: 19px; background: var(--lap); }
+.fej .nev { font-weight: 700; font-size: 17.5px; line-height: 1.25; }
+.igeret { display: flex; gap: 6px; align-items: center; font-size: 15px; line-height: 1.3; color: var(--masod-alap); margin-top: 2px; }
+.igeret .ikon { width: 17px; height: 17px; stroke-width: 2; }
+.keres-blokk { position: absolute; top: 113px; left: 0; right: 0; padding: 0 var(--perem) 14px; background: var(--lap); border-top: 1px solid var(--hajszal); border-bottom: 1px solid var(--hajszal); z-index: 3; }
+.keres-blokk .szakasz { padding-top: 12px; }
+.keres-blokk .szakasz span { color: var(--masod); }
+.keresek { display: flex; flex-wrap: wrap; gap: 8px; }
+.keresek .gomb.masod { height: 42px; padding: 0 14px; font-size: 16px; }
+.beszelgetes { position: absolute; top: 230px; bottom: 149px; left: 0; right: 0; overflow: hidden; padding: 0 var(--perem) 10px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
+.nap { flex: none; align-self: center; font-size: 14px; color: var(--masod-alap); font-weight: 700; margin: 6px 0 0; }
+.bub { max-width: 300px; padding: 10px 14px 8px; border-radius: 16px; font-size: 16.5px; line-height: 1.42; }
+.bub .ido { display: block; font-size: 13.5px; color: var(--masod); margin-top: 3px; text-align: right; }
+.tole { align-self: flex-start; background: var(--lap); flex: none; border-bottom-left-radius: 5px; }
+.tolem { align-self: flex-end; background: var(--sajat); flex: none; border-bottom-right-radius: 5px; }
+.tolem .ido { color: var(--masod-alap); }
+.csatolmany { display: flex; gap: 10px; align-items: center; margin: 8px 0 2px; padding: 9px 10px; border: 1px solid var(--hajszal); border-radius: 10px; }
+.csatolmany .ikon { color: var(--pala); }
+.csatolmany b { display: block; font-size: 15px; line-height: 1.25; }
+.csatolmany span { font-size: 13.5px; color: var(--masod); }
+.iro { position: absolute; left: 0; right: 0; bottom: 84px; z-index: 4; display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--lap); border-top: 1px solid var(--hajszal); }
+.iro .mezo { flex: 1; height: 44px; border-radius: 12px; color: var(--masod); font-size: 16.5px; }
+.iro .kapocs { width: 44px; height: 44px; display: grid; place-items: center; color: var(--pala); border-radius: 12px; }
+.iro .kuld { width: 44px; height: 44px; display: grid; place-items: center; background: var(--pala); color: #FFFFFF; border-radius: 12px; }
+.iro .kuld .ikon { stroke-width: 2.3; }
+</style>
+</head>
+<body class="telefon" data-ful="uzenetek">
+<div data-allapotsor></div>
+
+<header class="fej">
+  <span class="monogram" aria-hidden="true">KB</span>
+  <div class="fej-szoveg">
+    <div class="nev">Kovács Bence, a könyvelőd</div>
+    <div class="igeret"><svg class="ikon"><use href="#i-ora"/></svg>Hétköznap 4 órán belül válaszol</div>
+  </div>
+</header>
+
+<section class="keres-blokk" aria-labelledby="keres-cim">
+  <h3 class="szakasz" id="keres-cim">Kérj igazolást <span>2 munkanapon belül kész</span></h3>
+  <div class="keresek">
+    <button class="gomb masod">Jövedelemigazolás</button>
+    <button class="gomb masod">Nullás igazolás</button>
+    <button class="gomb masod">Adatváltozás</button>
+  </div>
+</section>
+
+<main class="beszelgetes" aria-label="Beszélgetés Bencével">
+  <div class="nap">Tegnap</div>
+  <div class="bub tole">
+    Beadtam a harmadik negyedéves bevallásodat, a NAV visszaigazolta.
+    <div class="csatolmany"><svg class="ikon"><use href="#i-irat"/></svg><div><b>Bevallás, harmadik negyedév</b><span>PDF, 3 oldal</span></div></div>
+    <span class="ido">16:02</span>
+  </div>
+  <div class="bub tolem">Köszi! A TB-t és a szochót is ugyanazzal a közleménnyel utaljam?<span class="ido">19:48</span></div>
+  <div class="nap">Ma</div>
+  <div class="bub tole">Igen, mindhármat az adóazonosító jeleddel. A számlaszám mindegyiknél más, a főoldalon tudod másolni.<span class="ido">8:55</span></div>
+  <div class="bub tolem">Rendben, hétfőn utalom.<span class="ido">9:03, Bence látta</span></div>
+</main>
+
+<div class="iro">
+  <button class="kapocs" aria-label="Fájl csatolása"><svg class="ikon"><use href="#i-kapocs"/></svg></button>
+  <div class="mezo">Írj Bencének…</div>
+  <button class="kuld" aria-label="Küldés"><svg class="ikon"><use href="#i-kuld"/></svg></button>
+</div>
+
+<script src="kozos.js"></script>
+</body>
+</html>

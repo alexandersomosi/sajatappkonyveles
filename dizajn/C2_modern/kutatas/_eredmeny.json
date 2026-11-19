@@ -1,0 +1,214 @@
+{
+ "elements": [
+  {
+   "name": "1. Bottom sheets instead of new pages (\"lap\")",
+   "seen_in": "Revolut Business transfer detail as a sheet with round X close, status rows, 'Statement: Download', 'Transfer tracking 1 of 3' (revolutbiz_04.jpg) and the 'Business accounts' sheet (revolutbiz_03.jpg); iOS 26 Apple Cash amount sheet (apple_02.jpg); Qonto payment-link / payment-method panels (qontoweb_10.jpg).",
+   "what_it_does": "Secondary detail slides up over the current screen (grabber, rounded top, dimmed scrim). Context stays visible, one swipe or the round X closes it, navigation stays one level deep. In Revolut 2025-26 nearly every detail is a sheet.",
+   "use_in_c": "Four sheets: (1) 'Hogyan jött ki?' tax breakdown (TB-járulék 113 220 + Szocho 79 560 + SZJA-előleg 264 600 = 457 380 Ft), opened from a tonal pill under the big amount on the band; (2) the three transfers with their 'Másolás' buttons + közlemény; (3) the 'Befizettem' confirmation; (4) Bence's request ('Kivonat feltöltése'). White sheet, 20 px top corners (the letter keeps 4 px), 36x5 grabber #C5CEDD, scrim --tintakek @40%, medium detent ~60% / large on drag, round 36 px tonal (#D6E0F0) X top-right with aria-label 'Bezárás'. Spring ~0.45 s, no bounce. Web (720 px column): same content as a centred dialog.",
+   "risk": "Low: sheets are the iOS 26 / Android default, so they read native, not templated. Only risk is overuse; keep real pages for the 4 tabs and the item detail (05).",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolutbiz_04.jpg"
+  },
+  {
+   "name": "2. Floating pill tab bar + separate round 'Fotózás' button",
+   "seen_in": "Revolut Business current store shots (v6.17, Nov 2026): floating capsule tab bar Home/Cards/Transfers/Merchant/Treasury over content (revolutbiz_02.jpg); iOS 26 Phone app: Liquid Glass tab bar with a separate round search button (apple_04.jpg); iOS 26 guidance: tab bar floats, can minimise on scroll, glass only on the navigation layer (donnywals.com, Apple newsroom).",
+   "what_it_does": "The bar floats above the bottom edge as a capsule, content scrolls under it, and the single most frequent action sits in its own circle next to it. Labels collapse while scrolling down.",
+   "use_in_c": "Replace the full-width white bar: white capsule (radius 999, ~62 px tall, 16 px side margin, 12 px above home indicator) with 'Főoldal, Dosszié, Üzenetek, Fiók'; active tab = tonal capsule #D6E0F0 behind icon+label, ink #17284A 700. To the right a separate 62 px round ink-blue (#17284A) button with the camera icon (accessible name 'Fotózás'). Material: white 88% + backdrop-blur 20 + hairline #D6DCE5 + shadow 0 6 20 rgba(23,40,74,.12); no refraction/glass shine on a paper app. Selection haptic on tab change; labels hide on scroll-down, return on scroll-up.",
+   "risk": "Medium: floating bars are the 2025-26 default (looks current), a camera FAB is common. Keep ink-blue not neon, keep text labels (non-tech users), never icon-only.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolutbiz_02.jpg"
+  },
+  {
+   "name": "3. Deadline Live Activity / lock-screen countdown",
+   "seen_in": "iOS 26 Live Activity: flight card with progress arc, times and gate on the lock screen (apple_01.jpg); Revolut HU 'Közelgő fizetés, 2 napon belül esedékes' (revolut_hu_06.jpg) and Pockets 'Határidő: jún. 25, 4 hónap van hátra' (revolut_hu_07.jpg); Android 16 Live Updates is the Android equivalent.",
+   "what_it_does": "A time-bound job lives on the lock screen / Dynamic Island with a progress line from start to deadline, updates without opening the app, and ends itself when done.",
+   "use_in_c": "From 5 days before the NAV deadline (after Bence's letter): ink-blue Live Activity — Bence's small photo, 'NAV-befizetés', '457 380 Ft' (Caslon Condensed tnum), right 'még 3 nap'; underneath a thin line from 'okt. 2. levél' to 'okt. 12. határidő' with a dot for today. Dynamic Island compact 'NAV 3 nap'; expanded adds a 'Befizettem' button (deep-link to the confirmation sheet). After confirmation: green check 'Befizetve, okt. 9.' then auto-dismiss after 1 h. Android: ongoing Live Update notification with the same content.",
+   "risk": "Low and distinctive (rare in Hungarian apps). No red urgency; amber #8A5A00 only on the last day.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/apple_01.jpg"
+  },
+  {
+   "name": "4. Home-screen and lock-screen widgets",
+   "seen_in": "iOS 26 clear/tinted widget home screens (apple_05.jpg); Qonto iOS widget for fast transfers (qonto.com/es blog) and Qonto Q3 2026 customisable home with resizable widgets (qonto.com/it/product-drop-q3-2026); Revolut 10 widgets.",
+   "what_it_does": "Glanceable status without opening the app; one tap deep-links into the right screen.",
+   "use_in_c": "Small (2x2): ink band 'Októberben', '457 380 Ft', 'okt. 12-ig'. Medium (4x2): adds Bence's open request ('Kérem a szeptemberi kivonatot') and a 'Fotózás' deep-link. Lock-screen circular accessory: ring of days left ('3 nap'). Ship a monochrome glyph version so it survives iOS 26 clear/tinted modes; no signature in widgets.",
+   "risk": "Low. Keep text minimal; it must not look like a wealth/balance widget.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/apple_05.jpg"
+  },
+  {
+   "name": "5. Document camera with edge detection",
+   "seen_in": "Qonto receipt scanner: full-bleed camera, framed receipt, big white shutter (qontoweb_03.jpg, qonto_06.jpg); Ramp camera with flash and gallery (ramp_1.jpg); Revolut Business receipt capture (revolutbiz_06.jpg); Mercury 'Uploading Receipts… 1/3' (mercury_2.jpg).",
+   "what_it_does": "Camera opens instantly, finds the paper edges, snaps a frame to the corners, auto-captures when steady, flattens/crops, supports multi-page with a counter.",
+   "use_in_c": "'Fotózás' screen = the only fully dark screen (#0F1B33). Four white corner brackets animate from screen corners to the detected paper corners (≈200 ms spring) and tint green when steady; hint chip on top 'Tartsd a telefont a papír fölé' → 'Megvan, ne mozdulj'; 72 px white shutter ring; left 'Galéria', right 'Vaku'; page pill '2. oldal' + tonal 'Kész'. Auto-capture after ~0.8 s steady. Haptics: light on edge lock, success on capture. Build on VisionKit / ML Kit document scanner.",
+   "risk": "Low-medium: standard pattern. Avoid fake 'AI scanning' laser lines or sparkles.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/qontoweb_03.jpg"
+  },
+  {
+   "name": "6. 'Megkaptam' match card with read-out fields",
+   "seen_in": "Revolut Business 'Marrow, Today 05:43, Match found' card floating over the receipt (revolutbiz_06.jpg); Qonto 'Invoices matched' with green check (qontoweb_06.jpg) and extracted-field chips 'Amount ✓ / Account No ✓ / Auto-generated entries ✓' (qonto.com/en/accounting); Dribbble match-confidence banners (dribbble_03.jpg).",
+   "what_it_does": "Right after capture the app shows what it read and where the document went, so the user trusts the automation without opening anything.",
+   "use_in_c": "After upload a white card drops in at the top: document icon with green badge, 'Nyugta, 18 000 Ft', 'Az októberi bevételedhez került'. Below, three chips appear with 120 ms stagger: 'Összeg: 18 000 Ft', 'Dátum: okt. 3.', 'Szabó Katalin e.v.' each with a green check; if unreadable an amber chip 'Dátum: nem olvasható, Bence megnézi'. The state word stays 'Feltöltve' until Bence reviews, then 'Bence látta'.",
+   "risk": "Medium: auto-extraction chips can feel AI-made. No sparkle icon, no word 'AI'; always say Bence checks it.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolutbiz_06.jpg"
+  },
+  {
+   "name": "7. Bence's review card (named human + concrete count)",
+   "seen_in": "Qonto 'Sarah Lawrence, Bookkeeping access' card with VAT chips above the scanned receipt (qonto_06.jpg); Qonto 'Tania Kosters, Accountant Access, 148 entries verified, Export Data' (qontoweb_05.jpg); Dribbble review history Prepared/Reviewed/Returned/Approved with names (dribbble_02.jpg).",
+   "what_it_does": "Shows a real person with a face next to the work they did and a concrete number: trust from accountability, not from badges.",
+   "use_in_c": "Top of Dosszié and in each closed month: white card, Bence's 44 px photo, 'Bence átnézte az októberi iratokat', big Caslon '12 tétel', line 'mind rendben, 1 kérdése van', blue KB monogram on the right; tonal button 'Megnézem a kérdést'. In the Fotózás flow a small pill on top: photo + 'Bence nézi át'.",
+   "risk": "Low, it is C's core promise. Must be the accountant's real photo, never an illustrated avatar.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/qontoweb_05.jpg"
+  },
+  {
+   "name": "8. 'Befizettem' confirmation moment",
+   "seen_in": "iOS 26 Apple Cash sheet: big amount and one dark pay button (apple_02.jpg); Monarch 'Marked as Reviewed' stamp (monarch_1.jpg); Revolut transfer status tracking (revolutbiz_04.jpg). Anti-example with 3D coins/flames: dribbble_01.jpg.",
+   "what_it_does": "Turns the most anxious action (paying the tax) into a clear, calm closure: one confirmation, then a visible 'done' state.",
+   "use_in_c": "'Befizettem' → sheet 'Mind a hármat elutaltad?' listing the three amounts, primary 'Igen, befizettem', text button 'Még nem'. On confirm: an ink line draws through '457 380 Ft' on the band left→right (≈320 ms, like clearing a ledger entry), below fades in green check + 'Befizetve, okt. 9. 10:24'; Bence's KB monogram stamps once onto the letter corner (scale 1.15→1, 180 ms). Success haptic; the Live Activity ends. Reduced motion: final state only.",
+   "risk": "Low if it stays ink + green. No confetti, coins, emoji or sound fanfare.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/apple_02.jpg"
+  },
+  {
+   "name": "9. Signature drawing itself when the letter opens",
+   "seen_in": "Revolut 'Customise your cards' with a handwritten signature as card art (revolut_07.jpg); C's own stroke paths (kezjegy_utak.js, kezjegy.py with speed-dependent width).",
+   "what_it_does": "A single human gesture in motion: proves a person signed this month's letter.",
+   "use_in_c": "First open of each monthly letter: greeting + two lines fade in (200 ms), then Bence's signature draws in real pen order via stroke-dashoffset (≈900 ms, ease-out), pen-blue #2546A6 on white only. Plays once per letter id; later visits static. prefers-reduced-motion → static. Optional 3-4 light haptic ticks, off by default.",
+   "risk": "Low, unique to C. Becomes a gimmick if replayed every visit.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_07.jpg"
+  },
+  {
+   "name": "10. Round tonal quick-action row",
+   "seen_in": "Revolut: four labelled round buttons under every balance ('Pénzfeltöltés, Átvezetés, Információ, Továbbiak' – revolut_hu_02.jpg, revolut_02.jpg, revolutbiz_02.jpg); Qonto home: Share IBAN / Upload receipt / Make transfer / Create invoice (qontoweb_01.jpg) and user-customisable 1–4 shortcuts (Qonto help center).",
+   "what_it_does": "The 3-4 most common jobs always sit in the same place as big round targets with words under them, impossible to mistake for list rows.",
+   "use_in_c": "Under the letter on Főoldal (and atop Dosszié): 'Fotózás', 'Feltöltés', 'Kérdezek', 'Igazolás'. 56 px circles #D6E0F0, 24 px hand-drawn ink icons (1.7 stroke), labels Archivo 600 13 px; pressed #C3D0E8 + scale .96. Never on the dark band (band rule: no buttons). Directly answers the owner's 'buttons blend in' complaint.",
+   "risk": "Medium: it is Revolut's signature; keep it tonal ink (not dark glass), C's icons, max 4.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_02.jpg"
+  },
+  {
+   "name": "11. Status badge on the icon corner + status pill",
+   "seen_in": "Revolut automations with a small green check badge on the icon corner (revolut_08.jpg, revolut_hu_07.jpg); Qonto status pills 'Scheduled' (blue clock), 'Paid' (green check), 'To be reviewed' (amber triangle), green amount pill (qontoweb_08.jpg, qontoweb_04.jpg).",
+   "what_it_does": "State is readable at a glance without reading the line.",
+   "use_in_c": "Dosszié rows: 40 px tonal circle with the document icon; 16 px badge bottom-right with 2 px white ring (green filled check = Feldolgozva/Beadva; grey clock = Feltöltve/Bence látta). Text keeps the word first ('Feldolgozva, hétfőn'). Item header (05): the same four words as a pill (#E2EFE6 + #2B6744 done; #EEF1F6 + ink waiting).",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_08.jpg"
+  },
+  {
+   "name": "12. Pen-hatched 'expected' part in meters and charts",
+   "seen_in": "Qonto budget bar: solid spent + diagonal-hatched pending, with Reject/Accept (qontoweb_09.jpg); Qonto cash-flow forecast: actual solid, forecast hatched (qontoweb_12.jpg).",
+   "what_it_does": "Separates fact from estimate without a new colour.",
+   "use_in_c": "Határ-mérő 'Még 11 580 000 Ft-ot számlázhatsz ÁFA nélkül': solid ink = invoiced so far, then 45° pen hatching (1.5 px ink lines, 4 px gap) = 'várható év végéig' at current pace, tick at 80%; if hatching crosses 80% the sentence turns amber. Same hatching for 'Novemberben várhatóan kb. 190 000 Ft'.",
+   "risk": "Low; hatching echoes pen on paper and fits C better than gradients.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/qontoweb_09.jpg"
+  },
+  {
+   "name": "13. Countdown deadline row (in-app)",
+   "seen_in": "Revolut HU 'Közelgő fizetés, 2 napon belül esedékes' (revolut_hu_06.jpg), 'Határidő: jún. 25, 4 hónap van hátra' (revolut_hu_07.jpg); Cleo big 'debt-free date May 2028' (cleo_1.jpg).",
+   "what_it_does": "Plain-language time left instead of a bare date.",
+   "use_in_c": "When nothing is due: one white row under the band 'Következő befizetés: november 12.' with right-aligned 'még 34 nap'; in deadline week 'még 3 nap' in ink 700. Never red.",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_hu_06.jpg"
+  },
+  {
+   "name": "14. Segmented period switch",
+   "seen_in": "Revolut HU '1 hét / 1 hó / 6 hó / 1 év' (revolut_hu_08.jpg); Qonto 3/9/12 instalment segments and Credit/Debit toggle (qontoweb_11.jpg).",
+   "what_it_does": "Changes the time frame in place, one tap.",
+   "use_in_c": "Limits card: 'Havi | Negyedéves | Idei'; Dosszié: 'Október | Szeptember | Korábbi'. Track #EEF1F6, selected = white capsule, ink 700, hairline; 40 px tall.",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_hu_08.jpg"
+  },
+  {
+   "name": "15. Requests and payments as chat bubbles",
+   "seen_in": "Revolut chat transfers with amount bubbles and 'Kérés / Küldés' (revolut_hu_04.jpg, revolut_06.jpg); iOS 26 Apple Cash request bubble with 'Pay' (apple_02.jpg).",
+   "what_it_does": "The action lives inside the conversation where the request was made.",
+   "use_in_c": "In Üzenetek Bence's request is a rich bubble: 'Szeptemberi bankszámlakivonat', 'Bence kérte, okt. 2.', tonal 'Feltöltöm' inside. Monthly tax as a bubble 'Októberi befizetés 457 380 Ft' + 'Megnézem' (opens transfer sheet). After action it updates to green 'Feltöltve' / 'Befizetve'.",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_hu_04.jpg"
+  },
+  {
+   "name": "16. Yes/no questions you only approve",
+   "seen_in": "Copilot Money 'Transactions categorized / Refunds caught / Budgets updated – You just approve' + 'Approve all' (copilot_2.jpg); Qonto Reject/Accept pair (qontoweb_09.jpg); Ramp Approve / Request changes (ramp_2.jpg); Qonto AI assistants 'always ask for approval' (Q3 2026 product drop).",
+   "what_it_does": "Reduces client work to one tap per decision.",
+   "use_in_c": "Card with Bence's photo: 'Ez a 18 000 Ft-os nyugta a vállalkozásodhoz tartozik?' [Igen] tonal, [Nem, magánkiadás] text button. Max 3 at once; answered ones collapse to a green line.",
+   "risk": "Medium: 'smart suggestions' read as AI. Phrase as Bence's question, never 'AI javaslat'.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/copilot_2.jpg"
+  },
+  {
+   "name": "17. Swipe review with an ink stamp",
+   "seen_in": "Monarch 'Review transactions with a swipe', 'Marked as Reviewed' card (monarch_1.jpg).",
+   "what_it_does": "Fast triage of many small decisions.",
+   "use_in_c": "Optional month-end 'Átnézés' for unclear bank lines: stack of white slips; right = 'Üzleti', left = 'Magán', each lands with an ink stamp mark (medium haptic). Buttons always present for accessibility.",
+   "risk": "Medium-high: gamified, may feel playful for tax; use only if Bence really needs client categorisation.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/monarch_1.jpg"
+  },
+  {
+   "name": "18. Pen-drawn empty states (generated, then hand-cleaned)",
+   "seen_in": "Qonto in-app illustrations: thin black line, one pastel fill (empty mailbox qontodribbble_01.jpg, card sleeve qontodribbble_02.jpg).",
+   "what_it_does": "Turns empty screens into a calm invitation to act.",
+   "use_in_c": "Three empty states as fountain-pen line art (1.6 px #17284A, round caps, slight wobble) with ONE tonal fill #D6E0F0: empty Dosszié = open folder with paperclip ('Még nincs iratod ebben a hónapban. Fotózd le az első számlád.' + primary 'Fotózás'); all done = sealed envelope with KB monogram ('Minden beadva, nincs teendőd.'); no messages = letter tray. Draft with Recraft V4 Vector via OpenRouter (SVG, no text), then clean to C's stroke by hand.",
+   "risk": "Medium: isometric Qonto style is recognisable; keep C's front-facing pen style, no people, no mascots.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/qontodribbble_01.jpg"
+  },
+  {
+   "name": "19. Emphasised primary action (Material 3 Expressive)",
+   "seen_in": "Google M3 Expressive research: 46 studies, 18 000+ participants, key element found up to 4x faster with bigger coloured button (material_03.jpg, material_04.jpg); Qonto one dark CTA per card (qonto_04.jpg).",
+   "what_it_does": "Size, colour and shape make the one important action findable instantly, also for 45+ users.",
+   "use_in_c": "One primary per screen, 56 px, radius 14, leading icon, 17/700 label; press morphs radius 14→18 + scale .97 (quick spring); disabled = #C5CEDD, not faded ink. 'Befizettem' gets a check-in-circle icon.",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/material_03.jpg"
+  },
+  {
+   "name": "20. Pull-to-refresh / progress as a pen wave",
+   "seen_in": "M3 Expressive wavy progress indicator and shape-morph loader (material_02.jpg).",
+   "what_it_does": "Brand-specific motion for waiting moments.",
+   "use_in_c": "Pulling Főoldal draws a short handwritten wave in white 60% on the band (pen-blue never on dark); while syncing NAV data it loops, then snaps into a tiny check. Upload progress uses the same wave filling left→right. Under 1 s where possible.",
+   "risk": "Medium: keep it subtle and short.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/material_02.jpg"
+  },
+  {
+   "name": "21. Large tabular numerals that roll",
+   "seen_in": "Revolut hero amounts '1 136 000 Ft' with '+19 060 Ft ▲ 3,16%' (revolut_hu_05.jpg), smaller decimals (revolut_05.jpg); Mercury superscript cents (mercury_1.jpg).",
+   "what_it_does": "The number is the hero and changes visibly when it changes.",
+   "use_in_c": "Keep Caslon Condensed 600 tnum 46-56 px on the band, 'Ft' at .5em #AEBBD2. When Bence recalculates, digits roll per column (odometer, 400 ms, 30 ms stagger) and a small line appears 'Bence frissítette, okt. 2.'. Thousands gap via CSS (fonts lack U+202F).",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_hu_05.jpg"
+  },
+  {
+   "name": "22. Upload pill '2/3' + ruled-line skeleton",
+   "seen_in": "Mercury 'Uploading Receipts… 1/3' pill (mercury_2.jpg); skeleton lists in Revolut/Qonto.",
+   "what_it_does": "Shows progress without blocking; loading looks like the final layout.",
+   "use_in_c": "Top pill 'Feltöltés… 2/3' with a thin progress line (tap = list). Loading letter: paper with faint ruled lines #EEF1F6 and a slow 1.2 s ink-fade shimmer instead of grey blocks; Dosszié rows = icon circle + two short lines.",
+   "risk": "Low.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/mercury_2.jpg"
+  },
+  {
+   "name": "23. Dark mode made of ink",
+   "seen_in": "Qonto dark mode for web and mobile on design tokens (qontodribbble_03.jpg); Revolut all-dark UI (revolut_03.jpg); Origin navy + serif (origin_1.jpg).",
+   "what_it_does": "Expected in 2026; reduces glare at night.",
+   "use_in_c": "Ground #0E1626, sheets #172238 (lighter than ground), band #17284A, text #E6EAF2, tonal button #24365C with #D6E0F0 label, done #7FC79A. The letter stays light #EEF1F6 so the pen-blue signature rule (white or #EEF1F6 only) still holds.",
+   "risk": "Medium: must stay navy, never #000 + neon (Revolut clone).",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/qontodribbble_03.jpg"
+  },
+  {
+   "name": "24. Subtle paper grain on the letter only",
+   "seen_in": "Not used by Revolut/Qonto; own proposal, mood from Monarch's warm paper tone and Origin's editorial serif (monarch_1.jpg, origin_1.jpg). Sample made on C's real letter: _minta_papirszemcse.jpg (left plain, right grain).",
+   "what_it_does": "Makes the letter read as paper among cards.",
+   "use_in_c": "2-3% fibre texture only on the letter (SVG feTurbulence or an OpenRouter-generated seamless 512 px tile, cool white, darkening only below-mean fibres), not on ground or other sheets; off in high-contrast mode. Must disappear in the squint test.",
+   "risk": "Medium: cream + grain is a known AI tell; keep it cool white and barely visible.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/_minta_papirszemcse.jpg"
+  },
+  {
+   "name": "25. Metallic 3D brand object (sparingly)",
+   "seen_in": "Revolut 2025 store art: chrome Bizum / MB WAY / currency objects inside a glass ring (revolut_13.jpg, revolut_14.jpg, revolut_15.jpg); Revolut Business 3D card (revolutbiz_01.jpg).",
+   "what_it_does": "Premium 'object' feel for brand moments.",
+   "use_in_c": "At most one object, e.g. an ink-blue enamel fountain-pen nib, generated via OpenRouter, only on the welcome screen / App Store art, never in daily screens.",
+   "risk": "High: Revolut's 2025 signature and the typical 'AI 3D' look; drop it if it fights the letter.",
+   "image": "C:/Users/UpgradePC/konyvelo_app/dizajn/C2_modern/kutatas/revolut_14.jpg"
+  }
+ ],
+ "top_picks": [
+  "1. Bottom sheets (Revolut Business, iOS 26) for 'Hogyan jött ki?', the three transfers with 'Másolás', the 'Befizettem' confirmation and Bence's request; the letter stays visible behind.",
+  "2. Floating white pill tab bar (Főoldal, Dosszié, Üzenetek, Fiók) with a separate round ink-blue 'Fotózás' camera button (Revolut Business 2026, iOS 26 Liquid Glass), frosted white, no glass shine.",
+  "3. Deadline Live Activity + widget: 'NAV-befizetés 457 380 Ft, még 3 nap' on the lock screen with a line from letter date to deadline, 'Befizettem' in the expanded island (Apple Live Activities; Revolut 'Közelgő fizetés, 2 napon belül esedékes').",
+  "4. Document camera with edge-snapping corner brackets and auto-capture, followed by a 'Megkaptam' card: 'Nyugta, 18 000 Ft, az októberi bevételedhez került' + read-out field chips (Qonto scanner, Revolut Business 'Match found', Ramp).",
+  "5. Bence's review card with his real photo: 'Bence átnézte: 12 tétel, mind rendben' + KB monogram (Qonto 'Accountant Access, 148 entries verified').",
+  "6. 'Befizettem' moment: confirmation sheet, then an ink line strikes through the amount on the band, green 'Befizetve, okt. 9.', KB monogram stamp, success haptic. No confetti.",
+  "7. Signature draws itself (real pen order, ~900 ms) the first time each monthly letter opens; static afterwards (Revolut signature card + C's own stroke paths).",
+  "8. Round tonal quick actions under the letter: 'Fotózás, Feltöltés, Kérdezek, Igazolás' as 56 px #D6E0F0 circles with labels (Revolut, Qonto). This fixes the 'buttons blend in' complaint. Runners-up: pen-hatched 'várható' part on the limit meter (Qonto) and pen-drawn empty states generated on OpenRouter (Qonto illustrations)."
+ ]
+}

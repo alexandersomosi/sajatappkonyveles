@@ -1,0 +1,216 @@
+{
+ "m01": {
+  "mp": 6.29,
+  "take": 2,
+  "hangulat": "udvozlo",
+  "szoveg": "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül öt perc.",
+  "hang": "Umbriel",
+  "fajl": "hang/m01.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m04": {
+  "mp": 3.68,
+  "take": 2,
+  "hangulat": "lepes",
+  "szoveg": "Nyisd meg az Onyát, és koppints a Bejelentkezés gombra.",
+  "hang": "Umbriel",
+  "fajl": "hang/m04.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m06": {
+  "mp": 2.94,
+  "take": 1,
+  "hangulat": "figyelem",
+  "szoveg": "Lépj be DÁP-pal vagy Ügyfélkapu plusszal.",
+  "hang": "Umbriel",
+  "fajl": "hang/m06.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m07": {
+  "mp": 4.41,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Jobb fent koppints a nevedre, és válaszd a saját profilod.",
+  "hang": "Umbriel",
+  "fajl": "hang/m07.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m08": {
+  "mp": 2.525,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Koppints az Új nyomtatvány csempére.",
+  "hang": "Umbriel",
+  "fajl": "hang/m08.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0,
+  "eleje_vagva_mp": 0.155
+ },
+ "m09": {
+  "mp": 5.65,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Nyisd le a Meghatalmazásokat, és az ujegyke sorában koppints a Kiválaszt gombra.",
+  "hang": "Umbriel",
+  "fajl": "hang/m09.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m10": {
+  "mp": 4.42,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "A felugró ablakban válaszd: Meghatalmazó, majd Tovább.",
+  "hang": "Umbriel",
+  "fajl": "hang/m10.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m11": {
+  "mp": 2.86,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Lent koppints az Új bejelentés gombra.",
+  "hang": "Umbriel",
+  "fajl": "hang/m11.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m12": {
+  "mp": 6.2,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod.",
+  "hang": "Umbriel",
+  "fajl": "hang/m12.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m14": {
+  "mp": 3.065,
+  "take": 1,
+  "hangulat": "figyelem",
+  "szoveg": "Jogcímnek válaszd a kilencest: Könyvelő.",
+  "hang": "Umbriel",
+  "fajl": "hang/m14.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0,
+  "eleje_vagva_mp": 0.085
+ },
+ "m15": {
+  "mp": 3.0,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Mellé írd be a nyilvántartási számát.",
+  "hang": "Umbriel",
+  "fajl": "hang/m15.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m16": {
+  "mp": 2.815,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "A Képviselt te vagy, előre kitöltve.",
+  "hang": "Umbriel",
+  "fajl": "hang/m16.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0,
+  "eleje_vagva_mp": 0.235
+ },
+ "m17": {
+  "mp": 3.33,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Kezdet: a mai nap. A végét hagyd üresen.",
+  "hang": "Umbriel",
+  "fajl": "hang/m17.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m18": {
+  "mp": 2.73,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Az ügycsoportoknál jelöld be az adóügyeket.",
+  "hang": "Umbriel",
+  "fajl": "hang/m18.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m19": {
+  "mp": 5.87,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+  "hang": "Umbriel",
+  "fajl": "hang/m19.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m20": {
+  "mp": 4.74,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.",
+  "hang": "Umbriel",
+  "fajl": "hang/m20.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m21": {
+  "mp": 2.85,
+  "take": 3,
+  "hangulat": "figyelem",
+  "szoveg": "Kész. Körülbelül húsz perc múlva él.",
+  "hang": "Umbriel",
+  "fajl": "hang/m21.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0,
+  "eleje_vagva_mp": 0.13
+ },
+ "m23": {
+  "mp": 3.4,
+  "take": 2,
+  "hangulat": "lepes",
+  "szoveg": "Itt, az alkalmazásban koppints a Beküldtem gombra.",
+  "hang": "Umbriel",
+  "fajl": "hang/m23.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m24": {
+  "mp": 3.01,
+  "take": 1,
+  "hangulat": "lepes",
+  "szoveg": "A könyvelőd megnézi, és szól, ha minden rendben.",
+  "hang": "Umbriel",
+  "fajl": "hang/m24.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m25": {
+  "mp": 5.4,
+  "take": 1,
+  "hangulat": "zaro",
+  "szoveg": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.",
+  "hang": "Umbriel",
+  "fajl": "hang/m25.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ },
+ "m26": {
+  "mp": 4.33,
+  "take": 2,
+  "hangulat": "zaro",
+  "szoveg": "Ha egyedül nem megy, megcsináljuk helyetted: te csak jóváhagyod.",
+  "hang": "Umbriel",
+  "fajl": "hang/m26.wav",
+  "proba": false,
+  "vak_hibas_szavak": 0
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "kor": "3",
+ "forgatokonyv": "L01 [koszonto] Köszönjük, hogy telepítetted az alkalmazásunkat!\nL02 [koszonto] Megmutatjuk, mire jó, és mi kell a kezdéshez.\nL03 [mire_jo] Valódi könyvelőd lesz, aki intézi az adóidat.\nL04 [mire_jo] A számláid maguktól megérkeznek a NAV-tól.\nL05 [mire_jo] A Főoldalon látod, mennyit, mikorra és hova fizess.\nL06 [mire_jo] A nyugtákat pedig csak lefotózod.\nL07 [bekotes] A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod.\nL08 [lepes_adatok] Először az adataid kellenek: ezekből számol a könyvelőd.\nL09 [lepes_inditas] Ha még nincs vállalkozásod, te magad jelented be a NAV-nál.\nL10 [lepes_inditas] Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj.\nL10b [lepes_inditas] A NAV-os igazolást feltöltöd, mi pedig átnézzük.\nL11 [lepes_szerzodes] Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat.\nL12 [lepes_szerzodes] Új vállalkozásnál a kártyát csak akkor kérjük, ha már megvan az adószámod.\nL13 [lepes_meghatalmazas] Ezután NAV-meghatalmazást adsz a könyvelődnek. Ebben is segít az alkalmazás.\nL14 [lepes_meghatalmazas] Így ő adhatja be helyetted a bevallásaidat.\nL15 [lepes_azonositas] Lefotózod a személyidet és a lakcímkártyád lakcímes oldalát.\nL16 [lepes_azonositas] A törvény szerint azonosítanunk kell téged.\nL17 [lepes_szamlak] Végül a könyvelőd összeköti a fiókodat a NAV-val.\nL18 [korlatozott] Addig néhány funkció még nem érhető el, utána minden megnyílik.\nL19 [korlatozott] Onnantól a könyvelőd szól, ha tenned kell valamit.\nL20 [segitseg] Ha elakadsz, kérj visszahívást: csapatunk 24–48 órán belül felhív.   (kimondva: Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív.)\nL21 [segitseg] Az Üzenetekben pedig bármikor írhatsz nekünk.\nL22 [zaro] Kezdjük is! Az első lépést lent találod.",
+ "nyelv": {
+  "osszkep": "A szöveg alapvetően közvetlen és követhető, de néhány helyen túlságosan szakmai, darabos vagy a beszélt nyelvben szokatlan szófordulatokat használ. Kis simításokkal még természetesebb, emberibb és megnyugtatóbb lesz a hangvétel.",
+  "javaslatok": [
+   {
+    "id": "L01",
+    "gond": "Kissé gépies és távolságtartó nyitás; a 'telepítetted az alkalmazásunkat' helyett természetesebb az 'alkalmazást' forma vagy a letöltés említése.",
+    "uj_szoveg": "Örülünk, hogy letöltötted az alkalmazást!"
+   },
+   {
+    "id": "L07",
+    "gond": "A 'bekötés' belső szakzsargon, egy laikusnak vagy idősebb vállalkozónak idegenül és technikaian hangzik.",
+    "uj_szoveg": "A beállítás csak néhány lépés. Mindegyiknél leírtuk, mit kell tenned, miért fontos, és hol találod."
+   },
+   {
+    "id": "L11",
+    "gond": "A 'megadod a kártyádat' kifejezés rideg, kissé pontatlan (a kártyaadatokat adja meg).",
+    "uj_szoveg": "Elfogadod a szerződést, és beállítod a bankkártyádat a havidíjhoz."
+   },
+   {
+    "id": "L13",
+    "gond": "A 'NAV-meghatalmazás' összetétel hivataloskodó, beszédben természetesebben hangzik kibontva.",
+    "uj_szoveg": "Ezután meghatalmazást adsz a könyvelődnek a NAV-nál. Ebben is segít az alkalmazás."
+   },
+   {
+    "id": "L15",
+    "gond": "A 'lakcímkártyád lakcímes oldalát' kifejezés szóismétlő és nehezen kimondható beszélt nyelven.",
+    "uj_szoveg": "Lefotózod a személyidet, és a lakcímkártyád hátoldalát."
+   },
+   {
+    "id": "L16",
+    "gond": "A megfogalmazás bürokratikus és szigorú; egy privátbanki stílusban érdemesebb megnyugtatóan jelezni a kötelező jogi hátteret.",
+    "uj_szoveg": "Erre a törvényi előírások miatt van szükség."
+   },
+   {
+    "id": "L18",
+    "gond": "A 'funkció még nem érhető el' informatikai műszó, a 60 éves felhasználónak kevésbé kézzelfogható.",
+    "uj_szoveg": "Addig néhány dolgot még nem érsz el, de utána minden megnyílik."
+   },
+   {
+    "id": "L20",
+    "gond": "A '24–48 órán belül' kimondva hosszú és hivatali ízű, barátságosabb az 1-2 napos megfogalmazás.",
+    "uj_szoveg": "Ha elakadsz, kérj visszahívást, és csapatunk egy-két napon belül keresni fog."
+   }
+  ]
+ },
+ "tenyek": {
+  "summary": "The script matches the contract on the main promises: the new-business self-service path, the card only after the tax number, no team filing, the 24–48 hour callback, the restricted mode, and no forbidden content (no product name, accountant name, or AI). The problems are mainly an unconditioned card step in L11 and a few omitted required details from the §26.7.4 outline.",
+  "issues": [
+   {
+    "id": "L11",
+    "severity": "medium",
+    "issue": "The sentence states the card is given at the szerződés step without qualification. On the 'inditas' path the előfizetés is locked until the registration is 'kesz' (default policy adoszam_utan), so this contradicts the flow. L12 corrects it, but L11 is read first and misstates the order.",
+    "evidence": "SPEC §26.1.6 (inditas locks: elofizetes locked until kesz), §26.1.7 (default adoszam_utan), §26.7.4 outline ('előfizetés (for new businesses only once the tax number exists)')",
+    "fix": "Make L11 path-specific, e.g. \"Elfogadod a szerződést. A havidíjhoz a kártyádat adod meg – új vállalkozásnál csak a adószám után.\" or merge L11 and L12 into one correct sentence."
+   },
+   {
+    "id": "L13",
+    "severity": "low",
+    "issue": "The NAV-meghatalmazás is not identified as given in ONYA, which the outline requires. It is also not stated that it is given by the client themselves in the app-guided ONYA flow.",
+    "evidence": "SPEC §26.7.4 (outline for 'bekotes': 'NAV-meghatalmazás given by you in ONYA with the in-app guide'); FUNKCIOK 4 (UJEGYKE in ONYA, lépésről lépésre útmutató)",
+    "fix": "Rewrite L13 to: \"Ezután a NAV ONYA-felületén NAV-meghatalmazást adsz a könyvelődnek. Ebben lépésről lépésre segít az alkalmazás.\""
+   },
+   {
+    "id": "L09",
+    "severity": "low",
+    "issue": "The outline asks to say the self-registration takes a few minutes. The script omits this time expectation, which sets the user's expectation for the largest step. The 'few minutes' figure should stay consistent with the guide's 'Kb. 10–15 perc' label.",
+    "evidence": "SPEC §26.7.4 (outline for 'bekotes': 'the app shows you step by step how to register it yourself in a few minutes'); §26.6.1 ('Kb. 10–15 perc')",
+    "fix": "Add to L09 or L10: \"…te magad jelented be a NAV-nál, kb. tíz-tizenöt perc alatt.\""
+   },
+   {
+    "id": "L08",
+    "severity": "low",
+    "issue": "The outline says what the adataid are for (tax and cost ratio), and the script says only that the accountant calculates from them. The cost-ratio detail is missing.",
+    "evidence": "SPEC §26.7.4 (outline: 'adataid (tax and cost ratio)'); FUNKCIOK 2 (költséghányad)",
+    "fix": "Extend L08: \"Először az adataid kellenek, a adóval és a költséghányaddal együtt: ezekből számol a könyvelőd.\""
+   },
+   {
+    "id": "L19",
+    "severity": "low",
+    "issue": "\"Onnantól a könyvelőd szól, ha tenned kell valamit\" promises a notification behaviour that the feature list only supports as 'teendők a könyvelőtől' (accountant to-dos). It does not say that notifications come by push or that the csapat also answers.",
+    "evidence": "FUNKCIOK 11 (Teendők a könyvelőtől), 18 (értesítés); SPEC §26.5.1 (todoCount)",
+    "fix": "Soften to: \"Onnantól a könyvelőd kérésekben jelzi, ha tenned kell valamit, és ezt az appban látod.\""
+   }
+  ]
+ }
+}

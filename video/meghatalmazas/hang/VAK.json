@@ -1,0 +1,212 @@
+{
+ "m01": {
+  "mond": "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül öt perc.",
+  "take": 2,
+  "atiratok": [
+   "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc.",
+   "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc.",
+   "Így adsz meghatalmazást a könyvelődnek, hogy ő intézhesse az adóügyeidet. Körülbelül 5 perc."
+  ],
+  "hibas_szavak": []
+ },
+ "m04": {
+  "mond": "Nyisd meg az Onyát, és koppints a Bejelentkezés gombra.",
+  "take": 2,
+  "atiratok": [
+   "Nyisd meg az ONYÁT, és koppints a Bejelentkezés gombra!",
+   "nyisd meg az Onyát, és koppints a bejelentkezés gombra.",
+   "Nyisd meg az Onynát, és koppints a bejelentkezés gombra."
+  ],
+  "hibas_szavak": []
+ },
+ "m06": {
+  "mond": "Lépj be DÁP-pal vagy Ügyfélkapu plusszal.",
+  "take": 1,
+  "atiratok": [
+   "Lépj be DÁP-pal vagy Ügyfélkapu Plusszal!",
+   "Lépj be DÁP-pal vagy Ügyfélkapu+-szal!",
+   "lépj be DÁP-pal vagy Ügyfélkapu+-szal."
+  ],
+  "hibas_szavak": []
+ },
+ "m07": {
+  "mond": "Jobb fent koppints a nevedre, és válaszd a saját profilod.",
+  "take": 1,
+  "atiratok": [
+   "jobbfent koppints a nevedre és válaszd a saját profilod",
+   "jobbfent koppints a nevedre, és válaszd a Saját profilod",
+   "Jobbfent koppints a nevedre, és válaszd a saját profilod."
+  ],
+  "hibas_szavak": []
+ },
+ "m08": {
+  "mond": "Koppints az Új nyomtatvány csempére.",
+  "take": 1,
+  "atiratok": [
+   "koppints az új nyomtatvány csempére",
+   "koppints az új nyomtatvány csempére",
+   "koppincssz az új nyomtatvány csempére"
+  ],
+  "hibas_szavak": []
+ },
+ "m09": {
+  "mond": "Nyisd le a Meghatalmazásokat, és az ujegyke sorában koppints a Kiválaszt gombra.",
+  "take": 1,
+  "atiratok": [
+   "Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!",
+   "Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!",
+   "Nyisd le a meghatalmazásokat, és az új egyke sorában koppints a kiválaszt gombra!"
+  ],
+  "hibas_szavak": []
+ },
+ "m10": {
+  "mond": "A felugró ablakban válaszd: Meghatalmazó, majd Tovább.",
+  "take": 1,
+  "atiratok": [
+   "a felugró ablakban válaszd meghatalmazó majd tovább",
+   "a felugró ablakban válaszd meghatalmazó majd tovább",
+   "a felugró ablakban válaszd meghatalmazó, majd tovább"
+  ],
+  "hibas_szavak": []
+ },
+ "m11": {
+  "mond": "Lent koppints az Új bejelentés gombra.",
+  "take": 1,
+  "atiratok": [
+   "Lent koppints az Új bejelentés gombra.",
+   "Lent koppints az új bejelentés gombra.",
+   "Lent koppints az új bejelentés gombra."
+  ],
+  "hibas_szavak": []
+ },
+ "m12": {
+  "mond": "Írd be a könyvelőd nevét és adóazonosító jelét: az alkalmazásban egy gombbal kimásolod.",
+  "take": 1,
+  "atiratok": [
+   "írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod.",
+   "írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod.",
+   "írd be a könyvelőd nevét és adóazonosító jelét. Az alkalmazásban egy gombbal kimásolod"
+  ],
+  "hibas_szavak": []
+ },
+ "m14": {
+  "mond": "Jogcímnek válaszd a kilencest: Könyvelő.",
+  "take": 1,
+  "atiratok": [
+   "jogcímnek válaszd a kilencest könyvelő",
+   "Jogcímnek válaszd a 9-est, könyvelő.",
+   "jogcímnek válaszd a kilencest, könyvelő"
+  ],
+  "hibas_szavak": []
+ },
+ "m15": {
+  "mond": "Mellé írd be a nyilvántartási számát.",
+  "take": 1,
+  "atiratok": [
+   "mellé írd be a nyilvántartási számát.",
+   "Mellé írd be a nyilvántartási számát",
+   "mellé írd be a nyilvántartási számát"
+  ],
+  "hibas_szavak": []
+ },
+ "m16": {
+  "mond": "A Képviselt te vagy, előre kitöltve.",
+  "take": 1,
+  "atiratok": [
+   "A képviselt te vagy. Előre kitöltve.",
+   "a képviselt te vagy előre kitöltve",
+   "a képviselt te vagy előre kitöltve"
+  ],
+  "hibas_szavak": []
+ },
+ "m17": {
+  "mond": "Kezdet: a mai nap. A végét hagyd üresen.",
+  "take": 1,
+  "atiratok": [
+   "kezdet a mai nap a végét hagyd üresen",
+   "kezdd el a mai nap a végét hagyd üresen",
+   "kezdet a mai nap a végét hagyd üresen"
+  ],
+  "hibas_szavak": []
+ },
+ "m18": {
+  "mond": "Az ügycsoportoknál jelöld be az adóügyeket.",
+  "take": 1,
+  "atiratok": [
+   "Az ügycsoportoknál jelöld be az adóügyeket,",
+   "az ügycsoportoknál jelöld be az adóügyeket",
+   "Az ügycsoportoknál jelöld be az adóügyeket."
+  ],
+  "hibas_szavak": []
+ },
+ "m19": {
+  "mond": "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+  "take": 1,
+  "atiratok": [
+   "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+   "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne.",
+   "A vegyes ügyeknél jelöld az egyéni vállalkozói nyilvántartást is. A többit ne"
+  ],
+  "hibas_szavak": []
+ },
+ "m20": {
+  "mond": "Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.",
+  "take": 1,
+  "atiratok": [
+   "Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.",
+   "Végül koppints az Ellenőrzés és benyújtás gombra, majd a Tovább gombra.",
+   "Végül koppints az ellenőrzés és benyújtás gombra, majd a tovább gombra."
+  ],
+  "hibas_szavak": []
+ },
+ "m21": {
+  "mond": "Kész. Körülbelül húsz perc múlva él.",
+  "take": 3,
+  "atiratok": [
+   "kész. Körülbelül 20 perc múlva él",
+   "kész. Körülbelül 20 perc múlva él",
+   "kész, körülbelül 20 perc múlva él"
+  ],
+  "hibas_szavak": []
+ },
+ "m23": {
+  "mond": "Itt, az alkalmazásban koppints a Beküldtem gombra.",
+  "take": 2,
+  "atiratok": [
+   "Itt az alkalmazásban koppints a beküldtem gombra",
+   "Itt az alkalmazásban koppints a beküldtem gombra",
+   "Itt az alkalmazásban koppints a beküldtem gombra"
+  ],
+  "hibas_szavak": []
+ },
+ "m24": {
+  "mond": "A könyvelőd megnézi, és szól, ha minden rendben.",
+  "take": 1,
+  "atiratok": [
+   "a könyvelőd megnézi és szól, ha minden rendben.",
+   "A könyvelőd megnézi és szól, ha minden rendben.",
+   "A könyvelőd megnézi, és szól, ha minden rendben,"
+  ],
+  "hibas_szavak": []
+ },
+ "m25": {
+  "mond": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül hív.",
+  "take": 1,
+  "atiratok": [
+   "ha elakadsz, kérj visszahívást. Csapatunk 24-48 órán belül hív",
+   "Ha elakadsz, kérj visszahívást! Csapatunk 24-48 órán belül hív",
+   "ha elakadsz kérj visszahívást csapatunk 24 48 órán belül hív"
+  ],
+  "hibas_szavak": []
+ },
+ "m26": {
+  "mond": "Ha egyedül nem megy, megcsináljuk helyetted: te csak jóváhagyod.",
+  "take": 2,
+  "atiratok": [
+   "Ha egyedül nem megy, megcsináljuk helyetted, te csak jóváhagyod",
+   "ha egyedül nem megy megcsináljuk helyetted. Te csak jóváhagyod.",
+   "Ha egyedül nem megy, megcsináljuk helyetted. Te csak jóváhagyod,"
+  ],
+  "hibas_szavak": []
+ }
+}

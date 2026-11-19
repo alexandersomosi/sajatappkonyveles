@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Főoldal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .keres .small { margin-top: 6px; }
+  .keres .btn-s { margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="sb"></div>
+
+<p class="hello">Szia, Kata! Ma október 7., szerda van.</p>
+
+<section class="kivonat" aria-label="Ennyit kell befizetned">
+  <svg class="keret" aria-hidden="true"></svg>
+  <div class="kv">
+    <p class="mondat">Október 12-ig (hétfő) fizess be 820&thinsp;260&nbsp;Ft-ot.</p>
+    <p class="kv-sub">Három külön utalás a NAV-nak, ugyanazzal a közleménnyel.</p>
+    <div class="tetelek">
+      <div class="l1"><span>TB-járulék</span><span class="amt">326&thinsp;340<small>Ft</small></span></div>
+      <div class="l1"><span>Szocho</span><span class="amt">229&thinsp;320<small>Ft</small></span></div>
+      <div class="l1"><span>SZJA-előleg</span><span class="amt">264&thinsp;600<small>Ft</small></span></div>
+    </div>
+    <div class="koz">
+      <div><span class="k1">Közlemény mindháromhoz</span><span class="id k2">8412345678</span></div>
+      <button class="btn-s on-card copy"><i data-i="copy" data-s="18"></i>Másolás</button>
+    </div>
+    <div class="gombok">
+      <button class="btn-s on-card">Utalás adatai</button>
+      <button class="btn-p inv">Befizettem</button>
+    </div>
+  </div>
+</section>
+
+<div class="gap"></div>
+<div class="sheet pad keres">
+  <p class="t3">Bence kéri a szeptemberi bankszámlakivonatod 2. oldalát.</p>
+  <p class="small">Hétfőn kérte. Elég a bankod appjából letöltött PDF is.</p>
+  <button class="btn-s"><i data-i="camera" data-s="20"></i>Feltöltöm a 2. oldalt</button>
+</div>
+
+<div class="gap"></div>
+<div class="sheet">
+  <div class="meter" style="padding:20px 20px 16px">
+    <p class="t3">Még <span class="num">11&thinsp;580&thinsp;000</span>&nbsp;Ft-ot számlázhatsz ÁFA nélkül.</p>
+    <div class="bar" role="img" aria-label="42 százalék"><i style="width:42.1%"></i></div>
+    <div class="ends"><span>Idén eddig <span class="amt">8&thinsp;420&thinsp;000</span>&nbsp;Ft</span><span>A határ <span class="amt">20&thinsp;000&thinsp;000</span>&nbsp;Ft</span></div>
+  </div>
+  <div class="meter" style="padding:16px 20px 20px">
+    <p class="t3">Az adómentes részt júniusban elérted.</p>
+    <div class="bar" role="img" aria-label="100 százalék"><i style="width:100%"></i></div>
+    <p class="small">Évente <span class="inl">1&thinsp;936&thinsp;800</span>&nbsp;Ft jövedelem után nem kell SZJA-t fizetned. Ami fölötte van, az után már fizetsz előleget, ez rendben van így.</p>
+  </div>
+</div>
+
+<div class="gap"></div>
+<div class="sheet pad konyvelo">
+  <div class="konyvelo-sor">
+    <span class="arckep"></span>
+    <div>
+      <p class="nev">Kovács Bence, a könyvelőd</p>
+      <p class="cim">Mérlegképes könyvelő</p>
+      <p class="cim">Nyilvántartási szám: 184205</p>
+    </div>
+  </div>
+  <p class="valasz">Munkanapokon 4 órán belül válaszol.</p>
+  <button class="btn-s"><i data-i="chat" data-s="20"></i>Írok Bencének</button>
+</div>
+
+<div class="spacer-tab"></div>
+<nav class="tabbar" data-on="fooldal"></nav>
+<script src="kozos.js"></script>
+</body>
+</html>

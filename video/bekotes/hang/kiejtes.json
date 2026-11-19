@@ -1,0 +1,258 @@
+{
+ "rossz_sorok": [],
+ "sorok": [
+  {
+   "id": "L01",
+   "take": 1,
+   "szoveg": "Köszönjük, hogy telepítetted az alkalmazásunkat!",
+   "atiratok": [
+    "Köszönjük, hogy telepítetted az alkalmazásunkat.",
+    "Köszönjük, hogy telepítetted az alkalmazásunkat."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L01_t1_nyers.wav"
+  },
+  {
+   "id": "L02",
+   "take": 1,
+   "szoveg": "Megmutatjuk, mire jó, és mi kell a kezdéshez.",
+   "atiratok": [
+    "Megmutatjuk, mire jó, és mi kell a kezdéshez.",
+    "Megmutatjuk, mire jó, és mi kell a kezdéshez."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L02_t1_nyers.wav"
+  },
+  {
+   "id": "L03",
+   "take": 1,
+   "szoveg": "Saját könyvelőd lesz, aki intézi az adóidat.",
+   "atiratok": [
+    "Saját könyvelőd lesz, aki intézi az adóidat.",
+    "Saját könyvelőd lesz, aki intézi az adóidat."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L03_t1_nyers.wav"
+  },
+  {
+   "id": "L04",
+   "take": 1,
+   "szoveg": "A kiállított számláid maguktól megjelennek az alkalmazásban, nem kell feltöltened őket.",
+   "atiratok": [
+    "A kiállított számláid maguktól megjelennek az alkalmazásban, nem kell feltöltened őket.",
+    "A kiállított számláid maguktól megjelennek az alkalmazásban, nem kell feltöltened őket."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L04_t1_nyers.wav"
+  },
+  {
+   "id": "L05",
+   "take": 1,
+   "szoveg": "A Főoldalon látod, mennyit, mikorra és hova kell fizetned.",
+   "atiratok": [
+    "A főoldalon látod, mennyit, mikorra és hova kell fizetned.",
+    "A főoldalon látod, mennyit, mikorra és hova kell fizetned."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L05_t1_nyers.wav"
+  },
+  {
+   "id": "L06",
+   "take": 1,
+   "szoveg": "A nyugtákat pedig csak lefotózod.",
+   "atiratok": [
+    "A nyugtákat pedig csak lefotózod.",
+    "A nyugtákat pedig csak lefotózod"
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L06_t1_nyers.wav"
+  },
+  {
+   "id": "L07",
+   "take": 1,
+   "szoveg": "A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod.",
+   "atiratok": [
+    "A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod.",
+    "A bekötés néhány lépés. Mindegyiknél leírtuk, mi ez, miért kell, és hol találod."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L07_t1_nyers.wav"
+  },
+  {
+   "id": "L08",
+   "take": 1,
+   "szoveg": "Először az adataid kellenek: ezekből számol a könyvelőd.",
+   "atiratok": [
+    "Először az adataid kellenek. Ezekből számol a könyvelőd.",
+    "Először az adataid kellenek. Ezekből számol a könyvelőd."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L08_t1_nyers.wav"
+  },
+  {
+   "id": "L09",
+   "take": 1,
+   "szoveg": "Ha még nincs vállalkozásod, te magad jelented be a NAV-nál, nagyjából negyedóra alatt.",
+   "atiratok": [
+    "Ha még nincs vállalkozásod, te magad jelented be a NAV-nál, nagyjából negyed óra alatt.",
+    "Ha még nincs vállalkozásod, te magad jelented be a NAV-nál nagyjából negyed óra alatt."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L09_t1_nyers.wav"
+  },
+  {
+   "id": "L10",
+   "take": 1,
+   "szoveg": "Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj.",
+   "atiratok": [
+    "Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj.",
+    "Az alkalmazás lépésről lépésre megmutatja, mit hova jelölj."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L10_t1_nyers.wav"
+  },
+  {
+   "id": "L10b",
+   "take": 1,
+   "szoveg": "A NAV-os igazolást feltöltöd, mi pedig átnézzük.",
+   "atiratok": [
+    "A NAV-os igazolást feltöltöd, mi pedig átnézzük.",
+    "A NAV-os igazolást feltöltöd, mi pedig átnézzük."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L10b_t1_nyers.wav"
+  },
+  {
+   "id": "L11",
+   "take": 3,
+   "szoveg": "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat. Új vállalkozásnál erre csak akkor van szükség, ha már megvan az adószámod.",
+   "atiratok": [
+    "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat. Új vállalkozásnál erre csak akkor van szükség, ha már megvan az adószámod.",
+    "Elfogadod a szerződést, és a havidíjhoz megadod a kártyádat. Új vállalkozásnál erre csak akkor van szükség, ha már megvan az adószámod."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L11_t3_nyers.wav"
+  },
+  {
+   "id": "L13",
+   "take": 1,
+   "szoveg": "Ezután NAV-meghatalmazást adsz a könyvelődnek. Ebben is segít az alkalmazás.",
+   "atiratok": [
+    "Ezután NAV meghatalmazást adsz a könyvelődnek. Ebben is segít az alkalmazás.",
+    "Ezután NAV meghatalmazást ad a könyvelőnek. Ebben is segít az alkalmazás."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L13_t1_nyers.wav"
+  },
+  {
+   "id": "L14",
+   "take": 1,
+   "szoveg": "Így ő adhatja be helyetted a bevallásaidat.",
+   "atiratok": [
+    "Így ő adhatja be helyetted a bevallásaidat.",
+    "Így ő adhatja be helyetted a bevallásaidat."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L14_t1_nyers.wav"
+  },
+  {
+   "id": "L15",
+   "take": 1,
+   "szoveg": "Lefotózod a személyidet és a lakcímkártyád lakcímes oldalát.",
+   "atiratok": [
+    "Lefotózod a személyidet, és a lakcímkártyád lakcímes oldalát.",
+    "Lefotózod a személyidet, és a lakcímkártyád lakcímes oldalát."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L15_t1_nyers.wav"
+  },
+  {
+   "id": "L16",
+   "take": 1,
+   "szoveg": "A törvény szerint azonosítanunk kell téged.",
+   "atiratok": [
+    "A törvény szerint azonosítanunk kell téged.",
+    "A törvény szerint azonosítanunk kell téged"
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L16_t1_nyers.wav"
+  },
+  {
+   "id": "L17",
+   "take": 1,
+   "szoveg": "Végül a könyvelőd összeköti a fiókodat a NAV-val.",
+   "atiratok": [
+    "Végül a könyvelőd összeköti a fiókodat a NAV-val.",
+    "Végül a könyvelőd összeköti a fiókodat a NAV-val."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L17_t1_nyers.wav"
+  },
+  {
+   "id": "L18",
+   "take": 1,
+   "szoveg": "Addig néhány rész még zárva van, utána minden megnyílik.",
+   "atiratok": [
+    "Addig néhány rész még zárva van, utána minden megnyílik.",
+    "Addig néhány rész még zárva van, utána minden megnyílik."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L18_t1_nyers.wav"
+  },
+  {
+   "id": "L19",
+   "take": 1,
+   "szoveg": "Onnantól a Főoldalon látod, mi a teendőd, a többit a könyvelőd intézi.",
+   "atiratok": [
+    "Onnantól a főoldalon látod, mi a teendőd. A többit a könyvelőd intézi.",
+    "Onnantól a főoldalon látod, mi a teendőd. A többit a könyvelőd intézi."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L19_t1_nyers.wav"
+  },
+  {
+   "id": "L20",
+   "take": 1,
+   "szoveg": "Ha elakadsz, kérj visszahívást: csapatunk huszonnégy-negyvennyolc órán belül felhív.",
+   "atiratok": [
+    "Ha elakadsz, kérj visszahívást. Csapatunk huszonnégy-negyvennyolc órán belül felhív.",
+    "Ha elakadsz, kérj visszahívást! Csapatunk huszonnégy-negyvennyolc órán belül felhív."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L20_t1_nyers.wav"
+  },
+  {
+   "id": "L20b",
+   "take": 2,
+   "szoveg": "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+   "atiratok": [
+    "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted.",
+    "Ha egyedül nem megy, a bejelentést és a meghatalmazást is elintézzük helyetted."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L20b_t2_nyers.wav"
+  },
+  {
+   "id": "L21",
+   "take": 1,
+   "szoveg": "Az Üzenetekben bármikor írhatsz nekünk.",
+   "atiratok": [
+    "Az üzenetekben bármikor írhatsz nekünk.",
+    "Az üzenetekben bármikor írhatsz nekünk."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L21_t1_nyers.wav"
+  },
+  {
+   "id": "L22",
+   "take": 1,
+   "szoveg": "Kezdjük is! Az első lépést lent találod.",
+   "atiratok": [
+    "Kezdjük is. Az első lépést lent találod.",
+    "Kezdjük is. Az első lépést lent találod."
+   ],
+   "hianyzo": [],
+   "wav": "C:\\Users\\UpgradePC\\konyvelo_app\\video\\bekotes\\hang\\sorok\\L22_t1_nyers.wav"
+  }
+ ]
+}

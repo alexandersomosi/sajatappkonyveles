@@ -1,0 +1,179 @@
+/* Tisztán (D: Pala és kockás lap), 2. kör – közös tokenek és elemek.
+   Minden képernyő ezt tölti be. A betűk a Google Fontsról jönnek (OFL):
+   Sofia Sans 400/500/600 és Sofia Sans Condensed 600 (csak pénzösszegre).
+   Egy világos rendszer mindenhol: színezett háttér, rajta fehér lapok. Sötét képernyő nincs. */
+
+:root {
+  /* Színek */
+  --pala: #2A4E57;          /* márka, elsődleges gomb, szöveges gomb, mérő kitöltése */
+  --pala-mely: #1D373E;     /* megnyomott elsődleges gomb */
+  --alap: #DAE3E5;          /* háttér minden képernyőn (1,30:1 a fehérhez) */
+  --lap: #FFFFFF;           /* fehér lap, alsó sáv */
+  --racs: #E2EAEC;          /* a kockás lap vonala (halványabb, mint az 1. körben) */
+  --racslap: #FCFDFD;       /* a kockás lap alapja */
+  --tinta: #132326;         /* szöveg */
+  --masod: #536569;         /* másodlagos szöveg fehér lapon (6,1:1) */
+  --masod-alap: #44575B;    /* másodlagos szöveg és szakaszcím a háttéren (5,8:1) */
+  --hajszal: #D3DDDF;       /* hajszálvonal a lapon */
+  --hajszal-alap: #BCC9CC;  /* hajszálvonal a háttéren és az alsó sáv tetején */
+  --halvany: #E8EEF0;       /* megnyomott sor */
+  --sajat: #BFD1D6;         /* a saját üzeneted buboréka */
+  --ures: #A9B8BB;          /* üres állapotszegmens, várakozó lépés köre */
+  --palya: #DCE5E7;         /* mérő pályája fehér lapon */
+  --palya-alap: #B9C7CA;    /* mérő pályája a háttéren */
+  --rez: #9C7A3C;           /* sárgaréz: csak jel (vonal, kör, ikon) */
+  --rez-szoveg: #7A5C24;    /* sárgaréz szöveg (fehéren 6,2:1, a háttéren 4,8:1) */
+  --hiba: #B42318;
+  --figy: #8A5A00;          /* „Hiányzik” */
+
+  /* Formák: lap, gomb és mező sarka szándékosan különbözik */
+  --r-lap: 16px;
+  --r-gomb: 10px;
+  --r-mezo: 8px;
+  --perem: 16px;            /* oldalsó margó */
+  --belso: 18px;            /* lapon belüli margó: 18 + 23 × 14 + 18 = 358, a kockás rács miatt */
+  --racs-meret: 14px;       /* egy számolási sor két kocka */
+
+  /* Betűk */
+  --szoveg: "Sofia Sans", "Segoe UI", system-ui, sans-serif;
+  --szuk: "Sofia Sans Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; }
+body {
+  font-family: var(--szoveg);
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--tinta);
+  background: var(--alap);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body.telefon { height: 844px; overflow: hidden; position: relative; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid #4F8C9B; outline-offset: 2px; }
+.szam { font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.ft { font-size: .82em; color: var(--masod); margin-left: .12em; }
+.ikon { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Állapotsor ---------- */
+.allapotsor { height: 47px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 32px; font-weight: 600; font-size: 16px; }
+.allapotsor .jelek { display: flex; gap: 6px; align-items: center; }
+.allapotsor svg { height: 12px; fill: currentColor; }
+
+/* ---------- Tartalom ---------- */
+.tartalom { padding: 0 var(--perem) 120px; }
+/* Képernyőcím: Sofia Sans 600, enyhén szűkített betűközzel. A szűkített betű csak pénzösszegé. */
+.cim { font-weight: 600; font-size: 26px; line-height: 1.15; letter-spacing: -.012em; padding: 12px 4px 0; }
+.alcim { font-size: 16px; line-height: 1.42; color: var(--masod-alap); padding: 6px 4px 0; max-width: 34em; }
+/* Szakaszcím: halk, normál vastagságú, a háttéren áll */
+.szakasz { font-weight: 400; font-size: 15px; line-height: 1.3; color: var(--masod-alap); padding: 26px 4px 8px; }
+
+/* ---------- Lap és sorok ---------- */
+.lap { background: var(--lap); border-radius: var(--r-lap); overflow: hidden; }
+.lap + .lap { margin-top: 10px; }
+.lap-belso { padding: 18px var(--belso); }
+/* A lap fő mondata: blokkonként ez az egyetlen kiemelt sor */
+.lap-fo { font-size: 17px; font-weight: 600; line-height: 1.35; }
+.lap-al { font-size: 16px; line-height: 1.45; color: var(--masod); margin-top: 6px; }
+.sor { display: flex; align-items: center; gap: 12px; padding: 12px var(--belso); min-height: 60px; position: relative; }
+.sor + .sor::before { content: ""; position: absolute; top: 0; left: var(--belso); right: 0; border-top: 1px solid var(--hajszal); }
+.sor .ikon.tipus { color: var(--masod); }
+.sor .bal { flex: 1; min-width: 0; }
+.sor .fo { font-size: 17px; line-height: 1.3; }
+.sor .al { font-size: 15px; line-height: 1.38; color: var(--masod); margin-top: 3px; }
+.sor .jobb { text-align: right; font-size: 17px; }
+.nyil { width: 16px; height: 16px; flex: none; fill: none; stroke: #7C8E92; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sor.lenyomva { background: var(--halvany); }
+
+/* ---------- Gombok ---------- */
+.gomb { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; text-align: center; border-radius: var(--r-gomb); white-space: nowrap; }
+.gomb.elso { width: 100%; height: 54px; background: var(--pala); color: #FFFFFF; font-size: 17px; letter-spacing: .005em; }
+.gomb.elso:active { background: var(--pala-mely); }
+.gomb.masod { height: 46px; padding: 0 18px; background: var(--lap); color: var(--pala); border: 1.5px solid var(--pala); font-size: 16px; }
+.gomb.masod .ikon { width: 22px; height: 22px; }
+/* Szöveges gomb: vékony aláhúzás, közepes vastagság. Kevés van belőle. */
+.gomb.harmad { color: var(--pala); font-weight: 500; font-size: 16px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; padding: 11px 0; border-radius: 4px; }
+.gomb.harmad .ikon { width: 20px; height: 20px; }
+.gomb.harmad.ikonos { text-decoration: none; gap: 6px; }
+.gomb.harmad.ikonos span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.gomb.veszely { color: var(--hiba); font-weight: 500; font-size: 16px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; padding: 11px 0; }
+.gomb.veszely-tele { width: 100%; height: 54px; background: var(--hiba); color: #FFFFFF; font-size: 17px; }
+.gomb[disabled] { opacity: .45; cursor: default; }
+/* Másolás: kis ikon és egy szó, aláhúzás nélkül. „Másolom” → „Kimásoltad” */
+.masol { display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 2px 0 10px; color: var(--pala); font-weight: 600; font-size: 15.5px; white-space: nowrap; }
+.masol .ikon { width: 20px; height: 20px; stroke-width: 1.9; }
+.masol.kesz { color: var(--tinta); font-weight: 500; }
+
+/* ---------- Állapot: szöveg + 4 szegmens ---------- */
+.allapot { display: flex; align-items: center; gap: 10px; margin-top: 7px; font-size: 15px; line-height: 1.3; color: var(--masod); }
+.szegmens { display: inline-flex; gap: 3px; flex: none; }
+.szegmens i { width: 18px; height: 5px; border-radius: 2.5px; background: var(--ures); }
+.szegmens i.tele { background: var(--pala); }
+.allapot.figy { color: var(--figy); font-weight: 600; }
+.allapot.figy .szegmens i { background: #D9C6A5; }
+
+/* ---------- Mező ---------- */
+.mezo-cimke { display: block; font-size: 15px; font-weight: 500; margin: 0 2px 7px; }
+.mezo { display: flex; align-items: center; height: 52px; padding: 0 14px; background: #FFFFFF; color: var(--tinta); border-radius: var(--r-mezo); border: 1.5px solid #7C8E92; font-size: 17px; }
+
+/* ---------- A könyvelő arcképe ----------
+   Álló, 4:5-ös keret, nem kör. Élesben Bence valódi fotója kerül bele (amit ő ad),
+   a próbaképeken egy saját rajzú, egyszerű helykitöltő. */
+.portre { flex: none; width: 44px; height: 55px; border-radius: 8px; overflow: hidden; position: relative; background: #C9D5D8; }
+.portre::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(19,35,38,.14); }
+.portre svg { display: block; width: 100%; height: 100%; }
+.portre.kicsi { width: 36px; height: 45px; border-radius: 7px; }
+.portre.nagy { width: 52px; height: 65px; border-radius: 9px; }
+/* „A könyvelőd” sor: az arckép mellett a név és a szerep. A szerep sárgarézzel. */
+.konyvelo { display: flex; gap: 12px; align-items: flex-start; }
+.konyvelo .ki { font-size: 15px; line-height: 1.35; color: var(--rez-szoveg); font-weight: 500; }
+.konyvelo .nev { font-size: 17px; line-height: 1.3; font-weight: 600; }
+.konyvelo .mit { font-size: 16px; line-height: 1.42; margin-top: 2px; }
+
+/* ---------- Határ-mérő ---------- */
+.mero { height: 10px; border-radius: 5px; background: var(--palya); position: relative; margin: 12px 0 7px; }
+.mero b { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: var(--pala); }
+.mero .jel80 { position: absolute; left: 80%; top: -4px; bottom: -4px; width: 2px; background: var(--tinta); border-radius: 1px; }
+.mero-lab { display: flex; justify-content: space-between; font-size: 15px; color: var(--masod); }
+
+/* ---------- Alsó sáv: világos, hogy ne a navigáció legyen a leghangosabb ---------- */
+.fulsor { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; background: var(--lap); border-top: 1px solid var(--hajszal-alap); display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 6px 24px; z-index: 5; }
+.ful { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; gap: 2px; color: var(--masod); font-size: 15px; line-height: 1.2; position: relative; }
+.ful .ikon { width: 25px; height: 25px; stroke-width: 1.7; }
+.ful.aktiv { color: var(--pala); font-weight: 600; }
+.ful.aktiv .ikon { stroke-width: 2.2; }
+.ful.aktiv::after { content: ""; width: 22px; height: 3px; border-radius: 2px; background: var(--pala); margin-top: 3px; }
+.ful .pont { position: absolute; top: 6px; left: calc(50% + 8px); width: 10px; height: 10px; border-radius: 50%; background: var(--rez); border: 2px solid var(--lap); }
+.kezdojel { position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--tinta); z-index: 6; }
+
+/* ---------- Kockás számolás (csak a befizetési lapon) ----------
+   14 px-es, halvány rács; egy számolási sor két kocka (28 px), így 16–17 px-es betű fér bele. */
+.kockas {
+  margin: 18px calc(-1 * var(--belso)) 0;
+  padding: 0 var(--belso) 14px;
+  background-color: var(--racslap);
+  background-image: linear-gradient(var(--racs) 1px, transparent 1px), linear-gradient(90deg, var(--racs) 1px, transparent 1px);
+  background-size: var(--racs-meret) var(--racs-meret);
+  background-position: var(--belso) 0;
+  border-top: 1px solid var(--hajszal);
+  border-bottom: 1px solid var(--hajszal);
+}
+.kockas .fej { height: 42px; display: flex; align-items: center; font-size: 16px; font-weight: 500; padding-top: 6px; }
+.kockas .r { display: grid; grid-template-columns: 28px 1fr 112px; height: 28px; line-height: 28px; }
+.kockas .op { color: var(--masod); text-align: center; font-size: 17px; }
+.kockas .cimke { font-size: 16px; padding-left: 2px; white-space: nowrap; }
+.kockas .n { text-align: right; font-variant-numeric: tabular-nums lining-nums; font-size: 17px; padding-right: 1px; position: relative; }
+.kockas .alahuz .n::after { content: ""; position: absolute; left: 4px; right: 0; bottom: -1px; border-top: 1.5px solid var(--tinta); transform-origin: left; }
+/* Dupla vonal: a könyvelésben is ez jelzi a végösszeget. Csak itt szerepel. */
+.kockas .vegso .n::after { content: ""; position: absolute; left: 4px; right: 0; bottom: -4px; height: 4px; border-top: 1.5px solid var(--tinta); border-bottom: 1.5px solid var(--tinta); transform-origin: left; }
+.kockas .vegso .cimke, .kockas .vegso .n { font-weight: 600; }
+.kockas .ures { height: 14px; }
+.kockas .labjegy { font-size: 15px; line-height: 21px; color: var(--masod); margin-top: 21px; max-width: 30em; }
+/* Az egyetlen kiemelt mozgás: első megnyitáskor a sorok egymás után „íródnak” (soronként 80 ms). */
+@keyframes ir { from { clip-path: inset(-8px 100% -8px -4px); } to { clip-path: inset(-8px -4px -8px -4px); } }
+@keyframes huz { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.kockas.ir .r { animation: ir .32s cubic-bezier(.3,.6,.3,1) both; animation-delay: calc(var(--i) * 80ms + 150ms); }
+.kockas.ir .r .n::after { animation: huz .24s ease-out both; animation-delay: calc(var(--i) * 80ms + 380ms); }
+@media (prefers-reduced-motion: reduce) { .kockas.ir .r, .kockas.ir .r .n::after { animation: none; } }

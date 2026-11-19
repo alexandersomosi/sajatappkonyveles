@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390">
+<title>Tisztán – Belépés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;700&family=Sofia+Sans+Condensed:wght@600;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.belepes { padding: 0 24px; }
+/* Szóvédjegy: a név kétszer aláhúzva, ahogy a végeredményt húzzuk alá a füzetben */
+.szovedjegy { display: inline-block; margin-top: 46px; font-family: var(--szuk); font-weight: 700; font-size: 46px; line-height: 1; letter-spacing: -.01em; padding-bottom: 9px; position: relative; }
+.szovedjegy::after { content: ""; position: absolute; left: 1px; right: 2px; bottom: 0; height: 3px; border-top: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF; }
+.szlogen { font-size: 17px; line-height: 1.45; color: var(--eloter-masod); margin-top: 14px; max-width: 19em; }
+.urlap { margin-top: 34px; }
+.urlap .mezo-cimke { color: #FFFFFF; }
+.urlap .mezo + .mezo-cimke { margin-top: 18px; }
+.jelszo { justify-content: space-between; letter-spacing: .18em; font-size: 20px; }
+.jelszo button { display: inline-flex; align-items: center; gap: 6px; color: var(--pala); font-weight: 700; font-size: 15px; letter-spacing: 0; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; padding: 10px 0 10px 10px; }
+.elfelejtett { margin-top: 4px; }
+.urlap .gomb.elso { margin-top: 14px; }
+.vagy { display: flex; align-items: center; gap: 12px; color: var(--eloter-masod); font-size: 15px; margin: 22px 0 16px; }
+.vagy::before, .vagy::after { content: ""; flex: 1; border-top: 1px solid var(--eloter-vonal); }
+.kulso { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.kulso .gomb.masod { width: 100%; height: 48px; font-size: 16px; }
+.bio { display: flex; gap: 12px; align-items: flex-start; margin-top: 24px; padding: 14px 16px; border: 1px solid var(--eloter-vonal); border-radius: var(--r-lap); background: var(--eloter-lap); }
+.bio .ikon { width: 28px; height: 28px; color: #FFFFFF; margin-top: 1px; }
+.bio p { font-size: 15px; line-height: 1.42; color: var(--eloter-masod); }
+.bio b { color: #FFFFFF; }
+.uj { text-align: center; font-size: 16px; color: var(--eloter-masod); margin-top: 14px; }
+.uj .gomb.harmad { margin-left: 4px; }
+</style>
+</head>
+<body class="telefon eloter">
+<div data-allapotsor></div>
+
+<main class="belepes">
+  <h1 class="szovedjegy">Tisztán</h1>
+  <p class="szlogen">Saját könyvelőd, és minden befizetésnél látod, hogyan jött ki.</p>
+
+  <form class="urlap" onsubmit="return false">
+    <label class="mezo-cimke" for="email">E-mail-cím</label>
+    <div class="mezo" id="email">szabokata@pelda.hu</div>
+    <label class="mezo-cimke" for="jelszo">Jelszó</label>
+    <div class="mezo jelszo" id="jelszo"><span aria-label="rejtett jelszó">••••••••••</span><button type="button"><svg class="ikon" style="width:20px;height:20px"><use href="#i-szem"/></svg>Mutasd</button></div>
+    <button type="button" class="gomb harmad elfelejtett">Elfelejtetted a jelszavad?</button>
+    <button type="submit" class="gomb elso">Belépés</button>
+  </form>
+
+  <div class="vagy">vagy</div>
+  <div class="kulso">
+    <button class="gomb masod">Google-lel</button>
+    <button class="gomb masod">Apple-lel</button>
+  </div>
+
+  <div class="bio">
+    <svg class="ikon"><use href="#i-ujj"/></svg>
+    <p><b>Legközelebb elég az ujjad vagy az arcod.</b> Belépés után egy gombbal bekapcsolhatod.</p>
+  </div>
+
+  <p class="uj">Még nincs fiókod?<button class="gomb harmad">Regisztrálok</button></p>
+</main>
+
+<script src="kozos.js"></script>
+</body>
+</html>

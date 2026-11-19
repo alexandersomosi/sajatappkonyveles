@@ -1,0 +1,399 @@
+{
+ "kör2:biztonság": {
+  "issues": [
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/auth.ts – POST /auth/login/totp (`if (u.lockedUntil && u.lockedUntil > now) throw E.rateLimited`) together with the lock logic in POST /auth/login",
+    "what": "Anyone who knows a 2FA user's e-mail can keep that user from signing in, without knowing the password. 10 wrong passwords from 3 addresses set users.locked_until for 15 minutes. The password step exempts addresses the owner used before, but the TOTP step refuses everybody while the lock is on. Verified locally on the real build (STAFF_TOTP_REQUIRED=true): accountant from his usual address, right password -> mfa_required, right TOTP code -> 429 with Retry-After 869 s. In production every accountant, admin and team member must use 2FA, so 10 requests per 15 minutes shut the whole staff out of the panel (staff sessions idle out after 12 h). A password reset clears the lock only until the next 10 tries.",
+    "fix": "In /auth/login/totp do not apply the password-failure lock: reaching this step already proves the password. Keep a separate lock that only wrong TOTP codes set (e.g. users.totp_locked_until), or at least skip locked_until when knownAddress(u.id, ipHmac) is true, as the password step does. Add a test: 10 wrong passwords from 3 addresses, then the owner finishes the TOTP sign-in from a known address."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/auth/codes.ts (per-address budgets: 5 guesses per code, 20 per address per day) and routes/auth.ts POST /auth/password/forgot (forgot-mail-all 12 per hour, in memory) + POST /auth/password/reset",
+    "what": "The 6-digit password-reset code can be guessed in a distributed way. Since round 1 every requesting address gets its own code with its own 5 guesses; the only per-account cap is 12 codes per hour. Measured locally with a fresh address per code: 288 codes and 1 152-1 440 compared guesses in 24 h against one account, i.e. about 0.12-0.14 % takeover chance per account per day (about 4 % per month for one targeted account; with 1 000 clients roughly one account per day). Clients have no mandatory 2FA, and the new password also opens the GDPR export (ID photos, tax id). The many addresses do not even need a botnet, because the API accepts cross-site text/plain posts (next issue): visitors of any web page can be made to ask for codes and send guesses.",
+    "fix": "Raise the entropy instead of only counting: mail a long one-time token (128 bit) as a link / deep link, and keep the typed code only as a fallback with an account-wide persistent cap (e.g. 15 wrong comparisons per e-mail per 24 h over all addresses, stored in the DB), or make the typed code 8-9 alphanumeric characters. Lower and persist forgot-mail-all (e.g. 5 per hour). Add a test that 72+ addresses over 24 h cannot exceed the cap."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/http/core.ts readJson (no Content-Type check) and the raw body parser of POST /auth/refresh in routes/auth.ts; affects /auth/login, /auth/register, /auth/password/forgot, /auth/password/reset, /auth/login/totp, /auth/google, /auth/apple",
+    "what": "JSON endpoints parse any content type, so other websites can post to them from a visitor's browser (form with enctype text/plain, or fetch in no-cors mode; no CORS preflight happens). Verified locally: POST /auth/login with Content-Type text/plain, Origin https://evil.example -> 200 and Set-Cookie __Host-kj_rt. Verified on live with a non-existent address: text/plain is parsed (401, not 415). Consequences: (1) login CSRF - a visitor is silently signed in to the attacker's account on the app or panel host and may then upload ID photos and receipts into an account the attacker controls; (2) any page can make its visitors send forgot / reset / register requests, so the per-IP limits are bypassed with other people's addresses (feeds the reset-code guessing above, mail flooding, accountant capacity).",
+    "fix": "Answer 415 unless Content-Type is application/json on every JSON route (a form cannot send it, and fetch with it needs a CORS preflight that fails because the API sends no CORS headers). On the cookie-setting /auth/* routes also refuse requests with Sec-Fetch-Site: cross-site or with an Origin that is not APP_PUBLIC_URL / PANEL_PUBLIC_URL / API_PUBLIC_URL (native apps send no Origin). Add tests for both."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/me.ts POST /me/consents; C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/contracts.ts storeSignedContract; services/onboarding.ts stepLockKeys (no lock for 'szerzodes')",
+    "what": "The megbízási szerződés can be accepted by an account whose e-mail was never confirmed and whose data form is empty. /me/* has no verified-e-mail gate and POST /me/consents checks no step order. Verified locally: fresh sign-up, e-mail not confirmed, adatok step = ugyfelre_var -> POST /me/consents with the three documents -> 204, step szerzodes = kesz, a contract PDF with placeholder data is stored in the dossier as szerzodes_alairt, and the contract mail (PDF attached, in production over SMTP) goes to the unconfirmed address. So a contract record and an outgoing mail with attachment can be produced in anybody's name and address, and the restricted-mode / step rules are not enforced by the API here (the app screen enforces the order, the API does not).",
+    "fix": "For role client in POST /me/consents: require a confirmed e-mail (409 email_not_verified, like /client/*) and require the adatok step to be kesz before megbizasi_szerzodes is accepted (add the lock to stepLockKeys and call assertStepOpen(…, 'szerzodes')). Send the contract mail only to a confirmed address. Add tests for both refusals."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/app.ts (upload-slot middleware keyed on the Bearer token hash) and files/upload.ts withUploadSlot (UPLOAD_SLOTS = 2, wait 45 s); C:/Users/UpgradePC/konyvelo_app/kod/deploy/kezjegy.caddy (upload bodies are streamed, no receive deadline)",
+    "what": "One client account can block uploads for everybody. A slot is held while the server waits for the request body, there are only 2 slots, and the per-caller rule is keyed on the access token, so one user with two tokens (login + refresh) is two callers. Verified locally on a real HTTP server: two multipart uploads of one account that send a few bytes and then stall -> another client's 1 KB attachment waits 45 s and gets 429. Each stalled request holds its slot up to Node's 300 s request timeout and can be reopened at once. Needs only a confirmed client account (also unpaid, in onboarding); it stops receipts, KYC photos, EV-bejelentés uploads and chat attachments for all users.",
+    "fix": "Key the per-caller slot on the user id (after auth), not on the token. Do not hold a global slot while bytes are still arriving: let Caddy buffer upload bodies before proxying (request_buffers on the upload matchers) or abort an upload that is not complete within a deadline (e.g. 60-90 s, 408) so a stalled sender frees the slot. Add a test with a stalled multipart request."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/client.ts uploadLimit (600 uploads per hour per user) and POST /client/attachments (open before activation); files/storage.ts; no quota code anywhere in backend/src",
+    "what": "There is no storage quota and no free-space guard. Any client with a confirmed e-mail (also unpaid, in onboarding) can store 600 x 25 MB = 15 GB per hour as chat attachments that never have to be attached to a message. The disk (179 GB free) is shared with Gardoko and both databases: one account fills it in about 12 hours, a few accounts in about one hour, and a full disk stops Kézjegy and Gardoko. The only disk check is in backup.sh, whose cron is not installed. Not reachable by outsiders on the live DEMO (they cannot confirm an e-mail), but it is the production path.",
+    "fix": "Add a byte quota per client (e.g. 300 MB before activation, a few GB after; env-configurable), an hourly byte budget per user, and refuse uploads with a clear message when free space on FILES_DIR is under about 10 %. Count unattached uzenet_csatolmany files against the quota and retire those older than 24 h. Show the disk state on the admin Rendszer page independent of backup.sh."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/auth.ts POST /auth/totp/setup, /auth/totp/enable and POST /auth/password/reset",
+    "what": "2FA can be switched on for an account whose e-mail was never confirmed. Verified locally: a stranger registers somebody else's address and binds his own authenticator; when the real mailbox owner later resets the password, sign-in still answers mfa_required, so the owner can never use the service with that address (no self-service way out, no admin 2FA reset for clients).",
+    "fix": "Require a confirmed e-mail for /auth/totp/setup and /auth/totp/enable. When a password reset confirms a mailbox for the first time (emailVerifiedAt was null), clear the TOTP secret and recovery codes."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/accounts.ts createClientAccount -> pickAccountant (capacity counts every client row)",
+    "what": "An accountant is assigned at sign-up, before the e-mail is confirmed, and every unconfirmed account counts towards the accountant's capacity (default 150). About 150 scripted sign-ups (5 per hour per address, or via visitors' browsers through the content-type issue) fill the capacity; real new clients then get no accountant. Never-confirmed accounts also stay forever and appear in the accountant's client list.",
+    "fix": "Assign the accountant when the e-mail is confirmed (or count only confirmed clients for capacity), and retire accounts that stay unconfirmed for some days."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/admin.ts setStaffAccess / POST /admin/users/:id/disable (404 for role client) and PATCH /admin/clients/:id lifecycle 'megszunt'; auth/middleware.ts checks only users.status",
+    "what": "There is no way to block a client account from the panel. /admin/users/:id/disable refuses clients, and a client set to 'megszunt' keeps signing in with full write access (uploads, messages, requests, callbacks), because restricted mode only covers 'bekotes_alatt'. An abusive account (see the upload issues) can only be stopped by hand in the database.",
+    "fix": "Add an audited admin action to disable / re-enable a client (users.status = 'disabled' + revoke all sessions). For lifecycle 'megszunt' make /client/* read-only (dossier, export) and refuse writes with a reason."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "appok-1:/srv/kezjegy/_regi/pg_dump_elotte_tulaj1118_20261118_131454.dump, pg_dump_elotte_javito_k3c_20261118_152241.dump, pg_dump_elotte_k3e_20261118_165743.dump, pg_dump_elotte_kek_20261118_184900.dump",
+    "what": "Four pre-deploy database dumps from 11-18 are still plain (file magic PGDMP, mode 600 inside a 700 folder). They hold e-mail addresses, names, addresses, tax numbers, messages, password hashes and the demo outbox. Round 1 made new dumps encrypted (up.sh), but the old ones were left as they are. The data is DEMO plus the owner's two accounts, so the risk is low today, but the files would travel with any copy of _regi.",
+    "fix": "Encrypt the four files with gpg and /srv/kezjegy/.backup_pass like backup.sh does, check the result with pg_restore -l, and ask the owner whether the plain originals may be shredded (house rule: nothing is deleted without him)."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "appok-1: crontab of deploy is empty; /srv/kezjegy/backups (last db_20261118_043315.dump.gpg); system_state backup.last = 2026-11-18 03:33 UTC",
+    "what": "The nightly backup is not scheduled: no cron entry exists, the last regular backup is more than a day old, later dumps exist only because deploys make one. There is no off-site copy, and the gpg passphrase (.backup_pass) and the three data keys sit on the same disk as the backups. STATUS.md lists this as an owner to-do, but the local nightly job needs no decision from him and the owner's live accounts depend on it.",
+    "fix": "Install the cron line from deploy/README.md now (0 3 * * * /bin/bash /srv/kezjegy/deploy/backup.sh >> /srv/kezjegy/backups/backup.log 2>&1) and run restore-proba.sh once. Off-site copy (mentes-kulso.sh) and an offline copy of FILE_ENC_KEY, APP_DATA_KEY, NAV_CRED_KEY and .backup_pass stay with the owner."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "C:/Users/UpgradePC/konyvelo_app/DEMO_BELEPESEK.txt (local PC, plain text)",
+    "what": "A plain copy of the live demo logins is in the project folder on the PC, although the rule is that they exist only on the server. Compared by hash only (nothing printed): all six lines (admin, accountant, three clients, the owner's tulaj@ account) are identical to the current lines in /srv/kezjegy/demo_belepesek.txt and tulaj_demo_belepes.txt, so they are valid. Live runs with STAFF_TOTP_REQUIRED=false (DEMO), so the admin password alone opens the panel, including clients' reset codes in the Demo-postafiók.",
+    "fix": "Move the file out of the project tree (e.g. to a _regi folder outside kod and outside anything that gets zipped or uploaded) and point the owner to the ssh command in STATUS.md. Rotating the seeded demo passwords afterwards is sensible, but only with the owner's consent and without touching alex@ and tulaj@."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/android/app/src/main/AndroidManifest.xml (android:allowBackup=\"true\"); C:/Users/UpgradePC/konyvelo_app/kod/app/app.config.ts has no allowBackup setting",
+    "what": "The Android app allows system backup of its data. The refresh token is in expo-secure-store (keystore-bound, so a restored copy is unusable and can cause restore errors), and other app data would go into device / cloud backups. For an app that handles ID photos and tax data this should be off.",
+    "fix": "Set android.allowBackup: false in app.config.ts (or backup rules that exclude the secure-store preferences), run expo prebuild and build the next APK."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/elofizetes/eredmeny.tsx (reads e / eredmeny and t from the URL)",
+    "what": "The payment result screen shows 'Sikeres tranzakció' with the tick and a transaction id purely from URL parameters. The backend checks SimplePay's signature on /payments/simplepay/back, but the app route itself opens without it: kezjegy://elofizetes/eredmeny?e=SUCCESS&t=123 or the same web path shows a successful payment that never happened. Nothing changes on the server; it is a spoofable screen.",
+    "fix": "Show the success state only when the subscription query says active (or the transaction is FINISHED on the server); until then show 'Ellenőrizzük a fizetést'. Take the transaction id from the API, not from the URL."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/deploy/docker-compose.yml (user ${KEZJEGY_UID:-1001}:${KEZJEGY_GID:-1001} for kezjegy-api, kezjegy-worker, kezjegy-web)",
+    "what": "The containers run with the uid of the host user deploy, who has password-less sudo and is in the docker group. The containers are otherwise well locked down (read-only, cap_drop ALL, no-new-privileges), but a breakout or a write through the mounted data folder would act as a root-equivalent host account. No pids limit is set.",
+    "fix": "Use a dedicated unprivileged uid/gid (e.g. 10001) that owns /srv/kezjegy/data/files and the web folders, and add pids_limit to the services."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/auth.ts POST /auth/register (409 'Ezzel az e-mail-címmel már van fiókod')",
+    "what": "Sign-up tells whether an address already has an account (login and forgot-password answer uniformly). Limited to 5 tries per hour per address, so it is slow, but it gives the list of targets for the reset-code guessing.",
+    "fix": "Answer sign-up the same way for an existing address and send that address a 'you already have an account' mail instead; or accept the trade-off in SPEC §4 explicitly."
+   }
+  ],
+  "checked": [
+   "Method: code review of kod/backend, deploy, nav-kliens, app and panel; read-only checks on appok-1 over ssh; unauthenticated probes of the three live hosts; logged-in attacks only on the LOCAL real backend build (in-memory PGlite + demo seed). Probe scripts: D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/sec2/sec2.mjs, D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/sec2/sec2b.mjs, D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/sec2/sec2c.mjs, D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/sec2/sec2d.mjs. No password was typed on the live host, nothing was deployed or changed (two read-only SQL files of mine were moved from /tmp to /srv/kezjegy/_regi/kor2_biztonsag_q*.sql).",
+   "Gardoko health 200 before and after; all kezjegy and appok containers up; the owner's alex@ and tulaj@ accounts present and active (read-only check).",
+   "Deployed build = local build: app entry bundle and panel index bundle names match live; all 76 backend source files on the server have the same sha256 as local; API and worker containers run the latest image.",
+   "Role isolation (local, 22 requests): client, accountant, csapat and admin tokens get 404 on each other's route groups (/acc, /admin, /team, /client). OK.",
+   "Client-to-client IDOR (local): documents, file link and download, delete, new version, tax period read / mark-paid / unmark, NAV invoice, requests complete / cancel, callbacks, sessions, GDPR export, chat attachments, foreign documentId / fileId in bodies – all 404 or 400. Own KYC and NAV XML files are never handed back to the client; accountant-only documents stay hidden (detail, file link, dossier, notifications, request completion). OK.",
+   "Accountant-to-accountant IDOR (local): a second accountant created through the admin invite got 404 on 35 routes against another accountant's client (card, KYC, tax id reveal, dossier, documents, bulk status, tax approve / reopen / filed, NAV credentials, notes, revenue, messages, attachments, callbacks); CSV export, audit and request lists came back empty; a deactivated accountant's token died at once. OK.",
+   "csapat limits (local): no document or KYC files, no thread of an active client, client card with masked phone and no tax id; onboarding threads readable as designed. OK.",
+   "Signed file links (local): bound to file, user, expiry and session; reuse for another file / user / later expiry refused; dead after logout and after 5 minutes; download carries CSP sandbox, nosniff, no-store. OK.",
+   "Tokens and sessions (local): tampered role claim, alg none and wrong key refused; access token 10 min; refresh rotation, reuse after the 60 s grace revokes the family; logout kills access and refresh at once; web refresh cookie is __Host-kj_rt, HttpOnly, Secure, SameSite=Strict, Path=/, no Domain; cookie refresh needs X-Kezjegy; mfa token is not an access token and is single use; TOTP code replay and recovery code reuse refused. OK.",
+   "Password reset (local): same answer for unknown address, 5 guesses per code, single use, sessions revoked, old password dead, 2FA survives a reset. The distributed guessing budget and the 2FA lock-out are reported as issues.",
+   "Login throttling (local): 429 after 10 tries from one address; with the account lock on, the owner still signs in from a known address (password-only accounts). OK.",
+   "Staff 2FA enforcement (local, STAFF_TOTP_REQUIRED=true): staff without a second factor get 403 on every /acc, /admin, /team, /files and /me/notifications route and cannot mint file links; /me and the 2FA setup stay open; mandatory 2FA cannot be switched off. OK.",
+   "Restricted mode before activation (local): dossier, tax periods, NAV invoices, revenue and deadlines answer 403 locked_until_active; path tricks (trailing slash, double slash, percent-encoding, case, dot segments) never return data; unconfirmed e-mail cannot write on /client/*. The /me/consents gap is reported.",
+   "Upload validation (local): HTML named .pdf, SVG, EXE, empty file refused; PNG bomb header and 26 MB file get 413; 2 MB JSON body 413; traversal file name stored as a clean display name under <clientId>/<yyyy>/<mm>/<uuid>.kjf; all 106 stored blobs are KJF1 ciphertext with no JFIF or %PDF in the clear. OK.",
+   "SimplePay IPN (local): bad or missing signature 400, body changed after signing 400, unknown order acknowledged without effect, replayed FINISHED IPN changes no subscription, bad-signature flood throttled (429); DEMO pay page is 404 for unknown orders and order references are random (50 bits). OK.",
+   "Encryption at rest verified on live: 463 files on disk all start with KJF1, modes 600 / 700, no stray plaintext or temp files; in the DB all 10 NAV credential rows, 8 TOTP secrets, 8 phone numbers, 17 tax ids, 12 KYC records and 6 callback phones carry the KJD1 header; 21 password hashes are argon2id; refresh tokens and e-mail codes are stored as 64-character hashes; no TAJ / mother's name keys in business_registrations.",
+   "Live database posture: API and worker connect as kezjegy_app (no superuser, no bypass RLS); audit_log grants are INSERT + SELECT only with append-only and no-truncate triggers; 799 audit rows contain no e-mail addresses; Postgres is only on the internal Docker network with scram auth.",
+   "Live exposure: only 22, 80 and 443 listen (ufw active, sshd key-only, no root login, fail2ban and unattended-upgrades active); 5432 / 8080 / 8081 / 2019 / 3000 time out from outside; only appok-caddy-1 publishes ports; no docker.sock mounts; kezjegy and Gardoko networks are separate (the shared Caddy is the only bridge); containers are read-only, cap_drop ALL, no-new-privileges, not privileged.",
+   "Live headers and TLS: HSTS, nosniff, Referrer-Policy no-referrer, X-Frame-Options DENY, Permissions-Policy and CSP on app and panel; API answers Cache-Control no-store and no CORS headers (preflight 404); TLS 1.1 refused, 1.2 and 1.3 work; HTTP redirects to HTTPS; spoofed X-Forwarded-For / X-Real-IP / Forwarded do not change the rate-limit key (checked through the request log, Caddy 2.11.9).",
+   "Live unauthenticated API: /client, /acc, /admin, /team, /me and /files answer 401; garbage signed link 404; alg-none and bogus tokens 401; refresh without header 403; IPN with bad or no signature 400; simplepay/back always redirects to the app host (no open redirect); dot-files, .env, traversal and /__helyi paths return 404 or the SPA shell; no source maps, mock code, demo addresses or keys in the built bundles.",
+   "Secrets: none in the repo (scan), in the API image (env names, history, file search) or in container logs (only hashed IPs and templates); /srv/kezjegy/.env, .env.db, .backup_pass and the demo login files are mode 600; server-side source tree has no secrets; kezjegy_kulcsok.ps1 sends values over ssh stdin only.",
+   "Dependency audit (npm audit): backend, nav-kliens, ado-motor, jogi, panel – 0 vulnerabilities in production dependencies (backend 4 moderate in dev tooling only); app – 40 moderate, all chained from one minimatch advisory in Expo build tooling, none high or critical.",
+   "NAV client: DOCTYPE / ENTITY rejected before XML parsing, fixed HTTPS endpoints, environment must match the server's NAV_MODE, placeholder software id refused for prod. Front-ends: no innerHTML / eval sinks, links only http(s), native refresh token in expo-secure-store, web token in memory only.",
+   "Guide images (order 9): looked at 5 of the published meghatalmazás images (03, 08, 10, 15, 16 @2x) – names, tax ids, organisation and reference numbers are blurred; all 32 live meghatalmazás images are byte-identical to the local ones; the unblurred NAV source PDF and the _forras / _nyers folders are not published (404)."
+  ]
+ },
+ "kör2:adó-és-nyelv": {
+  "issues": [
+   {
+    "severity": "blocker",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/tax.ts (recalcYear skips approved quarters; computeYear feeds no approved sums) + C:/Users/UpgradePC/konyvelo_app/kod/ado-motor/src/engine/year.ts (priorBase / priorSzja are always the engine's own recomputed values)",
+    "what": "Quarter boundary: revenue that lands in an already approved quarter silently vanishes from every payable (or is charged twice in the opposite direction). Reproduced on the local harness with the real backend: (1) Réka, Q3 approved and paid: moving her 1 840 000 Ft item from 2026-10-31 to 2026-09-30 (the designed 'írd át a kivonat szerinti napra' flow) drops the Q4 estimate from 407 874 to 352 674 Ft while Q3 stays 492 054 Ft, so 55 200 Ft SZJA-előleg is never requested. (2) Kata: adding 1 000 000 Ft received 2026-09-20 changes nothing (Q3 stays 510 471, Q4 stays 392 661), so 82 500 Ft SZJA-előleg is missing. No warning for the accountant in either case. The same applies to TB/szocho bases and to manual overrides at approval, which are not carried into the next quarter. NAV 100. füzet 4. and 6.1: the cumulative amount is reduced by what was actually taken into account in earlier quarters, so the shortfall belongs in the next quarter (or the earlier quarter must be reopened / self-revised). The demo's own timeline makes this the normal case: Q3 letter dated 5 Oct, September bank statement requested for 10 Oct.",
+    "fix": "For every approved (and especially filed) quarter pass the actually approved base sum and SZJA advance to the engine as the prior sums (generalise priorOverrides to per-quarter 'actuals'), so the next open quarter picks up the difference. In addition, when the recomputed result of an approved quarter differs from its approved amounts, raise an accountant warning/flag ('jóváhagyott negyedév adata változott: nyisd újra vagy önellenőrzés'). Add tests for both directions (move into / out of an approved quarter)."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts:488 (BUSINESS_ACTIVITIES key 'foto', costClass 'altalanos'; copies in app/panel/backend _shared) vs C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/bekotes/adatok.tsx:223",
+    "what": "Wrong cost ratio for photographers on the new-business path. Szja tv. 53. § (2) i) lists fényképészet (ÖVTJ'24 7420) among the 80% activities (checked on njt.jog.gov.hu), and the existing-business questionnaire itself lists 'fényképész' under the 80% option. The new-business list marks 'Fotózás, képszerkesztés' as general, so the demo starter Tóth Levente is told 'A tevékenységed alapján a költséghányadod várhatóan 45%' and gets a 45% tax profile (verified on the local harness: cost_ratio 45).",
+    "fix": "Set 'foto' to 'lista80' (or 'ellenorizendo' if képszerkesztés alone is doubtful). While there, [KÖNYVELŐ] should review the 'ellenorizendo' rows that the same list names explicitly: szakipar and festés/burkolás (ÖVTJ 43), kertgondozás (8130), közúti áruszállítás (4941), kézműves termék (feldolgozóipar 10–32), hobbiállat-gondozás (9609xx)."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/tax.ts:101 (ensurePeriods creates Q1–Q4 + HIPA-1 for the whole year) and C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/flags.ts:78–96 (clientDeadlines filters only by clients.created_at)",
+    "what": "False 'lejárt' tax deadlines for quarters before the business existed (new-business path). Local harness: a client whose account was created on 5 Oct and whose business started on 18 Nov gets 'III. negyedév: TB-járulék, szocho, SZJA-előleg – lejárt' and 'III. negyedév: bevallás – lejárt' (due 2026-10-12) in /client/deadlines, and the accountant's client list shows it as the next deadline with daysLeft −38 (also feeds the Határidő-figyelő 'Lemaradás'). The engine correctly returns only Q4 (145 744 Ft, matches hand calculation), but period rows 2026-Q1…Q3 and 2026-HIPA-1 exist with past due dates. HIPA-1 is also wrong by law for a first-year starter (Htv. 41. § (4) b): no advance in the first advance period).",
+    "fix": "Skip (do not create, or hide) quarters that end before the tax profile's atalanyFrom / evSince and the first-year HIPA advance; in clientDeadlines compare with the business start as well as with the client's sign-up date. Add a test with sign-up before a quarter's due date and business start after it."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/registration.ts:386–398 (finishRegistration: year = year of 'today') and C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/client.ts:237–249",
+    "what": "Year boundary: the tax profile is created only for the year in which the team records the adószám, not for the year the business started. Local harness with the clock at 2027-01-04: registration filed and registered on 2026-12-29 → only a 2027 profile with atalanyFrom null; GET /acc/clients/:id/tax-periods?year=2026 returns no items. So the 2026-Q4 period (2658 return and, for a főfoglalkozású, the minimum járulék for the December days, due 2027-01-12), the 26SZJA return and the 2026 HIPA return never appear, and 2027 is treated as a full year for a business we handle from day one. Year end is six weeks away.",
+    "fix": "In finishRegistration create the profile and periods for the year of evSince/registeredOn (atalanyFrom = evSince) and, if different, for the current year too; recalc both years. Add a test for registeredOn in December with recording in January."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts:220, 301, 707 (explainers 'Mennyi bevételre számítasz?', 'Alanyi ÁFA-mentesség', guide step 'Adózási adatok – ÁFA'); C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/bekotes/vallalkozas/adatlap.tsx:355–362",
+    "what": "The new-business copy tells every starter the alanyi ÁFA-mentesség limit is 'évi 20 millió forint (2026)' and never says it is time-proportional in the starting year (Áfa tv. 189. §), although this is exactly the audience it applies to. For a start on 2026-11-19 the real 2026 limit is 2 356 164 Ft. The backend already computes hints.afaLimitHuf and hints.atalanyCapHuf (seen in the API response), but no app screen uses them; only the home meter after activation shows the prorated value. The átalány cap sentence does mention proration, the ÁFA one does not.",
+    "fix": "Show the prorated amounts on the adatlap revenue step and in the guide's ÁFA step, e.g. 'Az indulásod évében a határ időarányos: idén kb. {afaLimit} Ft, jövőre a teljes összeg', and add the same half-sentence to the two explainers. Use the start year's rules in computeHints (it uses RULES_2026 and the non-retail cap even for a 2027 date or a retail activity)."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/jobs.ts:101–112 (limit warnings) and C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/flags.ts:35",
+    "what": "Limit meters alert only once a year at ÁFA ≥ 80%. Nothing is sent when the ÁFA limit is actually exceeded (the invoice that crosses it must already carry ÁFA), when the projection goes over, or for the átalányadó revenue cap at 80% / over (which ends átalányadózás retroactively for the whole year, NAV 100. füzet 5.). The engine produces afa_over, afa_projected_over, atalany_cap_80 and atalany_cap_over, but no notification uses them, and the panel flag 'hatar_kozel' is the same before and after crossing. The contract (megbízási szerződés 2.1) promises 'jelezzük, ha közeledsz egy fontos határhoz (… az átalányadózás felső határához)'.",
+    "fix": "notifyOnce per warning code and year to client and accountant (afa_over and atalany_cap_over immediately, with their own texts), and add a separate 'hatar_atlepve' flag/filter in the panel."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/lib/tevekenyseg.ts:48–52; C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/registration.ts:204 and :396; content key vallalkozas.hint.jarulek_fo",
+    "what": "The minimum-járulék hint always uses the minimálbér: 'havonta legalább 101 682 Ft'. For activities that need a qualification (the app's own examples: fodrász, kozmetikus, autószerelő; NAV 100. füzet names the kozmetikus) the base is the garantált bérminimum, i.e. 373 200 × 31,5% = 117 558 Ft/month. The new-business tax profile is also created with guaranteedMinimum false, so the first estimates are 15 876 Ft/month too low until the accountant flips it (the engine does warn the accountant).",
+    "fix": "When the main activity has kepesitesKellhet, show both numbers ('ha a munkádhoz szakképzettség kell: 117 558 Ft') and pre-set guaranteedMinimum as a suggestion for the accountant."
+   },
+   {
+    "severity": "minor",
+    "area": "ado-motor",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/ado-motor/src/rules/2027.ts; C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/tax.ts:110; C:/Users/UpgradePC/konyvelo_app/kod/backend/src/jobs.ts:190–216; C:/Users/UpgradePC/konyvelo_app/kod/panel/src/pages/acc/ugyfel/Ado.tsx:931, 936",
+    "what": "2027 readiness of the form number and the new-year job. RULES_2027 inherits jarulekQuarterlyForm '2658', so deadlinesFor(2027) prints 'Járulékbevallás (2658)' for 2027 quarters; ensurePeriods and the panel texts hard-code 2658 as well (the 2027 form will be 2758). jobNewYear calls ensurePeriods without the status, so a nyugdíjas gets a 2658 filing form until the next recalculation, and it does not copy 'allowances', so the 'kedvezmény nincs benne' warning disappears on 1 January.",
+    "fix": "Derive the form from the year (two-digit year + '58') in the rules and use it in ensurePeriods and the panel; pass p.status in jobNewYear and copy allowances."
+   },
+   {
+    "severity": "minor",
+    "area": "ado-motor",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/ado-motor/src/rules/holidays.ts (MOVED_WORKING_DAYS 2026-12-12 and the comment 'decree not found')",
+    "what": "2026-12-12 is still treated as a working Saturday. The 2026. évi LXXII. törvény (promulgated 2026-11-13) made 24 December a public holiday, and according to the bill's reasoning the 12 December working day is dropped with it. No tax deadline falls on that day, so nothing shown today is wrong.",
+    "fix": "Confirm on njt.jog.gov.hu and remove 2026-12-12 from the moved working days; update the comment and the calendar test."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/acc.ts:120–134 (accMeters / third())",
+    "what": "The third-person rewrite of meter sentences for the panel is incomplete. /\\bÁtlépted\\b/ never matches because JS \\b is ASCII-only and 'Á' is not a word character, so the accountant sees 'Átlépted az átalányadózás bevételi határát (…)'. Other outputs are left in mixed person: 'Az idei jövedelmedből … Amíg ezt el nem éred, SZJA-előleget sem fizet.', 'Az indulásod évében …', '… ÁFÁ-t kell felszámolnod. Beszéljetek még ma.' (checked by running the replacements).",
+    "fix": "Let the engine return an accountant variant of sentence/detail (audience parameter), or replace with (?<![\\p{L}])…(?![\\p{L}]) patterns under the u flag and cover jövedelmedből, éred, indulásod, felszámolnod."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/bekotes/index.tsx:62–65; C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts:176; C:/Users/UpgradePC/konyvelo_app/kod/app/src/lib/tevekenyseg.ts:52; hataridok screen",
+    "what": "Unnatural or misleading Hungarian in prominent places. (1) Hero title 'Jelentsd be Bencét a NAV-nál.' reads as reporting Bence to the tax office. (2) Button voice is mixed: 'Megmutatod, hogyan?' and 'Készítsd elő' stand among first-person buttons ('Kitöltöm', 'Lefotózom', 'Megnyitom az útmutatót'). (3) 'Nyugdíj mellett akkor vagy, ha már saját jogú nyugdíjas vagy.' (4) 'Negyedévente egyben utalod.' contradicts the 'három külön utalás' wording of the payment screen. (5) 'kb. 392 661 Ft' on Határidők: 'kb.' with a forint-exact amount. (6) 'Havi 20 000 Ft' is hard-coded on the előfizetés card instead of the brand price.",
+    "fix": "(1) 'Hatalmazd meg Bencét a NAV-nál.' (2) 'Megnézem, hogyan' / 'Előkészítem'. (3) 'Nyugdíjasnak akkor számítasz, ha már saját jogú nyugdíjas vagy.' (4) 'Negyedévente fizeted.' (5) round the estimate to thousands or drop 'kb.' (6) use brand.priceHufMonthlyGross."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/uzenetek.tsx:28; app/src/app/keresek/uj.tsx:22; app/src/app/bekotes/adatok.tsx:195; app/src/lib/validators.ts:29; C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts:113, 282, 453; C:/Users/UpgradePC/konyvelo_app/kod/jogi/app_szovegek.json (fizetes.levonas_sikertelen, uj_vallalkozas.nem_taroljuk); C:/Users/UpgradePC/konyvelo_app/kod/media/bekotes.vtt",
+    "what": "Inconsistent terms for the same thing. 'Köztartozás-mentes igazolás' (Üzenetek quick button) vs 'Köztartozásmentességi igazolás' (Kérések, panel) vs 'köztartozásmentes igazolás' (megbízási szerződés 2.1). 'adókártya' (form hints, validator, video) vs 'adóigazolvány (régi nevén adókártya)' (explainer, Készítsd elő list). 'anyád neve' (explainers, prepare list, video) vs 'édesanyád' (azonosítás form, app_szovegek). Retry promise: 'Holnap újra próbáljuk' vs 'Pár nap múlva újra megpróbáljuk' (notification) vs '1, 3 és 7 nap múlva' (ÁSZF 6.5). The bekötés video opens with 'Köszönjük, hogy telepítetted az alkalmazásunkat!' and also plays in the web app, where nothing was installed.",
+    "fix": "Pick one form each ('Köztartozásmentességi igazolás', 'adóigazolvány', 'édesanyád') and use it everywhere; align the retry sentence with the real schedule; change the video line to 'Köszönjük, hogy minket választottál!' at the next render."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/flags.ts:113",
+    "what": "The yearly HIPA item is always titled 'Iparűzési adó {év}: éves bevallás és különbözet (a könyvelőd adja be)'. For the sávos method Htv. 39/A. § (8) requires a return only if the year's tax exceeds the advance paid (or a refund is claimed); the engine's own title says so ('különbözet és bevallás, ha magasabb sávba kerültél') but is overridden here.",
+    "fix": "Use the engine's title for 'savos' (plus the '(a könyvelőd adja be, ha kell)' suffix) and keep the unconditional wording for 'altalanos' and for the first year."
+   }
+  ],
+  "checked": [
+   "Official 2026 sources looked up independently: NAV 100. sz. információs füzet (2026-02-20, full text extracted from the PDF), NAV 'Így adózunk jövőre', NAV 'Csökken a szocho alapja…', Htv. 39/A. § and 41. § (4) on njt.jog.gov.hu, Szja tv. 53. § (2) on njt.jog.gov.hu, 2026. évi LXXII. tv. (24 December), the 2027 chamber take-over of the EV register. All values in C:/Users/UpgradePC/konyvelo_app/kod/ado-motor/src/rules/2026.ts agree: 322 800 / 373 200 Ft, 45/80/90%, 1 936 800 Ft not prorated, 15% / 18,5% / 13%, szocho minimum 100%, quarterly 2658 by the 12th, caps 38 736 000 / 193 680 000 Ft, ÁFA limit 20 M (22 M in 2027), HIPA bands 2,5 / 6 / 8,5 M at 12 / 18 / 25 M (120 M retail).",
+   "12 hand-computed cases compared with the built engine, all equal to the forint: main job 45% 800e/month (305 046 / 410 526 / 503 046 / 503 046); main job 1,5 M/month above the minimum (385 776 / 1 015 362 / 1 150 875 / 1 150 875); side job (0 / 20 088 / 460 350 / 460 350); pensioner (0 / 0 / 80 730 / 123 750); 80% + garantált bérminimum (352 674 ×3, 422 154); 90% retail with ÁFA limit exceeded; adómentes rész crossing with receipts on 03-31 / 04-01 / 06-30 / 07-01; year boundary (received vs delivery date); start on 03-16 (31 850 + 22 381, prorated limits 30 882 674 / 15 945 205, HIPA 39 863); szünetelés 07-20…09-20; running quarter on 11-19; HIPA band edges at 12 M / 18 M / 25 M with 2% and 1,6%.",
+   "NAV booklet worked examples reproduced by the engine: cumulative bases 677 880 / 1 646 280 / 2 291 880 / 3 217 240 with táppénz and szünetelés, göngyölt base 83 460 and 40 440, SZJA 18 855 / 371 250 / 286 980.",
+   "4 000 random cases (status, ratio, guaranteed minimum, mid-year start, kieső and szünetelés periods, random revenue) against my own independent reference implementation: 0 differences. Scripts: D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/k2ado/esetek.mjs and D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/k2ado/fuzz.mjs",
+   "Amounts the app shows, on the local harness with the demo seed (cookie login through /__helyi/belep, no password typed, nothing on the live host): Kata Q4 estimate 392 661 Ft with the full 'Hogyan jött ki?' breakdown, Réka Q3 492 054 Ft (207 126 + 145 548 + 139 380) and Q4 407 874 Ft, Péter's fixture values 303 972 / 232 731 Ft, new starter from 2026-11-18: 145 744 Ft (13 November days → base 139 880 + 322 800). All equal my hand calculation; the accountant panel's tax page shows the same numbers.",
+   "Limit meters: ÁFA by delivery date vs revenue by receipt date (Kata 8 460 000 vs 8 002 000 Ft), 80% warning (Réka 81,6%), projection text (Kata 9,6 M), prorated ÁFA limit and átalány cap for a mid-year starter (2 410 959 / 4 669 545 Ft), adómentes rész reached month.",
+   "Deadlines: 2026-04-13, 2026-07-13, 2026-10-12, 2027-01-12; SZJA 2027-05-20; HIPA advance 2026-06-01 and return 2027-05-31; weekdays, Easter and Pentecost dates, the 'még 54 / 182 / 193 nap' counters, 7/3/1-day reminders in jobs.ts.",
+   "NAV collection accounts and IBANs (mod-97 = 1 for SZJA, TB, szocho), adószám and adóazonosító jel check digits, közlemény = adószám.",
+   "Scenario tests on the local harness with the real backend (in-memory DB): late revenue in an approved quarter, moving a receipt date across an approved quarter boundary, new-business registration with early sign-up, registration across the year boundary (server clock moved to 2027-01-04). Script files szcen*.mjs in the same scratchpad folder.",
+   "Language: read the extracted user-facing strings of the client app (1 461), shared onboarding/guide texts (530), backend messages and notification/e-mail defaults (about 1 000), panel tax pages and labels closely and the rest of the panel more quickly (2 061 in total), the three video caption files, all legal drafts in C:/Users/UpgradePC/konyvelo_app/kod/jogi (aszf, adatkezeles, megbizasi_szerzodes, nav_meghatalmazas, adatfeldolgozoi, pmt_nyilatkozatok, both SimplePay texts, sablonok, app_szovegek.json). No English leftovers in user-facing strings (only log lines). Date suffix rules correct for days 1–31, a/az article helper correct for Roman numerals and amounts, percent suffixes correct.",
+   "ő/ű glyphs: present and rendered in every screenshot I took (app home, 'Hogyan jött ki?', Határidők, onboarding, guide, panel tax page), in the annotated guide images (07/08/09 of vallalkozas_bejelentes) and in the text layer of the generated PDFs (megbizasi_szerzodes_elfogadva, aszf, nav_meghatalmazas). I did not re-render the PDFs to images (no pdftoppm on this machine).",
+   "Legal texts vs the 11-18 orders: visszahívás replaces időpont everywhere, TAJ and anyja neve not stored for the bejelentés, csapat role described, new-business path and fee start, 2027 chamber register note. Tax statements in them (2658, 26SZJA by 2027-05-20, 5-year elévülés, 8-year Pmt. retention) are correct.",
+   "Live host, public only: Gardoko health https://45-94-65-74.sslip.io/api/v1/health 200 before and after my work; API, app and panel 200; live app and panel bundle file names equal the local dist builds; live FAQ and /config read (demo: true, DEMO labelled). No login, no deploy, no DB change; my local harnesses on ports 8843 and 8845–8848 are stopped.",
+   "Not covered: 2027 minimum wage is not yet known (rules marked draft, engine warns); admin-only panel strings were skimmed rather than read line by line; the exact option labels of the NAV Vállalkozói Ügysegéd screens could not be checked without a NAV login (those guide images are marked 'Illusztráció')."
+  ]
+ },
+ "kör2:tulaj-kérések": {
+  "issues": [
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/apk/Kezjegy-1.0.4-test.apk (built 2026-11-18 17:07); kod/app/app.config.ts version 1.0.4",
+    "what": "Owner colour order (11-18 17:50, #1428DB) is NOT in the Android app he installs. The newest APK predates the decision: its assets/index.android.bundle still contains #17284A and has zero #1428DB. All 11-19 round-1 app fixes (new-business dead end, 2FA re-auth, Számlaszámok, video card) are web-only as well. Web footer and APK both say 1.0.4, so the two cannot be told apart.",
+    "fix": "Bump to 1.0.5 (versionCode 6), build a new APK with apk/build-apk.sh from the current tree (android/ is already regenerated), verify the bundle contains #1428DB and not #17284A, update apk/README.md and STATUS.md."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "kod/media/bekotes.mp4 (first ~4 s and last ~3 s), kod/media/bekotes_poszter.jpg (also the card thumbnail in the app); source video/bekotes/remotion/src/elemek.tsx:290; live at /media/ (same size as local). Screenshot kod/_qa/k2_2_tulaj_g04_video_lejatszo.png",
+    "what": "The onboarding video and its poster show the product wordmark \"Kézjegy\" (opening frame, closing frame, poster). Owner order 6 / SPEC §26.7.4: no product name in the video. It also breaks \"name in one config value\": after a rename the video and poster still show the working name until re-rendered (STATUS.md admits this). Narration and VTT are clean; the two guide videos and their posters are clean.",
+    "fix": "Remove the wordmark from the first/last scene and the poster (visual-only re-render with the existing audio, no TTS cost), run videok-json.mjs and feltolt.sh --media, then drop the rename-needs-re-render note from STATUS."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "kod/media/vallalkozas_bejelentes.mp4 ~0:08–0:14 (\"Készítsd elő\" scene); source video/vallalkozas_bejelentes/eszkoz/render.py:814; versus kod/app/src/app/bekotes/azonositas.tsx:267 and backend POST /client/kyc (mothersBirthName)",
+    "what": "The video tags \"Anyád születési neve (a születési helyeddel és időddel együtt)\" with \"Mi nem tároljuk\". The identification step asks for and stores exactly these (anyja születési neve, születési hely/idő, Pmt.). The owner's order says \"we do not store TAJ or anyja neve\"; the in-app list is correctly nuanced (\"A bejelentéshez nem kérjük el. Az azonosításnál … kell\"), the video makes a false data-handling claim.",
+    "fix": "Keep \"Mi nem tároljuk\" only on the TAJ row; on the anyja neve row show \"A bejelentéshez nem kérjük el\" (visual re-render, same narration). Tell the owner in STATUS that Pmt. identification stores the mother's name, so \"never stored\" holds only for TAJ."
+   },
+   {
+    "severity": "minor",
+    "area": "panel",
+    "where": "kod/panel/src/pages/acc/Beallitasok.tsx:234",
+    "what": "Product name hard-coded in UI text: the session list labels native sessions 'Kézjegy app' instead of using brand.json (the client app does it right in app/src/app/fiok/biztonsag.tsx).",
+    "fix": "Use brand.name from _shared/brand.json."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "backend/src/lib/pdf.ts:42 and backend/src/files/upload.ts:281 (PDF Producer 'Kezjegy'); backend/src/lib/ics.ts:23 (PRODID //Kezjegy//, UID @kezjegy); backend/src/payments/simplepay.ts:6 (SDK_VERSION 'Kezjegy_Node_1.0'); backend/src/content/defaults.hu.json:91-97 and the e-mail code subject (fixed article \"a {brand}\"); kod/app/src/app/fiok/index.tsx:112 (\"Nekem a ${brand.name} intézi…\")",
+    "what": "\"Name in one config value\" is only half done: the name is baked into PDF metadata, calendar files and the SimplePay SDK string, and several e-mail/app sentences use a fixed article \"a\" before the brand, which becomes wrong if the final name starts with a vowel.",
+    "fix": "Take these from brand.json (name / ids) and use the existing huArticle() helper (backend/src/lib/nevelo.ts) wherever an article precedes the brand."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "backend/src/lib/pdf.ts (markdownToPdf) versus kod/jogi/src/pdf.ts; screenshots kod/_qa/k2_2_tulaj_pdf_kata_megbizasi_szerzodes.png, …_pdf_kata_nav_meghatalmazas.png, …_pdf_kata_aszf.png; kod/jogi/pdf_minta/*.pdf",
+    "what": "The PDFs a client really gets from the app (megbízási szerződés attachment and dossier copy, ÁSZF, adatkezelés, NAV-meghatalmazás via /client/legal-pdf) are plain black Geist pages with no blue band and no brand header. The approved-looking blue-band layout exists only in the jogi sample generator, so the \"PDF palette update\" is not visible in the product. pdf_minta is also stale (megbizasi_szerzodes.md and app_szovegek changed after 11-18 18:24) and prints \"a(z) Kézjegy\".",
+    "fix": "Use the jogi typesetter (or port its header band, blue section titles and TERVEZET label) in the backend PDF path; regenerate pdf_minta with the article resolved."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "backend/src/routes/public.ts:116 (DEMO pay page, screenshot kod/_qa/k2_2_tulaj_x01_demo_fizetes.png); kod/app/src/app/fiok/ketlepcsos.tsx:153; kod/panel/src/styles/app.css:408",
+    "what": "\"Geist only\" is not kept on the DEMO payment page: it renders in the system font (Segoe UI / Arial), because its CSP is default-src 'none' and no font is embedded. The 2FA secret is shown in a system monospace font in app and panel. Everything else measured in the rendered DOM is Geist.",
+    "fix": "Embed Geist (data: URI plus font-src data:) on the pay page; show the 2FA secret in Geist with tabular figures, or record the exception in SPEC §2.5."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "backend/src/services/onboarding.ts:226-227 (milestone nav_bejelentve); screenshots kod/_qa/k2_2_tulaj_c01_peter_fooldal.png, …_g06_van_fooldal.png",
+    "what": "\"Hol tartunk\" still says \"{Bence} bejelenti magát a NAV-nál könyvelődként – Általában 1–2 munkanap\" even when the client gave the authorisation himself in ONYA (the default method per the owner's order). It contradicts the step row \"Beküldted, Bence ellenőrzi a NAV-nál\" and the previous milestone \"Add meg a meghatalmazást\".",
+    "fix": "For method onya_ugyfel use e.g. \"{fn} ellenőrzi a meghatalmazásodat a NAV-nál\"; keep the old wording only for onya_konyvelo / alairt_pdf."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/app/src/app/bekotes/index.tsx (step list, STEP explainer map); kod/app/src/app/bekotes/azonositas.tsx (\"Az adataid\" block)",
+    "what": "Owner order 5 (explainer on EVERY onboarding item) is not complete: the \"Fiók\" step row has no \"Mi ez?\" link, and the identification data fields (születési név, anyja születési neve, okmány száma, érvényes eddig) have no \"Hol találom?\" although all other forms do.",
+    "fix": "Add a fiok explainer and field explainers (where each item is printed on the ID card) to ONBOARDING_EXPLAINERS and wire them in."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/app/src/app/bekotes/meghatalmazas.tsx (state \"Beküldted\"), kod/app/src/app/bekotes/azonositas.tsx (states \"Azonosítva\" / under review); screenshots kod/_qa/k2_2_tulaj_c05_peter_meghatalmazas.png, …_f06_peter_azonositas_360.png",
+    "what": "\"Elakadtál? Kérj visszahívást\" is missing in the waiting/done states of these two sub-screens (FUNKCIOK 6: present at every step). It is present on all other onboarding screens, adatlap pages, guide steps, locked sheets, GYIK, Fiók, Üzenetek and the active Főoldal.",
+    "fix": "Render the Elakadtal link in every state of both screens."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "Fresh onboarding client: kod/_qa/k2_2_tulaj_e01_uj_fooldal_elagazas.png, …_g06_van_fooldal.png, …_g02_fotozas_zarolt.png; todoCount in backend/src/services/onboarding.ts versus the band in kod/app/src/app/bekotes/index.tsx",
+    "what": "The numbers disagree on the first screen: the band says \"Még 4 dolog kell tőled\", the Főoldal tab badge shows 5, and the locked-feature sheet says \"Még 6 lépés… Ebből 5 a tiéd\". The server's todoCount counts NAV-meghatalmazás, which the app shows locked (\"Előbb fogadd el a megbízási szerződést\"). SPEC §26.5.2 requires the client's share to equal the band's number.",
+    "fix": "Use one source: either make the meghatalmazas-after-szerzodes lock a server lock (so todoCount excludes it) or compute the band, badge and hint from the same value."
+   },
+   {
+    "severity": "minor",
+    "area": "jogi",
+    "where": "kod/jogi/aszf.md (12 notes), adatkezeles.md (16), megbizasi_szerzodes.md (11), nav_meghatalmazas.md (5); visible in the app at /jogi/aszf and in /client/legal-pdf PDFs",
+    "what": "Internal notes addressed to the owner, lawyer and accountant ([TULAJ: …], [JOGI: …], [KÖNYVELŐ: …]) are shown to clients inside the texts they accept and receive as PDF, for example \"[TULAJ: a határidő munkaórában számolva]\" in the ÁSZF callback section and a \"[JOGI: maradhat-e ez…]\" note in the contract.",
+    "fix": "Strip [JOGI|TULAJ|KÖNYVELŐ: …] notes at render time in backend/src/legal.ts and the jogi PDF (keep them in the source and README); keep only the TERVEZET label and the [CÉGADAT] markers until filled."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/shared/src/bekotes.ts:639 versus utmutato_kepek/vallalkozas_bejelentes/index.json:228-237 (image 03_ugyseged_ugytipus.png); screenshot kod/_qa/k2_2_tulaj_d03_levente_utmutato.png",
+    "what": "In the new-business guide the step text says \"Kattints rá: Egyéni vállalkozói tevékenység bejelentése\", while the marked row in the picture under it says \"Egyéni vállalkozói tevékenység elkezdése (vállalkozói bejelentkezés)\". The client is told to click a label that the picture does not show.",
+    "fix": "Use one wording in the guide template and the image index/caption, then re-run annotate.py, utmutato-kepek.mjs and feltolt.sh --media."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/media/utmutato/vallalkozas_bejelentes/kepek.json (17 of 18 items kind illusztracio); kod/media/vallalkozas_bejelentes.mp4; utmutato_kepek/hianyzik.md",
+    "what": "Owner order 9 (real annotated NAV screenshots) is done for the meghatalmazás guide and video (16/16 real, blurred, with source) but not for the EV bejelentés guide and video: only the login screen is real, every Vállalkozói Ügysegéd screen is a drawn sketch. It is honestly labelled \"Illusztráció / Rajzolt vázlat\" and matches hianyzik.md exactly. Still open, waits for the owner.",
+    "fix": "Keep it at the top of the owner's to-do list in STATUS: either his own screenshots up to the Ellenőrzés screen, or his yes to using frames of the official NAV video; then one re-annotation run and a re-render of the guide video."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/app/src/app/bekotes/azonositas.tsx:35,246-248; backend/src/routes/client.ts:376; screenshot kod/_qa/k2_2_tulaj_d06_levente_azonositas.png",
+    "what": "Needs confirmation, not a proven violation. The round brief says \"no ID-card back side photo\", but the app requires the back of the személyi igazolvány / jogosítvány and the API rejects the KYC without idBack. Only the lakcímkártya back is never asked (no slot in the app, no box in the panel viewer), which is what the owner's original words, FUNKCIOK 5 and SPEC §26.1.9 say.",
+    "fix": "No change if the order meant the lakcímkártya. If the owner also wants the ID card back dropped, make idBack optional in app and API and ask the lawyer (Pmt.)."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "C:/Users/UpgradePC/konyvelo_app/STATUS.md (last written 2026-11-18 17:07)",
+    "what": "The owner's status file contradicts reality: it says the videos are still silent and tells him to top up OpenRouter and run the TTS scripts (all three videos are narrated, hasNarration true, live); it says the deploy is still waiting for up.sh (the live bundles equal the local builds); it does not mention the blue palette; and it presents the 1.0.4 APK as current.",
+    "fix": "Rewrite STATUS.md at the end of this round: palette, narration done, what is live, new APK version, and the still-open owner decisions."
+   },
+   {
+    "severity": "minor",
+    "area": "deploy",
+    "where": "C:/Users/UpgradePC/konyvelo_app/DEMO_BELEPESEK.txt (project root, 576 bytes, 2026-11-18 07:56)",
+    "what": "A local plain-text copy of demo logins with passwords exists (6 rows, including admin@ and the owner's tulaj@ account), although the rule is that they live only in /srv/kezjegy/demo_belepesek.txt. Already listed as an open owner item in kod/deploy/README.md:284. Nothing from it was printed.",
+    "fix": "With the owner's OK, move the file to _regi/ leaving a pointer to the server file, and rotate those demo passwords on the server if they are still valid."
+   }
+  ],
+  "checked": [
+   "Method: static grep of app, panel, backend, shared, jogi, media and video sources, plus 126 screenshots kod/_qa/k2_2_tulaj_*.png, all looked at. Logged-in journeys ran only on the local harness (app/scripts/jav1/harness.mjs on my own ports 8891/8892, stopped afterwards) with seed users and fresh test clients; on the live host only public pages, headers, health and unauthenticated API. No project file changed except the _qa screenshots. No deploy.",
+   "Live equals local: app entry bundle and panel index bundles have identical names, /media video/poster/vtt sizes are identical, /config shows demo:true, Gardoko health 200 before and after, unauthenticated /client, /acc, /admin and /team all 401, security headers present.",
+   "No line/vector icons: no icon library in package.json or imports; every SVG use is an allowed one (QR code, Google logo, signature, wordmark stroke, meter, gradient veil, ground shadow, play triangle); rendered DOM on about 110 app and panel screens has no stray SVG icon; only → ✓ ▶ glyphs occur in text.",
+   "3D icons and avatar: all icon names in app and panel exist in dizajn/C2_modern/assets/ikon3d and same-named files are byte-identical; the avatar is byte-identical to karakter_1_lapos and is used only for the accountant (team and admin get the generic 3D figure).",
+   "No pastel circles: DOM heuristic for round tinted backgrounds behind images found only the avatar disc; quick actions, rows, tab bar and request tiles carry bare 3D objects.",
+   "Geist: computed font-family on every captured app screen is Geist-W### and on every panel screen Geist Variable; backend and jogi PDFs embed Geist; e-mail template uses Geist with fallbacks. Exceptions are reported (DEMO pay page, 2FA secret).",
+   "Palette: no old ink-blue values left in app, panel, backend or jogi sources; live and local login pages, panel, e-mail strip, DEMO pay page and jogi sample PDF are #1428DB. The Android APK is not (reported).",
+   "No video call and no booking: no booking UI in app or panel; /bekotes/idopont redirects to the callback screen, panel /idopontok redirects to /visszahivasok; POST /client/appointments returns 410, slots return enabled:false; only legacy readers and the retired content keys remain; live FAQ (12 items) and legal texts mention booking only as discontinued.",
+   "Callback instead of booking, team may call first: form, open-callback card, modify/cancel, the 24–48 h promise and \"Nem feltétlenül Bence hív elsőként\" verified on onboarding page, sub-screens, Fiók, Üzenetek, GYIK, locked sheets and active Főoldal; panel Visszahívások queue for team/admin and the Vállalkozás-indítás pipeline verified with screenshots.",
+   "New-business path: branch question, Rólad page, hub with the 8-row \"Készítsd elő\" list, adatlap, personalised guide with video card, upload, adószám, team check page; nowhere do app, panel, texts or videos say we file for the client; no mandatory call; the API rejects unknown fields such as taj / mothersBirthName on the registration (400).",
+   "Bottom tab bar is visible on every onboarding screen at 390 and 360 px (Főoldal, locked Dosszié, Fiók, all bekötés sub-screens, guides, visszahívás, GYIK, contract reader); hidden only in the Üzenetek thread as in the approved design.",
+   "Restricted mode enforced by the API on the local backend: tax-periods, dossiers, nav-invoices, revenue, deadlines and certificate requests return 403 locked_until_active with the reason; a kerdes request works (201); subscription start on the new-business path returns 409 step_locked; the team role gets 404 on /acc and /admin. Locked screens and sheets show reason, \"Mi kell még?\" and the callback link.",
+   "Explainers: 35 explainers from /client/explainers all have non-empty Mi ez / Miért kell / Hol találod and no unfilled placeholders; the sheet was opened and screenshotted.",
+   "Videos: all three have an audio track with real signal (mean about -17 to -20 dB) and hasNarration true; VTT texts contain no product name, accountant name, AI or booking wording; the onboarding video starts with the owner's sentence and follows the step outline; the web player has controls, no autoplay, no loop, sound on, and reached readyState 4.",
+   "NAV screenshots: kepek.json kinds match hianyzik.md; real meghatalmazás screenshots looked at (personal data blurred, numbered markers, source line).",
+   "Password login present in app and panel; Google/Apple buttons hidden without keys; SimplePay screen with the two declarations and the info link.",
+   "DEMO labelling: DEMO chip on every app screen, panel DEMO banner, \"DEMO FIZETÉS\" box and red DEMO pay page, \"DEMO DÍJBEKÉRŐ – NEM SZÁMLA\" PDF, MINTA mark on NAV invoices, Demo-postafiók, admin Rendszer page, DEMO hint on the e-mail code screen.",
+   "Product name: jogi texts use {{brand.name}}, content defaults use {brand}, app.config.ts, panel logo, e-mail template, DEMO pay page and nav-kliens read brand.json. Remaining hard-coded places are reported.",
+   "Not checked: the native APK on a device, and whether the three narrations are the same voice by ear (only video/hang.json, one voice for all three, was read)."
+  ]
+ }
+}

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Kézjegy – Hogyan jött ki?</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { overflow: hidden; height: 844px; }
+  .sheet { padding-bottom: 36px; }
+
+  /* írásbeli összeadás: bal oldalt a művelet jele, jobbra táblázatos számok, a vonal alatt az eredmény */
+  .szamitas { margin-top: 14px; }
+  .blokk + .blokk { margin-top: 16px; }
+  .blokk .bcim { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; white-space: nowrap; font-weight: 650; font-size: 15.5px; margin-bottom: 4px; }
+  .blokk .bcim span { font-weight: 400; font-size: 14px; color: var(--halvany); }
+  .s { display: grid; grid-template-columns: 18px 1fr auto; column-gap: 6px; align-items: baseline; padding: 4px 0; font-size: 15.5px; line-height: 1.35; }
+  .s .jel { color: var(--halvany); font-weight: 600; text-align: center; }
+  /* a kulcsok sorai: szöveggel mondjuk ki („ennek 18,5%-a”), mert az × bezáró gombnak, a · felsorolásjelnek látszott */
+  .s .ertek { font-weight: 600; font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; text-align: right; }
+  .s .ertek .ft { font-size: .82em; }
+  .s .magyar { grid-column: 2 / 4; font-size: 13.5px; color: var(--halvany); line-height: 1.4; margin-top: -1px; }
+  .s.osszeg-alatt { border-top: 1.5px solid var(--tinta); margin-top: 4px; padding-top: 8px; }
+  .s.osszeg-alatt .ertek, .s.osszeg-alatt .nev { font-weight: 700; }
+  .s.ado { background: #F2F4F8; border-radius: 6px; padding: 8px 10px 8px 0; margin-top: 4px; }
+  .s.ado + .s.ado { margin-top: 6px; }
+  .s.ado .ertek { font-weight: 700; font-size: 16.5px; }
+
+  .vegosszeg-sor { display: flex; align-items: baseline; justify-content: space-between; margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--hajszal); }
+  .vegosszeg-sor .nev { font-weight: 650; font-size: 16px; }
+  .vegosszeg-sor .ertek { font-weight: 800; font-size: 30px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vegosszeg-sor .ertek .ft { font-size: .5em; font-weight: 600; }
+
+  .lab { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+  .lab .ki { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--halvany); line-height: 1.35; }
+  .lab .arc-kicsi { width: 34px; height: 34px; }
+</style>
+</head>
+<body>
+<script src="kezjegy_utak.js"></script>
+<script src="kozos.js"></script>
+<iframe class="hatter-keret" id="hatter" title="Főoldal a lap mögött" tabindex="-1" aria-hidden="true"></iframe>
+<script>document.getElementById('hatter').src = '03_fooldal.html' + location.search;</script>
+<div class="fuggony"></div>
+
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="cim">
+  <button class="bezar">Bezár</button>
+  <h2 id="cim">Hogyan jött ki a 457&nbsp;380&nbsp;Ft?</h2>
+  <p class="bev">A bevételed 40%-át költségnek veszi a NAV, a többi a jövedelmed. A járulékokat havonta, az SZJA-előleget negyedévente fizeted, ezért kétféle bevételből számolunk.</p>
+
+  <div class="szamitas">
+    <div class="blokk">
+      <div class="bcim">Havonta: TB-járulék és szocho <span>szeptember</span></div>
+      <div class="s"><span class="jel"></span><span class="nev">Szeptemberi bevételed</span><span class="ertek">1&nbsp;020&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s"><span class="jel">−</span><span class="nev">Költséghányad, 40%</span><span class="ertek">408&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s osszeg-alatt"><span class="jel">=</span><span class="nev">Jövedelmed</span><span class="ertek">612&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s ado"><span class="jel"></span><span class="nev">TB-járulék: ennek 18,5%-a</span><span class="ertek">113&nbsp;220<span class="ft">Ft</span></span></div>
+      <div class="s ado"><span class="jel"></span><span class="nev">Szocho: ennek 13%-a</span><span class="ertek">79&nbsp;560<span class="ft">Ft</span></span></div>
+    </div>
+
+    <div class="blokk">
+      <div class="bcim">Negyedévente: SZJA-előleg <span>július–szeptember</span></div>
+      <div class="s"><span class="jel"></span><span class="nev">Három havi bevételed</span><span class="ertek">2&nbsp;940&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s"><span class="jel">−</span><span class="nev">Költséghányad, 40%</span><span class="ertek">1&nbsp;176&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s osszeg-alatt"><span class="jel">=</span><span class="nev">Jövedelmed</span><span class="ertek">1&nbsp;764&nbsp;000<span class="ft">Ft</span></span></div>
+      <div class="s ado"><span class="jel"></span><span class="nev">SZJA-előleg: ennek 15%-a</span><span class="ertek">264&nbsp;600<span class="ft">Ft</span></span>
+        <span class="magyar">Az adómentes részt áprilisban elérted, ezért most az egész után fizetsz.</span></div>
+    </div>
+  </div>
+
+  <div class="vegosszeg-sor"><span class="nev">Összesen</span><span class="ertek">457&nbsp;380<span class="ft">Ft</span></span></div>
+
+  <div class="lab">
+    <span class="ki"><img class="arc-kicsi" src="../assets/avatar/karakter_1_lapos@2x.png" srcset="../assets/avatar/karakter_1_lapos@2x.png 2x, ../assets/avatar/karakter_1_lapos@3x.png 3x" alt="Kovács Bence, a könyvelőd">Bence számolta,<br>október 2.</span>
+    <button class="gomb-m"><img class="i3" src="../assets/ikon3d/kerdezek_28@2x.png" srcset="../assets/ikon3d/kerdezek_28@2x.png 2x, ../assets/ikon3d/kerdezek_28@3x.png 3x" alt="">Kérdezek róla</button>
+  </div>
+</section>
+<div class="otthon-jel"></div>
+</body>
+</html>

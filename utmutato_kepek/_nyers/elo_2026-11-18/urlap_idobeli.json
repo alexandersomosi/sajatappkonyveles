@@ -1,0 +1,54 @@
+{
+ "nev": "urlap_idobeli",
+ "url": "https://webnyk-public.nav.gov.hu/app/webnykKim#form",
+ "cim": "Kitöltés - Regisztráció nélküli nyomtatványkitöltő",
+ "ido": "2026-11-18T10:14:57.979Z",
+ "dpr": 2,
+ "viewport": {
+  "width": 1280,
+  "height": 1000,
+  "deviceScaleFactor": 2,
+  "isMobile": false,
+  "hasTouch": false
+ },
+ "helyek": {
+  "fejlec": [
+   574,
+   390,
+   1483,
+   438
+  ],
+  "megszunes": [
+   654,
+   549,
+   994,
+   597
+  ],
+  "kezdete": [
+   582,
+   633,
+   931,
+   701
+  ],
+  "vege": [
+   971,
+   633,
+   1320,
+   701
+  ],
+  "csatolmany": [
+   654,
+   937,
+   917,
+   985
+  ],
+  "bejelento": [
+   574,
+   1063,
+   697,
+   1111
+  ]
+ },
+ "elozetesen_elmosva": [],
+ "piros_keret_eltavolitva": []
+}

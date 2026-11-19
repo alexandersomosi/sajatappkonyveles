@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# Builds and (re)starts the Kézjegy stack on appok-1. Safe to run repeatedly. Does not touch Gardoko.
+#   bash /srv/kezjegy/deploy/up.sh
+# Order (QA kör 3): env files → image → database → migrations as the owner (kezjegy-migrate, one-shot) →
+# least-privilege role + grants (db-roles.sh) → API + worker as kezjegy_app (SKIP_MIGRATIONS=1) → web, Caddy.
+set -euo pipefail
+cd /srv/kezjegy/deploy
+DC=(docker compose --env-file /srv/kezjegy/.env -f docker-compose.yml)
+
+bash /srv/kezjegy/deploy/gen-env.sh
+mkdir -p /srv/kezjegy/data/files /srv/kezjegy/backups /srv/kezjegy/_regi /srv/kezjegy/web/app /srv/kezjegy/web/panel
+chmod 700 /srv/kezjegy/data /srv/kezjegy/data/files /srv/kezjegy/backups
+
+# Refuse a broken web.Caddyfile before restarting anything.
+docker run --rm -v "$PWD/web.Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine \
+  caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null
+"${DC[@]}" config -q
+
+before=$(docker image inspect -f '{{.Id}}' kezjegy/api:latest 2>/dev/null || echo none)
+"${DC[@]}" build kezjegy-api
+after=$(docker image inspect -f '{{.Id}}' kezjegy/api:latest 2>/dev/null || echo none)
+
+# Database first, then the migrations with the owner role (the only container that gets .env.db besides the DB).
+"${DC[@]}" up -d kezjegy-db
+for i in $(seq 1 60); do
+  st=$(docker inspect -f '{{.State.Health.Status}}' kezjegy-db 2>/dev/null || echo none)
+  [ "$st" = healthy ] && break
+  sleep 2
+done
+[ "$st" = healthy ] || { echo "kezjegy-db: $st"; exit 1; }
+# A dump BEFORE the migrations, encrypted exactly like the nightly backup (gpg AES256, .backup_pass) – never a plain
+# file (round 1, 2026-11-19: the earlier pre-deploy dumps in _regi were not encrypted). No dump → no migration.
+if docker exec kezjegy-db psql -U kezjegy -d kezjegy -Atc "select to_regclass('public.users') is not null" 2>/dev/null | grep -qx t; then
+  [ -s /srv/kezjegy/.backup_pass ] || { echo "HIBA: nincs /srv/kezjegy/.backup_pass – a frissítés előtti mentést nem tudom titkosítani"; exit 1; }
+  ELOTTE="/srv/kezjegy/_regi/db_elotte_up_$(date +%Y%m%d_%H%M%S).dump.gpg"
+  ( umask 077
+    docker exec kezjegy-db pg_dump -U kezjegy -d kezjegy -Fc \
+      | gpg --batch --yes --quiet --pinentry-mode loopback --passphrase-file /srv/kezjegy/.backup_pass \
+            --symmetric --cipher-algo AES256 -o "$ELOTTE.part"
+    mv "$ELOTTE.part" "$ELOTTE" )
+  [ "$(stat -c %s "$ELOTTE")" -gt 1000 ] || { echo "HIBA: a frissítés előtti mentés üres: $ELOTTE"; exit 1; }
+  echo "mentés a frissítés előtt (titkosítva): $ELOTTE ($(stat -c %s "$ELOTTE") bájt)"
+fi
+"${DC[@]}" --profile migrate run --rm -T kezjegy-migrate
+# Least-privilege role and grants (needs the migrated schema; the API connects with this role).
+bash /srv/kezjegy/deploy/db-roles.sh
+
+"${DC[@]}" up -d
+# A rebuilt image must replace the running API and worker even when the compose file did not change.
+if [ "$before" != "$after" ]; then "${DC[@]}" up -d --force-recreate kezjegy-api kezjegy-worker; fi
+# feltolt.sh swaps web/app, web/panel and web.Caddyfile for new folders/files; bind mounts follow the old
+# inodes, so the static server is always RE-CREATED (k3c2 review: a plain restart was not proven to re-bind; a
+# re-created container mounts the current folders by path). A second, no downtime worth mentioning.
+"${DC[@]}" up -d --no-deps --force-recreate kezjegy-web
+# proof: the served app index must be the one on disk (the bind mount follows the new folder)
+kint=$(sha256sum /srv/kezjegy/web/app/index.html | cut -d' ' -f1)
+bent=$(docker exec kezjegy-web sha256sum /srv/app/index.html 2>/dev/null | cut -d' ' -f1 || true)
+if [ "$kint" = "$bent" ]; then echo "kezjegy-web: az új app-build él"; else echo "FIGYELEM: a kezjegy-web nem a /srv/kezjegy/web/app mappát szolgálja ki"; fi
+# The shared Caddy imports /srv/kezjegy/caddy/*.caddy (once caddy-csatolas.sh ran): reload its config.
+if grep -q '^import /etc/caddy/kezjegy/' /srv/appok/deploy/Caddyfile 2>/dev/null; then
+  docker exec appok-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+fi
+
+for i in $(seq 1 60); do
+  st=$(docker inspect -f '{{.State.Health.Status}}' kezjegy-api 2>/dev/null || echo none)
+  [ "$st" = healthy ] && break
+  sleep 3
+done
+echo "kezjegy-api: $st"
+"${DC[@]}" ps
+[ "$st" = healthy ]
+
+# The API and the worker must not hold any database owner secret (names only, never values).
+for c in kezjegy-api kezjegy-worker; do
+  leak=$(docker exec "$c" printenv 2>/dev/null | cut -d= -f1 | grep -E '^(POSTGRES_PASSWORD|MIGRATION_DATABASE_URL|KEZJEGY_APP_DB_PASSWORD)$' || true)
+  if [ -n "$leak" ]; then echo "HIBA: $c környezetében tulajdonosi titok: $leak"; exit 1; fi
+  echo "$c: nincs tulajdonosi titok a környezetben"
+done

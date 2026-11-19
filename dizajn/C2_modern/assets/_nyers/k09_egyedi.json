@@ -1,0 +1,37 @@
+[
+ {
+  "nev": "egyedi_12_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the top row, middle cell of that sheet (a single sheet of document paper lying at a slight angle with a few short abstract ruled lines and a small looping signature flourish on a short line near its bottom right; a closed fountain pen with its cap on lies diagonally across the lower left corner of the sheet), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ },
+ {
+  "nev": "egyedi_13_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the top row, right cell of that sheet (an open laptop at a slight three-quarter angle; on its screen a simple video-call window: one large rounded rectangle with a soft pale-wash head-and-shoulders silhouette without any facial features, and a short row of three small round buttons below it), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ },
+ {
+  "nev": "egyedi_21_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the bottom row, left cell of that sheet (a closed cardboard document folder (a dossier) with three or four paper sheets slightly fanned out at its top edge and one small paper clip; a simple empty tab on the folder), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ },
+ {
+  "nev": "egyedi_22_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the bottom row, middle cell of that sheet (a desk calendar page with a binding ring strip along the top and a plain grid of empty squares without any numbers; one square near the lower right is circled by hand with one loose confident ink loop), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ },
+ {
+  "nev": "egyedi_23_v1",
+  "model": "google/gemini-2.5-flash-image",
+  "prompt": "The reference image is a sheet of six spot illustrations in a 3 by 2 grid. Redraw ONLY the object in the bottom row, right cell of that sheet (a sheet of ledger paper with three short ruled entry lines, the lowest one struck through with one clean straight ink stroke, and a round double-ring stamp impression with a bold hand-drawn check mark inside overlapping the lower right corner of the sheet), as one single spot illustration, keeping it identical to the reference: the same object, the same composition, the same viewing angle, the same navy ink-blue #1F2F5C line weight relative to the object, the same sparse hatching and the same pale #D6E0F0 wash areas. Do not invent a new style and do not add anything. Draw it larger and crisper: the object centred and filling about 75 percent of the frame width, on a perfectly flat pure white #FFFFFF background with no paper texture, no vignette, no ground shadow, no frame. Strictly no text, no letters, no numbers, no digits, no readable writing, no logos, no people, no faces, no hands. Not 3D, not glossy, no gradients, no drop shadows, not cartoonish, not cute, no sparkles, no colours other than the navy ink and the one pale blue-grey wash.",
+  "aspect_ratio": "4:3",
+  "ref": "C:\\Users\\UpgradePC\\konyvelo_app\\dizajn\\C2_modern\\assets\\_lap_illusztraciok.png"
+ }
+]

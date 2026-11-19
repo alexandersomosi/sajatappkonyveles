@@ -1,0 +1,25 @@
+{
+  "items": [
+    {
+      "name": "bekotes",
+      "durationSec": 107,
+      "sizeBytes": 11111193,
+      "updatedAt": "2026-11-19T13:10:44.751Z",
+      "hasNarration": true
+    },
+    {
+      "name": "vallalkozas_bejelentes",
+      "durationSec": 149.7,
+      "sizeBytes": 14004502,
+      "updatedAt": "2026-11-19T16:48:44.632Z",
+      "hasNarration": true
+    },
+    {
+      "name": "meghatalmazas",
+      "durationSec": 99.3,
+      "sizeBytes": 14044878,
+      "updatedAt": "2026-11-19T16:41:43.676Z",
+      "hasNarration": true
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Számadó – Belépés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700&text=0123456789&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .brand { display: flex; align-items: center; gap: 12px; padding: 34px 20px 0; }
+  .brand .wm { font: 600 32px/1 var(--serif); color: var(--brand); letter-spacing: -0.01em; }
+  .brand + .lede { padding: 10px 20px 0; }
+  .form { margin-top: 26px; padding: 22px 18px 20px; }
+  .form .t2 { margin-bottom: 18px; }
+  .form .f + .f { margin-top: 16px; }
+  .form .forgot { margin-top: 12px; }
+  .form .btn-p { margin-top: 18px; }
+  .alt { padding: 22px 20px 0; }
+  .alt p { font-size: 15px; color: var(--muted); }
+  .alt .gombok { display: flex; gap: 10px; margin-top: 10px; }
+  .bio { display: flex; gap: 12px; align-items: flex-start; margin: 24px 20px 0; }
+  .bio .ik { width: 44px; height: 44px; border-radius: 50%; background: #fff; color: var(--brand); display: grid; place-items: center; flex: none; }
+  .bio p { font-size: 15px; line-height: 1.4; color: var(--muted); }
+  .uj { position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; font-size: 16px; color: var(--muted); }
+  .uj .btn-t { margin-left: 4px; }
+</style>
+</head>
+<body>
+<div class="sb"></div>
+
+<div class="brand">
+  <span class="wm">Számadó</span>
+</div>
+<p class="lede">Saját könyvelőd lesz, havi <span class="inl">20&thinsp;000</span>&nbsp;Ft-ért.</p>
+
+<form class="sheet form" onsubmit="return false">
+  <h1 class="t2">Belépés</h1>
+  <div class="f">
+    <label class="lbl" for="e">E-mail-cím</label>
+    <div class="field"><span class="v" id="e">nagy.kata.grafika@gmail.com</span></div>
+  </div>
+  <div class="f">
+    <label class="lbl" for="j">Jelszó</label>
+    <div class="field focus"><span class="v" id="j" style="letter-spacing:.18em">●●●●●●●●●●</span><button class="btn-t" type="button">Mutasd</button></div>
+  </div>
+  <button class="btn-t forgot" type="button">Elfelejtettem a jelszavam</button>
+  <button class="btn-p" type="submit">Belépés</button>
+</form>
+
+<div class="alt">
+  <p>Vagy lépj be ezzel:</p>
+  <div class="gombok">
+    <button class="btn-s">Google-fiókkal</button>
+    <button class="btn-s">Apple-fiókkal</button>
+  </div>
+</div>
+
+<div class="bio">
+  <span class="ik"><i data-i="finger" data-s="26"></i></span>
+  <p>Belépés után bekapcsolhatod, hogy ujjlenyomattal vagy arccal nyisd meg az appot. Így nem kell mindig beírnod a jelszót.</p>
+</div>
+
+<p class="uj">Még nincs fiókod?<button class="btn-t">Fiók létrehozása</button></p>
+<div class="homebar"></div>
+<script src="kozos.js"></script>
+</body>
+</html>

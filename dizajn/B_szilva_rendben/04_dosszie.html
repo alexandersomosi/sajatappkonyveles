@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dosszié, november (Rendben)</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  /* Hónapválasztó: vízszintesen görgethető pirulák. A régebbi hónapok balra vannak, kilógnak a képből. */
+  .honapok { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 16px var(--margo) 2px; }
+  .honapok::-webkit-scrollbar { display: none; }
+  .honap { flex: none; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 15px; border-radius: var(--r-gomb); border: 1.5px solid var(--mezo-keret); font-size: 16px; font-weight: 600; color: var(--tinta); }
+  .honap .ikon { width: 16px; height: 16px; stroke-width: 2.4; color: var(--szilva); }
+  .honap.aktiv { background: var(--szilva); border-color: var(--szilva); color: #FFFFFF; }
+  .honap .potty { box-shadow: 0 0 0 2px var(--lap); }
+  .honap-osszegzo { font-size: 17px; line-height: 24px; padding: 14px 20px 0; }
+
+  /* Tételsor: a felső sorban név és összeg, alatta az állapotmondat teljes szélességben */
+  .tetel-sor { align-items: flex-start; }
+  .tetel-sor > .nyil { align-self: center; }
+  .felso { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .felso .sor-cim { min-width: 0; }
+
+  .teendo-sor { align-items: flex-start; }
+  .teendo-sor .gomb-masod { height: 40px; padding: 0 15px; align-self: center; }
+  .hiany { width: 40px; height: 48px; border-radius: var(--r-kep); border: 1.5px dashed #A3A7AE; color: var(--masod); display: grid; place-items: center; flex: none; }
+  .hiany .ikon { width: 20px; height: 20px; }
+  .ragado .gomb .ikon { width: 22px; height: 22px; }
+</style>
+</head>
+<body>
+<div class="kepernyo" style="padding-bottom:178px">
+  <div class="allapotsor" aria-hidden="true"><span>9:41</span><span class="jelek">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.6 5.6 9.2a3.4 3.4 0 0 1 4.8 0z"/><path d="M3.5 7.1a6.4 6.4 0 0 1 9 0l-1.3 1.3a4.6 4.6 0 0 0-6.4 0z"/><path d="M1.3 4.9a9.5 9.5 0 0 1 13.4 0l-1.3 1.3a7.7 7.7 0 0 0-10.8 0z"/></svg>
+    <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.8" height="11.8" rx="3.4" fill="none" stroke="#241A23" stroke-opacity=".4" stroke-width="1.1"/><rect x="2.3" y="2.3" width="17" height="8.4" rx="2"/><path d="M25 4.4v4.2a2.1 2.1 0 0 0 0-4.2z" fill-opacity=".45"/></svg>
+  </span></div>
+
+  <header class="fej">
+    <h1 class="cim">Dosszié</h1>
+  </header>
+
+  <div class="honapok" id="honapok" role="tablist" aria-label="Hónapok">
+    <button class="honap" role="tab">Júl.<svg class="ikon" aria-label="lezárva"><use href="#i-pipa"/></svg></button>
+    <button class="honap" role="tab">Aug.<svg class="ikon" aria-label="lezárva"><use href="#i-pipa"/></svg></button>
+    <button class="honap" role="tab">Szept.<svg class="ikon" aria-label="lezárva"><use href="#i-pipa"/></svg></button>
+    <button class="honap" role="tab">Okt.<svg class="ikon" aria-label="lezárva"><use href="#i-pipa"/></svg></button>
+    <button class="honap aktiv" role="tab" aria-selected="true">November<i class="potty" aria-label="2 dolog vár rád"></i></button>
+    <button class="honap" role="tab">Dec.</button>
+  </div>
+  <p class="honap-osszegzo">Novemberben 2 dolog vár rád. 3 tétel Bencénél van, a többi kész.</p>
+
+  <!-- Rád vár: ugyanaz, mint a főoldalon -->
+  <h2 class="szakasz">Rád vár</h2>
+  <section class="lap">
+    <div class="sor teendo-sor">
+      <span class="hiany" aria-hidden="true"><svg class="ikon"><use href="#i-dok"/></svg></span>
+      <div class="sor-t">
+        <p class="sor-cim">Novemberi kivonat</p>
+        <p class="allapot rad-var"><i class="potty" aria-hidden="true"></i>Bence kérte december 1-jén.</p>
+      </div>
+      <button class="gomb gomb-masod">Feltöltés</button>
+    </div>
+    <div class="sor teendo-sor">
+      <svg class="belyeg" viewBox="0 0 40 48" aria-hidden="true"><defs><filter id="mos1"><feGaussianBlur stdDeviation="1.3"/></filter></defs><rect width="40" height="48" fill="#C9CCD1"/><g transform="rotate(-4 20 24)"><rect x="7" y="5" width="26" height="38" rx="1" fill="#FBFBFC"/><g filter="url(#mos1)" stroke="#5F636B" stroke-width="1.3"><path d="M11 10h11M11 15h18M11 19h14M11 23h17M11 30h8M23 30h6M11 35h12"/></g></g></svg>
+      <div class="sor-t">
+        <p class="sor-cim">12-es papírszámla</p>
+        <p class="allapot rad-var"><i class="potty" aria-hidden="true"></i>Nem látszik rajta az összeg.</p>
+      </div>
+      <button class="gomb gomb-masod">Új fotó</button>
+    </div>
+  </section>
+
+  <!-- Számlák a NAV-ból -->
+  <h2 class="szakasz">Számláid a NAV-ból</h2>
+  <p class="szakasz-megj">Maguktól jönnek, neked nincs velük dolgod.</p>
+  <section class="lap">
+    <div class="sor tetel-sor">
+      <div class="sor-t"><div class="felso"><p class="sor-cim">Fekete Nyomda Kft.</p><p class="osszeg">240&#8239;000&nbsp;Ft</p></div>
+        <p class="allapot kesz"><svg class="ikon" aria-hidden="true"><use href="#i-pipa"/></svg>Bence feldolgozta november 9-én.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+    <div class="sor tetel-sor">
+      <div class="sor-t"><div class="felso"><p class="sor-cim">Csillag Pékség Bt.</p><p class="osszeg">85&#8239;000&nbsp;Ft</p></div>
+        <p class="allapot"><svg class="ikon" aria-hidden="true"><use href="#i-ora"/></svg>Bencénél van, november 18-án látta.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+    <div class="sor tetel-sor">
+      <div class="sor-t"><div class="felso"><p class="sor-cim">Dr. Tóth Anna e.v.</p><p class="osszeg">120&#8239;000&nbsp;Ft</p></div>
+        <p class="allapot"><svg class="ikon" aria-hidden="true"><use href="#i-ora"/></svg>Bencénél van, november 27-én jött.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+    <div class="sor" style="min-height:54px">
+      <div class="sor-t"><p class="sor-cim">További 4 számla, mind kész</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+  </section>
+
+  <!-- Feltöltötted -->
+  <h2 class="szakasz">Feltöltötted</h2>
+  <section class="lap">
+    <div class="sor tetel-sor">
+      <svg class="belyeg" viewBox="0 0 40 48" aria-hidden="true"><rect width="40" height="48" fill="#C9CCD1"/><path d="M11 5h18v36l-2.25 2-2.25-2-2.25 2-2.25-2-2.25 2-2.25-2-2.25 2L11 41z" fill="#FBFBFC"/><path d="M14 10h12M15 13h10M14 18h12M14 21h9M14 24h12M14 30h12M14 33h8" stroke="#62666E" stroke-width="1"/></svg>
+      <div class="sor-t"><div class="felso"><p class="sor-cim">Toner és papír</p><p class="osszeg">18&#8239;990&nbsp;Ft</p></div>
+        <p class="allapot kesz"><svg class="ikon" aria-hidden="true"><use href="#i-pipa"/></svg>Kész, beadni nem kell.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+    <div class="sor tetel-sor">
+      <svg class="belyeg" viewBox="0 0 40 48" aria-hidden="true"><rect width="40" height="48" fill="var(--csempe)"/><path d="M10 6h14l6 6v30H10z" fill="#FFFFFF" stroke="#AEB2B8" stroke-width="1"/><path d="M24 6v6h6" fill="none" stroke="#AEB2B8" stroke-width="1"/><path d="M14 19h12M14 23h12M14 27h12M14 31h8" stroke="#8A8E96" stroke-width="1"/></svg>
+      <div class="sor-t"><div class="felso"><p class="sor-cim">Telefonszámla</p><p class="osszeg">8&#8239;990&nbsp;Ft</p></div>
+        <p class="allapot"><svg class="ikon" aria-hidden="true"><use href="#i-ora"/></svg>Bencénél van, feltöltötted <span class="egyben">november 25-én.</span></p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+  </section>
+
+  <!-- Bence intézte: a NAV-levél és a beadott irat egy lapon -->
+  <h2 class="szakasz">Bence intézte</h2>
+  <section class="lap">
+    <div class="sor tetel-sor">
+      <div class="csempe" aria-hidden="true"><svg class="ikon"><use href="#i-boritek"/></svg></div>
+      <div class="sor-t"><p class="sor-cim">NAV-levél az adószámládról</p>
+        <p class="allapot kesz"><svg class="ikon" aria-hidden="true"><use href="#i-pipa"/></svg>Elolvasta, nincs teendőd.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+    <div class="sor tetel-sor">
+      <div class="csempe" aria-hidden="true"><svg class="ikon"><use href="#i-dok-pipa"/></svg></div>
+      <div class="sor-t"><p class="sor-cim">Változásbejelentés: új tevékenység</p>
+        <p class="allapot kesz"><svg class="ikon" aria-hidden="true"><use href="#i-pipa"/></svg>Beadta <span class="egyben">november 10-én,</span> a NAV visszaigazolta.</p></div>
+      <svg class="ikon nyil"><use href="#i-nyil-j"/></svg>
+    </div>
+  </section>
+
+  <div class="ragado">
+    <button class="gomb gomb-elso"><svg class="ikon"><use href="#i-kamera"/></svg>Bizonylat feltöltése</button>
+  </div>
+
+  <nav class="fulsor" aria-label="Fő menü">
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-haz"/></svg></span>Főoldal</a>
+    <a class="ful aktiv" aria-current="page" aria-label="Dosszié, 2 dolog vár rád"><span class="ful-ikon"><svg class="ikon"><use href="#i-dosszie"/></svg><span class="jelzes">2</span></span>Dosszié</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-uzenet"/></svg></span>Üzenetek</a>
+    <a class="ful"><span class="ful-ikon"><svg class="ikon"><use href="#i-fiok"/></svg></span>Fiók</a>
+  </nav>
+  <div class="otthon-jel" aria-hidden="true"></div>
+</div>
+<script src="ikonok.js"></script>
+<script>
+  /* A kiválasztott hónap látsszon, a régebbiek balra kilógnak: ebből látszik, hogy van még. */
+  (function () { var h = document.getElementById('honapok'); h.scrollLeft = h.scrollWidth; })();
+</script>
+</body>
+</html>

@@ -1,0 +1,695 @@
+{
+ "kutatás:ev-indítás": {
+  "findings": [
+   {
+    "topic": "Csatorna 2026 (ki vezeti a nyilvántartást, hol kell bejelenteni)",
+    "fact": "2020. július 1. óta a NAV vezeti az egyéni vállalkozók nyilvántartását (EVNY). 2026. február 19-én a régi Webes Ügysegéd (nyilvantarto.hu) helyére a NAV Ügyfélportál (ÜPO) Vállalkozói Ügysegédje lépett: https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main. A régi felületen 2026. március 1. 23:59 után már nem lehet új ügyet indítani. Az új felület okostelefonra optimalizált. A nyilvános lekérdezés megmarad. A magyarorszag.hu-n nincs EV-bejelentő felület.",
+    "source": "NAV, A Vállalkozói Ügysegéd útmutatója (2026.03.19), I. fejezet: https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja ; NAV, A megújult ügysegédről: https://nav.gov.hu/fooldal-elemei/fooldali-csempek/uj-ugyseged/tajekoztatok/a-megujult-ugysegedrol ; Adózóna 2026.02.19 (mobilra optimalizált): https://adozona.hu/altalanos/NAV_mar_elerheto_a_Vallalkozoi_Ugyseged_777R7M",
+    "certainty": "official"
+   },
+   {
+    "topic": "Csatorna 2027-től (MKIK)",
+    "fact": "A 2026. évi III. törvény módosította az Evectv.-t. 2027. január 1-jétől a Magyar Kereskedelmi és Iparkamara a nyilvántartást vezető szerv, a feladatokat a területi kamarák látják el, és közigazgatási hatóságként járnak el az Ákr. szerint (3/A., 3/B. §). Bejelenteni a nyilvántartást vezető szerv útján vagy elektronikus azonosítás után, rendszeresített űrlapon lehet (5. § (2)). A kamara továbbítja az adatokat a NAV-nak az adószám kiadásához (7. § (2)), és értesíti a NAV-ot, a KSH-t és a területi kamarát (7. § (5)). Az új felület címét és a képviselet módját még nem láttam közzétéve.",
+    "source": "Evectv. 2027.01.01-től hatályos szövege: https://net.jogtar.hu/jogszabaly?docid=a0900115.tv&timeshift=20270101 ; Adózóna 2026.03.24: https://adozona.hu/2026_os_adovaltozasok/Egyeni_vallalkozok_uj_nyilvantartasi_szabal_NKFZLL",
+    "certainty": "official"
+   },
+   {
+    "topic": "Ki lehet EV / kizáró okok",
+    "fact": "Lehet egyéni vállalkozó a magyar állampolgár, az EGT-állampolgár, illetve egyes tartózkodási engedéllyel rendelkező személy (3. § (1)). Nem lehet egyéni vállalkozó: a kiskorú vagy a cselekvőképességet érintő gondnokság alatt álló személy; akit felsorolt (gazdasági, vagyon elleni, korrupciós stb.) bűncselekmény miatt végrehajtandó szabadságvesztésre, vagy szándékos bűncselekmény miatt 1 évnél hosszabb végrehajtandó szabadságvesztésre ítéltek, amíg nem mentesül; aki egyéni cég tagja vagy gazdasági társaság korlátlanul felelős tagja (bt./kkt. beltag) (3. § (2)). Egy személynek egyszerre csak egy EV-jogviszonya lehet (3. § (3)). Ha a kezdőnek már van élő adószáma, a NAV azt adja az új vállalkozáshoz is.",
+    "source": "Evectv. (2009. évi CXV.) 3. §, hatályos 2026.IX.27-től: https://net.jogtar.hu/jogszabaly?docid=a0900115.tv ; NAV Ügysegéd-útmutató 2026.03.19, III.1–2.",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) A bejelentés kötelező tartalma – törvény",
+    "fact": "Evectv. 6. § (1): a) családi és utónév, születési családi és utónév, anyja családi és utóneve, születési hely és idő, lakcím (vagy szálláshely), állampolgárság; b) nyilatkozat, hogy kizáró ok nem áll fenn; c) főtevékenység és egyéb tevékenységek ÖVTJ-kóddal; d) székhely, szükség esetén telephely(ek) és fióktelep(ek) címe; e) az Art. szerinti, NAV-bejelentkezéshez szükséges további adatok és nyilatkozatok; f) kérelem a székhely szerinti területi kamarához a nyilvántartásba vételre. A kitöltött űrlap írásbeli jognyilatkozatnak minősül (6. § (4)).",
+    "source": "Evectv. 6. §: https://net.jogtar.hu/jogszabaly?docid=a0900115.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) Adóügyi bejelentkezési adatok (Art. 1. melléklet)",
+    "fact": "EV bejelentkezésekor kötelező: adóazonosító jel ÉS TAJ-szám (1.2); cím, székhely, telephely (1.4); székhelyszolgáltató adatai, ha van (1.7); ÖVTJ-kódok (1.9.2); statisztikai számjel (1.10); levelezési cím, ha eltér (1.12); az iratok őrzésének helye, ha eltér, illetve az online őrzés ténye (1.13); a tevékenység jellege: fő-, mellékfoglalkozás, nyugdíj melletti kiegészítő stb. (1.15); áfanyilatkozat (1.16); átalányadó választása (1.17). Az áfa szerinti adózási mód választását a kezdés bejelentésével egyidejűleg kell megtenni (Art. 16. § (2)). Az EV-nyilvántartás ezeket a nyilatkozatokat gépi úton küldi tovább a NAV-nak (1. melléklet 18. pont).",
+    "source": "Art. (2017. évi CL.) 16. § (2) és 1. melléklet 1., 17.1. és 18. pont, hatályos 2026.X.1-től: https://net.jogtar.hu/jogszabaly?docid=a1700150.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) A Vállalkozói Ügysegéd képernyői (a 2026-os űrlap)",
+    "fact": "Az indítás képernyői: Személyi adatok (az útmutató szerint eltérés esetén a NAV-hoz kell fordulni, vagyis ezek valószínűleg a nyilvántartásból jönnek); Vállalkozói címadatok (székhely, telephely, fióktelep); Tevékenységek (ÖVTJ); Adózási adatok (a munkavégzés jellegének megadása KÖTELEZŐ; kata-nyilatkozat; átalányadózás az Szja tv. 50. § (6) szerint; áfafizetés módja; Áfamentesség rovat, ennek 2. pontja az alanyi adómentesség választása; közösségi adószám igénylése; MNB/EKB árfolyam; pénzforgalmi elszámolás; Áfa tv. 49/A. §); Nyilatkozatok (kizáró okok); Ellenőrzés; Megtekintés (az értesítés letölthető PDF-ben). A „Bejelentés megtétele” után a bejelentés nem módosítható és nem vonható vissza.",
+    "source": "NAV Ügysegéd-útmutató 2026.03.19, III.3. pont (10–16. oldal): https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fvallalkozoknak%2Findulo-vallalkozas%2Fkapcsolodo-tartalmak%2Fa-vallalkozoi-ugyseged-utmutatoja",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) Kezdés napja",
+    "fact": "A tevékenységet a nyilvántartásba vétel napján lehet megkezdeni. Gyorsított (sürgősségi) eljárás nincs. Az eljárás telefonon nem folytatható le (4. § (4)), ezért a mi visszahívásunk csak belső egyeztetés lehet, maga a bejelentés nem. Az útmutatóban nem találtam olyan mezőt, amellyel jövőbeli kezdőnapot lehetne megadni: a beküldés napja a kezdés napja.",
+    "source": "Evectv. 4. § (4), 7. § (6): https://net.jogtar.hu/jogszabaly?docid=a0900115.tv ; NAV Ügysegéd-útmutató 2026.03.19, 9–10. oldal",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) Székhely használati joga",
+    "fact": "A székhely, telephely és fióktelep csak olyan ingatlan lehet, amely az EV tulajdona, vagy amelynek használatára egyébként jogosult (16. § (6)). Az űrlaphoz nem kell okiratot csatolni. A székhely az iratok átvételének és őrzésének helye. A telephely ugyanazon a településen van, mint a székhely, a fióktelep más településen. Székhelyszolgáltatónál meg kell adni a szolgáltató adatait, és a NAV ellenőrzi, szerepel-e a szolgáltatók nyilvántartásában (Art. 18/A. §).",
+    "source": "Evectv. 16. § (6); NAV Ügysegéd-útmutató 2026.03.19, Vállalkozói címadatok; Art. 1. melléklet 1.7 és 18/A. §",
+    "certainty": "official"
+   },
+   {
+    "topic": "(a) Ami NYILVÁNOS lesz",
+    "fact": "Ingyenesen és bárki számára lekérdezhető: a név, a nyilvántartásba vétel napja, a tevékenységek, a székhely, a telephelyek és fióktelepek CÍME, a szünetelés, az adószám és állapota, a statisztikai számjel (12. § (2), amely a 11. § (1) b)–h) pontjára utal). Ha a székhely az otthoni lakcím, az otthoni cím nyilvános lesz. Az adatokat a jogosultság megszűnése után 10 évig őrzik (13. § (1)).",
+    "source": "Evectv. 11–13. §: https://net.jogtar.hu/jogszabaly?docid=a0900115.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Ki nyújthatja be – maga az ügyfél",
+    "fact": "A kezdést be lehet jelenteni elektronikusan, KAÜ-azonosítással (Ügyfélkapu+ vagy DÁP) a Vállalkozói Ügysegédben, vagy személyesen bármelyik NAV-ügyfélszolgálaton. Postán, papíron és telefonon nem lehet. Személyesen érvényes személyi igazolványt, útlevelet vagy kártyás jogosítványt kell bemutatni. Az azonosítással kapcsolatos kérdésekben a 1818-as Kormányzati Ügyfélvonal segít. Mind a hat kormányzati eAzonosítási mód 2028. december 31-ig használható.",
+    "source": "NAV Egyéni vállalkozás indítása (2026.02.19): https://nav.gov.hu/Elethelyzetek-adozasa/vallalkozas/Egyeni-vallalkozas-inditasa ; NAV Ügysegéd-útmutató II. fejezet; Dáptv. 119. § (6): https://net.jogtar.hu/jogszabaly?docid=a2300103.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Képviselet online – UJEGYKE",
+    "fact": "A NAV szerint a Vállalkozói Ügysegédben a vállalkozó képviselője vagy meghatalmazottja „teljeskörűen” intézheti az ügyeket, ha van UJEGYKE-n bejelentett meghatalmazása a VEGYES ÜGYEK → „Egyéni vállalkozói nyilvántartással kapcsolatos ügyek (kivéve adóügyek)” ügycsoportra. Az ügyfelet az Ügysegédbe való belépés UTÁN kell kiválasztani, nem az ÜPO fejlécében. A könyvelő meglévő ADÓÜGYEK-meghatalmazása erre nem elég, ezt az ügycsoportot külön is jelölni kell.",
+    "source": "NAV Ügysegéd-útmutató 2026.03.19, Meghatalmazotti ügyintézés (7. oldal); NAV sajtóközlemény 2026.02.19: https://nav.gov.hu/sajtoszoba/hirek/Matol_elerheto_a_Vallalkozoi_Ugyseged ; NAV GYIK, Állandó meghatalmazás 2. oldal: https://nav.gov.hu/ugyfeliranytu/valaszol-a-nav/allando-meghatalmazas/$rppid0x11000840x16_pageNumber/2",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) A meghatalmazás a személyhez kötődik",
+    "fact": "A NAV szerint az EV nem válik el a mögötte álló természetes személytől. Az UJEGYKE-t a magánszemély az ADÓAZONOSÍTÓ JELÉHEZ tartozó ONYA-profilból adja meg, csak az adószámra vagy csak az adóazonosító jelre nem lehet külön meghatalmazást adni. Ezért egy leendő vállalkozó a regisztráció ELŐTT is megadhatja, és a meghatalmazás a regisztráció után is érvényben marad.",
+    "source": "NAV GYIK, Állandó meghatalmazás 1. oldal: https://nav.gov.hu/ugyfeliranytu/valaszol-a-nav/allando-meghatalmazas",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Az UJEGYKE megadásának menete és ideje",
+    "fact": "ONYA: Új nyomtatvány → Meghatalmazások → UJEGYKE → Meghatalmazó vagy Meghatalmazott. Ha a meghatalmazó magánszemély nyújtja be, a meghatalmazottnak csak akkor kell jóváhagynia, ha jogi képviselő. Ha a meghatalmazott nyújtja be, a meghatalmazónak az értesítéstől számított 4 naptári napon belül jóvá kell hagynia az ONYA-ban. A hibátlan ONYA-meghatalmazás a jóváhagyás után kb. 20 perc alatt él. Az ÁNYK-s vagy papíros beadás néhány munkanapig tart. Magánszemély kinyomtatva, saját kezűleg aláírva papíron is beadhatja, a szkennelt példányt viszont nem fogadják el. Az elektronikus felületen tett nyilatkozat megfelel az alaki követelményeknek (Air. 15. § (3)–(4)).",
+    "source": "NAV GYIK, Állandó meghatalmazás 1–2. oldal; Air. (2017. évi CLI.) 15. §: https://net.jogtar.hu/jogszabaly?docid=a1700151.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Ki lehet meghatalmazott",
+    "fact": "Természetes személyt bármely, képviseletre alkalmas nagykorú személy képviselhet állandó meghatalmazással (Air. 17. § (2)). A felsorolt képviselők között van a könyvelő (17. § (1) f)), valamint a számviteli vagy könyvviteli szolgáltatásra, illetve adótanácsadásra jogosult gazdasági társaság (g), amely kijelöli, melyik munkatársa jár el (17. § (3)). 2025. február 1-je óta a könyvelőirodák az ügyfél bevonása nélkül jelölhetik ki az eljáró személyt. A 2025.02.01. előtti képviseletek 2027. december 31-ig érvényesek. Az Ákr. általános szabálya: ha törvény nem írja elő a személyes eljárást, meghatalmazott is eljárhat (Ákr. 13. § (1)).",
+    "source": "Air. 17. §; Ákr. (2016. évi CL.) 13. §: https://net.jogtar.hu/jogszabaly?docid=a1600150.tv ; NAV 2025.01.31: https://nav.gov.hu/ugyfeliranytu/eljarasi-kerdesek/Februartol_egyszerusodnek_a_NAV_elotti_kepviselet_szabalyai",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Képviselet személyesen, papíros meghatalmazással",
+    "fact": "A NAV-ügyfélszolgálaton meghatalmazott is bejelentheti a kezdést. Ilyenkor az eredeti meghatalmazást kell bemutatni. A meghatalmazásnak közokiratnak vagy teljes bizonyító erejű magánokiratnak kell lennie, illetve jegyzőkönyvbe is mondható, kivéve, ha a rendelkezési nyilvántartás már tartalmazza (Ákr. 14. § (1)). Teljes bizonyító erejű például a két tanúval aláírt irat (Pp. 325. § (1) b)), a minősített e-aláírással ellátott irat (f), illetve a Dáptv. szerint a digitális állampolgárság szolgáltató által hitelesített dokumentum (j).",
+    "source": "NAV Egyéni vállalkozás indítása (2026.02.19); Ákr. 14. §; Pp. (2016. évi CXXX.) 325. §: https://net.jogtar.hu/jogszabaly?docid=a1600130.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) AVDH helyett – mi maradt",
+    "fact": "Az AVDH a személyre szabott felületen csak 2024. december 31-ig volt elérhető, integráltan 2025. október 31-ig (Dáptv. 119. § (2)). A rendelkezési nyilvántartás (RNY) régi rendelkezéseit 2026. december 31-ig kezelik (119. § (3)). Az új DÁP-os ügyintézési rendelkezésben bármely digitális szolgáltatónak címzett meghatalmazás adható, és ez megfelel a teljes bizonyító erejű magánokirat követelményének (38. § (3) b), (5)). A NAV-ügyekben az RNY-meghatalmazás csak természetes személy és EV felhasználónál megengedett (38. § (9)). Ha a meghatalmazást az ügyintézési rendelkezés tartalmazza, a hatóság nem kérheti a képviseleti jog igazolását (35. § (3) b)). Az EV-ügysegéd a gyakorlatban az UJEGYKE-t használja. A DÁP eAláírás a sajtó szerint minősített aláírás, és csak magánszemélyként használható.",
+    "source": "Dáptv. (2023. évi CIII.) 35., 38., 119. §: https://net.jogtar.hu/jogszabaly?docid=a2300103.tv ; DÁP eAláírás: https://telex.hu/techtud/2025/04/18/digitalis-allampolgarsag-program-dap-elektronikus-digitalis-alairas-pdf-szerzodes-hitelesites-both-andras",
+    "certainty": "official"
+   },
+   {
+    "topic": "(b) Jogi kockázat díjas képviseletnél",
+    "fact": "A jogi képviselet ellátása ügyvédi tevékenység (Üttv. 2. § (1) a)), amelyet rendszeresen és ellenérték fejében csak ügyvéd, kamarai jogtanácsos stb. végezhet (4. § (1)). Kivétel, ha más személy törvény felhatalmazása alapján jár el (2. § (2) b)), például a könyvelő adóügyben (Air. 17. §). A jogosulatlan, üzletszerű ügyvédi tevékenység bűncselekmény (zugírászat, Btk. 286. §). Az EV-nyilvántartási ügy kifejezetten „kivéve adóügyek”. Nem dőlt el, hogy a Somosi Kft. munkatársának vagy a könyvelőnek a díjas szolgáltatás részeként végzett meghatalmazotti bejelentése ide tartozik-e. Ezt ügyvédnek kell eldöntenie.",
+    "source": "Üttv. (2017. évi LXXVIII.) 2. és 4. §: https://net.jogtar.hu/jogszabaly?docid=a1700078.tv ; Btk. 286. §: https://net.jogtar.hu/jogszabaly?docid=a1200100.tv",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "(b) Indíthat-e a meghatalmazott ÚJ vállalkozást",
+    "fact": "A NAV útmutatója szerint a meghatalmazott „teljeskörűen” eljárhat, az indítási fejezet pedig így kezdődik: „Bejelentheti … elkezdését, ha még nem folytat egyéni vállalkozást”. Másodlagos források (szekhelypartner.hu, kamarai hírek) kifejezetten állítják, hogy a könyvelő az ügyfél nevében elindíthatja a vállalkozást. Olyan NAV-mondatot, amely szó szerint kimondja, hogy meghatalmazott indíthat vállalkozást nem vállalkozó nevében, nem találtam.",
+    "source": "NAV Ügysegéd-útmutató 2026.03.19, 7–8. oldal; https://szekhelypartner.hu/vallalkozoi-ugyseged-2026-februar-19-tol-az-upo-n-intezhetok-az-ev-bejelentesek/",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "(c) Ami utána automatikusan történik",
+    "fact": "Hibás űrlapra azonnali automatikus visszajelzés jön (7. § (1)). Hibátlan űrlapnál a nyilvántartó „haladéktalanul, automatikusan” rögzíti az adószámot és beszerzi a statisztikai számjelet (7. § (2)), majd nyilvántartási számmal nyilvántartásba vesz, és értesítést küld (7. § (3)). Az értesítés tartalma: adószám, statisztikai számjel, nyilvántartási szám, az adónyilatkozatok kivonata (9. §), és az Ügysegédből PDF-ben letölthető. A nyilvántartó értesíti a KSH-t, a Hatóságot és a székhely szerinti területi kamarát (7. § (5)). Ha az űrlap rendben van, a nyilvántartó nem mérlegelhet (7. § (4)). A NAV régebbi útmutatója szerint a statisztikai számjel néhány napig is eltarthat, és sürgősségi eljárás nincs.",
+    "source": "Evectv. 7. és 9. §; NAV Egyéni vállalkozás lépésről lépésre (dátum nélküli, 2026 előtti szöveg): https://nav.gov.hu/pfile/file?path=%2FElethelyzetek-adozasa%2Fvallalkozas%2F-egyeni-vallalkozas-lepesrol-lepesre-pdf",
+    "certainty": "official"
+   },
+   {
+    "topic": "(c) Biztosítás (TB) és iparűzési adó",
+    "fact": "2026-tól a NAV hivatalból teljesíti az EV saját biztosítotti bejelentését a bejelentkezés és az EV-nyilvántartás adatai alapján (Art. 1. melléklet 3.10). A székhely és a telephelyek szerinti önkormányzati adóhatóság a NAV-tól értesül, az EV-nek nem kell külön bejelentkeznie az önkormányzatnál.",
+    "source": "Art. 1. melléklet 3.10; NAV Így adózunk jövőre: https://nav.gov.hu/sajtoszoba/hirek/Igy_adozunk_jovore ; NAV Egyéni vállalkozás lépésről lépésre (Iparűzési adó)",
+    "certainty": "official"
+   },
+   {
+    "topic": "(c) Kamarai regisztráció",
+    "fact": "A kamarai nyilvántartásba vétel iránti kérelem a kezdő bejelentés része (Evectv. 6. § (1) f), Gkt. 8/A. § (1)), és a NAV értesíti a kamarát. A NAV ennek ellenére azt írja, hogy a vállalkozónak KÜLÖN kamarai űrlapot kell beadnia a területi kamarához 5 munkanapon belül (agrártevékenységnél haladéktalanul a NAK-nak). A regisztráció feltétele a kamarai hozzájárulás megfizetése (Gkt. 8/A. § (3)). A kamarai adatlap tartalma: név, székhely, tevékenységek, adószám, bankszámlaszám(ok), KKV-besorolás, e-mail vagy honlap, kapcsolattartó.",
+    "source": "NAV Egyéni vállalkozás indítása (2026.02.19), Bejelentkezés a gazdasági kamarához; Gkt. (1999. évi CXXI.) 8/A. §: https://net.jogtar.hu/jogszabaly?docid=99900121.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(d) Díjak",
+    "fact": "A kezdés, a változás, a szünetelés és a megszűnés bejelentése díj- és illetékmentes (Evectv. 8. §). A kamarai hozzájárulás évi 5 000 Ft, a tárgyév március 31-ig kell megfizetni. Nem kell fizetni, ha a vállalkozó az egész naptári évben szünetelteti a tevékenységét, és ezt bejelenti. A meg nem fizetett hozzájárulást a NAV adók módjára behajtja (Gkt. 34/A. §). Áfamentes EV-nek nem kötelező pénzforgalmi (bank)számlát nyitnia.",
+    "source": "Evectv. 8. §; Gkt. 34/A. §; NAV Mentor program Q4: https://nav.gov.hu/ugyfeliranytu/mentor_program/kezdo_vallalkozasok_forum",
+    "certainty": "official"
+   },
+   {
+    "topic": "(e) Képesítés, engedély",
+    "fact": "Képesítéshez kötött tevékenységet csak az végezhet, aki megfelel a képesítési követelményeknek, vagy határozatlan időre alkalmaz képesített személyt (16. § (2)), és ennek minden telephelyen teljesülnie kell (16. § (3)). Engedélyhez kötött tevékenység csak az engedély birtokában kezdhető meg (15. § (3)). Csak olyan tevékenység jelenthető be, amelynek a feltételeit teljesíti, és ha már nem felel meg, haladéktalanul törölnie kell (16. § (5)). Ellenőrzésre a KAVIR (https://kavir.mkik.hu/) és a KSH ÖVTJ'25 jegyzéke (https://www.ksh.hu/osztalyozasok_ovtj25) szolgál.",
+    "source": "Evectv. 15–16. §; NAV Ügysegéd-útmutató 2026.03.19, ÖVTJ-kódok és Tevékenységek",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Alanyi áfamentesség – hogyan és mikor",
+    "fact": "Csak belföldi székhelyű vagy lakóhelyű vállalkozó választhatja (Áfa tv. 187. § (1)). Értékhatár: 2026-ban 20 000 000 Ft (188. § (2)), 2027-től 22 000 000 Ft. Év közben kezdőnél a nyilvántartásba vétellel egyidejűleg választható, és a tárgyévi feltételt IDŐARÁNYOSAN kell teljesíteni (189. §). Ha a kezdéskor NEM választja, legkorábban a következő évre választhatja. Ha túllépi, megszűnik a mentesség (191. § (1) c)), és a megszűnés után a második naptári év végéig nem választható újra (191. § (3)). Az előzetesen felszámított áfa nem vonható le.",
+    "source": "Áfa tv. 187–191. §, hatályos 2026.IX.15-től: https://net.jogtar.hu/jogszabaly?docid=a0700127.tv ; 2027: https://net.jogtar.hu/jogszabaly?docid=a0700127.tv&timeshift=20270101 ; NAV 14. információs füzet (2026.01.22), 12. oldal: https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/nezzen-utana/inf_fuz/rejtett/Informacios-fuzetek---Aktualis/14.-informacios-fuzet---hasznos-tudnivalok-kezdo-afaalanyoknak",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Alanyi mentes vállalkozó és EU-s szolgáltatások",
+    "fact": "Az alanyi mentes adóalany bizonyos határon átnyúló (fordított adózású) ügyleteknél nem járhat el mentesként, ezért bevallásra és fizetésre kötelezett. Ha az Áfa tv. 37. § szerinti szolgáltatást nyújt vagy vesz igénybe EU-s partnertől (például külföldi online szolgáltatást), közösségi adószámot kell kérnie. Ezt a kezdő űrlapon is meg lehet igényelni.",
+    "source": "NAV 14. információs füzet (2026.01.22), 13. oldal; NAV 27. információs füzet, Közösségi adószám (2026.01.29): https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fnezzen-utana%2Finf_fuz%2F2026%2F27.-Tajekoztato-a-kozossegi-adoszamrol-2026.01.29 ; NAV Ügysegéd-útmutató, Közösségi adószám rovat",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Átalányadó – választás a kezdéskor",
+    "fact": "Az év közben kezdő EV a tevékenység megkezdésétől választhatja az átalányadózást (Szja tv. 50. § (6)), mégpedig úgy, hogy a kezdéskor bejelenti a NAV-nak: 2026. február 19. óta a Vállalkozói Ügysegéd nyilatkozatában. Egyébként a választás a következő évre szól, az előző évi szja-bevallásban. Csak a teljes tevékenységre választható (50. § (3)). Megszűnés vagy kilépés után a megszűnés évére és az azt követő 12 hónapra nem választható újra (50. § (7)). Ha egy átalányadózó ugyanabban az évben megszünteti, majd újrakezdi a vállalkozást, az egész évre át kell térnie a vállalkozói jövedelem szerinti adózásra (52. § (2)).",
+    "source": "Szja tv. 50. és 52. §, hatályos 2026.X.1-től: https://net.jogtar.hu/jogszabaly?docid=99500117.tv ; NAV 03. információs füzet (2026.08.31), 17. oldal és 59. lábjegyzet: https://nav.gov.hu/pfile/file?path=/ugyfeliranytu/nezzen-utana/inf_fuz/rejtett/Informacios-fuzetek---Aktualis/03_Az-egyeni-vallalkozok-szja--es-jarulekkotelezettsege",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Átalányadó – határok és költséghányad",
+    "fact": "Bevételi határ: az éves minimálbér tízszerese (Szja tv. 52. § (1) a)), ez 2026-ban 38 736 000 Ft (a minimálbér havi 322 800 Ft, 426/2025. (XII. 23.) Korm. rendelet). Év közben kezdőnél a határ a működés napjaival időarányos (50. § (8)). Saját számításom: 2026. július 1-jei kezdésnél ez kb. 19,5 M Ft, az áfahatár pedig kb. 10,1 M Ft. Költséghányad: 2026-ban általánosan 45 %, 2027-től 50 % (53. § (1) a)). 80 % jár, ha az egész évben KIZÁRÓLAG felsorolt ÖVTJ-tevékenységek folynak (például építőipar, javítás, fodrászat, fényképészet, taxi; 53. § (2)). 90 % a kiskereskedelemé. Ha év közben más tevékenység is bekerül, a költséghányad visszamenőleg csökken (53. § (3)). Adómentes rész: az éves minimálbér fele, 2026-ban 1 936 800 Ft (1. melléklet 4.48).",
+    "source": "Szja tv. 50., 52., 53. § és 1. melléklet 4.48; 2027-es szöveg: https://net.jogtar.hu/jogszabaly?docid=99500117.tv&timeshift=20270101 ; NAV 03. füzet (2026.08.31), 18. oldal, 15. és 73. lábjegyzet",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Munkavégzés jellege és járulékok",
+    "fact": "Főfoglalkozású EV-nél a TB-járulék (18,5 %) és a szocho (13 %) havi alapja legalább a minimálbér, 2026-ban 322 800 Ft. Ha a személyesen végzett FŐTEVÉKENYSÉG legalább középfokú végzettséget igényel, a garantált bérminimum az alap, 2026-ban 373 200 Ft. A szocho 112,5 %-os szorzója 2026-tól megszűnt. Nincs minimumalap, ha a vállalkozó legalább heti 36 órás munkaviszonyban áll (a munkaviszonyokat össze kell számítani), vagy nappali tagozatos diák (Tbj. 42. § (2)–(3)). A nyugdíjas EV kiegészítő tevékenységet folytatónak számít. A munkavégzés jellegét a kezdéskor kötelező megadni, a későbbi változást 15 napon belül az ONYA-ban kell bejelenteni.",
+    "source": "Tbj. (2019. évi CXXII.) 42. §: https://net.jogtar.hu/jogszabaly?docid=a1900122.tv ; NAV 03. füzet (2026.08.31), 4.2. és III.2. pont; NAV Ügysegéd-útmutató, Munkavégzés jellege",
+    "certainty": "official"
+   },
+   {
+    "topic": "(f) Egyéb buktatók",
+    "fact": "Az ÖVTJ-kód választása egyszerre határozza meg a költséghányadot (45/80 %) és azt, hogy minimálbér vagy garantált bérminimum után kell-e járulékot fizetni. A kata-rovatot nem szabad bejelölni (új kata). A pénzforgalmi elszámolás alanyi mentes vállalkozónál nem releváns. A beküldött bejelentést nem lehet visszavonni. Ha a vállalkozó számla- vagy nyugtaadási mulasztásért bírságot kap, elveszíti az átalányadózás jogát (Szja tv. 55. §). Később az adózási nyilatkozatok változását nem az Ügysegédben, hanem az ONYA „Egyéni vállalkozó bejelentése” menüben vagy a T101E lapon kell bejelenteni.",
+    "source": "Szja tv. 53., 55. §; NAV Ügysegéd-útmutató 2026.03.19 (I. fejezet és Adózási adatok); NAV 03. füzet 2.2. pont",
+    "certainty": "official"
+   },
+   {
+    "topic": "(g) GDPR – jogalap és célhoz kötöttség",
+    "fact": "Az indításhoz szükséges adatokra a szerződés teljesítése, illetve az érintett kérésére tett szerződéskötés előtti lépés a jogalap (GDPR 6. cikk (1) b)). A Pmt. szerinti ügyfél-átvilágítás adataira a jogi kötelezettség (6. cikk (1) c)), mert a könyvelő a Pmt. hatálya alá tartozik (Pmt. 1. § (1) h)). Az átvilágítási adatkör (név, születési név, állampolgárság, születési hely és idő, anyja születési neve, lakcím, okmány típusa és száma; Pmt. 7. § (2)) majdnem azonos az EV-űrlapéval. Ezek az adatok azonban KIZÁRÓLAG pénzmosás elleni célra kezelhetők (Pmt. 56. § (1)), és 8 évig kell őrizni őket (56. § (2)). Az EV-bejelentéshez ezért külön célként és külön tájékoztatással kell kérni őket (GDPR 5. cikk (1) b)–c), 13. cikk).",
+    "source": "GDPR (2016/679): https://eur-lex.europa.eu/eli/reg/2016/679/oj ; Pmt. (2017. évi LIII.) 1., 7., 56. §: https://net.jogtar.hu/jogszabaly?docid=a1700053.tv",
+    "certainty": "official"
+   },
+   {
+    "topic": "(g) GDPR – különleges azonosítók",
+    "fact": "A TAJ-számot csak a Szazt. 23. §-ában zártan felsorolt szervek, célok szerint kezelhetik, és magáncégként könyvelő ügyfélszolgálat nincs köztük. A személyi azonosítót csak az érintett előzetes írásbeli hozzájárulásával szabad kezelni (35. §). A Pmt. szerinti másolat NEM terjedhet ki a lakcímkártya személyi azonosítót tartalmazó hátoldalára (Pmt. 7. § (8) a), (8a)). Ellentmondás: a SPEC 10.3 pontja „lakcímkártya front + back” feltöltést kér. A kizáró okokat (büntetett előélet) nem szabad nálunk tárolni (GDPR 10. cikk). Ezekről az ügyfél maga nyilatkozik a hivatalos űrlapon.",
+    "source": "1996. évi XX. tv. (Szazt.) 23. és 35. §: https://net.jogtar.hu/jogszabaly?docid=99600020.tv ; Pmt. 7. § (8)–(8a); GDPR 10. cikk; C:/Users/UpgradePC/konyvelo_app/kod/SPEC.md 10.3. pont",
+    "certainty": "official"
+   }
+  ],
+  "recommendation": "AJÁNLOTT MENET: az ügyfél maga nyújtja be, de végig vezetjük. A képviseletet csak tartalék útnak javaslom.\n\n1) Adatgyűjtés az appban. A bekötés elején egy új ág: „Még nincs vállalkozásom”. Csak azt kérdezzük meg, ami a kitöltéshez és a döntésekhez kell:\n- mivel foglalkozna (ebből javaslunk fő- és egyéb ÖVTJ-kódot, és megmutatjuk, mit jelent ez a 45/80 %-os költséghányadra és a minimálbér/garantált bérminimum szerinti járulékra);\n- a székhely (saját / bérelt, és van-e használati joga / székhelyszolgáltató), telephely; figyelmeztetés, hogy a cím nyilvános lesz;\n- a munkavégzés jellege (főállás / legalább heti 36 órás munkaviszony mellett / nyugdíjas / nappali tagozatos / EGT-s munkaviszony);\n- a tervezett kezdés napja és a várható éves bevétel (ebből számoljuk az időarányos áfa- és átalányhatárt);\n- lesz-e EU-s szolgáltatás vásárlás vagy eladás (közösségi adószám kell-e);\n- volt-e idén megszüntetett vállalkozása vagy élő adószáma.\nA kizáró okokat csak tájékoztatásként mutatjuk, választ nem tárolunk. Nem kérünk TAJ-t, személyi azonosítót és lakcímkártya-hátoldalt. A személyes adatokat úgyis a meglévő `azonositas` (Pmt.) lépés gyűjti, de az csak pénzmosás elleni célra használható. Az EV-űrlap személyi képernyője a NAV útmutatója szerint a nyilvántartásból töltődik.\n\n2) Visszahívás 24–48 órán belül. Egy munkatárs telefonon átnézi az adatokat. Ez csak egyeztetés: telefonon bejelenteni nem lehet (Evectv. 4. § (4)).\n\n3) Beadás az ügyféllel. Az ügyfél Ügyfélkapu+ vagy DÁP belépéssel, a telefonján megnyitja a Vállalkozói Ügysegédet (ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged), és egy személyre szabott „Mit hova jelölj” lap alapján tölti ki, képernyőről képernyőre:\n- Áfamentesség → 2. alanyi adómentesség: IGEN, mert különben csak jövőre választhatja;\n- átalányadózás nyilatkozat: IGEN;\n- kata: NEM;\n- pénzforgalmi elszámolás: NEM;\n- munkavégzés jellege: X;\n- közösségi adószám: csak ha kell.\nAz „Ellenőrzés” képernyőt a hívás alatt együtt olvassuk vissza, mert beküldés után nem javítható. Az ügyfél feltölti az értesítés PDF-jét → állapot: „Vállalkozás bejelentve”. Utána jön a kamarai adatlap 5 munkanapon belül és az 5 000 Ft, majd az eddigi `meghatalmazas` lépés (UJEGYKE, ADÓÜGYEK). Ez a meghatalmazás az adóazonosító jelhez kötődik, így az új vállalkozásra is érvényes.\n\nMiért ez a legbiztonságosabb:\n- Az írásbeli jognyilatkozatot és a kizáró okokról szóló nyilatkozatot az ügyfél maga teszi meg.\n- Nincs zugírászati kockázat (Üttv. 2. és 4. §, Btk. 286. §).\n- Nem kell TAJ-t és bűnügyi adatot kezelnünk.\n- Nem kell 4 napot várni egy UJEGYKE-jóváhagyásra.\n- 2027-től, amikor az MKIK veszi át a nyilvántartást, csak a link változik.\n- A NAV szerint a beadás percek alatt kész, és a felület mobilra készült.\n\n4) Tartalék út, ha az ügyfél nem tud vagy nem akar belépni:\n- a) Ügyfélkapu+ igénylése kormányablakban vagy a NAV-nál, utána a 3) pont.\n- b) Személyesen bármelyik NAV-ügyfélszolgálaton (2027-től a területi kamaránál), személyi igazolvánnyal.\n- c) Képviselet: az ügyfél az ONYA-ban UJEGYKE-t ad a könyvelőnek (VEGYES ÜGYEK → „Egyéni vállalkozói nyilvántartással kapcsolatos ügyek (kivéve adóügyek)” + ADÓÜGYEK), a könyvelő belép a saját Vállalkozói Ügysegédjébe, kiválasztja az ügyfelet és beküldi a bejelentést. Ehhez az ügyfélnek is KAÜ-belépés kell.\n- d) Személyesen, meghatalmazottal: két tanúval aláírt (vagy DÁP eAláírással ellátott) papíros meghatalmazás, eredetiben.\nA c) és d) utat csak akkor kapcsoljuk be, ha a NAV 1819 megerősítette, hogy meghatalmazott vállalkozást is indíthat olyan ügyfél nevében, akinek még nincs EV-je, és ügyvéd jóváhagyta a díjas képviseletet.\n\nSzövegjavaslat a nyilvános felületekre, amíg a jogi oldal nem dől el: „Segítünk elindítani a vállalkozásod: felhívunk, átnézzük együtt, és pár perc alatt beküldöd” – a „Mi bejelentjük helyetted” helyett. Az új ügyfél a bekötés alatt korlátozott módban marad (nincs adószám, nincs NAV Online Számla) egészen a „Vállalkozás bejelentve” állapotig.\n\nKódot és fájlt nem módosítottam. A kutatás munkafájljai (a törvényszövegek és NAV-PDF-ek szöveges kivonata) itt vannak: D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad/kutatas",
+  "open_questions": [
+   "NAV 1819-ben vagy egy munkatárs saját belépésével (beküldés nélkül) meg kell nézni: engedi-e a Vállalkozói Ügysegéd, hogy egy UJEGYKE-meghatalmazott vállalkozást INDÍTSON olyan ügyfél nevében, akinek még nincs EV-je? A NAV útmutatója ezt nem mondja ki szó szerint.",
+   "A Személyi adatok képernyő (anyja neve, születési hely és idő, TAJ) tényleg a nyilvántartásból töltődik-e? Ha igen, az önálló beadáshoz nekünk ezeket egyáltalán nem kell bekérnünk.",
+   "Van-e az űrlapon jövőbeli kezdőnap mező, vagy mindig a beküldés napja a kezdés? A törvény szerint a nyilvántartásba vétel napja.",
+   "Kér-e az űrlap képesítési adatot (bizonyítvány száma, kiállító) képesítéshez kötött ÖVTJ-nál? Az útmutatóban ilyet nem láttam.",
+   "2027. január 1-jétől az MKIK lesz a nyilvántartó: mi lesz az új beadási felület, és milyen formában fogadja a képviseletet (UJEGYKE, RNY/DÁP-rendelkezés vagy teljes bizonyító erejű meghatalmazás az Ákr. 14. § szerint)? 2026 decemberében újra kell ellenőrizni, a végrehajtási rendeletet még nem láttam.",
+   "Ügyvédi kérdés (kod/jogi): a Somosi Kft. munkatársa vagy az alvállalkozó könyvelő eljárhat-e díjas szolgáltatás részeként meghatalmazottként az EV-nyilvántartási (nem adóügyi) eljárásban az Üttv. 2. és 4. §, illetve a Btk. 286. § (zugírászat) alapján? Jogi vagy adótanácsadásnak számít-e a részletes kitöltési útmutatás?",
+   "Kamarai regisztráció: a NAV külön kamarai űrlapot ír elő 5 munkanapon belül, a Gkt. 8/A. § (1) szerint viszont a kérelem a kezdő bejelentés része. Mi a mostani gyakorlat, és az első évben a regisztrációkor kell-e fizetni az 5 000 Ft-ot?",
+   "A SPEC 10.3 pontja „lakcímkártya front + back” fotót kér, de a Pmt. 7. § (8) a) szerint a személyi azonosítót tartalmazó hátoldalról NEM szabad másolatot készíteni. A KYC-lépésen a tulajnak vagy a jogi oldalnak javítania kell.",
+   "Kell-e valaha TAJ-t kezelnünk (például a képviselős tartalék útnál)? A Szazt. 23. § zárt listája alapján ezt ügyvédnek kell jóváhagynia; addig ne tároljuk.",
+   "Elfogadja-e a NAV-ügyfélszolgálat a DÁP eAláírással aláírt PDF-meghatalmazást, vagy csak papíros eredetit? A NAV „eredetben” való bemutatást ír.",
+   "Termékdöntés a tulajnak: a „bejelentjük” helyett „segítünk bejelenteni” legyen-e a nyilvános szöveg, és az új vállalkozók a bekötés alatt korlátozott módban maradjanak-e, amíg nincs adószámuk (nincs NAV Online Számla és technikai felhasználó)?"
+  ]
+ },
+ "kutatás:visszahívás": {
+  "findings": [
+   {
+    "topic": "Bottom bar during onboarding",
+    "fact": "Apple HIG (Tab bars): keep the tab bar visible when people move between sections, because hiding it makes people lose track of where they are. The only exception is a modal view that covers the bar, since a modal is temporary and self-contained.",
+    "source": "https://developer.apple.com/design/human-interface-guidelines/tab-bars (change log June 2026)",
+    "certainty": "official"
+   },
+   {
+    "topic": "Bottom bar during onboarding",
+    "fact": "Apple HIG: do not disable or hide tab bar buttons, even when their content is unavailable. Tabs that come and go make the interface feel unstable. If a section is empty, explain inside it why the content is unavailable. HIG also says a tab bar is for navigation, not for actions.",
+    "source": "https://developer.apple.com/design/human-interface-guidelines/tab-bars",
+    "certainty": "official"
+   },
+   {
+    "topic": "Bottom bar during onboarding",
+    "fact": "Android/Material 3: use a navigation bar for 3 to 5 destinations of equal importance and keep the destinations the same across the app's screens.",
+    "source": "https://developer.android.com/develop/ui/compose/components/navigation-bar",
+    "certainty": "official"
+   },
+   {
+    "topic": "Restricted mode before activation",
+    "fact": "Revolut: the account stays limited until identity is verified, and the user can pause the application and finish it later. For Revolut Business, pending checks can block specific actions such as sending transfers or using a card.",
+    "source": "https://help.revolut.com/en-BR/help/sign-up/i-dont-have-the-required-documents-how-can-i-proceed/ ; https://help.revolut.com/sv-SE/business/help/setting-up-an-account/onboarding/identity-verification/ (seen through search excerpts; direct fetch returned 403)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Restricted mode before activation (API enforcement)",
+    "fact": "Stripe Connect enforces restrictions on the server. The Account object has requirements.currently_due, past_due, eventually_due, pending_verification, current_deadline and disabled_reason (why the account cannot do something), plus the booleans charges_enabled and payouts_enabled. Platforms are expected to read these and show the user what is still needed.",
+    "source": "https://docs.stripe.com/connect/handling-api-verification.md?accounts-namespace=v1",
+    "certainty": "official"
+   },
+   {
+    "topic": "Restricted mode – disabled controls",
+    "fact": "NN/g: a disabled state means the action is unavailable and nothing happens on click. aria-disabled is recommended so the control stays focusable and screen readers announce it. NN/g's buttons topic page and other UX sources advise explaining why something is unavailable rather than silently greying it out.",
+    "source": "https://www.nngroup.com/articles/button-states-communicate-interaction/ ; https://www.nngroup.com/videos/why-disabled-buttons-hurt-ux-and-how-to-fix-them/",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Callback flow – fintech example",
+    "fact": "Revolut (Ultra): the user first sees FAQs for the issue, then taps 'Request Call'. Revolut sends a security code plus a text and push saying when the agent will call. The agent always quotes that code before discussing anything. The user can cancel via Home → Actions → Call Request → Cancel. The service is English only.",
+    "source": "https://help.revolut.com/help/profile-and-plan/my-plan-benefits/ultra-plan/callback-service (seen through search excerpts; direct fetch returned 403)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Callback flow – anti-fraud promise",
+    "fact": "Revolut says it never calls out of the blue and never calls outside the app unless the call was arranged in in-app chat. Monzo says it never calls without first arranging it in in-app chat. Monzo's 'Call Status' banner on the home tab shows whether a Monzo person is really on the line, and Monzo asks security questions before discussing the account.",
+    "source": "https://www.revolut.com/blog/post/how-to-know-its-really-revolut-calling/ ; https://monzo.com/blog/2023/09/06/making-it-clear-when-were-on-a-call-with-you/",
+    "certainty": "official"
+   },
+   {
+    "topic": "Callback flow – fintech example",
+    "fact": "Monzo: you schedule a call in the app and Monzo rings your preferred number. After a phone or chat conversation you can ask for a written summary by e-mail. Non-voice options exist (text relay, BSL video relay), and you can tell Monzo which contact method works best for you.",
+    "source": "https://monzo.com/legal/mobile/vulnerability-and-accessibility-statement",
+    "certainty": "official"
+   },
+   {
+    "topic": "Callback flow – Hungarian context (fraud)",
+    "fact": "OTP MobilBank lets a customer check during a call whether the bank is really calling: Profil menu → time of call, caller number and the agent's ID. Missed calls can be checked later.",
+    "source": "https://bank360.hu/blog/mobilbank-ellenorizheto-csalo-telefonhivas (2024-08-02, updated 2025-03-19)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Callback flow – Hungarian context (fraud)",
+    "fact": "MNB message repeated by banks: neither the MNB nor commercial banks ever ask for passwords, PIN or SMS/one-time codes by phone. Red flags are urgency, a 'safe account', asking for codes, and asking you to install an app. Advice: hang up and call back on the known number.",
+    "source": "https://www.otpbank.hu/portal/hu/Hirek/mnb_adathalasz_kozlemeny ; https://adozona.hu/altalanos/Telefonos_csalokra_figyelmeztet_az_MNB_KA7C1J",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Callback form fields and promise – bank example",
+    "fact": "HSBC UK 'Arrange a callback' asks for: the phone number 'you'd like us to call you on'; preferred time slots (Mon–Thu 09–12 / 12–17 / 17–20, Fri–Sat 09–12 / 12–17); optional topics with free text; and an 'I agree to be contacted' checkbox. Its promise reads: 'One of our team will call you back within 2 working days from an 0345 phone number.' It also says 'We'll never ask for your account, card or online banking details.'",
+    "source": "https://www.hsbc.co.uk/forms/arrange-a-callback",
+    "certainty": "official"
+   },
+   {
+    "topic": "Callback form fields and promise – bank example",
+    "fact": "Danske Bank UK: required phone number; preferred window Mon–Fri 8:30–12:30 and/or 12:30–16:30 (choose one or both); topic checkboxes plus 'Other' with details. It aims to return calls within one working day and may call outside the window when volume is high.",
+    "source": "https://danskebank.co.uk/personal/help/money-worries/form",
+    "certainty": "official"
+   },
+   {
+    "topic": "Callback form fields and promise – bank example",
+    "fact": "Other UK forms treat the preferred time as best effort. Bank of Ireland UK: 'we can't guarantee it… we'll call as close to your preferred date as we can'. Family Building Society: 'We aim to return all calls within 48 hours' (Mon–Fri 9–17:30). Halifax reschedules if the slot is unavailable. Cavendish Online offers Morning/Lunch/Afternoon/Evening/ASAP slots.",
+    "source": "https://www.bankofirelanduk.com/?p=4134 ; https://www.familybuildingsociety.co.uk/contact-us/request-a-callback ; https://www.halifax.co.uk/mass-affluent/book-your-meeting/ab.html (seen through search summary)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Back office – retry policy",
+    "fact": "Amazon Connect queued callback: 'Max number of retries' = 2 means at most 3 attempts (the first plus 2 retries). 'Minimum time between attempts' is set separately (the example uses 10 min). AWS warns that a high number such as 20 makes needless work and too many calls. A call that reaches voicemail counts as connected and is not retried. Callbacks stay queued at most 7 days. AWS recommends a dedicated callback queue for metrics, a fixed caller ID, duplicate-request checks, and an optional advance SMS before the call.",
+    "source": "https://docs.aws.amazon.com/connect/latest/adminguide/setup-queued-callback.html ; https://aws.amazon.com/blogs/contact-center/preventing-duplicate-callback-requests-in-amazon-connect/",
+    "certainty": "official"
+   },
+   {
+    "topic": "Back office – retry policy",
+    "fact": "Genesys Cloud callbacks: 'Maximum Number of Retries' can be 0–20 (0 turns retries off) and 'Time Between Retries' can be at most 24 h. Retries happen only after an unsuccessful outcome (busy, no answer, disconnect, unreachable).",
+    "source": "https://help.genesys.cloud/?p=350615 (seen through search excerpt)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Back office – retry policy",
+    "fact": "Industry guidance from vendor blogs, with no single standard: start with 3–4 total attempts spaced 4 h or more apart; vary the time of day (late morning and mid-afternoon are bad for working people); after failed attempts switch channel to SMS or e-mail with a self-serve link; set a clear stop rule ('Attempt 3 — No Contact').",
+    "source": "https://docs.meetgail.com/platform/communications/outbound/redialing-rules.md ; https://voximplant.com/blog/setting+callback+rules ; https://www.ringover.com/blog/customer-service-callback",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Back office – queue, claim, duplicates, SLA",
+    "fact": "Zendesk Talk offers a callback to all agents for 60 min, then turns it into a 'Callback' ticket on which an SLA can be set. Talk does not retry if the customer does not answer. A community thread reports team confusion and customers being called twice. Zendesk SLA targets can run on a business-hours schedule (working days, hours, time zone, holidays). First/next reply timers do not pause in pending or on-hold status.",
+    "source": "https://support.zendesk.com/hc/en-us/articles/4408884087706 ; https://support.zendesk.com/hc/en-us/articles/4408885881498-Troubleshooting-common-SLA-issues ; Zendesk community post 7162280058138",
+    "certainty": "official"
+   },
+   {
+    "topic": "Back office – collision prevention",
+    "fact": "Help Scout Collision Detection: if a teammate updates a conversation while you are replying, the reply is held so you can review first, which prevents duplicate replies. It is automatic on all plans. Assignment ('assign to me') is a separate mechanism.",
+    "source": "https://docs.helpscout.com/article/99-traffic-cop",
+    "certainty": "official"
+   },
+   {
+    "topic": "Phone number input",
+    "fact": "GOV.UK Design System, telephone numbers pattern: use type=tel and autocomplete=tel (needed for WCAG 1.3.5). Accept any familiar format (spaces, +country code, brackets). Collect a number only if you genuinely need it, and tell users why and when you will call. Validate with specific error messages that include an example. Give users a choice of contact method because not everyone can use a phone.",
+    "source": "https://design-system.service.gov.uk/patterns/telephone-numbers/",
+    "certainty": "official"
+   },
+   {
+    "topic": "Confirmation / status feedback",
+    "fact": "GOV.UK confirmation page pattern: show a reference if there is one, what happens next and when, contact details, likely next links, and a way to keep a record.",
+    "source": "https://design-system.service.gov.uk/patterns/confirmation-pages/",
+    "certainty": "official"
+   },
+   {
+    "topic": "Accessibility",
+    "fact": "WCAG 2.2 SC 3.2.6 Consistent Help (Level A): if a human contact mechanism, contact details or self-help option is repeated across a set of pages, it must appear in the same relative order each time.",
+    "source": "https://www.w3.org/WAI/WCAG22/Understanding/consistent-help",
+    "certainty": "official"
+   },
+   {
+    "topic": "Accessibility",
+    "fact": "WCAG 2.2 SC 3.3.7 Redundant Entry (Level A): information already entered in the same process (for example the phone number from the questionnaire) must be auto-populated or available to select. WCAG 4.1.3 Status Messages (AA): status changes must be programmatically determinable (aria-live/role=status) without moving focus.",
+    "source": "https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry ; https://www.w3.org/WAI/WCAG22/Understanding/status-messages",
+    "certainty": "official"
+   },
+   {
+    "topic": "Accessibility law",
+    "fact": "The European Accessibility Act has applied since 28 June 2025 (with transition periods). Hungary transposed it as a standalone act, reported as 2022. évi LXVIII. törvény, though one article gives a different number. At EU level, microenterprises providing services are generally exempt, but the Hungarian provision was not verified.",
+    "source": "https://www.portfolio.hu/uzlet/20250507/nyakunkon-a-juniusi-hatarido-hogyan-keszuljenek-fel-a-cegek-a-digitalis-akadalymentessegre-759509 ; https://www.disabilityworld.org/regulations/hu/",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Consent / adatkezelés for callbacks (Hungarian model text)",
+    "fact": "Concorde Értékpapír Zrt. 'Visszahívást kérek!' privacy notice (2026-10-21). Data: name, e-mail, phone. Purposes: calling back at the person's request and pre-contract discussion. Legal basis: GDPR 6(1)(b), steps taken before a contract at the person's request. Separately it keeps data 5 years after the discussion closes under 6(1)(f), for legal claims. It states explicitly that a callback request is not a newsletter sign-up or marketing consent.",
+    "source": "https://con.hu/documents/2024/10/adatkezelesi-tajekoztato-visszahivas.pdf",
+    "certainty": "official"
+   },
+   {
+    "topic": "Consent / adatkezelés for callbacks",
+    "fact": "OTP Bank 'Visszahívást kérek!' button: pressing it means the user acknowledges the attached privacy notice. If contact fails, the bank keeps the data to try again later.",
+    "source": "https://www.otpbank.hu/static/portal/sw/file/NAIH_87028.pdf (seen through search excerpt)",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Call recording",
+    "fact": "NAIH guidance (2016, before GDPR): a recording needs a defined purpose and must be announced at the start of the call. Where no law obliges recording, it needs the caller's consent based on that prior information. Fgytv. 17/B (3) obliges certain consumer-facing businesses to record with a unique ID, keep recordings 5 years, provide them free on request and announce this at the start. Banks and insurers are outside Fgytv. Our clients act as businesses, so the consumer rule probably does not apply. The current legal position should be confirmed by the lawyer.",
+    "source": "https://www.naih.hu/files/2016_05_09_tajekoztato_hangfelvetelekrol.pdf ; https://naih.hu/files/NAIH-2018-3102-1-hatarozat.pdf",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Business-day calendar for SLA",
+    "fact": "Under 10/2025. (IV. 30.) NGM rendelet, 2026 has working Saturdays on Jan 10, Aug 8 and Dec 12, and rest days on Jan 2, Aug 21 and Dec 24. Public holidays include Jan 1, Mar 15, Apr 3 (Good Friday), Dec 25–26. A '1–2 munkanap' deadline must use this calendar.",
+    "source": "https://adozona.hu/jogtar/495662_10_2025_IV_30_NGM_rendelet_2026 ; https://www.penzcentrum.hu/karrier/20250524/ledolgozos-szombatok-2026-ban-itt-van-minden-athelyezett-munkanap-1179148",
+    "certainty": "secondary"
+   },
+   {
+    "topic": "Hungarian accounting services",
+    "fact": "Several searches found no public, documented 'visszahívást kérek' flow from a Hungarian online accounting service. The Hungarian examples found are from banks and investment firms (OTP, Magnet: 'Felhívhatunk?', Concorde). The patterns above come mostly from banks and fintechs.",
+    "source": "web searches 2026-11-18 (magnetbank.hu/kkv-visszahivast-kerek, adozona.hu)",
+    "certainty": "uncertain"
+   },
+   {
+    "topic": "Our codebase (context for the recommendations)",
+    "fact": "Today the onboarding route bekotes/* renders without the Fulsor tab bar (app/src/ui/keret.tsx exports Fulsor; app/src/app/index.tsx line 296 redirects onboarding clients to /bekotes). The backend has no lifecycle-based gate: routes/client.ts only shapes the home 'hero'. Seed client Németh Péter (SPEC §19.5) is mid-onboarding and has an open accountant request to upload bank statements (design 02). Appointments are a separate table, and the step `idopont` is optional (§6.1, §25 review notes).",
+    "source": "C:/Users/UpgradePC/konyvelo_app/kod/SPEC.md §6.1, §17.3, §19.5; C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/index.tsx; C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/client.ts",
+    "certainty": "official"
+   }
+  ],
+  "recommendation": "CONCRETE RECOMMENDATIONS FOR KÉZJEGY. Research only; no code was changed.\n\nA. CLIENT APP: \"Visszahívást kérek\" replaces time-slot booking\n\n1. Where it lives\n- One \"Visszahívást kérek\" entry, always in the same place (WCAG 3.2.6):\n  - a card on the onboarding Főoldal, replacing the `idopont` card;\n  - a row in the Üzenetek header;\n  - a row in Fiók → Segítség;\n  - the bottom of GYIK.\n- Show 2–3 GYIK answers for the chosen topic before sending (Revolut pattern), but never block the request.\n\n2. One short screen, title \"Felhívunk\". Lead text: \"Munkanapokon 1–2 napon belül hív egy kollégánk. Nem mindig Bence, de mindenben segít.\"\n- \"Miről beszéljünk?\" – single-choice chips: Új vállalkozást indítanék · Kérdésem van a bekötésről · Másik könyvelőtől jönnék · Adó, számlák · Egyéb. Plus an optional note field, max 300 characters.\n- \"Melyik számon hívjunk?\"\n  - Prefilled from the questionnaire phone and editable (WCAG 3.3.7).\n  - type=tel, autocomplete=tel; accept 06…, +36…, spaces.\n  - Store as E.164 and show as \"+36 30 123 4567\".\n  - Errors give an example (\"Írd be így: 06 30 123 4567\").\n- \"Mikor jó?\" – optional checkboxes: Délelőtt (9–12) · Délután (12–17), default Mindegy. Hint: \"Igyekszünk ekkor hívni, de nem ígérjük.\"\n- Button: \"Kérem a visszahívást\".\n- No consent checkbox (the legal basis is GDPR 6(1)(b)). Instead one line: \"A számodat csak erre a hívásra használjuk. Nem rögzítjük a hívást. Részletek: Adatkezelési tájékoztató\", linking a new \"Visszahívás\" section.\n- Link \"Inkább írnék\" → Üzenetek, so there is a non-voice alternative (GOV.UK, Monzo).\n\n3. Confirmation (GOV.UK pattern)\n- \"Megkaptuk. Legkésőbb csütörtökön, nov. 20-án hívunk a +36 30 … számon, a +36 1 … számról.\"\n- Compute the concrete date with a business-day calendar (2026 NGM rendelet: working Saturdays and rest days) and a 9–17 calling window. A concrete date beats \"24–48 óra\", which is misleading over weekends.\n- Show a 4-digit hívókód, Revolut-style: \"A kollégánk a hívás elején ezt mondja: 4827. Ha nem ezt mondja, tedd le, és írj nekünk.\"\n- Safety line, Hungarian-fraud aware (MNB/HSBC wording): \"Telefonon soha nem kérjük a jelszavad, az Ügyfélkapu+ vagy DÁP kódodat, és nem kérünk utalást.\"\n- Buttons: \"Rendben\" / \"Mégsem kérem\".\n\n4. Status card (onboarding Főoldal + a system message in the Üzenetek thread + push/e-mail)\n- Statuses:\n  - Fogadtuk (\"Legkésőbb {nap} hívunk\")\n  - Hamarosan hívunk (\"{Keresztnév} hív téged\")\n  - Nem értünk el, n/3 (\"Ma 10:12-kor hívtunk, nem értünk el. Holnap délután újra próbáljuk.\" + \"Másik számot adok\" + \"Írok inkább\")\n  - Beszéltünk (date + optional short summary the team writes, Monzo-style)\n  - Nem értünk el, lezártuk (\"Háromszor hívtunk… Kérj új hívást, vagy írj nekünk.\")\n  - Lemondtad.\n- Only one open request per client: while one is open, the button turns into the status card.\n- Announce status changes with aria-live (WCAG 4.1.3). Targets ≥44 pt.\n- Later, cheap anti-fraud: when staff press \"Hívom\" in the panel, push \"Most hívunk a +36 1 … számról\", and show the hívókód on the card for 10 min. This mirrors the OTP/Monzo call check.\n\n5. Link to order 1 (new businesses)\n- The questionnaire's first question: \"Van már vállalkozásod?\" Igen / Még nincs, indítanék.\n- \"Még nincs\" collects the registration data and automatically creates a callback with topic \"Új vállalkozás\": \"felhívunk, átnézzük, és bejelentjük\".\n\nB. BOTTOM BAR AND RESTRICTED MODE (orders 3–4)\n\n1. Tab bar\n- Show the same Fulsor during bekötés: Főoldal / Dosszié / Üzenetek / Fiók, plus Fotózás. Research favours keeping all tabs over a reduced 3-tab bar, because Apple HIG says not to hide or disable tabs and Material wants the same destinations everywhere.\n- Főoldal tab = the onboarding checklist (bekotes/index rendered under the tab).\n- Dosszié tab = a friendly locked state: `dosszie_mappa` illustration, \"A dossziéd a bekötés után nyílik meg. Még 3 dolog kell tőled.\" and a button to Főoldal. Do not grey out the tab.\n- Fotózás tap → sheet: \"Iratokat a bekötés után tudsz feltölteni. A személyi fotózása itt van: Azonosítás.\"\n- Hide the bar only inside step forms (adatok, szerződés, előfizetés, meghatalmazás, azonosítás), treating them as modal tasks with their own \"‹ Vissza\", the same way Üzenetek already hides it.\n- Badge Üzenetek with the unread count.\n\n2. Restricted mode (Stripe-like model), enforced in the API\n- `GET /client/me` (or onboarding) returns `capabilities` with an `enabled` flag and a `reason` code per feature. Example: `{ dosszie:{enabled:false,reason:'bekotes'}, igazolasKeres, fizetendo, navSzamlak, feltoltes:'csak_keresre' }`. Add `todo[]` (like `currently_due`).\n- A Hono middleware `requireActive` on the locked routes returns 403 `{code:'BEKOTES_UTAN', message:'A bekötés után nyílik meg.'}`.\n- Stays open: onboarding endpoints, messages and attachments, callback, Fiók (security/2FA, subscription and cancel, GDPR export/delete, logout), GYIK, jogi, notifications.\n- Locked: dossier browsing and free uploads, certificate requests (jövedelemigazolás etc. need the meghatalmazás), the tax/pay home, NAV invoice lists, ajánló.\n- Exception: uploads that answer an open accountant request stay allowed. Seed client Németh Péter (bekötés alatt) has the request \"Töltsd fel az idei bankszámlakivonataidat\".\n- The app renders locks only from the server's `capabilities`, so there is one source of truth.\n- Tests: every locked route returns 403 for a bekotes_alatt user and 200 after activation.\n- No data migration is needed for this, so the owner's live accounts (alex@…, tulaj@…) are untouched.\n\nC. PANEL: \"Visszahívások\" queue (/visszahivasok)\n\n1. Who\n- The owner said \"someone from our team\", so add a narrow role (e.g. `ugyfelszolgalat`), or let admin and accountants see this queue.\n- Show only: name (or \"Új érdeklődő\"), phone, topic, note, preferred window, onboarding progress summary. Not KYC, documents or messages (least privilege, §4.6).\n\n2. List\n- Columns: Beérkezett (age), Határidő (SLA due), Téma, Ügyfél, Telefon (tel: link), Mikor jó, Próba (0/3), Felelős, Állapot.\n- Chips: Új · Nálam · Ma esedékes · Késésben · Nem értük el · Lezárt.\n- Sort by due date.\n\n3. Claim\n- \"Elvállalom\" sets the owner and claimed_at; others see \"Anna vállalta 10:02\" and cannot log attempts.\n- Auto-release if there is no attempt within 2 work hours.\n- Re-check status on every action. This prevents double calls (the Zendesk double-call reports; Help Scout collision detection).\n\n4. Attempts\n- \"Hívom\" (optionally pushes to the client) → outcome buttons: Beszéltünk / Nem vette fel / Foglalt / Rossz szám / Hangposta, plus an internal note.\n- Voicemail: leave only name + \"visszahívást kértél, írtunk az appban\" — never details.\n\n5. Retry policy\n- At most 3 attempts (AWS: first try plus 2 retries; warns against more).\n- At least 3–4 h apart, across both délelőtt and délután, spread over at least 2 workdays.\n- After each miss, an automatic in-app message and push; after the 3rd, close as `nem_ertuk_el` and invite a new request.\n- Show \"Következő próba: holnap 14:00 után\".\n\n6. SLA timer\n- due_at = created + 2 business days (end of day), using a Hungarian business-day calendar in kod/shared; internal goal 1 business day.\n- Amber when <4 work hours are left, red \"Késésben\" after due.\n- Admin dashboard tiles: open, overdue, % within SLA, median time to first attempt, contact rate.\n- Daily overdue digest to admin.\n- If the client asks for a later time, staff can move the due date with a reason (audited).\n\n7. Close\n- Requires an outcome code: megbeszéltük / új vállalkozás – adatfelvétel / átadva a könyvelőnek / nem értük el / lemondta / téves.\n- Optional client-visible summary.\n- \"Új vállalkozás\" can create an internal task \"Vállalkozás bejelentése\".\n\n8. Audit\n- callback.created / claimed / attempted / closed / cancelled. Never notes or the phone number in `details`.\n\n9. Data, additive only\n- New tables:\n  - `callback_requests`: id, client_id, topic, note_enc, phone_enc, phone_last4, preferred_windows, status, code_hash, created_at, due_at, claimed_by, claimed_at, next_attempt_after, attempts, closed_at, outcome, client_summary.\n  - `callback_attempts`.\n- Keep the `appointments` table and the `idopont` step: set appointments_enabled false and leave data as is.\n- pg_dump before migrating; the live accounts are untouched.\n\nD. Legal text and lawyer\n- Add a \"Visszahívás\" section to the Adatkezelési tájékoztató, modelled on the Concorde 2026 notice:\n  - data: név, telefonszám, téma, megjegyzés, hívások ideje és eredménye;\n  - purpose: kapcsolatfelvétel a kérésedre / a szerződés teljesítése;\n  - basis: GDPR 6(1)(b), plus retention set by the lawyer;\n  - \"nem iratkozol fel hírlevélre\".\n- Do not record calls. If that ever changes, announce it at the start of the call and offer an unrecorded option (NAIH).\n- Add these to kod/jogi/README questions.",
+  "open_questions": [
+   "Which number do we call from? One company number (needed for the 'erről a számról hívunk' line and the in-app call check), or colleagues' own mobiles?",
+   "Who works the callback queue: a new narrow 'ügyfélszolgálat' role, the admin (who today may not see client messages or KYC), or the accountants? This decides panel access rules.",
+   "Promise wording: the owner's literal '24–48 órán belül', or '1–2 munkanapon belül' plus a computed latest date? What are the calling hours (9–17 on workdays only? working Saturdays?)",
+   "Retry policy numbers: are 3 attempts over at least 2 workdays acceptable, and should a voicemail count as an attempt?",
+   "Should we ever record calls? Recommended: no. Recording would need notice at the start of the call, consent or another legal basis, a retention period, and a lawyer's sign-off.",
+   "How long do we keep closed callback records (e.g. 1 year, or 5 years like Concorde under 6(1)(f))? This is for the lawyer.",
+   "In restricted mode, should a mid-onboarding client be able to upload documents only as answers to accountant requests (as recommended), or also freely (e.g. last year's statements)?",
+   "During bekötés, show all four tabs with explanations (recommended by Apple HIG) or only Főoldal/Üzenetek/Fiók? The owner's order allows either.",
+   "Should non-registered website visitors also be able to request a callback (leads)? If so, it needs a separate form, privacy notice and spam protection.",
+   "New-business registration (order 1): can Somosi Kft. or the accountant legally file the EV bejelentés on the client's behalf (meghatalmazás scope, WÜS)? This was not researched here and needs the lawyer and the accountant."
+  ]
+ },
+ "terv:spec-26": {
+  "done": [
+   "Before changing anything, copied the old files to _regi: SPEC.md to kod/_regi/SPEC_par26_elott_1020.md, FUNKCIOK.md to _regi/FUNKCIOK_par26_elott_1020.md, and the stopped run's partial shared sources to kod/_regi/shared_src_par26_reszleges_1020/ (an earlier 10:03 copy also exists). SPEC.md had no partial §26. The partial shared files were replaced, not merged.",
+   "Appended '§26 Tulaj-kérések 11-18' to kod/SPEC.md (about 555 lines). It also adds a TOC line, a note at the top that §26 overrides older sections, and a dated §24 builder note. It covers: 26.0 which order goes to which section; 26.1 the self-service new-business path (the 'Van már egyéni vállalkozásod?' question, a short 'Rólad' page, a 5-page adatlap with validation, ÖVTJ search and a cost-ratio/contribution hint from ado-motor, stop cases, the registration states kitoltes → utmutato → beadva → javitas/ellenorizve → kesz/elallt, step order, locks, milestones, which profile fields get filled at kesz, and the KYC fix: lakcímkártya address side only); charging default 'adoszam_utan' marked as an [OWNER] decision; 26.2 the callback request replacing booking everywhere (entry-point table, form, promise, anti-fraud text, 48 h SLA and overdue, max 3 attempts, 'Most hívom', status texts, retiring appointments: rows kept, future bookings mapped to callbacks, old endpoints answer 410); 26.3 panel pages (Visszahívások queue, Vállalkozás-indítás pipeline, admin Csapat, menu per role); 26.4 the 'csapat' permission matrix; 26.5 the bottom bar during onboarding and the restricted-mode matrix with route mapping and 403 locked_until_active; 26.6 the guides on annotated NAV screenshots (kepek.json manifest built by a normaliser script from the NAV-képek output); 26.7 the video contract (/media/bekotes.*, /media/vallalkozas_bejelentes.*, /media/meghatalmazas.*, a kod/media staging folder with fixed owners per path, a Caddy /media handle, streaming in the APK, a placeholder when a file is missing, script outlines); 26.8 the editable explainer content keys and the field → explainer → 3D icon/object table; 26.9 additive migrations 0008 (enum ADD VALUE only) and 0009 (new tables) plus a one-time idempotent data step; 26.10 the endpoint tables; 26.11 notifications and e-mail texts; 26.12 legal changes; 26.13 the idempotent demo-data addition (team member Nagy Anna, new-business client Tóth Levente in beadva, Fehér Zsófia with no login, 4 callbacks in 4 states); 26.14 acceptance tests per order; 26.15 waits; 26.16 sources.",
+   "Rewrote kod/shared/src/enums.ts. New: role csapat with labels; onboarding step vallalkozas_inditas (idopont marked legacy); step order and required steps per path (this replaces the backend's REQUIRED_STEPS); milestone vallalkozas_elinditva; document category ev_bejelentes; 15 new notification kinds; all registration, seat, work-kind, revenue-band, filing-channel and check-item enums with labels; GUIDE_STEP_KEYS (14 + 8); video file names and the media base; all callback enums and CALLBACK_RULES; the restricted-mode matrix CLIENT_FEATURE_RULES and the error codes.",
+   "Wrote kod/shared/src/bekotes.ts (no imports, so the NodeNext builds of jogi and nav-kliens still compile it). It holds: 35 explainers ('Mi ez? / Miért kell? / Hol találod?', Hungarian, tegező, each with a 3D icon); the 'Készítsd elő' list (TAJ and anyja neve marked as never stored by us); 35 common target-group activities with NAV search words, a suggested cost class and an ovtjKod left null for the accountant; the two 'Mit hova jelölj' guide templates; and small helpers (normalizeHuPhone, maskHuPhone, isValidHuZip, isValidOvtjKod, fillPlaceholders).",
+   "Checked the guide template wording against the official NAV PDFs the parallel NAV-képek job downloaded (Vállalkozói Ügysegéd útmutató 2026.03.19 and the ONYA segédlet), treated as data only. Corrections: exact field labels ('A katával kapcsolatos nyilatkozat', 'Áfamentesség – 2. Az alanyi adómentesség választása', etc.); the bejelentés is free; a new last step 'kamarai_regisztracio' (chamber registration is due within 5 working days); the activity list is ÖVTJ'25 at KSH; KAVIR for qualifications; the meghatalmazás steps now match kod/jogi/nav_meghatalmazas.md (jogcím 9 – könyvelő, nyilvántartási szám, ügycsoportok taken from the jogi list).",
+   "Extended kod/shared/src/api.ts. Changed existing types: ApiError.feature, PublicConfig.mediaBaseUrl and newBusinessChargePolicy, Me.access and teamMember, OnboardingState (path, registration, callback, per-step locks), ClientProfileStartInput, Message sender 'csapat' and senderName, Appointment marked deprecated. Added the full §26 type block: ClientAccess, Explainer, BusinessRegistration* types, Guide types, GuideImageManifest, VideoManifest, Callback* types, Team* types, AdminServiceStats. index.ts now also exports bekotes.",
+   "The shared typecheck passes (tsc 5.9.3, taken from backend/node_modules because npx could not write its cache). Ran sync-shared into backend, app, panel, jogi and nav-kliens; all copies are identical. jogi and nav-kliens still typecheck clean. Backend (6 errors), panel (5) and app (2) now fail typecheck as expected, from exhaustive Records and new required fields; the exact files are listed in the SPEC §24 note for the builders.",
+   "Updated FUNKCIOK.md, keeping the old numbers stable. Point 6 is now the callback request and point 26 the callback queue. Points 4, 5, 7 and 16 got small updates (ONYA guide with video, address side only, the 'vállalkozás elindítva' milestone, the team also answers during onboarding). Added points 36–39 (new business, guide on real annotated NAV screenshots, video and explainers, bottom bar and restricted mode), 40–41 (a new Csapat / ügyfélszolgálat section) and 42 (admin team management)."
+  ],
+  "files": [
+   "C:/Users/UpgradePC/konyvelo_app/kod/SPEC.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/enums.ts",
+   "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/bekotes.ts",
+   "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/api.ts",
+   "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/index.ts",
+   "C:/Users/UpgradePC/konyvelo_app/FUNKCIOK.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_regi/SPEC_par26_elott_1020.md",
+   "C:/Users/UpgradePC/konyvelo_app/_regi/FUNKCIOK_par26_elott_1020.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_regi/shared_src_par26_reszleges_1020/",
+   "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/_shared/",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/src/_shared/",
+   "C:/Users/UpgradePC/konyvelo_app/kod/panel/src/_shared/",
+   "C:/Users/UpgradePC/konyvelo_app/kod/jogi/src/_shared/",
+   "C:/Users/UpgradePC/konyvelo_app/kod/nav-kliens/src/_shared/"
+  ],
+  "owner_todo": [
+   "Decide when a new-business client is first charged: 'adoszam_utan' (default: the card step opens only after the adószám is recorded) or 'azonnal'. Env NEW_BUSINESS_CHARGE_POLICY; switching also needs two text edits (SPEC §26.1.7).",
+   "Provide the caller number shown to clients (env CALLBACK_CALLER_ID; hidden until set) and confirm the callback hours (default text: weekdays 9–17) and the SLA (48 calendar hours).",
+   "Accountant: fill the ÖVTJ'25 codes in BUSINESS_ACTIVITIES (kod/shared/src/bekotes.ts), confirm the cost classes marked 'ellenorizendo', the garantált bérminimum cases, and review every guide text against the live NAV screens.",
+   "Lawyer: (1) is our guiding + checking outside 'ügyvédi tevékenység'; (2) may the 'Egyéni vállalkozói nyilvántartással kapcsolatos ügyek (kivéve adóügyek)' group stay in the paid meghatalmazás – the existing jogi draft includes it and I kept it, so the guide follows jogi meghatalmazas.ugykorok automatically; (3) legal basis and retention for callback data, and the 'calls are not recorded' statement; (4) use of official NAV screenshots (Szjt. 1. § (4)); (5) whether the new ÁSZF needs re-acceptance (left false so your live accounts are not blocked).",
+   "Capture the NAV screens that are missing (listed in utmutato_kepek/hianyzik.md by the NAV-képek job) by logging in yourself, without sending anything, then re-run its annotate.py and the app's utmutato-kepek normaliser.",
+   "Before 2027-01-01, update the guide templates and screenshots: the chamber (MKIK) takes over the register. The guide shows an 'outdated' banner after 2026-12-31.",
+   "Name the real team members (ügyfélszolgálat) and who receives the daily staff digest; demo uses 'Nagy Anna'."
+  ],
+  "problems": [
+   "After the sync, backend, panel and app no longer typecheck. This is expected (exhaustive Records over enums that gained values, and new required fields on OnboardingState). Exact files: backend notify.ts, documents.ts, onboarding.ts; panel lib/labels.ts, mock/server.ts, pages/acc/UgyfelLista.tsx; app api/minta/adatok.ts. They are listed in the SPEC §24 note 2026-11-18 10:43 for the builders. jogi and nav-kliens compile clean.",
+   "The NAV-képek job was still running when I finished (utmutato_kepek only had _forras with 3 source files), so I could not match its index.json format to our step keys. §26.6.4 makes the app builder write a normaliser (kod/app/scripts/utmutato-kepek.mjs, with a mapping file) that produces media/utmutato/<kind>/kepek.json keyed by GUIDE_STEP_KEYS.",
+   "An earlier draft of mine said not to tick the EV-register ügycsoport, which contradicted the existing jogi draft (it ticks it so the accountant can file later data changes). I reverted that: the guide follows the jogi list, and the question is flagged [JOGI] in §26.6.3, §26.12 and §26.15.",
+   "Older SPEC sections call the activity list 'ÖVTJ'24'; the NAV guide of 2026-03-19 points to KSH ÖVTJ'25. §26.1.4 and §26.15 say ÖVTJ'25; the older sections were not edited.",
+   "npx could not download TypeScript (EPERM on the npm cache under D:/Cache/npm), so every typecheck used kod/backend/node_modules/typescript 5.9.3. Several Bash heredocs also failed to parse in this shell; I worked around that with script files in the scratchpad. No effect on the deliverables."
+  ]
+ },
+ "terv:nav-képek": {
+  "done": [
+   "READY FOR BUILDERS: C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/{vallalkozas_bejelentes,meghatalmazas}/NN_slug.png (1080 px wide) + NN_slug@2x.png (2160 px) + index.json per guide. index.json lepesek[]: lepes_kulcs = exactly kod/shared GUIDE_STEP_KEYS; resz = order when one key has several images; valtozat = {mezo:'workKind'|'euPartner', ertek} (show only for that answer; euPartner 'nem_tudom' -> 'nem'); felirat (short caption), alt, mit_csinalj, mezok[], forras{cim,url,datum,oldal}, forras_rovid; kimenet{fajl,fajl_2x,szel,mag,tipus ('valodi'|'illusztracio', the normaliser should read THIS field), jelolesek_kimeneten[] {n, stilus, cimke, doboz [x0,y0,x1,y1] 0-1 on the final image, korong} for the video zooms}. Steps with no picture: kep_nelkuli_lepes_kulcsok (feltoltes_appban, kamarai_regisztracio, app_bekuldtem).",
+   "meghatalmazas: 16 images, ALL REAL NAV screens (onya_belepes x2, onya_profil, onya_uj_nyomtatvany x2, onya_szerep x2, onya_meghatalmazott x3 incl. jogcím '9 - Könyvelő' list, onya_ugykorok x3 (időbeli hatály, ADÓÜGYEK, Vegyes ügyek > Egyéni vállalkozói nyilvántartással kapcsolatos ügyek), onya_bekuldes x3). Sources: NAV ONYA bemutató PPTX 2026.01.23 (dia 7, 8, 10), NAV Segédlet UJEGYKE/ONYA 2025.03.11 (p. 2-4), and our own screenshots of the public no-login ONYA / UJEGYKE 13.0 form and the KAÜ login page (2026.11.18).",
+   "vallalkozas_bejelentes: 18 images for 12 NAV step keys. 01_belepes is real (KAÜ login, reached from ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main). 02-14 are drawn 'Illusztráció' reconstructions built from the NAV Vállalkozói Ügysegéd útmutató 2026.03.19 III.3, because that guide has no screenshots and no official screenshot of the new UI exists in the approved sources. Variants: 07 munkavégzés jellege x4 (fofoglalkozas, munkaviszony_mellett, tanulmany_mellett, nyugdij_mellett), 10 közösségi adószám eu_igen/eu_nem. Marked choices: alanyi ÁFA-mentesség (Áfamentesség point 2) IGEN, átalányadózás IGEN, kata NEM, pénzforgalmi NEM, the rest of the ÁFA fields empty, Nyilatkozatok, Ellenőrzés, Bejelentés megtétele (cannot be undone), Megtekintés PDF.",
+   "C2 style: rounded boxes (ink blue = tap, amber = tick/type, dashed = leave empty), numbered discs with short arrows beside the box, numbered Geist legend under the sheet so nothing on the screen is covered, the source line at the bottom, an amber 'Illusztráció' badge on the drawn ones. All personal and sample data blurred (names, adóazonosító jel, company names, érkeztetési számok). I looked at every output image.",
+   "annotate.py: `python annotate.py` re-annotates everything from the index.json files; old outputs go to _regi/. Owner screenshots go in _sajat/<guide>/<NN>_<slug>.png and override the base image. A sajat.homalyos list is mandatory, so no unblurred data can leak. Also: `--racs` (coordinate grid) and `--elonezet` (overview sheets in _elonezet/). Tested the skip, legend-only and full-marker paths.",
+   "Also written: forrasok.json (3 downloaded files with SHA-256, every source image with URL, title, date and page/slide, every output image), forrasok.md (sources plus the Szjt. 1. § (4) copyright note for the lawyer), hianyzik.md (what is drawn and how the owner captures and re-annotates it), README.md, _eszkoz/rogzit.mjs (re-capture of the public NAV pages), _eszkoz/kinyer.py (PDF/PPTX extraction), _illusztracio/ (kepernyok.py + render.mjs), _betu/ (Geist and Inter, OFL)."
+  ],
+  "files": [
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/vallalkozas_bejelentes/index.json",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/meghatalmazas/index.json",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/annotate.py",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/hianyzik.md",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/forrasok.md",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/forrasok.json",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/README.md",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_elonezet/attekintes_vallalkozas_bejelentes.jpg",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_elonezet/attekintes_meghatalmazas.jpg",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_forras/ (vallalkozoi_ugyseged_utmutato.pdf, segedlet_15_18_ujegyke_onya.pdf, onya_altalanos_bemutato.pptx)",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_nyers/",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_illusztracio/kepernyok.py",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_illusztracio/render.mjs",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_eszkoz/rogzit.mjs",
+   "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/_eszkoz/kinyer.py"
+  ],
+  "owner_todo": [
+   "Replace the drawn Vállalkozói Ügysegéd screens (vallalkozas_bejelentes 02-14) with your own screenshots, following hianyzik.md: log in with Ügyfélkapu+ or DÁP at ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main, start the kezdés bejelentése and screenshot every page. NEVER press 'Bejelentés megtétele': it really starts a business and cannot be withdrawn. Ellenőrzés is the last screen you can safely capture. Save each image as _sajat/vallalkozas_bejelentes/<NN>_<slug>.png, fill in sajat.homalyos (where your personal data is), then run `python annotate.py`, then the app normaliser and `feltolt.sh --media`, then re-render the guide videos. Or ask Claude to 'jelöld be az új NAV-képeket'.",
+   "Check on the real screens what the drawings could only guess: the exact labels of the munkavégzés jellege options, the kata and átalányadó checkbox texts, whether TAJ-szám or anyja neve has to be typed (and on which screen), whether a székhely jogcím is asked, and the name of the PDF download button on Megtekintés.",
+   "Optional: re-capture the ONYA screens that come from the 2025.03.11 segédlet (meghatalmazas 06, 10, 14, 15, 16; older UI). Use MÉGSEM in the 'Meghatalmazás benyújtása!' dialog.",
+   "Lawyer: are the NAV guides 'hivatalos közlemény' under Szjt. 1. § (4)? May we show NAV/KAÜ UI elements (the 'iD' logo, the ONYA tile artwork) in a paid app with the source named? Should the images say 'A NAV nem kapcsolódik a szolgáltatáshoz'?",
+   "Accountant: confirm the UJEGYKE choices shown: elsődleges jogcím 9 – Könyvelő plus nyilvántartási szám; ADÓÜGYEK – Ügycsoport intézésére jogosult; Vegyes ügyek – Egyéni vállalkozói nyilvántartással kapcsolatos ügyek; kezdete today, vége empty.",
+   "Before 2027-01-01 the chamber (MKIK) takes over the EV register, so the whole vallalkozas_bejelentes series has to be redone.",
+   "For reference (not downloaded): the NAV short film on the new Ügysegéd, https://youtu.be/DQnbjo2lrv8."
+  ],
+  "problems": [
+   "No official screenshot of the new (2026-02-19) Vállalkozói Ügysegéd exists in the approved sources: the 2026.03.19 NAV guide is text-only and the UI is only visible after login. So 13 screens are drawn 'Illusztráció'. The screen and field names come from the guide; the layout and option wording are unverified.",
+   "The meghatalmazas screens 08, 09, 11, 12 and 13 come from the public no-login UJEGYKE 13.0 form; after login the Képviselt part is prefilled. Screen 07 is the meghatalmazott-side list from the PPTX (header cropped); the meghatalmazó list should look the same. Screens 06, 10, 14, 15 and 16 show the 2025 UI.",
+   "The KAÜ login page is on kau.gov.hu, which is not on the download list. It was only screenshotted as the public redirect target of the official NAV link: no download, no login, nothing typed. For the ONYA start-page shot I removed the cookie modal from the DOM in our own headless browser; it was not accepted.",
+   "The raw images embedded in the 2025 Segédlet PDF contain real-looking personal data that NAV covered only with vector black bars. I blurred it in _nyers/ and in every output, but _forras/segedlet_15_18_ujegyke_onya.pdf itself must never be published or served.",
+   "Tooling: D:/Programs/Python310 cannot start with -I (broken home lookup). Extraction ran with uv's Python 3.12 using -I and PyMuPDF installed from PyPI into the scratchpad venv navvenv. Image processing used the system Python, with scripts kept outside _forras. A second scratchpad venv install (kepvenv) stalled and was not needed.",
+   "_regi/ grew to about 165 MB from re-runs (old outputs moved there, not deleted). Not checked against the app normaliser (kod/app/scripts/utmutato-kepek.mjs) because it is being built in parallel. It must accept several items per stepKey (resz) and the valtozat variants, and should take kind from kimenet.tipus."
+  ]
+ },
+ "összeállítás:integrátor": {
+  "done": [
+   "Pre-flight: shared contracts were already in sync in all packages. All suites pass: backend typecheck + 179 vitest + build; panel typecheck + 37 vitest + build (check-dist OK); app typecheck + 19 node:test + export:web (no MINTA data); jogi `npm run minden` (33 tests, PDFs regenerated); ado-motor 131; nav-kliens 105. The panel's real build against the real backend (scripts/eles-proba.mjs) loaded 54 pages, including every §26 csapat/admin/accountant page, with no failed API call. There was no contract mismatch between panel and backend.",
+   "Integration fixes. (1) New optional contract field VideoManifest.items[].hasNarration (kod/shared/src/api.ts, synced to every package). (2) New script kod/deploy/videok-json.mjs writes kod/media/videok.json with ffprobe (length, size) and a silence check. The app video card now says 'Felirattal.' instead of 'Felirattal, hanggal.' while the videos are silent, and shows the length. (3) The Főoldal tab badge now matches the band's 'Még N dolog' while the branch question is unanswered. (4) Active clients' Főoldal now has 'Kérdésed van? Kérj visszahívást' under the accountant's letter (source konyvelo_kartya). §26.2.1 asked for it and it was missing. (5) In 'Készítsd elő', the Ügyfélkapu+/DÁP row now reads 'Ezt nem kérjük el: ezzel te lépsz be.' (6) App version is 1.0.3, versionCode 4.",
+   "End-to-end on the LOCAL harness: new script kod/_qa/k3_e2e.mjs. It runs one PGlite backend with the demo seed, the 11-18 addition and the data step, serves the app on :8811 and the panel on :8812, and logs in through /__helyi/belep, so no password is typed. Each shot uses its own Chrome profile. Final run: 36/36 checks OK, no API errors. Covered: (a) API restricted mode: 6 locked routes return 403 locked_until_active with the reason; 7 open routes return 200; Kata (active) gets 200. (b) All 35 explainers have Mi ez?/Miért kell?/Hol találod? filled. (c) New client chooses 'Még nincs' → hub with 'Készítsd elő' → Rólad page → 5-page adatlap → personalised guide: 14 steps, no placeholder left, correct ÁFA/átalány/kata/pénzforgalmi/munkavégzés choices. (d) Annotated NAV images and zoom viewer; bekotes.mp4 and vallalkozas_bejelentes.mp4 play. (e) Fake PDF upload → beadva. (f) 'Elakadtál? Kérj visszahívást' creates a callback. (g) Team (Nagy Anna): pipeline card, 9-point check, adószám → kesz, 'Elindult a vállalkozásod' milestone done. (h) Visszahívások queue: claim, 'Most hívom' (the client sees 'Most hív kollégánk, Anna'), 'Beszéltünk' + summary; the summary appears in the client's thread. (i) Meghatalmazás guide: meghatalmazas.mp4 plays, 'Beküldtem' records onya_ugyfel. (j) Kata (existing business) asks for a callback from the accountant link; the team sees it with source konyvelo_kartya. Bottom bar visible on every onboarding screen. I looked at every screenshot.",
+   "Deployed on appok-1. Order: Gardoko health 200 → snapshot of alex@ and tulaj@ (new kod/deploy/tulaj-fiokok-allapot.sh) → pg_dump /srv/kezjegy/_regi/pg_dump_elotte_tulaj1118_20261118_131454.dump (600) → shared Caddyfile and kezjegy.caddy copied to /srv/appok/_regi/*_20261118_131523 → both Caddy configs validated → feltolt.sh → up.sh. up.sh applied migrations 0008 and 0009 (10 in the journal), rebuilt the API and worker, and reloaded the web container and the shared Caddy. The worker data step ran once with {businessStatus:14, callbacks:2, faq:4}. Then feltolt.sh --media uploaded 80 files: 3 videos, posters, VTTs, videok.json, 34 annotated guide images and 2 kepek.json. Then seed-tulaj1118.sh: 7 items added (Anna, Levente, Zsófia, callbacks); the second run said 'már megvan' and did nothing. After that, a web-only redeploy with the final app build. Previous hashed chunks still answer 200.",
+   "Live verification without logging in. The alex@ and tulaj@ snapshots before and after are byte-identical: users including hash md5s, clients, onboarding_steps, consents, subscriptions. Both still have business_status NULL, so the app will ask the branch question. Gardoko health was 200 before and after every step and at the end. curl: /media mp4 returns 200 video/mp4 with Accept-Ranges, a Range request returns 206; vtt returns text/vtt; charset=utf-8; json returns application/json; a missing file returns a plain 404 'Nem található.'; the panel host gives 404 on /media. /config now includes mediaBaseUrl and newBusinessChargePolicy=adoszam_utan. kod/_qa/k3_eles_video.mjs played all three videos from https://app.45-94-65-74.sslip.io/media/ (readyState 4, 1080×1920), and the live login page loads. Read-only DB queries confirm Levente is beadva, Zsófia is utmutato, the callbacks are in 4 states, Anna is a csapat team member, and the appointment rows are untouched.",
+   "Built Android test APK C:/Users/UpgradePC/konyvelo_app/apk/Kezjegy-1.0.3-test.apk (PREBUILD=1, versionCode 4, expo-video included, SHA-256 3d00d1bc…1139; the previous APKs are kept).",
+   "Docs: SPEC §24 integrator notes (13:30), kod/deploy/README.md §26 deploy recipe, apk/README.md, and STATUS.md updated in Hungarian (new section 0, owner todos). Old copies are in kod/_regi/, konyvelo_app/_regi/STATUS_2026-11-18_reggel.md and apk/_regi/."
+  ],
+  "files": [
+   "C:/Users/UpgradePC/konyvelo_app/STATUS.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/SPEC.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/shared/src/api.ts",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/src/ui/Video.tsx",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/src/ui/keret.tsx",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/index.tsx",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/src/kepernyok/Utmutato.tsx",
+   "C:/Users/UpgradePC/konyvelo_app/kod/app/app.config.ts",
+   "C:/Users/UpgradePC/konyvelo_app/kod/deploy/tulaj-fiokok-allapot.sh",
+   "C:/Users/UpgradePC/konyvelo_app/kod/deploy/videok-json.mjs",
+   "C:/Users/UpgradePC/konyvelo_app/kod/deploy/README.md",
+   "C:/Users/UpgradePC/konyvelo_app/kod/media/videok.json",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3_e2e.mjs",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3_eles_video.mjs",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3_e2e_eredmeny.json",
+   "C:/Users/UpgradePC/konyvelo_app/kod/_qa/ (k3_e01…k3_e35 client, k3_p01…k3_p10 team, k3_l01…k3_l04 live)",
+   "C:/Users/UpgradePC/konyvelo_app/apk/Kezjegy-1.0.3-test.apk",
+   "C:/Users/UpgradePC/konyvelo_app/apk/README.md"
+  ],
+  "owner_todo": [
+   "Voice for the three videos: all three are live but SILENT, with burned-in captions. OpenRouter refuses google/gemini-3.8-flash-tts with 402 at the current ~0.83 USD balance. Top up a few dollars at openrouter.ai, then run `python C:/Users/UpgradePC/konyvelo_app/video/bekotes/eszkoz/minden.py` and `python C:/Users/UpgradePC/konyvelo_app/video/vallalkozas_bejelentes/eszkoz/epit.py mind`. After that run `node C:/Users/UpgradePC/konyvelo_app/kod/deploy/videok-json.mjs` and `bash C:/Users/UpgradePC/konyvelo_app/kod/deploy/feltolt.sh --media`.",
+   "Decide NEW_BUSINESS_CHARGE_POLICY (default adoszam_utan), CALLBACK_CALLER_ID (hidden until set), whether the 48 calendar-hour callback deadline and the 9–17 calling window are right, and name the real team members (Nagy Anna is demo only; 2FA needed before go-live).",
+   "Capture the missing real Vállalkozói Ügysegéd screens yourself (log in, never press 'Bejelentés megtétele'), following utmutato_kepek/hianyzik.md, then re-annotate with one command. The meghatalmazás guide already uses 16 real annotated NAV screenshots.",
+   "Install apk/Kezjegy-1.0.3-test.apk on the phone; it has not been tried on a device.",
+   "Lawyer: the §26.15 #20 items. Retention purge for withdrawn registrations is not built."
+  ],
+  "problems": [
+   "The silent interim videos are deployed. The app card honestly says 'Felirattal.' (videok.json hasNarration=false), but the owner's Gemini voice is not in them yet; see owner_todo.",
+   "I did not run logged-in checks against the live host. A read-only curl login with the demo accounts on the server was blocked by the permission classifier, so I did not retry it, and https-proba.sh was not re-run. Live verification is anonymous curl, headless video playback, DB queries and owner-account snapshots only. The full logged-in flows ran on the local harness.",
+   "Cosmetic: Caddy answers a missing /media/*.mp4 with 404 and the header Content-Type: video/mp4 (body 'Nem található.'). It does not break the app's fallback.",
+   "A stray parallel e2e start collided once (EADDRINUSE) during my work. The final clean run (e2e3) passed 36/36. One leftover error screenshot from an earlier run was moved to kod/_qa/_regi/."
+  ]
+ },
+ "cél3:új-vállalkozás": {
+  "satisfied": false,
+  "issues": [
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "kod/app/src/app/bekotes/vallalkozas/index.tsx (\"Leállítom a bejelentést\", canWithdraw); kod/backend/src/services/registration.ts:301 canWithdraw = OPEN_REG (includes beadva, javitas, ellenorizve); screenshot kod/_qa/k3c3_új-vállalkozás_24_kozpont_beadva.png",
+    "what": "After the client has filed with NAV (status beadva and later), the hub still shows \"Leállítom a bejelentést\". Its reasons include \"Meggondoltam magam\" and \"Később indítom\", and the sheet only says that his answers and the PDF stay. NAV says a filed bejelentés is final. The business exists from that day, so the client can believe he cancelled it while he is a registered EV who owes contributions. Withdrawing also sets business_status to NULL, so the branch question shows again.",
+    "fix": "Allow withdraw only in kitoltes and utmutato, and make the backend answer 409 from beadva on. Show a short text instead: \"A NAV-nál már bejelentetted. Ha mégsem kell, a megszüntetést a Vállalkozói Ügysegédben külön kell bejelenteni.\" Add the callback link."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "kod/backend/src/jobs.ts jobRegistrationReminders; adatlap lap 5 \"Csak emlékeztető: azon a napon küldd be.\" (kod/app/src/app/bekotes/vallalkozas/adatlap.tsx); screenshot kod/_qa/k3c3_új-vállalkozás_32_reka_ertesitesek.png",
+    "what": "Test client Oláh Réka (főállás) chose to start on a date 60 days ahead. On day 4 and day 11 she got \"Folytasd a vállalkozásod bejelentését – Pár perc az egész\", and the \"Megírtuk\" notice also says \"Folytathatod a bejelentést\". Nothing is sent on the day she chose. The app pushes her to file weeks early, and filing day is the start day, so the főállás minimum contribution (about 101 682 Ft a month) starts early. The reminder that the form promises never comes.",
+    "fix": "When startPlan is datum and startDate is after today, send no nag reminders before startDate. Send one reminder on startDate morning (\"Ma indulnál: küldd be a bejelentést\"). Make the \"Megírtuk\" text say \"…a választott napon (dátum) küldd be\"."
+   },
+   {
+    "severity": "major",
+    "area": "panel",
+    "where": "kod/backend/src/services/registration.ts (kesz hand-over, SPEC §26.1.8 fills only the seat city); kod/panel/src/pages/acc/ugyfel/Attekintes.tsx and Bekotes.tsx UjVallalkozas; screenshot kod/_qa/k3c3_új-vállalkozás_31_konyvelo_ugyfel.png",
+    "what": "Hand-over gap. Bodnár Ilona has a székhelyszolgáltató seat in Budapest, a fióktelep in Győr and asked for a közösségi adószám (EU partner igen). After kész, the accountant sees only \"Székhely települése: Budapest\" plus activity, work kind and cost ratio. Nothing shows the Győr fióktelep (local business tax in a second municipality), the közösségi adószám (EU reverse-charge ÁFA returns even with alanyi mentesség) or the provider. Only csapat and admin see these in the registration view; the accountant would have to read the PDF.",
+    "fix": "Show seat kind and provider, every telephely/fióktelep and the EU partner / közösségi adószám answer in the accountant's UjVallalkozas card and in Áttekintés. Mention them in the onboarding_needs_review text, for example \"fióktelep: Győr; közösségi adószámot kért\"."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/utmutato_kepek/vallalkozas_bejelentes/index.json (only step 01 belepes is tipus valodi); app guide steps 2–12 show \"NAV KÉPERNYŐ · RAJZOLT VÁZLAT\" (screenshots 10–14, 19–21)",
+    "what": "Order 9 and the owner's request in this run (\"Nav screenshotok kellenének jelöléssel\"): the new-business guide still uses drawn sketches for 13 of its 14 NAV screens. Only the KAÜ login is a real annotated NAV screenshot. The labelling is honest, but the self-service guide does not yet have real annotated NAV screenshots.",
+    "fix": "Owner decision, unchanged: (a) he logs in, clicks through to the Ellenőrzés screen without sending, and captures the screens as listed in utmutato_kepek/hianyzik.md; or (b) he allows frames to be taken from NAV's own video (https://youtu.be/DQnbjo2lrv8, needs a download). Then run annotate.py, node kod/app/scripts/utmutato-kepek.mjs and bash kod/deploy/feltolt.sh --media."
+   },
+   {
+    "severity": "major",
+    "area": "app",
+    "where": "kod/app/src/app/bekotes/vallalkozas/adatlap.tsx lap 3, telephely question (\"Nincs – Otthonról vagy az ügyfeleimnél dolgozom.\"); screenshot kod/_qa/k3c3_új-vállalkozás_06_adatlap3_szolgaltato_rossz_adoszam.png",
+    "what": "The \"Nincs\" sub-text tells home workers to answer Nincs even when the seat is a székhelyszolgáltató or another address. NAV's Ügysegéd guide (2026.03.19, p. 10) defines a telephely as the place where the work is done when it differs from the seat (fióktelep if in another settlement). A home-working client with a székhelyszolgáltató seat is steered to leave out her home as telephely/fióktelep. The bejelentés is then incomplete, and the local business tax municipality may be missed.",
+    "fix": "When the seat is not the client's home, change the sub-text to \"Ha otthonról dolgozol, az otthonod is ilyen cím: válaszd a Van-t\" and add a one-tap \"A lakcímem\" prefill. [KÖNYVELŐ] confirms the wording. Show telephely/fióktelep in the team's compare box too."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "kod/backend/src/services/registration.ts costClassOf (main activity only); result in kod/_qa/k3c3_eredmeny.json (Kiss Bence)",
+    "what": "Webshop (main) plus grafika gets \"A tevékenységed alapján a költséghányadod várhatóan 90%\". At kész the stored suggestion would be cost_ratio 90 (ugyfel_javaslat). The 90% ratio is only for exclusively retail work: the project's own ado-motor rules say \"90 % exclusively retail\".",
+    "fix": "Use kiskereskedelem only when every chosen activity is retail. For mixed activities show \"{firstName} mondja meg\" (or the general 45%), and do not store 90 as the suggestion."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/shared/src/enums.ts REGISTRATION_STATUS_CLIENT_TEXT.utmutato; onboarding step status for vallalkozas_inditas while activityPending (kod/backend/src/services/onboarding.ts); earlier shot kod/_qa/k3e_a07_hub_banner.png",
+    "what": "While the ÖVTJ line is still pending, the hub band and statusText say \"Kövesd lépésről lépésre, és küldd be a bejelentést a NAV-nak\", the Főoldal card says \"Most te jössz\" and it counts in \"Még N dolog kell tőled\". The amber banner right below says \"a NAV-os bejelentést még ne kezdd el\". The two messages contradict each other.",
+    "fix": "Use a separate statusText while activityPending, for example \"Megírjuk a tevékenységed pontos sorát (általában 1 munkanap). Addig nézd át az útmutatót.\" Show the step as waiting on us, not \"Most te jössz\", and leave it out of the todo count."
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "POST /client/business-registration/filed in status beadva (log: 409 \"Most nem tölthetsz fel igazolást. Előbb küldd el az adatlapot, és kövesd az útmutatót.\")",
+    "what": "A client who has just uploaded a PDF and wants to replace a wrong file gets an error that does not fit his situation: he has already sent the adatlap and followed the guide. There is no way to replace the file until the team asks for a fix.",
+    "fix": "Allow a replacement version in beadva (new document version, status stays beadva, the team sees \"új igazolás\"). At least, use a fitting message: \"Már feltöltötted. Ha rossz fájl volt, írj nekünk.\""
+   },
+   {
+    "severity": "minor",
+    "area": "backend",
+    "where": "PUT /client/profile on the inditas path (result in kod/_qa/k3c3_eredmeny.json: a 15-year-old's adóazonosító jel was saved with 200)",
+    "what": "The adóazonosító jel encodes the birth date (digits 2–6 = days since 1867-01-01). A minor's jel is accepted on the new-business path without any warning, although ÁSZF 3.1 requires \"nagykorú\" and Evectv. 3. § (2) excludes minors.",
+    "fix": "Derive the birth date from the adóazonosító jel. On the inditas path, show a stop card (with callback) when the client is under 18."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "kod/shared/src/bekotes.ts PREPARE_ITEMS taj.privacyNote \"Ezt nem kérjük el és nem tároljuk\" (screenshot kod/_qa/k3c3_új-vállalkozás_02_kozpont_keszitsd_elo.png); upload screen (screenshot 22)",
+    "what": "Data-protection wording. The app says we never store the TAJ number, but the uploaded NAV értesítés PDF may contain TAJ, anyja neve and birth data. That PDF is stored and seen by csapat, admin and the accountant. The adatkezelési tájékoztató already says so (\"az irat részeként, titkosítva tároljuk\"); the app texts contradict it.",
+    "fix": "Use \"Külön nem kérjük el. Ha a NAV-os igazoláson rajta van, az irattal együtt titkosítva tároljuk.\" Add one line on the upload screen as well."
+   },
+   {
+    "severity": "minor",
+    "area": "panel",
+    "where": "kod/panel/src/pages/acc/ugyfel/Attekintes.tsx:99 and :224 (\"ÖVTJ’24\")",
+    "what": "The accountant view labels the code \"ÖVTJ’24\". The guide, the team drawer and the NAV guide all use KSH ÖVTJ'25.",
+    "fix": "Rename the label to ÖVTJ’25."
+   },
+   {
+    "severity": "minor",
+    "area": "panel",
+    "where": "kod/panel/src/ui/kozos.tsx Fiok (backdrop .fuggony onClick=bezar), used by the \"Javítom\" drawer in pages/csapat/Regisztracio.tsx",
+    "what": "Clicking outside the edit drawer closes it and throws away the typed ÖVTJ codes and names without a warning. This happened in the first harness run.",
+    "fix": "If the form has unsaved changes, ask before closing, or do not close on a backdrop click."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "guide step 13 (screenshot kod/_qa/k3c3_új-vállalkozás_21_utmutato_vege_kamara.png); the guide video card shows \"Felirattal.\"",
+    "what": "Two cosmetic and known items. The step kicker and the title both say \"Itt, az alkalmazásban\". The new-business guide video (2:29) is still silent: captions only, no Gemini voice. This is orders 6 and 8 and is waiting for the OpenRouter top-up.",
+    "fix": "Change the kicker to \"ITT, AZ APPBAN\" with a different title, such as \"Töltsd fel az igazolást\". The owner tops up OpenRouter, then runs epit.py mind, videok-json.mjs and feltolt.sh --media."
+   }
+  ],
+  "checked": [
+   "Read SPEC §26.0–26.1, §26.6, §26.14–26.16, §24 builder notes up to jav-k3e, STATUS, FUNKCIOK, ÁSZF 4/A, megbízási szerződés and adatkezelés (2.15) before testing. Changed no product code; the only new file besides outputs is kod/_qa/k3c3_ellenor.mjs.",
+   "Compared the guide with NAV's official PDF 'A Vállalkozói Ügysegéd útmutatója' (2026.03.19, utmutato_kepek/_forras). Matches: Ügysegéd/KAÜ (Ügyfélkapu+ or DÁP), free filing, Személyi adatok (check, contact NAV on a mismatch), munkavégzés jellege mandatory with change within 15 days via ONYA, kata no, átalány yes (Szja tv. 50. § (6)), Áfamentesség point 2 only, áfafizetés módja empty, pénzforgalmi no, közösségi adószám per answer, the Áfa tv. 49/A., 89/A. and 96. § and MNB/EKB rows empty, Ellenőrzés with Vissza, 'Bejelentés megtétele' final, PDF on Megtekintés, chamber form within 5 working days, KAVIR, ÖVTJ'25. The exclusion list matches Evectv. 3. §. The iratőrzési hely and levelezési cím rows exist.",
+   "Local harness: one PGlite backend with demo seed, 11-18 addition and data step; app on :8861 and panel on :8862; logins only via /__helyi/belep; no password typed anywhere; one headless Chrome profile per shot. Script kod/_qa/k3c3_ellenor.mjs; results in kod/_qa/k3c3_eredmeny.json (42 checks, 39 OK) and logs k3c3_naplo.txt / k3c3_naplo_elso_futas.txt.",
+   "Client walk (Bodnár Ilona): branch question, Készítsd elő list (all 8 items from order 8, TAJ and anyja neve not stored), Rólad, adatlap 1–5 (exclusions, fodrászat plus kozmetika at 80% with qualification note, székhelyszolgáltató with a bad provider adószám rejected by check digit, fióktelep Győr, nyugdíjas hint, EU igen, start date and summary).",
+   "Client walk continued: guide held while the ÖVTJ line is pending (banner plus hold on Tevékenységek, Ellenőrzés and Bejelentés megtétele), personalised rows (provider, iratőrzés, fióktelep split and copyable, kiegészítő munkavégzés image variant, közösségi adószám 'Jelöld be'), no leftover {placeholders}.",
+   "Team: the panel pipeline shows the 'ÖVTJ-kód kell … -ig' deadline. The 'Javítom' drawer saved the codes, the client got 'Megírtuk, melyik sort válaszd' and the hold disappeared.",
+   "Upload: PDF uploaded with an ÁFA-code-1 adószám and an 8-digit registration number gives beadva, after which meghatalmazás and azonosítás unlock. The team check list compares profile name and address. All 9 ticks with a known adószám go straight to kész.",
+   "Hand-over: clients row (adoszam, ev_since = filing day, hq Budapest, activity_code 960201, lista80), tax profile (nyugdíjas, 80, ugyfel_javaslat), registration_done notice to the client, onboarding_needs_review to Bence, előfizetés unlocked only after kész, the ev_bejelentes document stored.",
+   "Order 7 KYC: the lakcímkártya has only its address-side slot, with a note that the other side is not asked for (screenshot 29). The csapat role gets 404 on /acc/clients/:id, /kyc and /documents and never sees the full adóazonosító jel. The registration row holds no TAJ, anyja neve or birth data.",
+   "Self-service throughout: no mandatory call anywhere; 'Elakadtál? Kérj visszahívást' appears on every step. The app, ÁSZF and video say the client files himself and we only check.",
+   "Probes: the cost-ratio hint for mixed activities, a minor's adóazonosító jel, and the reminder job with the clock moved to +4, +11, +30 and +61 days for a client starting in 60 days.",
+   "Looked at every screenshot k3c3_új-vállalkozás_01–32 (01–14 from the first run, 15–32 from the fast rerun after fixing the drawer save click in my script). I also looked at the earlier shot k3e_a07_hub_banner.png.",
+   "Live deployment, checked with curl and read-only ssh. At 17:12 live still served the 13:30 build (containers up 4 hours). By 17:36 someone else had run up.sh (containers recreated at 17:35 CET): the live app index.html and panel index.html now match the local dist byte for byte, backend sources on /srv/kezjegy/src match local (md5), and live /media kepek.json, videok.json and vtt match kod/media. Gardoko health and the Kézjegy API health are 200.",
+   "House-keeping: after the first scripted attempt failed I removed my own leftover k3c3_új-vállalkozás_*__hiba.png debug shots (created minutes earlier in this run); no other file was deleted."
+  ]
+ },
+ "cél3:alsó-sáv": {
+  "satisfied": false,
+  "issues": [
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/services/subscription.ts:721 (runBillingJob, cancellations) and :409 (applyFinished)",
+    "what": "Order 4 can be bypassed through the subscription. Reproduced on the local harness with Péter: he was never activated (meghatalmazás still konyvelore_var, nav_bekotes nincs_kezdve, lifecycle bekotes_alatt). Steps: POST /client/subscription/cancel (200), then the clock jumps past currentPeriodEnd 2026-12-10 and runBillingJob runs. The job sets lifecycle to 'megszunt' with no bekotes_alatt guard, so isRestricted() becomes false: /client/access says 'teljes', and /client/dossiers, /deadlines, /tax-periods and /revenue all return 200. He then re-subscribes (POST /client/subscription/start → demo pay → IPN). applyFinished turns 'megszunt' into 'aktiv' even though onboarding is not complete. The client ends up fully active, with an unfinished onboarding and no NAV authorisation (see eredmeny.k3c3.eletciklus).",
+    "fix": "Track whether the client was ever activated (e.g. clients.activated_at, set in onboarding.ts where lifecycle becomes 'aktiv'; backfill it additively for current 'aktiv' clients). In runBillingJob, end a never-activated client's relationship without lifting restricted mode: either keep bekotes_alatt, or make isRestricted() mean 'never activated' rather than lifecycle==='bekotes_alatt'. In applyFinished, return to 'aktiv' only if the client was activated before (or allDone(onboarding)); otherwise go back to 'bekotes_alatt'. Add a vitest for cancel → period end → billing job → re-subscribe."
+   },
+   {
+    "severity": "major",
+    "area": "backend",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/backend/src/routes/acc.ts:666-667 (PATCH /acc/documents/:id) + app routing",
+    "what": "When the accountant marks a document 'feldolgozva' or 'beadva', the client gets a document_processed or document_filed notification even while in bekotes_alatt. Reproduced: 'Iratok a beadott bevallásban – 1 irat bekerült a beadott bevallásba' and '1 iratod feldolgozva', both linking to /dosszie/2026-11. That path does not exist in the app: only dosszie/index and dosszie/[honap]/szamlak do. Tapping the notification therefore opens 'Ezt az oldalt nem találjuk', with no tab bar and no lock reason. Screenshots: k3c3_alsó-sáv_86_ind_ertesites_dosszie_*.png. The link is broken for active clients (Kata) too. For order 4 this is a locked-feature entry point that shows neither the reason nor the bar. It also gives a not-yet-connected client dossier and bevallás news.",
+    "fix": "Send the link as /dosszie?honap=<month>, which dosszie/index already reads (fotozas.tsx uses it), or add app route dosszie/[honap]/index.tsx that redirects there. In notify() also drop document_filed for bekotes_alatt clients, as already done for tax_*. For document_processed before activation, link to /keresek, or suppress it."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/app/fiok/adataim.tsx:61",
+    "what": "Before activation, the 'Megváltozott egy adatom' button on Fiók → Adataim shows no lakat. SPEC §26.5.3 requires a small lock on controls that lead to locked features, and the Üzenetek tile for the same action does show one. Tapping it lands on a locked screen headed 'Igazolás kérése – hamarosan' (ZaroltKapu igazolas_keres on /keresek/uj?tipus=adatvaltozas). That is the wrong title for a data change. Screenshot: k3c3_alsó-sáv_89_van_fiok_adataim_*.png.",
+    "fix": "When restricted, either show the lakat and open zarolt({feature:'igazolas_keres'}), or better, send the client to edit /bekotes/adatok (his data is still editable in onboarding). Give ZaroltKapu a title that matches the tipus ('Adatváltozás bejelentése')."
+   },
+   {
+    "severity": "minor",
+    "area": "app",
+    "where": "C:/Users/UpgradePC/konyvelo_app/kod/app/src/ui/keret.tsx:177",
+    "what": "The Fotózás button's screen-reader label for an open accountant request is built as `${title} feltöltése`. Request titles are imperative sentences, so it reads 'Fotózás: Töltsd fel a novemberi kivonatot feltöltése, a könyvelőd kérte' (seen in the accessibility tree for Péter, 93_a11y_peter_bekotes).",
+    "fix": "Use a form that works with any title, e.g. `Fotózás: feltöltés a könyvelőd kérésére – ${title}`."
+   }
+  ],
+  "checked": [
+   "Build freshness: backend/dist and app/dist are newer than every source in backend/src, app/src and shared/src. The only app files newer than the export are the 16:59 sync copies of _shared, and they differ from kod/shared only in the header line. The local harness therefore runs the current code (no rebuild needed).",
+   "Android build config: AndroidManifest MainActivity uses windowSoftInputMode=adjustResize; versionCode 5 / 1.0.4 in app.config.ts and build.gradle; Kezjegy-1.0.4-test.apk (17:07) is newer than every app/src file. Its Hermes bundle contains the round-2 fix strings: 'még N teendő' badge label, both restricted Fotózás labels, 'Mi kell még?', '– hamarosan', 'Kérdésed van? Kérj visszahívást.', 'Bemutató videó', 'Kérdésem van', 'Csapatunk 24–48 órán belül hív.'. The tab bar (ui/keret.tsx Fulsor) hides only while the keyboard is open, uses tablist/tab roles with accessibilityState.selected, caps tab labels at 1.1 and other text at 1.3, and switches to narrow mode below 360 pt or when the font scale is above 1.15.",
+   "New script C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3c3_also_sav.mjs: k3c2 kept as regression plus new adversarial checks. In-memory PGlite and demo seed only; no password typed; nothing touched on the live host. Results: C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3c3_also_sav_eredmeny.json (k3c3, k3c3_ertekeles).",
+   "Order 4 API: all 71 /client, /me and /files routes registered in Hono were called as 5 not-yet-activated clients (fresh, van, inditas, Péter, Levente) and as Kata. 504/504 matrix rows match SPEC §26.5.2: allowed = onboarding, profile, kyc, legal-pdf, business-registration, guides, messages, attachments, callbacks, subscription, fee-invoices, explainers, access, requests GET/complete/cancel, kerdes, upload for an open accountant request, own uploads, contract papers, /me*. Locked with 403 locked_until_active plus a filled reason = tax-periods*, dossiers*, accountant documents and their files, uploads without a request, nav-invoices*, revenue, deadlines*, certificate and data-change requests. Me.access equals /client/access equals CLIENT_FEATURE_RULES; activationHint is filled.",
+   "Order 4 bypass attempts that held: HEAD requests; X-HTTP-Method-Override; dot, encoded, semicolon and case path tricks; new raw paths (/api/v1//client/dossiers, //api/..., /client//revenue, %2e, %20, %09, %3F, %23) all return 403 or 404, never 200. Request-type tricks (kerdes plus certificate, KERDES, [kerdes], dokumentum, direction override) create only a plain kerdes in the ugyfeltol direction. Accountant approval while in bekotes_alatt → 409 and no tax_* notification. Jobs: tax 7/3/1-day reminders, ÁFA limit and the 12-01 monthly statement request do not reach bekotes_alatt clients. Every allowed GET (/me, home, onboarding, requests, messages, notifications, subscription, ...) was scanned: no tax, revenue, deadline or NAV values (home limits zeroed, dossier = own uploads only).",
+   "Order 4 holes found: subscription cancel → megszunt → re-subscribe → aktiv (major), and document_processed/document_filed notifications that lead to a 404 (major). See issues.",
+   "Order 3 UI: 224 screenshots at 390x844, 360x780 and 320x640, all looked at as contact sheets plus crops: C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3c3_alsó-sáv_*.png. The tab bar is present with the right active tab on every onboarding screen in both branches. 'van' branch: bekotes, adatok, szerződés, előfizetés, meghatalmazás, azonosítás, payment result, retired /bekotes/idopont redirect. 'inditas' branch: bekotes, vállalkozás hub, adatlap pages 1–5 (new), adatok, guide before and after ÖVTJ, upload, the locked meghatalmazás/előfizetés/azonosítás steps, Levente after submission, Péter late in onboarding. Also present on: visszahívás from Főoldal/Fiók/zárolt, GYIK, jogi, értesítések, Fiók subpages, keresek, keresek/uj, határidők, számla, tétel.",
+   "Order 3, before activation: the Főoldal tab goes to /bekotes, and its badge equals the band's 'Még N dolog'. Dosszié shows the locked sheet with folder and lock, the reason, 'Mi kell még?' and the visszahívás link. Üzenetek opens the thread without the bar (as SPEC), with locked request buttons and a callback tile. Fiók works, and its Határidők row has a lakat. Fotózás opens the locked sheet, or the upload for Bence's open request (Péter). Logout takes two taps; all four tabs navigate correctly.",
+   "Bar hidden or covered where SPEC says: Üzenetek thread, camera (Kata /fotozas), and the guide's full-screen picture viewer, rechecked with C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3c3_kepnezo.mjs → k3c3_alsó-sáv_84_zsofi_kepnezo_{390,360,320}.png. In the viewer the modal covers all four tabs.",
+   "Large text at 320, simulated with the real caps (tab labels ×1.1, other text ×1.3), for 22 screens: tab labels are not truncated and the bar stays on screen. Scrolled to the bottom: the last controls ('Elakadtál?', 'Tovább', 'Kijelentkezés', 'Fiók törlése') sit above the bar. The 61_kata_dosszie large-text shot is a script artifact (the month tablist was taken as the bar).",
+   "Screen reader: in the full Chrome accessibility tree (C:/Users/UpgradePC/konyvelo_app/kod/_qa/k3c3_a11y_proba.mjs) there is one tablist with 4 tabs, exactly one selected, and badges spoken ('Főoldal, még 6 teendő'). The Fotózás button is a sibling of the tablist, with labels 'Fotózás: a bekötés után nyílik meg. Addig csak a könyvelőd kérésére tölthetsz fel.' / 'Fotózás: irat lefotózása' (Kata). The locked Határidők row in Fiók is disabled and its label carries the reason. Kata has no disabled controls. The 'tablist 0 db' failures in the JSON come from the Puppeteer interestingOnly snapshot pruning the unnamed tablist; they are not app bugs.",
+   "After activation (Kata): home with amount, letter and quick actions; Dosszié months; számlák; tétel; számla; Üzenetek; Fiók with no lakat; Határidők; Fotózás → camera. No restricted UI anywhere and no regression. /keresek/uj now shows the bar for Kata too, which was intentional in jav-k3e and is harmless.",
+   "Moved my own failed first-attempt viewer screenshots to C:/Users/UpgradePC/konyvelo_app/kod/_qa/_regi/k3c3/ instead of deleting them."
+  ]
+ }
+}
