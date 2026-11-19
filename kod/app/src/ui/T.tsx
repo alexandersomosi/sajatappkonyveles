@@ -18,7 +18,7 @@ export interface TProps extends TextProps {
   children?: ReactNode;
 }
 
-const KOTOTT = /(\d%?|NAV|ÁFA|SZJA|TB)-(?=[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű])/g;
+const KOTOTT = /(\d%?|NAV|ÁFA|SZJA|TB|Ft)-(?=[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű])/g;
 /** A számhoz/rövidítéshez kötött toldalék előtt nem tör sort: „10-ig”, „18,5%-a”, „NAV-nál”. */
 // \u2026\u00e9s az \u00f6sszeg meg a \u201eFt\u201d k\u00f6z\u00f6tt sem (\u201e0 Ft\u201d egy sorban marad)
 // …és az ezres tagolás szóköze sem („havi 19 999 Ft” nem törik „19 | 999”-re).

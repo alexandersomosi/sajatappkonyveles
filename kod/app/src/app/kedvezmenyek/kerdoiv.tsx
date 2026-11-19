@@ -163,7 +163,7 @@ export default function KedvezmenyKerdoiv() {
                     {x.label}
                   </T>
                   <T m={15} lh={1.4} c={szin.halvany} szam>
-                    {x.onlyAnnual || x.effectYearHuf == null ? Q.K12.effectAnnual : fillPlaceholders(Q.K12.effect, { x: szam(x.effectYearHuf) })}
+                    {x.onlyAnnual ? Q.K12.effectAnnual : x.effectYearHuf == null || x.effectYearHuf <= 0 ? Q.K12.effectQuarterly : fillPlaceholders(Q.K12.effect, { x: szam(x.effectYearHuf) })}
                   </T>
                 </View>
               ))}
@@ -199,7 +199,7 @@ export default function KedvezmenyKerdoiv() {
         </>
       ) : (
         <>
-          <UrlapKerdes i={kert} n={sor.length - 1} cim={lap === 'K11' ? Q.K11.title : (Q[lap] as { title: string }).title} miert={lap === 'K11' ? null : sz((Q[lap] as { why?: string }).why ?? '')} ikon={IKON[lap]} />
+          <UrlapKerdes valtozo i={kert} n={sor.length - 1} cim={lap === 'K11' ? Q.K11.title : (Q[lap] as { title: string }).title} miert={lap === 'K11' ? null : sz((Q[lap] as { why?: string }).why ?? '')} ikon={IKON[lap]} />
           {lap === 'K1' ? <HonapValaszto ertek={a.birthMonth} valt={(v) => set({ birthMonth: v })} tol={evek.tol} ig={evek.ig} /> : null}
           {lap === 'K2' ? (
             <IgenNem

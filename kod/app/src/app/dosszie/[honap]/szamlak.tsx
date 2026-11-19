@@ -43,7 +43,7 @@ function SzamlakTartalom() {
                 cim={s.customerName?.trim() || 'Magánszemély'}
                 al={
                   <>
-                    <Allapot szo={s.invoiceNumber} utana={`${datum(s.issueDate)}${s.demo ? ' · MINTA' : ''}`} m={15} />
+                    <Allapot szo={s.invoiceNumber} utana={`${datum(s.issueDate)}${s.demo ? ' · DEMO' : ''}`} m={15} />
                     <TartalekAlsor r={s.reserve} />
                   </>
                 }

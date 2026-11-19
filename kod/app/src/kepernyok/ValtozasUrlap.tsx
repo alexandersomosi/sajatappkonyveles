@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import type { ChangeData, NavAddress } from '@/_shared/api';
 import { CHANGE_FORM_TEXTS as F } from '@/_shared/bekotes';
 import { CHANGE_RULES, SEAT_RIGHT_LABELS, SEAT_RIGHTS, STREET_TYPES, WORK_KIND_LABELS, WORK_KINDS, type ChangeKind, type ChangeTaxItem, type SeatRight, type WorkKind } from '@/_shared/enums';
-import { napHozzaad } from '@/lib/format';
+import { datumBe, napHozzaad } from '@/lib/format';
 import { Kapszulak } from '@/kepernyok/Urlap';
 import { Mezo } from '@/ui/Mezo';
 
@@ -72,18 +72,18 @@ export function valtozasEllenoriz(kind: ChangeKind, lap: VLap, a: VAdat, ma: str
     if (!a.streetType) return v.streetType;
     if (!a.houseNumber.trim()) return v.houseNumber;
   }
-  if (lap === 'datum' && !datumRe.test(a.effectiveOn)) return 'Írd be a dátumot így: 2026-12-01.';
+  if (lap === 'datum' && !datumRe.test(a.effectiveOn)) return 'Írd be a dátumot így: 2026.12.01.';
   if (lap === 'jogcim' && !a.right) return 'Válaszd ki, milyen jogon használod.';
   if (lap === 'mod' && !a.mode) return v.items;
   if (lap === 'tevekenyseg' && !a.ownWords.trim()) return v.activity;
   if (lap === 'szunet') {
-    if (!datumRe.test(a.from)) return 'Írd be a dátumot így: 2026-12-01.';
+    if (!datumRe.test(a.from)) return 'Írd be a dátumot így: 2026.12.01.';
     if (a.from < ma) return v.szunetelPast;
     if (a.from > napHozzaad(ma, CHANGE_RULES.szunetelStartMaxAheadDays)) return `Legfeljebb ${CHANGE_RULES.szunetelStartMaxAheadDays} nappal előre jelentheted be.`;
     if (a.to && (!datumRe.test(a.to) || a.to > napHozzaad(a.from, 365 * CHANGE_RULES.szunetelMaxYears))) return v.szunetelMax;
   }
   if (lap === 'folytatas') {
-    if (!datumRe.test(a.from)) return 'Írd be a dátumot így: 2026-12-01.';
+    if (!datumRe.test(a.from)) return 'Írd be a dátumot így: 2026.12.01.';
     if (a.from < ma) return v.folytatasPast;
   }
   if (lap === 'tetelek' && !a.items.length) return v.items;
@@ -171,7 +171,7 @@ export function ValtozasLap({ kind, lap, a, set }: { kind: ChangeKind; lap: VLap
     );
   }
   if (lap === 'datum') {
-    return <Mezo felirat={kind === 'valtozas_telephely' ? F.dateHintTelephely : kind === 'valtozas_szekhely' ? F.dateHintSzekhely : 'A változás napja'} placeholder="2026-12-01" value={a.effectiveOn} onChangeText={(t) => set({ effectiveOn: t.trim() })} />;
+    return <Mezo felirat={kind === 'valtozas_telephely' ? F.dateHintTelephely : kind === 'valtozas_szekhely' ? F.dateHintSzekhely : 'A változás napja'} placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.effectiveOn} onChangeText={(t) => set({ effectiveOn: datumBe(t) })} />;
   }
   if (lap === 'jogcim') {
     return (
@@ -206,12 +206,12 @@ export function ValtozasLap({ kind, lap, a, set }: { kind: ChangeKind; lap: VLap
   if (lap === 'szunet') {
     return (
       <View style={{ gap: 12 }}>
-        <Mezo felirat="Kezdőnap" placeholder="2026-12-01" value={a.from} onChangeText={(t) => set({ from: t.trim() })} />
-        <Mezo felirat={F.szunetelTo} placeholder="2027-06-30" value={a.to} onChangeText={(t) => set({ to: t.trim() })} />
+        <Mezo felirat="Kezdőnap" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: datumBe(t) })} />
+        <Mezo felirat={F.szunetelTo} placeholder="2027.06.30." keyboardType="numbers-and-punctuation" value={a.to} onChangeText={(t) => set({ to: datumBe(t) })} />
       </View>
     );
   }
-  if (lap === 'folytatas') return <Mezo felirat="Az újrakezdés napja" placeholder="2026-12-01" value={a.from} onChangeText={(t) => set({ from: t.trim() })} />;
+  if (lap === 'folytatas') return <Mezo felirat="Az újrakezdés napja" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: datumBe(t) })} />;
   if (lap === 'tetelek') {
     return (
       <Kapszulak

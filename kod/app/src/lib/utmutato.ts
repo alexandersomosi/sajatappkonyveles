@@ -45,7 +45,8 @@ export function kepCimke(k: Pick<UtmutatoKep, 'kind' | 'source'>): string {
   const s = k.source;
   const d = s?.date ? `, ${s.date.replace(/-/g, '.')}.` : '';
   if (!s) return GUIDE_IMAGE_LABELS.kepernyokep;
-  if (/^saját/i.test(s.title.trim())) return `${GUIDE_IMAGE_LABELS.kepernyokep} · Forrás: saját képernyőkép${d}`;
+  // own screenshots: never the internal wording ("A tulaj saját …") in client text (k6c review)
+  if (/^saját/i.test(s.title.trim()) || /tulaj/i.test(s.title)) return `${GUIDE_IMAGE_LABELS.kepernyokep} · Forrás: saját képernyőkép${d}`;
   // a zárójeles részletek (fájlnév, csatorna) nélkül: egy-két rövid sor maradjon a kép alatt
   const cim = s.title.replace(/^NAV\s*[:,–-]\s*/i, '').replace(/\s*\([^)]*\)/g, '').trim();
   return `${GUIDE_IMAGE_LABELS.kepernyokep} · Forrás: NAV, ${cim}${d}`;

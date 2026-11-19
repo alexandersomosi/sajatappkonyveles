@@ -114,7 +114,9 @@ describe('K1 – félretenni', () => {
     expect(april.reserve.line).toContain('Ft-os számla – ebből kb.');
     const card = r.body.card;
     expect(card.keepNowHuf).toBe(Math.max(0, Math.ceil((card.accruedHuf - card.dueOrPaidHuf) / 1000) * 1000));
-    expect(card.invoicesHuf).toBe(items.reduce((a, i) => a + i.reserve.reserveHuf, 0));
+    // k6c: the card row is a rounded "kb." value of the same accrual (A − fixed − HIPA); the per-invoice reserves round up
+    expect(card.invoicesHuf % 1000).toBe(0);
+    expect(Math.abs(card.invoicesHuf - items.reduce((a, i) => a + i.reserve.reserveHuf, 0))).toBeLessThanOrEqual(items.length * 1000);
     expect(card.sentence).toMatch(/^Most kb\. [\d ]+ Ft legyen félretéve az adódra\.$|^Most nincs mit félretenned\.$/);
   });
   it('the cache recomputes only when the inputs change', async () => {
@@ -246,7 +248,7 @@ describe('K3 – allowances', () => {
     expect(proposeAllowances({ ...base, children: [kid()], csaladiWho: 'en', csjkWish: 'igen' }, 2026, 'nyugdijas').find((p) => p.kind === 'csaladi')!.params.csjkInYear).toBe(false);
     expect(proposeAllowances({ ...base, children: [kid()], csaladiWho: 'par' }, 2026, 'mellekallasu').some((p) => p.kind === 'csaladi')).toBe(false);
     expect(proposeAllowances({ ...base, marriage: { month: '2026-05', first: true, who: 'en' } }, 2026, 'mellekallasu').find((p) => p.kind === 'elso_hazasok')?.months).toEqual([6, 7, 8, 9, 10, 11, 12]);
-    expect(proposeAllowances({ ...base, marriage: { month: '2026-05', first: true, who: 'kozosen' } }, 2026, 'mellekallasu').find((p) => p.kind === 'elso_hazasok')?.params.elsoHazasokMonthlyHuf).toBe(16_668);
+    expect(proposeAllowances({ ...base, marriage: { month: '2026-05', first: true, who: 'kozosen' } }, 2026, 'mellekallasu').find((p) => p.kind === 'elso_hazasok')?.params.elsoHazasokMonthlyHuf).toBe(16_667); // the spouse takes 16 668: together 33 335
     expect(proposeAllowances({ ...base, children: [kid({ tartosBeteg: true })], csaladiWho: 'en', healthConsent: true }, 2026, 'mellekallasu').find((p) => p.kind === 'csaladi')!.params.csaladi![0]!.children[0]!.tartosBeteg).toBe(true);
     expect(proposeAllowances({ ...base, benefit: { fromMonth: '2026-03', toMonth: '2026-05' } }, 2026, 'mellekallasu').find((p) => p.kind === 'csed_gyed')?.months).toEqual([3, 4, 5]);
     const preg = proposeAllowances({ ...base, pregnancy: { dueMonth: '2027-02' }, csaladiWho: 'en' }, 2026, 'mellekallasu').find((p) => p.kind === 'csaladi')!;

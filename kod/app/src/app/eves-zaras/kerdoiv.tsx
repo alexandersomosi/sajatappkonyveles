@@ -68,7 +68,11 @@ export default function EvesKerdoiv() {
     if (lap === 'E1' && !a.otherIncomes.length) return setHiba('Válassz legalább egyet (vagy: Nem volt).');
     if (lap === 'E3' && !a.hipaPlace) return setHiba('Válassz egyet.');
     try {
-      if (lap !== 'E0') await ment.mutateAsync({ id: z.id, answers: { ...a, ...(szamla ? { refundAccount: szamla } : {}) } });
+      if (lap !== 'E0') {
+        // only the editable answers: refundAccountMasked is view-only (the strict schema refused it: "Ismeretlen mező.")
+        const { refundAccountMasked: _csakNezet, refundAccount: _r, ...valasz } = a;
+        await ment.mutateAsync({ id: z.id, answers: { ...valasz, ...(szamla ? { refundAccount: szamla } : {}) } });
+      }
       if (lap === 'E8') {
         const r = await bekuld.mutateAsync(z.id);
         if (r.feeCharge?.canPay) return void (await dijFizetes(r.feeCharge.id));

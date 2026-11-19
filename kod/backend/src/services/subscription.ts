@@ -458,6 +458,9 @@ export async function applyFinished(deps: Deps, txId: string, ipn: { transaction
       await checkCompletion(deps, db, t.clientId);
       await computeFlags(deps, db, t.clientId);
       await renewalCheck(deps, t.clientId);
+      // SPEC §28.K.5: the lock lifts at once on FINISHED (not at the next 06:20 job); sends service_unlocked when it clears
+      const { computeServiceLock } = await import('./zarolas.js');
+      await computeServiceLock(deps, t.clientId);
     }
   }
   for (const o of oldCards) {

@@ -223,8 +223,9 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
   // The blue band above shows the whole running quarter (with the fixed járulék of its months still to come): say so.
   const qOfMonth = Math.ceil(month / 3);
   const futureFixedInQuarter = yr.fixedByMonth.slice(month, qOfMonth * 3).reduce((a, b) => a + b, 0);
-  let detail = await deps.content.render(zero ? 'felretesz.kartya.detail_zero' : 'felretesz.kartya.detail', p2);
-  if (!zero && futureFixedInQuarter > 0) detail += await deps.content.get('felretesz.kartya.detail_hero');
+  const detail = await deps.content.render(zero ? 'felretesz.kartya.detail_zero' : 'felretesz.kartya.detail', p2);
+  // only on the Főoldal, under its blue band (the /felretesz screen has no quarter band)
+  const heroNote = !zero && futureFixedInQuarter > 0 ? (await deps.content.get('felretesz.kartya.detail_hero')).trim() : null;
   const refundHuf = basis.refundHuf;
   return {
     year,
@@ -240,6 +241,7 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
     estimateReasons: await estimateReasons(deps, db, cl, year, input, rows.map((x) => x.r), firstName, result),
     sentence: await deps.content.render(zero ? 'felretesz.kartya.sentence_zero' : 'felretesz.kartya.sentence', p2),
     detail,
+    heroNote,
     footnote: await deps.content.render('felretesz.kartya.footnote', p2),
     markedHuf,
     ring:

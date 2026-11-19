@@ -2,7 +2,7 @@
 // a Főoldal két nagy száma, a „Félretenni” kártya a gyűrűvel, a „Mennyit kerestem?”, a havi ellenőrzés, az éves zárás, a
 // szüneteltetés és a kedvezmény-tipp, valamint a számlánkénti „Ennyit tegyél félre” blokk és a „Miért ennyi?” lap.
 import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, useWindowDimensions, View } from 'react-native';
 import { router } from 'expo-router';
 import Svg, { Circle } from 'react-native-svg';
 import type { AnnualView, CheckinView, EarningsCard, InvoiceReserveView, PauseView, ReserveCard, TwoNumbersView } from '@/_shared/api';
@@ -123,12 +123,17 @@ export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
             </T>
           </View>
           <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 6 }}>
-            {c.keepNowHuf > 0 ? c.detail : fillPlaceholders(RESERVE_TEXTS.kartya.detailZero, {})}
+            {c.keepNowHuf > 0 ? `${c.detail}${c.heroNote ? ` ${c.heroNote}` : ''}` : fillPlaceholders(RESERVE_TEXTS.kartya.detailZero, {})}
           </T>
+          {c.refundText ? (
+            <T m={15} s={600} lh={1.45} c={szin.tintakekSzoveg} style={{ marginTop: 4 }}>
+              {c.refundText}
+            </T>
+          ) : null}
           <View style={{ marginTop: 6 }}>
-            <OsszegSor elso cim={RESERVE_TEXTS.kartya.rowSzamlak} huf={c.invoicesHuf} kb />
+            <OsszegSor elso cim={RESERVE_TEXTS.kartya.rowSzamlak} huf={c.invoicesHuf} kb={c.invoicesHuf > 0} />
             {c.fixedMonthlyHuf > 0 ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowFix} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowFixSub, { fixedMonthly: szam(c.fixedMonthlyHuf) })} huf={c.fixedHuf} /> : null}
-            {c.hipaAnnualHuf != null ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowHipa} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowHipaSub, { hipaAnnual: szam(c.hipaAnnualHuf) })} huf={c.hipaHuf} kb /> : null}
+            {c.hipaAnnualHuf != null ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowHipa} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowHipaSub, { hipaAnnual: szam(c.hipaAnnualHuf) })} huf={c.hipaHuf} kb={c.hipaHuf > 0} /> : null}
             <OsszegSor cim={RESERVE_TEXTS.kartya.rowLezart} al={RESERVE_TEXTS.kartya.rowLezartSub} huf={c.dueOrPaidHuf} />
           </View>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 12, marginTop: 8 }}>
@@ -197,6 +202,11 @@ export function KeresetKartya({ e }: { e: EarningsCard }) {
           <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 4 }}>
             {e.sub}
           </T>
+          {e.refundText ? (
+            <T m={15} s={600} lh={1.45} c={szin.tintakekSzoveg} style={{ marginTop: 4 }}>
+              {e.refundText}
+            </T>
+          ) : null}
           {e.projectionText ? (
             <T m={16} lh={1.45} style={{ marginTop: 6 }}>
               {e.projectionText}
@@ -211,14 +221,17 @@ export function KeresetKartya({ e }: { e: EarningsCard }) {
 
 /** Szakasz egy mondattal és egy kapszulával jobbra (havi ellenőrzés, éves zárás, kedvezmény-tipp, szünetelés). */
 function TeendoSzakasz({ ikon, cim, szoveg, gomb, onPress, masik }: { ikon: Parameters<typeof Ikon3d>[0]['nev']; cim: string; szoveg: string; gomb: string; onPress: () => void; masik?: { cim: string; onPress: () => void } }) {
+  // 320 px: a long title next to the capsule broke inside the word ("vállalkozás / od") – the capsule goes under the text
+  const keskeny = useWindowDimensions().width < 360 && cim.length > 16;
   return (
     <>
-      <Szakasz ikon={ikon} cim={cim} jobbra={<GombM cim={gomb} onPress={onPress} />} />
+      <Szakasz ikon={ikon} cim={cim} jobbra={keskeny ? undefined : <GombM cim={gomb} onPress={onPress} />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: masik ? 4 : 14 }}>
         <View style={{ paddingLeft: BELJEBB }}>
           <T m={16} lh={1.45}>
             {szoveg}
           </T>
+          {keskeny ? <GombM cim={gomb} onPress={onPress} style={{ marginTop: 10, alignSelf: 'flex-start' }} /> : null}
           {masik ? <GombSz cim={masik.cim} m={16} onPress={masik.onPress} style={{ minHeight: 44, justifyContent: 'center' }} /> : null}
         </View>
       </Lap>

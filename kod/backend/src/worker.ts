@@ -10,6 +10,7 @@ import { heartbeat, jobDefs, runIfDue } from './jobs.js';
 import { createLogger, log, setLogger, safeErr } from './log.js';
 import { runDataFixKor1, runDataStepTulaj1118, runDataStepTulaj1119, runFaqSafetyFix } from './services/datastep.js';
 import { runDataStepK28, runDataStepOt1119 } from './services/datastep-k28.js';
+import { runDataStepK6c } from './services/datastep-k6c.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -73,6 +74,13 @@ async function main(): Promise<void> {
     await runDataStepK28(deps);
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step ot1119/k28 failed');
+  }
+  // Round 2 of 11-19 (k6c): pauses → tax-profile breaks (once); demo invoice notifications re-rendered from the reserves.
+  try {
+    const r = await runDataStepK6c(deps);
+    log().info(r, 'data step k6c');
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step k6c failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

@@ -42,6 +42,8 @@ export const annualAnswersSchema = z.strictObject({
     .nullish(),
   missingDocuments: z.boolean().nullish(),
   message: z.string().trim().max(ANNUAL_RULES.messageMaxChars).nullish(),
+  /** View-only (GET returns it); accepted and ignored so a client that echoes the view back is not refused (k6c). */
+  refundAccountMasked: z.string().max(40).nullish(),
 });
 
 export function questionnaireDue(year: number, regime: 'atalany' | 'kata'): string {
@@ -90,6 +92,12 @@ export async function annualOf(db: DbOrTx, clientId: string, year: number): Prom
 }
 
 /** GET /client/annual?year= – creates the 'nem_indult' row lazily so the card can say when it opens. */
+/** The year whose closing the client sees by default: last year if he had a tax profile then, else this year. */
+export async function defaultAnnualYear(db: DbOrTx, clientId: string, thisYear: number): Promise<number> {
+  const [tp] = await db.select({ id: clientTaxProfiles.id }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, thisYear - 1))).limit(1);
+  return tp ? thisYear - 1 : thisYear;
+}
+
 export async function annualView(deps: Deps, db: DbOrTx, cl: ClientRow, year: number): Promise<AnnualView> {
   let r = await annualOf(db, cl.id, year);
   if (!r) {
@@ -110,7 +118,7 @@ async function own(db: DbOrTx, cl: ClientRow, id: string): Promise<AnnualRow> {
 export async function saveAnnualAnswers(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, a: z.infer<typeof annualAnswersSchema>, userId: string): Promise<AnnualView> {
   const r = await own(db, cl, id);
   if (r.status !== 'kerdoiv') throw annualErr.wrongStatus();
-  const { refundAccount, ...rest } = a;
+  const { refundAccount, refundAccountMasked: _viewOnly, ...rest } = a;
   const merged = { ...((r.answers ?? {}) as Partial<AnnualAnswers>), ...rest };
   const enc = refundAccount === undefined ? r.refundAccountEnc : refundAccount ? deps.data.enc(refundAccount, AAD) : null;
   const [u] = await db.update(annualClosings).set({ answers: merged, refundAccountEnc: enc, updatedAt: deps.now() }).where(eq(annualClosings.id, r.id)).returning();

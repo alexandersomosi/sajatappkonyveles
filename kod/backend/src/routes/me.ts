@@ -1,6 +1,7 @@
 // /me – all roles (SPEC §12.3): profile, notification prefs, push tokens, inbox, consents, GDPR.
 import { notificationSettingsOf } from '../notify/notify.js';
-import { userNotificationSettings } from '../db/schema.js';
+import { clientTaxProfiles, userNotificationSettings } from '../db/schema.js';
+import { serviceLockView } from '../services/zarolas.js';
 import { NOTIFICATION_PREFS_MAX } from '../_shared/enums.js';
 import { and, desc, eq, inArray, isNull, lt, notInArray } from 'drizzle-orm';
 import { Hono } from 'hono';
@@ -75,6 +76,10 @@ export function meRoutes(deps: Deps) {
       if (cl) {
         const st = await steps(deps.db, cl.id);
         me.client = { id: cl.id, firstName: cl.firstName, lastName: cl.lastName, lifecycle: cl.lifecycle, onboardingComplete: allDone(st, pathOf(cl)), personalReferralCode: cl.personalReferralCode };
+        // SPEC §28.K.5: the lock banner of every main screen reads this (it was only in the MINTA mock – k6c review)
+        me.client.serviceLock = await serviceLockView(deps, cl);
+        const [tpNow] = await deps.db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, Number(todayBudapest(deps.now()).slice(0, 4))))).limit(1);
+        if (tpNow) me.client.taxRegime = tpNow.regime;
         // SPEC §27.4.2: the same numbers as the journey (band = badge = locked sheet).
         const j = await journeyOf(deps, deps.db, cl);
         const acc0 = await clientAccess(deps, deps.db, cl, j.remaining, j.todoCount);

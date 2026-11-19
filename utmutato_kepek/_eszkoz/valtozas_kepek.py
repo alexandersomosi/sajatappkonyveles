@@ -41,7 +41,7 @@ CEL = os.path.join(KEPEK, 'valtozas')
 MUNKA = os.path.join(KEPEK, '_sajat', '_munka', 'ocr_munka.png')
 FEJLEC_NEV = (455, 6, 615, 44)          # „Bejelentkezett felhasználó” alatti név – minden képen
 FORRAS_ROVID = 'NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.'
-FORRAS = {'id': 'sajat_2026-11-19', 'cim': 'A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)',
+FORRAS = {'id': 'sajat_2026-11-19', 'cim': 'Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)',
           'url': None, 'datum': '2026-11-19', 'oldal': None, 'fajta': 'sajat_kepernyokep'}
 
 # sorszám, slug (= lépéskulcs), nyers fájl, elmosandó területek (nyers px), kivágás, képernyőcím, felirat, jelölések
@@ -77,14 +77,16 @@ LEPESEK = [
      [(1, (125, 424, 283, 458), 'tinta', 'Ha más lesz a fő munkád: „Új főtevékenység”.'),
       (2, (125, 520, 283, 554), 'tinta', 'Ha a mostani mellett kezdesz újat: „Új tevékenység hozzáadása”.'),
       (3, (600, 581, 758, 615), 'tinta', 'Ha a tevékenységeid nem változnak: „Tovább”.')]),
-    (10, 'valtozas_ovtj_kereso', '06_ovtj_kereso.jpg', [(120, 366, 744, 414)], (92, 140, 790, 624),
+    # k6c: the searched activity (his own) is blurred too
+    (10, 'valtozas_ovtj_kereso', '06_ovtj_kereso.jpg', [(120, 366, 744, 414), (128, 522, 423, 559)], (92, 140, 790, 624),
      'A tevékenység keresése', 'Írj be egy szót vagy a kódot, és válaszd ki a sort.',
      [(1, (126, 518, 428, 560), 'borostyan', 'Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.', 'jobb'),
       (2, (122, 568, 276, 612), 'borostyan', 'Adatváltozás ideje: ettől a naptól végzed.', 'jobb')]),
     (11, 'szunetel_inditas', '03_uj_bejelentes_meglevo_ev.jpg', [(428, 174, 770, 502)], (92, 62, 790, 620),
      'Új bejelentés, kérelem benyújtása', 'A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).',
      [(1, None, 'tinta', 'Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).')]),
-    (12, 'valtozas_megtekintes', '12_megtekintes_3.jpg', [(395, 82, 758, 108)], (92, 120, 790, 560),
+    # k6c: his tax choices (munkavégzés jellege, átalány, alanyi mentesség, közösségi adószám, árfolyam) are blurred too
+    (12, 'valtozas_megtekintes', '12_megtekintes_3.jpg', [(395, 82, 758, 108), (114, 190, 749, 212), (114, 254, 749, 277), (114, 317, 749, 340), (114, 380, 749, 403), (114, 444, 749, 474)], (92, 120, 790, 560),
      'Bejelentéseim, kérelmeim – Megtekintés', 'A beküldött bejelentésed: töltsd le a NAV értesítését.',
      [(1, (106, 512, 264, 546), 'tinta', 'Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.')]),
 ]

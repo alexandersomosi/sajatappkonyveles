@@ -1,8 +1,8 @@
 // C űrlap (SPEC §28.K.10, `valasztott/urlap.html`): a keskeny kék sáv „Vissza” + a szakasz neve, alatta „1. kérdés a 3-ból”,
 // a kérdés címként (26), egy „miért” sor, a válasz-kapszulák; a fő gomb lent a dokkban. Egy kérdés egy képernyőn.
-import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
-import { forma, szin } from '@/theme/tokens';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
+import { betu, forma, szin } from '@/theme/tokens';
 import { Fejlec } from '@/ui/alap';
 import { Ikon3d, type Ikon3dNev } from '@/ui/kepek';
 import { T } from '@/ui/T';
@@ -22,7 +22,7 @@ export function UrlapFej({ vissza, szakasz }: { vissza: () => void; szakasz: str
             Vissza
           </T>
         </Pressable>
-        <T m={16} s={650} c="#fff" kozep numberOfLines={1} style={{ position: 'absolute', left: 104, right: 104 }}>
+        <T m={16} s={650} c="#fff" kozep numberOfLines={2} lh={1.2} style={{ position: 'absolute', left: 104, right: 104 }}>
           {szakasz}
         </T>
       </View>
@@ -40,12 +40,14 @@ export function bolBol(n: number): 'ból' | 'ből' {
 }
 
 /** „2. kérdés a 9-ből” + a kérdés + a „miért” sor (+ opcionális 3D ikon a kérdés előtt). */
-export function UrlapKerdes({ i, n, cim, miert, ikon }: { i?: number; n?: number; cim: string; miert?: string | null; ikon?: Ikon3dNev }) {
+export function UrlapKerdes({ i, n, cim, miert, ikon, valtozo }: { i?: number; n?: number; cim: string; miert?: string | null; ikon?: Ikon3dNev; valtozo?: boolean }) {
+  // valtozo: the number of questions depends on the answers (k6c: "1. kérdés a 7-ből" jumped to "3. kérdés a 11-ből")
+  const szamlalo = i == null || n == null ? null : valtozo ? (n - i <= 0 ? 'Utolsó kérdés' : `Még kb. ${n - i} kérdés`) : `${i}. kérdés a ${n}-${bolBol(n)}`;
   return (
     <View style={{ marginBottom: 16 }}>
-      {i != null && n != null ? (
+      {szamlalo ? (
         <T m={15} c={szin.halvany} lh={1.4}>
-          {`${i}. kérdés a ${n}-${bolBol(n)}`}
+          {szamlalo}
         </T>
       ) : null}
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginTop: 4 }}>
@@ -97,7 +99,7 @@ export function IgenNem({ ertek, valt }: { ertek: boolean | null; valt: (b: bool
 }
 
 const HO = ['jan.', 'febr.', 'márc.', 'ápr.', 'máj.', 'jún.', 'júl.', 'aug.', 'szept.', 'okt.', 'nov.', 'dec.'];
-/** Év (számmező helyett léptető) + hónap rácsa – 'YYYY-MM'. */
+/** Év (beírható, 4 számjegy, ± léptetővel) + hónap rácsa – 'YYYY-MM'. */
 export function HonapValaszto({ ertek, valt, tol, ig, cim }: { ertek: string | null; valt: (v: string) => void; tol: number; ig: number; cim?: string }) {
   const ev = ertek ? Number(ertek.slice(0, 4)) : null;
   const ho = ertek ? Number(ertek.slice(5, 7)) : null;
@@ -116,11 +118,8 @@ export function HonapValaszto({ ertek, valt, tol, ig, cim }: { ertek: string | n
             −
           </T>
         </Pressable>
-        <View style={{ minWidth: 92, height: 56, borderRadius: 12, borderWidth: ev ? 2 : 1, borderColor: ev ? szin.tintakek : szin.keret, alignItems: 'center', justifyContent: 'center' }} accessible accessibilityLabel={`Év: ${ev ?? 'nincs kiválasztva'}`}>
-          <T m={22} s={600} szam c={ev ? szin.tinta : szin.halvany}>
-            {ev ?? 'Év'}
-          </T>
-        </View>
+        {/* k6c: the year can be typed (4 digits) – a 1997-born user needed 18 taps; the ± buttons stay */}
+        <EvMezo ev={ev} tol={tol} ig={ig} valt={(e) => allit(e, ho ?? 1)} />
         <Pressable accessibilityRole="button" accessibilityLabel="Későbbi év" onPress={() => allit(Math.min(ig, kezdo + (ev ? 1 : 0)), ho ?? 1)} style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: szin.gombMAlap, alignItems: 'center', justifyContent: 'center' }}>
           <T m={22} s={700} c={szin.tintakekSzoveg} lh={1}>
             +
@@ -147,6 +146,31 @@ export function HonapValaszto({ ertek, valt, tol, ig, cim }: { ertek: string | n
         })}
       </View>
     </View>
+  );
+}
+
+function EvMezo({ ev, tol, ig, valt }: { ev: number | null; tol: number; ig: number; valt: (e: number) => void }) {
+  const [szoveg, setSzoveg] = useState(ev ? String(ev) : '');
+  useEffect(() => setSzoveg(ev ? String(ev) : ''), [ev]);
+  return (
+    <TextInput
+      value={szoveg}
+      onChangeText={(t) => {
+        const d = t.replace(/\D/g, '').slice(0, 4);
+        setSzoveg(d);
+        if (d.length === 4) {
+          const n = Number(d);
+          if (n >= tol && n <= ig) valt(n);
+        }
+      }}
+      placeholder="Év"
+      placeholderTextColor={szin.halvany}
+      keyboardType="number-pad"
+      inputMode="numeric"
+      maxLength={4}
+      accessibilityLabel={`Év (${tol}–${ig}): ${ev ?? 'nincs kiválasztva'}`}
+      style={{ width: 96, height: 56, borderRadius: 12, borderWidth: ev ? 2 : 1, borderColor: ev ? szin.tintakek : szin.keret, textAlign: 'center', fontSize: 22, color: szin.tinta, fontVariant: ['tabular-nums'], ...betu(600) }}
+    />
   );
 }
 

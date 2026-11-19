@@ -123,6 +123,7 @@ export async function buildChangeGuide(deps: Deps, db: DbOrTx, cl: ClientRow, ki
   const p = personaliseChangeGuide(kind, {
     change: open && isOpenAssist(open.status) && open.changeData ? (open.changeData as unknown as ChangeGuideData) : null,
     firstName: String(params.firstName),
+    firstNameWith: String(params.firstNameWith),
     progress: await changeProgress(db, cl.id, kind),
     ugysegedValidUntil: validUntilOf(deps, kind),
   });

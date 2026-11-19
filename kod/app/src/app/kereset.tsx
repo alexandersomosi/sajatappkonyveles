@@ -31,7 +31,7 @@ function KeresetTartalom() {
           vissza={() => vissza('/')}
           ikon="kivonat"
           cim={EARNINGS_TEXTS.screenTitle}
-          nagy={v ? `kb. ${szam(v.ytd.netHuf)} Ft` : null}
+          nagy={v ? `kb. ${szam(Math.round(v.ytd.netHuf / 1000) * 1000)} Ft` : null}
           mondat={v && utolso ? fillPlaceholders(EARNINGS_TEXTS.screenSub, { year: String(v.year), honap: utolso.label.toLocaleLowerCase('hu-HU') }) : null}
         />
       }
@@ -46,6 +46,11 @@ function KeresetTartalom() {
             <T m={16} lh={1.45}>
               {v.line}
             </T>
+            {v.refund ? (
+              <T m={15} s={600} lh={1.45} c={szin.tintakekSzoveg} style={{ marginTop: 6 }}>
+                {v.refund.text}
+              </T>
+            ) : null}
           </Lap>
           <Szakasz ikon="tepnaptar" cim="Hónaponként" jobbra={<MiEzKor kulcs="kereset_miert" cim={EARNINGS_TEXTS.howLink} />} />
           <Lap>

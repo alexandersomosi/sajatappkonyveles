@@ -12,7 +12,7 @@ import { randomBytes } from 'node:crypto';
 import { appendFile, chmod, mkdir } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { eq, sql } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 import type { AllowanceAnswers, ChangeData } from '../_shared/api.js';
 import { ConfigError, loadConfig } from '../config.js';
 import { openPg } from '../db/client.js';
@@ -29,6 +29,7 @@ import { notify } from '../notify/notify.js';
 import { runDataStepK28, runDataStepOt1119 } from '../services/datastep-k28.js';
 import { proposeAllowances } from '../services/kedvezmeny.js';
 import { ensureReserves } from '../services/felretesz.js';
+import { invoiceItems, invoiceNotificationContent } from '../services/szamla-ertesites.js';
 import { createDocumentFromBuffer } from '../services/system-docs.js';
 import { ensurePeriods, recalcYear } from '../services/tax.js';
 import { fakeAdoazonosito } from './tulaj1118.js';
@@ -222,8 +223,15 @@ export async function seedOt1119(deps: Deps, o: { credentialsFile: string }): Pr
     await recalcYear(deps, deps.db, cl.id, 2026);
     await ensureReserves(deps, deps.db, cl.id, 2026);
     const u = cl.userId;
-    await notify(deps, deps.db, { userId: u, kind: 'invoice_new', params: { osszeg: '120 000', vevo: 'Bodza Kiadó Kft', felre: '31 000' }, link: `/szamla/${fresh[0]}`, data: { items: [{ navInvoiceId: fresh[0] }] }, noPush: true, noEmail: true });
-    await notify(deps, deps.db, { userId: u, kind: 'invoice_new', variant: 'tobb', params: { n: 2, osszeg: '335 000', felre: '87 000' }, link: '/felretesz', data: { items: [{ navInvoiceId: fresh[1] }, { navInvoiceId: fresh[2] }] }, noPush: true, noEmail: true });
+    // Round 2 of 11-19: the texts come from the engine's reserves (the same number the invoice page shows), never literals.
+    const freshRows = await deps.db.select().from(navInvoices).where(inArray(navInvoices.id, fresh.map(String)));
+    const byId = (id: unknown) => freshRows.filter((r) => r.id === String(id));
+    const one = await invoiceItems(deps, cl.id, byId(fresh[0]));
+    const two = await invoiceItems(deps, cl.id, [...byId(fresh[1]), ...byId(fresh[2])]);
+    const c1 = await invoiceNotificationContent(deps, one);
+    const c2 = await invoiceNotificationContent(deps, two);
+    await notify(deps, deps.db, { userId: u, kind: 'invoice_new', ...(c1.variant !== 'alap' ? { variant: c1.variant } : {}), params: c1.params, link: `/szamla/${fresh[0]}`, data: { items: one, variant: c1.variant }, noPush: true, noEmail: true });
+    await notify(deps, deps.db, { userId: u, kind: 'invoice_new', ...(c2.variant !== 'alap' ? { variant: c2.variant } : {}), params: c2.params, link: '/felretesz', data: { items: two, variant: c2.variant }, noPush: true, noEmail: true });
     created.push('balint');
   }
 

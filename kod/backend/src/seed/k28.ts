@@ -7,6 +7,7 @@
 //     Bárány Tamás    (login, bekotes_alatt, 'van') "Most nem tudom" for the adószám + EFO → panel tasks
 //     Molnár Csilla   (login) szünetel since 2026-10-01 → availability fee; annual closing 2025 'kesz'
 //   + Tóth Bálint's 2026 annual closing row 'nem_indult'; one accepted mailbox log row for Szabó Eszter.
+import { applyPauseToProfile } from '../services/szuneteltetes.js';
 import { fileURLToPath } from 'node:url';
 import { eq } from 'drizzle-orm';
 import type { ChangeData } from '../_shared/api.js';
@@ -81,6 +82,8 @@ export async function seedK28(deps: Deps, o: { credentialsFile: string }): Promi
   if (!(await exists(deps, `csilla.molnar@${DOMAIN}`))) {
     const cl = await demoClient(ctx, { email: `csilla.molnar@${DOMAIN}`, first: 'Csilla', last: 'Molnár', idSeed: 95, login: true, status: 'fofoglalkozasu' });
     await deps.db.insert(subscriptionPauses).values({ clientId: cl.id, from: '2026-10-01', to: null, source: 'konyvelo', createdBy: ctx.bence.userId, createdAt: ctx.at(24 * 50) });
+    // the szünetelés is also a break of the tax profile: no monthly minimum from 1 October (k6c review)
+    await applyPauseToProfile(deps, deps.db, cl.id, '2026-10-01', null);
     await deps.db.insert(annualClosings).values({ clientId: cl.id, taxYear: 2025, regime: 'atalany', status: 'kesz', questionnaireDue: '2026-03-15', submittedAt: new Date('2026-02-20T10:00:00Z'), approvedAt: new Date('2026-05-02T10:00:00Z'), filedSzjaAt: new Date('2026-05-10T10:00:00Z'), filedHipaAt: new Date('2026-05-20T10:00:00Z') }).onConflictDoNothing();
     created.push('csilla');
   }

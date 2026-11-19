@@ -672,7 +672,7 @@ button.nav-elem.ertesites-gomb { width: 100%; text-align: left; font: inherit; c
 .szakasz.tores .megj { flex-basis: 100%; }
 
 /* =====================================================================================================================
-   SPEC §28.K.10 (panel) – the approved variant C: calm scale, sections inside a sheet separated by the 8 px #EEF1F8
+   SPEC §28.K.10 (panel) – the approved variant C: calm scale, sections inside a sheet separated by the 10 px #D3DAFC
    band (owner 11-19 20:20 "csak valami elválasztó köztük"), no shadows, no stacked sheets, no darkening layers.
    Used by every §28 / §28.K card (.lap.k28 > .szak). The old values are in _regi/styles_elotte_k6_1119/.
    ===================================================================================================================== */

@@ -58,7 +58,11 @@ export async function checkinView(deps: Deps, db: DbOrTx, cl: ClientRow, row: Ch
       ...(ir
         ? {
             status: ir.status,
-            statusText: await deps.content.get(`havi.panel.status.${ir.status}`),
+            // paid fee → the accountant is on it (the item row itself stays 'dijra_var' until the panel moves it)
+            statusText:
+              ir.status === 'dijra_var' && ch?.status === 'fizetve'
+                ? await deps.content.render('havi.item_paid', await accountantParams(db, cl.accountantId))
+                : await deps.content.get(`havi.panel.status.${ir.status}`),
             assistId: ir.assistId,
             feeCharge: ch ? await feeChargeView(deps, db, ch) : null,
             clientText: ir.clientText,

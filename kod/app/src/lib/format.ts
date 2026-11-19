@@ -292,3 +292,14 @@ export function videoHossz(mp?: number | null): string | null {
   const s = Math.floor(mp);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
+
+/**
+ * A beírt dátum ISO-ra (k6c): „2026.12.01.”, „2026. 12. 1.”, „20261201” → „2026-12-01”; amíg nincs meg az év, hónap és
+ * nap, a beírt szöveg marad (a mező így magyar formában is kitölthető, nem kell kötőjeles ISO-t gépelni).
+ */
+export function datumBe(t: string): string {
+  const s = t.trim();
+  const m = /^(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D*$/.exec(s) ?? /^(\d{4})(\d{2})(\d{2})$/.exec(s);
+  if (!m) return s;
+  return `${m[1]}-${m[2]!.padStart(2, '0')}-${m[3]!.padStart(2, '0')}`;
+}

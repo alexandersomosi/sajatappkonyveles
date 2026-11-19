@@ -169,7 +169,8 @@ export function proposeAllowances(a: AllowanceAnswers, year: number, status: Tax
     const start = idx(mar.y, mar.m) + 1;
     const end = start + ALLOWANCE_LIMITS.elsoHazasokMaxMonths - 1;
     const months = ALL.filter((m) => idx(year, m) >= start && idx(year, m) <= end);
-    const monthly = a.marriage.who === 'en' ? ar.elsoHazasokMonthlyHuf : Math.ceil(ar.elsoHazasokMonthlyHuf / 2);
+    // shared: our client takes the lower half (16 667), the spouse the rest (16 668) – together never above 33 335 (k6c)
+    const monthly = a.marriage.who === 'en' ? ar.elsoHazasokMonthlyHuf : Math.floor(ar.elsoHazasokMonthlyHuf / 2);
     if (months.length)
       out.push({
         kind: 'elso_hazasok',
@@ -323,9 +324,11 @@ async function itemView(deps: Deps, r: AllowanceRow, firstName: string, effectYe
       statusText = await deps.content.render('kedvezmeny.allapot.kerdes', { firstName, question: r.clientText ?? '' });
       break;
     case 'jovahagyva':
-      statusText = r.inYear
-        ? await deps.content.render('kedvezmeny.allapot.jovahagyva', { monthsText: mt, effectYear: fmt(round1000(effectYearHuf ?? 0)) })
-        : await deps.content.render('kedvezmeny.allapot.jovahagyva_ev_vegen', {});
+      statusText = !r.inYear
+        ? await deps.content.render('kedvezmeny.allapot.jovahagyva_ev_vegen', {})
+        : round1000(effectYearHuf ?? 0) > 0
+          ? await deps.content.render('kedvezmeny.allapot.jovahagyva', { monthsText: mt, effectYear: fmt(round1000(effectYearHuf ?? 0)) })
+          : await deps.content.render('kedvezmeny.allapot.jovahagyva_meg_nincs', { monthsText: mt });
       break;
     case 'elutasitva':
       statusText = await deps.content.render('kedvezmeny.allapot.elutasitva', { rejectText: r.clientText || (r.rejectReason ? ALLOWANCE_REJECT_REASON_LABELS[r.rejectReason] : '') });
@@ -417,7 +420,8 @@ export function clientPreview(input: YearInput | null, answers: AllowanceAnswers
       const inYear = p.kind !== 'csaladi' || true;
       const k = toEngineInput([{ kind: p.kind, months: p.months, params: p.params, inYear }], answers.birthMonth);
       const eff = input && k ? round1000(savedBy(input, k)) : null;
-      return { kind: p.kind, label: labelOf(p.kind, p.params), effectYearHuf: eff, onlyAnnual: !input || eff === 0 };
+      // every modelled allowance is settled in the quarterly advance: "Év végén" only for what really waits for the annual return
+      return { kind: p.kind, label: labelOf(p.kind, p.params), effectYearHuf: eff, onlyAnnual: false };
     }),
   };
 }

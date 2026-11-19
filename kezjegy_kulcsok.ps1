@@ -171,7 +171,7 @@ for i in $(seq 1 40); do
   sleep 3
 done
 if [ "$st" = healthy ]; then echo 'API restarted: OK.'; else echo "API is NOT healthy ($st). Check: ssh appok-1 'docker logs kezjegy-api --tail 30' (the message names the bad value)."; fi
-curl -fsS -m 10 https://45-94-65-74.sslip.io/api/v1/health >/dev/null && echo 'Gardoko: OK.' || echo 'Gardoko: NOT answering!'
+# (A Gardoko 2026-11-20-án törölve; az ő ellenőrzése megszűnt.)
 exit 0
 '@
 

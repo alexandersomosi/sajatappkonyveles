@@ -569,7 +569,7 @@ export function installK28(x: K28Ctx): K28Hooks {
     healthConsentAt: null,
     legacy: [],
     items: [
-      tetel('elso_hazasok', 'javasolt', [6, 7, 8, 9, 10, 11, 12], { elsoHazasokMonthlyHuf: 16_668 }, ['Esküvő: 2026. május, első házasság', 'Megosztva: fele-fele (16 668 Ft/hó)'], {
+      tetel('elso_hazasok', 'javasolt', [6, 7, 8, 9, 10, 11, 12], { elsoHazasokMonthlyHuf: 16_667 }, ['Esküvő: 2026. május, első házasság', 'Megosztva: fele-fele (16 667 Ft/hó, a házastársánál 16 668)'], {
         documents: [{ label: 'a házassági anyakönyvi kivonat', keep: true }],
       }),
       tetel('csed_gyed', 'javasolt', [8, 9], {}, ['Táppénz: augusztus–szeptember'], { warnings: ['Kieső időként vedd fel az adóprofilba: ezekre a hónapokra nincs minimum járulék.'] }),

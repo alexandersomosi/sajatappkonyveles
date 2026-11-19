@@ -5,7 +5,7 @@
 // &forras=<hely>.
 import { useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, View, type ScrollViewInstance } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import type { AssistView, OnboardingState } from '@/_shared/api';
 import { ASSIST_TEXTS, normalizeHuPhone } from '@/_shared/bekotes';
 import {
@@ -59,6 +59,8 @@ export default function Helyettunk() {
   const fej = <CimSor visszaCim="Vissza" vissza={() => vissza('/bekotes')} cim={cim} />;
   const evZarva = fajta === 'vallalkozas_bejelentes' && (kikapcsolva || !evNyitva);
 
+  // k6c: an active client (his business runs) never sees the new-business flow here – his "intézzük helyetted" is a change
+  if (fajta === 'vallalkozas_bejelentes' && me.data?.client?.lifecycle === 'aktiv') return <Redirect href="/valtozas" />;
   if (o.isLoading || cb.isLoading) return <Kepernyo ful="fooldal" fejlec={fej}><Betolt /></Kepernyo>;
 
   // Már kérte: az állapot, a lista, és „Mégis magam csinálom” (amíg a bejelentés el nem ment).

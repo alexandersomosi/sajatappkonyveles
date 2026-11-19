@@ -78,7 +78,6 @@ export default function Dijak() {
                 key={t.kind}
                 elso={i === 0}
                 cim={t.label}
-                al={t.line}
                 jobbra={
                   <View style={{ alignItems: 'flex-end' }}>
                     <T m={16} s={650} szam>

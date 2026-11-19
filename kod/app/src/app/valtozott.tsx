@@ -13,7 +13,7 @@ import {
 import { changeFeeKind, EMPLOYER_ANSWERS, FEE_DEFAULTS, type ChangeKind, type CheckinHow, type CheckinItem, type CheckinWeeklyHours, type EmployerAnswer } from '@/_shared/enums';
 import { useHaviEllenorzes, useHaviValasz, useMe } from '@/api/hooks';
 import { hibaUzenet } from '@/lib/hiba';
-import { maiNap, szam } from '@/lib/format';
+import { datumBe, maiNap, szam } from '@/lib/format';
 import { dijFizetes } from '@/lib/simplepay';
 import { DemoDij } from '@/kepernyok/k28';
 import { Kapszulak, UrlapFej, UrlapKerdes } from '@/kepernyok/Urlap';
@@ -181,7 +181,7 @@ export default function HaviEllenorzes() {
         <TetelLap item={lp.item} x={v(lp.item)} set={(p) => setV(lp.item, p)} fn={fn} i={i} n={lepesek.length - 1} mellek={mellek} />
       ) : lp.t === 'urlap' ? (
         <>
-          <UrlapKerdes i={i} n={lepesek.length - 1} cim={lapCim(tetelFajta(lp.item, v(lp.item))!, lp.lap)} />
+          <UrlapKerdes valtozo i={i} n={lepesek.length - 1} cim={lapCim(tetelFajta(lp.item, v(lp.item))!, lp.lap)} />
           <ValtozasLap kind={tetelFajta(lp.item, v(lp.item))!} lap={lp.lap} a={v(lp.item).v} set={(p) => setV(lp.item, { v: { ...v(lp.item).v, ...p } })} />
         </>
       ) : (
@@ -220,7 +220,7 @@ function TetelLap({ item, x, set, fn, i, n, mellek }: { item: CheckinItem; x: Va
     <>
       <UrlapKerdes i={i} n={n} cim={CHECKIN_ITEM_TEXTS[item].question} />
       {item === 'munkaviszony' || item === 'nyugdij' ? (
-        <Mezo felirat={item === 'nyugdij' ? FU.pensionSince : FU.since} placeholder="2026-11-03" value={x.since} onChangeText={(t) => set({ since: t.trim() })} style={{ marginBottom: 14 }} />
+        <Mezo felirat={item === 'nyugdij' ? FU.pensionSince : FU.since} placeholder="2026.11.03." keyboardType="numbers-and-punctuation" value={x.since} onChangeText={(t) => set({ since: datumBe(t) })} style={{ marginBottom: 14 }} />
       ) : null}
       {item === 'munkaviszony' && !mellek ? (
         <View style={{ marginBottom: 14 }}>
@@ -314,15 +314,16 @@ function Eredmeny({ c, fn }: { c: CheckinView | null; fn: string }) {
       {!c ? (
         <UrlapKerdes cim="Most nincs havi kérdés" miert="Havonta egyszer rákérdezünk, változott-e valami. Ha közben változik, írj nekünk." ikon="kerdezek" />
       ) : c.status === 'nem_valtozott' ? (
-        <UrlapKerdes cim="Köszönjük!" miert={CHECKIN_TEXTS.noneToast} ikon="kerdezek" />
+        <UrlapKerdes cim="Köszönjük!" miert={CHECKIN_TEXTS.noneBody} ikon="kerdezek" />
       ) : c.status === 'lejart' ? (
         <UrlapKerdes cim="Ezt a hónapot lezártuk" miert={CHECKIN_TEXTS.expired} ikon="kerdezek" />
       ) : (
         <>
-          <UrlapKerdes cim="Köszönjük!" miert={fillPlaceholders(CHECKIN_TEXTS.doneSent, { firstName: fn })} ikon="kerdezek" />
+          <UrlapKerdes cim="Köszönjük!" miert={fillPlaceholders(CHECKIN_TEXTS.doneBody, { firstName: fn })} ikon="kerdezek" />
           <Szakasz ikon="irat" cim="Ezekkel foglalkozunk" />
           <Lap>
-            {c.items.map((x, n) => (
+            {/* only the items answered "igen" (they have a status); the "nem" answers are not listed (k6c) */}
+            {c.items.filter((x) => x.status).map((x, n) => (
               <View key={x.item} style={{ paddingVertical: 10, marginHorizontal: 16, paddingLeft: 38, borderTopWidth: n ? 1 : 0, borderTopColor: szin.hajszal }}>
                 <T m={16} s={600} lh={1.35}>
                   {x.question}

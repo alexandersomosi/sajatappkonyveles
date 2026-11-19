@@ -190,6 +190,16 @@ export function huDayMonthAn(dateStr: string): string {
   return `${monthName(Number(dateStr.slice(5, 7)))} ${dayAn(Number(dateStr.slice(8, 10)))}`;
 }
 
+/** -tól/-től after a day number, from the -án/-én form: 1-jétől, 2-ától, 4-étől, 10-étől, 20-ától. */
+export function dayTol(day: number): string {
+  return dayAn(day).replace(/jén$/, 'jétől').replace(/án$/, 'ától').replace(/én$/, 'étől');
+}
+
+/** "október 1-jétől" */
+export function huDayMonthTol(dateStr: string): string {
+  return `${monthName(Number(dateStr.slice(5, 7)))} ${dayTol(Number(dateStr.slice(8, 10)))}`;
+}
+
 /** "november 18-ig" */
 export function huDayMonthIg(dateStr: string): string {
   return `${monthName(Number(dateStr.slice(5, 7)))} ${Number(dateStr.slice(8, 10))}-ig`;

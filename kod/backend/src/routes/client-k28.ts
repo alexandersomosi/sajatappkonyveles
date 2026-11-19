@@ -17,8 +17,9 @@ import { accountantParams } from '../notify/notify.js';
 import { clientOfUser, type ClientRow } from '../services/people.js';
 import { isRestricted } from '../services/access.js';
 import { reserveCard, reserveList, reservesForInvoices, setReserveMark } from '../services/felretesz.js';
-import { earnings } from '../services/kereset.js';
-import { allowanceState, allowancesHint, answersRow, clientPreview, saveAnswers, setGate } from '../services/kedvezmeny.js';
+import { earnings, earningsBasis, kb1000 } from '../services/kereset.js';
+import { allowanceState, allowancesHint, answersRow, clientPreview, fmt, saveAnswers, setGate } from '../services/kedvezmeny.js';
+import type { DbOrTx } from '../db/client.js';
 import { engineInput } from '../services/tax.js';
 import {
   buildChangeGuide,
@@ -36,7 +37,7 @@ import {
 } from '../services/valtozas.js';
 import { feesView, startFeePayment } from '../services/dijak.js';
 import { answerCheckin, checkinView, currentCheckin } from '../services/havi-ellenorzes.js';
-import { annualAnswersSchema, annualView, approveAnnual, saveAnnualAnswers, submitAnnual } from '../services/eves-zaras.js';
+import { annualAnswersSchema, annualView, defaultAnnualYear, approveAnnual, saveAnnualAnswers, submitAnnual } from '../services/eves-zaras.js';
 import { employerRow, employerView, setEmployerAnswer } from '../services/alkalmazott.js';
 import { serviceLockView } from '../services/zarolas.js';
 import { pauseView } from '../services/szuneteltetes.js';
@@ -93,6 +94,7 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   r.get('/reserve', async (c) => {
     const cl = await client(c);
     const year = parseQuery(c, yearQ).year ?? thisYear();
+    if (await isKata(deps.db, cl.id, year)) throw E.notFound(`Katás vagy: a havi 50 000 Ft-ot és a keretedet ${await firstName(cl)} figyeli.`);
     const v = await reserveList(deps, deps.db, cl, year, todayBudapest(deps.now()));
     if (!v) throw E.notFound('Még nincs adózási profilod. Ha {firstName} beállította, itt látod.'.replace('{firstName}', await firstName(cl)));
     return c.json(v);
@@ -116,6 +118,7 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   r.get('/earnings', async (c) => {
     const cl = await client(c);
     const year = parseQuery(c, yearQ).year ?? thisYear();
+    if (await isKata(deps.db, cl.id, year)) throw E.notFound(`Katás vagy: a kata mindent fedez, a havi 50 000 Ft-ot ${await firstName(cl)} számolja.`);
     const e = await earnings(deps, deps.db, cl, year, todayBudapest(deps.now()));
     if (!e) throw E.notFound('Még nincs adózási profilod.');
     return c.json(e.view);
@@ -270,7 +273,7 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   // ================= §28.K.3 annual closing =================
   r.get('/annual', async (c) => {
     const cl = await client(c);
-    const year = parseQuery(c, yearQ).year ?? thisYear() - 1;
+    const year = parseQuery(c, yearQ).year ?? (await defaultAnnualYear(deps.db, cl.id, thisYear()));
     return c.json(await annualView(deps, deps.db, cl, year));
   });
   r.put('/annual/:id/answers', async (c) => {
@@ -298,6 +301,12 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   });
 }
 
+/** The client's regime this year is KATA (client_tax_profiles.regime). */
+export async function isKata(db: DbOrTx, clientId: string, year: number): Promise<boolean> {
+  const [tp] = await db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, year))).limit(1);
+  return tp?.regime === 'kata';
+}
+
 /** SPEC §28 / §28.K additions of GET /client/home (null while restricted or without a profile). */
 export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, today: string): Promise<void> {
   const db = deps.db;
@@ -310,22 +319,65 @@ export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, t
     home.allowancesHint = null;
     return;
   }
-  try {
-    home.reserve = await reserveCard(deps, db, cl, today);
-  } catch {
+  // KATA (SPEC §28.K.11): the KATA engine branch and views are not built yet – never show átalány numbers to a katás
+  // client (k6c review: Gréta saw SZJA, "Havi fix járulék" and per-invoice reserves). A plain "{firstName} számolja" state.
+  if (await isKata(db, cl.id, year)) {
+    const params = await accountantParams(db, cl.accountantId);
     home.reserve = null;
-  }
-  try {
-    const e = await earnings(deps, db, cl, year, today);
-    home.earnings = e?.card ?? null;
-    if (e) home.twoNumbers = { revenueHuf: e.card.ytdRevenueHuf, revenueSub: '', taxesHuf: e.card.ytdTaxesHuf, taxesSub: 'SZJA, járulék, iparűzési adó' };
-  } catch {
     home.earnings = null;
+    home.twoNumbers = {
+      revenueHuf: home.revenueByMonth.reduce((a, m) => a + m.amountHuf, 0),
+      revenueSub: '',
+      taxesHuf: null,
+      taxesSub: `${await deps.content.get('fooldal.kata_taxes')} · ${await deps.content.render('fooldal.kata_taxes_sub', params)}`,
+    };
+    // no átalány estimate: no "Hogyan jött ki?" (periodId) and no estimate letter
+    if (home.hero.state === 'becsles') {
+      home.hero = { state: 'nincs_fizetendo', note: await deps.content.render('fooldal.kata_hero_note', params) };
+      home.letter = null;
+      home.paymentItems = [];
+    }
+    home.limits.adomentes = { ...home.limits.adomentes, reached: false, sentence: '', afterText: null };
+    home.limits.kata = true;
+    home.allowancesHint = null;
+  } else {
+    try {
+      home.reserve = await reserveCard(deps, db, cl, today);
+    } catch {
+      home.reserve = null;
+    }
+    try {
+      const e = await earnings(deps, db, cl, year, today);
+      home.earnings = e?.card ?? null;
+      if (e) {
+        const refund = e.view.refund?.huf ?? 0;
+        home.twoNumbers = {
+          revenueHuf: e.card.ytdRevenueHuf,
+          revenueSub: '',
+          taxesHuf: e.card.ytdTaxesHuf,
+          taxesSub: refund > 0 ? await deps.content.render('fooldal.taxes_sub_refund', { refund: fmt(kb1000(refund)) }) : await deps.content.get('fooldal.taxes_sub'),
+        };
+      }
+    } catch {
+      home.earnings = null;
+    }
+    // "Az adómentes részt … elérted. Azóta fizetsz SZJA-előleget" is not true with an approved 25 év alatti / anyák
+    // allowance: say what the allowance does (k6c review, Bálint)
+    try {
+      const b = home.limits.adomentes.reached ? await earningsBasis(db, cl, year, today) : null;
+      const al = b?.result.allowances;
+      if (b && al && al.szjaSavedHuf > 0) {
+        const szjaYtd = b.result.quarters.reduce((a, q) => a + q.szjaAdvanceHuf, 0);
+        home.limits.adomentes.afterText = await deps.content.render(szjaYtd === 0 ? 'fooldal.adomentes_allowance_none' : 'fooldal.adomentes_allowance_less', { limit: fmt(home.limits.adomentes.limitHuf) });
+      }
+    } catch {
+      /* the default line stays */
+    }
+    home.allowancesHint = await allowancesHint(db, cl, year);
   }
-  home.allowancesHint = await allowancesHint(db, cl, year);
   const ch = await currentCheckin(db, cl.id);
   home.checkin = ch && ch.status === 'nyitott' ? await checkinView(deps, db, cl, ch) : null;
-  if (today.slice(5) >= '01-05' && today.slice(5) <= '06-30') {
+  if (today.slice(5) >= '01-05' && today.slice(5) <= '06-30' && (await defaultAnnualYear(db, cl.id, year)) === year - 1) {
     const ann = await annualView(deps, db, cl, year - 1).catch(() => null);
     home.annual = ann && ann.status !== 'nem_indult' && ann.status !== 'kesz' ? ann : null;
   }
@@ -335,5 +387,7 @@ export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, t
 /** SPEC §28.1.5: the reserve of each listed invoice (only for active clients). */
 export async function invoiceReserves(deps: Deps, cl: ClientRow, ids: string[]) {
   if (isRestricted(cl)) return new Map();
+  // KATA: no átalány reserve per invoice (k6c review) – the KATA invoice line comes with the KATA view
+  if (await isKata(deps.db, cl.id, Number(todayBudapest(deps.now()).slice(0, 4)))) return new Map();
   return reservesForInvoices(deps, deps.db, cl.id, ids);
 }

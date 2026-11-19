@@ -75,23 +75,75 @@ export async function notifyNewInvoices(deps: Deps, clientId: string, ids: strin
     .returning();
   if (!claimed.length) return 0;
   // the reserves of the claimed invoices (after the recalc)
-  const revs = await db.select().from(revenueItems).where(and(inArray(revenueItems.navInvoiceId, claimed.map((x) => x.id)), isNull(revenueItems.deletedAt)));
-  for (const y of new Set(revs.map((r) => Number(r.receivedOn.slice(0, 4))))) await ensureReserves(deps, db, clientId, y);
-  const rr = revs.length ? await db.select().from(revenueReserves).where(inArray(revenueReserves.revenueItemId, revs.map((r) => r.id))) : [];
-  const privateLabel = await deps.content.get('notif.invoice_new.magansz');
-  const items: Item[] = claimed
-    .sort((a, b) => (a.issueDate < b.issueDate ? -1 : 1))
-    .map((inv) => {
-      const rev = revs.find((r) => r.navInvoiceId === inv.id);
-      const res = rev ? rr.find((x) => x.revenueItemId === rev.id) : undefined;
-      return { navInvoiceId: inv.id, amountHuf: inv.grossHuf, reserveHuf: Math.max(0, res?.reserveHuf ?? 0), crossesTaxFree: Boolean(res?.crossesTaxFree), zone: res?.zone ?? 'nincs_adat', vevo: customerLabel(inv, privateLabel) };
-    });
+  const items = await invoiceItems(deps, clientId, claimed);
   // KATA: business customers → kata_business_invoice (handled by the KATA warning; not part of this message)
   const kataBusiness = tp?.regime === 'kata' ? new Set(claimed.filter((c) => KATA_WARNING_PAYER_KINDS.includes(payerKindOf(c))).map((c) => c.id)) : new Set<string>();
   const list = items.filter((i) => !kataBusiness.has(i.navInvoiceId));
   if (list.length) await sendOrFold(deps, cl.userId, list);
   await audit(db, { action: 'invoice.notified', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { count: list.length, variant: list.length > 1 ? 'tobb' : 'egy' } });
   return list.length;
+}
+
+/**
+ * The notification items of these invoices with the engine's CURRENT reserve (ensureReserves first): the same
+ * revenue_reserves.reserve_huf the invoice page shows, so the message and the page never differ (round 2 of 11-19).
+ */
+export async function invoiceItems(deps: Deps, clientId: string, invoices: InvRow[]): Promise<Item[]> {
+  const db = deps.db;
+  if (!invoices.length) return [];
+  const revs = await db.select().from(revenueItems).where(and(inArray(revenueItems.navInvoiceId, invoices.map((x) => x.id)), isNull(revenueItems.deletedAt)));
+  for (const y of new Set(revs.map((r) => Number(r.receivedOn.slice(0, 4))))) await ensureReserves(deps, db, clientId, y);
+  const rr = revs.length ? await db.select().from(revenueReserves).where(inArray(revenueReserves.revenueItemId, revs.map((r) => r.id))) : [];
+  const privateLabel = await deps.content.get('notif.invoice_new.magansz');
+  // KATA (k6c): the átalány reserve does not apply – no amount until the KATA view (the month's 50 000 Ft covers it)
+  const [tp] = await db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, Number(todayBudapest(deps.now()).slice(0, 4))))).limit(1);
+  const kata = tp?.regime === 'kata';
+  return invoices
+    .slice()
+    .sort((a, b) => (a.issueDate < b.issueDate ? -1 : 1))
+    .map((inv) => {
+      const rev = revs.find((r) => r.navInvoiceId === inv.id);
+      const res = rev ? rr.find((x) => x.revenueItemId === rev.id) : undefined;
+      if (kata) return { navInvoiceId: inv.id, amountHuf: inv.grossHuf, reserveHuf: 0, crossesTaxFree: false, zone: 'nincs_adat', vevo: customerLabel(inv, privateLabel) };
+      return { navInvoiceId: inv.id, amountHuf: inv.grossHuf, reserveHuf: Math.max(0, res?.reserveHuf ?? 0), crossesTaxFree: Boolean(res?.crossesTaxFree), zone: res?.zone ?? 'nincs_adat', vevo: customerLabel(inv, privateLabel) };
+    });
+}
+
+/** Title + body of an in-app invoice_new row for these items (the variant and params of texts()). */
+export async function invoiceNotificationContent(deps: Deps, items: Item[]): Promise<{ variant: string; params: Record<string, string | number>; title: string; body: string }> {
+  const t = await texts(deps, items, true);
+  const key = t.variant === 'alap' ? 'notif.invoice_new' : `notif.invoice_new.${t.variant}`;
+  return { variant: t.variant, params: t.params, title: await deps.content.render(`${key}.title`, t.params), body: await deps.content.render(`${key}.body`, t.params) };
+}
+
+/**
+ * Data step (round 2 of 11-19): re-renders the in-app invoice_new rows of the DEMO users from the current reserves, so a
+ * row written with a literal or an older engine value says what the invoice page says. Only rows that list their
+ * invoices in data.items; title, body and data.items change, nothing else (no push, no e-mail).
+ */
+export async function rerenderInvoiceNotifications(deps: Deps, o: { emailDomain: string }): Promise<number> {
+  const db = deps.db;
+  const rows = await db
+    .select({ n: notifications, clientId: clients.id })
+    .from(notifications)
+    .innerJoin(clients, eq(clients.userId, notifications.userId))
+    .where(and(eq(notifications.kind, 'invoice_new'), sql`exists (select 1 from users u where u.id = ${notifications.userId} and u.email like ${`%@${o.emailDomain}`})`));
+  let n = 0;
+  for (const { n: row, clientId } of rows) {
+    const ids = (((row.data as { items?: { navInvoiceId: string }[] } | null)?.items ?? []) as { navInvoiceId: string }[]).map((i) => i.navInvoiceId);
+    if (!ids.length) continue;
+    const invs = await db.select().from(navInvoices).where(inArray(navInvoices.id, ids));
+    if (!invs.length) continue;
+    const items = await invoiceItems(deps, clientId, invs);
+    const c = await invoiceNotificationContent(deps, items);
+    if (c.title === row.title && c.body === row.body) continue;
+    await db
+      .update(notifications)
+      .set({ title: c.title, body: c.body, data: { ...((row.data ?? {}) as Record<string, unknown>), items, variant: c.variant } })
+      .where(eq(notifications.id, row.id));
+    n++;
+  }
+  return n;
 }
 
 export function payerKindOf(inv: Pick<InvRow, 'customerVatStatus' | 'data' | 'customerTaxNumber'>): 'maganszemely' | 'kifizeto' | 'kulfoldi_kifizeto' | 'ismeretlen' {

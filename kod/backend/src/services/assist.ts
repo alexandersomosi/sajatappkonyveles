@@ -5,6 +5,7 @@
 // the EV bejelentés in the app (consent + instruction PDF). One row per request (assist_requests), one function per
 // state change (each audited 'assist.<action>'), one view builder for the client (assistView) and one for the panel
 // (teamAssistDetail); allowed actions come from ASSIST_ACTION_ROLES + the status.
+import { fmt as fmtHuf } from './kedvezmeny.js';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { and, desc, eq, inArray, sql } from 'drizzle-orm';
@@ -185,7 +186,16 @@ export async function assistView(deps: Deps, db: DbOrTx, row: AssistRow, o: { ac
   const ready = row.status === 'egyeztetve' || row.status === 'meghatalmazas_lejart' ? await readyForUjegyke(db, cl) : true;
   if (row.status === 'egyeztetve' && ready && (await deps.content.exists('helyettunk.allapot.egyeztetve.kesz'))) key = 'helyettunk.allapot.egyeztetve.kesz';
   // After the shown due day (NAV's 4 × 24 h still running) a past "november 22-ig" would be wrong: "még ma".
-  const statusText = await deps.content.render(key, { firstName: fn, hatarido: approval ? (approval.afterDue ? 'még ma' : approval.dueText) : '', date: approval ? huDayMonth(approval.dueOn) : '', reasonText });
+  // A change assist (valtozas_*) has its own client texts (valtozas.allapot.<status>, with the fee in {dij}); every route
+  // that shows an assist gets them, not the new-business ones (k6c review: "({dij} Ft)" raw, "Beszéltünk…" after payment).
+  let dij = '';
+  if (row.kind.startsWith('valtozas_') && row.feeChargeId) {
+    const { chargeById } = await import('./dijak.js');
+    const ch = await chargeById(db, row.feeChargeId);
+    dij = ch ? fmtHuf(ch.amountHuf) : '';
+  }
+  if (row.kind.startsWith('valtozas_') && (await deps.content.exists(`valtozas.allapot.${row.status}`))) key = `valtozas.allapot.${row.status}`;
+  const statusText = await deps.content.render(key, { firstName: fn, hatarido: approval ? (approval.afterDue ? 'még ma' : approval.dueText) : '', date: approval ? huDayMonth(approval.dueOn) : '', reasonText, dij });
   let canConsent = false;
   if (row.kind === 'vallalkozas_bejelentes' && CONSENT_STATUSES.includes(row.status) && !row.consentValid) {
     const reg = await registrationOfAssist(db, row);

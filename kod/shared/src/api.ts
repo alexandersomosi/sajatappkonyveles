@@ -485,7 +485,10 @@ export interface ClientHome {
   limits: {
     afa: Meter;
     atalanyCap: Meter;
-    adomentes: { reached: boolean; reachedMonth: number | null; limitHuf: number; sentence: string };
+    /** afterText (k6c): the line under "Az adómentes részt … elérted." when an approved allowance changes it (null = the default). */
+    adomentes: { reached: boolean; reachedMonth: number | null; limitHuf: number; sentence: string; afterText?: string | null };
+    /** k6c: a KATA client – the átalány lines (adómentes rész, átalány határ) are not shown. */
+    kata?: boolean;
   };
   revenueByMonth: { month: number; amountHuf: number }[];
   currentDossier: { month: MonthKey; label: string; items: DocumentListItem[]; totalCount: number };
@@ -1520,6 +1523,8 @@ export interface ReserveCard {
   /** Round 2 of 11-19: what comes back in the annual return (overpaid SZJA advances, year-end csjk); 0 = none. */
   refundHuf?: number;
   refundText?: string | null;
+  /** k6c: Főoldal only – how the card relates to the blue band's quarter amount (null = nothing to say). */
+  heroNote?: string | null;
 }
 export interface ReserveListItem {
   revenueItemId: string;

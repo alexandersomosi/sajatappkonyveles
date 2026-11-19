@@ -31,7 +31,7 @@
    "caption": "Az Ügysegéd kezdőlapja: kattints a középső fülre.",
    "alt": "Képernyőkép: Bejelentéseim, kérelmeim. A személyes adatok elmosva. Kiemelve – Kattints az „Új bejelentés, kérelem benyújtása” fülre.",
    "source": {
-    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
     "url": null,
     "date": "2026-11-19"
    },
@@ -58,10 +58,10 @@
    "width": 1080,
    "height": 998,
    "kind": "kepernyokep",
-   "caption": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).",
-   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).",
+   "caption": "Ezen a lapon görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod.",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. A szüneteltetés bejelentése ezen a lapon, lejjebb indul.",
    "source": {
-    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
     "url": null,
     "date": "2026-11-19"
    },
@@ -79,7 +79,7 @@
    "caption": "A beküldött bejelentésed: töltsd le a NAV értesítését.",
    "alt": "Képernyőkép: Bejelentéseim, kérelmeim – Megtekintés. A személyes adatok elmosva. Kiemelve – Kattints a „Letöltés” gombra, és töltsd fel nálunk az értesítést.",
    "source": {
-    "title": "A tulaj saját NAV Vállalkozói Ügysegéd-képernyői (adatváltozás-űrlap, nem beküldve)",
+    "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
     "url": null,
     "date": "2026-11-19"
    },

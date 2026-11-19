@@ -1814,7 +1814,8 @@ export const ACCOUNTANT_RESPONSE_TIME_DEFAULT = 'A lehető leggyorsabban válasz
 /**
  * Binding UI scale (pt = CSS px at 390 width). Source: dizajn/C4_atlathato/valasztott/ (owner 11-19 20:10 "a C sokkal
  * jobb") + dizajn/C4_atlathato/C_elvalaszto/ (20:20 "csak valami elválasztó köztük"): between two white sections an
- * 8 px #EEF1F8 band. C_retegek (stacked sheets, shadows, darkening layers) is rejected.
+ * 10 px #D3DAFC band (owner's final choice 11-19 20:40, dizajn/C4_atlathato/C_VEGLEGES; before: 8 px #EEF1F8 of C_elvalaszto).
+ * C_retegek (stacked sheets, shadows, darkening layers) is rejected.
  */
 export const UI_SCALE = {
   screenTitle: { size: 26, weight: 700, lineHeight: 1.15, letterSpacingEm: -0.022 },
@@ -1843,7 +1844,7 @@ export const UI_SCALE = {
   input: { height: 56, radius: 12, focusBorder: 2, valueSize: 22, valueWeight: 600 },
   formHeader: { backHeight: 36, titleSize: 16, titleWeight: 650 },
   tabBar: { height: 52, tabs: ['Főoldal', 'Dosszié', 'Fotózás', 'Üzenetek', 'Fiók'], labelSize: 12.5, labelWeight: 550, activeWeight: 750 },
-  section: { padding: 16, contentIndent: 38, separator: { heightPx: 8, color: '#EEF1F8' }, rowDivider: { heightPx: 1, color: '#E2E6F1' } },
+  section: { padding: 16, contentIndent: 38, separator: { heightPx: 10, color: '#D3DAFC' }, rowDivider: { heightPx: 1, color: '#E2E6F1' } },
   spacing: [4, 8, 12, 16, 24],
   minTapTarget: 44,
   colors: {
@@ -1854,7 +1855,7 @@ export const UI_SCALE = {
     fejlecHalvany: '#C9D2FF',
     gombMAlap: '#DFE4FD',
     tintakekSzoveg: '#1226B8',
-    sectionSeparator: '#EEF1F8',
+    sectionSeparator: '#D3DAFC',
     page: '#FFFFFF',
   },
   /** Never: rejected by the owner or outside the approved set. */

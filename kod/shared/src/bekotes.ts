@@ -1406,9 +1406,32 @@ export function isValidOvtjKod(code: string): boolean {
   return /^\d{6}$/.test(code);
 }
 /** Replaces {name} placeholders; unknown ones stay as they are (so a missing value is visible in QA). */
+/**
+ * The instrumental ("-val/-vel") of a first name, for {firstNameWith} when the caller has no stored form
+ * (accountants.name_with wins): Bence → Bencével, Anna → Annával, Dávid → Dáviddal, Péter → Péterrel,
+ * Gergely → Gergellyel. Never "Benceval" (k6c review).
+ */
+export function hunWith(name: string): string {
+  const n = name.trim();
+  if (!n) return n;
+  if (/^a könyvelőd/i.test(n)) return `${n.slice(0, 1)} könyvelőddel`;
+  const back = /[aáoóuú]/i.test(n);
+  const v = back ? 'a' : 'e';
+  const last = n.slice(-1);
+  if (/[aeiouáéíóúöőüű]/i.test(last)) {
+    const stem = last === 'a' ? `${n.slice(0, -1)}á` : last === 'e' ? `${n.slice(0, -1)}é` : n;
+    return `${stem}v${v}l`;
+  }
+  const di = /(cs|dz|gy|ly|ny|sz|ty|zs)$/i.exec(n);
+  if (di) return `${n.slice(0, -2)}${di[1]!.slice(0, 1)}${di[1]}${v}l`;
+  return `${n}${last}${v}l`;
+}
+
 export function fillPlaceholders(text: string, values: Record<string, string | undefined>): string {
   return text.replace(/\{([A-Za-z0-9_]+)\}/g, (m, k: string, at: number) => {
-    const v = values[k];
+    let v = values[k];
+    // {firstNameWith} without a stored form: built from {firstName} ("Bencével")
+    if (v === undefined && k === 'firstNameWith' && values.firstName !== undefined) v = hunWith(values.firstName);
     if (v === undefined) return m;
     // The fallback name of a not-yet-assigned accountant ("A könyvelőd") is lower case inside a sentence (11-19 javítás:
     // "Felhívunk, és A könyvelőd …").
@@ -1975,7 +1998,7 @@ export const RESERVE_TEXTS = {
     manualItem: 'Kézi tétel: {description}',
     empty: 'Idén még nincs kiállított számlád. Ha lesz, itt látod, mennyit tegyél félre.',
     /** Round 2 of 11-19: an item whose money is expected later (the payment deadline). */
-    upcoming: 'Várható: {datum}. Még nincs benne a fenti összegben.',
+    upcoming: 'Várható: {datum} Még nincs benne a fenti összegben.',
     monthSub: '{n} tétel · félretenni kb. {felre} Ft',
     monthSubUpcoming: '{n} tétel · félretenni kb. {felre} Ft · {u} várható',
     help: 'Elakadtál? Kérj visszahívást',
@@ -2107,6 +2130,8 @@ export const ALLOWANCE_TEXTS = {
     kerdes: '{firstName} kérdezett: {question}',
     kerdesButton: 'Válaszolok',
     jovahagyva: 'Jár · {monthsText} · idén kb. {effectYear} Ft-tal kevesebb adó',
+    /** k6c: approved, but no effect yet (no revenue above the adómentes rész): never "kb. 0 Ft-tal kevesebb". */
+    jovahagyvaMegNincs: 'Jár · {monthsText} · ha lesz bevételed, kevesebb adót fizetsz miatta',
     jovahagyvaEvVegen: 'Jár · az éves bevallásban számoljuk el',
     elutasitva: 'Nem jár: {rejectText}',
     edit: 'Valami változott – módosítom',
@@ -2137,7 +2162,7 @@ export const ALLOWANCE_QUESTION_TEXTS = {
   K1: {
     icon: 'tepnaptar',
     title: 'Mikor születtél?',
-    why: 'A 25 és 30 év alattiak és a két gyermekes anyák kedvezménye az életkortól függ. A napot nem kérjük.',
+    why: 'A 25 és 30 év alattiak és a kétgyermekes anyák kedvezménye az életkortól függ. A napot nem kérjük.',
     year: 'Év',
     month: 'Hónap',
   },
@@ -2172,7 +2197,7 @@ export const ALLOWANCE_QUESTION_TEXTS = {
   K5: {
     icon: 'tepnaptar',
     title: 'Babát vártok?',
-    why: 'Ha te vagy a feleséged várandós, a 91. naptól már jár a családi kedvezmény. Az orvosi igazolást tartsd meg.',
+    why: 'Ha te vagy a párod várandós, a 91. naptól már jár a családi kedvezmény. Az orvosi igazolást tartsd meg.',
     when: 'Mikorra várjátok?',
   },
   K6: { icon: 'fiok', title: 'Te vagy a gyerekek anyukája?', why: 'Az anyák 2026-ban sokszor egyáltalán nem fizetnek SZJA-t a vállalkozásuk után.' },
@@ -2228,6 +2253,8 @@ export const ALLOWANCE_QUESTION_TEXTS = {
     title: 'Ezek járhatnak neked',
     effect: 'kb. {x} Ft-tal kevesebb adó idén',
     effectAnnual: 'Év végén számoljuk el',
+    /** k6c: an in-year allowance without an estimate yet (the next screen says the same). */
+    effectQuarterly: 'A negyedéves adódban számoljuk el',
     note: 'Megjegyzés {firstName} számára (nem kötelező)',
     send: 'Elküldöm',
     sub: '{firstName} a lehető leggyorsabban átnézi.',
@@ -2733,7 +2760,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_szuneteltetes: {
     title: 'Így szünetelteted a vállalkozásodat',
-    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. A kezdőnapot utólag nem lehet módosítani, ezért előbb beszéld meg {firstName}val.',
+    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. A kezdőnapot utólag nem lehet módosítani, ezért előbb beszéld meg {firstNameWith}. A szüneteltetés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2809,7 +2836,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_folytatas: {
     title: 'Így kezded újra a vállalkozásodat',
-    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. A NAV-os lap pontos feliratait még ellenőrizzük, ezért néhány kép rajzolt.',
+    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. Az újrakezdés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2878,6 +2905,8 @@ export interface ChangeGuidePersonaliseInput {
   /** From the client's latest open change assist of this kind; null = generic texts. */
   change: ChangeGuideData | null;
   firstName: string;
+  /** The stored instrumental form (accountants.name_with, "Bencével"); built from firstName when missing. */
+  firstNameWith?: string;
   /** Done step keys. */
   progress: string[];
   /** env CHANGE_UGYSEGED_VALID_UNTIL for the Ügysegéd kinds. */
@@ -2912,6 +2941,7 @@ export function personaliseChangeGuide(
     szunetelVege: huLongDate(c?.to ?? null) || '',
     folytatasNapja: huLongDate(c?.from) || 'az újrakezdés napja',
     firstName: inp.firstName,
+    firstNameWith: inp.firstNameWith ?? hunWith(inp.firstName),
   };
   const cond = new Set<GuideCondition>();
   if (c?.mode === 'uj_fo') cond.add('tevekenyseg_uj_fo');
@@ -3186,6 +3216,11 @@ export const CHECKIN_TEXTS = {
   egyebMessagePrefix: 'Havi ellenőrzés:',
   doneSent: 'Köszönjük! {firstName} megkapta, és szól, ha teendő van.',
   expired: 'Ezt a hónapot már lezártuk. Ha mégis változott valami, írj nekünk az Üzenetekben.',
+  /** k6c: under the "Köszönjük!" title the sentence does not thank again. */
+  noneBody: 'Jövő hónapban újra rákérdezünk.',
+  doneBody: '{firstName} megkapta, és szól, ha teendő van.',
+  /** k6c: an item whose fee is paid (the assist is with the accountant). */
+  itemPaid: 'Kifizetted a díjat. {firstName} nekilát.',
 } as const;
 /** One row per item; `questionAlt` = the mellékállású variant of 'munkaviszony'. */
 export const CHECKIN_ITEM_TEXTS: Record<_CheckinItem, { question: string; questionAlt?: string }> = {
@@ -3212,7 +3247,7 @@ export const CHECKIN_FOLLOWUP_TEXTS = {
   csalad: 'Ezt az adókedvezmény-kérdőívben adod meg, kb. 3 perc.',
   csaladButton: 'Megnyitom',
   kataCeges:
-    'Ha egy cég vagy egyéni vállalkozó fizet neked, a katád a fizetés előtti nappal megszűnik. Előbb beszélj {firstName}val: lehet, hogy jobb, ha előtte átállsz átalányadózásra.',
+    'Ha egy cég vagy egyéni vállalkozó fizet neked, a katád a fizetés előtti nappal megszűnik. Előbb beszélj {firstNameWith}: lehet, hogy jobb, ha előtte átállsz átalányadózásra.',
   kataCegesCall: 'Kérek visszahívást',
   kataCegesChange: 'Átállnék átalányadózásra',
 } as const;
@@ -3422,10 +3457,10 @@ export const LOCK_TEXTS = {
 // ---------- §28.K.6 E – suspension (content szunetel.*) ----------
 export const PAUSE_TEXTS = {
   cardTitle: 'Szünetel a vállalkozásod',
-  cardBody: 'Szünetel a vállalkozásod, ezért {from}-tól havi {dij} Ft rendelkezésre állási díjat fizetsz a {havidij} helyett. Ezért megőrizzük az irataidat, figyeljük a határidőidet, és segítünk újraindulni.',
+  cardBody: 'Szünetel a vállalkozásod, ezért {from} havi {dij} Ft rendelkezésre állási díjat fizetsz a {havidij} helyett. Ezért megőrizzük az irataidat, figyeljük a határidőidet, és segítünk újraindulni.',
   cardButton: 'Újrakezdeném',
   feeLine: 'Rendelkezésre állási díj: {dij} Ft / hó',
-  ended: 'Újra dolgozol: {from}-tól ismét a havidíj jár.',
+  ended: 'Újra dolgozol: {from} ismét a havidíj jár.',
 } as const;
 
 // ---------- §28.K.7 F – employees / EFO (content alkalmazott.*) ----------
@@ -3458,7 +3493,7 @@ export const EMPLOYER_TEXTS = {
   journeyTitle: 'Alkalmazottak',
   journeyWaiting: '{firstName} megnézi, mit tudunk vállalni.',
   subscriptionLock: 'Előbb {firstName} megnézi, mit tudunk vállalni az alkalmazottaid miatt.',
-  offerButton: 'Megbeszélem {firstName}val',
+  offerButton: 'Megbeszélem {firstNameWith}',
   declinedTitle: 'Most nem tudunk segíteni',
   declinedCallback: 'Kérj visszahívást',
   panelCard: 'Alkalmazottak',
@@ -3579,8 +3614,8 @@ export const KATA_TEXTS = {
   invoiceFits: 'Ez a számla belefér a havi 50 000 Ft-ba, nem kell külön félretenned.',
   invoiceOver: 'Ez a számla a kereted fölött van: tegyél félre kb. {felre} Ft-ot (40%).',
   businessInvoice: 'Cégnek számláztál – vigyázz a katádra',
-  businessInvoiceLine: 'Ha {vevo} kifizeti, a katád a fizetés előtti nappal megszűnik. Beszélj {firstName}val, mielőtt fizet.',
-  unknownCustomer: 'Nem tudjuk, cég-e a vevő. Ellenőrizd, és ha cég, beszélj {firstName}val.',
+  businessInvoiceLine: 'Ha {vevo} kifizeti, a katád a fizetés előtti nappal megszűnik. Beszélj {firstNameWith}, mielőtt fizet.',
+  unknownCustomer: 'Nem tudjuk, cég-e a vevő. Ellenőrizd, és ha cég, beszélj {firstNameWith}.',
   infoCard: 'Katásként a nyugdíjad és a táppénzed alapja havi 108 000 Ft. Egy katás év kb. 122 nap szolgálati időt ér.',
   infoCardButton: 'Értem',
   switchRule: 'Kilépés után az év végéig és még 12 hónapig nem lehetsz újra katás.',
@@ -3595,6 +3630,16 @@ export const HOME_K_TEXTS = {
   revenueSub: 'ebből {n} számla',
   taxes: 'Eddigi adód',
   taxesSub: 'SZJA, járulék, iparűzési adó',
+  /** k6c: when part of the advances comes back in the annual return. */
+  taxesSubRefund: 'SZJA, járulék, iparűzési adó; kb. {refund} Ft visszajár',
+  /** k6c: the line under "Az adómentes részt … elérted." with an approved allowance. */
+  adomentesAllowanceNone: 'Az első {limit} Ft jövedelmed adómentes volt. Azóta a kedvezményed miatt nem fizetsz SZJA-t.',
+  adomentesAllowanceLess: 'Az első {limit} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, de a kedvezményed csökkenti.',
+  /** k6c: KATA clients – until the KATA view is built no átalány number is shown. */
+  kataTaxes: 'Kata',
+  kataTaxesSub: 'havi 50 000 Ft, {firstName} számolja.',
+  kataHeroTitle: '{firstName} számolja a katádat',
+  kataHeroNote: 'Katás vagy: a havi 50 000 Ft-ot és a keretedet {firstName} figyeli. Szól, ha utalnod kell.',
   payTitle: 'Utalj {osszeg} Ft-ot {hatarido}',
   payPayee: 'Kedvezményezett',
   payAccount: 'Számlaszám',
@@ -3670,7 +3715,7 @@ export const K28_NOTIFICATION_TEXTS = {
   service_unlocked: { title: 'Újra minden működik', body: 'Köszönjük a fizetést. {firstName} folytatja a munkát.' },
   kata_business_invoice: {
     title: 'Cégnek számláztál – vigyázz a katádra',
-    body: '{vevo}, {osszeg} Ft. Ha kifizeti, megszűnik a katád. Beszélj {firstName}val, mielőtt fizet.',
+    body: '{vevo}, {osszeg} Ft. Ha kifizeti, megszűnik a katád. Beszélj {firstNameWith}, mielőtt fizet.',
     /** To the accountant (staff wording, in-app + digest). */
     staff: { title: 'Kata-kockázat: {clientName}', body: '{vevo}, {osszeg} Ft. Fizetés esetén a kata a fizetés előtti nappal megszűnik, bejelentés 15 napon belül.' },
   },
@@ -3684,8 +3729,8 @@ export const K28_NOTIFICATION_TEXTS = {
     nem_vallaljuk: { title: 'Most nem tudunk segíteni', body: 'Nézd meg, mit írt {firstName}.' },
   },
   subscription_paused: {
-    kezdet: { title: 'Szünetel a vállalkozásod', body: '{from}-tól a havidíj helyett havi {dij} Ft-ot fizetsz.' },
-    vege: { title: 'Újra dolgozol', body: '{from}-tól ismét a havidíj jár.' },
+    kezdet: { title: 'Szünetel a vállalkozásod', body: '{from} a havidíj helyett havi {dij} Ft-ot fizetsz.' },
+    vege: { title: 'Újra dolgozol', body: '{from} ismét a havidíj jár.' },
   },
   /** Staff kinds (in-app badge + digest; staff wording). */
   checkin_change: { title: 'Havi változás: {clientName}', body: '{items}' },

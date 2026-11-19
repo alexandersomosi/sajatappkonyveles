@@ -1,5 +1,13 @@
 # Kézjegy – telepítés az appok-1 szerverre (`kod/deploy`)
 
+> **2026-11-20: A GARDOKO TÖRÖLVE (a tulaj kérésére, véglegesen).** Az `appok-api-1`, `appok-db-1`, az `appok_pgdata`
+> kötet és a `/srv/appok` adatai lekerültek. **A Gardoko-health ellenőrzés MEGSZŰNT** – a
+> `https://45-94-65-74.sslip.io/api/v1/health` hibája innentől NEM hiba, ne próbáld helyreállítani, és **NE indítsd
+> újra az `appok` compose-t**. Ami maradt és KELL: az `appok-caddy-1` (a közös kapu, az Adózz összes címét ez
+> szolgálja ki) a `/srv/appok/deploy/Caddyfile`, `/srv/appok/deploy/docker-compose.yml` és `/srv/appok/.env`
+> fájlokkal. Ezeket a k7 költözteti át az Adózz alá (az adozz.hu-átállással együtt); addig érintetlenek.
+> Telepítés előtt/után az **Adózz** címeit nézd: api/app/konyvelo …sslip.io → 200.
+
 SPEC §20. A Kézjegy a Gardoko mellett fut ugyanazon a Contabo VPS-en, **saját** mappában, saját compose
 projektben, saját Postgresszel és hálózattal. Portot csak a közös Caddy (`appok-caddy-1`) publikál.
 

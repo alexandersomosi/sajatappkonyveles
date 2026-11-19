@@ -388,11 +388,11 @@ export default function Fooldal() {
           balVeg={`eddig ${szam(limits.afa.usedHuf)} Ft`}
           jobbVeg={`a keret ${szam(limits.afa.limitHuf)} Ft`}
         />
-        <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />
-        {limits.adomentes.reached ? (
+        {limits.kata ? null : <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />}
+        {limits.kata ? null : limits.adomentes.reached ? (
           <PipaMondat
             cim={`Az adómentes részt ${limits.adomentes.reachedMonth ? ['januárban', 'februárban', 'márciusban', 'áprilisban', 'májusban', 'júniusban', 'júliusban', 'augusztusban', 'szeptemberben', 'októberben', 'novemberben', 'decemberben'][limits.adomentes.reachedMonth - 1] : 'idén'} elérted.`}
-            mellek={/^Az adómentes részt/.test(limits.adomentes.sentence) ? `Az első ${szam(limits.adomentes.limitHuf)} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, ez így rendben van.` : limits.adomentes.sentence}
+            mellek={limits.adomentes.afterText ?? (/^Az adómentes részt/.test(limits.adomentes.sentence) ? `Az első ${szam(limits.adomentes.limitHuf)} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, ez így rendben van.` : limits.adomentes.sentence)}
           />
         ) : (
           <View style={{ paddingTop: 14, paddingHorizontal: 16, paddingBottom: 14 }}>
@@ -404,7 +404,7 @@ export default function Fooldal() {
             </T>
           </View>
         )}
-        {limits.atalanyCap.ratio >= 0.5 ? (
+        {!limits.kata && limits.atalanyCap.ratio >= 0.5 ? (
           <>
             <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />
             <Mero

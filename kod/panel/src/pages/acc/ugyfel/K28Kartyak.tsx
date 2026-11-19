@@ -1,7 +1,7 @@
 // SPEC §28.1.9, §28.4.4 and §28.K on the client page's Áttekintés tab: "Ezt látja az ügyfél" (reserve + earnings,
 // with the read-only month tables), the service lock, the pause, the KATA meter, the EFO decision, the missing
 // adószám, the monthly check-in items and the forwarding address. C look (§28.K.10): 3D icon 28 + dark title 18,
-// sections inside a sheet separated by the 8 px #EEF1F8 band, no shadows.
+// sections inside a sheet separated by the 10 px #D3DAFC band (C_VEGLEGES), no shadows.
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

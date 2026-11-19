@@ -1,7 +1,7 @@
 // Egy kiállított számla a NAV Online Számlából (FUNKCIOK 12): vevő, dátumok, tételek, összeg; demóban MINTA.
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { K, useNavSzamla } from '@/api/hooks';
+import { K, useMe, useNavSzamla } from '@/api/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import type { ClientHome } from '@/_shared/api';
 import { TartalekBlokk } from '@/kepernyok/k28';
@@ -36,12 +36,19 @@ function SzamlaTartalom() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const q = useNavSzamla(id);
   const home = useQueryClient().getQueryData<ClientHome>(K.home);
-  const fn = home?.accountant.firstName ?? 'a könyvelőd';
+  const me = useMe();
+  // opened from a notification the home may not be cached: the accountant's name comes from /me (never "a könyvelőd")
+  const fn = home?.accountant.firstName ?? me.data?.accountant?.firstName ?? 'a könyvelőd';
   // a backend a lista-mezők mellé `invoice`-ban adja a normalizált számlát (SPEC §24); a MINTA laposan
   const nyers = q.data as (typeof q.data & { invoice?: Record<string, unknown> }) | undefined;
   const s = nyers ? ({ ...nyers, ...(nyers.invoice ?? {}), id: nyers.id, demo: nyers.demo ?? (nyers.invoice as { source?: string } | undefined)?.source === 'DEMO' } as NonNullable<typeof q.data>) : undefined;
+  // The same buyer label as the list, /felretesz and the notification: the parsed invoice's name, else the stored
+  // customerName (demo rows have no parsed XML); "Magánszemély" only for a private buyer or no name (k6c review).
+  const lapos = nyers as { customerName?: string | null; customerVatStatus?: string | null; payerKind?: string | null } | undefined;
+  const magan = lapos?.customerVatStatus === 'PRIVATE_PERSON' || lapos?.payerKind === 'maganszemely';
+  const vevo = s?.customer?.name?.trim() || (!magan ? lapos?.customerName?.trim() : '') || 'Magánszemély';
   return (
-    <Kepernyo ful="dosszie" fejlec={<CimSor visszaCim="Vissza a számlákhoz" vissza={() => vissza('/dosszie')} cim={s?.invoiceNumber ?? 'Számla'} al={s ? [s.customer?.name?.trim() || 'Magánszemély', s.demo ? 'DEMO, nem valódi számla' : ''].filter(Boolean).join(' · ') : undefined} />}>
+    <Kepernyo ful="dosszie" fejlec={<CimSor visszaCim="Vissza a számlákhoz" vissza={() => vissza('/dosszie')} cim={s?.invoiceNumber ?? 'Számla'} al={s ? [vevo, s.demo ? 'DEMO, nem valódi számla' : ''].filter(Boolean).join(' · ') : undefined} />}>
       {q.isLoading ? <Betolt /> : q.error || !s ? <Hiba hiba={q.error} ujra={() => void q.refetch()} /> : (
         <>
           {/* SPEC §28.1.5: az első blokk: mennyit tegyél félre ebből a számlából */}

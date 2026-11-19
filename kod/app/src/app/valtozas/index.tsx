@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { CHANGE_TEXTS } from '@/_shared/bekotes';
 import { useValtozasok } from '@/api/hooks';
 import { SavFej } from '@/kepernyok/k28';
-import { GombSz, Lap, Sor, Szakasz } from '@/ui/alap';
+import { Lap, Sor, Szakasz } from '@/ui/alap';
 import type { Ikon3dNev } from '@/ui/kepek';
 import { Betolt, Hiba, Kepernyo, vissza } from '@/ui/keret';
 import { MiEzKor } from '@/ui/Magyarazat';
@@ -44,9 +44,10 @@ export default function ValtozasHub() {
             {q.data.items.map((i, n) => (
               <Sor key={i.kind} elso={n === 0} ikon={i.icon as Ikon3dNev} cim={i.title} al={i.outdated ? CHANGE_TEXTS.outdated : i.line} onPress={() => router.push(`/valtozas/${i.kind}`)} />
             ))}
+            {/* k6c: one text link per screen – "Más változott?" is a row of the list */}
+            <Sor ikon="irat" cim="Más változott?" al="Lakcím, telefonszám, bankszámla: írd meg nekünk." onPress={() => router.push({ pathname: '/keresek/uj', params: { tipus: 'adatvaltozas' } })} />
           </Lap>
           <View style={{ paddingTop: 12 }}>
-            <GombSz cim={CHANGE_TEXTS.hub.other} m={16} onPress={() => router.push({ pathname: '/keresek/uj', params: { tipus: 'adatvaltozas' } })} />
             <Elakadtal forras="valtozas_utmutato" tema="valtozas" cim={CHANGE_TEXTS.hub.help} />
           </View>
         </>

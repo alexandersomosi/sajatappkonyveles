@@ -40,7 +40,7 @@ function FelreteszTartalom() {
           ) : null}
           {v.months.map((m) => (
             <Fragment key={m.month}>
-              <Szakasz ikon="szamlak" cim={nagybetu(m.label)} megj={`${m.items.length} tétel · félretenni kb. ${szam(m.items.reduce((a, b) => a + Math.max(0, b.reserve.reserveHuf), 0))} Ft`} />
+              <Szakasz ikon="szamlak" cim={nagybetu(m.label)} megj={m.sub ?? `${m.items.length} tétel · félretenni kb. ${szam(m.items.reduce((a, b) => a + (b.upcoming ? 0 : Math.max(0, b.reserve.reserveHuf)), 0))} Ft`} />
               <Lap kotott>
                 {m.items.map((x, i) => (
                   <Sor
@@ -53,6 +53,11 @@ function FelreteszTartalom() {
                           {x.sub}
                         </T>
                         <TartalekAlsor r={x.reserve} />
+                        {x.upcoming && x.upcomingText ? (
+                          <T m={14} lh={1.4} c={szin.borostyanSzoveg}>
+                            {x.upcomingText}
+                          </T>
+                        ) : null}
                       </>
                     }
                     jobbra={<Osszeg szoveg={szam(x.amountHuf)} m={16} />}
