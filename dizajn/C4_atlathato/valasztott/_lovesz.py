@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-"""C4/valasztott: fooldal + urlap képek @2x (390x844), teljes hosszú fooldal, és hunyorítás-próba (GaussianBlur 6)."""
+"""C4/C: fooldal + urlap képek @2x (390x844), teljes hosszú fooldal, és hunyorítás-próba (GaussianBlur 6)."""
 import os, re, sys, subprocess, tempfile, uuid
 from PIL import Image, ImageFilter
 
 CH = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
-D = 'C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/valasztott'
-SCR = 'D:/Atvitel/Temp/claude/C--Users-UpgradePC/87bd1012-c50f-48f0-975b-1b47560d5083/scratchpad'
+D = 'C:/Users/UpgradePC/konyvelo_app/dizajn/C4_atlathato/C'
 
 
 def prof():
-    return (tempfile.gettempdir() + '/c4v_prof_' + uuid.uuid4().hex[:10]).replace('\\', '/')
+    return (tempfile.gettempdir() + '/c4c_prof_' + uuid.uuid4().hex[:10]).replace('\\', '/')
 
 
 def url(html, q=''):

@@ -1,0 +1,54 @@
+/* C4 átlátható – C változat = a javított B (2026-11-19 este).
+   A tulaj B-t választotta, a lapos, teljes szélességű 5 fülű sávval (Fotózás középen). C ezt tartja, és sűrűbb,
+   nyugodtabb léptékre vált („Nem túl nagyok amúgy a dolgok?”): képernyőcím 26, szakaszcím 18 félkövér, szöveg 16,
+   másodlagos 15 (>= 4,5:1), haladás-szám 18 a csík mellett, 3D ikon 28–32, fő gomb 52, ritmus 8/12/16/24.
+   Visszajön a jóváhagyott kék fejlécsáv (#1428DB + guilloche-rozetta): mindig azt mondja meg, hol tartasz és mi a dolgod.
+   Kék = csak a sáv, a fő gomb, a link és az aktív fül; a szakaszcímek sötét tintával (NN/g vizuális hierarchia). */
+
+html, body { background: #fff; }
+
+/* ---------- kék sáv: hol tartasz + mi a dolgod most ---------- */
+.fejsav { background: var(--neon); color: #fff; position: relative; isolation: isolate; overflow: hidden; padding: 0 16px 20px; }
+.fejsav::before { content: ""; position: absolute; z-index: -1; pointer-events: none; width: 440px; height: 440px;
+  left: calc(var(--roz-x, 318px) - 220px); top: calc(var(--roz-y, 128px) - 220px);
+  background: url("../../C2_modern/app_v2/guilloche_rozetta.svg") 0 0 / 440px 440px no-repeat; }
+.fejsav .allapotsor { color: #fff; margin: 0 -16px; }
+
+.demo { flex: none; height: 24px; padding: 0 8px; border-radius: 6px; display: inline-flex; align-items: center;
+  background: var(--borostyan-alap); color: #5E3B00; font-weight: 750; font-size: 12.5px; letter-spacing: .05em; }
+
+/* ---------- szakasz: lap nélkül, egy hajszálvonal választ (B szerkezete) ---------- */
+.szak { padding: 16px; }
+.szak + .szak { border-top: 1px solid var(--hajszal); }
+.szak-fej { display: flex; align-items: center; gap: 10px; min-height: 32px; }
+.szak-fej img.i3 { width: 28px; height: 28px; }
+.szak-fej h2 { flex: 1; min-width: 0; font-weight: 650; font-size: 18px; line-height: 1.3; letter-spacing: -.012em; color: var(--tinta); }
+.szak p { font-size: 16px; line-height: 1.45; margin-top: 4px; color: var(--tinta); }
+
+/* másodlagos művelet: világoskék kapszula, 40 px látszik, 44 px az érintési terület */
+.kapszula { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px;
+  border-radius: 999px; background: var(--gomb-m-alap); color: var(--tintakek-szoveg);
+  font-weight: 650; font-size: 15.5px; letter-spacing: -.005em; white-space: nowrap; }
+.kapszula::after { content: ""; position: absolute; inset: -2px 0; }
+
+/* a képernyő egyetlen szöveges linkje */
+.link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 550; font-size: 16px;
+  color: var(--tintakek-szoveg); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+
+/* ---------- lent: a fő gomb mindig ugyanott, a lapos fülsor fölött (B) ---------- */
+main { padding-bottom: 162px; }
+.dokk { position: fixed; left: 0; bottom: 0; width: 390px; z-index: 9; background: #fff; }
+.dokk::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); }
+.dokk .fo { padding: 8px 16px 8px; }
+.dokk .gomb-e { height: 52px; font-size: 17px; font-weight: 650; }
+.fulek { display: grid; grid-template-columns: repeat(5, 1fr); height: 52px; border-top: 1px solid var(--hajszal); }
+.fulek .f { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font-size: 12.5px; font-weight: 550; color: var(--halvany); letter-spacing: -.005em; }
+.fulek .f img.i3 { width: 26px; height: 26px; }
+.fulek .f img.i3.dosszie { transform: scale(.965); }
+.fulek .f img.i3.uzenetek { transform: scale(1.11); }
+.fulek .f img.i3.fiok { transform: scale(.93); }
+.fulek .f.on { color: var(--neon); font-weight: 750; }
+.biztonsagi { height: 26px; }
+.otthon-jel { bottom: 8px; }

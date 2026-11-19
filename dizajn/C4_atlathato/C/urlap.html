@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Adószám (C: a javított B)</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="c_kozos.css">
+<style>
+/* C űrlap: a GOV.UK kérdésoldal mintája. Egy kérdés; a cím MAGA a mező felirata (nincs külön „Adószám” felirat);
+   a szakasz neve kicsi felirat a cím fölött, „1. kérdés a 3-ból” szöveggel (a 3 részes csík kikerült, mert a főoldal
+   12-es csíkjával ütközött). Baymard: a 11. számjegy után ellenőrzünk; jó szám = pipa a mezőben + a megtalált cég.
+   A fő gomb maga a válasz: „Igen, ez az enyém” (pár: „Nem, ez nem az enyém” a lapon). Egy szöveges link: „Most nem tudom”. */
+
+/* kék sáv, keskenyen: vissza + hol vagy + DEMO */
+.fejsav { padding-bottom: 8px; }
+.felso { display: flex; align-items: center; gap: 12px; min-height: 52px; }
+.vissza { position: relative; flex: none; height: 36px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.78); color: #fff; font-weight: 600; font-size: 15.5px; }
+.vissza::after { content: ""; position: absolute; inset: -4px -4px; } /* 44 pt-os érintési terület */
+.felso .hol { flex: 1; min-width: 0; text-align: center; font-weight: 650; font-size: 16px; line-height: 1.3; }
+.felso .demo { margin-left: 0; }
+/* a „Vissza” és a DEMO szélessége eltér: a középső felirat a képernyő közepén marad */
+.felso .bal, .felso .jobb { flex: 0 0 84px; display: flex; }
+.felso .jobb { justify-content: flex-end; }
+
+/* a kérdés */
+.fej { padding: 20px 16px 0; }
+.felirat-kicsi { font-size: 15px; line-height: 1.4; color: var(--halvany); }
+h1 { font-weight: 700; font-size: 26px; line-height: 1.15; letter-spacing: -.022em; margin-top: 4px; }
+.fej p { font-size: 16px; line-height: 1.45; margin-top: 8px; color: var(--halvany); }
+
+/* „Hol találom?”: kerek i + felirat, 44 pt magas */
+.i-gomb { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 4px;
+  color: var(--tintakek-szoveg); font-weight: 650; font-size: 16px; }
+.i-gomb span { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--gomb-m-alap); font-weight: 800; font-size: 14.5px; line-height: 1; }
+
+/* a mező: fókuszban, kitöltve, jó (pipa) */
+.mezo-b { padding: 4px 16px 0; }
+.nagy-mezo { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 14px 0 16px;
+  border: 2px solid var(--neon); border-radius: 12px; background: #fff;
+  font-weight: 600; font-size: 22px; letter-spacing: .01em; font-variant-numeric: tabular-nums lining-nums; }
+.nagy-mezo .ertek { flex: 1; min-width: 0; }
+.nagy-mezo img.i3 { width: 28px; height: 28px; }
+
+/* a felugró megerősítés: egy lebegő lap, a mezőre mutat */
+.megerosit { position: relative; margin: 16px 16px 0; padding: 16px; border-radius: 16px; background: #fff;
+  box-shadow: 0 0 0 1px var(--hajszal), 0 2px 4px rgba(16,21,60,.05), 0 14px 28px -14px rgba(16,21,60,.30); }
+.megerosit::before { content: ""; position: absolute; top: -7px; left: 30px; width: 14px; height: 14px; background: #fff;
+  transform: rotate(45deg); border-radius: 3px 0 0 0; box-shadow: -1px -1px 0 0 var(--hajszal); }
+.megerosit .szak-fej { position: relative; }
+.megerosit .ceg { font-size: 16px; line-height: 1.45; margin-top: 4px; }
+/* a lap tartalma a cím vonalán kezdődik, mint a főoldal szakaszaiban */
+.megerosit .beljebb { padding-left: 38px; }
+.megerosit .ceg b { font-weight: 650; }
+.megerosit .ceg span { color: var(--halvany); }
+.megerosit .kapszula { margin-top: 12px; }
+
+.link-b { padding: 4px 16px 0; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+
+<header class="fejsav">
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div class="felso">
+    <div class="bal"><button class="vissza">Vissza</button></div>
+    <div class="hol">Vállalkozásod</div>
+    <div class="jobb"><span class="demo">DEMO</span></div>
+  </div>
+</header>
+
+<main>
+  <div class="fej">
+    <div class="felirat-kicsi">1. kérdés a 3-ból</div>
+    <h1><label for="adoszam">Add meg az adószámodat</label></h1>
+    <p>Ebből kikeressük a vállalkozásod adatait, neked csak rá kell bólintanod.</p>
+    <button class="i-gomb"><span>i</span>Hol találom?</button>
+  </div>
+
+  <div class="mezo-b">
+    <div class="nagy-mezo" id="adoszam" role="textbox" aria-describedby="talalat">
+      <span class="ertek">12345678-1-41</span>
+      <img class="i3" src="../../C2_modern/assets/ikon3d/befizetve_jel_28@2x.png" srcset="../../C2_modern/assets/ikon3d/befizetve_jel_28@2x.png 2x, ../../C2_modern/assets/ikon3d/befizetve_jel_28@3x.png 3x" alt="Jó formátum">
+    </div>
+  </div>
+
+  <section class="megerosit" id="talalat" aria-live="polite">
+    <div class="szak-fej"><img class="i3" src="../../C2_modern/assets/ikon3d/bevallas_28@2x.png" srcset="../../C2_modern/assets/ikon3d/bevallas_28@2x.png 2x, ../../C2_modern/assets/ikon3d/bevallas_28@3x.png 3x" alt=""><h2>Ez a te vállalkozásod?</h2></div>
+    <div class="beljebb">
+      <p class="ceg"><b>Minta Márta e.v.</b><br><span>1136 Budapest, Példa utca 7.</span></p>
+      <button class="kapszula">Nem, ez nem az enyém</button>
+    </div>
+  </section>
+
+  <div class="link-b"><a class="link" href="#">Most nem tudom</a></div>
+</main>
+
+<div class="dokk">
+  <div class="fo"><button class="gomb-e">Igen, ez az enyém</button></div>
+  <nav class="fulek" aria-label="Fülek">
+    <button class="f on"><img class="i3" src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+    <button class="f"><img class="i3 dosszie" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+    <button class="f"><img class="i3" src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+    <button class="f"><img class="i3 uzenetek" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+    <button class="f"><img class="i3 fiok" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body>
+</html>
