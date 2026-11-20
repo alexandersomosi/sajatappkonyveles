@@ -11,6 +11,7 @@
 // Screenshots → kod/_qa/k7c_bevezeto_*.png (390 × 844 @2x). Every check prints OK/HIBA; exit code 1 on any HIBA.
 //   APP_PORT=8871 PANEL_PORT=8872 node scripts/jav1/harness.mjs      (separate window; app export:web + backend build first)
 //   BASE=http://127.0.0.1:8871 node scripts/k7c-bevezeto.mjs
+// It signs up 3 new clients; the API allows 5 sign-ups per IP per hour, so run it on a freshly started harness.
 import { mkdirSync, rmSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -46,7 +47,7 @@ async function kattint(page, szoveg, { utolso = false } = {}) {
   // exact text first ("Később" must not hit "Később folytatom", "Kezdjük" not "Kezdjük egy kérdéssel.")
   const mind = await page.$$(`::-p-text(${JSON.stringify(szoveg)})`);
   const pontos = [];
-  for (const x of mind) if ((await x.evaluate((n) => n.innerText?.trim())) === szoveg) pontos.push(x);
+  for (const x of mind) if (await x.evaluate((n, sz) => n.innerText?.trim() === sz && n.getClientRects().length > 0, szoveg)) pontos.push(x);
   const jeloltek = pontos.length ? pontos : mind;
   const e = utolso ? jeloltek[jeloltek.length - 1] : jeloltek[0];
   await e.evaluate((x) => x.scrollIntoView({ block: 'center' }));

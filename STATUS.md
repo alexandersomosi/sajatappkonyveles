@@ -2,6 +2,19 @@
 
 **Él:** app https://app.45-94-65-74.sslip.io · panel https://konyvelo.45-94-65-74.sslip.io · API 200 (10:08-as élesítés után mind a három cím 200). A te fiókjaid (alex@, tulaj@) és Bence + Dávid demo-belépése változatlan, az adatbázishoz nem nyúltunk (élesítés előtt titkosított mentés: `/srv/kezjegy/_regi/db_elotte_up_20261120_100737.dump.gpg`). A Gardoko törölve, ez rendben van. APK most nem készült (kérésed szerint). Az előző állapot: `_regi\STATUS_elotte_k6c3_1120.md`.
 
+
+## 16:00 – a bevezető javítva, élesben (a kérdésedre: „nem úgy volt, hogy így végigmegy először?”)
+Igen, így kellett volna – és most így megy. A hiba: a regisztráció után az e-mail-kód megerősítése egyenesen a bekötési
+listára vitt (ott: „Folytasd ott, ahol abbahagytad”), és csak egy újratöltés után indult el a bevezető. Most:
+- **Regisztrálok → e-mail-kód → Megerősítem → „Szia {keresztnév}!”** (az üdvözlő képernyők), utána lépésről lépésre.
+- Aki még el sem kezdte, a listán nem „Folytasd ott…” kártyát lát, hanem „Végigvezetünk a beállításon – Kezdjük”.
+- A „Jár neked adókedvezmény?” kérdésnél a „Később” most tényleg továbbvisz (eddig ugyanaz a kérdés jött vissza).
+- Az „Intézzük helyetted” lapon is megmarad a bevezető fejléce és a haladás.
+- A végén nem írja, hogy „Kész vagy”, ha még jön tőled valami: „Most nincs több teendőd. Később még 1 dolog kell tőled: NAV-meghatalmazás.”
+Végigpróbálva a valódi regisztrációs képernyőkön, kitalált adatokkal (képek: `kod\_qa\k7c_bevezeto_*.png`). Élesítés előtt
+titkosított mentés; a fiókjaid és a demó-belépések változatlanok. Tesztek: backend 402, app 49 – mind zöld.
+Ami még nyitott (nem ez a javítás): a szerveren a havidíj még 20 000 Ft-ként szerepel (regisztráció, ÁSZF); ezt külön kell javítani.
+
 ## A kért 5 funkció – mind kész, élesben
 1. **Ennyit tegyél félre** – minden kiállított számládnál egy sor: „145 000 Ft-os számla – ebből kb. 5 000 Ft-ot tegyél félre.” Mellette „Miért ennyi?”: megmutatja, miért nem mindig ugyanannyi (adómentes rész, havi minimum, negyedéves járulék). Mindig felfelé kerekít ezresre. A Főoldalon: „Most kb. … Ft legyen félretéve”, mellette az idei összes és a már lezárt negyedévek.
 2. **Értesítés új számláról** – a napi NAV-lekérés után: „Új kiállított számlád: 120 000 Ft – Bodza Kiadó Kft. Tegyél félre kb. … Ft-ot.” Ha több jön, egy összesített üzenet. A beállításokat és az éjszakai csendes időt betartja. (A képen Bálint 25 év alatti és a havi minimumon van, ezért nála „most nem kell félretenned” – ez helyes.)

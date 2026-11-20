@@ -10,6 +10,16 @@
 > (`ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh allapot'`).
 
 
+## k7c – a vezetett első indulás (bevezető) javítása, élesítve 2026-11-20 15:54–15:57
+
+Ugyanúgy, mint a k7-es frissítés (fiókszámok és tulaj-fiókok előtte/utána, `feltolt.sh` + `up.sh`); migráció nem volt (19 maradt).
+Titkosított mentés előtte: `_regi/db_elotte_up_20261120_155647.dump.gpg`. alex@, tulaj@ VÁLTOZATLAN, a fiókszámok (david@,
+bence.kovacs@) ugyanazok. Utána mind a nyolc cím 200/301. Az éles app `index.html` = a helyi build.
+- **A `feltolt.sh` már nem viszi fel a `caddy/kezjegy.caddy`-t** (a régi közös Caddy importmappája; a `takarit` 14:45-kor
+  `_regi`-be tette, egy teljes feltöltés eddig visszahozta volna). A `deploy/kezjegy.caddy` fájl megmaradt, csak nem megy fel.
+- Helyi végigjátszás a VALÓDI regisztrációs képernyőkön: `app/scripts/k7c-bevezeto.mjs` (friss `scripts/jav1/harness.mjs`
+  mellett – az API óránként 5 regisztrációt enged egy IP-ről), képek `kod/_qa/k7c_bevezeto_*.png`.
+
 ## k7 – élesítve 2026-11-20 13:38–13:47 (integrátor)
 
 Ahogy ment (a következő k7-es frissítésnél ugyanígy, csak az átállási lépések nélkül):
