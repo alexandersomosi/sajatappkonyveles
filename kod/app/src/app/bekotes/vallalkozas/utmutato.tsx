@@ -58,7 +58,7 @@ function BejelentesUtmutato() {
   const lp = useLepesParam(g?.steps.length ?? 0);
   const egyben = p.egyben === '1';
   const ev = segitsegFajta(o.data?.assists, 'vallalkozas_bejelentes');
-  const segitsegLink = evNyitva && !nyitott(ev) && (!r || ['kitoltes', 'utmutato'].includes(r.status)) ? () => router.push(helyettunkUt('vallalkozas_bejelentes', 'vallalkozas_utmutato')) : null;
+  const segitsegLink = evNyitva && !nyitott(ev) && (!r || ['kitoltes', 'utmutato'].includes(r.status)) ? () => router.push(helyettunkUt('vallalkozas_bejelentes', 'vallalkozas_utmutato', vezetettKulcs())) : null;
   const feltolthet = !!r && ['utmutato', 'javitas'].includes(r.status);
   const fej = (
     <SavCim

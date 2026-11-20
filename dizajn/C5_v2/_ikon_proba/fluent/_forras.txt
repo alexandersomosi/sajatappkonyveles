@@ -1,0 +1,21 @@
+house <- Home/24
+camera <- Camera/24
+chat <- Chat/24
+user <- Person/28
+bell <- Alert/24
+calendar <- Calendar/24
+document <- Document Text/24
+lock <- Lock Closed/24
+mail <- Mail/24
+check <- Checkmark Circle/32
+warning <- Warning/28
+question <- Question Circle/24
+shield <- Shield/24
+receipt <- Receipt/24
+clock <- Clock/24
+settings <- Settings/24
+building <- Building/24
+idcard <- Contact Card/24
+people <- People/24
+trend <- Arrow Trending Lines/24
+chart <- Data Bar Vertical Ascending/20

@@ -8,7 +8,7 @@ import { JOURNEY_STEP_TEXTS } from '../_shared/bekotes.js';
 import { GUIDED_ORDER, GUIDED_OWN_ROUTES, GUIDED_STEP_ROUTES, GUIDED_TEXTS, type GuidedAction, type GuidedState, type GuidedStepKey, type GuidedStepView, type GuidedView } from '../_shared/k29g.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { accountants, clients, clientTaxProfiles } from '../db/schema.js';
+import { accountants, allowanceAnswers, clients, clientTaxProfiles } from '../db/schema.js';
 import { todayBudapest } from '../lib/dates.js';
 import { ApiError } from '../lib/errors.js';
 import { accountantPublic, type ClientRow } from './people.js';
@@ -41,6 +41,16 @@ async function isKata(db: DbOrTx, cl: ClientRow, now: Date): Promise<boolean> {
   return tp?.regime === 'kata';
 }
 
+/**
+ * k7c: the allowance gate answered "Később" (and nothing sent yet). The journey keeps the optional row 'nyitva' (the
+ * checklist and the Főoldal hint offer it again); the guided run must move on, so there it is 'kesobb' – decided for now.
+ */
+async function allowanceLater(db: DbOrTx, clientId: string, now: Date): Promise<boolean> {
+  const year = Number(todayBudapest(now).slice(0, 4));
+  const [a] = await db.select({ gate: allowanceAnswers.gate, submittedAt: allowanceAnswers.submittedAt }).from(allowanceAnswers).where(and(eq(allowanceAnswers.clientId, clientId), eq(allowanceAnswers.year, year))).limit(1);
+  return a?.gate === 'kesobb' && !a.submittedAt;
+}
+
 function routeOf(key: GuidedStepKey, js: JourneyStepView | undefined): string | null {
   if (GUIDED_OWN_ROUTES[key]) return GUIDED_OWN_ROUTES[key]!;
   if (key === 'adatok') return '/bekotes/adatok';
@@ -59,6 +69,7 @@ export async function buildGuided(deps: Deps, db: DbOrTx, cl: ClientRow, j?: Jou
   const byKey = new Map(journey.steps.map((s) => [s.key, s]));
 
   const order = GUIDED_ORDER[journey.variant].filter((k) => !(k === 'kedvezmenyek' && kata));
+  const kedvLater = !kata && order.includes('kedvezmenyek') && (await allowanceLater(db, cl.id, deps.now()));
   const steps: GuidedStepView[] = [];
   for (const key of order) {
     if (key === 'adoszam') {
@@ -68,9 +79,11 @@ export async function buildGuided(deps: Deps, db: DbOrTx, cl: ClientRow, j?: Jou
     }
     const js = byKey.get(key);
     if (!js) continue; // a row that is not on this path any more (e.g. 'alkalmazottak' with no employees)
-    // the guided run treats the optional allowance row as a real step (the gate question), never 'kesobb'
-    const state = js.state;
-    const doneForClient = state === 'kesz' || (state === 'var' && !js.clientPart);
+    // the guided run treats the optional allowance row as a real step (the gate question); the gate's "Később" answers
+    // it for now (k7c: before, the run reopened the same gate – the link looked dead)
+    const later = key === 'kedvezmenyek' && kedvLater && js.state !== 'kesz';
+    const state = later ? 'kesobb' : js.state;
+    const doneForClient = later || state === 'kesz' || (state === 'var' && !js.clientPart);
     steps.push({
       key,
       title: js.title,

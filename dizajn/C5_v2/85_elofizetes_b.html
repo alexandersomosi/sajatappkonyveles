@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=390, initial-scale=1">
 <title>Adózz – Előfizetés (átutalás)</title>
-<link rel="stylesheet" href="v2.css">
+<link rel="stylesheet" href="v2.css"><style>.kv.masol{flex-wrap:wrap;align-items:center;row-gap:0}.kv.masol b{flex-basis:100%;color:var(--sotet);font-size:16px;white-space:nowrap}.kv.masol .cimke{height:22px;margin-left:6px}</style>
 </head>
 <body>
 <script src="v2.js"></script>
@@ -20,18 +20,19 @@
   <div class="szakasz-cim">Utalási adatok</div>
   <section class="k blokk">
     <div class="kv" style="padding-top:2px"><span>Kedvezményezett</span><span>Somosi Kft.</span></div>
-    <div class="kv" style="align-items:center"><span>Számlaszám <span class="demo">demo</span><br><b style="color:var(--sotet);font-size:16px">12345678-00000000-00000000</b></span><button class="gomb-kis masod"><svg><use href="#i-irat"/></svg>Másolom</button></div>
-    <div class="kv" style="align-items:center"><span>Közlemény<br><b style="color:var(--sotet);font-size:16px">ADZ-10482</b></span><button class="gomb-kis masod"><svg><use href="#i-irat"/></svg>Másolom</button></div>
+    <div class="kv masol"><span>Számlaszám</span><button class="gomb-kis masod"><svg><use href="#i-irat"/></svg>Másolom</button><b>11600006-00000002-04741855</b></div>
+    <div class="kv masol"><span>Közlemény</span><button class="gomb-kis masod"><svg><use href="#i-irat"/></svg>Másolom</button><b>ADZ-10482</b></div>
     <div class="kv"><span>Összeg</span><span>19&nbsp;999&nbsp;Ft</span></div>
-    <div class="doboz info"><svg><use href="#i-info"/></svg><span>A közleményből tudjuk, kitől jött az utalás. Tipp: állíts be állandó átutalást a bankodban, így nem kell minden hónapban emlékezned.</span></div>
+    <div class="mezo-sug">A közleményből tudjuk, kitől jött az utalás, ezért pontosan így írd be.</div>
+    <div class="doboz tipp"><svg><use href="#i-info"/></svg><span>Állíts be állandó átutalást a bankodban, így nem kell minden hónapban emlékezned.</span></div>
   </section>
 
   <div class="szakasz-cim">Fizetés módja</div>
   <section class="k">
     <div class="tile t-kek"><svg><use href="#i-kartya"/></svg></div>
     <div class="tart">
-      <p style="margin-top:0">Minden hónap elején díjbekérőt küldünk e-mailben, és az appban is látod. 8 napod van átutalni. A díjszámlát az utalás beérkezése után küldjük.</p>
-      <button class="gomb-masod">Átváltok kártyára (kényelmesebb, automatikus)</button>
+      <p style="margin-top:0">Minden hónap elején díjbekérőt küldünk e-mailben, és az appban is látod. 8 napod van átutalni, a díjszámlát utána küldjük. Kártyával kényelmesebb: automatikusan levonjuk, nem kell emlékezned.</p>
+      <button class="gomb-masod">Átváltok kártyára</button>
     </div>
   </section>
 

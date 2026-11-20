@@ -53,7 +53,7 @@ export function k29Kezdo(fk: string, ma: string): K29Allapot {
 }
 
 /** A vezetett állapot a minta-útvonalból (a szerver services/guided.ts egyszerűsített mása). */
-function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | null, firstName: string, kedvezmenyKesz: boolean, aktiv: boolean): GuidedView {
+function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | null, firstName: string, kedvezmenyKesz: boolean, aktiv: boolean, kedvezmenyKesobb = false): GuidedView {
   const variant = j?.variant ?? 'nincs';
   const byKey = new Map((j?.steps ?? []).map((s) => [s.key, s]));
   const steps: GuidedStepView[] = [];
@@ -64,7 +64,8 @@ function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | nu
     }
     const js = byKey.get(key);
     if (!js) continue;
-    const state = key === 'kedvezmenyek' ? (kedvezmenyKesz ? 'kesz' : 'nyitva') : js.state;
+    const kesobbre = key === 'kedvezmenyek' && !kedvezmenyKesz && kedvezmenyKesobb;
+    const state = key === 'kedvezmenyek' ? (kedvezmenyKesz ? 'kesz' : kesobbre ? 'kesobb' : 'nyitva') : js.state;
     steps.push({
       key,
       title: js.title,
@@ -74,7 +75,7 @@ function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | nu
       ...(state === 'var' ? { waitText: js.statusText } : {}),
       ...(state === 'kesobb' && js.lockedReason ? { lockedReason: js.lockedReason } : {}),
       actorLabel: js.actorLabel,
-      doneForClient: state === 'kesz' || (state === 'var' && !js.clientPart),
+      doneForClient: kesobbre || state === 'kesz' || (state === 'var' && !js.clientPart),
     });
   }
   const tehet = (s: GuidedStepView) => s.state === 'most' || s.state === 'nyitva';
@@ -119,6 +120,7 @@ export interface K29Kornyezet {
   onboarding: () => OnboardingState | null;
   firstName: () => string;
   kedvezmenyKesz: () => boolean;
+  kedvezmenyKesobb?: () => boolean;
   elofizetes: () => SubscriptionView;
   elofizetesBeallit: (s: SubscriptionView) => void;
   lepes: (step: string, status: 'kesz' | 'konyvelore_var') => void;
@@ -129,7 +131,7 @@ export interface K29Kornyezet {
 
 export function k29Utak(ut: (method: string, minta: string, f: Kezelo) => void, c: K29Kornyezet) {
   const { ok, hiba } = c;
-  const nezet = () => vezetett(c.st(), c.journey(), c.onboarding(), c.firstName(), c.kedvezmenyKesz(), c.aktiv());
+  const nezet = () => vezetett(c.st(), c.journey(), c.onboarding(), c.firstName(), c.kedvezmenyKesz(), c.aktiv(), c.kedvezmenyKesobb?.() ?? false);
 
   // ---------- G: vezetett első indulás ----------
   ut('GET', '/client/guided', () => c.kell() ?? ok(nezet()));

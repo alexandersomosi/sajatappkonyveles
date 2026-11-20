@@ -16,7 +16,8 @@ import { ApiHiba, post, put } from '@/api/http';
 import { useMe, useOnboarding, useSegitsegKer, useSegitsegLemond, useVisszahivasKer, useVisszahivasok } from '@/api/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { hibaUzenet } from '@/lib/hiba';
-import { bekotesre } from '@/lib/vezetett';
+import { bekotesre, vezetettHref } from '@/lib/vezetett';
+import { useVezetettParam } from '@/ui/Vezetett';
 import { segitsegFajta } from '@/lib/ut';
 import { forma, szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Szakasz, Valaszto } from '@/ui/alap';
@@ -57,7 +58,10 @@ export default function Helyettunk() {
   const gorgeto = useRef<ScrollViewInstance>(null);
   const meglevo: AssistView | null = segitsegFajta(o.data?.assists, fajta);
   const cim = fajta === 'meghatalmazas' ? ASSIST_TEXTS.sheetTitleMh : ASSIST_TEXTS.sheetTitleEv;
-  const fej = <CimSor visszaCim="Vissza" vissza={() => vissza('/bekotes')} cim={cim} />;
+  // k7c: opened from a guided step (`?vezetett=<lépés>`): the guided header and bar stay, "Vissza" returns to that step
+  const vk = useVezetettParam();
+  const lepesre = (ut: string) => (vk ? vezetettHref(ut, vk) : ut);
+  const fej = <CimSor visszaCim="Vissza" vissza={() => (vk && router.canGoBack() ? router.back() : vissza('/bekotes'))} cim={cim} />;
   const evZarva = fajta === 'vallalkozas_bejelentes' && (kikapcsolva || !evNyitva);
 
   // k6c: an active client (his business runs) never sees the new-business flow here – his "intézzük helyetted" is a change
@@ -89,7 +93,7 @@ export default function Helyettunk() {
                 await lemond.mutateAsync({ id: meglevo.id });
                 setLemondLap(false);
                 jelez({ szoveg: 'Rendben, magad intézed. Lépésről lépésre segítünk.', kesz: true });
-                router.replace(fajta === 'meghatalmazas' ? '/bekotes/meghatalmazas' : '/bekotes/vallalkozas');
+                router.replace(lepesre(fajta === 'meghatalmazas' ? '/bekotes/meghatalmazas' : '/bekotes/vallalkozas') as never);
               } catch (e) {
                 jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'));
               }
@@ -278,7 +282,7 @@ export default function Helyettunk() {
         <GombE cim={ASSIST_TEXTS.sendButton} onPress={() => void kuld()} tolt={ker.isPending || regiCb.isPending} style={{ marginTop: 16 }} />
         <GombM
           cim={fajta === 'meghatalmazas' ? 'Inkább magam adom meg' : 'Inkább magam jelentem be'}
-          onPress={() => router.replace(fajta === 'meghatalmazas' ? '/bekotes/meghatalmazas?mod=magam' : '/bekotes/vallalkozas')}
+          onPress={() => router.replace(lepesre(fajta === 'meghatalmazas' ? '/bekotes/meghatalmazas?mod=magam' : '/bekotes/vallalkozas') as never)}
           style={{ marginTop: 12 }}
         />
       </Kepernyo>

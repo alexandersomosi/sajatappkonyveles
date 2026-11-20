@@ -14,6 +14,7 @@ import { datumAn } from '@/lib/format';
 import { hibaUzenet } from '@/lib/hiba';
 import { adoszamAfaMentesHiba, adoszamFormaz } from '@/lib/validators';
 import { elo, helyettunkUt, segitsegFajta } from '@/lib/ut';
+import { vezetettKulcs } from '@/lib/vezetett';
 import { ElokeszitLista, SavCim, useElokeszit } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
@@ -161,7 +162,7 @@ function VallalkozasKozpont() {
             <Teendo ikon="tepnaptar" cim={KAMARA_TEXTS.title} szoveg={kamaraSor.dueText ?? KAMARA_TEXTS.body} gomb="Megnézem" onPress={() => router.push('/bekotes/vallalkozas/kamara')} />
           </View>
         ) : null}
-        <GombSz cim="Így megy, és mit csinálunk mi" onPress={() => router.push(helyettunkUt('vallalkozas_bejelentes', 'helyettunk_vallalkozas'))} style={{ marginTop: 10, marginLeft: 4 }} />
+        <GombSz cim="Így megy, és mit csinálunk mi" onPress={() => router.push(helyettunkUt('vallalkozas_bejelentes', 'helyettunk_vallalkozas', vezetettKulcs()))} style={{ marginTop: 10, marginLeft: 4 }} />
         <Elakadtal forras="vallalkozas_utmutato" tema="vallalkozas_bejelentes_helyettem" style={{ marginLeft: 4 }} />
       </Kepernyo>
     );
@@ -280,7 +281,7 @@ function VallalkozasKozpont() {
           cim={ASSIST_TEXTS.evCardTitle}
           szoveg={fillPlaceholders(ASSIST_TEXTS.evCardBody, { firstName: fn })}
           gomb={ASSIST_TEXTS.cardButton}
-          onPress={() => router.push(helyettunkUt('vallalkozas_bejelentes', 'helyettunk_vallalkozas'))}
+          onPress={() => router.push(helyettunkUt('vallalkozas_bejelentes', 'helyettunk_vallalkozas', vezetettKulcs()))}
         />
       ) : null}
 

@@ -377,7 +377,8 @@ export function utvaltasInfo(o: OnboardingState, reg?: BusinessRegistrationView 
 }
 
 /** A sor egy kéréshez: melyik „Intézzük helyetted” kérés tartozik hozzá (route az /helyettunk-hoz). */
-export const helyettunkUt = (fajta: AssistKind, forras: string) => ({ pathname: '/helyettunk' as const, params: { fajta, forras } });
+/** k7c: `vezetett` (the guided step on top) keeps the guided header and progress on "Intézzük helyetted" too. */
+export const helyettunkUt = (fajta: AssistKind, forras: string, vezetett?: string | null) => ({ pathname: '/helyettunk' as const, params: { fajta, forras, ...(vezetett ? { vezetett } : {}) } });
 
 /** A visszahívás témája a „Most ez jön” sorból (S21). */
 export function temaSorbol(k: JourneyStepKey | null | undefined): 'bekotes' | 'vallalkozas_inditas' | 'meghatalmazas' | 'azonositas' | 'elofizetes' {

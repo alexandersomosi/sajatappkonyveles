@@ -105,6 +105,35 @@ describe('G – a brand-new client', () => {
     expect(v2.pending.some((p: { key: string }) => p.key === 'azonositas')).toBe(true);
   });
 
+  it('k7c: "Később" on the allowance gate moves the guided run on (it reopened the same gate before)', async () => {
+    const c = await fresh('bevezeto8@demo.kezjegy.test');
+    await act(c.token, 'welcome_seen');
+    await h.json('PUT', '/client/onboarding/business-status', { token: c.token, body: { businessStatus: 'van' } });
+    await h.deps.db.update(clients).set({ adoszam: '12345676-1-41' }).where(eq(clients.id, c.clientId));
+    await h.deps.db.insert(onboardingSteps).values({ clientId: c.clientId, step: 'adatok', status: 'kesz', completedAt: h.clock.now() }).onConflictDoUpdate({ target: [onboardingSteps.clientId, onboardingSteps.step], set: { status: 'kesz', completedAt: h.clock.now() } });
+    const v0 = await guided(c.token);
+    expect(v0.currentKey).toBe('kedvezmenyek');
+    const done0 = v0.progress.done;
+
+    expect((await h.json('POST', '/client/allowances/gate', { token: c.token, body: { year: 2026, gate: 'kesobb' } })).status).toBeLessThan(300);
+    const v1 = await guided(c.token);
+    const kv = v1.steps.find((s: { key: string }) => s.key === 'kedvezmenyek');
+    expect(kv.state).toBe('kesobb');
+    expect(kv.doneForClient).toBe(true);
+    expect(kv.route).toBe('/kedvezmenyek/kerdoiv'); // "Vissza" can still open it
+    expect(v1.currentKey).toBe('szerzodes');
+    expect(v1.progress.done).toBe(done0 + 1);
+    // the checklist (journey) keeps offering it: the optional row stays open there
+    const o = (await h.json('GET', '/client/onboarding', { token: c.token })).body;
+    expect(o.journey.steps.find((s: { key: string }) => s.key === 'kedvezmenyek').state).toBe('nyitva');
+
+    // a later real answer closes it as before
+    await h.json('POST', '/client/allowances/gate', { token: c.token, body: { year: 2026, gate: 'nem_jar' } });
+    const v2 = await guided(c.token);
+    expect(v2.steps.find((s: { key: string }) => s.key === 'kedvezmenyek').state).toBe('kesz');
+    expect(v2.currentKey).toBe('szerzodes');
+  });
+
   it('done_seen ends the auto-open; an active client never sees the guided run', async () => {
     const c = await fresh('bevezeto5@demo.kezjegy.test');
     const d = await act(c.token, 'done_seen');

@@ -41,6 +41,11 @@ ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh cimek'                 # 
   `appok_caddy_config` kötet és az `appok/garden-api` kép megmarad – **[TULAJ]** ha nem kellenek:
   `ssh appok-1 'docker volume rm appok_caddy_data appok_caddy_config; docker image rm appok/garden-api:latest'`.
   A takarítás után visszaállni a régi proxyra már nem lehet (`visszaall` csak előtte); a kezjegy-proxy fájljai a `/srv/kezjegy/proxy/`-ban.
+  **Lefutott 14:45-kor** (a proxy 61 perce futott, a naplóban 0 hibasor; a 14:05-ös óránkénti mentés rendben, 456 269 bájt):
+  `appok-caddy-1` és a két `appok_*` háló eltávolítva; `/srv/appok` → `/srv/kezjegy/_regi/appok_gardoko_20261120_144542/`
+  (a `/srv` a rooté, ezért `sudo -n mv` – a szkript ezt már magától így csinálja); `/srv/kezjegy/caddy` →
+  `/srv/kezjegy/_regi/caddy_elotte_k7_20261120_144519/`. Megmaradt: `appok_caddy_data`, `appok_caddy_config` kötet. Utána mind a
+  nyolc cím 200/301, csak a `kezjegy-proxy` publikál portot (80, 443).
 - Helyi végigjátszás élesítés előtt (Stripe TESZT + Számlázz.hu Tesztüzem, kitalált adatok): `kod/_qa/k7_integ_eredmeny.txt`,
   képek `kod/_qa/k7_integ_*.png`, azonosítók `kod/_qa/k7_integ_stripe_futas1.jsonl`.
 

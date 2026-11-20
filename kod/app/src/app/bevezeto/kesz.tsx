@@ -32,8 +32,15 @@ export default function BevezetoKesz() {
   };
   const most = v.pending.filter((p) => !p.later);
   const kesobb = v.pending.filter((p) => p.later);
+  // k7c: a client step that only comes later (the bar shows e.g. 7 / 8) – never "Kész vagy a te részeddel!" next to it;
+  // the checklist says the same ("Már csak 1 dolog kell tőled")
+  const tolemMeg = v.steps.filter((s) => s.state !== 'kihagyva' && !s.doneForClient);
+  const cim = tolemMeg.length ? G.doneLaterTitle : G.doneTitle;
+  const szoveg = tolemMeg.length
+    ? fillPlaceholders(G.doneLaterBody, { n: String(tolemMeg.length), lepesek: tolemMeg.map((s) => s.title).join(', '), firstName: fn })
+    : fillPlaceholders(G.doneBody, { firstName: fn });
   return (
-    <Kepernyo fejlec={<BevezetoSav kulcs="kesz" vissza={null} kesobb={false} cim={G.doneTitle} szoveg={fillPlaceholders(G.doneBody, { firstName: fn })} felett={<View style={{ paddingHorizontal: 16, marginTop: 4 }}><KeszJel pt={56} label="Kész" /></View>} />} dokk={<GombE cim={G.doneButton} tolt={megy} onPress={() => void fooldal()} />}>
+    <Kepernyo fejlec={<BevezetoSav kulcs="kesz" vissza={null} kesobb={false} cim={cim} szoveg={szoveg} felett={<View style={{ paddingHorizontal: 16, marginTop: 4 }}><KeszJel pt={56} label="Kész" /></View>} />} dokk={<GombE cim={G.doneButton} tolt={megy} onPress={() => void fooldal()} />}>
       {most.length ? (
         <>
           <Szakasz ikon="ora" cim={G.donePendingTitle} />

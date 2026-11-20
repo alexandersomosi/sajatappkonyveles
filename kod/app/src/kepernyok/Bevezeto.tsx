@@ -68,11 +68,15 @@ export function LapPontok({ lap, db = 3 }: { lap: number; db?: number }) {
 /**
  * SPEC §29.10.1 – on the checklist after "Később folytatom": "Folytasd ott, ahol abbahagytad" / "Következő: {lépés} ·
  * {idő}" / "Folytatom" (resume → /bevezeto at the right step).
+ * k7c: a client who never started the guided run (welcome not seen, not paused) gets the start card instead ("Kezdjük"
+ * → /bevezeto → W1); before the branch answer ('nincs') there is no bar ("0 / 1" would mislead).
  */
 export function FolytasKartya({ v, elso }: { v: GuidedView; elso?: boolean }) {
   const a = useGuidedAction();
   const s = v.currentKey ? v.steps.find((x) => x.key === v.currentKey) : null;
+  const kezdo = !v.paused && !v.welcome.seen;
   const folytat = async () => {
+    if (kezdo) return void router.replace('/bevezeto');
     try {
       await a.mutateAsync({ action: 'resume' });
     } catch {
@@ -85,17 +89,21 @@ export function FolytasKartya({ v, elso }: { v: GuidedView; elso?: boolean }) {
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 32 }}>
         <Ikon3d nev="tepnaptar" pt={28} />
         <T m={18} s={650} lh={1.3} style={{ flex: 1 }} accessibilityRole="header">
-          {GUIDED_TEXTS.pausedTitle}
+          {kezdo ? GUIDED_TEXTS.startTitle : GUIDED_TEXTS.pausedTitle}
         </T>
       </View>
       <View style={{ paddingLeft: 38 }}>
-        {s ? (
+        {kezdo ? (
+          <T m={16} lh={1.45} style={{ marginTop: 4 }}>
+            {GUIDED_TEXTS.startBody}
+          </T>
+        ) : s ? (
           <T m={16} lh={1.45} style={{ marginTop: 4 }}>
             {s.timeText ? fillPlaceholders(GUIDED_TEXTS.pausedNext, { lepes: s.title, ido: s.timeText }) : fillPlaceholders(GUIDED_TEXTS.pausedNextNoTime, { lepes: s.title })}
           </T>
         ) : null}
-        <Haladas done={v.progress.done} total={v.progress.total} sotet style={{ marginTop: 10 }} />
-        <GombE cim={GUIDED_TEXTS.pausedButton} tolt={a.isPending} onPress={() => void folytat()} style={{ marginTop: 14 }} />
+        {!kezdo && v.variant !== 'nincs' ? <Haladas done={v.progress.done} total={v.progress.total} sotet style={{ marginTop: 10 }} /> : null}
+        <GombE cim={kezdo ? GUIDED_TEXTS.startButton : GUIDED_TEXTS.pausedButton} tolt={a.isPending} onPress={() => void folytat()} style={{ marginTop: 14 }} />
       </View>
     </Lap>
   );

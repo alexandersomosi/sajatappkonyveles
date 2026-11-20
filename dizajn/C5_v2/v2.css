@@ -288,3 +288,15 @@ main.lap.sima { padding-bottom: 28px; }      /* se nav, se dokk */
 .szerep { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; font-size: 12.5px; font-weight: 700; background: #EEF0F6; color: var(--szurke); margin-bottom: 3px; }
 .szerep.te { background: var(--kek-vil); color: var(--kek); }
 .lepes.te .p { background: var(--kek); color: #fff; }
+
+/* ---------- Emoji-ikonok (tulaj 11-20: Microsoft Fluent Emoji Flat mindenhol) ----------
+   A színes rajzok semleges csempén mutatnak jól; az alsó sávban a nem aktív fül szürke, az aktív színes;
+   beviteli mezőben és a fejléc háttérrajzán szürkék, hogy ne vegyék el a figyelmet. */
+.tile { background: #F1F3F9 !important; }
+.tile svg { width: 26px; height: 26px; }
+.tile.kicsi svg { width: 22px; height: 22px; }
+.tile.nagy svg { width: 38px; height: 38px; }
+.nav button:not(.on) svg { filter: grayscale(1); opacity: .5; }
+.fej-rajz { filter: grayscale(1) brightness(3); opacity: .16; }
+.mezo svg { filter: grayscale(1); opacity: .6; }
+.seg .buborek-ikon svg { filter: drop-shadow(0 1px 1px rgba(16,21,43,.18)); }

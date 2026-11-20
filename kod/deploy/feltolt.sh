@@ -63,7 +63,9 @@ STAGE=$(mktemp -d)
 mkdir -p "$STAGE/kezjegy/web"
 if [ "$WEB_ONLY" = 0 ]; then
   # src/ and caddy/ only in a full upload: an empty src/ would replace the server's build context (kör 2 fix)
-  mkdir -p "$STAGE/kezjegy/src" "$STAGE/kezjegy/caddy"
+  # k7c: no caddy/ any more – since 11-20 the public proxy is kezjegy-proxy (/srv/kezjegy/proxy, deploy/proxy/); the old
+  # shared Caddy and its import folder /srv/kezjegy/caddy were cleaned up (takarit), a full upload must not bring it back
+  mkdir -p "$STAGE/kezjegy/src"
   tar -C "$KOD" -cf - \
     --exclude='node_modules' --exclude='dist' --exclude='_regi' --exclude='_kepek' --exclude='pdf_minta' \
     --exclude='.test-*' --exclude='*.log' \
@@ -73,7 +75,6 @@ if [ "$WEB_ONLY" = 0 ]; then
   # SPEC §29.3: the Adózz proxy (atallas.sh copies it to /srv/kezjegy/proxy) and the public-URL example
   cp "$KOD"/deploy/nyilvanos.env.example "$STAGE/kezjegy/deploy/"
   tar -C "$KOD/deploy" -cf - --exclude='_regi' proxy | tar -C "$STAGE/kezjegy/deploy" -xf -
-  cp "$KOD/deploy/kezjegy.caddy" "$STAGE/kezjegy/caddy/kezjegy.caddy"
 fi
 if [ "$NO_WEB" = 0 ]; then
   cp -r "$KOD/app/dist" "$STAGE/kezjegy/web/app"

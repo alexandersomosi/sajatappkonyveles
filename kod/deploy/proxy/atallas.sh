@@ -216,7 +216,8 @@ EOF
     if [ -n "$(docker ps -a --format '{{.Names}}' | grep -x appok-caddy-1)" ]; then docker rm appok-caddy-1 >/dev/null && echo "appok-caddy-1: eltávolítva (leállított konténer, adat nem volt benne)"; fi
     for n in appok_edge appok_internal; do if docker network inspect "$n" >/dev/null 2>&1; then docker network rm "$n" >/dev/null && echo "háló eltávolítva: $n"; fi; done
     if [ -d /srv/appok ]; then
-      mv /srv/appok "$REGI/appok_gardoko_$TS" && chmod 700 "$REGI/appok_gardoko_$TS" && echo "/srv/appok → $REGI/appok_gardoko_$TS (áthelyezve, 700)"
+      # /srv belongs to root: the rename needs sudo (11-20: plain mv → Permission denied, then done with sudo -n mv)
+      { mv /srv/appok "$REGI/appok_gardoko_$TS" 2>/dev/null || sudo -n mv /srv/appok "$REGI/appok_gardoko_$TS"; } && chmod 700 "$REGI/appok_gardoko_$TS" && echo "/srv/appok → $REGI/appok_gardoko_$TS (áthelyezve, 700)"
     fi
     echo "Megmaradt (a tulaj törölheti): kötetek $(docker volume ls --format '{{.Name}}' | grep -E '^appok_' | tr '\n' ' ')· kép $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^appok/' | tr '\n' ' ')"
     if [ -d $K/caddy ]; then mv $K/caddy "$REGI/caddy_elotte_k7_$TS"; echo "$K/caddy → $REGI/caddy_elotte_k7_$TS (a miénk: áthelyezve, nem törölve)"; fi

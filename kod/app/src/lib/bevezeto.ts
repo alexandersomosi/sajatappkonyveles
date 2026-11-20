@@ -20,8 +20,9 @@ export function bevezetoCel(v: GuidedView, p: { utan?: string | null; vissza?: s
   if (!v.inOnboarding) return '/';
   if (p.vissza) {
     const i = v.steps.findIndex((s) => s.key === p.vissza);
-    // the previous step the client can open again (a done one is opened for editing; locked ones are skipped)
-    const elozo = (i < 0 ? [] : v.steps.slice(0, i)).reverse().find((s) => s.route && s.state !== 'kihagyva' && s.state !== 'kesobb');
+    // the previous step the client can open again (a done one is opened for editing; locked ones are skipped – a 'kesobb'
+    // step the client answered for now, e.g. the allowance gate's "Később", opens again)
+    const elozo = (i < 0 ? [] : v.steps.slice(0, i)).reverse().find((s) => s.route && s.state !== 'kihagyva' && (s.state !== 'kesobb' || s.doneForClient));
     const cel = elozo ? lepesCel(elozo) : null;
     return cel ?? '/bevezeto/udv?lap=3';
   }

@@ -788,7 +788,9 @@ ut('POST', '/client/business-registration/chamber', (_m, _q, t) => {
     journey: () => bekotesNezet()?.journey ?? null,
     onboarding: () => S.onboarding,
     firstName: () => szemely().firstName,
-    kedvezmenyKesz: () => !!(S.k.kedvezmeny.gate || S.k.kedvezmeny.submittedAt),
+    // k7c: like the server – "Később" on the gate is not done, the guided run treats it as answered for now
+    kedvezmenyKesz: () => !!((S.k.kedvezmeny.gate && S.k.kedvezmeny.gate !== 'kesobb') || S.k.kedvezmeny.submittedAt),
+    kedvezmenyKesobb: () => S.k.kedvezmeny.gate === 'kesobb' && !S.k.kedvezmeny.submittedAt,
     elofizetes: () => S.elofizetes,
     elofizetesBeallit: (e) => {
       S.elofizetes = e;

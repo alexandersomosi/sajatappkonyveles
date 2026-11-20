@@ -40,7 +40,9 @@ export default function EmailMegerosites() {
       await post('/auth/email/verify', { code: kod.trim() });
       frissitUser({ emailVerified: true });
       await qc.invalidateQueries();
-      router.replace('/bekotes');
+      // k7c (tulaj 11-20: „nem úgy volt, hogy így végigmegy először, ilyen bevezetősen?”): a Főoldal dönt – egy új
+      // ügyfél a vezetett első indulásba (/bevezeto → W1) kerül, nem a bekötési listára (SPEC §29.10.1)
+      router.replace('/');
     } catch (e) {
       // A szerver a mezőhöz köti a hibát (fields.code): azt mutatjuk a mező alatt, nem az általános szöveget.
       if (e instanceof ApiHiba && e.fields?.code) setMezoHiba(e.fields.code);

@@ -152,6 +152,10 @@ export const GUIDED_TEXTS = {
   varDone: 'Tovább',
   doneTitle: 'Kész vagy a te részeddel!',
   doneBody: 'Most {firstName} és a NAV dolgozik. Szólunk, ha kell tőled valami.',
+  // k7c: a client step that only comes later (e.g. approving the NAV-meghatalmazás once our team sent it) is still his –
+  // the done screen says so, like the checklist ("Már csak 1 dolog kell tőled")
+  doneLaterTitle: 'Most nincs több teendőd',
+  doneLaterBody: 'Később még {n} dolog kell tőled: {lepesek}. Szólunk, ha itt az ideje. Addig {firstName} és a NAV dolgozik.',
   donePendingTitle: 'Ami most történik',
   doneLater: 'később',
   doneButton: 'Főoldal',
@@ -159,6 +163,10 @@ export const GUIDED_TEXTS = {
   pausedNext: 'Következő: {lepes} · {ido}',
   pausedNextNoTime: 'Következő: {lepes}',
   pausedButton: 'Folytatom',
+  // k7c: on the checklist before the guided run was ever started (never "Folytasd ott, ahol abbahagytad")
+  startTitle: 'Végigvezetünk a beállításon',
+  startBody: 'Egyszerre egy lépés, mindig látod, mi jön. Bármikor abbahagyhatod, és később ott folytatod.',
+  startButton: 'Kezdjük',
   adoszamStep: 'Adószámod',
   adoszamTime: 'kb. 1 perc',
   adoszamManual: 'Kitöltöm kézzel',

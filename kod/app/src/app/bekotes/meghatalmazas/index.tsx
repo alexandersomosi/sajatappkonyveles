@@ -26,7 +26,7 @@ import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { KiemeltKartya, SegitsegAllapot, useUt, VarakozasKartya } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
-import { bekotesre } from '@/lib/vezetett';
+import { bekotesre, vezetettKulcs } from '@/lib/vezetett';
 
 function Kesz({ cim, szoveg }: { cim: string; szoveg: string }) {
   return (
@@ -147,7 +147,7 @@ export default function Meghatalmazas() {
             <SohaBelepes fn={fn} style={{ marginTop: 12 }} />
           </>
         ) : null}
-        {a.canCancel && a.kind === 'meghatalmazas' ? <GombSz cim={ASSIST_TEXTS.cancelLink} onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas'))} style={{ marginTop: 6, marginLeft: 4 }} /> : null}
+        {a.canCancel && a.kind === 'meghatalmazas' ? <GombSz cim={ASSIST_TEXTS.cancelLink} onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas', vezetettKulcs()))} style={{ marginTop: 6, marginLeft: 4 }} /> : null}
         {elakadtal}
       </Kepernyo>
     );
@@ -173,7 +173,7 @@ export default function Meghatalmazas() {
             cim={ASSIST_TEXTS.mhCardTitle}
             szoveg={fillPlaceholders(ASSIST_TEXTS.mhCardBody, { firstName: fn })}
             gomb={ASSIST_TEXTS.cardButton}
-            onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas'))}
+            onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas', vezetettKulcs()))}
           />
         ) : null}
         <GombM cim="Vissza a Főoldalra" onPress={() => router.navigate('/bekotes')} style={{ marginTop: 14 }} />
@@ -213,7 +213,7 @@ export default function Meghatalmazas() {
       return (
         <Kepernyo ful="fooldal" fejlec={fej('Így add meg a NAV-meghatalmazást – kb. 5 perc')}>
           {/* 11-19 javító kör 2: a kiemelt „Megcsináljuk helyetted” az egyben (nyomtatható) nézet tetején is ott van. */}
-          <SegitsegCsik fajta="mh" fn={fn} onPress={() => router.push(helyettunkUt('meghatalmazas', 'meghatalmazas_utmutato'))} style={{ marginBottom: 12 }} />
+          <SegitsegCsik fajta="mh" fn={fn} onPress={() => router.push(helyettunkUt('meghatalmazas', 'meghatalmazas_utmutato', vezetettKulcs()))} style={{ marginBottom: 12 }} />
           <UtmutatoTorzs g={g} kepek={kepek.data} valaszok={{}} kesz={haladas.kesz} valt={haladas.valt} fn={fn} />
           <HibaSzoveg szoveg={hiba} />
           <GombE cim="Beküldtem" onPress={() => void bekuld('onya_ugyfel')} tolt={kuld.isPending} style={{ marginTop: 16 }} />
@@ -242,7 +242,7 @@ export default function Meghatalmazas() {
           ugrik={lp.ugrik}
           vege={{ cim: 'Beküldtem', onPress: () => void bekuld('onya_ugyfel'), tolt: kuld.isPending }}
           // 11-19 javítás (3. kérés: „ki kell emelni”): a magam-útmutató minden lépésén ott a kiemelt „Megcsináljuk helyetted”
-          segitseg={() => router.push(helyettunkUt('meghatalmazas', 'meghatalmazas_utmutato'))}
+          segitseg={() => router.push(helyettunkUt('meghatalmazas', 'meghatalmazas_utmutato', vezetettKulcs()))}
           segitsegFajta="mh"
           egyben={() => router.setParams({ egyben: '1' })}
         />
@@ -304,7 +304,7 @@ export default function Meghatalmazas() {
         szoveg={fillPlaceholders(ASSIST_TEXTS.mhCardBody, { firstName: fn })}
         gomb={ASSIST_TEXTS.cardButton}
         elsodleges
-        onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas'))}
+        onPress={() => router.push(helyettunkUt('meghatalmazas', 'helyettunk_meghatalmazas', vezetettKulcs()))}
       />
       <View style={{ marginTop: 12, backgroundColor: szin.lap, borderRadius: forma.lap, padding: 16 }}>
         <View style={{ flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>

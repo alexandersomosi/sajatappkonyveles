@@ -40,6 +40,21 @@ test('vezetett: átadás után (a lépés „var”) egyszer a várakozó képer
   assert.equal(bevezetoCel(v, { utan: 'azonositas' }), '/bekotes/azonositas?vezetett=azonositas');
 });
 
+test('k7c: a kedvezmény-kapu „Később” válasza után a futás továbbmegy, a „Vissza” mégis megnyitja', () => {
+  const kesobbre: GuidedStepView = { ...lepes('kedvezmenyek', 'kesobb', '/kedvezmenyek/kerdoiv'), doneForClient: true };
+  const v = nezet({ steps: [lepes('ut', 'kesz', '/bevezeto/ut'), lepes('adatok', 'kesz'), kesobbre, lepes('szerzodes', 'most'), lepes('elofizetes', 'kesobb')], currentKey: 'szerzodes' });
+  assert.equal(bevezetoCel(v, { utan: 'kedvezmenyek' }), '/bekotes/szerzodes?vezetett=szerzodes');
+  assert.equal(bevezetoCel(v, { vissza: 'szerzodes' }), '/kedvezmenyek/kerdoiv?vezetett=kedvezmenyek');
+  // a zárt (még nem nyitható) lépést továbbra is átugorja
+  assert.equal(bevezetoCel(v, { vissza: 'elofizetes' }), '/bekotes/szerzodes?vezetett=szerzodes');
+});
+
+test('k7c: e-mail-megerősítés után a Főoldal dönt (új ügyfél → bevezető), nem a bekötési lista', () => {
+  const src = readFileSync(join(import.meta.dirname, '../src/app/email-megerosites.tsx'), 'utf8');
+  assert.match(src, /router\.replace\('\/'\)/);
+  assert.doesNotMatch(src, /router\.replace\('\/bekotes'\)/);
+});
+
 test('vezetett sorrend: a szerződés a NAV-meghatalmazás előtt, az azonosítás a kártya előtt (SPEC §29.10.2)', () => {
   for (const v of ['van', 'inditas_segitett'] as const) {
     const o = GUIDED_ORDER[v];
