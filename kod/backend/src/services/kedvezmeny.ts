@@ -26,7 +26,7 @@ import { E } from '../lib/errors.js';
 import { todayBudapest } from '../lib/dates.js';
 import { accountantParams, notify } from '../notify/notify.js';
 import { calculateYear, RULES_2026, rulesForYear, type AllowancesInput, type TaxProfileInput, type YearInput } from '../tax/engine.js';
-import { accountantUserOf } from './team.js';
+import { accountantUserOf, staffRefs } from './team.js';
 import { recalcYear } from './tax.js';
 import { clientName, type ClientRow } from './people.js';
 
@@ -650,6 +650,8 @@ export async function accAllowanceView(
   // k6c2: the same marginal "idén eddig" shares the client sees
   const marg = input && approved.length ? marginalSavings(input, approved.map((r) => ({ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear })), birth, today < `${year}-12-31` ? today : undefined, approvedQ) : null;
   const motherExempt = approved.some((r) => (r.kind === 'anyak' || r.kind === 'anya30') && r.inYear);
+  // k6c3: "Döntött: Kovács Bence", never the user id
+  const deciders = await staffRefs(db, rows.map((r) => r.decidedBy));
   const items: AccAllowanceItem[] = [];
   for (const r of rows) {
     const k = toEngineInput([{ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear }], birth);
@@ -669,7 +671,7 @@ export async function accAllowanceView(
       params: r.params,
       paramsPrev: r.paramsPrev?.params ?? null,
       proposal: { months: r.proposal?.months ?? r.months, params: r.proposal?.params ?? r.params, reasons: r.proposal?.reasons ?? [] },
-      decidedBy: r.decidedBy,
+      decidedBy: r.decidedBy ? (deciders.get(r.decidedBy)?.name || null) : null,
       decidedAt: r.decidedAt?.toISOString() ?? null,
       staffNote: r.staffNote,
       warnings: [...(r.proposal?.warnings ?? []), ...engineWarnings],

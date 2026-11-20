@@ -1,0 +1,8 @@
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_11_reka_felretesz_teteje.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_12_reka_szamla_szept_84k_miert.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_22_balint_ertesitesek.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_02_kata_kedvezmenyek.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_41_panel_kata_kedvezmenyek_teteje.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_03_kata_kereset.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_30_valtozas_lista.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k6e_34_szekhely_lepes_5.png

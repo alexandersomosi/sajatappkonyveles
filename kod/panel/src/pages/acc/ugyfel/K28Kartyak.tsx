@@ -126,7 +126,8 @@ function EztLatja({ c }: FulProps) {
             <I3 n="szamlak" s={28} />
             <h2>{EARNINGS_TEXTS.cardTitle}</h2>
           </div>
-          <div className="nagy-osszeg">{fill(RESERVE_PANEL_TEXTS.ytdNet, { ytdNet: szam(e.ytdNetHuf) })}</div>
+          {/* k6c3: a "kb." amount is rounded to 1 000 Ft, as on the client's card; a negative year uses the client's own sentence */}
+          <div className="nagy-osszeg">{e.ytdNetHuf < 0 ? e.sentence : fill(RESERVE_PANEL_TEXTS.ytdNet, { ytdNet: szam(Math.round(e.ytdNetHuf / 1000) * 1000) })}</div>
           <p className="halvany">{e.sub}</p>
           {e.projectionText && <p className="halvany kicsi">{e.projectionText}</p>}
           <button className="gomb-sz" onClick={() => setNyit('kereset')}>

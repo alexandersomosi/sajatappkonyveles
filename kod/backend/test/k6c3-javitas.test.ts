@@ -103,7 +103,11 @@ describe('1. an allowance with in-year csjk approved after Q1–Q3 (Kata, 45 %, 
     expect(csaladi.statusText).toContain('kb. 101 000 Ft-tal kevesebb adó');
     // the accountant sees the same shares
     const acc = (await h.json('GET', `/acc/clients/${c.clientId}/allowances?year=2026`, { token: bence.token })).body;
-    expect(acc.items.find((i: { kind: string }) => i.kind === 'csaladi').effectYearHuf).toBe(101_000);
+    const accCs = acc.items.find((i: { kind: string }) => i.kind === 'csaladi');
+    expect(accCs.effectYearHuf).toBe(101_000);
+    // "Döntött: <name>", never the user id
+    expect(accCs.decidedBy).toBeTruthy();
+    expect(accCs.decidedBy).not.toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-/);
   });
 });
 
