@@ -7,6 +7,11 @@
 from PIL import Image
 import os
 FORRAS = os.path.join(os.path.dirname(__file__), '..', '..', 'C5_v2')
+# 3. kör (11-20 este): ha van név és ígéret nélküli másolat (_eszkoz/app_minta, app_minta.py + app_minta_kep.cjs), azt használjuk.
+MINTA = os.path.join(os.path.dirname(__file__), 'app_minta')
+def forras(f):
+    m = os.path.join(MINTA, f)
+    return m if os.path.exists(m) else os.path.join(FORRAS, f)
 CEL = os.path.join(os.path.dirname(__file__), '..', 'kepek')
 H = 1688
 # kimeneti név: (forrásfájl, alsó dokk magassága px-ben, felső szeletek [(y0, y1), ...] vagy None = a kép teteje)
@@ -24,7 +29,7 @@ LISTA = {
     'app_uzenetek_chat': ('70_uzenetek.png', 330, [(0, 432), (1190, None)]),
 }
 for nev, (f, dokk, szeletek) in LISTA.items():
-    im = Image.open(os.path.join(FORRAS, f)).convert('RGB')
+    im = Image.open(forras(f)).convert('RGB')
     w, h = im.size
     if h == H:
         out = im
@@ -48,7 +53,7 @@ GEP = {
     'app_asztali_uzenetek': 'A70_uzenetek.png',
     'app_asztali_hataridok': 'A53_hataridok.png',
 }
-for nev, f in GEP.items():
+for nev, f in (GEP.items() if '--gep' in __import__('sys').argv else []):
     a = Image.open(os.path.join(FORRAS, 'asztali', f)).convert('RGB')
     a = a.crop((0, 0, 1440, 914))
     a.save(os.path.join(CEL, nev + '.webp'), 'WEBP', quality=86, method=6)

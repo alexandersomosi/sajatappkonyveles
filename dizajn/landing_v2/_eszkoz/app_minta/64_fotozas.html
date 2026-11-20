@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hu"><!-- MÁSOLAT: landing_v2/_eszkoz/app_minta.py készítette a C5_v2/64_fotozas.html-ből. --><head><meta charset="utf-8"><meta name="viewport" content="width=390, initial-scale=1"><title>Adózz – Fotózás</title><link rel="stylesheet" href="../../../C5_v2/v2.css"><style>.kamera .felso{position:absolute;left:16px;right:16px;top:54px;display:flex;align-items:center;justify-content:space-between}
+.kamera .kerek{height:40px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.16);font-weight:650;font-size:15px;display:flex;align-items:center}
+.kamera .kap{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:650}
+.kamera .keret{position:absolute;left:9%;right:9%;top:128px;bottom:330px;background:#141A2B;border-radius:6px}
+.kamera .keret i{position:absolute;width:30px;height:30px;border:0 solid rgba(255,255,255,.9)}
+.kamera .keret i:nth-child(1){left:-4px;top:-4px;border-left-width:6px;border-top-width:6px;border-top-left-radius:8px}
+.kamera .keret i:nth-child(2){right:-4px;top:-4px;border-right-width:6px;border-top-width:6px;border-top-right-radius:8px}
+.kamera .keret i:nth-child(3){left:-4px;bottom:-4px;border-left-width:6px;border-bottom-width:6px;border-bottom-left-radius:8px}
+.kamera .keret i:nth-child(4){right:-4px;bottom:-4px;border-right-width:6px;border-bottom-width:6px;border-bottom-right-radius:8px}
+.kamera .tipp-sor{position:absolute;left:24px;right:24px;bottom:238px;text-align:center}
+.kamera .tipp-sor b{display:block;font-size:15.5px}.kamera .tipp-sor span{font-size:14.5px;color:#C9D2E3}
+.kamera .vezerlok{position:absolute;left:0;right:0;bottom:116px;display:flex;align-items:center;justify-content:space-around;padding:0 24px}
+.kamera .kis-gomb{width:72px;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#C9D2E3}
+.kamera .kis-gomb span{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;color:#fff}
+.kamera .kis-gomb svg{width:24px;height:24px;fill:currentColor}
+.kamera .expo{width:78px;height:78px;border-radius:50%;border:4px solid #fff;display:grid;place-items:center;flex:none}
+.kamera .expo i{width:60px;height:60px;border-radius:50%;background:#fff;display:block}
+/* 11-20 tulaj: a telefonon is lehessen fájlt (PDF) és galériából képet feltölteni, nem csak fotózni; a vaku a keret sarkába került */
+.kamera .vaku{position:absolute;right:10px;top:10px;height:34px;padding:0 12px 0 8px;border-radius:999px;background:rgba(0,0,0,.45);display:flex;align-items:center;gap:4px;font-size:13px;font-weight:650;color:#fff}
+.kamera .vaku svg{width:20px;height:20px}</style><style>.szil{display:inline-grid;place-items:center;flex:none;border-radius:50%;background:#fff;color:#5B6BEF;box-shadow:0 0 0 2px rgba(255,255,255,.7)}.szil svg{width:62%;height:62%;fill:currentColor;margin-top:8%}.kamera .szil{background:rgba(255,255,255,.9)}.k .szil{background:#E6EBFF;box-shadow:none}</style></head><body><script src="../../../C5_v2/v2.js"></script>
+<div class="kamera">
+<div class="allapot" style="padding:0 18px"></div>
+<div class="felso"><span class="kerek">Mégse</span><span class="kap"><span class="szil" style="width:28px;height:28px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>A könyvelőd kapja meg</span></div>
+<div class="keret"><i></i><i></i><i></i><i></i><span class="vaku" role="button" aria-label="Vaku: automatikus"><svg><use href="#i-vaku"/></svg>Auto</span></div>
+<div class="tipp-sor"><b>Még nincs oldal</b><span>Fotózd le sötét alapon, vagy válaszd ki a galériából vagy a fájljaid közül (PDF is jó).</span></div>
+<div class="vezerlok">
+<div class="kis-gomb"><span><svg><use href="#i-kep"/></svg></span>Galéria</div>
+<div class="expo" role="button" aria-label="Fénykép készítése"><i></i></div>
+<div class="kis-gomb"><span><svg><use href="#i-irat"/></svg></span>Fájl, PDF</div>
+</div></div>
+<nav class="nav" data-aktiv="fotozas" data-pont="uzenetek"></nav>
+</body></html>

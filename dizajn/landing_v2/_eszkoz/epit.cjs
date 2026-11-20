@@ -33,6 +33,9 @@ html = html
   .replace(/<!--ikon:([a-z-]+)-->/g, (m, n) => ikon(n));
 const maradt = html.match(/<!--(logo|pipa|nem|ikon:)[^>]*-->/g);
 if (maradt) throw new Error('Kimaradt jelölő: ' + maradt.join(', '));
-html = html.replace('<head>', '<head>\n<!-- GENERÁLT: _eszkoz/index.sablon.html + _eszkoz/epit.cjs. Kézzel ne ezt írd át. -->');
+// 3. kör (11-20 este): a sablon belső megjegyzései nem kerülnek a nyilvános oldalba (a kimenetben nincs HTML-megjegyzés).
+// Az index.html GENERÁLT fájl: a sablont (_eszkoz/index.sablon.html) kell szerkeszteni, utána node _eszkoz/epit.cjs.
+html = html.replace(/[ \t]*<!--[\s\S]*?-->[ \t]*\n?/g, '').replace(/\n{3,}/g, '\n\n');
+if (/<!--/.test(html)) throw new Error('Maradt HTML-megjegyzés a kimenetben');
 fs.writeFileSync(path.join(GYOKER, 'index.html'), html);
 console.log('index.html kész,', Math.round(html.length / 1024), 'KB');

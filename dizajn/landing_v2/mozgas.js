@@ -1,12 +1,15 @@
-/* Adózz.hu – az értékesítő oldal mozgásai (2. kör, 2026-11-20 este). Saját fájl, külső könyvtár nélkül.
+/* Adózz.hu – az értékesítő oldal mozgásai (2026-11-20). Saját fájl, külső könyvtár nélkül.
    CSP default-src 'self' mellett is fut: nincs inline script, nincs eval, nincs inline eseménykezelő.
-   Fokozatos javítás: JS nélkül minden tartalom látszik (végállapot). Ez a fájl csak ráadást ad, és csak a termék mozog:
+   Fokozatos javítás: JS nélkül minden tartalom látszik (a „Mit kapsz” lépései egymás alatt, a rétegek végállapotban).
    - html.js: a JS fut;
-   - html.mozog: mozgás engedélyezve (prefers-reduced-motion: reduce esetén NEM kerül ki: állókép, minden látszik);
-   - hős: a telefon képernyői maguktól váltakoznak (Főoldal → Dosszié → Üzenetek → Fotózás → Határidők), vezérlő nélkül.
-     Két kör után a Főoldalon megáll. Megáll, amíg egér van rajta vagy fókuszban van, ha a fül rejtett, és ha a hős nem látszik;
-   - #mit-kapsz: széles kijelzőn ragadós telefon (görgetésre lépésenként vált), keskenyen minden lépés saját telefonja indul.
-   Nincs beúszó szakasz és felemelkedő kártya. Csak transform/opacity mozog (CSS); a telefonon belüli számokat requestAnimationFrame lépteti. */
+   - html.mozog: mozgás engedélyezve (prefers-reduced-motion: reduce esetén NEM kerül ki: nincs animáció és nincs automatikus váltás);
+   - mobilmenü: menüpontra koppintva, Escape-re és a menün kívül koppintva bezárul (csökkentett mozgásnál is);
+   - hős: a telefon képernyői folyamatosan, maguktól váltakoznak (Főoldal → Dosszié → Üzenetek → Fotózás → Határidők), vezérlő nélkül.
+     Megáll, amíg egér van rajta vagy fókuszban van (koppintás is fókuszba teszi), ha a fül rejtett, és ha a hős nem látszik;
+   - #mit-kapsz: ragadós bemutató gépen és telefonon is. Egyetlen telefon áll, görgetésre lépésenként vált benne a képernyő,
+     mellette (gépen) vagy alatta (telefonon) a lépés szövege; 7 részes haladásjelző. Csökkentett mozgásnál ugyanez, átúszás és
+     animáció nélkül (a rétegek a végállapotukban).
+   Csak transform/opacity mozog (CSS); a telefonon belüli számokat requestAnimationFrame lépteti. */
 (function () {
   'use strict';
   var d = document, html = d.documentElement;
@@ -15,16 +18,33 @@
 
   function indul() {
     html.classList.add('js');
-    if (csendes || !vanIO) return;   // állókép: az első hős-kép és minden réteg a végállapotában
-    html.classList.add('mozog');
-    hos();
+    mobilmenu();
+    if (!csendes) html.classList.add('mozog');
     bemutato();
+    if (!csendes) hos();
   }
 
   function tomb(lista) { return Array.prototype.slice.call(lista); }
 
+  /* ---------- mobilmenü (natív <details>): bezárás menüpontra, Escape-re, kívül koppintásra ---------- */
+  function mobilmenu() {
+    var m = d.querySelector('.mobilmenu');
+    if (!m) return;
+    m.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('.mobilmenu-lap a') : null;
+      if (a) m.open = false;
+    });
+    d.addEventListener('keydown', function (e) {
+      if ((e.key === 'Escape' || e.key === 'Esc') && m.open) {
+        m.open = false;
+        var s = m.querySelector('summary'); if (s) s.focus();
+      }
+    });
+    d.addEventListener('click', function (e) { if (m.open && !m.contains(e.target)) m.open = false; });
+  }
+
   /* ---------- számláló a telefon képernyőjén: data-szamlal (cél), data-tol (kezdet), data-kesik, data-ido (ms) ---------- */
-  function formaz(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  function formaz(n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   function szamlal(el) {
     var cel = +el.getAttribute('data-szamlal'), tol = +(el.getAttribute('data-tol') || 0);
     var kesik = +(el.getAttribute('data-kesik') || 0), ido = +(el.getAttribute('data-ido') || 1200);
@@ -49,18 +69,18 @@
     tomb(k.querySelectorAll('[data-szamlal]')).forEach(szamlal);
   }
 
-  /* ---------- hős: maguktól váltakozó képernyők, vezérlő nélkül ---------- */
+  /* ---------- hős: folyamatosan, maguktól váltakozó képernyők, vezérlő nélkül ---------- */
   function hos() {
     var fig = d.querySelector('[data-valto]');
     if (!fig) return;
     var kepek = tomb(fig.querySelectorAll('.valto > img'));
     var n = kepek.length;
     if (n < 2) return;
-    var IDO = 4000, KOROK = 2;
-    var i = 0, valtas = 0, ora = null, maradek = IDO, t0 = 0;
-    var ok = { eger: false, fokusz: false, rejtve: d.hidden, kint: false, vege: false };
+    var IDO = 4000;
+    var i = 0, ora = null, maradek = IDO, t0 = 0;
+    var ok = { eger: false, fokusz: false, rejtve: d.hidden, kint: false };
 
-    function all() { return ok.eger || ok.fokusz || ok.rejtve || ok.kint || ok.vege; }
+    function all() { return ok.eger || ok.fokusz || ok.rejtve || ok.kint; }
     function mutat(k) {
       var regi = kepek[i];
       regi.classList.remove('aktiv'); regi.classList.add('ki');
@@ -75,8 +95,6 @@
     function kovetkezo() {
       ora = null; maradek = IDO;
       mutat((i + 1) % n);
-      valtas++;
-      if (valtas >= n * KOROK) ok.vege = true;   // két teljes kör után a Főoldalon áll
       utemez();
     }
     function allit(kulcs, ertek) {
@@ -91,79 +109,100 @@
     fig.addEventListener('focusin', function () { allit('fokusz', true); });
     fig.addEventListener('focusout', function () { allit('fokusz', false); });
     d.addEventListener('visibilitychange', function () { allit('rejtve', d.hidden); });
-    new IntersectionObserver(function (es) { allit('kint', !es[0].isIntersecting); }, { threshold: 0.25 }).observe(fig);
+    if (vanIO) new IntersectionObserver(function (es) { allit('kint', !es[0].isIntersecting); }, { threshold: 0.25 }).observe(fig);
 
     // a következő képek előtöltése, hogy a váltás ne villanjon
     kepek.forEach(function (img) { img.loading = 'eager'; });
     utemez();
   }
 
-  /* ---------- #mit-kapsz: mozgó bemutató ---------- */
+  /* ---------- #mit-kapsz: ragadós bemutató (gépen és telefonon) ---------- */
   function bemutato() {
     var b = d.querySelector('[data-bemutato]');
     if (!b) return;
     var lepesek = tomb(b.querySelectorAll('.blepes'));
-    var kepernyok = lepesek.map(function (l) { return l.querySelector('.kepernyo'); });
+    var n = lepesek.length;
+    if (!n) return;
     var szeles = window.matchMedia('(min-width: 981px)');
 
-    // keskeny kijelző: minden lépés telefonja akkor indul, amikor félig a képernyőre ér (és újraindul, ha visszagörgetsz)
-    var kepTartok = lepesek.map(function (l) { return l.querySelector('.blepes-kep'); });
-    var kisIO = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        var k = e.target.querySelector('.kepernyo');
-        if (e.isIntersecting && e.intersectionRatio >= 0.5 && !e.target._fut) { e.target._fut = true; inditKepernyo(k); }
-        else if (!e.isIntersecting) { e.target._fut = false; }
-      });
-    }, { threshold: [0, 0.5] });
+    // a színpad: egy telefon a lépések képernyőiből + haladásjelző + (keskeny kijelzőn) a lépések szövege. Csak látvány: aria-hidden.
+    var szinpad = d.createElement('div'); szinpad.className = 'szinpad'; szinpad.setAttribute('aria-hidden', 'true');
+    var kepTarto = d.createElement('div'); kepTarto.className = 'szinpad-kep';
+    var tel = d.createElement('div'); tel.className = 'telefon';
+    var tarto = d.createElement('div'); tarto.className = 'szinpad-tarto';
+    var halado = d.createElement('div'); halado.className = 'halado';
+    var szovegek = d.createElement('div'); szovegek.className = 'szinpad-szovegek';
+    var lapok = [], cimek = [], toltok = [];
+    lepesek.forEach(function (l) {
+      var lap = l.querySelector('.kepernyo').cloneNode(true);
+      tomb(lap.querySelectorAll('img')).forEach(function (img) { img.alt = ''; });
+      tarto.appendChild(lap); lapok.push(lap);
+      var sz = l.querySelector('.blepes-szoveg').cloneNode(true);
+      szovegek.appendChild(sz); cimek.push(sz);
+      var s = d.createElement('span'), t = d.createElement('i');
+      s.appendChild(t); halado.appendChild(s); toltok.push(t);
+    });
+    tomb(szinpad.querySelectorAll('[id]')).forEach(function (el) { el.removeAttribute('id'); });
+    tel.appendChild(tarto); kepTarto.appendChild(tel);
+    szinpad.appendChild(kepTarto); szinpad.appendChild(halado); szinpad.appendChild(szovegek);
+    b.insertBefore(szinpad, b.firstChild);
+    b.classList.add('szinpad-mod');
 
-    // széles kijelző: egyetlen ragadós telefon a lépések képernyőiből
-    var szinpad = null, lapok = [], aktiv = -1, nagyIO = null;
-    function epit() {
-      szinpad = d.createElement('div');
-      szinpad.className = 'szinpad';
-      szinpad.setAttribute('aria-hidden', 'true');
-      var tel = d.createElement('div'); tel.className = 'telefon';
-      var tarto = d.createElement('div'); tarto.className = 'szinpad-tarto';
-      kepernyok.forEach(function (k) {
-        var lap = k.cloneNode(true);
-        tomb(lap.querySelectorAll('img')).forEach(function (img) { img.alt = ''; img.loading = 'eager'; });
-        tomb(lap.querySelectorAll('[id]')).forEach(function (el) { el.removeAttribute('id'); });
-        tarto.appendChild(lap); lapok.push(lap);
-      });
-      tel.appendChild(tarto);
-      szinpad.appendChild(tel);
-      b.appendChild(szinpad);
-      nagyIO = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting) aktival(lepesek.indexOf(e.target)); });
-      }, { rootMargin: '-46% 0px -46% 0px' });
-    }
+    var aktiv = -1, fut = false, keres = 0;
     function jelol(k) {
-      [lepesek, lapok].forEach(function (sor) {
+      [lepesek, lapok, cimek].forEach(function (sor) {
         sor.forEach(function (el, j) { el.classList.toggle('aktiv', j === k); });
       });
     }
-    function aktival(k) {
-      if (k === aktiv || k < 0) return;
-      if (aktiv >= 0) lapok[aktiv].classList.remove('fut');
-      aktiv = k;
-      jelol(k);
-      inditKepernyo(lapok[k]);
-    }
-    function mod() {
-      if (szeles.matches) {
-        if (!szinpad) epit();
-        kepTartok.forEach(function (t) { kisIO.unobserve(t); t._fut = false; });
-        b.classList.add('szinpad-mod');
-        if (aktiv < 0) jelol(0); // az első lap látszik, de csak akkor indul, amikor a lépés középre ér
-        lepesek.forEach(function (l) { nagyIO.observe(l); });
-      } else {
-        if (nagyIO) lepesek.forEach(function (l) { nagyIO.unobserve(l); });
-        b.classList.remove('szinpad-mod');
-        kepTartok.forEach(function (t) { kisIO.observe(t); });
+    function aktival(k, indit) {
+      if (k !== aktiv) {
+        var regi = aktiv >= 0 ? lapok[aktiv] : null;
+        aktiv = k;
+        jelol(k);
+        if (regi) setTimeout(function () { if (regi !== lapok[aktiv]) regi.classList.remove('fut'); }, 320);
+        fut = false;
       }
+      if (indit && !fut && !csendes) { fut = true; inditKepernyo(lapok[k]); }
     }
-    if (szeles.addEventListener) szeles.addEventListener('change', mod); else if (szeles.addListener) szeles.addListener(mod);
-    mod();
+    function korlat(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+
+    function szamol() {
+      keres = 0;
+      var vh = window.innerHeight || html.clientHeight;
+      var br = b.getBoundingClientRect();
+      var tops = lepesek.map(function (l) { return l.getBoundingClientRect(); });
+      var k = 0, toltes = [];
+      if (szeles.matches) {
+        // gépen: az a lépés aktív, amelyiken a képernyő közepe áll
+        var vonal = vh * 0.5;
+        tops.forEach(function (r, j) {
+          if (r.top <= vonal) k = j;
+          toltes.push(korlat((vonal - r.top) / Math.max(1, r.height)));
+        });
+      } else {
+        // telefonon: a ragadós szakasz görgetési hosszát egyenlően osztjuk el a lépések között
+        var fent = parseFloat(window.getComputedStyle(szinpad).top) || 0;
+        var hossz = tops[n - 1].bottom - tops[0].top - szinpad.offsetHeight;
+        var p = hossz > 0 ? (fent - tops[0].top) / hossz : 0;
+        var x = korlat(p) * n;
+        k = Math.min(n - 1, Math.floor(x));
+        for (var j = 0; j < n; j++) toltes.push(korlat(x - j));
+      }
+      toltok.forEach(function (t, j) {
+        var f = csendes ? (j <= k ? 1 : 0) : toltes[j];
+        t.style.transform = 'scaleX(' + f.toFixed(3) + ')';
+      });
+      // a képernyő akkor indul, amikor a bemutató már jól látszik; ha teljesen kikerül a képből, legközelebb újraindul
+      var latszik = br.top < vh * 0.6 && br.bottom > vh * 0.4;
+      if (br.bottom < 0 || br.top > vh) { if (fut && aktiv >= 0) lapok[aktiv].classList.remove('fut'); fut = false; }
+      aktival(k, latszik);
+    }
+    function kerj() { if (!keres) keres = window.requestAnimationFrame(szamol); }
+    window.addEventListener('scroll', kerj, { passive: true });
+    window.addEventListener('resize', kerj);
+    if (szeles.addEventListener) szeles.addEventListener('change', kerj); else if (szeles.addListener) szeles.addListener(kerj);
+    jelol(0);
+    szamol();
   }
 
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', indul); else indul();

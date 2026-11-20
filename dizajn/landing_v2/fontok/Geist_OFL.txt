@@ -1,3 +1,4 @@
 Geist – Copyright 2024 The Geist Project Authors (https://github.com/vercel/geist-font).
-SIL Open Font License, Version 1.1 – https://openfontlicense.org
-A fájlok a változtatható Geist_wght.ttf statikus példányai (scripts/fontok.py).
+SIL Open Font License, Version 1.1 – a teljes licencszöveg: OFL.txt (ebben a mappában), https://openfontlicense.org
+A Geist_wght.woff a Geist_wght.ttf latin + magyar betűkre szűkített változata (fontTools, a licenc-névbejegyzésekkel együtt, 2026-11-20).
+Átvett elemek listája: ../vendor/LICENCEK.md

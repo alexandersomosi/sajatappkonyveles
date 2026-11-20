@@ -5,6 +5,9 @@
 // 11-20 este: az oldalon egyetlen saját script lehet (mozgas.js). A teljes oldalas képhez csökkentett mozgást emulálunk
 // (prefers-reduced-motion: reduce) -> nincs mozgás, minden réteg a végállapotában látszik.
 // Ezen felül: mozgás-próba (1440 és 390, mozgással végiggörgetve: JS-hiba, kilógás), és kilógás-próba 1280 és 768 szélességen.
+// 11-20 késő este: a „Mit kapsz” ragadós bemutató (gépen és telefonon is) a teljes oldalas képen egy képernyőnyire csukva látszik
+// (teljes_kep_stilus.cjs, csak a képhez); a görgetés közbeni állapotokat a bemutato_kep.cjs fotózza.
+const teljesKepStilus = require('./teljes_kep_stilus.cjs');
 const path = require('path');
 const fs = require('fs');
 const { pathToFileURL } = require('url');
@@ -62,6 +65,7 @@ function figyel(page, naplo) {
     await page.setViewport({ width: n.w, height: n.h, deviceScaleFactor: n.dpr });
     await page.goto(OLDAL, { waitUntil: 'networkidle0', timeout: 45000 }).catch(e => naplo.push('goto: ' + e.message));
     await page.evaluate(() => document.fonts && document.fonts.ready);
+    await page.addStyleTag({ content: teljesKepStilus(n.h) });
     const h = await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
     await page.setViewport({ width: n.w, height: h, deviceScaleFactor: n.dpr });
     await page.evaluate(async () => {
@@ -126,14 +130,15 @@ function figyel(page, naplo) {
         max,
         mozog: document.documentElement.classList.contains('mozog'),
         szinpad: !!document.querySelector('.szinpad-mod'),
-        lathatatlan: [...document.querySelectorAll('.be, .be-sor')].filter(e => !e.classList.contains('latszik')).length,
+        aktivUtolso: [...document.querySelectorAll('.bemutato .blepes')].findIndex(e => e.classList.contains('aktiv')),
       };
     }, p.gorget);
     const gond = [...naplo];
     if (eredmeny.max > p.w) gond.push(`vízszintesen kilóg: ${eredmeny.max}px`);
     if (!eredmeny.mozog) gond.push('nem indult el a mozgás');
-    if (eredmeny.lathatatlan) gond.push(`végiggörgetés után is rejtve maradt ${eredmeny.lathatatlan} beúszó elem`);
-    console.log(`mozgás-próba ${p.w}x${p.h}` + (eredmeny.szinpad ? ' (ragadós színpad)' : ' (lépésenkénti telefonok)') + (gond.length ? '\n  ' + gond.join('\n  ') : '  OK'));
+    if (!eredmeny.szinpad) gond.push('nincs ragadós bemutató');
+    if (eredmeny.aktivUtolso !== 6) gond.push('végiggörgetés után nem az utolsó lépés aktív: ' + eredmeny.aktivUtolso);
+    console.log(`mozgás-próba ${p.w}x${p.h} (ragadós bemutató)` + (gond.length ? '\n  ' + gond.join('\n  ') : '  OK'));
     if (gond.length) hiba++;
     await page.close();
   }
