@@ -172,6 +172,10 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
     const now = deps.now();
     const authErr = e.kind === 'auth' || e.kind === 'permission';
     await deps.db.update(navSyncRuns).set({ status: 'hiba', finishedAt: now, digestsSeen: seen, invoicesNew: added, errorCode: e.code }).where(eq(navSyncRuns.id, runId));
+    // k7b: the rendben → hibas switch is made atomically first, so of two runs that both read 'rendben' only one mails
+    const brokeNow = authErr
+      ? (await deps.db.update(navCredentials).set({ status: 'hibas' }).where(and(eq(navCredentials.id, cred.id), eq(navCredentials.status, 'rendben'))).returning({ id: navCredentials.id })).length > 0
+      : false;
     await deps.db
       .update(navCredentials)
       .set({ lastSyncAt: now, lastSyncStatus: 'hiba', lastSyncError: e.messageHu || e.code, ...(authErr ? { status: 'hibas' as const } : {}) })
@@ -183,7 +187,7 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
     // k7b (LEVEL_LEFEDETTSEG #71): working credentials ('rendben') just broke on the technical user or its rights → the
     // accountant and the admins get ONE e-mail. The daily job skips 'hibas' credentials, so it never repeats; it comes
     // again only after a fix (test or sync → 'rendben') and a new failure.
-    if (authErr && cred.status === 'rendben') await mailNavError(deps, clientId, e.messageHu || e.code, o.by ?? null).catch((e3: Error) => log().warn({ err: safeErr(e3) }, 'nav error mail failed'));
+    if (brokeNow) await mailNavError(deps, clientId, e.messageHu || e.code, o.by ?? null).catch((e3: Error) => log().warn({ err: safeErr(e3) }, 'nav error mail failed'));
     return { runId, status: 'hiba', digestsSeen: seen, invoicesNew: added, errorCode: e.code, messageHu: e.messageHu };
   }
 }

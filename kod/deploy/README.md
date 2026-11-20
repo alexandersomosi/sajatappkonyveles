@@ -10,6 +10,22 @@
 > (`ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh allapot'`).
 
 
+## k7b – a hiányzó levelek + S16 regisztráció, élesítve 2026-11-20 20:19–20:23
+Ugyanúgy, mint a k7c2: `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_k7b_20261120_201900` → kézi, titkosított mentés
+`backups/pg_dump_elotte_k7b_20261120_201900.dump.gpg` (pg_restore -l: 554 sor) → web export + panel build → `feltolt.sh` → `up.sh`
+(saját mentése `_regi/db_elotte_up_20261120_202228.dump.gpg`; **migráció nem volt, 20 maradt**; worker: `data.k7b` `{content: 0,
+messagePrefs: 0}`) → `hasonlit … utana_k7b_20261120_202333`: VÁLTOZATLAN; a fiókszámok ugyanazok. Utána mind a nyolc cím 200/301,
+az éles app és panel `index.html` = a helyi build, az API/worker naplójában nincs figyelmeztetés vagy hiba.
+- **A regisztráció szerződése megváltozott (SPEC §30):** `POST /auth/register` → 202 munkamenet nélkül, a kód nyitja
+  (`POST /auth/register/verify`); megerősítés előtt a jelszó 401-et kap (új kód megy). A web (kezjegy-web) a backenddel együtt ment ki.
+  **A régi APK nem tudja befejezni a regisztrációt – új APK kell.**
+- **Élő próba (DEMO, kitalált cím `k7b.proba.<idő>@demo.kezjegy.test`, `is_test = true`):** 202 → jó jelszó a megerősítés előtt 401,
+  betűre ugyanaz, mint a rossz jelszóé → ugyanaz a cím újra 202 → rossz kód 400 → a levélben kapott kód 201, megerősítve. A DEMO
+  postafiókba 3 kódos levél + 1 „Már van fiókod az Adózzban” került (valódi levél nem ment ki).
+- **`https-proba.sh` és `bongeszo-proba.mjs`** az új regisztrációt követi. A kettő többi része (SimplePay DEMO indítás) a Stripe-ra
+  váltás óta elavult, ezért most nem futott; az egyszeri `app/scripts/_helyi_j1119.mjs`, `_helyi_j2.mjs` és a `_qa/*_harness.mjs`
+  a régi regisztrációt használja.
+
 ## k7c2 – a 2. ellenőrzés javításai, élesítve 2026-11-20 17:42–17:47
 Ugyanúgy, mint a k7c: `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_k7c2_20261120_174225` → `feltolt.sh` → `up.sh`
 (titkosított mentés `_regi/db_elotte_up_20261120_174609.dump.gpg`, migráció **0019_k7c2** 19 → 20: `payments.charge_params`,

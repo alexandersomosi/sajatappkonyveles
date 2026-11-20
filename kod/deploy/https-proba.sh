@@ -123,13 +123,16 @@ TS=$(date +%Y%m%d%H%M%S)
 NE="proba.$TS@demo.kezjegy.test"
 NP=$(openssl rand -base64 18)
 T0=$(date -u +%Y-%m-%dT%H:%M:%S)
+# k7b (S16): the sign-up answers 202 "nézd meg a postafiókodat" without a session; the code opens it (/auth/register/verify)
 req POST app /auth/register "$(jq -nc --arg e "$NE" --arg p "$NP" '{email:$e,password:$p,firstName:"Próba",lastName:"Teszt",platform:"web",utm:{source:"https-proba"}}')"
-chk "regisztráció (201)" is 201
-NTOK=$(j .accessToken)
+chk "regisztráció (202, munkamenet nélkül)" test "$ST" = 202 -a "$(j .status)" = check_email -a "$(j .accessToken)" = null
+req POST app /auth/login "$(login_json "$NE" "$NP" web)"; chk "megerősítés előtt a jelszó nem enged be (401, mint a rossz jelszó)" is 401
 settok "$ATOK"; req GET konyvelo /admin/demo-outbox
-CODE=$(jq -r --arg t "$T0" '[.items[] | select(.createdAt >= $t)][0].bodyText' "$W/b" | grep -oE '\b[0-9]{6}\b' | head -1)
+CODE=$(jq -r --arg t "$T0" '[.items[] | select(.createdAt >= $t and (.subject | test("megerősítő kódod")))][0].bodyText' "$W/b" | grep -oE '\b[0-9]{6}\b' | head -1)
 chk "e-mail kód a DEMO postafiókban (nem ment ki levél)" test -n "$CODE"
-settok "$NTOK"; req POST app /auth/email/verify "{\"code\":\"$CODE\"}"; chk "e-mail megerősítés" test "$ST" = 200 -a "$(j .emailVerified)" = true
+notok; req POST app /auth/register/verify "$(jq -nc --arg e "$NE" --arg c "$CODE" '{email:$e,code:$c,platform:"web"}')"
+chk "a kód megnyitja a munkamenetet (201, e-mail megerősítve)" test "$ST" = 201 -a "$(j .user.emailVerified)" = true
+NTOK=$(j .accessToken); settok "$NTOK"
 IDS=$(python3 - <<'PY'
 import random
 from datetime import date

@@ -1,6 +1,30 @@
 # Levél-lefedettség: ügyfél-életút és e-mailek
 
-Ellenőrizve a kódban 2026-11-20-án. Csak olvastam, a kódban semmit nem módosítottam. A hivatkozások a `kod/backend/src` mappához képest értendők, kivéve a `SPEC.md` (`kod/SPEC.md`) és az `app/src` (`kod/app/src`) hivatkozásait.
+Ellenőrizve a kódban 2026-11-20-án (a k7b előtt). Csak olvastam, a kódban semmit nem módosítottam. A k7b-vel elkészült tételeket a 0. pont sorolja fel. A hivatkozások a `kod/backend/src` mappához képest értendők, kivéve a `SPEC.md` (`kod/SPEC.md`) és az `app/src` (`kod/app/src`) hivatkozásait.
+
+## 0. Állapot: k7b (2026-11-20 este) – a 3. pont 1–13. tétele elkészült, élesítve 20:23-kor
+
+A lenti táblázatok a k7b ELŐTTI állapotot írják le (a fájl:sor hivatkozások is akkoriak). A k7b után:
+
+| 3. pont | Esemény (#) | Mi készült | Sablonkulcs (`email.<kulcs>.subject/body`) |
+|---|---|---|---|
+| 1 | Felmondás (#56) | Közvetlen levél, a felmondó PDF csatolva; az appbeli sor nem küld második levelet. Ügyfél kérte + azonnal: a visszatérítést csak akkor írja (összeggel), ha tényleg elindult. | `contract_terminated` (+ `.azonnali`, `.ugyfel_kerte`, `.ugyfel_kerte_azonnal`, `.ugyfel_kerte_azonnal_visszaterites`) |
+| 2 | Új üzenet (#51) | A `message_new` e-mail alapból BE (aki kikapcsolta, annál ki marad); ügyfelenként naponta legfeljebb egy levél, a push nincs korlátozva. | `message_new`, `message_new_ugyfelszolgalat` |
+| 3 | NAV-hiba (#71) | A könyvelő és az aktív adminok egyszer kapnak levelet, amikor egy működő technikai felhasználó hibára fut; újra csak javítás és újabb hiba után. | `nav_hiba` (+ `.admin`) |
+| 4–5 | Megszűnt az előfizetés (#54, #55) | Ügyfél: értesítés + levél (csak ha futott fizetős előfizetés). Könyvelő: feladat + levél (csak ha van meghatalmazás vagy technikai felhasználó). | `subscription_ended`, `subscription_ended_konyvelo` |
+| 6 | Felmondás hatályba lépett (#57) | Ügyfél: értesítés + levél, egyszer (azonnali felmondásnál nem: azt a PDF-es levél lefedi). | `contract_terminated_hatalyos` |
+| 7 | Fióktörlés visszavonva (#60) | Közvetlen levél; futó, lemondott előfizetésnél a „Mégis maradok” útvonallal. | `account_deletion_cancelled` (+ `.elofizetes`) |
+| 8 | Fiók törölve (#61) | A valódi címet az álnevesítés előtt olvassuk ki, a levél a sikeres törlés után megy. | `account_deleted` |
+| 9 | Adatmásolat-hiba (#63) | Ügyfél és minden aktív admin, egyszer. | `export_failed`, `export_failed_admin` |
+| 10 | Már van fiókod (#3) | A regisztráció mindig 202 „nézd meg a postafiókodat”, munkamenet nélkül; új címre kód, létezőre ez a levél (befejezetlen regisztrációnál: hogyan fejezd be). A kód nyitja a munkamenetet (`/auth/register/verify`); megerősítés előtt a jelszó nem enged be (a válasz azonos a rossz jelszóéval, és új kód megy). | `account_exists` (+ `.megerositetlen`) |
+| 11 | Árkedvezmény visszavonva (#32) | Csak ha a következő levonás tényleg drágul; a dátum a tényleges (hátralékos hónapnál: ma). A visszavonás továbbra is azonnal hat – **tulaj-döntés nyitott** (azonnal vagy 30 nap múlva). | `price_discount_revoked` |
+| 12 | Admin törölte a kártyát (#33) | Három változat: futó előfizetés (adj meg új kártyát), lemondott, még el sem indult. | `card_deleted_by_admin` (+ `.lemondva`, `.nincs_elofizetes`) |
+| 13 | Igazolás elutasítva (#47) | Most levél is megy (eddig csak push). | `certificate_rejected` |
+
+Minden szöveg a content rendszerben van (`kod/backend/src/content/k7b.ts`), a `/admin/szovegek` alatt szerkeszthető. A 14. pont
+(SZOVEG_JAVITAS_LEVELEK.md) 54 tételéből 51 bekerült; a javasolt_14, 17 és 19 levele most nem készül (JL), ezért nincs forrásuk.
+Nem készült (JL, a 3. pont 14–21.): üdvözlő levél, fiókzár, „folytasd”, éves határidő, díj elengedve, letiltás, összesítő-sorok.
+Az új dizájnsablon (`sablon.html`) és a munkatársi lábléc a k8 része; most minden levél a régi keretben megy.
 
 ## 1. Keret
 

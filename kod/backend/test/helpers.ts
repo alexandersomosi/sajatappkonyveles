@@ -10,6 +10,7 @@ import { openPglite } from '../src/db/client.js';
 import { accountants, clients, teamMembers, users } from '../src/db/schema.js';
 import { buildDeps, type Deps, type DepsOverrides } from '../src/deps.js';
 import { hashPassword } from '../src/lib/password.js';
+import { issueAuth } from '../src/services/accounts.js';
 import type { Mailer } from '../src/notify/mailer.js';
 
 export interface Mail {
@@ -129,15 +130,17 @@ export async function newClient(h: Harness, email: string, o: { first?: string; 
 }
 
 /**
- * k7b: a signed-in client whose e-mail is NOT confirmed yet – registered, then signed in with the password (the way an
- * older, unconfirmed sign-up comes back). Returns the login body (accessToken, user, refreshToken).
+ * k7b: a signed-in client whose e-mail is NOT confirmed yet – the way an older sign-up (before k7b the registration
+ * opened a session at once) still holds a session. Since k7b such an account cannot sign in with the password any more
+ * (S16), so the session is issued directly. Returns a login-like answer { status: 200, body: AuthResult }.
  */
 export async function registerUnverified(h: Harness, email: string, headers: Record<string, string>, o: { first?: string; last?: string } = {}) {
   const r = await h.json('POST', '/auth/register', { body: { email, password: PW, firstName: o.first ?? 'Teszt', lastName: o.last ?? 'Ügyfél', platform: 'android' }, headers });
   if (r.status !== 202) throw new Error(`register failed ${r.status} ${JSON.stringify(r.body)}`);
-  const l = await h.json('POST', '/auth/login', { body: { email, password: PW, clientKind: 'native' }, headers });
-  if (l.status !== 200) throw new Error(`login failed ${l.status} ${JSON.stringify(l.body)}`);
-  return l;
+  const [u] = await h.deps.db.select({ id: users.id }).from(users).where(eq(users.email, email.toLowerCase())).limit(1);
+  if (!u) throw new Error('register made no account');
+  const issued = await issueAuth(h.deps, h.deps.db, { userId: u.id, clientKind: 'native', ua: 'test', ipHmac: 'test' });
+  return { status: 200, body: issued.result as unknown as Record<string, any> };
 }
 
 export async function staff(h: Harness, role: 'accountant' | 'admin' | 'csapat', email: string, o: { firstName?: string; appointmentsEnabled?: boolean } = {}) {

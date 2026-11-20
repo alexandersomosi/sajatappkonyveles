@@ -2076,7 +2076,7 @@ export const NOTIFY_INVOICE_TEXTS = {
   /** {vevo} for a private person or an empty name. A private person's name is never put in a push. */
   privatePerson: 'Magánszemély',
   /** E-mail (off by default): subject = the title, body = `email[variant]` + this line (k7b: the same line in all five). */
-  emailFooter: 'Az összes számládat és a félreteendő összeget az alkalmazásban látod: {appUrl}/felretesz',
+  emailFooter: 'Az összes számládat és a félreteendő összeget az appban látod: {appUrl}/felretesz',
   /** k7b: the e-mail bodies (a mail has room for a full sentence; the push stays short). */
   email: {
     alap: 'Vevő: {vevo}. Ebből tegyél félre kb. {felre} Ft-ot adóra.',

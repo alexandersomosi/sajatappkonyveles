@@ -14,7 +14,9 @@ import {
   navCredentials,
   notificationPrefs,
   notifications,
+  onboardingSteps,
   paymentMethods,
+  payments,
   plans,
   subscriptions,
   systemState,
@@ -85,7 +87,7 @@ describe('1) + 6) felmondás: a levél a PDF-fel; a hatálybalépésről külön
     expect(m.subject).toBe('Felmondtuk a szerződésedet');
     expect(m.text).toContain('Szia Ödön!');
     expect(m.text).toContain(`A szerződésed ${huLongDate(r.body.effectiveOn)} napjával megszűnik`);
-    expect(m.text).toContain('A felmondó levelet csatoltuk');
+    expect(m.text).toContain('A részleteket a csatolt felmondó levélben olvasod');
     expect(m.text).not.toMatch(/\.-(ig|tól|n)\b/);
     expect(m.attachments?.[0]).toMatchObject({ filename: 'felmondas.pdf', contentType: 'application/pdf' });
     expect(m.attachments![0]!.content.subarray(0, 4).toString()).toBe('%PDF');
@@ -107,7 +109,8 @@ describe('1) + 6) felmondás: a levél a PDF-fel; a hatálybalépésről külön
     const eff = mailsTo('felmond.k7b@demo.kezjegy.test', 'contract_terminated_hatalyos');
     expect(eff).toHaveLength(1);
     expect(eff[0]!.subject).toBe('Megszűnt a szerződésed');
-    expect(eff[0]!.text).toContain('A felmondás mai nappal hatályos');
+    expect(eff[0]!.text).toContain('Ma lépett hatályba a felmondás');
+    expect(eff[0]!.text).toContain('Mostantól a könyvelőd nem intézi az adóügyeidet.');
     const rows = await notifsOf(c.userId, 'contract_terminated');
     expect(rows.map((x) => x.title)).toEqual(['Felmondtuk a szerződésedet', 'Megszűnt a szerződésed']);
     // the accountant's closing task (unchanged) – and no "megszűnt az előfizetés" notice next to the termination
@@ -122,11 +125,33 @@ describe('1) + 6) felmondás: a levél a PDF-fel; a hatálybalépésről külön
     expect(r.status).toBe(200);
     const letters = mailsTo('azonnal.k7b@demo.kezjegy.test', 'contract_terminated');
     expect(letters).toHaveLength(1);
-    expect(letters[0]!.text).toContain('A szerződésed ma megszűnt.');
+    expect(letters[0]!.text).toContain('A szerződésed ma megszűnt. Az okát és az elszámolást a csatolt felmondó levélben olvasod');
+    expect(letters[0]!.text).toContain('Mostantól a könyvelőd nem intézi az adóügyeidet.');
     expect((letters[0] as unknown as { attachments?: unknown[] }).attachments).toHaveLength(1);
     expect((await notifsOf(c.userId, 'contract_terminated')).map((x) => x.title)).toEqual(['Felmondtuk a szerződésedet']);
     await dispatchPending(h.deps);
     expect(mailsTo('azonnal.k7b@demo.kezjegy.test', 'contract_terminated_hatalyos')).toHaveLength(0);
+  });
+});
+
+describe('1) ügyfél kérte, azonnal: a visszatérítést csak akkor írjuk, ha tényleg elindult', () => {
+  it('a paid running month → the refund with its amount; nothing paid for the month → no refund sentence', async () => {
+    const paid = await aktiv('visszaterit.k7b@demo.kezjegy.test', 'Vilma', 'Teszt');
+    const [s1] = await h.deps.db.insert(subscriptions).values({ clientId: paid.clientId, planCode: 'havi', status: 'active', currentPeriodStart: '2026-11-10', currentPeriodEnd: '2026-12-10', mode: 'demo', provider: 'demo' }).returning();
+    await h.deps.db.insert(payments).values({ clientId: paid.clientId, subscriptionId: s1!.id, kind: 'havi', provider: 'demo', mode: 'demo', amountHuf: 19_999, periodStart: '2026-11-10', periodEnd: '2026-12-10', status: 'sikeres', initiated: 'utemezo', idempotencyKey: 'k7b:visszaterit', succeededAt: h.clock.now() });
+    const free = await aktiv('ingyenes.k7b@demo.kezjegy.test', 'Ingrid', 'Teszt');
+    await h.deps.db.insert(subscriptions).values({ clientId: free.clientId, planCode: 'havi', status: 'active', currentPeriodStart: '2026-11-10', currentPeriodEnd: '2026-12-10', mode: 'demo', provider: 'demo' });
+    await konzol();
+    for (const c of [paid, free]) expect((await h.json('POST', `/admin/console/clients/${c.clientId}/terminate`, { token: admin.token, body: { kind: 'ugyfel_kerte', when: 'azonnal', reason: 'Az ügyfél kérte' } })).status).toBe(200);
+    const a = mailsTo('visszaterit.k7b@demo.kezjegy.test', 'contract_terminated');
+    expect(a).toHaveLength(1);
+    expect(a[0]!.subject).toBe('Megszűnt a szerződésed');
+    expect(a[0]!.text).toMatch(/hátralévő napok díját, [\d  .]+ Ft-ot visszatérítjük a kártyádra/);
+    const b = mailsTo('ingyenes.k7b@demo.kezjegy.test', 'contract_terminated');
+    expect(b).toHaveLength(1);
+    expect(b[0]!.text).toContain('Ahogy kérted, a szerződésed ma megszűnt. Az elszámolást a csatolt felmondó levélben olvasod');
+    expect(b[0]!.text).not.toMatch(/visszatérít|visszautal/);
+    expect(b[0]!.text).toContain('Mostantól a könyvelőd nem intézi az adóügyeidet.');
   });
 });
 
@@ -135,7 +160,10 @@ describe('2) új üzenet: e-mail alapból be, naponta legfeljebb egy', () => {
   it('the accountant writes twice → one e-mail ("Bence üzenetet küldött"); next day again one; a client who switched it off gets none', async () => {
     const c = await aktiv('uzenet.k7b@demo.kezjegy.test', 'Ubul', 'Teszt');
     const before = mailsTo('uzenet.k7b@demo.kezjegy.test').length;
-    for (const body of ['Szia, megnéztem a számláidat.', 'Még egy dolog: a kivonat is kellene.']) expect((await h.json('POST', `/acc/clients/${c.clientId}/messages`, { token: bence.token, body: { body } })).status).toBe(201);
+    for (const body of ['Szia, megnéztem a számláidat.', 'Még egy dolog: a kivonat is kellene.']) {
+      expect((await h.json('POST', `/acc/clients/${c.clientId}/messages`, { token: bence.token, body: { body } })).status).toBe(201);
+      h.clock.advance(1000); // distinct createdAt, so the order of the two rows is fixed
+    }
     const rows = await notifsOf(c.userId, 'message_new');
     expect(rows.map((x) => x.wantEmail)).toEqual([true, false]);
     expect((rows[1]!.data as { emailFolded?: boolean }).emailFolded).toBe(true);
@@ -198,7 +226,11 @@ describe('3) NAV-hiba: a könyvelő és az admin egyszer kap levelet', () => {
       expect(toBence.subject).toBe('NAV-hiba: Teszt Nándor számlái nem jönnek');
       expect(toBence.text).toContain('Bekötés fülön');
       expect(toBence.text).not.toMatch(/\.\./);
-      expect(first.find((m) => m.to === 'admin.k7b@demo.kezjegy.test')!.text).toContain('A könyvelőjének is szóltunk');
+      expect(toBence.text).toContain('Teszt Nándor NAV-lekérdezése nem sikerült');
+      expect(toBence.text).toContain('(NAV-kapcsolat → Új adatok megadása)');
+      const toAdmin = first.find((m) => m.to === 'admin.k7b@demo.kezjegy.test')!.text;
+      expect(toAdmin).toContain('a könyvelője adja meg újra');
+      expect(toAdmin).not.toContain('szóltunk');
       const [cred] = await h.deps.db.select().from(navCredentials).where(eq(navCredentials.clientId, c.clientId));
       expect(cred!.status).toBe('hibas');
       // the same failure again (a manual retry, or a day later) → no new mail
@@ -224,6 +256,8 @@ describe('4) + 5) megszűnt az előfizetés: ügyfél-levél és könyvelői fel
       const b2 = await staff(h2, 'accountant', 'bence2.k7b@demo.kezjegy.test', { firstName: 'Bence' });
       const c = await newClient(h2, 'lejar.k7b@demo.kezjegy.test', { active: true, first: 'Lili', last: 'Lejár' });
       await h2.deps.db.update(clients).set({ accountantId: b2.accountantId }).where(eq(clients.id, c.clientId));
+      // there is a meghatalmazás to withdraw (the accountant's task needs one, or a technical user)
+      await h2.deps.db.update(onboardingSteps).set({ status: 'kesz' }).where(and(eq(onboardingSteps.clientId, c.clientId), eq(onboardingSteps.step, 'meghatalmazas')));
       await h2.deps.db.insert(plans).values({ code: 'havi', name: 'Havi előfizetés', priceHuf: 19_999 }).onConflictDoNothing();
       await h2.deps.db.insert(subscriptions).values({ clientId: c.clientId, planCode: 'havi', status: 'active', cancelAtPeriodEnd: true, currentPeriodStart: '2026-10-20', currentPeriodEnd: '2026-11-20', mode: 'demo', provider: 'demo' });
       const out = await runBillingJob(h2.deps);
@@ -234,7 +268,8 @@ describe('4) + 5) megszűnt az előfizetés: ügyfél-levél és könyvelői fel
       const toClient = h2.mails.filter((m) => m.to === 'lejar.k7b@demo.kezjegy.test' && m.template === 'subscription_ended');
       expect(toClient).toHaveLength(1);
       expect(toClient[0]!.subject).toBe('Megszűnt az előfizetésed');
-      expect(toClient[0]!.text).toContain('2026. november 20. napjával megszűnt az Adózz-előfizetésed');
+      expect(toClient[0]!.text).toContain('Az Adózz-előfizetésed 2026. november 20. napjával megszűnt');
+      expect(toClient[0]!.text).toContain('Mostantól a könyvelőd nem intézi az adóügyeidet.');
       const toAcc = h2.mails.filter((m) => m.to === 'bence2.k7b@demo.kezjegy.test' && m.template === 'subscription_ended_konyvelo');
       expect(toAcc).toHaveLength(1);
       expect(toAcc[0]!.subject).toBe('Megszűnt: Lejár Lili');
@@ -242,6 +277,7 @@ describe('4) + 5) megszűnt az előfizetés: ügyfél-levél és könyvelői fel
       expect(toAcc[0]!.text).toContain('tiltsd le a technikai felhasználót');
       const [task] = (await h2.deps.db.select().from(notifications).where(and(eq(notifications.userId, b2.userId), eq(notifications.kind, 'assist_task'))));
       expect(task!.link).toBe(`/ugyfelek/${c.clientId}`);
+      expect(task!.body).toBe('Megszűnt az előfizetése (2026. november 20.). Vond vissza a meghatalmazást a NAV-nál (8 napon belül), és az Online Számla rendszerben tiltsd le a technikai felhasználót.');
     } finally {
       await h2.close();
     }
@@ -251,6 +287,7 @@ describe('4) + 5) megszűnt az előfizetés: ügyfél-levél és könyvelői fel
     const c = await aktiv('adminmegszunt.k7b@demo.kezjegy.test', 'Mihály', 'Megszűnt');
     await h.deps.db.insert(subscriptions).values({ clientId: c.clientId, planCode: 'havi', status: 'active', currentPeriodStart: '2026-11-01', currentPeriodEnd: '2026-12-01', mode: 'demo', provider: 'demo' });
     await h.deps.db.insert(paymentMethods).values({ clientId: c.clientId, provider: 'demo', mode: 'demo', brand: 'visa', last4: '4242', status: 'aktiv' });
+    await h.deps.db.update(onboardingSteps).set({ status: 'kesz' }).where(and(eq(onboardingSteps.clientId, c.clientId), eq(onboardingSteps.step, 'meghatalmazas')));
     await konzol();
     expect((await h.json('PATCH', `/admin/clients/${c.clientId}`, { token: admin.token, body: { lifecycle: 'megszunt' } })).status).toBe(200);
     expect((await h.json('PATCH', `/admin/clients/${c.clientId}`, { token: admin.token, body: { lifecycle: 'megszunt' } })).status).toBe(200);
@@ -258,6 +295,16 @@ describe('4) + 5) megszűnt az előfizetés: ügyfél-levél és könyvelői fel
     expect(mailsTo('adminmegszunt.k7b@demo.kezjegy.test', 'subscription_ended')).toHaveLength(1);
     expect(mailsTo('adminmegszunt.k7b@demo.kezjegy.test', 'card_deleted_by_admin')).toHaveLength(0);
     expect(h.mails.filter((m) => m.template === 'subscription_ended_konyvelo' && m.subject === 'Megszűnt: Megszűnt Mihály')).toHaveLength(1);
+  });
+
+  it('the admin closes a client who never subscribed and gave no meghatalmazás → no client mail, no accountant task', async () => {
+    const c = await aktiv('sosemfizetett.k7b@demo.kezjegy.test', 'Soma', 'Sosem');
+    await konzol();
+    expect((await h.json('PATCH', `/admin/clients/${c.clientId}`, { token: admin.token, body: { lifecycle: 'megszunt' } })).status).toBe(200);
+    await dispatchPending(h.deps);
+    expect(mailsTo('sosemfizetett.k7b@demo.kezjegy.test', 'subscription_ended')).toHaveLength(0);
+    expect((await notifsOf(c.userId, 'subscription_canceled')).filter((x) => x.title === 'Megszűnt az előfizetésed')).toHaveLength(0);
+    expect(h.mails.filter((m) => m.template === 'subscription_ended_konyvelo' && m.subject === 'Megszűnt: Sosem Soma')).toHaveLength(0);
   });
 });
 
@@ -299,8 +346,10 @@ describe('7) 8) 9) fióktörlés és adatmásolat', () => {
     expect(mailsTo('export.k7b@demo.kezjegy.test', 'export_failed')).toHaveLength(1);
     const adm = mailsTo('admin.k7b@demo.kezjegy.test', 'export_failed_admin');
     expect(adm).toHaveLength(1);
-    expect(adm[0]!.subject).toBe('Adatmásolat hiba: Export Ede');
+    expect(adm[0]!.subject).toBe('Nem készült el az adatmásolat: Export Ede');
     expect(adm[0]!.text).toContain('egy hónapon belül');
+    expect(adm[0]!.text).toContain('az „Adatexport (GDPR)” művelettel');
+    expect(mailsTo('export.k7b@demo.kezjegy.test', 'export_failed')[0]!.text).toContain('Neked nem kell újra kérned.');
     // (b) a build that throws → 'hiba' at once, the same two mails
     const [x] = await h.deps.db.insert(gdprExports).values({ userId: c.userId, status: 'keszul' }).returning();
     const tmp = h.deps.storage.tmpFile;
@@ -330,7 +379,7 @@ describe('11) 12) 13) árkedvezmény, kártya, igazolás', () => {
     const del = await h.json('DELETE', `/admin/console/clients/${c.clientId}/price/${disc.body.id}`, { token: admin.token, body: { reason: 'Lejárt az akció' } });
     expect(del.status).toBe(200);
     const [n] = (await notifsOf(c.userId, 'price_changed')).filter((x) => x.title === 'Változik a havidíjad');
-    expect(n!.body).toMatch(/^2026\. december 15\. napjától a havidíjad 19.999 Ft, mert megszűnt a kedvezményed\. A részleteket a Fiók → Előfizetés alatt látod; ha kérdésed van, írj nekünk\.$/);
+    expect(n!.body).toMatch(/^Megszűnt a kedvezményed, ezért 2026\. december 15\. napjától a havidíjad 19.999 Ft\. A részleteket a Fiók → Előfizetés alatt látod; ha kérdésed van, írj nekünk\.$/);
     expect(n!.wantPush).toBe(false);
     await dispatchPending(h.deps);
     const m = mailsTo('kedvezmeny.k7b@demo.kezjegy.test', 'price_discount_revoked');
@@ -345,6 +394,22 @@ describe('11) 12) 13) árkedvezmény, kártya, igazolás', () => {
     expect((await notifsOf(c.userId, 'price_changed')).filter((x) => x.title === 'Változik a havidíjad')).toHaveLength(2); // the rise notice + the revoke notice, no third
   });
 
+  it('11) the date fits the subscription: an unpaid month (past_due) → from today; cancelled at the period end → no notice', async () => {
+    const due = await aktiv('kedv2.k7b@demo.kezjegy.test', 'Kornélia', 'Késik');
+    await h.deps.db.insert(subscriptions).values({ clientId: due.clientId, planCode: 'havi', status: 'past_due', currentPeriodStart: '2026-10-15', currentPeriodEnd: '2026-11-15', mode: 'demo', provider: 'demo' });
+    const gone = await aktiv('kedv3.k7b@demo.kezjegy.test', 'Kornélia', 'Lemond');
+    await h.deps.db.insert(subscriptions).values({ clientId: gone.clientId, planCode: 'havi', status: 'active', cancelAtPeriodEnd: true, currentPeriodStart: '2026-11-15', currentPeriodEnd: '2026-12-15', mode: 'demo', provider: 'demo' });
+    await konzol();
+    for (const c of [due, gone]) {
+      const d = await h.json('POST', `/admin/console/clients/${c.clientId}/price`, { token: admin.token, body: { kind: 'kedvezmeny_szazalek', percent: 50, fromPeriod: '2026-10-01', reason: 'Bevezető ár' } });
+      expect(d.status).toBe(201);
+      expect((await h.json('DELETE', `/admin/console/clients/${c.clientId}/price/${d.body.id}`, { token: admin.token, body: { reason: 'Lejárt az akció' } })).status).toBe(200);
+    }
+    const [n] = (await notifsOf(due.userId, 'price_changed')).filter((x) => x.title === 'Változik a havidíjad');
+    expect(n!.body).toContain(`ezért ${huLongDate('2026-11-20')} napjától a havidíjad 19.999 Ft`.replace('19.999', n!.body.match(/19.999/)![0]));
+    expect((await notifsOf(gone.userId, 'price_changed')).filter((x) => x.title === 'Változik a havidíjad')).toHaveLength(0);
+  });
+
   it('12) the admin deletes the saved card → the client is told (once: a second delete finds no card)', async () => {
     const c = await aktiv('kartya.k7b@demo.kezjegy.test', 'Kálmán', 'Kártya');
     const [s] = await h.deps.db.insert(subscriptions).values({ clientId: c.clientId, planCode: 'havi', status: 'active', currentPeriodStart: '2026-11-01', currentPeriodEnd: '2026-12-01', mode: 'demo', provider: 'demo' }).returning();
@@ -356,7 +421,24 @@ describe('11) 12) 13) árkedvezmény, kártya, igazolás', () => {
     expect(m).toHaveLength(1);
     expect(m[0]!.subject).toBe('Töröltük a mentett kártyádat');
     expect(m[0]!.text).toContain('adj meg új kártyát a Fiók → Előfizetés alatt');
-    expect(m[0]!.text).toContain('Ha nem tudsz róla, írj nekünk');
+    expect(m[0]!.text).toContain('Ha nem te kérted a törlést, vagy kérdésed van, írj nekünk');
+    expect(m[0]!.text).toContain('/fiok/elofizetes');
+  });
+
+  it('12) the card mail fits the subscription: cancelled → "le van mondva"; not started (incomplete) → "amikor elindítod"', async () => {
+    const c1 = await aktiv('kartya2.k7b@demo.kezjegy.test', 'Kata', 'Lemondva');
+    const [s1] = await h.deps.db.insert(subscriptions).values({ clientId: c1.clientId, planCode: 'havi', status: 'active', cancelAtPeriodEnd: true, currentPeriodStart: '2026-11-01', currentPeriodEnd: '2026-12-01', mode: 'demo', provider: 'demo' }).returning();
+    await h.deps.db.insert(paymentMethods).values({ clientId: c1.clientId, provider: 'demo', mode: 'demo', brand: 'visa', last4: '4242', status: 'aktiv' });
+    const c2 = await aktiv('kartya3.k7b@demo.kezjegy.test', 'Kata', 'Indul');
+    const [s2] = await h.deps.db.insert(subscriptions).values({ clientId: c2.clientId, planCode: 'havi', status: 'incomplete', mode: 'demo', provider: 'demo' }).returning();
+    await h.deps.db.insert(paymentMethods).values({ clientId: c2.clientId, provider: 'demo', mode: 'demo', brand: 'visa', last4: '4242', status: 'aktiv' });
+    await konzol();
+    expect((await h.json('POST', `/admin/subscriptions/${s1!.id}/card/delete`, { token: admin.token })).status).toBe(200);
+    expect((await h.json('POST', `/admin/subscriptions/${s2!.id}/card/delete`, { token: admin.token })).status).toBe(200);
+    expect(mailsTo('kartya2.k7b@demo.kezjegy.test', 'card_deleted_by_admin')[0]!.text).toContain('Az előfizetésed le van mondva, így kártya nem is kell hozzá');
+    const m2 = mailsTo('kartya3.k7b@demo.kezjegy.test', 'card_deleted_by_admin')[0]!.text;
+    expect(m2).toContain('Amikor elindítod az előfizetésedet');
+    expect(m2).not.toContain('le van mondva');
   });
 
   it('13) "Nem adható ki" → e-mail too (own text, no double full stop); "beadtuk a NAV-nak" stays without e-mail', async () => {
@@ -374,6 +456,7 @@ describe('11) 12) 13) árkedvezmény, kártya, igazolás', () => {
     expect(m[0]!.subject).toBe('Nem tudjuk kiadni az igazolásodat');
     expect(m[0]!.text).toContain('Bence nem tudta kiadni ezt az igazolást:');
     expect(m[0]!.text).toContain('Az oka: Tartozás miatt nem nullás.');
+    expect(m[0]!.text).toContain('ha még nem, már nem kell kifizetned');
     expect(m[0]!.text).not.toContain('..');
     expect(m[0]!.text).not.toContain('a(z)');
   });
@@ -395,7 +478,7 @@ describe('DEMO: az új levelek a demo-postafiókba kerülnek (semmi nem megy ki)
       const rows = await h.deps.db.select().from(demoOutbox).where(sql`${demoOutbox.template} in ('account_exists', 'message_new')`);
       expect(rows.map((r) => r.template).sort()).toEqual(['account_exists', 'message_new']);
       const ex = rows.find((r) => r.template === 'account_exists')!;
-      expect(ex.subject).toBe('Már van fiókod az Adózz-ban');
+      expect(ex.subject).toBe('Már van fiókod az Adózzban');
       expect(ex.toDisplay).not.toBe('demo.k7b@demo.kezjegy.test'); // masked
     } finally {
       h.deps.mailer = stub;
@@ -439,11 +522,14 @@ describe('14) szövegek', () => {
     // zarolas.ts:82 – "havidíj és a éves zárás díja" → "havidíj és az éves zárás díja"
     const mit = await mitText(h.deps, ['havidij', 'eves_zaras']);
     expect(mit).toBe('havidíj és az éves zárás díja');
+    // a manual lock next to an unpaid fee is no unpaid item (was: "nincs kifizetve az a könyvelésed és a havidíj")
+    expect(await mitText(h.deps, ['kezi', 'havidij'])).toBe('havidíj');
+    expect(await mitText(h.deps, ['kezi'])).toBe('a könyvelésed');
     expect(fill(DEFAULT_TEXTS['zarolas.banner']!, { mit, osszeg: '34 998', firstName: 'Bence' })).toBe(
       'Szünetel a könyvelésed, mert nincs kifizetve a havidíj és az éves zárás díja (34 998 Ft). Amint rendezed, Bence folytatja a munkát.',
     );
     expect(fill(DEFAULT_TEXTS['email.invoice_new.body']!, { vevo: 'Magánszemély', felre: '12 000', appUrl: 'https://app.x' })).toBe(
-      'Vevő: Magánszemély. Ebből tegyél félre kb. 12 000 Ft-ot adóra.\n\nAz összes számládat és a félreteendő összeget az alkalmazásban látod: https://app.x/felretesz',
+      'Vevő: Magánszemély. Ebből tegyél félre kb. 12 000 Ft-ot adóra.\n\nAz összes számládat és a félreteendő összeget az appban látod: https://app.x/felretesz',
     );
   });
 
@@ -495,6 +581,14 @@ describe('15) könyvelői hibák', () => {
       ]);
       await h.deps.db.update(annualClosings).set({ status: 'kesz', filedHipaAt: new Date('2027-05-20T10:00:00Z') }).where(eq(annualClosings.clientId, c.clientId));
       expect((await nap()).every((d) => d.status === 'kesz')).toBe(true);
+      // the CLIENT's item also means "pay the difference" (not tracked): it stays open until its due date, so the Főoldal
+      // keeps the reminder, and becomes "kész" – never "lejárt" – after it (ellenőr 11-20)
+      const ugyfel = async () => (await clientDeadlines(h.deps, h.deps.db, c.clientId, '2027-05-01', '2027-06-30')).filter((d) => d.id === 'ev:2026:szja');
+      h.clock.set('2027-05-15T09:00:00Z');
+      expect((await ugyfel()).map((d) => d.status)).toEqual(['nyitott']);
+      expect((await nap()).find((d) => d.id === 'ev:2026:szja')!.status).toBe('kesz');
+      h.clock.set('2027-06-15T09:00:00Z');
+      expect((await ugyfel()).map((d) => d.status)).toEqual(['kesz']);
     } finally {
       h.clock.set('2026-11-20T09:00:00Z');
     }

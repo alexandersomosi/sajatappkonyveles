@@ -52,7 +52,8 @@ describe('register and e-mail verification', () => {
     const newMails = h.mails.slice(before);
     const toOwner = newMails.filter((m) => m.to === 'uj.ugyfel@demo.kezjegy.test');
     expect(toOwner.map((m) => m.template)).toEqual(['account_exists']);
-    expect(toOwner[0]!.subject).toBe('Már van fiókod az Adózz-ban');
+    expect(toOwner[0]!.subject).toBe('Már van fiókod az Adózzban');
+    expect(toOwner[0]!.text).toContain('kódot sem küldtünk');
     expect(toOwner[0]!.text).toContain('Elfelejtettem a jelszavam');
     expect(toOwner[0]!.text).not.toMatch(/\b\d{6}\b/);
     expect(newMails.filter((m) => m.to === 'masik.uj@demo.kezjegy.test').map((m) => m.template)).toEqual(['auth_email_code']);
@@ -86,6 +87,62 @@ describe('register and e-mail verification', () => {
     const ok = await h.json('POST', '/auth/register/verify', { body: { email: 'ujkod@demo.kezjegy.test', code: second, platform: 'android' }, headers: { 'x-forwarded-for': '198.51.100.81' } });
     expect(ok.status).toBe(201);
     void first;
+  });
+});
+
+describe('k7b (ellenőr 11-20): the sign-up cannot be used to learn who has an account', () => {
+  it('register X with P, then log in with P: a new address answers exactly like an existing one (401); the owner gets a code', async () => {
+    // an existing, confirmed account – the stranger does not know its password
+    await newClient(h, 'letezo.k7b@demo.kezjegy.test');
+    const ip = { 'x-forwarded-for': '198.51.130.1' };
+    const P = 'Idegen-Jelszo-2026!';
+    const regOld = await h.json('POST', '/auth/register', { body: { email: 'letezo.k7b@demo.kezjegy.test', password: P, firstName: 'I', lastName: 'D', platform: 'web' }, headers: ip });
+    const regNew = await h.json('POST', '/auth/register', { body: { email: 'vadonatuj.k7b@demo.kezjegy.test', password: P, firstName: 'I', lastName: 'D', platform: 'web' }, headers: ip });
+    expect([regOld.status, regNew.status]).toEqual([202, 202]);
+    const n = h.mails.length;
+    const loginOld = await h.json('POST', '/auth/login', { body: { email: 'letezo.k7b@demo.kezjegy.test', password: P, clientKind: 'web' }, headers: ip });
+    const loginNew = await h.json('POST', '/auth/login', { body: { email: 'vadonatuj.k7b@demo.kezjegy.test', password: P, clientKind: 'web' }, headers: ip });
+    expect(loginNew.status).toBe(401);
+    expect(loginOld.status).toBe(401);
+    expect(loginNew.body).toEqual(loginOld.body);
+    expect(loginNew.res.headers.get('set-cookie')).toBeNull();
+    // the unconfirmed account's owner got a fresh code (only he reads it); the failure was not counted
+    expect(h.mails.slice(n).map((m) => [m.to, m.template])).toEqual([['vadonatuj.k7b@demo.kezjegy.test', 'auth_email_code']]);
+    const [u] = await h.deps.db.select().from(users).where(eq(users.email, 'vadonatuj.k7b@demo.kezjegy.test'));
+    expect(u!.failedLogins).toBe(0);
+    // the code from that mail finishes the sign-up (the app's sign-in screen offers "Írd be a kódot")
+    const ok = await h.json('POST', '/auth/register/verify', { body: { email: 'vadonatuj.k7b@demo.kezjegy.test', code: lastCode(h, 'vadonatuj.k7b@demo.kezjegy.test'), platform: 'web' }, headers: ip });
+    expect(ok.status).toBe(201);
+    expect((await h.json('POST', '/auth/login', { body: { email: 'vadonatuj.k7b@demo.kezjegy.test', password: P, clientKind: 'native' }, headers: ip })).status).toBe(200);
+  });
+
+  it('five (and more) wrong codes: the answer of a fresh sign-up never differs from an address with an account', async () => {
+    await h.json('POST', '/auth/register', { body: { email: 'kodproba.k7b@demo.kezjegy.test', password: PW, firstName: 'K', lastName: 'P', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.131.1' } });
+    const real = lastCode(h, 'kodproba.k7b@demo.kezjegy.test');
+    const bad = real === '000000' ? '111111' : '000000';
+    for (let i = 0; i < 7; i++) {
+      const a = await h.json('POST', '/auth/register/verify', { body: { email: 'kodproba.k7b@demo.kezjegy.test', code: bad, platform: 'web' }, headers: { 'x-forwarded-for': '198.51.131.2' } });
+      const b = await h.json('POST', '/auth/register/verify', { body: { email: 'letezo.k7b@demo.kezjegy.test', code: bad, platform: 'web' }, headers: { 'x-forwarded-for': '198.51.131.3' } });
+      expect([a.status, b.status], `try ${i + 1}`).toEqual([400, 400]);
+      expect(a.body, `try ${i + 1}`).toEqual(b.body);
+    }
+  });
+
+  it('a stranger guessing from elsewhere cannot shut the owner out; an unfinished sign-up hears how to finish it', async () => {
+    await h.json('POST', '/auth/register', { body: { email: 'gazda.k7b@demo.kezjegy.test', password: PW, firstName: 'G', lastName: 'A', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.132.1' } });
+    const code = lastCode(h, 'gazda.k7b@demo.kezjegy.test');
+    for (let i = 0; i < 10; i++) await h.json('POST', '/auth/register/verify', { body: { email: 'gazda.k7b@demo.kezjegy.test', code: code === '000000' ? '111111' : '000000', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.132.9' } });
+    expect((await h.json('POST', '/auth/register/verify', { body: { email: 'gazda.k7b@demo.kezjegy.test', code: '000000', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.132.9' } })).status).toBe(429);
+    // a second sign-up with the same, still unconfirmed address: the same 202, and the mail says how to finish
+    const n = h.mails.length;
+    expect((await h.json('POST', '/auth/register', { body: { email: 'gazda.k7b@demo.kezjegy.test', password: PW, firstName: 'G', lastName: 'A', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.132.2' } })).status).toBe(202);
+    const m = h.mails.slice(n).filter((x) => x.template === 'account_exists');
+    expect(m).toHaveLength(1);
+    expect(m[0]!.text).toContain('csak a regisztráció nincs befejezve');
+    expect(m[0]!.text).toContain('lépj be az appban az akkor megadott jelszóval');
+    // the owner's own code still works from his address
+    const ok = await h.json('POST', '/auth/register/verify', { body: { email: 'gazda.k7b@demo.kezjegy.test', code, platform: 'web' }, headers: { 'x-forwarded-for': '198.51.132.1' } });
+    expect(ok.status).toBe(201);
   });
 });
 

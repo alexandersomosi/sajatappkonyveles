@@ -8,7 +8,7 @@ import { useAuth } from '@/auth/AuthProvider';
 import { AppleGomb, GoogleGomb } from '@/auth/kulso';
 import { brand } from '@/config';
 import { emailHiba } from '@/lib/validators';
-import { jelszoEmailBeallit, mfaBeallit } from '@/lib/atadas';
+import { jelszoEmailBeallit, mfaBeallit, regEmailBeallit } from '@/lib/atadas';
 import { datumEvvel, datumEvvelAn, nemTor } from '@/lib/format';
 import { szin } from '@/theme/tokens';
 import { Fejlec, GombE, GombM, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
@@ -28,6 +28,9 @@ export default function Belepes() {
   const [mezoHiba, setMezoHiba] = useState<{ email?: string | null; jelszo?: string | null }>({});
   const [tolt, setTolt] = useState(false);
   const [torlesAlatt, setTorlesAlatt] = useState<string | null>(null);
+  // k7b (S16): egy befejezetlen regisztráció a jó jelszóval is „hibás” választ kap, és új kódot küldünk neki – a tipp
+  // minden sikertelen belépés után ugyanúgy megjelenik, így semmit nem árul el
+  const [kodTipp, setKodTipp] = useState(false);
   const jelszoRef = useRef<TextInputInstance>(null);
 
   const [elso, ...tobbi] = brand.tagline.split(',');
@@ -52,7 +55,10 @@ export default function Belepes() {
       if (e instanceof ApiHiba && e.code === 'deletion_pending') {
         setTorlesAlatt(typeof e.data?.deletionDueAt === 'string' ? e.data.deletionDueAt : '');
         setHiba(null);
-      } else setHiba(hibaUzenet(e, 'Nem sikerült belépni. Próbáld újra.'));
+      } else {
+        setHiba(hibaUzenet(e, 'Nem sikerült belépni. Próbáld újra.'));
+        if (e instanceof ApiHiba && e.status === 401) setKodTipp(true);
+      }
     } finally {
       setTolt(false);
     }
@@ -107,6 +113,17 @@ export default function Belepes() {
               router.push('/jelszo-elfelejtve');
             }} style={{ marginTop: 2, marginBottom: 8 }} />
             <HibaSzoveg szoveg={hiba} style={{ marginTop: 0, marginBottom: 10 }} />
+            {kodTipp && hiba ? (
+              <GombSz
+                cim="Most regisztráltál? Írd be a kódot a levélből"
+                m={15}
+                onPress={() => {
+                  regEmailBeallit(email, 'belepes');
+                  router.push('/postafiok');
+                }}
+                style={{ marginTop: -4, marginBottom: 8 }}
+              />
+            ) : null}
             {torlesAlatt !== null ? (
               <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
                 <T m={15} s={650} c={szin.borostyanSzoveg} lh={1.45}>

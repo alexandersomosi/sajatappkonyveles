@@ -17,12 +17,12 @@ Mérce: `dizajn/C5_v2/` (89 jóváhagyott képernyő, HTML+PNG), közös alap: `
 - Kétlépcsős belépés: e-mailes kód (nincs hitelesítő app, nincs tartalékkód).
 - „Félretettem” gomb → „Megjelölöm, hogy félretettem” + „Ez csak jelölés: pénzt nem vonunk le, nem utalunk.”
 - Határidők: NAV-számlaszám + közlemény (az ügyfél adószáma) „Másolom” gombokkal (53_hataridok_b). Számlák: szja 10032000-06056353, TB 10032000-06055802, szocho 10032000-06055912 (nav.gov.hu 2026.11.01, egyezik az ado-motorral). Átalányadós EV: negyedéves fizetés, a negyedévet követő hó 12-ig (IV. n.év: jan. 12.).
-- Fizetés: kártya (Stripe, automatikus) VAGY átutalás (havi díjbekérő, 8 nap – jóváhagyásra vár). Kedvezményezett: Somosi Kft., számlaszám/IBAN/SWIFT a `kod/shared/brand.json` provider mezőiben.
+- Fizetés: kártya (Stripe, automatikus) VAGY átutalás (havi díjbekérő, 8 nap fizetési határidő – a tulaj 11-20 jóváhagyta). Kedvezményezett: Somosi Kft., számlaszám/IBAN/SWIFT a `kod/shared/brand.json` provider mezőiben.
 - Átutalás-egyeztetés: Számlázz.hu Autokassza (Erste). A díjbekérőn rendelésszám = ügyfélazonosító (pl. ADZ-10482, ez a közlemény is); a backend lekérdezi a fizetési állapotot (a pontos Agent-hívást ellenőrizni), a vezérlőpultban: fizetett / vár / késik; első utalás után automatikus bekapcsolás; késésnél emlékeztető.
 - Díjszámla-levél: NEM a Számlázz.hu küldi (sendEmail=false), hanem saját Adózz-levél ZeptoMaillel, a mi arculatunkkal, a számlával (PDF/link). Szöveg „a(z)” nélkül, pl.: „Szia Zoé! Elkészült a havidíjad számlája (2026. 11. 20. – 12. 19.).” (Most: kod/backend/src/payments/invoices.ts emailTargy/emailSzoveg + content/k29.ts.)
 
 ## Nyitott (tulaj)
-- 8 napos fizetési határidő OK? Késésnél szüneteljen a könyvelés (mint sikertelen kártyánál)?
+- 8 napos fizetési határidő: JÓVÁHAGYVA (11-20). NYITOTT: késésnél szüneteljen a könyvelés (mint sikertelen kártyánál)?
 - „ADZ-10482” közlemény-formátum OK?
 - Szerződésnél „Bencével kötöd” → „velünk kötöd” (a szerződő fél a Somosi Kft.)?
 - Plusz díjak (éves zárás 14 999, változás 4 999) maradnak? 24–48 órás visszahívás marad?
@@ -57,3 +57,16 @@ Mérce: `dizajn/C5_v2/` (89 jóváhagyott képernyő, HTML+PNG), közös alap: `
 - Nagyobb hiányok (k8/k9, előbb Dávid válaszai): éves különbözet (SZJA/TB/szocho/HIPA fizetendő/visszajáró) tételként; NAV-folyószámla egyeztetés + önellenőrzés; helyettesítés (más könyvelő átmenetileg); ÁFA (közösségi adószám) időszak/határidő; KATA-kártya kitöltése + havi KATA-befizetések követése; jogállás évközi változása; meghatalmazás terjedelme; 35 tevékenység ÖVTJ-kódja üres; közös olvasatlan-üzenet és "Ma" nézet; negyedéves zárási tábla minden ügyfélre; négy szem elve adó-jóváhagyásnál.
 - FIGYELEM (11-20): a Számlázz.hu "Rendelésszám ismétlődés tiltása" BE VAN (a tulaj 11-20 este bekapcsolta; k7 kérte, a kártyás számláknál a fizetés-azonosító a rendelésszám). Az átutalásos díjbekérőnél ezért NEM lehet minden hónapban ugyanaz a rendelésszám (ADZ-10482) – helyette egyedi (pl. ADZ-10482-2026-12), az ügyfélazonosító a közleménybe/megjegyzésbe; ellenőrizni, hogy az Autokassza így is párosít-e (állandó átutalásnál fix közlemény + a küldő bankszámla alapján). Ha nem: a közlemény-formátumot igazítani.
 - Google iOS client: 573908605351-u5vsshs9m00li20dfb3k5m8vl3n5m616.apps.googleusercontent.com (bundle com.somosi.kezjegy). iOS buildnél: GOOGLE_IOS_CLIENT_ID + a fordított client ID URL-sémaként az app.json-ban (com.googleusercontent.apps.573908605351-u5vsshs9m00li20dfb3k5m8vl3n5m616); Team ID az Apple-fiók után.
+
+## Próbalevél tanulságai (11-20 20:20)
+- ZeptoMail → Lark kézbesítés OK (nem spam). A tulaj válasza az ertesites@adozz.hu-ra ment (a saját címre mutató Reply-To-t a Lark figyelmen kívül hagyja) és VISSZAPATTANT: az ertesites@ nem létező postafiók. Teendő (tulaj): a Lark-adminban az ertesites@adozz.hu legyen alias az ugyfelszolgalat@ postafiókon, hogy ügyfélválasz soha ne vesszen el.
+- A levelezők az "Adózz.hu" szót félig linkelik ("Adó" + link "zz.hu", az ó miatt). Minden HTML-levélben az Adózz.hu legyen teljes, kifejezett link (<a href="https://adozz.hu" style="color:…;text-decoration:none">). A dizajn/email/sablon.html és az aláírások javítva; a backend htmlOf/új sablon-renderelő (k8) is így tegye a szövegtörzsben.
+- A levéllogó (https://adozz.hu/email/logo_feher@2x.png) 404 volt: a landing mappát 17:42-kor kicserélték, a kezjegy-web konténer a régi (bind mount) mappát látta. Javítva: email/ feltöltve + kezjegy-web újraindítva → 200. A landing-telepítés (feltolt.sh / k8) mappacsere után indítsa újra a kezjegy-webet (vagy a szülőmappát csatolja), és a dist/email mindig kerüljön fel (build.mjs már másolja).
+
+## k7b után nyitva (11-20 20:23, élő)
+- Időígéret maradt felületi szövegben (a megengedett mondaton kívül): kod/backend/src/content/tulaj1118.ts, kod/shared/src/bekotes.ts → javítani.
+- Új APK kell (a régi APK-val a regisztráció nem fejezhető be; a webes app már jó).
+- Két egyszerre végzett kártyatörlés dupla levelet küldhet (ritka).
+- A jogi app_szovegek.json régi szövegei (a kód felülírja) → egységesíteni.
+- Régi egyszeri szkriptek (app/scripts/_helyi_j*.mjs, _qa/*_harness.mjs) a régi regisztrációt használják; https-proba.sh / bongeszo-proba.mjs SimplePay-része elavult.
+- Szövegjavítás: 54-ből 51 bent; a 14., 17., 19. tétel levele nem készült.

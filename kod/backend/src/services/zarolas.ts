@@ -79,7 +79,10 @@ export async function computeServiceLock(deps: Deps, clientId: string): Promise<
 
 export async function mitText(deps: Deps, reasons: ServiceLockReason[]): Promise<string> {
   const parts: string[] = [];
-  for (const r of reasons) parts.push(await deps.content.get(`zarolas.mit.${r}`));
+  // k7b: a manual lock is no unpaid item – next to a real one it is left out ("nincs kifizetve a havidíj", never
+  // "… az a könyvelésed és a havidíj"); alone it keeps its own text
+  const list = reasons.length > 1 ? reasons.filter((r) => r !== 'kezi') : reasons;
+  for (const r of list) parts.push(await deps.content.get(`zarolas.mit.${r}`));
   // k7b: "havidíj és az éves zárás díja" – the article of each later part follows its own first word (the first part's
   // article stands in the template: "a {mit}")
   return parts.map((p, i) => (i === 0 ? p : `${huArticle(p)} ${p}`)).join(' és ');

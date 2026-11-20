@@ -8,7 +8,7 @@ import { useConfig } from '@/api/hooks';
 import { useAuth } from '@/auth/AuthProvider';
 import { AuthKeret } from '@/kepernyok/AuthKeret';
 import { kodHiba } from '@/lib/validators';
-import { mfaBeallit, regEmailBeallit, regEmailOlvas } from '@/lib/atadas';
+import { mfaBeallit, regEmailBeallit, regEmailOlvas, regHonnanOlvas } from '@/lib/atadas';
 import { szin } from '@/theme/tokens';
 import { GombE, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
 import { Targykep } from '@/ui/kepek';
@@ -22,6 +22,8 @@ export default function Postafiok() {
   const { regisztracioMegerosit } = useAuth();
   const jelez = useJelzes();
   const email = regEmailOlvas();
+  // belépésből jött: egy befejezetlen regisztráció a jó jelszóval új kódot kapott (a szerver ezt sem árulja el)
+  const belepesbol = regHonnanOlvas() === 'belepes';
   const [kod, setKod] = useState('');
   const [hiba, setHiba] = useState<string | null>(null);
   const [mezoHiba, setMezoHiba] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function Postafiok() {
   const [hatra, setHatra] = useState(60);
   useEffect(() => {
     // újratöltés után nincs meg a cím (nem tesszük az URL-be): vissza a regisztrációhoz
-    if (!email) router.replace('/regisztracio');
+    if (!email) router.replace(belepesbol ? '/belepes' : '/regisztracio');
   }, [email]);
   useEffect(() => {
     if (hatra <= 0) return;
@@ -62,9 +64,13 @@ export default function Postafiok() {
   return (
     <AuthKeret
       cim="Nézd meg a postafiókodat."
-      al={`Levelet küldtünk ide: ${email}. Ha ezzel a címmel még nincs fiókod, egy 6 jegyű kódot találsz benne. Ha már van, abban leírtuk, hogyan lépj be.`}
+      al={
+        belepesbol
+          ? `Ha még nem fejezted be a regisztrációt, és a jelszavad jó volt, most küldtünk egy 6 jegyű kódot ide: ${email}. Írd be, és kész a regisztráció.`
+          : `Levelet küldtünk ide: ${email}. Ha ezzel a címmel még nincs fiókod, egy 6 jegyű kódot találsz benne. Ha már van fiókod, a levélben leírtuk, hogyan lépj be.`
+      }
       visszaCim="Vissza"
-      visszaHova="/regisztracio"
+      visszaHova={belepesbol ? '/belepes' : '/regisztracio'}
     >
       <Lap style={{ padding: 18 }}>
         <Targykep nev="level_boritek" style={{ marginBottom: 10 }} />

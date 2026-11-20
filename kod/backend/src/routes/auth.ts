@@ -171,11 +171,13 @@ export function authRoutes(deps: Deps) {
     const pw = passwordProblem(b.password, b.email);
     if (pw) throw E.validation({ password: pw });
     const passwordHash = await hashPassword(b.password);
-    const [exists] = await deps.db.select({ id: users.id, status: users.status }).from(users).where(eq(users.email, b.email)).limit(1);
+    const [exists] = await deps.db.select({ id: users.id, status: users.status, role: users.role, emailVerifiedAt: users.emailVerifiedAt }).from(users).where(eq(users.email, b.email)).limit(1);
     if (exists) {
-      // The owner is told by mail (at most once an hour per address – the answer is the same either way).
+      // The owner is told by mail (at most once an hour per address – the answer is the same either way). An earlier
+      // sign-up that never got its code confirmed hears how to finish it (sign in with that password → a new code).
       const once = deps.limiter.hit(`reg-exists:${k(b.email)}`, 1, 3600_000);
-      if (once.ok && exists.status !== 'deleted') await sendTemplateMail(deps, { to: b.email, key: 'account_exists' });
+      const unconfirmed = exists.role === 'client' && exists.status === 'active' && !exists.emailVerifiedAt;
+      if (once.ok && exists.status !== 'deleted') await sendTemplateMail(deps, { to: b.email, key: 'account_exists', ...(unconfirmed ? { variant: 'megerositetlen' } : {}) });
       await auditC(c, deps.db, 'auth.register_existing', { actorUserId: null, actorRole: null, targetType: 'user', targetId: exists.id, details: { mailed: once.ok } });
       return c.json({ status: 'check_email', email: b.email }, 202);
     }
@@ -231,11 +233,14 @@ export function authRoutes(deps: Deps) {
   r.post('/register/verify', async (c) => {
     const b = await readJson(c, z.object({ email, code: z.string().trim().max(10), platform: z.enum(['web', 'android', 'ios']).default('web') }));
     limit(`regverify-ip:${c.get('ipHmac')}`, 20, 15 * 60_000);
-    limit(`regverify:${k(b.email)}`, 10, 15 * 60_000);
+    // per address AND caller: a stranger's wrong guesses cannot shut the owner out of typing his own code (ellenőr 11-20)
+    limit(`regverify:${c.get('ipHmac')}:${k(b.email)}`, 10, 15 * 60_000);
     const [u] = await deps.db.select().from(users).where(eq(users.email, b.email)).limit(1);
-    // the comparison runs for every address (same work), a code only counts for a fresh, unconfirmed client account
-    const res = await checkCode(deps, deps.db, { email: b.email, purpose: 'verify_email', code: b.code, ipHmac: c.get('ipHmac') });
-    if (res === 'too_many') throw E.validation({ code: CODE_MESSAGES.too_many });
+    // The comparison runs for every address (same work), a code only counts for a fresh, unconfirmed client account.
+    // Without a session nothing proves the caller, so the account-wide daily budget of S2 applies (accountCap): guesses
+    // spread over many addresses and resends stay ≤ 30 a day. The way out of a used-up day is the password reset.
+    const res = await checkCode(deps, deps.db, { email: b.email, purpose: 'verify_email', code: b.code, ipHmac: c.get('ipHmac'), accountCap: true });
+    // ONE answer for everything – "túl sok próbálkozás" too: only an address with a real code could ever get that one
     if (res !== 'ok' || !u || u.role !== 'client' || u.status !== 'active' || u.emailVerifiedAt) throw E.validation({ code: REGISTER_CODE_MESSAGE });
     await markEmailVerified(c, u.id);
     const kind: ClientKind = b.platform === 'web' ? 'web' : 'native';
@@ -310,6 +315,22 @@ export function authRoutes(deps: Deps) {
       } else {
         await auditC(c, deps.db, 'auth.login_failed', { actorUserId: null, actorRole: null, details: { known: false } });
       }
+      throw E.unauthenticated(LOGIN_FAILED);
+    }
+    // k7b (S16, ellenőr 11-20): a client account whose address is not confirmed yet cannot sign in with the password.
+    // POST /auth/register makes such an account with the password the REGISTRANT chose; if it could sign in, a stranger
+    // could test "register X with P, then log in with P" – 200 for a new address, 401 for one that has an account – and
+    // learn who is our client. So the answer is exactly the wrong-password answer (no failure counted), and the owner
+    // gets a fresh code by mail: the app's sign-in screen offers "Írd be a kódot" (POST /auth/register/verify).
+    if (u.role === 'client' && u.status === 'active' && !u.emailVerifiedAt) {
+      const once = deps.limiter.hit(`login-unverified:${k(b.email)}`, 3, 3600_000);
+      if (once.ok && deps.mailer.mode !== 'disabled') {
+        const code = await issueCode(deps, deps.db, { email: b.email, purpose: 'verify_email', userId: u.id, ipHmac: c.get('ipHmac') });
+        // with real SMTP after the answer (the response time must not differ from a wrong password)
+        if (deps.mailer.mode === 'smtp') void sendCodeEmail(deps, b.email, 'auth_email_code', code);
+        else await sendCodeEmail(deps, b.email, 'auth_email_code', code);
+      }
+      await auditC(c, deps.db, 'auth.login_unverified', { actorUserId: u.id, actorRole: u.role, targetType: 'user', targetId: u.id, details: { mailed: once.ok } });
       throw E.unauthenticated(LOGIN_FAILED);
     }
     if (u.status === 'pending_deletion') {
@@ -446,7 +467,8 @@ export function authRoutes(deps: Deps) {
     const [byMail] = await deps.db.select().from(users).where(eq(users.email, id.email)).limit(1);
     if (byMail) {
       if (!byMail.emailVerifiedAt)
-        throw E.conflict('Ezzel az e-mail-címmel már regisztráltál jelszóval. Lépj be jelszóval, és erősítsd meg az e-mail-címed.');
+        // k7b: an unfinished password sign-up – signing in with that password mails a new code (POST /auth/login)
+        throw E.conflict('Ezzel az e-mail-címmel már elkezdtél egy regisztrációt jelszóval. Lépj be azzal a jelszóval: küldünk egy kódot, és azzal befejezheted.');
       if (byMail.status !== 'active') throw E.unauthenticated('Ez a fiók nem aktív.');
       await deps.db.update(users).set(p === 'google' ? { googleSub: id.sub } : { appleSub: id.sub }).where(eq(users.id, byMail.id));
       await auditC(c, deps.db, 'auth.provider_linked', { actorUserId: byMail.id, actorRole: byMail.role, targetType: 'user', targetId: byMail.id, details: { provider: p } });

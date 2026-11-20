@@ -375,6 +375,8 @@ export function adminRoutes(deps: Deps) {
     // A terminated client is not charged again: the subscription ends at once and the card tokens are revoked.
     if (b.lifecycle === 'megszunt' && cl.lifecycle !== 'megszunt') {
       const now = deps.now();
+      const [sub0] = await deps.db.select({ status: subscriptions.status }).from(subscriptions).where(eq(subscriptions.clientId, id)).limit(1);
+      const paidServiceRan = Boolean(sub0 && ['active', 'past_due', 'suspended'].includes(sub0.status));
       await deps.db
         .update(subscriptions)
         .set({ status: 'canceled', cancelAtPeriodEnd: true, canceledAt: now, nextChargeAt: null, nextRetryAt: null, updatedAt: now })
@@ -382,7 +384,9 @@ export function adminRoutes(deps: Deps) {
       await deleteCard(deps, id, { userId: auth(c).userId, role: 'admin' }).catch(() => undefined);
       await endRelationship(deps.db, id, now);
       // k7b (LEVEL_LEFEDETTSEG #55): the same notices as a real period end (client e-mail + the accountant's task)
-      await notifyServiceEnded(deps, id, todayBudapest(now));
+      // (the client's e-mail only when a paid subscription really ran; the accountant's task only when there is a
+      // meghatalmazás or a technical user to close)
+      await notifyServiceEnded(deps, id, todayBudapest(now), { notifyClient: paidServiceRan });
     }
     return c.json({ ok: true });
   });

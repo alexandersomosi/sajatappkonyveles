@@ -26,6 +26,7 @@ import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { accountants, announcements, assistRequests, clientPriceOverrides, clients, feeCharges, gdprExports, messages, payments, subscriptions, users } from '../db/schema.js';
 import { audit } from '../audit.js';
+import { log, safeErr } from '../log.js';
 import { auth, type C } from '../http/core.js';
 import { issueCode } from '../auth/codes.js';
 import { addDays, addMonths, isIsoDate, todayBudapest } from '../lib/dates.js';
@@ -222,21 +223,29 @@ export async function addPriceOverride(deps: Deps, c: C, id: string, b: ConsoleP
   return { id: row!.id };
 }
 
-/** The first day the next monthly fee is charged for: the next period start of a running subscription, else today. */
-async function nextChargePeriod(deps: Deps, clientId: string): Promise<string> {
+/**
+ * The next monthly fee the client will pay: `period` = the period whose amount is charged next, `from` = the day the new
+ * amount counts from in the client's words. null = no fee will be charged any more (cancelled, or cancelled at the
+ * period end), so a price change is no news.
+ *  - active: the next period (the period end is exclusive = the next period's first day, k7c2);
+ *  - past_due / suspended: the unpaid month – its pending retry charges the CURRENT price, so it counts from today on;
+ *  - no subscription yet / incomplete: the first charge, from today.
+ */
+async function nextChargePeriod(deps: Deps, clientId: string): Promise<{ period: string; from: string } | null> {
   const today = todayBudapest(deps.now());
   const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
-  // the period end is exclusive (= the next period's first day, k7c2)
-  if (sub && ['active', 'past_due', 'suspended'].includes(sub.status) && !sub.cancelAtPeriodEnd && sub.currentPeriodEnd && sub.currentPeriodEnd > today) return sub.currentPeriodEnd;
-  return today;
+  if (!sub || sub.status === 'incomplete') return { period: today, from: today };
+  if (sub.status === 'canceled' || sub.cancelAtPeriodEnd) return null;
+  const period = sub.currentPeriodEnd ?? today;
+  return { period, from: period > today ? period : today };
 }
 
 export async function revokePriceOverride(deps: Deps, c: C, id: string, overrideId: string, reasonIn: string): Promise<void> {
   const reason = needReason(reasonIn);
   // k7b: what the next monthly fee would have been with the override – the revocation acts at once (open owner decision:
   // immediately or 30 days later; for now the current behaviour stays), and the client is told the real date and amount.
-  const period = await nextChargePeriod(deps, id);
-  const before = await effectiveMonthlyAmount(deps, deps.db, id, period).catch(() => null);
+  const next = await nextChargePeriod(deps, id);
+  const before = next ? await effectiveMonthlyAmount(deps, deps.db, id, next.period).catch(() => null) : null;
   const r = await deps.db
     .update(clientPriceOverrides)
     .set({ revokedAt: deps.now(), revokedBy: auth(c).userId, revokeReason: reason })
@@ -245,10 +254,10 @@ export async function revokePriceOverride(deps: Deps, c: C, id: string, override
   if (!r.length) throw E.notFound();
   await auditAdmin(c, deps.db, 'admin.price.override_revoked', id, { reason, before: { kind: r[0]!.kind, amountHuf: r[0]!.amountHuf, percent: r[0]!.percent, months: r[0]!.months } });
   // Only when the next fee really goes up (a revoked discount / free month / lower own price); a revoked RISE is no news.
-  const after = await effectiveMonthlyAmount(deps, deps.db, id, period).catch(() => null);
-  if (before && after && after.amountHuf > before.amountHuf) {
+  const after = next ? await effectiveMonthlyAmount(deps, deps.db, id, next.period).catch(() => null) : null;
+  if (next && before && after && after.amountHuf > before.amountHuf) {
     const cl = await consoleClientRow(deps.db, id);
-    await notify(deps, deps.db, { userId: cl.userId, kind: 'price_changed' as never, variant: 'visszavonva', params: { datum: huLongDate(period), osszeg: fmtN(after.amountHuf) }, link: '/fiok/elofizetes', noPush: true, emailKey: 'price_discount_revoked' });
+    await notify(deps, deps.db, { userId: cl.userId, kind: 'price_changed' as never, variant: 'visszavonva', params: { datum: huLongDate(next.from), osszeg: fmtN(after.amountHuf) }, link: '/fiok/elofizetes', noPush: true, emailKey: 'price_discount_revoked' });
   }
 }
 
@@ -520,7 +529,16 @@ export async function terminateClient(deps: Deps, c: C, id: string, b: ConsoleTe
   const actor = auth(c).userId;
   await deps.db.update(clients).set({ terminated: { kind: b.kind, subReason: b.subReason ?? null, reason, noticeAt: now.toISOString(), effectiveOn, by: actor, appliedAt: null }, updatedAt: now }).where(eq(clients.id, id));
   await cancelSubscriptionK29(deps, { clientId: id, when: immediate ? 'azonnal' : 'datum', ...(immediate ? {} : { date: effectiveOn }), byUserId: actor, reason: `felmondás: ${b.kind}` } as never);
-  if (refundPaymentId && refundHuf > 0) await refundPayment(deps, { paymentId: refundPaymentId, amountHuf: refundHuf, reason: 'Időarányos visszatérítés (ÁSZF 8.3.)', byUserId: actor }).catch(() => undefined);
+  // k7b (ellenőr 11-20): the e-mail names the refund only when it was really started (the letter states the settlement)
+  let refundStarted = false;
+  if (refundPaymentId && refundHuf > 0) {
+    refundStarted = await refundPayment(deps, { paymentId: refundPaymentId, amountHuf: refundHuf, reason: 'Időarányos visszatérítés (ÁSZF 8.3.)', byUserId: actor })
+      .then(() => true)
+      .catch((err: Error) => {
+        log().warn({ err: safeErr(err), clientId: id }, 'termination refund failed – the admin refunds it by hand');
+        return false;
+      });
+  }
   const openFees = (await deps.db.select().from(feeCharges).where(and(eq(feeCharges.clientId, id), eq(feeCharges.status, 'nyitott')))).map((f) => ({ label: (FEE_KIND_LABELS as Record<string, string>)[f.kind] ?? f.kind, amountHuf: f.amountHuf }));
   // k7c2: the period end is exclusive (= the next period's first day) – the letter names the last paid day
   const paidPeriod = sub?.currentPeriodStart && sub.currentPeriodEnd ? `${huLongDate(sub.currentPeriodStart)} – ${huLongDate(addDays(sub.currentPeriodEnd, -1))}` : null;
@@ -552,19 +570,20 @@ export async function terminateClient(deps: Deps, c: C, id: string, b: ConsoleTe
   if (pdf && documentId) {
     const [u] = await deps.db.select({ email: users.email, status: users.status }).from(users).where(eq(users.id, cl.userId)).limit(1);
     if (u && u.status !== 'deleted') {
-      const mailVariant = b.kind === 'ugyfel_kerte' ? (b.when === 'azonnal' ? 'ugyfel_kerte_azonnal' : 'ugyfel_kerte') : immediate ? 'azonnali' : undefined;
+      const mailVariant =
+        b.kind === 'ugyfel_kerte' ? (b.when === 'azonnal' ? (refundStarted ? 'ugyfel_kerte_azonnal_visszaterites' : 'ugyfel_kerte_azonnal') : 'ugyfel_kerte') : immediate ? 'azonnali' : undefined;
       const r = await sendTemplateMail(deps, {
         to: u.email,
         key: 'contract_terminated',
         ...(mailVariant ? { variant: mailVariant } : {}),
-        params: { firstName: cl.firstName, datum: huLongDate(effectiveOn) },
+        params: { firstName: cl.firstName, datum: huLongDate(effectiveOn), osszeg: fmtN(refundHuf) },
         attachments: [{ filename: 'felmondas.pdf', content: pdf, contentType: 'application/pdf' }],
       });
       mailed = r === 'sent' || r === 'demo';
     }
   }
   await notify(deps, deps.db, { userId: cl.userId, kind: 'contract_terminated' as never, variant, params: { datum: huLongDate(effectiveOn) }, link: '/dosszie', data: { documentId, ...(mailed ? { letterMailed: true } : {}) }, ...(mailed ? { noEmail: true } : {}) });
-  await auditAdmin(c, deps.db, 'admin.client.terminated', id, { reason, kind: b.kind, subReason: b.subReason ?? null, effectiveOn, refundHuf, documentId, letterMailed: mailed });
+  await auditAdmin(c, deps.db, 'admin.client.terminated', id, { reason, kind: b.kind, subReason: b.subReason ?? null, effectiveOn, refundHuf, ...(refundHuf > 0 ? { refundStarted } : {}), documentId, letterMailed: mailed });
   // the immediate kinds end today: a "hatályba lépett" notice would only repeat the letter that just went out
   if (immediate) await applyTerminationEffect(deps, id, actor, { notifyClient: false });
   return { effectiveOn, documentId };

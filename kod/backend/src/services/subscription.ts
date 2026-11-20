@@ -691,13 +691,19 @@ export async function hasActiveCard(db: DbOrTx, sub: Pick<SubRow, 'clientId' | '
  * email.subscription_ended_konyvelo). Callers run it once per transition (the status change guards it). A terminated
  * client gets the termination notices instead (konzol-muveletek.ts applyTerminationEffect), never both.
  */
-export async function notifyServiceEnded(deps: Deps, clientId: string, endedOn: string): Promise<void> {
+export async function notifyServiceEnded(deps: Deps, clientId: string, endedOn: string, o: { notifyClient?: boolean } = {}): Promise<void> {
   const db = deps.db;
   const [cl] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
   if (!cl || cl.terminated || cl.anonymizedAt) return;
   const datum = huLongDate(endedOn);
-  await notify(deps, db, { userId: cl.userId, kind: 'subscription_canceled', variant: 'megszunt', params: { datum }, link: '/fiok/elofizetes', emailKey: 'subscription_ended' });
-  if (cl.accountantId) {
+  // the client only when a paid service really ran (the admin may close a client who never subscribed – ellenőr 11-20)
+  if (o.notifyClient !== false)
+    await notify(deps, db, { userId: cl.userId, kind: 'subscription_canceled', variant: 'megszunt', params: { datum }, link: '/fiok/elofizetes', emailKey: 'subscription_ended' });
+  // the accountant's closing task only when there is something to close: a meghatalmazás or a NAV technical user
+  const { navCredentials, onboardingSteps } = await import('../db/schema.js');
+  const [meg] = await db.select({ status: onboardingSteps.status }).from(onboardingSteps).where(and(eq(onboardingSteps.clientId, clientId), eq(onboardingSteps.step, 'meghatalmazas'))).limit(1);
+  const [nav] = await db.select({ id: navCredentials.id }).from(navCredentials).where(eq(navCredentials.clientId, clientId)).limit(1);
+  if (cl.accountantId && (meg?.status === 'kesz' || nav)) {
     const { accountants } = await import('../db/schema.js');
     const [acc] = await db.select({ userId: accountants.userId }).from(accountants).where(eq(accountants.id, cl.accountantId)).limit(1);
     if (acc) await notify(deps, db, { userId: acc.userId, kind: 'assist_task', variant: 'megszunt', params: { clientName: clientName(cl), datum }, link: `/ugyfelek/${clientId}`, emailKey: 'subscription_ended_konyvelo' });
@@ -712,8 +718,12 @@ export async function notifyCardDeletedByAdmin(deps: Deps, clientId: string): Pr
   const [row] = await deps.db.select({ email: users.email, status: users.status, firstName: clients.firstName }).from(clients).innerJoin(users, eq(users.id, clients.userId)).where(eq(clients.id, clientId)).limit(1);
   if (!row || row.status === 'deleted') return;
   const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
+  // running → a new card is needed; cancelled (or cancelled at the period end) → nothing to do; never started or the first
+  // payment still open ('incomplete') → a card comes with the start (ellenőr 11-20)
   const running = Boolean(sub && ['active', 'past_due', 'suspended'].includes(sub.status) && !sub.cancelAtPeriodEnd);
-  const r = await sendTemplateMail(deps, { to: row.email, key: 'card_deleted_by_admin', ...(running ? {} : { variant: 'lemondva' }), params: { firstName: row.firstName } });
+  const cancelled = Boolean(sub && (sub.status === 'canceled' || sub.cancelAtPeriodEnd));
+  const variant = running ? undefined : cancelled ? 'lemondva' : 'nincs_elofizetes';
+  const r = await sendTemplateMail(deps, { to: row.email, key: 'card_deleted_by_admin', ...(variant ? { variant } : {}), params: { firstName: row.firstName } });
   await audit(deps.db, { action: 'mail.card_deleted_by_admin', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { result: r } });
 }
 

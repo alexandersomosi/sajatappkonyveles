@@ -4920,3 +4920,45 @@ Jobs (`jobs-k29.ts`, `jobs-k29f.ts`): `predebit` 10:00 · `suspension_warning` 1
 - **Deviations from §29.3:** `443/udp` is NOT published by `kezjegy-proxy` (same exposure as the old `appok-caddy-1`; HTTP/3 is an owner decision). `atallas.sh takarit` removes only the stopped `appok-caddy-1` and the two `appok_*` networks, MOVES `/srv/appok` to `/srv/kezjegy/_regi/appok_gardoko_<time>/` and leaves the `appok_caddy_*` volumes and the `appok/garden-api` image for the owner (house rule: nothing is deleted by us).
 - **Fixes (each with a local screenshot, `_qa/k7_integ_eredmeny.txt`):** guided waiting screen used the journey's first wait for every step → the step's own wait (`bevezeto/var.tsx`); `/bekotes` showed no due month → red "Fizetésre vár / Fizesd ki" line unless the lock band already says it; "Fizesd ki" band period end exclusive → last paid day; card consent: card change without money starts "– havonta egyszer" (no dangling "utána"), a due month says "a fizetésre váró hónapért" (not "az első hónapért"); console step-up survived no refresh (session id rotates) → looked up across the sign-in's session family; console tables: PDF button instead of `/files/<id>`, Hungarian labels for payment/invoice kinds and states, 4-digit amounts grouped; the old admin Áttekintés revenue now includes the §29 payments (net of refunds); two stale SimplePay texts in the panel. Tests added for the consent texts and the step-up family.
 - **Local harness for Stripe TEST:** `_qa/k7_integ_harness.mjs` (keys only from the process env; webhooks relayed from `GET /v1/events`, signed with a local `whsec_`), step driver `_qa/k7_bongeszo.mjs` + `_qa/k7_b.mjs`, whole guided run `_qa/k7_integ_vezetett.sh`. Moving the harness clock forward makes Stripe refuse new Checkout sessions (`expires_at` too far) – reset the clock before opening a hosted page.
+
+## 30. k7b – the missing e-mails and the 11-20 wording review (2026-11-20)
+
+Source: `dizajn/email/LEVEL_LEFEDETTSEG.md` §3 items 1–13 (status table in its §0) and `SZOVEG_JAVITAS_LEVELEK.md`; owner order 11-20.
+Mails still go out in the old frame (`notify/mailer.ts` `htmlOf`); the new template (`dizajn/email/sablon.html`) and a staff footer are k8.
+
+- **Texts:** `backend/src/content/k7b.ts` – `email.<key>[.<variant>].subject|body` + the matching `notif.*` rows; editable on
+  `/admin/szovegek`. The 66 defaults the wording review changed keep their old wording in `content/k7b_regi.ts`: a jogi text or an
+  unedited `content_texts` override still equal to it follows the new default (`data.k7b`, once at worker start, `system_state`).
+- **Mail paths:** `NotifyInput.emailKey` – a notification e-mail with its own subject/body and template key; `sendTemplateMail()` –
+  a direct mail from the content system (attachment, staff alerts, an address about to be pseudonymised; one try, then a log line);
+  `activeAdminEmails()`.
+- **New mails (template keys):** `contract_terminated[.azonnali|.ugyfel_kerte|.ugyfel_kerte_azonnal|.ugyfel_kerte_azonnal_visszaterites]`
+  (with `felmondas.pdf`; the refund sentence only when the refund was started), `message_new` / `message_new_ugyfelszolgalat`
+  (e-mail default ON, max one a day per client – `data.mailGroup`), `nav_hiba[.admin]` (once per rendben → hibas switch, atomic),
+  `subscription_ended` (client, only after a paid subscription ran) + `subscription_ended_konyvelo` (only with a meghatalmazás or a
+  technical user), `contract_terminated_hatalyos`, `account_deletion_cancelled[.elofizetes]`, `account_deleted` (after the commit,
+  to the address read before the pseudonymisation), `export_failed` + `export_failed_admin`, `account_exists[.megerositetlen]`,
+  `price_discount_revoked` (only when the next fee rises; past_due → from today; cancelled → none), `card_deleted_by_admin[.lemondva|.nincs_elofizetes]`,
+  `certificate_rejected`.
+- **S16 done – the sign-up tells nothing about an address:** `POST /auth/register` always `202 {status:'check_email', email}`, no
+  session; a new address gets the account + a 6-digit code, an existing one the "Már van fiókod" mail (1/h). `POST /auth/register/verify
+  {email, code, platform}` opens the session (201); every failure – wrong, expired, too many, no such sign-up – is the same 400
+  (`REGISTER_CODE_MESSAGE`); limits per caller+address (10/15 min) and per caller (20/15 min), plus the S2 account-wide 30
+  comparisons a day (`checkCode … accountCap`). `POST /auth/register/resend` always 202. **An unconfirmed client account cannot sign in
+  with its password:** `/auth/login` answers exactly like a wrong password (401 `LOGIN_FAILED`, no failure counted) and mails a new
+  code (3/h) – otherwise "register X with P, then log in with P" would tell new from existing addresses. App: `(auth)/postafiok.tsx`
+  ("Nézd meg a postafiókodat", code, new code), the sign-in screen offers "Most regisztráltál? Írd be a kódot a levélből" after every
+  failed sign-in; the waiting address survives a web reload in the tab's sessionStorage. Old APKs cannot finish a sign-up any more
+  (they expect a session from `/register`) – a new APK is needed.
+- **Accountant fixes:** HIPA advance approval card on the panel's Adó tab (`HipaIdoszak`, `POST /acc/tax-periods/:id/hipa-approve`);
+  the "Számolás" error of a HIPA period points there. The annual SZJA/HIPA deadlines are "kész" for the accountant once
+  `annual_closings.filed_szja_at / filed_hipa_at` is set; for the client (the item also means "pay the difference") a filed return
+  stays open until its due date and is "kész", never "lejárt", after it.
+- **Other fixes:** `zarolas.ts mitText` ("havidíj és az éves zárás díja"; a manual lock is left out next to an unpaid fee),
+  `notif.price_changed.body` "{datum} napjától", the felmondás mail no longer repeats the Dosszié sentence.
+- **Open (owner):** the discount revocation acts at once (30 days later?); the k8 staff footer; UI texts with a time promise other
+  than the allowed sentence (`content/tulaj1118.ts`, `shared/src/bekotes.ts`); jogi `app_szovegek.json` still holds old texts (the
+  code supersedes them).
+- **Live 2026-11-20 20:19–20:23** (no migration, 20; `data.k7b` ran; live DEMO probe of the new sign-up passed – deploy/README k7b).
+- **Tests:** `backend/test/k7b-levelek.test.ts`, `auth.test.ts` (S16: register+login probe, too-many answers, stranger lock-out),
+  `panel/src/pages/acc/ugyfel/hipa.test.tsx`. Probes: `deploy/https-proba.sh` and `deploy/bongeszo-proba.mjs` follow the new sign-up.

@@ -80,12 +80,17 @@ export async function codesIssuedSince(deps: Deps, email: string, purpose: CodeP
  * MAX_ATTEMPTS comparisons are ever made per issued code by its own address (+ MAX_FOREIGN_ATTEMPTS by others).
  * A correct code is consumed with a conditional UPDATE (used_at IS NULL), so it also works only once.
  */
-export async function checkCode(deps: Deps, db: DbOrTx, p: { email: string; purpose: CodePurpose; code: string; ipHmac?: string | null; trustedAddress?: boolean }): Promise<CheckResult> {
+export async function checkCode(
+  deps: Deps,
+  db: DbOrTx,
+  /** accountCap: the S2 account-wide daily budget for another purpose too (k7b: the sign-up code without a session). */
+  p: { email: string; purpose: CodePurpose; code: string; ipHmac?: string | null; trustedAddress?: boolean; accountCap?: boolean },
+): Promise<CheckResult> {
   const now = deps.now();
   const ip = p.ipHmac ?? null;
   const dayAgo = new Date(now.getTime() - 86_400_000);
   const base = and(eq(emailCodes.email, p.email), eq(emailCodes.purpose, p.purpose));
-  if (p.purpose === 'password_reset' && !p.trustedAddress) {
+  if ((p.purpose === 'password_reset' || p.accountCap) && !p.trustedAddress) {
     const [all] = await db
       .select({ n: sql<number>`coalesce(sum(${emailCodes.attempts} + ${emailCodes.foreignAttempts}), 0)::int` })
       .from(emailCodes)

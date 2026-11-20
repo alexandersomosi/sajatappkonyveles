@@ -2,9 +2,10 @@
 // Real-browser check of the LIVE deployment over HTTPS (headless Chrome on the owner's PC), complementing
 // https-proba.sh (curl). Looks for console errors and CSP violations, and walks the parts only a browser can prove:
 //   1. app + panel login pages render (Geist, 3D icons, no CSP violation);
-//   2. registration of a NEW fictional test client in the web app UI → e-mail verification screen;
-//   3. the server (over ssh, test values via stdin, nothing printed) verifies the e-mail from the DEMO outbox,
-//      fills the questionnaire + consents and starts the SimplePay DEMO registration → prints only the payment URL;
+//   2. registration of a NEW fictional test client in the web app UI → "Nézd meg a postafiókodat" (k7b: no session
+//      yet); the code is read from the DEMO outbox over ssh (never printed) and typed in on that screen → signed in;
+//   3. the server (over ssh, test values via stdin, nothing printed) fills the questionnaire + consents and starts
+//      the SimplePay DEMO registration → prints only the payment URL;
 //   4. the browser opens the DEMO payment page on api., clicks "Sikeres fizetés", follows the cross-host
 //      redirects (form-action CSP!) back to app./elofizetes/eredmeny with its own session; then home + bekötés.
 // Screenshots → kod/_qa/eles_https/. Usage: node kod/deploy/bongeszo-proba.mjs
@@ -120,12 +121,33 @@ try {
   for (let i = 0; i < 4; i++) await inputs[i].type(vals[i], { delay: 5 });
   await shot(page, '03_app_regisztracio_kitoltve');
   if (!(await byText(page, 'Regisztrálok'))) throw new Error('nincs Regisztrálok gomb');
-  await page.waitForFunction(() => location.pathname.includes('email-megerosites'), { timeout: 20000 });
+  // k7b (S16): the answer is the same for a new and an existing address – "Nézd meg a postafiókodat", no session yet
+  await page.waitForFunction(() => location.pathname.includes('postafiok'), { timeout: 20000 });
   await wait(800);
-  await shot(page, '04_app_email_megerosites');
-  ok('regisztráció a webappban → e-mail megerősítés képernyő');
+  await shot(page, '04_app_postafiok');
+  ok('regisztráció a webappban → „Nézd meg a postafiókodat” képernyő (munkamenet nélkül)');
+  // the code from the DEMO outbox (admin, on the server; the code comes back only to be typed in, never printed)
+  const code = execFileSync('ssh', ['appok-1', 'bash -s'], {
+    input: String.raw`
+set -euo pipefail
+D=45-94-65-74.sslip.io; CRED=/srv/kezjegy/demo_belepesek.txt
+AE=$(grep '^admin;' $CRED | cut -d';' -f2); AP=$(grep '^admin;' $CRED | cut -d';' -f3)
+ATOK=$(jq -nc --arg e "$AE" --arg p "$AP" '{email:$e,password:$p,clientKind:"panel"}' | curl -fsS -H 'content-type: application/json' --data-binary @- https://konyvelo.$D/api/v1/auth/login | jq -r .accessToken)
+printf 'Authorization: Bearer %s\n' "$ATOK" | curl -fsS -H @- https://konyvelo.$D/api/v1/admin/demo-outbox | jq -r '[.items[] | select(.subject | test("megerősítő kódod"))][0].bodyText' | grep -oE '\b[0-9]{6}\b' | head -1
+`,
+    encoding: 'utf8',
+  }).trim();
+  if (!/^\d{6}$/.test(code)) throw new Error('nincs kód a DEMO postafiókban');
+  const kodMezo = await page.$('input');
+  if (!kodMezo) throw new Error('nincs kódmező a postafiók képernyőn');
+  await kodMezo.type(code, { delay: 20 });
+  if (!(await byText(page, 'Megerősítem'))) throw new Error('nincs Megerősítem gomb');
+  await page.waitForFunction(() => !location.pathname.includes('postafiok'), { timeout: 20000 });
+  await wait(1200);
+  await shot(page, '04b_app_kod_utan');
+  ok('a kód a böngészőben megnyitja a munkamenetet');
 
-  // server side: verify + questionnaire + consents + SimplePay DEMO start (test values over stdin only)
+  // server side: questionnaire + consents + SimplePay DEMO start (test values over stdin only; the address is confirmed)
   const remote = execFileSync('ssh', ['appok-1', 'bash -s'], {
     // `bash -s` reads its script from stdin, so the test values travel base64-encoded inside the script text
     // (never in argv, never printed).
@@ -134,11 +156,7 @@ set -euo pipefail
 D=45-94-65-74.sslip.io; CRED=/srv/kezjegy/demo_belepesek.txt
 j() { jq -nc "$@"; }
 TOK=$(j --arg e "$NE" --arg p "$NP" '{email:$e,password:$p,clientKind:"native"}' | curl -fsS -H 'content-type: application/json' --data-binary @- https://api.$D/api/v1/auth/login | jq -r .accessToken)
-AE=$(grep '^admin;' $CRED | cut -d';' -f2); AP=$(grep '^admin;' $CRED | cut -d';' -f3)
-ATOK=$(j --arg e "$AE" --arg p "$AP" '{email:$e,password:$p,clientKind:"panel"}' | curl -fsS -H 'content-type: application/json' --data-binary @- https://konyvelo.$D/api/v1/auth/login | jq -r .accessToken)
-CODE=$(printf 'Authorization: Bearer %s\n' "$ATOK" | curl -fsS -H @- https://konyvelo.$D/api/v1/admin/demo-outbox | jq -r '.items[0].bodyText' | grep -oE '\b[0-9]{6}\b' | head -1)
 H() { printf 'Authorization: Bearer %s\n' "$TOK"; }
-H | curl -fsS -o /dev/null -H @- -H 'content-type: application/json' --data "{\"code\":\"$CODE\"}" https://api.$D/api/v1/auth/email/verify
 IDS=$(python3 -c '
 import random
 from datetime import date
@@ -160,7 +178,7 @@ H | curl -fsS -H @- -H 'content-type: application/json' --data '{"platform":"web
   }).trim();
   const payUrl = remote.split('\n').pop();
   if (!payUrl.startsWith(`https://api.${D}/api/v1/payments/demo/pay?o=`)) throw new Error('nincs fizetési URL');
-  ok('szerver: e-mail megerősítve (DEMO postafiók), kérdőív + szerződések, SimplePay DEMO indítva');
+  ok('szerver: kérdőív + szerződések, SimplePay DEMO indítva');
 
   await page.goto(payUrl, { waitUntil: 'networkidle2', timeout: 45000 });
   await shot(page, '05_demo_fizetooldal');

@@ -1,0 +1,113 @@
+{
+ "modell": "google/gemini-3.8-flash",
+ "datum": "2026-11-20T20:31:49",
+ "kepek": [
+  "1. lépés mozgás közben (telefon)",
+  "2. lépés mozgás közben",
+  "3. lépés",
+  "6. lépés (üzenetek)",
+  "A könyvelő-szakasz (telefon, állókép)",
+  "A könyvelő-szakasz folytatása"
+ ],
+ "valasz": {
+  "perszonak": [
+   {
+    "kod": "A",
+    "sajat_szavaimmal": "Az app valós időben mutatja a NAV-ból behúzott számláim után félreteendő adót, miközben a valódi könyvelőm negyedévente beadja a bevallást és ellenőrzi a befizetést.",
+    "melyik_lepes_gyozott_meg": "2. lépés (Félretenni), mert azonnal látom a pontos összeget, amit nem költhetek el, így nem ér meglepetés a negyedév végén.",
+    "nem_ertem": [
+     {
+      "idezet": "A kivonatodon látja, hogy rendben megérkezett a befizetésed",
+      "miert": "Nem világos, hogyan látja a kivonatomat: nekem kell feltöltenem a Dossziéba, vagy a NAV folyószámlámon látja a könyvelő.",
+      "uj_szoveg": "A beküldött bankszámlakivonatodon és a NAV folyószámládon ellenőrzi, hogy a befizetésed rendben megérkezett."
+     }
+    ],
+    "konyvelo_bizalom_1_10": 9,
+    "konyvelo_miert": "Megnyugtató, hogy névvel, nyilvántartási számmal szerepel a szerződésben, és ő adja be a bevallást, nem az app.",
+    "megvennem": "igen",
+    "miert": "Pontosan ezt a hibrid megoldást kerestem: automata számlakövetés appban, de hús-vér szakember a bevallás mögött."
+   },
+   {
+    "kod": "B",
+    "sajat_szavaimmal": "Az appban egy helyen látom a kata-keretemet és a havi fizetendőmet, a kijelölt könyvelőmmel pedig chatben bármikor tarthatom a kapcsolatot a személyes találkozók helyett.",
+    "melyik_lepes_gyozott_meg": "7. lépés (Keretek), mert katásként rettegek a kerettúllépéstől és a céges számlázástól, itt pedig azonnal figyelmeztet.",
+    "nem_ertem": [
+     {
+      "idezet": "A könyvelésedet nyilvántartásba vett könyvelő végzi, nem egy program. És te tudod, ki ő.",
+      "miert": "A képernyőképen egy illusztrált avatar és 'Kovács Bence' szerepel, miközben a szöveg szerint nem lesz fotó a könyvelőről.",
+      "uj_szoveg": "A könyvelésedet nyilvántartásba vett könyvelő végzi, akinek a nevét és nyilvántartási számát az appban és a szerződésedben is látod."
+     }
+    ],
+    "konyvelo_bizalom_1_10": 7,
+    "konyvelo_miert": "Bár tetszik a közvetlen chat és visszahívás lehetősége, a személyes irodai kontaktust nehezen engedem el 5000 Ft-os többletért.",
+    "megvennem": "talán",
+    "miert": "A jelenlegi könyvelőmnél drágább 5 000 Ft-tal, de ha a keretfigyelés tényleg leveszi a stresszt a vállamról, átváltok."
+   },
+   {
+    "kod": "C",
+    "sajat_szavaimmal": "Egy telefonos felület, ahol elérem a Somosi Kft. által biztosított könyvelőt, beküldöm a számláimat, és pontos utalási adatokat kapok a NAV felé.",
+    "melyik_lepes_gyozott_meg": "3. lépés (Határidők), mert a konkrét számlaszámmal és másolható közleménnyel kizárja az elgépelésből adódó tévedéseket.",
+    "nem_ertem": [
+     {
+      "idezet": "A könyvelőd munkájáért úgy felelünk, mintha magunk dolgoznánk.",
+      "miert": "Nem mondja ki egyértelműen, hogy van-e szakmai felelősségbiztosításuk, ami kifizeti a bírságot, ha a könyvelő hibázik.",
+      "uj_szoveg": "A könyvelőd munkájáért és az esetleges bírságokért cégként, szakmai felelősségbiztosítással állunk jót."
+     }
+    ],
+    "konyvelo_bizalom_1_10": 8,
+    "konyvelo_miert": "A név szerinti regisztrált könyvelő és a cég egyetemleges felelősségvállalása meggyőző, de a biztosítási háttér említése még hiányzik.",
+    "megvennem": "igen",
+    "miert": "Ha garanciát vállalnak a hibákért és nem kell papírokkal rohangálnom, megéri az árát."
+   },
+   {
+    "kod": "D",
+    "sajat_szavaimmal": "Az app automatikusan rendezi a NAV-ból érkező számláimat és figyelmeztet az adókra, a könyvelőm pedig a háttérben elintézi a hivatalos beadásokat.",
+    "melyik_lepes_gyozott_meg": "4. lépés (Fotózás), mert kezdőként félek a papírok elvesztésétől, így viszont a boltban azonnal lefotózom a költségszámlát és már le is van tudva.",
+    "nem_ertem": [
+     {
+      "idezet": "Ha valami hiányzik, szól, például kéri a bankszámlakivonatodat.",
+      "miert": "Kezdőként azt hittem, a NAV-kötés mindent megold; nem egyértelmű, mikor és miért kötelező kivonatot küldeni átalányadóban.",
+      "uj_szoveg": "Ha a bevételek igazolásához vagy ellenőrzéséhez egyéb irat kell, az appban jelzi neked."
+     }
+    ],
+    "konyvelo_bizalom_1_10": 10,
+    "konyvelo_miert": "Különösen biztonságosnak érzem, hogy feketén-fehéren leírják, mit nem kérnek el soha (Ügyfélkapu, jelszavak).",
+    "megvennem": "igen",
+    "miert": "Kezdőként semmit sem értek az adózáshoz, ez a kombináció viszont egyszerre fogja a kezem és ad digitális átláthatóságot."
+   }
+  ],
+  "kozos": {
+   "erthetoseg_1_10": 9,
+   "tul_sok_vagy_tul_hosszu": "A szövegezés feszes és lényegretörő, a lépések bontása kifejezetten segíti a mentális modell kialakítását anélkül, hogy túlbonyolítaná.",
+   "legfontosabb_3_javitas": [
+    "Pontosítani kell a banki kivonat szerepét: az appba kell-e feltölteni fotózva/PDF-ben, vagy miért van rá szükség, ha a számlák a NAV-ból jönnek.",
+    "A felelősségvállalás bekezdésben ('Egy szerződés, egy felelős') érdemes explicit megnevezni a szakmai felelősségbiztosítás meglétét a bizalom maximalizálásához.",
+    "Az app bemutató képernyőin az avatar/fotó elemet semleges ikonra kell cserélni, hogy összhangban legyen a fotómentes könyvelői koncepcióval."
+   ]
+  }
+ },
+ "usage": {
+  "prompt_tokens": 9363,
+  "completion_tokens": 1933,
+  "total_tokens": 11296,
+  "cost": 0.014271,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.014271,
+   "upstream_inference_prompt_cost": 0.00702225,
+   "upstream_inference_completions_cost": 0.00724875
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "koltseg": 0.014271
+}

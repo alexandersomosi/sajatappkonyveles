@@ -8,8 +8,10 @@
 <meta name="description" content="Saját, nyilvántartásba vett könyvelő átalányadózó és katás, alanyi ÁFA-mentes egyéni vállalkozóknak. Havi 19 999 Ft bruttó, nincs hűségidő. Az appban látod, mennyit tegyél félre adóra.">
 <meta name="theme-color" content="#1428DB">
 <link rel="icon" type="image/png" href="kepek/favicon.png">
-<!-- Minden saját forrásból jön (betű, logó, képek): élesben a CSP default-src 'self' mellett is működik, és nem küld adatot másnak. -->
+<!-- Minden saját forrásból jön (betű, logó, képek, mozgas.js): élesben a CSP default-src 'self' mellett is működik, és nem küld adatot másnak.
+     Inline script, inline stílus (style=) és inline eseménykezelő (onclick=) nincs. A mozgás csak ráadás: JS nélkül is minden látszik. -->
 <link rel="stylesheet" href="stilus.css">
+<script src="mozgas.js" defer></script>
 </head>
 <body id="top">
 
@@ -20,6 +22,7 @@
   <div class="kontener fejlec-sor">
     <a class="logo" href="#top"><img src="kepek/logo.png" width="138" height="38" alt="Adózz.hu – az oldal teteje"></a>
     <nav class="menu" aria-label="Fő menü">
+      <a href="#mit-kapsz">Mit kapsz</a>
       <a href="#hogyan">Hogyan működik</a>
       <a href="#arak">Árak</a>
       <a href="#konyvelo">Könyvelő</a>
@@ -31,6 +34,7 @@
       <details class="mobilmenu">
         <summary aria-label="Menü"><span></span><span></span><span></span></summary>
         <nav class="mobilmenu-lap" aria-label="Mobil menü">
+          <a href="#mit-kapsz">Mit kapsz</a>
           <a href="#hogyan">Hogyan működik</a>
           <a href="#arak">Árak</a>
           <a href="#konyvelo">Könyvelő</a>
@@ -53,7 +57,7 @@
       <p class="bevezeto">Valódi, nyilvántartásba vett könyvelő intézi a bevallásaidat és a NAV-os ügyeidet. Az appban pedig mindig látod, mennyit tegyél félre adóra, és mikor mit kell befizetned.</p>
       <div class="hos-ar">
         <span class="hos-ar-osszeg">19&nbsp;999&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></span>
-        <span class="hos-ar-meg">bruttó, minden külön díj <a href="#arak">kiírva</a></span>
+        <span class="hos-ar-meg">bruttó · éves zárás évente egyszer: 14&nbsp;999&nbsp;Ft · minden díj <a href="#arak">kiírva</a></span>
       </div>
       <div class="gombsor">
         <a class="gomb gomb-fo" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
@@ -66,16 +70,43 @@
       </ul>
     </div>
     <div class="hos-kep">
-      <figure class="termek">
+      <!-- Váltakozó képernyők (mozgas.js). JS nélkül az első kép áll, a többi rejtve marad. -->
+      <figure class="termek" data-valto>
         <div class="bongeszo">
           <div class="bongeszo-sav"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
-          <img src="kepek/app_asztali.webp" width="1440" height="914" alt="Az Adózz.hu gépes nézete: félretenni való összeg, idei keretek, határidők, visszahívás">
+          <div class="valto valto-gep">
+            <img class="aktiv" src="kepek/app_asztali.webp" width="1440" height="914" alt="Az Adózz.hu gépes nézete: félretenni való összeg, idei keretek, határidők, visszahívás">
+            <img src="kepek/app_asztali_dosszie.webp" width="1440" height="914" loading="lazy" fetchpriority="low" alt="">
+            <img src="kepek/app_asztali_uzenetek.webp" width="1440" height="914" loading="lazy" fetchpriority="low" alt="">
+            <img src="kepek/app_asztali_hataridok.webp" width="1440" height="914" loading="lazy" fetchpriority="low" alt="">
+          </div>
         </div>
         <div class="telefon telefon-hos">
-          <img src="kepek/app_fooldal.webp" width="780" height="1688" alt="Az Adózz.hu app főoldala telefonon: mennyit tegyél félre adóra, határidők">
+          <div class="valto valto-tel">
+            <img class="aktiv" src="kepek/app_fooldal.webp" width="780" height="1688" data-gep="0" data-cim="Főoldal: mennyit tegyél félre adóra" alt="Az Adózz.hu app főoldala telefonon: mennyit tegyél félre adóra, határidők">
+            <img src="kepek/app_dosszie.webp" width="780" height="1688" loading="lazy" fetchpriority="low" data-gep="1" data-cim="Dosszié: minden papírod egy helyen" alt="A havi dosszié: amit küldtél, és amit a könyvelőd átnézett">
+            <img src="kepek/app_uzenetek.webp" width="780" height="1688" loading="lazy" fetchpriority="low" data-gep="2" data-cim="Üzenetek: a könyvelőd egy üzenetnyire" alt="Üzenetek a könyvelővel és igazoláskérés egy gombnyomással">
+            <img src="kepek/app_fotozas.webp" width="780" height="1688" loading="lazy" fetchpriority="low" data-gep="1" data-cim="Fotózás: a papírt lefotózod, és kész" alt="Fotózás az appban: a papírt lefotózod, vagy a galériából, fájlból választod ki">
+            <img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" fetchpriority="low" data-gep="3" data-cim="Határidők: mit, mikorra, melyik számlára" alt="Negyedéves adó és járulékok: összeg, NAV-számlaszám és közlemény másolható formában">
+          </div>
         </div>
         <figcaption>Az app képei bemutató adatokkal készültek.</figcaption>
       </figure>
+      <!-- Vezérlő: JS nélkül láthatatlan, de a helye megvan (nincs elmozdulás, amikor megjelenik). -->
+      <div class="hos-vezerlo" data-vezerlo>
+        <button class="hos-szunet" type="button" aria-label="Képváltás szüneteltetése" data-szunet>
+          <svg class="jel-szunet" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="5" y="4" width="3.4" height="12" rx="1.2" fill="currentColor"/><rect x="11.6" y="4" width="3.4" height="12" rx="1.2" fill="currentColor"/></svg>
+          <svg class="jel-indit" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M6.5 4.2v11.6c0 .8.9 1.3 1.6.9l9-5.8c.6-.4.6-1.3 0-1.7l-9-5.8c-.7-.5-1.6 0-1.6.8z" fill="currentColor"/></svg>
+        </button>
+        <div class="hos-fulek" role="group" aria-label="Melyik képernyőt mutassuk?">
+          <button type="button" class="hos-ful aktiv" data-kep="0" aria-current="true" aria-label="Főoldal"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 8.83354V3.52275C10 3.23233 9.75879 3 9.46734 3H6.54271C6.24121 3 6 3.23233 6 3.52275V12.1687L5 13.0025V29.0025H27V14.0025L16.07 3.77246L10 8.83354Z" fill="#F3C07B"></path><path d="M15.92 27.0025H8.08C8.04 27.0025 8 26.9625 8 26.9225V16.3925C8 15.6425 8.61 15.0325 9.36 15.0325H14.65C15.4 15.0325 16.01 15.6425 16.01 16.3925V26.9225C16 26.9625 15.96 27.0025 15.92 27.0025Z" fill="#8C5543"></path><path d="M14.5 21.0024C14.7761 21.0024 15 20.7786 15 20.5024C15 20.2263 14.7761 20.0024 14.5 20.0024C14.2239 20.0024 14 20.2263 14 20.5024C14 20.7786 14.2239 21.0024 14.5 21.0024Z" fill="#402A32"></path><path d="M15.96 28.0024H8C7.45 28.0024 7 27.5524 7 27.0024C7 26.4524 7.45 26.0024 8 26.0024H15.96C16.51 26.0024 16.96 26.4524 16.96 27.0024C16.96 27.5524 16.51 28.0024 15.96 28.0024Z" fill="#D3D3D3"></path><path d="M30 29.0024H2V28.9124C2 27.8524 2.85 27.0024 3.91 27.0024H28.09C29.14 27.0024 30 27.8524 30 28.9124V29.0024Z" fill="#00F397"></path><path d="M16.88 2.3525L29.64 14.9225C30.12 15.3925 30.12 16.1525 29.64 16.6125C29.17 17.0825 28.4 17.0825 27.92 16.6125L16.02 4.8925L4.08 16.6525C3.61 17.1225 2.84 17.1225 2.36 16.6525C1.88 16.1825 1.88 15.4225 2.36 14.9525L15.16 2.3525C15.63 1.8825 16.4 1.8825 16.88 2.3525Z" fill="#F8312F"></path><path d="M23.14 21.0024H18.86C18.38 21.0024 18 20.6224 18 20.1424V15.8624C18 15.3924 18.38 15.0024 18.86 15.0024H23.14C23.61 15.0024 24 15.3824 24 15.8624V20.1424C24 20.6224 23.62 21.0024 23.14 21.0024Z" fill="#83CBFF"></path></svg><span>Főoldal</span><i></i></button>
+          <button type="button" class="hos-ful" data-kep="1" aria-label="Dosszié"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M15.385 7.39062L12.9075 4.915C12.3219 4.32875 11.5275 4 10.6987 4H4.125C2.95125 4 2 4.95125 2 6.125V13.5H12.985H30V10.1375C30 8.96375 29.0488 8.0125 27.875 8.0125H16.8875C16.3237 8.0125 15.7838 7.78875 15.385 7.39062Z" fill="#FFB02E"></path><path d="M27.875 30H4.125C2.95125 30 2 29.0545 2 27.8878V13.1122C2 11.9455 2.95125 11 4.125 11H27.875C29.0488 11 30 11.9455 30 13.1122V27.8878C30 29.0545 29.0488 30 27.875 30Z" fill="#FCD53F"></path></svg><span>Dosszié</span><i></i></button>
+          <button type="button" class="hos-ful" data-kep="2" aria-label="Üzenetek"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.0278 4C8.16615 4 3.53108 9.75575 1.66714 12.7026C0.772247 14.1175 0.77225 15.8825 1.66714 17.2974C2.53549 18.6702 3.97262 20.6044 6.02779 22.3015V26.5017C6.02779 27.6235 7.214 28.3483 8.21217 27.8365L12.5619 25.6063C13.6426 25.8582 14.7979 26 16.0278 26C23.8894 26 28.5245 20.2442 30.3884 17.2974C31.2833 15.8825 31.2833 14.1175 30.3884 12.7026C28.5245 9.75575 23.8894 4 16.0278 4Z" fill="#9B9B9B"></path><path d="M16.0278 25C14.741 25 13.5452 24.8344 12.4384 24.5458L7.75592 26.9467C7.42319 27.1173 7.02779 26.8757 7.02779 26.5017V21.8222C4.88609 20.1489 3.39604 18.16 2.51228 16.7628C1.82387 15.6744 1.82387 14.3256 2.51227 13.2372C4.32778 10.3669 8.70189 5 16.0278 5C23.3537 5 27.7278 10.3669 29.5433 13.2372C30.2317 14.3256 30.2317 15.6744 29.5433 16.7628C27.7278 19.6331 23.3537 25 16.0278 25Z" fill="white"></path></svg><span>Üzenetek</span><i></i></button>
+          <button type="button" class="hos-ful" data-kep="3" aria-label="Fotózás"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5.5 11C5.22386 11 5 11.2239 5 11.5V13H9V11.5C9 11.2239 8.77614 11 8.5 11H5.5Z" fill="#D3D3D3"></path><path d="M21.5 11C21.2239 11 21 11.2239 21 11.5V13H27V11.5C27 11.2239 26.7761 11 26.5 11H21.5Z" fill="#D3D3D3"></path><path d="M2 14C2 12.8954 2.89543 12 4 12H28C29.1046 12 30 12.8954 30 14V16.5L28 22L30 27.5V28C30 29.1046 29.1046 30 28 30H4C2.89543 30 2 29.1046 2 28V27.5L3.5 22L2 16.5V14Z" fill="#E6E6E6"></path><path d="M2 16.5C2 16.2239 2.22386 16 2.5 16H29.5C29.7761 16 30 16.2239 30 16.5V27.5C30 27.7761 29.7761 28 29.5 28H2.5C2.22386 28 2 27.7761 2 27.5V16.5Z" fill="#533566"></path><path d="M22 22C22 25.3137 19.3137 28 16 28C12.6863 28 10 25.3137 10 22C10 18.6863 12.6863 16 16 16C19.3137 16 22 18.6863 22 22Z" fill="#321B41"></path><path d="M16 27C18.7614 27 21 24.7614 21 22C21 19.2386 18.7614 17 16 17C13.2386 17 11 19.2386 11 22C11 24.7614 13.2386 27 16 27ZM16 29C12.134 29 9 25.866 9 22C9 18.134 12.134 15 16 15C19.866 15 23 18.134 23 22C23 25.866 19.866 29 16 29Z" fill="#9B9B9B"></path><path d="M18.5 22C18.5 23.3807 17.3807 24.5 16 24.5C14.6193 24.5 13.5 23.3807 13.5 22C13.5 20.6193 14.6193 19.5 16 19.5C17.3807 19.5 18.5 20.6193 18.5 22Z" fill="#433B6B"></path><path d="M19.0825 19.875C19.4967 20.5924 19.4448 21.3979 18.9665 21.674C18.4882 21.9501 17.7647 21.5924 17.3505 20.875C16.9363 20.1575 16.9882 19.3521 17.4665 19.0759C17.9448 18.7998 18.6683 19.1575 19.0825 19.875Z" fill="white"></path></svg><span>Fotózás</span><i></i></button>
+          <button type="button" class="hos-ful" data-kep="4" aria-label="Határidők"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 9.00001L15.2666 6.15716C15.7501 6.05357 16.2499 6.05357 16.7334 6.15716L30 9.00001V24.8C30 27.6719 27.6719 30 24.8 30H7.2C4.32812 30 2 27.6719 2 24.8V9.00001Z" fill="#B4ACBC"></path><path d="M3 8.00005L15.213 5.18167C15.7309 5.06216 16.2691 5.06216 16.787 5.18167L29 8.00005V24.5001C29 26.9853 26.9853 29.0001 24.5 29.0001H7.5C5.01472 29.0001 3 26.9853 3 24.5001V8.00005Z" fill="#F3EEF8"></path><path d="M7.9998 12C7.88935 12 7.7998 12.0895 7.7998 12.2V14.8C7.7998 14.9105 7.88935 15 7.9998 15H10.7998C10.9103 15 10.9998 14.9105 10.9998 14.8V12.2C10.9998 12.0895 10.9103 12 10.7998 12H7.9998Z" fill="#998EA4"></path><path d="M7.9998 17.5C7.88935 17.5 7.7998 17.5895 7.7998 17.7V20.3C7.7998 20.4105 7.88935 20.5 7.9998 20.5H10.7998C10.9103 20.5 10.9998 20.4105 10.9998 20.3V17.7C10.9998 17.5895 10.9103 17.5 10.7998 17.5H7.9998Z" fill="#998EA4"></path><path d="M7.7998 23.1C7.7998 22.9896 7.88935 22.9 7.9998 22.9H10.7998C10.9103 22.9 10.9998 22.9896 10.9998 23.1V25.7C10.9998 25.8105 10.9103 25.9 10.7998 25.9H7.9998C7.88935 25.9 7.7998 25.8105 7.7998 25.7V23.1Z" fill="#998EA4"></path><path d="M14.5998 12C14.4893 12 14.3998 12.0895 14.3998 12.2V14.8C14.3998 14.9105 14.4893 15 14.5998 15H17.3998C17.5102 15 17.5998 14.9105 17.5998 14.8V12.2C17.5998 12.0895 17.5102 12 17.3998 12H14.5998Z" fill="#998EA4"></path><path d="M14.3998 17.7C14.3998 17.5895 14.4893 17.5 14.5998 17.5H17.3998C17.5102 17.5 17.5998 17.5895 17.5998 17.7V20.3C17.5998 20.4105 17.5102 20.5 17.3998 20.5H14.5998C14.4893 20.5 14.3998 20.4105 14.3998 20.3V17.7Z" fill="#998EA4"></path><path d="M14.5998 22.9C14.4893 22.9 14.3998 22.9896 14.3998 23.1V25.7C14.3998 25.8105 14.4893 25.9 14.5998 25.9H17.3998C17.5102 25.9 17.5998 25.8105 17.5998 25.7V23.1C17.5998 22.9896 17.5102 22.9 17.3998 22.9H14.5998Z" fill="#998EA4"></path><path d="M20.9998 12.2C20.9998 12.0895 21.0894 12 21.1998 12H23.9998C24.1103 12 24.1998 12.0895 24.1998 12.2V14.8C24.1998 14.9105 24.1103 15 23.9998 15H21.1998C21.0894 15 20.9998 14.9105 20.9998 14.8V12.2Z" fill="#998EA4"></path><path d="M21.1998 22.9C21.0894 22.9 20.9998 22.9896 20.9998 23.1V25.7C20.9998 25.8105 21.0894 25.9 21.1998 25.9H23.9998C24.1103 25.9 24.1998 25.8105 24.1998 25.7V23.1C24.1998 22.9896 24.1103 22.9 23.9998 22.9H21.1998Z" fill="#998EA4"></path><path d="M7.2 2C4.32812 2 2 4.32812 2 7.2V9H30V7.2C30 4.32812 27.6719 2 24.8 2H7.2Z" fill="#0084CE"></path><path d="M21.2 17.5C21.0895 17.5 21 17.5895 21 17.7V20.3C21 20.4105 21.0895 20.5 21.2 20.5H24C24.1105 20.5 24.2 20.4105 24.2 20.3V17.7C24.2 17.5895 24.1105 17.5 24 17.5H21.2Z" fill="#0084CE"></path></svg><span>Határidők</span><i></i></button>
+        </div>
+        <p class="hos-felirat" data-felirat>Főoldal: mennyit tegyél félre adóra</p>
+      </div>
     </div>
   </div>
 </section>
@@ -93,7 +124,7 @@
     </div>
     <div class="bizalom-elem">
       <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 2C12.6863 2 10 4.68629 10 8V11C10 14.3137 12.6863 17 16 17C19.3137 17 22 14.3137 22 11V8C22 4.68629 19.3137 2 16 2ZM16 4.5C17.933 4.5 19.5 6.067 19.5 8V11C19.5 12.933 17.933 14.5 16 14.5C14.067 14.5 12.5 12.933 12.5 11V8C12.5 6.067 14.067 4.5 16 4.5Z" fill="#D3D3D3"></path><path d="M5 14C5 12.3431 6.34315 11 8 11H24C25.6569 11 27 12.3431 27 14V27C27 28.6569 25.6569 30 24 30H8C6.34315 30 5 28.6569 5 27V14Z" fill="#F9C23C"></path><path d="M17.5 20.5002C18.1072 20.0441 18.5 19.3179 18.5 18.5C18.5 17.1193 17.3807 16 16 16C14.6193 16 13.5 17.1193 13.5 18.5C13.5 19.3179 13.8928 20.0441 14.5 20.5002V24C14.5 24.8284 15.1716 25.5 16 25.5C16.8284 25.5 17.5 24.8284 17.5 24V20.5002Z" fill="#433B6B"></path></svg>
-      <div><h2>Európai szerveren</h2><p>Az irataidat titkosítva tároljuk.</p></div>
+      <div><h2>Európai szerveren</h2><p>A könyvelési irataidat titkosítva tároljuk, és csak a könyvelőd látja őket.</p></div>
     </div>
     <div class="bizalom-elem">
       <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 30H6.0317L15.977 27.2248L25.9222 30H30V9.3C30 8.03 28.97 7 27.7 7H4.3C3.03 7 2 8.03 2 9.3V30Z" fill="#9B9B9B"></path><path d="M27 14H26C25.45 14 25 13.55 25 13V12C25 11.45 25.45 11 26 11H27C27.55 11 28 11.45 28 12V13C28 13.56 27.55 14 27 14ZM28 18V17C28 16.45 27.55 16 27 16H26C25.45 16 25 16.45 25 17V18C25 18.55 25.45 19 26 19H27C27.55 19 28 18.56 28 18ZM28 23V22C28 21.45 27.55 21 27 21H26C25.45 21 25 21.45 25 22V23C25 23.55 25.45 24 26 24H27C27.55 24 28 23.56 28 23Z" fill="#83CBFF"></path><path d="M7 22V23C7 23.55 6.55 24 6 24H5C4.45 24 4 23.55 4 23V22C4 21.45 4.45 21 5 21H6C6.55 21 7 21.45 7 22ZM6 11H5C4.45 11 4 11.45 4 12V13C4 13.55 4.45 14 5 14H6C6.55 14 7 13.55 7 13V12C7 11.45 6.55 11 6 11ZM6 16H5C4.45 16 4 16.45 4 17V18C4 18.55 4.45 19 5 19H6C6.55 19 7 18.55 7 18V17C7 16.45 6.55 16 6 16Z" fill="#83CBFF"></path><path d="M26 30H18.9867L15.9711 28.2702L12.9556 30H6V4.46C6 3.1 7.1 2 8.46 2H23.54C24.9 2 26 3.1 26 4.46V30Z" fill="#D3D3D3"></path><path d="M19 30H13V26.25C13 25.56 13.56 25 14.25 25H17.75C18.44 25 19.01 25.56 19.01 26.26V30H19Z" fill="#1C1C1C"></path><path d="M14.5 18H11.5C11.23 18 11 17.78 11 17.5V15.49C11 15.22 11.22 14.99 11.5 14.99H14.51C14.78 14.99 15.01 15.21 15.01 15.49V17.5C15 17.78 14.78 18 14.5 18ZM21 17.51V15.5C21 15.23 20.78 15 20.5 15H17.5C17.23 15 17 15.22 17 15.5V17.51C17 17.78 17.22 18.01 17.5 18.01H20.51C20.78 18 21 17.78 21 17.51ZM15 22.51V20.5C15 20.23 14.78 20 14.5 20H11.5C11.23 20 11 20.22 11 20.5V22.51C11 22.78 11.22 23.01 11.5 23.01H14.51C14.78 23 15 22.78 15 22.51ZM21 22.51V20.5C21 20.23 20.78 20 20.5 20H17.5C17.23 20 17 20.22 17 20.5V22.51C17 22.78 17.22 23.01 17.5 23.01H20.51C20.78 23 21 22.78 21 22.51ZM15 7.50999V5.5C15 5.23 14.78 5 14.5 5H11.5C11.23 5 11 5.22 11 5.5V7.50999C11 7.77999 11.22 8.00999 11.5 8.00999H14.51C14.78 7.99999 15 7.77999 15 7.50999ZM21 7.50999V5.5C21 5.23 20.78 5 20.5 5H17.5C17.23 5 17 5.22 17 5.5V7.50999C17 7.77999 17.22 8.00999 17.5 8.00999H20.51C20.78 7.99999 21 7.77999 21 7.50999ZM15 12.51V10.5C15 10.23 14.78 10 14.5 10H11.5C11.23 10 11 10.22 11 10.5V12.51C11 12.78 11.22 13.01 11.5 13.01H14.51C14.78 13 15 12.78 15 12.51ZM21 12.51V10.5C21 10.23 20.78 10 20.5 10H17.5C17.23 10 17 10.22 17 10.5V12.51C17 12.78 17.22 13.01 17.5 13.01H20.51C20.78 13 21 12.78 21 12.51Z" fill="#83CBFF"></path></svg>
@@ -103,14 +134,14 @@
 </section>
 
 <!-- ============ KINEK SZÓL ============ -->
-<section class="szakasz" id="kinek">
+<section class="szakasz szakasz-feher" id="kinek">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Kinek szól</p>
-      <h2>Egy célcsoport, egy csomag.</h2>
+      <h2>Átalányadósoknak és katásoknak. Csak nekik.</h2>
       <p class="bevezeto">Csak alanyi ÁFA-mentes egyéni vállalkozókkal dolgozunk, akik átalányadóval vagy katával adóznak. Ezért tudunk egyetlen, előre kiírt áron dolgozni.</p>
     </div>
-    <div class="kinek-racs">
+    <div class="kinek-racs be-sor">
       <div class="kartya kinek-igen">
         <h3>Neked szól, ha</h3>
         <ul class="lista lista-pipa">
@@ -134,29 +165,29 @@
 </section>
 
 <!-- ============ HOGYAN MŰKÖDIK ============ -->
-<section class="szakasz szakasz-szurke" id="hogyan">
+<section class="szakasz szakasz-meleg" id="hogyan">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Hogyan működik</p>
       <h2>Négy lépés, és a könyvelésed rendben van.</h2>
     </div>
-    <ol class="lepesek">
-      <li>
+    <ol class="lepesek be-sor">
+      <li class="lepes-kek">
         <span class="lepes-szam">1</span>
         <h3>Regisztrálsz</h3>
         <p>Megadod az e-mail-címedet, és válaszolsz pár kérdésre a vállalkozásodról. Kártya ehhez nem kell.</p>
       </li>
-      <li>
+      <li class="lepes-levendula">
         <span class="lepes-szam">2</span>
         <h3>Szerződés, meghatalmazás</h3>
         <p>Elfogadod a szerződést, és a NAV-nál meghatalmazást adsz a könyvelődnek. Ha kéred, ő küldi be, te csak jóváhagyod.</p>
       </li>
-      <li>
+      <li class="lepes-menta">
         <span class="lepes-szam">3</span>
         <h3>Visszahívás, ha kéred</h3>
         <p>A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Utána fizetsz, kártyával vagy átutalással.</p>
       </li>
-      <li>
+      <li class="lepes-sarga">
         <span class="lepes-szam">4</span>
         <h3>Indul a könyvelés</h3>
         <p>A könyvelőd bekapcsolja a könyvelést. A számláid maguktól bejönnek, te pedig az appban látod, mennyit tegyél félre.</p>
@@ -165,101 +196,253 @@
   </div>
 </section>
 
-<!-- ============ MIT KAPSZ ============ -->
-<section class="szakasz" id="mit-kapsz">
+<!-- ============ MIT KAPSZ: LÉPÉSRŐL LÉPÉSRE (mozgó bemutató) ============
+     JS nélkül / csökkentett mozgásnál: lépésenként szöveg + telefon, a mozgó rétegek végállapotban (minden látszik).
+     Mozgással, széles kijelzőn: a mozgas.js a telefonokból egy ragadós „színpadot” épít, és görgetésre lépésenként vált.
+     Mozgással, keskeny kijelzőn: minden lépés saját telefonja akkor indul, amikor a képernyőre ér.
+     A rétegek számai mind az app bemutató képeiről valók. Név a rétegekben nincs, csak „a könyvelőd”. -->
+<section class="szakasz szakasz-sotet" id="mit-kapsz">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Mit kapsz</p>
       <h2>Mindig tudod, hol tartasz az adóval.</h2>
-      <p class="bevezeto">Az app megmutatja, mennyit tegyél félre és mikor mit fizess. A számolást és a bevallást a könyvelőd végzi.</p>
+      <p class="bevezeto">Nézd meg lépésről lépésre, mit mutat neked az app egy hónap alatt. A számolást és a bevallást a könyvelőd végzi. Te csak látod, hol tartasz.</p>
     </div>
 
-    <div class="funkcio">
-      <div class="funkcio-szoveg">
-        <p class="funkcio-cimke">Félretenni</p>
-        <h3>Minden számla után látod, mennyit tegyél félre.</h3>
-        <p>Az app a kiállított számláidból kiszámolja, mennyi adóra és járulékra számíts, hónapokra bontva. A befizetendő összeget negyedévente a könyvelőd hagyja jóvá.</p>
-        <p class="funkcio-meg"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pénzt nem vonunk le, és nem utalunk helyetted. Csak megmutatjuk.</p>
-      </div>
-      <div class="funkcio-kep">
-        <div class="telefon"><img src="kepek/app_felretesz.webp" width="780" height="1688" loading="lazy" alt="Ennyit tegyél félre: havonta, számlánként kiszámolt összegek az appban"></div>
-      </div>
+    <div class="bemutato" data-bemutato>
+      <ol class="blepesek">
+
+        <!-- 1. SZÁMLÁK -->
+        <li class="blepes szin-egkek">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">1</span>Számlák</p>
+            <h3>Kiállítasz egy számlát. Az app már tudja.</h3>
+            <p>A számláid a NAV Online Számla rendszeréből maguktól bejönnek az appba. Nem kell begépelned őket, és mindegyik mellett ott van, mennyit tegyél félre belőle.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> nincs adminisztráció, és minden számla után tudod, mennyi jár az adóra.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-egkek">
+                <img src="kepek/app_szamlak.webp" width="780" height="1688" loading="lazy" alt="Kiállított számlák az appban: Napfény Étterem Kft., 418 000 Ft-os számla, ebből kb. 29 000 Ft-ot tegyél félre">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-szamla"></span>
+                  <span class="kivagas kv-szamla a-csuszik k2"></span>
+                  <span class="kiemeles ki-szamla a-pop k4"></span>
+                  <div class="ertesites a-le k0"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M20.3432 2.29289C20.1556 2.10536 19.9013 2 19.6361 2H7C5.89543 2 5 2.89543 5 4V28C5 29.1046 5.89543 30 7 30H25C26.1046 30 27 29.1046 27 28V9.36394C27 9.09872 26.8946 8.84437 26.7071 8.65683L20.3432 2.29289Z" fill="#B4ACBC"></path><path d="M19.6821 3.00001L7 3C6.44772 3 6 3.44772 6 4V28C6 28.5523 6.44772 29 7 29L25 29C25.5523 29 26 28.5523 26 28V9.45333L19.6821 3.00001Z" fill="#F3EEF8"></path><path d="M9.5 12H22.5C22.7761 12 23 12.2239 23 12.5C23 12.7761 22.7761 13 22.5 13H9.5C9.22386 13 9 12.7761 9 12.5C9 12.2239 9.22386 12 9.5 12ZM9.5 15C9.22386 15 9 15.2239 9 15.5C9 15.7761 9.22386 16 9.5 16H22.5C22.7761 16 23 15.7761 23 15.5C23 15.2239 22.7761 15 22.5 15H9.5ZM9 18.5C9 18.2239 9.22386 18 9.5 18H22.5C22.7761 18 23 18.2239 23 18.5C23 18.7761 22.7761 19 22.5 19H9.5C9.22386 19 9 18.7761 9 18.5ZM9.5 21C9.22386 21 9 21.2239 9 21.5C9 21.7761 9.22386 22 9.5 22H17.5C17.7761 22 18 21.7761 18 21.5C18 21.2239 17.7761 21 17.5 21H9.5Z" fill="#998EA4"></path><path d="M26 9.45325H21.3892C20.4464 9.45325 19.6821 8.68896 19.6821 7.74614V3L26 9.45325Z" fill="#CDC4D6"></path></svg></span><span class="ert-szoveg"><b>Új számla a NAV-tól</b><span>Napfény Étterem Kft. · 418&nbsp;000&nbsp;Ft</span></span><span class="ert-ido">most</span></div>
+                  <div class="hivo hivo-szamla a-pop k5"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.44 3.385C17.77 3.765 18.33 3.835 18.74 3.545C19.54 2.975 20.58 3.835 20.17 4.715L17.75 7.485H13.88L11.44 4.685C11.03 3.795 12.07 2.935 12.87 3.505L12.94 3.555C13.35 3.845 13.91 3.765 14.23 3.385L15.1 2.345C15.48 1.885 16.19 1.885 16.57 2.345L17.44 3.385ZM4 21.2249C4 14.6849 9.3 9.38489 15.84 9.38489C22.38 9.38489 27.68 14.6849 27.67 21.2249C27.67 26.0549 23.75 29.9749 18.92 29.9749H12.75C7.92 29.9749 4 26.0549 4 21.2249Z" fill="#F3C07B"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14.12 7.46484H17.56C18.17 7.46484 18.67 7.96484 18.67 8.57484C18.67 9.18484 18.17 9.68484 17.56 9.68484H14.12C13.51 9.68484 13.01 9.18484 13.01 8.57484C13.01 7.96484 13.51 7.46484 14.12 7.46484ZM15.8401 19.3449H15.9101C17.4101 19.3849 18.6101 20.6049 18.6101 22.1049C18.6101 23.3849 17.7401 24.4549 16.5601 24.7749V25.8949C16.5601 26.2949 16.2401 26.6149 15.8401 26.6149C15.4401 26.6149 15.1201 26.2949 15.1201 25.8949V24.7749C13.9401 24.4549 13.0701 23.3849 13.0701 22.1049C13.0701 21.7049 13.3901 21.3849 13.7901 21.3849C14.1901 21.3849 14.5101 21.7049 14.5101 22.1049C14.5101 22.8449 15.1001 23.4349 15.8301 23.4349C16.5601 23.4349 17.1601 22.8349 17.1601 22.1049C17.1601 21.3749 16.5601 20.7749 15.8301 20.7749H15.7601C14.2701 20.7349 13.0701 19.5149 13.0701 18.0149C13.0701 16.7349 13.9401 15.6649 15.1201 15.3449V14.2249C15.1201 13.8249 15.4401 13.5049 15.8401 13.5049C16.2401 13.5049 16.5601 13.8249 16.5601 14.2249V15.3449C17.7401 15.6649 18.6101 16.7349 18.6101 18.0149C18.6101 18.4149 18.2901 18.7349 17.8901 18.7349C17.4901 18.7349 17.1701 18.4149 17.1701 18.0149C17.1701 17.2849 16.5701 16.6849 15.8401 16.6849C15.1101 16.6849 14.5101 17.2849 14.5101 18.0149C14.5101 18.7449 15.1101 19.3449 15.8401 19.3449Z" fill="#8C5543"></path></svg><span>Ebből kb. <b>29&nbsp;000&nbsp;Ft</b>-ot tegyél félre.</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 2. FÉLRETENNI -->
+        <li class="blepes szin-sarga">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">2</span>Félretenni</p>
+            <h3>Látod, mennyi pénz nem a tiéd.</h3>
+            <p>A főoldalon egy szám mutatja, mennyit tegyél félre adóra és járulékra. Minden új számlával frissül. Ha félretetted, megjelölöd, és kész.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> nem költöd el az adó pénzét, és a negyedév végén nem ér meglepetés.</p>
+            <p class="blepes-meg"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ez csak jelölés: pénzt nem vonunk le, nem utalunk. A befizetendő összeget negyedév végén a könyvelőd pontosítja.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-sarga">
+                <img src="kepek/app_fooldal.webp" width="780" height="1688" loading="lazy" alt="Az app főoldala: most kb. 250 000 Ft legyen félretéve az adóra, gomb a félretett összeg megjelöléséhez">
+                <div class="reteg" aria-hidden="true">
+                  <span class="koppintas kop-felretesz k5"></span>
+                  <span class="kesz-gomb kg-felretesz a-pop k6"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Megjelölve</span>
+                  <div class="szamlalo a-be k0">
+                    <div class="szamlalo-fej"><span>Most legyen félretéve</span><em class="a-pop k1">+29&nbsp;000&nbsp;Ft</em></div>
+                    <p class="szamlalo-szam">kb. <b data-szamlal="250000" data-tol="221000" data-kesik="550" data-ido="1300">250&nbsp;000</b>&nbsp;Ft</p>
+                    <p class="szamlalo-meg">III. negyedév 96&nbsp;000 + IV. negyedév, eddig 154&nbsp;000</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 3. HATÁRIDŐK -->
+        <li class="blepes szin-kek">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">3</span>Határidők</p>
+            <h3>Tudod, mit, mikorra és hova utalj.</h3>
+            <p>Határidő előtt szólunk. Látod az összeget, a NAV-számlaszámot és a közleményt, és egy koppintással kimásolod őket a bankodba. Katásként a havi katát látod így.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> nem késel le határidőt, és nem gépeled el a számlaszámot.</p>
+            <p class="blepes-meg"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Az adót te utalod el, így a pénzed végig nálad marad.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-kek">
+                <img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" alt="Szja-előleg a IV. negyedévre: kb. 49 680 Ft, NAV-számlaszám és közlemény Másolom gombbal">
+                <div class="reteg" aria-hidden="true">
+                  <span class="kiemeles ki-szamlaszam a-pop k2"></span>
+                  <span class="koppintas kop-masol k4"></span>
+                  <span class="kesz-gomb kg-masol a-pop k5"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Kimásolva</span>
+                  <div class="ertesites a-le k0"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 9.00001L15.2666 6.15716C15.7501 6.05357 16.2499 6.05357 16.7334 6.15716L30 9.00001V24.8C30 27.6719 27.6719 30 24.8 30H7.2C4.32812 30 2 27.6719 2 24.8V9.00001Z" fill="#B4ACBC"></path><path d="M3 8.00005L15.213 5.18167C15.7309 5.06216 16.2691 5.06216 16.787 5.18167L29 8.00005V24.5001C29 26.9853 26.9853 29.0001 24.5 29.0001H7.5C5.01472 29.0001 3 26.9853 3 24.5001V8.00005Z" fill="#F3EEF8"></path><path d="M7.9998 12C7.88935 12 7.7998 12.0895 7.7998 12.2V14.8C7.7998 14.9105 7.88935 15 7.9998 15H10.7998C10.9103 15 10.9998 14.9105 10.9998 14.8V12.2C10.9998 12.0895 10.9103 12 10.7998 12H7.9998Z" fill="#998EA4"></path><path d="M7.9998 17.5C7.88935 17.5 7.7998 17.5895 7.7998 17.7V20.3C7.7998 20.4105 7.88935 20.5 7.9998 20.5H10.7998C10.9103 20.5 10.9998 20.4105 10.9998 20.3V17.7C10.9998 17.5895 10.9103 17.5 10.7998 17.5H7.9998Z" fill="#998EA4"></path><path d="M7.7998 23.1C7.7998 22.9896 7.88935 22.9 7.9998 22.9H10.7998C10.9103 22.9 10.9998 22.9896 10.9998 23.1V25.7C10.9998 25.8105 10.9103 25.9 10.7998 25.9H7.9998C7.88935 25.9 7.7998 25.8105 7.7998 25.7V23.1Z" fill="#998EA4"></path><path d="M14.5998 12C14.4893 12 14.3998 12.0895 14.3998 12.2V14.8C14.3998 14.9105 14.4893 15 14.5998 15H17.3998C17.5102 15 17.5998 14.9105 17.5998 14.8V12.2C17.5998 12.0895 17.5102 12 17.3998 12H14.5998Z" fill="#998EA4"></path><path d="M14.3998 17.7C14.3998 17.5895 14.4893 17.5 14.5998 17.5H17.3998C17.5102 17.5 17.5998 17.5895 17.5998 17.7V20.3C17.5998 20.4105 17.5102 20.5 17.3998 20.5H14.5998C14.4893 20.5 14.3998 20.4105 14.3998 20.3V17.7Z" fill="#998EA4"></path><path d="M14.5998 22.9C14.4893 22.9 14.3998 22.9896 14.3998 23.1V25.7C14.3998 25.8105 14.4893 25.9 14.5998 25.9H17.3998C17.5102 25.9 17.5998 25.8105 17.5998 25.7V23.1C17.5998 22.9896 17.5102 22.9 17.3998 22.9H14.5998Z" fill="#998EA4"></path><path d="M20.9998 12.2C20.9998 12.0895 21.0894 12 21.1998 12H23.9998C24.1103 12 24.1998 12.0895 24.1998 12.2V14.8C24.1998 14.9105 24.1103 15 23.9998 15H21.1998C21.0894 15 20.9998 14.9105 20.9998 14.8V12.2Z" fill="#998EA4"></path><path d="M21.1998 22.9C21.0894 22.9 20.9998 22.9896 20.9998 23.1V25.7C20.9998 25.8105 21.0894 25.9 21.1998 25.9H23.9998C24.1103 25.9 24.1998 25.8105 24.1998 25.7V23.1C24.1998 22.9896 24.1103 22.9 23.9998 22.9H21.1998Z" fill="#998EA4"></path><path d="M7.2 2C4.32812 2 2 4.32812 2 7.2V9H30V7.2C30 4.32812 27.6719 2 24.8 2H7.2Z" fill="#0084CE"></path><path d="M21.2 17.5C21.0895 17.5 21 17.5895 21 17.7V20.3C21 20.4105 21.0895 20.5 21.2 20.5H24C24.1105 20.5 24.2 20.4105 24.2 20.3V17.7C24.2 17.5895 24.1105 17.5 24 17.5H21.2Z" fill="#0084CE"></path></svg></span><span class="ert-szoveg"><b>Közeleg egy határidő</b><span>Szja-előleg, IV. negyedév: jan. 12.</span></span><span class="ert-ido">most</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 4. FOTÓZÁS -->
+        <li class="blepes szin-menta">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">4</span>Fotózás</p>
+            <h3>Papírt kaptál? Lefotózod, és kész.</h3>
+            <p>A nyugtát, a levelet vagy a kézzel írt számlát lefotózod a telefonoddal, vagy feltöltöd PDF-ben. Egyenesen a könyvelődhöz kerül, és ő teszi a helyére.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> nem kell papírt hordanod, és régi e-maileket keresgélned.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-menta">
+                <img src="kepek/app_fotozas.webp" width="780" height="1688" loading="lazy" alt="Fotózás az appban: kameranézet, Galéria és Fájl, PDF gomb">
+                <div class="reteg" aria-hidden="true">
+                  <div class="papir k0"><b>PAPÍRBOLT</b><small>nyomtatópapír</small><i></i><i></i><i></i><i class="rovid"></i><span></span></div>
+                  <span class="koppintas kop-expo k3"></span>
+                  <span class="villanas k3"></span>
+                  <span class="tab-jel a-pop k5"></span>
+                  <div class="ertesites a-le k6"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 6C2 3.79086 3.79086 2 6 2H26C28.2091 2 30 3.79086 30 6V26C30 28.2091 28.2091 30 26 30H6C3.79086 30 2 28.2091 2 26V6Z" fill="#00D26A"></path><path d="M13.242 23C12.8588 23 12.4757 22.8566 12.183 22.5692L6.43855 16.9278C5.85382 16.3535 5.85382 15.422 6.43855 14.8477C7.02329 14.2735 7.97186 14.2735 8.55659 14.8477L13.242 19.4491L23.4434 9.43069C24.0281 8.85644 24.9767 8.85644 25.5614 9.43069C26.1462 10.0049 26.1462 10.9365 25.5614 11.5107L14.301 22.5692C14.009 22.8566 13.6252 23 13.242 23Z" fill="#F4F4F4"></path></svg></span><span class="ert-szoveg"><b>Elküldve a könyvelődnek</b><span>Papírbolt, nyomtatópapír · bekerült a Dossziéba</span></span><span class="ert-ido">most</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 5. DOSSZIÉ -->
+        <li class="blepes szin-menta">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">5</span>Dosszié</p>
+            <h3>Minden papírod egy helyen. És ember nézi át.</h3>
+            <p>A havi dossziéban látod, mit küldtél, mit nézett át a könyvelőd, és mit kér még tőled. A kiállított számláid és a NAV levelei is itt vannak.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> látod, hogy rendben vagy, és nem kell rákérdezned.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-menta">
+                <img src="kepek/app_dosszie.webp" width="780" height="1688" loading="lazy" alt="A novemberi dosszié: a könyvelő átnézte az iratokat, 5 irat rendben, a beküldött papírok listája">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-papir"></span>
+                  <span class="kivagas kv-papir a-csuszik k0"></span>
+                  <span class="cimke-uj a-pop k2">Új</span>
+                  <span class="kiemeles ki-rendben a-pop k5"></span>
+                  <div class="ertesites a-le k4"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 6C2 3.79086 3.79086 2 6 2H26C28.2091 2 30 3.79086 30 6V26C30 28.2091 28.2091 30 26 30H6C3.79086 30 2 28.2091 2 26V6Z" fill="#00D26A"></path><path d="M13.242 23C12.8588 23 12.4757 22.8566 12.183 22.5692L6.43855 16.9278C5.85382 16.3535 5.85382 15.422 6.43855 14.8477C7.02329 14.2735 7.97186 14.2735 8.55659 14.8477L13.242 19.4491L23.4434 9.43069C24.0281 8.85644 24.9767 8.85644 25.5614 9.43069C26.1462 10.0049 26.1462 10.9365 25.5614 11.5107L14.301 22.5692C14.009 22.8566 13.6252 23 13.242 23Z" fill="#F4F4F4"></path></svg></span><span class="ert-szoveg"><b>A könyvelőd átnézte az iratokat</b><span>5 irat rendben</span></span><span class="ert-ido">most</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 6. ÜZENETEK -->
+        <li class="blepes szin-levendula">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">6</span>Üzenetek</p>
+            <h3>A könyvelőd egy üzenetnyire van.</h3>
+            <p>Bármikor írhatsz neki az appban. Jövedelemigazolást vagy nullás igazolást egy gombbal kérsz, és ha elakadsz, visszahívást kérhetsz. A NAV leveleit is ő értelmezi és intézi, a meghatalmazásod alapján.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> nem maradsz egyedül a kérdéseiddel, és látod, ha rendben megérkezett a befizetésed.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-levendula">
+                <img src="kepek/app_uzenetek_chat.webp" width="780" height="1688" loading="lazy" alt="Beszélgetés a könyvelővel az appban: mennyit fizettem be eddig az adóból? Eddig 317 000 Ft-ot">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-kerdes a-ki k1"></span>
+                  <span class="maszk m-valasz a-ki k5"></span>
+                  <span class="maszk m-ma a-ki k6"></span>
+                  <span class="gepel k2"><i></i><i></i><i></i></span>
+                  <div class="ertesites a-le k7"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 6C2 3.79086 3.79086 2 6 2H26C28.2091 2 30 3.79086 30 6V26C30 28.2091 28.2091 30 26 30H6C3.79086 30 2 28.2091 2 26V6Z" fill="#00D26A"></path><path d="M13.242 23C12.8588 23 12.4757 22.8566 12.183 22.5692L6.43855 16.9278C5.85382 16.3535 5.85382 15.422 6.43855 14.8477C7.02329 14.2735 7.97186 14.2735 8.55659 14.8477L13.242 19.4491L23.4434 9.43069C24.0281 8.85644 24.9767 8.85644 25.5614 9.43069C26.1462 10.0049 26.1462 10.9365 25.5614 11.5107L14.301 22.5692C14.009 22.8566 13.6252 23 13.242 23Z" fill="#F4F4F4"></path></svg></span><span class="ert-szoveg"><b>Megérkezett a befizetésed</b><span>A III. negyedéves szja-előleg rendben megérkezett.</span></span><span class="ert-ido">most</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- 7. KERETEK + MENNYIT KERESTEM -->
+        <li class="blepes szin-korall">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="blepes-szam">7</span>Keretek</p>
+            <h3>Nem csúszol bele véletlenül az ÁFA-ba.</h3>
+            <p>Látod, mennyit számlázhatsz még ÁFA nélkül. Katásként a kata-keretedet is, és szólunk, ha cégnek számlázol. Azt is látod, mennyi maradt neked az adók után.</p>
+            <p class="blepes-haszon"><b>Neked ebből:</b> egy pillantásból tudod, mennyi a tiéd.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo szin-korall">
+                <img src="kepek/app_kereset.webp" width="780" height="1688" loading="lazy" alt="Mennyit kerestem? Idén eddig kb. 14 527 000 Ft maradt neked az adók és járulékok után">
+                <div class="reteg" aria-hidden="true">
+                  <span class="kiemeles ki-kereset a-pop k6"></span>
+                  <div class="keret-kartya a-be k0">
+                    <div class="keret-fej"><span class="ert-ikon"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M20.3432 2.29289C20.1556 2.10536 19.9013 2 19.6361 2H7C5.89543 2 5 2.89543 5 4V28C5 29.1046 5.89543 30 7 30H25C26.1046 30 27 29.1046 27 28V9.36394C27 9.09872 26.8946 8.84437 26.7071 8.65683L20.3432 2.29289Z" fill="#B4ACBC"></path><path d="M19.6821 3.00001L7 3C6.44772 3 6 3.44772 6 4V28C6 28.5523 6.44772 29 7 29L25 29C25.5523 29 26 28.5523 26 28V9.45333L19.6821 3.00001Z" fill="#F3EEF8"></path><path d="M9.5 12H22.5C22.7761 12 23 12.2239 23 12.5C23 12.7761 22.7761 13 22.5 13H9.5C9.22386 13 9 12.7761 9 12.5C9 12.2239 9.22386 12 9.5 12ZM9.5 15C9.22386 15 9 15.2239 9 15.5C9 15.7761 9.22386 16 9.5 16H22.5C22.7761 16 23 15.7761 23 15.5C23 15.2239 22.7761 15 22.5 15H9.5ZM9 18.5C9 18.2239 9.22386 18 9.5 18H22.5C22.7761 18 23 18.2239 23 18.5C23 18.7761 22.7761 19 22.5 19H9.5C9.22386 19 9 18.7761 9 18.5ZM9.5 21C9.22386 21 9 21.2239 9 21.5C9 21.7761 9.22386 22 9.5 22H17.5C17.7761 22 18 21.7761 18 21.5C18 21.2239 17.7761 21 17.5 21H9.5Z" fill="#998EA4"></path><path d="M26 9.45325H21.3892C20.4464 9.45325 19.6821 8.68896 19.6821 7.74614V3L26 9.45325Z" fill="#CDC4D6"></path><path d="M26.7662 20.1724L25.6864 16.941L22.8905 14.9347L12.2827 22.784L13.431 25.9402L16.1584 28.0217L26.7662 20.1724Z" fill="#FF822D"></path><path d="M11.1055 26.6545L11.2772 27.5479L12.1125 28.016L16.1519 28.0101L12.2919 22.7937L11.1055 26.6545Z" fill="#FFCE7C"></path><path d="M10.6865 28.0179L11.1053 26.655L12.1123 28.0158L10.6865 28.0179Z" fill="#402A32"></path><path d="M26.5206 12.2485C27.4085 11.5915 28.6609 11.7786 29.318 12.6666L30.8144 14.6889C31.4714 15.5768 31.2842 16.8292 30.3963 17.4862L28.3376 19.0096L25.5326 16.941L24.4619 13.7718L26.5206 12.2485Z" fill="#F92F60"></path><path d="M24.4619 13.772L28.3377 19.0097L26.7663 20.1724L22.8906 14.9347L24.4619 13.772Z" fill="#D3D3D3"></path></svg></span><span><small>Idei kereteid</small><b>Még <span data-szamlal="3685000" data-tol="20000000" data-kesik="500" data-ido="1500">3&nbsp;685&nbsp;000</span>&nbsp;Ft</b></span></div>
+                    <p class="keret-meg">ennyit számlázhatsz még ÁFA nélkül</p>
+                    <span class="csik"><i></i></span>
+                    <p class="keret-sor"><span>eddig <b data-szamlal="16315000" data-tol="0" data-kesik="500" data-ido="1500">16&nbsp;315&nbsp;000</b>&nbsp;Ft</span><span>keret <b>20&nbsp;000&nbsp;000</b>&nbsp;Ft</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ol>
     </div>
 
-    <div class="funkcio funkcio-fordit">
-      <div class="funkcio-szoveg">
-        <p class="funkcio-cimke">Határidők</p>
-        <h3>Tudod, mit, mikorra és melyik számlára utalj.</h3>
-        <p>Az SZJA-előleget, a TB-járulékot és a szochót, katásként a havi katát tételesen látod: összeg, NAV-számlaszám, közlemény. Egy koppintással átmásolod a bankodba, és határidő előtt emlékeztetünk.</p>
-        <p class="funkcio-meg"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Az adót te utalod el, így a pénzed végig nálad marad.</p>
-      </div>
-      <div class="funkcio-kep">
-        <div class="telefon"><img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" alt="Negyedéves SZJA-előleg és járulékok: összeg, NAV-számlaszám és közlemény másolható formában"></div>
-      </div>
-    </div>
-
-    <div class="funkcio">
-      <div class="funkcio-szoveg">
-        <p class="funkcio-cimke">Könyvelő</p>
-        <h3>A könyvelőd egy üzenetnyire van.</h3>
-        <p>Kérdezz tőle az appban, kérj jövedelemigazolást vagy nullás igazolást egy gombnyomással, és ha elakadsz, kérj visszahívást.</p>
-        <p class="funkcio-meg"><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>A NAV leveleit is ő értelmezi és intézi, a meghatalmazásod alapján.</p>
-      </div>
-      <div class="funkcio-kep">
-        <div class="telefon"><img src="kepek/app_uzenetek.webp" width="780" height="1688" loading="lazy" alt="Üzenetek a könyvelővel és igazoláskérés egy gombnyomással"></div>
-      </div>
-    </div>
-
-    <div class="apro-racs">
-      <div class="apro">
-        <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M20.3432 2.29289C20.1556 2.10536 19.9013 2 19.6361 2H7C5.89543 2 5 2.89543 5 4V28C5 29.1046 5.89543 30 7 30H25C26.1046 30 27 29.1046 27 28V9.36394C27 9.09872 26.8946 8.84437 26.7071 8.65683L20.3432 2.29289Z" fill="#B4ACBC"></path><path d="M19.6821 3.00001L7 3C6.44772 3 6 3.44772 6 4V28C6 28.5523 6.44772 29 7 29L25 29C25.5523 29 26 28.5523 26 28V9.45333L19.6821 3.00001Z" fill="#F3EEF8"></path><path d="M9.5 12H22.5C22.7761 12 23 12.2239 23 12.5C23 12.7761 22.7761 13 22.5 13H9.5C9.22386 13 9 12.7761 9 12.5C9 12.2239 9.22386 12 9.5 12ZM9.5 15C9.22386 15 9 15.2239 9 15.5C9 15.7761 9.22386 16 9.5 16H22.5C22.7761 16 23 15.7761 23 15.5C23 15.2239 22.7761 15 22.5 15H9.5ZM9 18.5C9 18.2239 9.22386 18 9.5 18H22.5C22.7761 18 23 18.2239 23 18.5C23 18.7761 22.7761 19 22.5 19H9.5C9.22386 19 9 18.7761 9 18.5ZM9.5 21C9.22386 21 9 21.2239 9 21.5C9 21.7761 9.22386 22 9.5 22H17.5C17.7761 22 18 21.7761 18 21.5C18 21.2239 17.7761 21 17.5 21H9.5Z" fill="#998EA4"></path><path d="M26 9.45325H21.3892C20.4464 9.45325 19.6821 8.68896 19.6821 7.74614V3L26 9.45325Z" fill="#CDC4D6"></path></svg>
-        <h3>Számlák maguktól</h3>
-        <p>A kiállított számláid a NAV Online Számla rendszeréből jönnek. Nem kell begépelned őket.</p>
-      </div>
-      <div class="apro">
-        <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M5.5 11C5.22386 11 5 11.2239 5 11.5V13H9V11.5C9 11.2239 8.77614 11 8.5 11H5.5Z" fill="#D3D3D3"></path><path d="M21.5 11C21.2239 11 21 11.2239 21 11.5V13H27V11.5C27 11.2239 26.7761 11 26.5 11H21.5Z" fill="#D3D3D3"></path><path d="M2 14C2 12.8954 2.89543 12 4 12H28C29.1046 12 30 12.8954 30 14V16.5L28 22L30 27.5V28C30 29.1046 29.1046 30 28 30H4C2.89543 30 2 29.1046 2 28V27.5L3.5 22L2 16.5V14Z" fill="#E6E6E6"></path><path d="M2 16.5C2 16.2239 2.22386 16 2.5 16H29.5C29.7761 16 30 16.2239 30 16.5V27.5C30 27.7761 29.7761 28 29.5 28H2.5C2.22386 28 2 27.7761 2 27.5V16.5Z" fill="#533566"></path><path d="M22 22C22 25.3137 19.3137 28 16 28C12.6863 28 10 25.3137 10 22C10 18.6863 12.6863 16 16 16C19.3137 16 22 18.6863 22 22Z" fill="#321B41"></path><path d="M16 27C18.7614 27 21 24.7614 21 22C21 19.2386 18.7614 17 16 17C13.2386 17 11 19.2386 11 22C11 24.7614 13.2386 27 16 27ZM16 29C12.134 29 9 25.866 9 22C9 18.134 12.134 15 16 15C19.866 15 23 18.134 23 22C23 25.866 19.866 29 16 29Z" fill="#9B9B9B"></path><path d="M18.5 22C18.5 23.3807 17.3807 24.5 16 24.5C14.6193 24.5 13.5 23.3807 13.5 22C13.5 20.6193 14.6193 19.5 16 19.5C17.3807 19.5 18.5 20.6193 18.5 22Z" fill="#433B6B"></path><path d="M19.0825 19.875C19.4967 20.5924 19.4448 21.3979 18.9665 21.674C18.4882 21.9501 17.7647 21.5924 17.3505 20.875C16.9363 20.1575 16.9882 19.3521 17.4665 19.0759C17.9448 18.7998 18.6683 19.1575 19.0825 19.875Z" fill="white"></path></svg>
-        <h3>Fotózás és feltöltés</h3>
-        <p>Amit a könyvelőd kér, lefotózod vagy feltöltöd PDF-ben.</p>
-      </div>
-      <div class="apro">
-        <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 6C2 3.79086 3.79086 2 6 2H26C28.2091 2 30 3.79086 30 6V26C30 27.4806 29.1956 28.7733 28 29.4649L26.5537 28.9997C25.5578 28.6794 24.4759 28.762 23.5402 29.2299L22 30H19L16 28.5L13 30H10L8.45982 29.2299C7.52406 28.762 6.44223 28.6794 5.44626 28.9997L4 29.4649C2.8044 28.7733 2 27.4806 2 26V6Z" fill="#E1D8EC"></path><path d="M10 11V21H2V22H10V30H11V22H21V30H22V22H30V21H22V11H30V10H22V2H21V10H11V2H10V10H2V11H10ZM11 11H21V21H11V11Z" fill="#B4ACBC"></path><path d="M6 30H10V10.2135C10 9.54155 9.4527 9 8.77365 9H5.22635C4.5473 9 4 9.54155 4 10.2135V29.4649C4.58835 29.8052 5.27143 30 6 30Z" fill="#00D26A"></path><path d="M17.7736 17H14.2264C13.5473 17 13 17.5417 13 18.2137V30H19V18.2137C19 17.5417 18.4527 17 17.7736 17Z" fill="#F70A8D"></path><path d="M22 30H26C26.7286 30 27.4117 29.8052 28 29.4649V7.20899C28 6.53955 27.4527 6 26.7736 6H23.2264C22.5473 6 22 6.53955 22 7.20899V30Z" fill="#00A6ED"></path></svg>
-        <h3>Keretek</h3>
-        <p>Látod, mennyit számlázhatsz még ÁFA nélkül. Katásként a kata-keretedet is, és szólunk, ha cégnek számlázol.</p>
-      </div>
-      <div class="apro">
-        <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M9 2C7.34315 2 6 3.34315 6 5V7H25V5C25 3.34315 23.6569 2 22 2H9Z" fill="#7167A4"></path><path d="M9 30C7.34315 30 6 28.6569 6 27V25H25V27C25 28.6569 23.6569 30 22 30H9Z" fill="#7167A4"></path><path d="M6 6H25V26H6V6Z" fill="#321B41"></path><path d="M13.5 10C13.5 9.44772 13.9477 9 14.5 9H16.5C17.0523 9 17.5 9.44772 17.5 10V12C17.5 12.5523 17.0523 13 16.5 13H14.5C13.9477 13 13.5 12.5523 13.5 12V10ZM8.5 15C8.5 14.4477 8.94772 14 9.5 14H11.5C12.0523 14 12.5 14.4477 12.5 15V17C12.5 17.5523 12.0523 18 11.5 18H9.5C8.94772 18 8.5 17.5523 8.5 17V15ZM14.5 19C13.9477 19 13.5 19.4477 13.5 20V22C13.5 22.5523 13.9477 23 14.5 23H16.5C17.0523 23 17.5 22.5523 17.5 22V20C17.5 19.4477 17.0523 19 16.5 19H14.5Z" fill="#00A6ED"></path><path d="M8.5 10C8.5 9.44772 8.94772 9 9.5 9H11.5C12.0523 9 12.5 9.44772 12.5 10V12C12.5 12.5523 12.0523 13 11.5 13H9.5C8.94772 13 8.5 12.5523 8.5 12V10ZM8.5 20C8.5 19.4477 8.94772 19 9.5 19H11.5C12.0523 19 12.5 19.4477 12.5 20V22C12.5 22.5523 12.0523 23 11.5 23H9.5C8.94772 23 8.5 22.5523 8.5 22V20ZM19.5 14C18.9477 14 18.5 14.4477 18.5 15V17C18.5 17.5523 18.9477 18 19.5 18H21.5C22.0523 18 22.5 17.5523 22.5 17V15C22.5 14.4477 22.0523 14 21.5 14H19.5Z" fill="#FF822D"></path><path d="M18.5 10C18.5 9.44772 18.9477 9 19.5 9H21.5C22.0523 9 22.5 9.44772 22.5 10V12C22.5 12.5523 22.0523 13 21.5 13H19.5C18.9477 13 18.5 12.5523 18.5 12V10ZM13.5 15C13.5 14.4477 13.9477 14 14.5 14H16.5C17.0523 14 17.5 14.4477 17.5 15V17C17.5 17.5523 17.0523 18 16.5 18H14.5C13.9477 18 13.5 17.5523 13.5 17V15ZM19.5 19C18.9477 19 18.5 19.4477 18.5 20V22C18.5 22.5523 18.9477 23 19.5 23H21.5C22.0523 23 22.5 22.5523 22.5 22V20C22.5 19.4477 22.0523 19 21.5 19H19.5Z" fill="#FCD53F"></path></svg>
-        <h3>Telefonon és gépen</h3>
-        <p>Ugyanazt látod mindkettőn, a belépésed ugyanaz.</p>
-      </div>
-    </div>
+    <ul class="bemutato-tenyek be-sor">
+      <li><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M9 2C7.34315 2 6 3.34315 6 5V7H25V5C25 3.34315 23.6569 2 22 2H9Z" fill="#7167A4"></path><path d="M9 30C7.34315 30 6 28.6569 6 27V25H25V27C25 28.6569 23.6569 30 22 30H9Z" fill="#7167A4"></path><path d="M6 6H25V26H6V6Z" fill="#321B41"></path><path d="M13.5 10C13.5 9.44772 13.9477 9 14.5 9H16.5C17.0523 9 17.5 9.44772 17.5 10V12C17.5 12.5523 17.0523 13 16.5 13H14.5C13.9477 13 13.5 12.5523 13.5 12V10ZM8.5 15C8.5 14.4477 8.94772 14 9.5 14H11.5C12.0523 14 12.5 14.4477 12.5 15V17C12.5 17.5523 12.0523 18 11.5 18H9.5C8.94772 18 8.5 17.5523 8.5 17V15ZM14.5 19C13.9477 19 13.5 19.4477 13.5 20V22C13.5 22.5523 13.9477 23 14.5 23H16.5C17.0523 23 17.5 22.5523 17.5 22V20C17.5 19.4477 17.0523 19 16.5 19H14.5Z" fill="#00A6ED"></path><path d="M8.5 10C8.5 9.44772 8.94772 9 9.5 9H11.5C12.0523 9 12.5 9.44772 12.5 10V12C12.5 12.5523 12.0523 13 11.5 13H9.5C8.94772 13 8.5 12.5523 8.5 12V10ZM8.5 20C8.5 19.4477 8.94772 19 9.5 19H11.5C12.0523 19 12.5 19.4477 12.5 20V22C12.5 22.5523 12.0523 23 11.5 23H9.5C8.94772 23 8.5 22.5523 8.5 22V20ZM19.5 14C18.9477 14 18.5 14.4477 18.5 15V17C18.5 17.5523 18.9477 18 19.5 18H21.5C22.0523 18 22.5 17.5523 22.5 17V15C22.5 14.4477 22.0523 14 21.5 14H19.5Z" fill="#FF822D"></path><path d="M18.5 10C18.5 9.44772 18.9477 9 19.5 9H21.5C22.0523 9 22.5 9.44772 22.5 10V12C22.5 12.5523 22.0523 13 21.5 13H19.5C18.9477 13 18.5 12.5523 18.5 12V10ZM13.5 15C13.5 14.4477 13.9477 14 14.5 14H16.5C17.0523 14 17.5 14.4477 17.5 15V17C17.5 17.5523 17.0523 18 16.5 18H14.5C13.9477 18 13.5 17.5523 13.5 17V15ZM19.5 19C18.9477 19 18.5 19.4477 18.5 20V22C18.5 22.5523 18.9477 23 19.5 23H21.5C22.0523 23 22.5 22.5523 22.5 22V20C22.5 19.4477 22.0523 19 21.5 19H19.5Z" fill="#FCD53F"></path></svg><div><h3>Telefonon és gépen</h3><p>Ugyanazt látod mindkettőn, a belépésed ugyanaz.</p></div></li>
+      <li><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.44 3.385C17.77 3.765 18.33 3.835 18.74 3.545C19.54 2.975 20.58 3.835 20.17 4.715L17.75 7.485H13.88L11.44 4.685C11.03 3.795 12.07 2.935 12.87 3.505L12.94 3.555C13.35 3.845 13.91 3.765 14.23 3.385L15.1 2.345C15.48 1.885 16.19 1.885 16.57 2.345L17.44 3.385ZM4 21.2249C4 14.6849 9.3 9.38489 15.84 9.38489C22.38 9.38489 27.68 14.6849 27.67 21.2249C27.67 26.0549 23.75 29.9749 18.92 29.9749H12.75C7.92 29.9749 4 26.0549 4 21.2249Z" fill="#F3C07B"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14.12 7.46484H17.56C18.17 7.46484 18.67 7.96484 18.67 8.57484C18.67 9.18484 18.17 9.68484 17.56 9.68484H14.12C13.51 9.68484 13.01 9.18484 13.01 8.57484C13.01 7.96484 13.51 7.46484 14.12 7.46484ZM15.8401 19.3449H15.9101C17.4101 19.3849 18.6101 20.6049 18.6101 22.1049C18.6101 23.3849 17.7401 24.4549 16.5601 24.7749V25.8949C16.5601 26.2949 16.2401 26.6149 15.8401 26.6149C15.4401 26.6149 15.1201 26.2949 15.1201 25.8949V24.7749C13.9401 24.4549 13.0701 23.3849 13.0701 22.1049C13.0701 21.7049 13.3901 21.3849 13.7901 21.3849C14.1901 21.3849 14.5101 21.7049 14.5101 22.1049C14.5101 22.8449 15.1001 23.4349 15.8301 23.4349C16.5601 23.4349 17.1601 22.8349 17.1601 22.1049C17.1601 21.3749 16.5601 20.7749 15.8301 20.7749H15.7601C14.2701 20.7349 13.0701 19.5149 13.0701 18.0149C13.0701 16.7349 13.9401 15.6649 15.1201 15.3449V14.2249C15.1201 13.8249 15.4401 13.5049 15.8401 13.5049C16.2401 13.5049 16.5601 13.8249 16.5601 14.2249V15.3449C17.7401 15.6649 18.6101 16.7349 18.6101 18.0149C18.6101 18.4149 18.2901 18.7349 17.8901 18.7349C17.4901 18.7349 17.1701 18.4149 17.1701 18.0149C17.1701 17.2849 16.5701 16.6849 15.8401 16.6849C15.1101 16.6849 14.5101 17.2849 14.5101 18.0149C14.5101 18.7449 15.1101 19.3449 15.8401 19.3449Z" fill="#8C5543"></path></svg><div><h3>A pénzed nálad marad</h3><p>Pénzt nem vonunk le, és nem utalunk helyetted. Az adót te utalod el.</p></div></li>
+      <li><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M12.0955 2.00006C11.3976 1.98479 10.7193 2.23248 10.1955 2.69402C9.35852 3.44402 9.47151 4.16102 8.72451 5.21502C8.51573 5.55185 8.24017 5.84237 7.91475 6.06854C7.58934 6.29471 7.22102 6.4518 6.83254 6.53008L6.80355 6.53704C6.2786 6.68227 5.81167 6.98694 5.46737 7.40899C5.12307 7.83104 4.91839 8.34958 4.88155 8.893C4.23255 13.982 5.98151 21.8931 10.2035 26.2241C11.3554 27.3166 12.611 28.2941 13.9525 29.143C15.3322 29.6195 16.8318 29.6195 18.2115 29.143C19.5677 28.3047 20.8315 27.3252 21.9816 26.221C26.0686 22.029 27.9655 14.0831 27.3035 8.89007C27.272 8.33987 27.0659 7.81407 26.715 7.38909C26.3641 6.96412 25.8869 6.6621 25.3526 6.52703C24.9641 6.44875 24.5957 6.29166 24.2703 6.06549C23.9449 5.83931 23.6694 5.54892 23.4606 5.21209C22.7846 4.25809 22.7935 3.4121 21.9895 2.6911C21.4657 2.22955 20.7875 1.98174 20.0895 1.997L12.0955 2.00006Z" fill="#E6E6E6"></path><path d="M20.0089 3.5H16L12.7858 15.9188L16 28.5C18 28.5 18 28 20 26.5C20 26.5 26.5 22 26 9.5C26 9.5 26.0024 8.25 25 8C22.5 7.5 21.5 4.5 21.5 4.5C21.368 4.16593 21 3.5 20.0089 3.5Z" fill="#AEDDFF"></path><path d="M12.0186 3.5H16.0275V28.5C14.0275 28.5 14.0275 28 12.0275 26.5C12.0275 26.5 5.52747 22 6.02747 9.5C6.02747 9.5 6.02505 8.25 7.02747 8C9.52747 7.5 10.5275 4.5 10.5275 4.5C10.6594 4.16593 11.0275 3.5 12.0186 3.5Z" fill="#00A6ED"></path></svg><div><h3>A NAV-hoz a könyvelőd fordul</h3><p>Az app nem küld be semmit a NAV-nak. A bevallást a könyvelőd adja be, miután átnézte.</p></div></li>
+    </ul>
+    <p class="bemutato-jegy">Az app képei bemutató adatokkal készültek.</p>
   </div>
 </section>
 
-<!-- ============ KÖNYVELŐ ============ -->
-<section class="szakasz szakasz-szurke" id="konyvelo">
+<!-- ============ KÖNYVELŐ (fotó nélkül: a könyvelő munkája egy negyedévben + tények) ============ -->
+<section class="szakasz szakasz-menta" id="konyvelo">
   <div class="kontener konyvelo-racs">
-    <!-- HELYŐRZŐ: valódi fotó és adatok csak a könyvelő írásos hozzájárulásával. Stock- és AI-kép tilos. -->
-    <div class="kartya konyvelo-kartya">
-      <div class="helyorzo helyorzo-foto"><span>[KÖNYVELŐ FOTÓ]</span><small>valódi fotó, a könyvelő engedélyével</small></div>
-      <div class="konyvelo-adatok">
-        <p class="konyvelo-nev"><span class="helyorzo-szoveg">[NÉV]</span></p>
-        <p><span class="helyorzo-szoveg">[KÉPESÍTÉS]</span></p>
-        <p>Nyilvántartási szám: <span class="helyorzo-szoveg">[nyilvántartási szám]</span></p>
-        <blockquote><span class="helyorzo-szoveg">„[Egy mondat a könyvelőtől, a saját szavaival.]”</span></blockquote>
-      </div>
+    <div class="negyedev be">
+      <p class="negyedev-cim">Egy negyedév a könyvelőddel</p>
+      <ol class="idovonal">
+        <li>
+          <span class="ido-pont"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 9.00001L15.2666 6.15716C15.7501 6.05357 16.2499 6.05357 16.7334 6.15716L30 9.00001V24.8C30 27.6719 27.6719 30 24.8 30H7.2C4.32812 30 2 27.6719 2 24.8V9.00001Z" fill="#B4ACBC"></path><path d="M3 8.00005L15.213 5.18167C15.7309 5.06216 16.2691 5.06216 16.787 5.18167L29 8.00005V24.5001C29 26.9853 26.9853 29.0001 24.5 29.0001H7.5C5.01472 29.0001 3 26.9853 3 24.5001V8.00005Z" fill="#F3EEF8"></path><path d="M7.9998 12C7.88935 12 7.7998 12.0895 7.7998 12.2V14.8C7.7998 14.9105 7.88935 15 7.9998 15H10.7998C10.9103 15 10.9998 14.9105 10.9998 14.8V12.2C10.9998 12.0895 10.9103 12 10.7998 12H7.9998Z" fill="#998EA4"></path><path d="M7.9998 17.5C7.88935 17.5 7.7998 17.5895 7.7998 17.7V20.3C7.7998 20.4105 7.88935 20.5 7.9998 20.5H10.7998C10.9103 20.5 10.9998 20.4105 10.9998 20.3V17.7C10.9998 17.5895 10.9103 17.5 10.7998 17.5H7.9998Z" fill="#998EA4"></path><path d="M7.7998 23.1C7.7998 22.9896 7.88935 22.9 7.9998 22.9H10.7998C10.9103 22.9 10.9998 22.9896 10.9998 23.1V25.7C10.9998 25.8105 10.9103 25.9 10.7998 25.9H7.9998C7.88935 25.9 7.7998 25.8105 7.7998 25.7V23.1Z" fill="#998EA4"></path><path d="M14.5998 12C14.4893 12 14.3998 12.0895 14.3998 12.2V14.8C14.3998 14.9105 14.4893 15 14.5998 15H17.3998C17.5102 15 17.5998 14.9105 17.5998 14.8V12.2C17.5998 12.0895 17.5102 12 17.3998 12H14.5998Z" fill="#998EA4"></path><path d="M14.3998 17.7C14.3998 17.5895 14.4893 17.5 14.5998 17.5H17.3998C17.5102 17.5 17.5998 17.5895 17.5998 17.7V20.3C17.5998 20.4105 17.5102 20.5 17.3998 20.5H14.5998C14.4893 20.5 14.3998 20.4105 14.3998 20.3V17.7Z" fill="#998EA4"></path><path d="M14.5998 22.9C14.4893 22.9 14.3998 22.9896 14.3998 23.1V25.7C14.3998 25.8105 14.4893 25.9 14.5998 25.9H17.3998C17.5102 25.9 17.5998 25.8105 17.5998 25.7V23.1C17.5998 22.9896 17.5102 22.9 17.3998 22.9H14.5998Z" fill="#998EA4"></path><path d="M20.9998 12.2C20.9998 12.0895 21.0894 12 21.1998 12H23.9998C24.1103 12 24.1998 12.0895 24.1998 12.2V14.8C24.1998 14.9105 24.1103 15 23.9998 15H21.1998C21.0894 15 20.9998 14.9105 20.9998 14.8V12.2Z" fill="#998EA4"></path><path d="M21.1998 22.9C21.0894 22.9 20.9998 22.9896 20.9998 23.1V25.7C20.9998 25.8105 21.0894 25.9 21.1998 25.9H23.9998C24.1103 25.9 24.1998 25.8105 24.1998 25.7V23.1C24.1998 22.9896 24.1103 22.9 23.9998 22.9H21.1998Z" fill="#998EA4"></path><path d="M7.2 2C4.32812 2 2 4.32812 2 7.2V9H30V7.2C30 4.32812 27.6719 2 24.8 2H7.2Z" fill="#0084CE"></path><path d="M21.2 17.5C21.0895 17.5 21 17.5895 21 17.7V20.3C21 20.4105 21.0895 20.5 21.2 20.5H24C24.1105 20.5 24.2 20.4105 24.2 20.3V17.7C24.2 17.5895 24.1105 17.5 24 17.5H21.2Z" fill="#0084CE"></path></svg></span>
+          <div><p class="ido-mikor">Minden hónapban</p><h3>Átnézi, amit küldtél</h3><p>Vezeti a bevételi nyilvántartásodat, és átnézi a számláidat. Ha valami hiányzik, szól. A bankszámlakivonatodat is kéri, mert abból látja, mikor érkezett meg a pénz.</p></div>
+        </li>
+        <li>
+          <span class="ido-pont"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M29 8H3V9H29V8ZM29 13H3V14H29V13ZM3 18H29V19H3V18ZM29 23H3V24H29V23Z" fill="#D3D3D3"></path><path d="M8 2C4.68629 2 2 4.68629 2 8V24C2 27.3137 4.68629 30 8 30H24C27.3137 30 30 27.3137 30 24V8C30 4.68629 27.3137 2 24 2H8ZM8 4H24C26.2091 4 28 5.79086 28 8V24C28 26.2091 26.2091 28 24 28H8C5.79086 28 4 26.2091 4 24V8C4 5.79086 5.79086 4 8 4Z" fill="#FF6723"></path><path d="M6 8C6 7.17157 6.67157 6.5 7.5 6.5C8.32843 6.5 9 7.17157 9 8C9 7.17157 9.67157 6.5 10.5 6.5C11.3284 6.5 12 7.17157 12 8C12 7.17157 12.6716 6.5 13.5 6.5C14.3284 6.5 15 7.17157 15 8C15 7.17157 15.6716 6.5 16.5 6.5C17.3284 6.5 18 7.17157 18 8V9C18 9.82843 17.3284 10.5 16.5 10.5C15.6716 10.5 15 9.82843 15 9C15 9.82843 14.3284 10.5 13.5 10.5C12.6716 10.5 12 9.82843 12 9C12 9.82843 11.3284 10.5 10.5 10.5C9.67157 10.5 9 9.82843 9 9C9 9.82843 8.32843 10.5 7.5 10.5C6.67157 10.5 6 9.82843 6 9V8ZM24.5 6.5C23.6716 6.5 23 7.17157 23 8V9C23 9.82843 23.6716 10.5 24.5 10.5C25.3284 10.5 26 9.82843 26 9V8C26 7.17157 25.3284 6.5 24.5 6.5Z" fill="#F70A8D"></path><path d="M6 13C6 12.1716 6.67157 11.5 7.5 11.5C8.32843 11.5 9 12.1716 9 13C9 12.1716 9.67157 11.5 10.5 11.5C11.3284 11.5 12 12.1716 12 13C12 12.1716 12.6716 11.5 13.5 11.5C14.3284 11.5 15 12.1716 15 13C15 12.1716 15.6716 11.5 16.5 11.5C17.3284 11.5 18 12.1716 18 13V14C18 14.8284 17.3284 15.5 16.5 15.5C15.6716 15.5 15 14.8284 15 14C15 14.8284 14.3284 15.5 13.5 15.5C12.6716 15.5 12 14.8284 12 14C12 14.8284 11.3284 15.5 10.5 15.5C9.67157 15.5 9 14.8284 9 14C9 14.8284 8.32843 15.5 7.5 15.5C6.67157 15.5 6 14.8284 6 14V13ZM24.5 11.5C23.6716 11.5 23 12.1716 23 13V14C23 14.8284 23.6716 15.5 24.5 15.5C25.3284 15.5 26 14.8284 26 14V13C26 12.1716 25.3284 11.5 24.5 11.5Z" fill="#00A6ED"></path><path d="M6 18C6 17.1716 6.67157 16.5 7.5 16.5C8.32843 16.5 9 17.1716 9 18C9 17.1716 9.67157 16.5 10.5 16.5C11.3284 16.5 12 17.1716 12 18C12 17.1716 12.6716 16.5 13.5 16.5C14.3284 16.5 15 17.1716 15 18C15 17.1716 15.6716 16.5 16.5 16.5C17.3284 16.5 18 17.1716 18 18V19C18 19.8284 17.3284 20.5 16.5 20.5C15.6716 20.5 15 19.8284 15 19C15 19.8284 14.3284 20.5 13.5 20.5C12.6716 20.5 12 19.8284 12 19C12 19.8284 11.3284 20.5 10.5 20.5C9.67157 20.5 9 19.8284 9 19C9 19.8284 8.32843 20.5 7.5 20.5C6.67157 20.5 6 19.8284 6 19V18ZM24.5 16.5C23.6716 16.5 23 17.1716 23 18V19C23 19.8284 23.6716 20.5 24.5 20.5C25.3284 20.5 26 19.8284 26 19V18C26 17.1716 25.3284 16.5 24.5 16.5Z" fill="#FCD53F"></path><path d="M6 23C6 22.1716 6.67157 21.5 7.5 21.5C8.32843 21.5 9 22.1716 9 23C9 22.1716 9.67157 21.5 10.5 21.5C11.3284 21.5 12 22.1716 12 23C12 22.1716 12.6716 21.5 13.5 21.5C14.3284 21.5 15 22.1716 15 23C15 22.1716 15.6716 21.5 16.5 21.5C17.3284 21.5 18 22.1716 18 23V24C18 24.8284 17.3284 25.5 16.5 25.5C15.6716 25.5 15 24.8284 15 24C15 24.8284 14.3284 25.5 13.5 25.5C12.6716 25.5 12 24.8284 12 24C12 24.8284 11.3284 25.5 10.5 25.5C9.67157 25.5 9 24.8284 9 24C9 24.8284 8.32843 25.5 7.5 25.5C6.67157 25.5 6 24.8284 6 24V23ZM24.5 21.5C23.6716 21.5 23 22.1716 23 23V24C23 24.8284 23.6716 25.5 24.5 25.5C25.3284 25.5 26 24.8284 26 24V23C26 22.1716 25.3284 21.5 24.5 21.5Z" fill="#00D26A"></path></svg></span>
+          <div><p class="ido-mikor">A negyedév végén</p><h3>Kiszámolja és beadja</h3><p>Kiszámolja és beadja a negyedéves adódat és járulékaidat. Az appban megmutatja, mennyit utalj.</p></div>
+        </li>
+        <li>
+          <span class="ido-pont"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M26 10.0276H6V27.0276H26V10.0276Z" fill="#636363"></path><path d="M3 10.0076V10.9776H4V26.7376H7V13.6912H8V26.7376H11V13.6912H21V27.0276H24V13.6912H25V26.9976H28V10.9776H29V10.0076L16 2.00757L3 10.0076Z" fill="#D3D3D3"></path><path d="M3.84998 9.1375L14.64 2.3975C15.48 1.8675 16.56 1.8675 17.4 2.3975L28.19 9.1375V11.0275L16.69 3.8875C16.28 3.6375 15.77 3.6375 15.36 3.8875L3.85999 11.0275V9.1375H3.84998Z" fill="#E6E6E6"></path><path d="M19.9853 11.0276C19.0711 12.2422 17.6173 13.0276 15.98 13.0276C14.3427 13.0276 12.8888 12.2422 11.9746 11.0276H3C2.45 11.0276 2 10.5776 2 10.0276C2 9.47759 2.45 9.02759 3 9.02759H11.0718C11.005 8.70135 10.97 8.36355 10.97 8.01757C10.97 5.25062 13.213 3.00757 15.98 3.00757C18.7469 3.00757 20.99 5.25062 20.99 8.01757C20.99 8.36355 20.9549 8.70135 20.8881 9.02759H29C29.55 9.02759 30 9.47759 30 10.0276C30 10.5776 29.55 11.0276 29 11.0276H19.9853ZM2 14.0276C2 13.4776 2.45 13.0276 3 13.0276H29C29.55 13.0276 30 13.4776 30 14.0276C30 14.5776 29.55 15.0276 29 15.0276H3C2.45 15.0276 2 14.5776 2 14.0276ZM2 29.0276H29.99V28.0976C29.99 27.5076 29.51 27.0276 28.92 27.0276H29V26.0976C29 25.5076 28.52 25.0276 27.93 25.0276H4.03998C3.44998 25.0276 2.96997 25.5076 2.96997 26.0976V27.0276H3.06999C2.47999 27.0276 2 27.5076 2 28.0976V29.0276Z" fill="#9B9B9B"></path><path d="M17.21 9.53759C17.36 9.34759 17.44 9.12759 17.44 8.87759C17.44 8.59759 17.37 8.37759 17.24 8.20759C17.12 8.03759 16.96 7.91759 16.78 7.82759C16.69 7.78759 16.59 7.74759 16.47 7.70759C16.4409 7.69885 16.4109 7.69011 16.38 7.68112C16.305 7.65926 16.225 7.63593 16.14 7.60759C15.96 7.55759 15.82 7.51759 15.73 7.48759C15.64 7.45759 15.58 7.41759 15.52 7.36759C15.51 7.35759 15.5 7.34759 15.5 7.33759C15.47 7.29759 15.46 7.24759 15.46 7.19759C15.46 7.15759 15.46 7.09759 15.5 7.04759C15.55 6.98759 15.65 6.93759 15.87 6.93759C16.02 6.93759 16.16 6.95759 16.27 7.01759C16.35 7.04759 16.41 7.08759 16.47 7.14759C16.5 7.16759 16.53 7.19759 16.56 7.22759C16.72 7.38759 17 7.40759 17.18 7.25759C17.3 7.16759 17.35 7.04759 17.35 6.90759C17.35 6.79759 17.32 6.68759 17.24 6.59759C17.1 6.40759 16.89 6.26759 16.64 6.16759C16.6278 6.16351 16.6159 6.15943 16.6044 6.15543C16.5592 6.13984 16.5177 6.12555 16.47 6.11759V5.47759C16.47 5.23759 16.27 5.02759 16.02 5.02759H15.95C15.7 5.02759 15.5 5.23759 15.5 5.47759V6.07759C15.4 6.09759 15.3 6.13759 15.2 6.17759C14.97 6.27759 14.79 6.40759 14.66 6.58759C14.51 6.77759 14.44 6.98759 14.44 7.23759C14.44 7.51759 14.51 7.73759 14.65 7.90759C14.78 8.07759 14.94 8.19759 15.13 8.27759C15.2057 8.31543 15.2986 8.34755 15.3999 8.3826C15.4325 8.39387 15.466 8.40543 15.5 8.41759C15.59 8.44759 15.69 8.47759 15.8 8.50759C16.04 8.56759 16.23 8.63759 16.34 8.69759C16.43 8.74759 16.47 8.81759 16.47 8.90759V8.90759C16.47 8.98759 16.47 9.18759 16.04 9.20759C15.85 9.20759 15.68 9.16759 15.54 9.10759C15.535 9.10259 15.5275 9.10009 15.52 9.09759C15.5125 9.09509 15.505 9.09259 15.5 9.08759C15.38 9.02759 15.26 8.93759 15.15 8.81759C14.96 8.62759 14.73 8.59759 14.52 8.72759C14.37 8.83759 14.3 8.96759 14.3 9.12759C14.3 9.23759 14.32 9.32759 14.38 9.40759C14.56 9.64759 14.79 9.82759 15.07 9.92759C15.21 9.98759 15.35 10.0276 15.5 10.0476V10.5876C15.5 10.8276 15.7 11.0276 15.95 11.0276H16.02C16.27 11.0276 16.47 10.8276 16.47 10.5876V10.0076C16.53 9.99759 16.59 9.97759 16.65 9.94759C16.88 9.85759 17.07 9.71759 17.21 9.53759ZM13 25.0276H19V18.6676C19 18.3176 18.71 18.0276 18.36 18.0276H13.63C13.28 18.0276 13 18.3076 13 18.6576V25.0276Z" fill="#321B41"></path></svg></span>
+          <div><p class="ido-mikor">Amikor utaltál</p><h3>Látja, hogy megérkezett</h3><p>A feltöltött bankszámlakivonatodon látja, hogy rendben megérkezett a befizetésed, és az appban jelzi neked.</p></div>
+        </li>
+        <li>
+          <span class="ido-pont"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="5" width="30" height="22" rx="1.5" fill="#B4ACBC"></rect><rect x="2" y="7" width="28" height="18" rx="1" fill="#CDC4D6"></rect><path d="M30 23.4001L17.029 15.6175C16.3956 15.2375 15.6044 15.2375 14.971 15.6175L2 23.4001V25.0001C2 25.5524 2.44771 26.0001 3 26.0001L29 26.0001C29.5523 26.0001 30 25.5524 30 25.0001V23.4001Z" fill="#E1D8EC"></path><path d="M2 9.76619V8H30V9.76619L17.5435 17.2401C16.5934 17.8101 15.4066 17.8101 14.4565 17.2401L2 9.76619Z" fill="#998EA4"></path><path d="M2 8.6V7C2 6.44772 2.44772 6 3 6H29C29.5523 6 30 6.44772 30 7V8.6L17.029 16.3826C16.3956 16.7626 15.6044 16.7626 14.971 16.3826L2 8.6Z" fill="#F3EEF8"></path></svg></span>
+          <div><p class="ido-mikor">Ha NAV-levél jön</p><h3>Elmagyarázza és intézi</h3><p>Megmondja, mit jelent, és a meghatalmazásod alapján intézi.</p></div>
+        </li>
+        <li>
+          <span class="ido-pont"><svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.0278 4C8.16615 4 3.53108 9.75575 1.66714 12.7026C0.772247 14.1175 0.77225 15.8825 1.66714 17.2974C2.53549 18.6702 3.97262 20.6044 6.02779 22.3015V26.5017C6.02779 27.6235 7.214 28.3483 8.21217 27.8365L12.5619 25.6063C13.6426 25.8582 14.7979 26 16.0278 26C23.8894 26 28.5245 20.2442 30.3884 17.2974C31.2833 15.8825 31.2833 14.1175 30.3884 12.7026C28.5245 9.75575 23.8894 4 16.0278 4Z" fill="#9B9B9B"></path><path d="M16.0278 25C14.741 25 13.5452 24.8344 12.4384 24.5458L7.75592 26.9467C7.42319 27.1173 7.02779 26.8757 7.02779 26.5017V21.8222C4.88609 20.1489 3.39604 18.16 2.51228 16.7628C1.82387 15.6744 1.82387 14.3256 2.51227 13.2372C4.32778 10.3669 8.70189 5 16.0278 5C23.3537 5 27.7278 10.3669 29.5433 13.2372C30.2317 14.3256 30.2317 15.6744 29.5433 16.7628C27.7278 19.6331 23.3537 25 16.0278 25Z" fill="white"></path></svg></span>
+          <div><p class="ido-mikor">Bármikor</p><h3>Válaszol neked</h3><p>Kérdezhetsz tőle az appban, és igazolást kérhetsz egy gombbal.</p></div>
+        </li>
+      </ol>
+      <p class="negyedev-meg">Katásként a havi katát és a kata-keretedet figyeli.</p>
     </div>
     <div class="konyvelo-szoveg">
-      <p class="felcim">A könyvelőd</p>
-      <h2>Valódi könyvelő dolgozik neked.</h2>
-      <p class="bevezeto">A könyvelésedet nyilvántartásba vett könyvelő végzi. A nevét és a nyilvántartási számát a szerződésedben és az appban is látod. Érte úgy felelünk, mintha magunk dolgoznánk.</p>
-      <h3 class="kiscim">Amit a könyvelőd csinál</h3>
-      <ul class="lista lista-pipa">
-        <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Kiszámolja és beadja a negyedéves SZJA-előleget, TB-járulékot és szochót. Katásként figyeli a havi katát és a keretedet.</li>
-        <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Vezeti a bevételi nyilvántartásodat.</li>
-        <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>A meghatalmazásod alapján tartja a kapcsolatot a NAV-val, és elmagyarázza a leveleit.</li>
-        <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Igazolásokat kér neked, és válaszol a kérdéseidre.</li>
-      </ul>
-      <div class="soha">
+      <div class="be">
+        <p class="felcim">A könyvelőd</p>
+        <h2>Valódi könyvelő dolgozik neked.</h2>
+        <p class="bevezeto">A könyvelésedet nyilvántartásba vett könyvelő végzi, nem egy program. És te tudod, ki ő.</p>
+      </div>
+      <div class="tenyek be-sor">
+        <div class="teny teny-kiemelt">
+          <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M27.8 30H4.2C3 30 2 29 2 27.8V14.2C2 13 3 12 4.2 12H27.7C29 12 30 13 30 14.2V27.7C30 29 29 30 27.8 30Z" fill="#26C9FC"></path><path d="M26.4046 28H14.5954C14.2977 28 14 27.8065 14 27.4194V25.5806C14 25.2903 14.1985 25 14.5954 25H26.4046C26.7023 25 27 25.1935 27 25.5806V27.4194C27 27.7097 26.7023 28 26.4046 28Z" fill="#F4F4F4"></path><path d="M11.0244 23H8H4.97561C4.5834 23 4.19119 23.7414 4.05253 23.3282C4.01873 23.2275 4 23.1176 4 23V15C4 14.5 4.39024 14 4.97561 14H11.0244C11.5122 14 12 14.4 12 15V23C12 23.0723 11.9943 23.1417 11.9833 23.2078C11.9031 23.6906 11.5392 23 11.0244 23Z" fill="white"></path><path d="M14.5 15C14.2239 15 14 15.2239 14 15.5C14 15.7761 14.2239 16 14.5 16H26.5C26.7762 16 27 15.7761 27 15.5C27 15.2239 26.7762 15 26.5 15H14.5ZM14 18.5C14 18.2239 14.2239 18 14.5 18H26.5C26.7762 18 27 18.2239 27 18.5C27 18.7761 26.7762 19 26.5 19H14.5C14.2239 19 14 18.7761 14 18.5ZM14 21.5C14 21.2239 14.2239 21 14.5 21H26.5C26.7762 21 27 21.2239 27 21.5C27 21.7761 26.7762 22 26.5 22H14.5C14.2239 22 14 21.7761 14 21.5Z" fill="#0074BA"></path><path d="M8.47558 15H7.49655C6.41961 15 5.63639 15.9204 5.73429 17.0454L5.77487 17.5752C5.47114 17.6487 5.24476 17.9331 5.24476 18.2727C5.24476 18.6516 5.52646 18.9617 5.88298 18.9869L5.9301 19.6022C6.00705 20.2453 6.4469 20.8252 7.05949 21.044C5.78604 21.3272 4.69582 22.1278 4 23.225C4.11056 23.6986 4.53077 24 4.95098 24H11.021C11.6084 24 12 23.5909 12 22.9773C11.2826 21.9798 10.2241 21.2648 9.00547 21.0223C9.56938 20.8044 9.96902 20.2886 10.042 19.6022L10.0891 18.9869C10.4457 18.9617 10.7273 18.6515 10.7273 18.2727C10.7273 17.9331 10.501 17.6487 10.1973 17.5752L10.2378 17.0454C10.3357 15.9204 9.45461 15 8.47558 15Z" fill="#321B41"></path><path d="M15.5 27H25.5C25.7 27 26 26.8 26 26.5C26 26.2 25.8 26 25.5 26H15.5C15.2 26 15 26.2 15 26.5C15 26.8 15.2 27 15.5 27Z" fill="#321B41"></path></svg>
+          <div><h3>Név szerint ismered</h3><p>A neve és a nyilvántartási száma benne van a szerződésedben, és az appban is látod.</p></div>
+        </div>
+        <div class="teny">
+          <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M2 30H6.0317L15.977 27.2248L25.9222 30H30V9.3C30 8.03 28.97 7 27.7 7H4.3C3.03 7 2 8.03 2 9.3V30Z" fill="#9B9B9B"></path><path d="M27 14H26C25.45 14 25 13.55 25 13V12C25 11.45 25.45 11 26 11H27C27.55 11 28 11.45 28 12V13C28 13.56 27.55 14 27 14ZM28 18V17C28 16.45 27.55 16 27 16H26C25.45 16 25 16.45 25 17V18C25 18.55 25.45 19 26 19H27C27.55 19 28 18.56 28 18ZM28 23V22C28 21.45 27.55 21 27 21H26C25.45 21 25 21.45 25 22V23C25 23.55 25.45 24 26 24H27C27.55 24 28 23.56 28 23Z" fill="#83CBFF"></path><path d="M7 22V23C7 23.55 6.55 24 6 24H5C4.45 24 4 23.55 4 23V22C4 21.45 4.45 21 5 21H6C6.55 21 7 21.45 7 22ZM6 11H5C4.45 11 4 11.45 4 12V13C4 13.55 4.45 14 5 14H6C6.55 14 7 13.55 7 13V12C7 11.45 6.55 11 6 11ZM6 16H5C4.45 16 4 16.45 4 17V18C4 18.55 4.45 19 5 19H6C6.55 19 7 18.55 7 18V17C7 16.45 6.55 16 6 16Z" fill="#83CBFF"></path><path d="M26 30H18.9867L15.9711 28.2702L12.9556 30H6V4.46C6 3.1 7.1 2 8.46 2H23.54C24.9 2 26 3.1 26 4.46V30Z" fill="#D3D3D3"></path><path d="M19 30H13V26.25C13 25.56 13.56 25 14.25 25H17.75C18.44 25 19.01 25.56 19.01 26.26V30H19Z" fill="#1C1C1C"></path><path d="M14.5 18H11.5C11.23 18 11 17.78 11 17.5V15.49C11 15.22 11.22 14.99 11.5 14.99H14.51C14.78 14.99 15.01 15.21 15.01 15.49V17.5C15 17.78 14.78 18 14.5 18ZM21 17.51V15.5C21 15.23 20.78 15 20.5 15H17.5C17.23 15 17 15.22 17 15.5V17.51C17 17.78 17.22 18.01 17.5 18.01H20.51C20.78 18 21 17.78 21 17.51ZM15 22.51V20.5C15 20.23 14.78 20 14.5 20H11.5C11.23 20 11 20.22 11 20.5V22.51C11 22.78 11.22 23.01 11.5 23.01H14.51C14.78 23 15 22.78 15 22.51ZM21 22.51V20.5C21 20.23 20.78 20 20.5 20H17.5C17.23 20 17 20.22 17 20.5V22.51C17 22.78 17.22 23.01 17.5 23.01H20.51C20.78 23 21 22.78 21 22.51ZM15 7.50999V5.5C15 5.23 14.78 5 14.5 5H11.5C11.23 5 11 5.22 11 5.5V7.50999C11 7.77999 11.22 8.00999 11.5 8.00999H14.51C14.78 7.99999 15 7.77999 15 7.50999ZM21 7.50999V5.5C21 5.23 20.78 5 20.5 5H17.5C17.23 5 17 5.22 17 5.5V7.50999C17 7.77999 17.22 8.00999 17.5 8.00999H20.51C20.78 7.99999 21 7.77999 21 7.50999ZM15 12.51V10.5C15 10.23 14.78 10 14.5 10H11.5C11.23 10 11 10.22 11 10.5V12.51C11 12.78 11.22 13.01 11.5 13.01H14.51C14.78 13 15 12.78 15 12.51ZM21 12.51V10.5C21 10.23 20.78 10 20.5 10H17.5C17.23 10 17 10.22 17 10.5V12.51C17 12.78 17.22 13.01 17.5 13.01H20.51C20.78 13 21 12.78 21 12.51Z" fill="#83CBFF"></path></svg>
+          <div><h3>Egy szerződés, egy felelős</h3><p>A szerződést a <span class="nowrap">Somosi Kft.-vel</span> kötöd. A könyvelőd munkájáért úgy felelünk, mintha magunk dolgoznánk.</p></div>
+        </div>
+      </div>
+      <div class="soha be">
         <h3>Amit soha nem kérünk el</h3>
         <p>A jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet, a kódjaidat, és telefonon a kártyaadataidat. Ha valaki a nevünkben ezt kéri, tedd le, és írj nekünk.</p>
       </div>
@@ -268,18 +451,18 @@
 </section>
 
 <!-- ============ BIZTONSÁG ============ -->
-<section class="szakasz" id="biztonsag">
+<section class="szakasz szakasz-levendula" id="biztonsag">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Biztonság</p>
       <h2>Érthető meghatalmazás, védett adatok.</h2>
     </div>
-    <div class="ket-kartya">
+    <div class="ket-kartya be-sor">
       <div class="kartya kartya-keret">
         <h3>A NAV-meghatalmazás, röviden</h3>
         <ul class="lista lista-pont">
           <li>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet a NAV-nál.</li>
-          <li>Te adod meg az ONYA-ban. Ha kéred, a könyvelőd küldi be, és te hagyod jóvá.</li>
+          <li>Te adod meg a NAV online felületén (ONYA). Ha kéred, a könyvelőd küldi be, és te hagyod jóvá.</li>
           <li>Bármikor visszavonhatod, ugyanott.</li>
           <li>Az app soha nem küld be semmit a NAV-nak. A bevallást a könyvelőd adja be, miután átnézte.</li>
         </ul>
@@ -299,23 +482,24 @@
 </section>
 
 <!-- ============ ÁRAK ============ -->
-<section class="szakasz szakasz-szurke" id="arak">
+<section class="szakasz szakasz-feher" id="arak">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Árak</p>
-      <h2>Egy csomag, egy ár.<br>A külön díjakat is előre látod.</h2>
+      <h2>Egy havidíj. Minden más díj előre kiírva.</h2>
+      <p class="bevezeto">Évente egyszer jön hozzá az éves zárás. A többit csak akkor fizeted, ha kéred.</p>
     </div>
-    <div class="arkartya">
+    <div class="arkartya be">
       <div class="ar-fo">
         <p class="ar-cimke">Havidíj</p>
-        <p class="ar-osszeg">19&nbsp;999&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></p>
+        <p class="ar-osszeg"><span class="kiemelo">19&nbsp;999&nbsp;Ft</span><small>&nbsp;/&nbsp;hó</small></p>
         <p class="ar-afa">bruttó, 27% ÁFA-val</p>
         <p class="ar-ev">Egy teljes év az éves zárással együtt: <b>254&nbsp;987&nbsp;Ft</b></p>
         <h3 class="kiscim">Benne van</h3>
         <ul class="lista lista-pipa">
           <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Saját, név szerint ismert könyvelő</li>
           <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Bevételi nyilvántartás a NAV Online Számlából</li>
-          <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Negyedéves SZJA-előleg, TB-járulék és szocho kiszámítása és bevallása</li>
+          <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>A negyedéves adó és járulékok kiszámítása és bevallása (SZJA-előleg, TB-járulék, szocho)</li>
           <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Katásként: a havi kata és a kata-keret figyelése</li>
           <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Mennyit tegyél félre, számlánként</li>
           <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Határidő-figyelés és emlékeztetők</li>
@@ -331,7 +515,7 @@
         <h3>Külön díjak</h3>
         <p class="ar-kulon-bev">Az éves zárás évente egyszer jár, ha a bevallásodat mi adjuk be. A többit csak akkor fizeted, ha kéred. Mindet előre látod az appban, és a jóváhagyásod nélkül nem kérjük.</p>
         <dl class="dijlista">
-          <div class="dij">
+          <div class="dij dij-fo">
             <dt>Éves zárás<span>Az éves adóbevallások: SZJA vagy kata, és iparűzési adó.</span></dt>
             <dd>14&nbsp;999&nbsp;Ft<small>/ év</small></dd>
           </div>
@@ -340,11 +524,11 @@
             <dd>4&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
           </div>
           <div class="dij">
-            <dt>Jogállás-változás bejelentése helyetted<span>Például főállásból mellékállásba.</span></dt>
+            <dt>Jogállás-változás bejelentése helyetted<span>Ha főállásból mellékállásba váltasz, vagy fordítva.</span></dt>
             <dd>7&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
           </div>
           <div class="dij">
-            <dt>Amíg szünetel a vállalkozásod<span>A havidíj helyett ezt fizeted.</span></dt>
+            <dt>Amíg szünetel a vállalkozásod<span>Ilyenkor a havidíj helyett csak ennyit fizetsz.</span></dt>
             <dd>2&nbsp;999&nbsp;Ft<small>/ hó</small></dd>
           </div>
           <div class="dij">
@@ -359,7 +543,7 @@
         <p class="ar-kulon-meg">Szintén egyedi ajánlattal, előre és írásban: ÁFA-bevallás, képviselet NAV-ellenőrzésnél, korábbi évek rendbetétele.</p>
       </div>
     </div>
-    <ul class="ar-tenyek">
+    <ul class="ar-tenyek be-sor">
       <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Kártyával vagy átutalással</b> fizethetsz, havonta előre.</span></li>
       <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Nincs hűségidő.</b> Bármikor lemondhatod, a kifizetett hónap végéig minden marad.</span></li>
       <li><svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Minden ár bruttó,</b> 27% ÁFA-val. A részletek az <a href="https://app.adozz.hu/jogi/aszf">ÁSZF-ben</a>.</span></li>
@@ -368,14 +552,14 @@
 </section>
 
 <!-- ============ ÖSSZEVETÉS ============ -->
-<section class="szakasz" id="osszevetes">
+<section class="szakasz szakasz-kek" id="osszevetes">
   <div class="kontener">
-    <div class="szakasz-fej">
+    <div class="szakasz-fej be">
       <p class="felcim">Összevetés</p>
       <h2>Miben más, mint egy hagyományos könyvelőiroda?</h2>
       <p class="bevezeto">Mindkettő jó választás lehet. Ez a különbség.</p>
     </div>
-    <div class="tabla-keret">
+    <div class="tabla-keret be">
       <table class="tabla">
         <thead>
           <tr><th scope="col"><span class="rejtett">Szempont</span></th><th scope="col" class="oszlop-adozz">Adózz</th><th scope="col">Hagyományos iroda</th></tr>
@@ -397,7 +581,7 @@
 
 <!-- ============ VÉLEMÉNYEK (HELYŐRZŐ) ============ -->
 <!-- Csak valódi ügyfél véleménye kerülhet ide, névvel és írásos engedéllyel. Élesítés előtt ezt a szakaszt el kell rejteni, amíg nincs valódi vélemény. -->
-<section class="szakasz szakasz-szurke szakasz-kicsi" id="velemenyek">
+<section class="szakasz szakasz-feher szakasz-kicsi" id="velemenyek">
   <div class="kontener">
     <div class="helyorzo helyorzo-sav">
       <span>[Itt lesznek valódi ügyfélvélemények]</span>
@@ -407,7 +591,7 @@
 </section>
 
 <!-- ============ GYIK ============ -->
-<section class="szakasz" id="gyik">
+<section class="szakasz szakasz-meleg" id="gyik">
   <div class="kontener gyik-racs">
     <div class="gyik-fej">
       <p class="felcim">GYIK</p>
@@ -433,11 +617,11 @@
       </details>
       <details>
         <summary>Mi az a NAV-meghatalmazás, és visszavonható?</summary>
-        <p>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet. Te adod meg az ONYA-ban, vagy ha kéred, a könyvelőd küldi be, és te hagyod jóvá. Bármikor visszavonhatod, ugyanott. Az Ügyfélkapu+- vagy DÁP-belépésedet és a jelszavadat soha nem kérjük el.</p>
+        <p>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet. Te adod meg a NAV online felületén (ONYA), vagy ha kéred, a könyvelőd küldi be, és te hagyod jóvá. Bármikor visszavonhatod, ugyanott. Az Ügyfélkapu+- vagy DÁP-belépésedet és a jelszavadat soha nem kérjük el.</p>
       </details>
       <details>
         <summary>Hol vannak az adataim, és ki látja őket?</summary>
-        <p>Európai szerveren, titkosítva. A könyvelési irataidat csak a könyvelőd látja. Ügyfélszolgálatunk csak azt látja, ami a bekötéshez és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="https://app.adozz.hu/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
+        <p>Európai szerveren, titkosítva. A könyvelési irataidat csak a könyvelőd látja. Ügyfélszolgálatunk csak azt látja, ami az induláshoz és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="https://app.adozz.hu/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
       </details>
       <details>
         <summary>Miért nincs próbaidő? Mikor kell fizetni?</summary>
@@ -449,7 +633,7 @@
       </details>
       <details>
         <summary>Mi kell az induláshoz?</summary>
-        <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a pénzmosás elleni törvény miatt azonosítanunk kell az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.</p>
+        <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a törvény előírja, hogy azonosítsuk az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.</p>
       </details>
       <details>
         <summary>Még nincs vállalkozásom. Segítetek elindítani?</summary>
@@ -462,7 +646,7 @@
 <!-- ============ ZÁRÓ CTA + VISSZAHÍVÁS ============ -->
 <section class="zaro" id="visszahivas">
   <div class="kontener zaro-racs">
-    <div class="zaro-szoveg">
+    <div class="zaro-szoveg be">
       <h2>Legyen saját könyvelőd.</h2>
       <p>Regisztrálj, válaszolj pár kérdésre, és ha kéred, előbb visszahívunk.</p>
       <div class="gombsor">
@@ -470,7 +654,7 @@
       </div>
       <p class="zaro-mikro">19&nbsp;999&nbsp;Ft/hó bruttó · Nincs hűségidő · Kártya vagy átutalás</p>
     </div>
-    <div class="zaro-kartya">
+    <div class="zaro-kartya be">
       <svg class="ikon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M29.72 25.8394L25.1 23.5L22.59 18.7094C22.28 18.3994 21.79 18.3394 21.41 18.5694C20.14 19.3394 19.16 20.5594 18.71 21.9994C18.48 22.7194 17.64 23.0494 16.99 22.6594L16.98 22.6494L16.97 22.6394C13.85 20.7694 11.23 18.1494 9.36 15.0294C9.36 15.0194 9.35 15.0094 9.35 15.0094C8.95 14.3594 9.28 13.5194 10 13.2894C11.45 12.8394 12.67 11.8594 13.43 10.5894C13.66 10.2094 13.6 9.72941 13.29 9.40941L8.5 7L6.16 2.27941C5.85 1.96941 5.36 1.90941 4.98 2.13941C3.26 3.16941 2.1 5.01941 2.01 7.14941V7.15941C2 7.25941 2 7.35941 2 7.45941C2 7.59941 2.01 7.72941 2.02 7.85941C2.14 11.8194 3.27 15.6794 5.31 19.0794C7.18 22.1994 9.8 24.8194 12.92 26.6894L12.93 26.6994C16.37 28.7694 20.29 29.8994 24.3 29.9894C24.38 29.9894 24.46 29.9994 24.54 29.9994C24.58 29.9994 24.63 29.9994 24.67 29.9994C24.73 29.9994 24.78 29.9994 24.84 29.9994H25.1V29.9794C27.12 29.8094 28.87 28.6694 29.87 27.0194C30.09 26.6394 30.03 26.1494 29.72 25.8394Z" fill="#F8312F"></path><path d="M13.4401 10.5894C13.0601 11.2194 12.5701 11.7694 12.0001 12.2294L3.34009 3.56941C3.80009 2.99941 4.35009 2.51941 4.98009 2.13941C5.36009 1.90941 5.85009 1.96941 6.16009 2.27941L13.3001 9.40941C13.6101 9.72941 13.6701 10.2094 13.4401 10.5894ZM21.4001 18.5695C21.7801 18.3395 22.2701 18.3995 22.5801 18.7095L29.7101 25.8595C30.0301 26.1695 30.0901 26.6495 29.8601 27.0295C29.4801 27.6595 28.9901 28.2095 28.4201 28.6695L19.7601 20.0095C20.2201 19.4395 20.7701 18.9495 21.4001 18.5695Z" fill="#BB1D80"></path></svg>
       <h3>Előbb beszélnél velünk?</h3>
       <p>Regisztráció után az appban egy gombbal kérsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nem kötelező.</p>
@@ -491,6 +675,7 @@
       </div>
       <nav class="lablec-oszlop" aria-label="Szolgáltatás">
         <h2>Szolgáltatás</h2>
+        <a href="#mit-kapsz">Mit kapsz</a>
         <a href="#hogyan">Hogyan működik</a>
         <a href="#arak">Árak</a>
         <a href="#konyvelo">Könyvelő</a>

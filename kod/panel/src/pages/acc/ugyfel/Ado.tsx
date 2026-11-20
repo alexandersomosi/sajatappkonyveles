@@ -326,7 +326,7 @@ export function hipaSzamlaJo(s: string): boolean {
  * last year's tax), so the accountant types the amount and the önkormányzat's account number and approves it here
  * (POST /acc/tax-periods/:id/hipa-approve). Approved: the same payment card as a quarter (check, mismatch) + reopen.
  */
-function HipaIdoszak({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
+export function HipaIdoszak({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
   const t = today();
   const qc = useQueryClient();
   const pir = usePirito();

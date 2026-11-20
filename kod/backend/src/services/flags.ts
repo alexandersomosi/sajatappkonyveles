@@ -112,6 +112,9 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
     .from(annualClosings)
     .where(eq(annualClosings.clientId, clientId));
   const closingOf = (year: number) => closings.find((x) => x.taxYear === year);
+  // The client's item also says "és a különbözet befizetése": we do not track that transfer, so for the client a filed
+  // return stays open until its due date (the Főoldal keeps the payment reminder) and turns "kész" – not "lejárt" – after.
+  const annualDone = (filedAt: Date | null | undefined, dueDate: string) => Boolean(filedAt) && (acc || dueDate < today);
   for (let y = Math.max(fromYear, 2026); y <= toYear; y++) {
     const prof = profiles.find((x) => x.year === y);
     if (!prof) continue;
@@ -121,9 +124,9 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       if (d.periodKey === String(y)) {
         if (prof.regime === 'kata') continue; // no 26SZJA for a KATA year (the '26KATA only above the keret)
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
-        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, Boolean(closingOf(y)?.filedSzjaAt), '/hataridok'));
+        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, annualDone(closingOf(y)?.filedSzjaAt, d.dueDate), '/hataridok'));
       } else if (d.periodKey === `${y}-HIPA`) {
-        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, Boolean(closingOf(y)?.filedHipaAt), '/hataridok'));
+        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, annualDone(closingOf(y)?.filedHipaAt, d.dueDate), '/hataridok'));
       }
     }
   }
