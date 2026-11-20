@@ -27,3 +27,27 @@ Mérce: `dizajn/C5_v2/` (89 jóváhagyott képernyő, HTML+PNG), közös alap: `
 - Szerződésnél „Bencével kötöd” → „velünk kötöd” (a szerződő fél a Somosi Kft.)?
 - Plusz díjak (éves zárás 14 999, változás 4 999) maradnak? 24–48 órás visszahívás marad?
 - Új app-ikon + favicon (felirat-alapú jel).
+
+## Gépes (asztali) nézet (tulaj 11-20)
+- Az app.adozz.hu gépen is megnyílik -> responsive: telefonon a v2, ~1024 px felett asztali elrendezés: bal menüsáv logóval (Főoldal, Dosszié, Feltöltés, Üzenetek, Fiók) + könyvelő kártya alul, kék hős sáv, 2 oszlopos kártyarács, kétpaneles üzenetek/határidők/dosszié, osztott belépőoldal. Minták: dizajn/C5_v2/asztali/ – JÓVÁHAGYVA 11-20 ("nagyon jól néz ki"). A menüben "Fotózás" kamera ikonnal marad (gépen fájlfeltöltést is enged).
+
+## E-mail-lefedettség (felmérés 11-20, dizajn/email/LEVEL_LEFEDETTSEG.md)
+- 74 esemény: 40 kap e-mailt, 11 részben, 23 nem (5 szándékosan csak push/app, 18 valódi hiány). Mind a 21 hiányzó levélhez van javasolt tárgy+szöveg a fájlban.
+- k8: minden levél az új sablonnal (dizajn/email/sablon.html, mailer.ts htmlOf helyett); a díjszámla is (Számlázz sendEmail=false).
+- Top hiányok: felmondó PDF e-mailben (kötelező); új üzenet a könyvelőtől alapból e-mail (most csak bekapcsolva); NAV-hiba jelzése (ügyfél+könyvelő); előfizetés megszűnése; felmondás hatálybalépése; fióktörlés visszavonva/végrehajtva + adatexport-hiba; árkedvezmény visszavonása, admin kártyatörlés; "már van fiókod" levél (regisztrációnál ne árulja el, hogy létezik a cím); elutasított igazolás e-mailben is.
+- Döntés kell: árkedvezmény visszavonásánál is 30 napos előzetes értesítés?
+- Fotózás (telefon): a kamera mellett GALÉRIA és FÁJL/PDF feltöltés is (tulaj 11-20); minta: dizajn/C5_v2/64_fotozas.png (vaku a keret sarkában).
+- Könyvelői panel + tulaj konzol (konyvelo.adozz.hu) is megkapja a v2 dizájnt: felirat-logó, kártyák, Microsoft emoji ikonok (a 3D ikonok helyett), sárga fő gomb, egységes menüsáv (tulaj 11-20 kérdésére: igen). Előtte minták jóváhagyásra.
+
+## Mozgás (motion design) az appban (tulaj 11-20: "ezeket is tegyük bele") – csak az ügyfél-appba, a panelbe/konzolba nem
+- Főoldal betöltés: kártyák finom, egymás utáni beúszása; a fő összeg (pl. 250 000 Ft) felpörgése nulláról.
+- Haladás- és keretcsíkok feltöltődése betöltéskor.
+- Gombnyomás: enyhe "benyomódás" (scale ~0,97).
+- "Megjelölöm, hogy félretettem" / befizetés után: felpattanó zöld pipa.
+- Bekötés vége és első sikeres fizetés: rövid ünneplő animáció (pl. konfetti, Lottie – MIT licencű lottie-react-native).
+- Fotózás: villanás + a kép bélyegképként a Dossziéba "repül".
+- Betöltés: forgó kör helyett halvány helykitöltők (skeleton).
+- Alsó sáv: a kiválasztott fül ikonja picit megugrik; az új üzenet piros pöttye felpattan.
+- Szabályok: 0,2–0,4 s, nincs folyamatos mozgás, gyenge telefonon is akadásmentes (Reanimated / natív driver), a rendszer "csökkentett mozgás" beállítását tiszteletben tartja.
+- Weboldal (adozz.hu): opcionális, 1-2 finom CSS-mozgás a hős részen (JS nélkül).
+- Gépen (app.adozz.hu asztali nézet) UGYANEZEK a mozgások (ugyanaz a kód fut a weben), plusz gépre szabva: egér fölé vitelre a kártya picit megemelkedik, a gomb kiemelődik; fájl behúzásakor a feltöltő sáv kivilágosodik, feltöltés után a fájl a listába "repül" (a kamera-villanás helyett). (tulaj 11-20: "gépen is kellene")

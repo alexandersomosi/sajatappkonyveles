@@ -10,6 +10,22 @@
 > (`ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh allapot'`).
 
 
+## k7c2 – a 2. ellenőrzés javításai, élesítve 2026-11-20 17:42–17:47
+Ugyanúgy, mint a k7c: `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_k7c2_20261120_174225` → `feltolt.sh` → `up.sh`
+(titkosított mentés `_regi/db_elotte_up_20261120_174609.dump.gpg`, migráció **0019_k7c2** 19 → 20: `payments.charge_params`,
+`payments.refund_pending_at`, `subscriptions.predebit_period`, `stripe_events.claimed_at`, és a `payments_one_success_per_fee`
+részleges egyedi index – csak akkor jön létre, ha nincs dupla sikeres díjfizetés; az élőn 0 volt, létrejött) →
+`hasonlit … utana_k7c2_20261120_174710`: VÁLTOZATLAN. Utána mind a nyolc cím 200/301, `/config` ár 19 999, az ÁSZF /
+szerződés / kártyás engedély 19 999 Ft; az éles `index.html` = a helyi build.
+- **Számlázz.hu kulcs:** DEMO szerveren csak `SZAMLAZZHU_TEST_AGENT_KEY` olvasódik, éles szerveren csak `SZAMLAZZHU_AGENT_KEY`
+  (`config.ts`); a `kezjegy_kulcsok.ps1` fiókválasztáskor ugyanabban a futásban kéri a fiók kulcsát. Élő Stripe-kulcs éles
+  Számlázz.hu nélkül nem indul.
+- **Új Stripe-események** (`stripe_szerverre.ps1` + `STRIPE_WEBHOOK_EVENTS`): `refund.failed`, `charge.refund.updated`,
+  `charge.dispute.closed` – a tulaj a következő `stripe_szerverre.ps1` futtatással iratkozik fel rájuk.
+- **[TULAJ]** `ar_19999_szerverre.ps1`: a `.env` tartalék `PLAN_PRICE_HUF` sora 20000 → 19999 (a kijelzett ár már a Díjak beállításból jön).
+- Helyi próba: `PORT=8893 node kod/app/scripts/helyi-proba.mjs` (most a `seed:k29`-et is betölti) +
+  `BASE=http://127.0.0.1:8893 node kod/app/scripts/k7c2-kepek.mjs` → `kod/_qa/k7c2j_*.png`.
+
 ## k7c – a vezetett első indulás (bevezető) javítása, élesítve 2026-11-20 15:54–15:57
 
 Ugyanúgy, mint a k7-es frissítés (fiókszámok és tulaj-fiókok előtte/utána, `feltolt.sh` + `up.sh`); migráció nem volt (19 maradt).

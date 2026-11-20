@@ -1,0 +1,189 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.assist_task.ellenorzes",
+   "ertheto": "nem",
+   "mi_a_gond": "A megjelölés szerint ügyfélnek szól, de a tartalma egyértelműen belső könyvelői feladat ('Nézd meg az ONYA-ban'). Ha Péter kapja, fogalma sincs, mi az az ONYA és mit kellene csinálnia.",
+   "javitott_cim": "Jóváhagyva: {clientName}",
+   "javitott_szoveg": "Az ügyfél jóváhagyta a meghatalmazást. Ellenőrizd az ONYA felületén a státuszt.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.bejelentes",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői admin feladat (Vállalkozói Ügysegéd, meghatalmazotti beküldés), tévesen ügyfélnek címezve. Péter számára riasztó és értelmezhetetlen.",
+   "javitott_cim": "Bejelentés beküldése: {clientName}",
+   "javitott_szoveg": "Az ügyfél jóváhagyta. Küldd be a bejelentést a Vállalkozói Ügysegédben meghatalmazottként.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.ujra",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső szakmai teendő a könyvelőnek (újraküldés), nem ügyfél-értesítés. Nincs kontextus, Péter nem tudja, mi járt le és mit kell beküldenie.",
+   "javitott_cim": "Lejárt a határidő: {clientName}",
+   "javitott_szoveg": "Eltelt a 4 nap, küldd be újra a meghatalmazást az ügyfélnek.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.ellenorzes_kesik",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső könyvelői utasítás konkrét gombokkal és ONYA hivatkozással. Nem az ügyfélnek való.",
+   "javitott_cim": "Sürgős ellenőrzés: {clientName}",
+   "javitott_szoveg": "A 4 nap letelt. Ellenőrizd az ONYA-ban: ha érvényes, jelöld az 'Él a meghatalmazás', ha törölték, a 'Nem él' gombbal, majd küldd be újra.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.atnezes",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői teendő (adószám rögzítése a panelben), Péter semmit sem tud kezdeni vele.",
+   "javitott_cim": "Bejelentés ellenőrzése: {clientName}",
+   "javitott_szoveg": "{firstName} beküldte a bejelentést. Ellenőrizd az értesítést, és rögzítsd a panelen az adószámot.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_approval_overdue",
+   "ertheto": "nem",
+   "mi_a_gond": "A könyvelőnek szóló utasítás ('Hívd fel'), hogy keresse meg az ügyfelet, tévesen az ügyfélnek címezve.",
+   "javitott_cim": "Jóváhagyás lejár: {clientName}",
+   "javitott_szoveg": "Az ügyfél még nem hagyta jóvá a meghatalmazást, és ma lejár. Kérlek, hívd fel telefonon.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.kesik",
+   "ertheto": "nem",
+   "mi_a_gond": "A könyvelőnek szóló határidős figyelmeztetés ('Lejárt a határidőnk, az ügyfél várja'), tévesen az ügyfélhez rendelve.",
+   "javitott_cim": "Késésben: {clientName} – {what}",
+   "javitott_szoveg": "Lejárt a belső határidő. Intézd el még ma, vagy írj az ügyfélnek, hogy mikorra várhatja.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_path_changed",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső rendszeresemény a könyvelőnek. Kriptikus formátum ({fromLabel} → {toLabel}), Péter nem tudná hova tenni.",
+   "javitott_cim": "Módosított válasz: {clientName}",
+   "javitott_szoveg": "Az ügyfél módosította a korábbi válaszát: {fromLabel} helyett most {toLabel}.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.invoice_new",
+   "ertheto": "részben",
+   "mi_a_gond": "A szöveg végén a 'Magánszemély' szó csonkán, kontextus nélkül lóg.",
+   "javitott_cim": "Új kiállított számlád: {osszeg} Ft",
+   "javitott_szoveg": "{vevo} (magánszemély). Tegyél félre kb. {felre} Ft-ot adóra.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.invoice_new",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya (üres cím), és jó lenne egyértelművé tenni, hogy adóra tesszük félre.",
+   "javitott_cim": "Új kiállított számla érkezett: {vevo}",
+   "javitott_szoveg": "{vevo} felé kiállított számlád után tegyél félre kb. {felre} Ft-ot adóra.\n\nAz összes számládat és a pontos összeget itt találod: {appUrl}/felretesz",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.invoice_new.kuszob",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya, és a megfogalmazás kicsit hirtelen.",
+   "javitott_cim": "Új számla: elérted az adómentes keretedet",
+   "javitott_szoveg": "{vevo}. Tegyél félre kb. {felre} Ft-ot adóra, mert elérted az adómentes kereted határát.\n\nRészletek az appban: {appUrl}/felretesz",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.invoice_new.adomentes",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya.",
+   "javitott_cim": "Új számla: most nem kell félretenned",
+   "javitott_szoveg": "{vevo}. Ebből a számlából most még nem kell félretenned adóra.\n\nA részleteket megnézheted az appban: {appUrl}/felretesz",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.invoice_new.tobb",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'Megnézem, melyik mennyi' egy gomb felirata lenne, értesítés szövegeként furcsa E/1-ben.",
+   "javitott_cim": "{n} új számlád érkezett: összesen {osszeg} Ft",
+   "javitott_szoveg": "Tegyél félre kb. {felre} Ft-ot adóra. Nyisd meg az appot a részletekért.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.invoice_new.tobb",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya, és a 'Megnézem...' fordulat idegen.",
+   "javitott_cim": "{n} új számlád érkezett",
+   "javitott_szoveg": "Az új számláid után tegyél félre kb. {felre} Ft-ot adóra.\n\nA számlák bontását és az összegeket itt éred el: {appUrl}/felretesz",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.invoice_new.tobb_adomentes",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya.",
+   "javitott_cim": "{n} új számla: nem kell félretenned",
+   "javitott_szoveg": "A legutóbbi számláid után most még nem kell félretenned adóra.\n\nAz adataidat bármikor megnézheted az appban: {appUrl}/felretesz",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.invoice_new.rejtett",
+   "ertheto": "részben",
+   "mi_a_gond": "A cím és a szöveg első sora szóról szóra ismétli egymást ('Új kiállított számlád érkezett').",
+   "javitott_cim": "Új számla érkezett",
+   "javitott_szoveg": "{n} új kiállított számlád van. Nézd meg az appban, mennyit érdemes félretenned adóra.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.allowance_submitted",
+   "ertheto": "nem",
+   "mi_a_gond": "A könyvelőnek szóló belső értesítés (az ügyfél kitöltötte, bíráld el), hibásan az ügyfélhez rendelve.",
+   "javitott_cim": "Új kedvezmény-kérdőív: {clientName}",
+   "javitott_szoveg": "Az ügyfél kitöltötte a kérdőívet. {n} kedvezmény vár elbírálásra a fiókjában.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.allowance_decided.jovahagyva",
+   "ertheto": "részben",
+   "mi_a_gond": "Nincs alanya a mondatnak ('Jóváhagyta a kedvezményedet: ki? Kovács Bence? A könyvelőd?').",
+   "javitott_cim": "Kedvezmény jóváhagyva: {label}",
+   "javitott_szoveg": "A könyvelőd jóváhagyta, mostantól ezzel is számolunk az adóelőlegednél.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.allowance_decided.reszben",
+   "ertheto": "részben",
+   "mi_a_gond": "Túlzottan szűkszavú, nem derül ki, hogy nem mindegyik lett elfogadva.",
+   "javitott_cim": "{firstName} átnézte a kedvezményeidet",
+   "javitott_szoveg": "Nem minden kedvezményt tudtunk jóváhagyni. Nyisd meg az appot a részletekért.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.allowance_decided.elutasitva",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'Megnézem, miért' gombfeliratként értelmes, push szövegként furcsa E/1-es befejezés.",
+   "javitott_cim": "{firstName} átnézte a kedvezményeidet",
+   "javitott_szoveg": "Egy kedvezmény most sajnos nem vehető igénybe. Lépj be az appba a magyarázatért.",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A csomag legsúlyosabb hibája, hogy számos tisztán könyvelői, adminisztrációs feladatot (ONYA, Vállalkozói Ügysegéd, teendők felülvizsgálata) 'ügyfél' célcsoporttal címkéztek fel, ami egy kezdő vállalkozónak teljesen érthetetlen és riasztó lenne. A tényleges ügyfélüzeneteknél (számlák, kedvezmények) az e-maileknek hiányzik a tárgya, és a push értesítések szövegébe néhol gombfelirat-szerű szövegek ragadtak bent. Kis igazítással viszont nagyon közvetlen és hasznos értesítések lesznek.",
+ "csomag": 4,
+ "usage": {
+  "prompt_tokens": 2932,
+  "completion_tokens": 3424,
+  "total_tokens": 6356,
+  "cost": 0.015039,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.015039,
+   "upstream_inference_prompt_cost": 0.002199,
+   "upstream_inference_completions_cost": 0.01284
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

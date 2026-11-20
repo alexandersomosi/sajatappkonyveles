@@ -1,0 +1,69 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.annual_due.jovahagyas",
+   "ertheto": "részben",
+   "mi_a_gond": "A címben a határidő behelyettesítése ragozatlanul vagy hibás toldalékkal szerepelhet (pl. 'Hagyd jóvá a bevallásodat 2024. május 20.'), magyartalan.",
+   "javitott_cim": "Hagyd jóvá a bevallásodat eddig: {hatarido}",
+   "javitott_szoveg": "Elkészült a tervezet, nézd át az appban! Kb. 2 percet vesz igénybe.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.annual_due",
+   "ertheto": "részben",
+   "mi_a_gond": "A címben a dátum toldalékolatlanul szerepelhet a mondat végén ('Éves zárás: töltsd ki a kérdőívet {hatarido}').",
+   "javitott_cim": "Éves zárás: töltsd ki a kérdőívet eddig: {hatarido}",
+   "javitott_szoveg": "Csak kb. 5 perc. Az adataid alapján készíti el {firstName} a bevallásodat.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.service_locked",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'Fizess, és {firstName} folytatja' kifejezés nyers, sürgető és rideg egy szolgáltatótól.",
+   "javitott_cim": "Szünetel a könyvelésed",
+   "javitott_szoveg": "Kérünk, fizesd be az elmaradt {mit} tételt, hogy {firstName} folytathassa a könyvelésedet.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.employer_decided.egyedi_elfogadva",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'bekötéssel' belső szleng, Péter nem tudja, milyen műszaki vagy hivatali folyamatot takar.",
+   "javitott_cim": "Megállapodtatok",
+   "javitott_szoveg": "Elfogadtad az ajánlatot, folytatjuk a fiókod beállítását.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.subscription_paused.kezdet",
+   "ertheto": "részben",
+   "mi_a_gond": "A '{from} a havidíj helyett' toldalékolatlan dátumnál magyartalan (pl. '2024.03.01. a havidíj helyett').",
+   "javitott_cim": "Szünetel a vállalkozásod",
+   "javitott_szoveg": "{from} naptól a normál díj helyett csökkentett készenléti díjat ({dij} Ft/hó) vonszunk le.",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A szövegek általában lényegretörőek, rövidek és jól illeszkednek a mobilos felülethez. Néhány helyen a dátumos helyőrzők ragozási problémát okoznak a címekben, illetve felbukkan felesleges belső szakzsargon ('bekötés') és túlzottan rideg felszólítás ('Fizess').",
+ "csomag": 6,
+ "usage": {
+  "prompt_tokens": 2751,
+  "completion_tokens": 924,
+  "total_tokens": 3675,
+  "cost": 0.00552825,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00552825,
+   "upstream_inference_prompt_cost": 0.00206325,
+   "upstream_inference_completions_cost": 0.003465
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

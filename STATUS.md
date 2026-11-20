@@ -3,6 +3,28 @@
 **Él:** app https://app.45-94-65-74.sslip.io · panel https://konyvelo.45-94-65-74.sslip.io · API 200 (10:08-as élesítés után mind a három cím 200). A te fiókjaid (alex@, tulaj@) és Bence + Dávid demo-belépése változatlan, az adatbázishoz nem nyúltunk (élesítés előtt titkosított mentés: `/srv/kezjegy/_regi/db_elotte_up_20261120_100737.dump.gpg`). A Gardoko törölve, ez rendben van. APK most nem készült (kérésed szerint). Az előző állapot: `_regi\STATUS_elotte_k6c3_1120.md`.
 
 
+## 17:46 – a 2. ellenőrzés hibái javítva, élesben (k7c2)
+Élesítés előtt titkosított mentés (`_regi/db_elotte_up_20261120_174609.dump.gpg`), migráció 19 → 20 (csak bővít). A fiókjaid
+(alex@, tulaj@) VÁLTOZATLANOK, Dávid és Bence számai ugyanazok. Mind a nyolc cím 200/301. Tesztek: adómotor 208, backend 420,
+app 49, panel 80, jogi 45 – mind zöld. Képek: `kod\_qa\k7c2j_*.png`.
+- **Fizetés:** egy díjat csak egyszer lehet kifizetni (ha mégis kétszer jön pénz, a másodikat automatikusan visszautaljuk,
+  számla nélkül, és szólunk). Díjfizetés nem ment el kártyát. Levonás csak 3 nappal előtte küldött értesítés után.
+  Ha a Stripe visszautasítja a kérésünket, a hónap fizetetlen lesz (nem fut a végtelenségig), és szólunk neked.
+- **Számlázz.hu:** a DEMO szerveren a szerver soha nem olvassa az ÉLES kulcsodat, a teszt fiók csak a saját teszt kulcsával megy.
+- **Ár:** az ÁSZF, a szerződés, a kártyás engedély és a regisztráció mindenhol 19 999 Ft (a Díjak beállításból jön).
+- **Adó:** utólag jóváhagyott családi kedvezménynél nincs „elveszett” keret (Réka: kb. 195 000 Ft megtakarítás, 139 380 Ft jár
+  vissza); a járulék a saját hónapjában marad (Kata: eddigi adó 1 063 633 Ft). A bevételi kimutatás csak a már megérkezett pénzt
+  számolja (Kata: 8 242 000 Ft) – ezért Bencének újra jóvá kell hagynia a kimutatását.
+- **Kata:** nincs negyedéves átalány-határidő, helyette havi 50 000 Ft; a cégnek kiállított számlánál piros figyelmeztetés.
+- **Képernyők:** felmondott ügyfélnél egy dátum és „Felmondtuk…” (nincs „Mégis maradok”); fizetetlen havidíjnál „Adót most nem
+  kell fizetned” + piros kártya az okkal; a konzol párbeszédablakai kiírják, miért nem ment; „Díjak és számlák” a bekötés alatt is.
+- **Neked kell dönteni:** 1) Hosszú szünetelés után a „Fizesd ki” a legrégebbi hónapot fizeti, és a további elmaradt hónapokat
+  is levonjuk (most már mindegyiket 3 nappal előtte jelezve). Maradjon így, vagy induljon újra a hónap a fizetés napjától?
+  2) Felmondott ügyfélnél most nincs „Fizesd ki” (ha mégis fizet, értesítést kapsz, és visszautalhatod). Így jó?
+  3) A szerver `.env`-jében a tartalék ár még 20 000: `ar_19999_szerverre.ps1` (te futtatod) átírja 19 999-re.
+  4) A `brand.json`-ban már van ügyfélszolgálati e-mail (`ugyfelszolgalat@adozz.hu`) – ha még nem döntöttél, szólj.
+- **Bencének:** szünetelés alatt arányos-e a sávos iparűzési adó (most egész évre 50 000 Ft-tal számolunk).
+
 ## 16:00 – a bevezető javítva, élesben (a kérdésedre: „nem úgy volt, hogy így végigmegy először?”)
 Igen, így kellett volna – és most így megy. A hiba: a regisztráció után az e-mail-kód megerősítése egyenesen a bekötési
 listára vitt (ott: „Folytasd ott, ahol abbahagytad”), és csak egy újratöltés után indult el a bevezető. Most:

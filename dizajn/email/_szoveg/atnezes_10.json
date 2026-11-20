@@ -1,0 +1,53 @@
+{
+ "gondok": [
+  {
+   "kulcs": "minta_04_dijbekero_atutalas",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgymezője, a törzsszövegben kétszer ismétlődik a gomb felirata ('Letöltöm a díjbekérőt Letöltöm a díjbekérőt'), és a 'Somosi Kft.' cégnév zavaró lehet Péternek az Adózz.hu márkanév mellett anélkül, hogy jeleznénk: ez az Adózz.hu üzemeltetője.",
+   "javitott_cim": "Díjbekérő az Adózz.hu havidíjról – {összeg} Ft",
+   "javitott_szoveg": "Szia {Keresztnév}! Itt vannak a havidíjad utalási adatai:\n\nÖsszeg: {összeg} Ft\nHatáridő: {határidő}\nKedvezményezett: Somosi Kft. (az Adózz.hu üzemeltetője)\nSzámlaszám: {számlaszám}\nKözlemény: {közlemény}\n\nA közleményt pontosan így írd be, ebből tudjuk azonnal beazonosítani a befizetésedet.\n\nTipp: Állíts be állandó átutalást a netbankodban, így nem kell havonta észben tartanod!\n\nA hivatalos díjbekérőt PDF-ként csatoltuk a levélhez, de le is töltheted az appból.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "minta_05_hatarido_emlekezteto",
+   "ertheto": "részben",
+   "mi_a_gond": "Kifejezetten zavaró és bizonytalanságot szül, hogy a levél címe azonnali utalásra szólít fel ('Január 12-ig utald el'), miközben a szöveg szerint ezek csak 'becsült összegek', és a pontos adatokat máshol kell keresni. Emellett a gomb szövege kétszer szerepel duplán.",
+   "javitott_cim": "Közeleg a negyedéves adófizetés határideje: {határidő}",
+   "javitott_szoveg": "Szia {Keresztnév}! Közeleg a negyedéves adófizetési határidő ({határidő}).\n\nAz eddig feltöltött számláid alapján a becsült fizetendő összegek:\n- Szja-előleg: {szja_összeg} Ft\n- TB-járulék: {tb_összeg} Ft\n- Szociális hozzájárulási adó: {szocho_összeg} Ft\nÖsszesen kb.: {összesen_összeg} Ft\n\nFontos: Mielőtt utalsz, nyisd meg az appot a pontos, végleges összegekért és a megfelelő NAV-os számlaszámokért!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "minta_06_visszahivas",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az e-mail tárgya, és a kapcsolattartóként a könyvelő helyett csak a csapat / ügyfélszolgálat jelenik meg, pedig Péter a saját könyvelőjét keresné.",
+   "javitott_cim": "Megkaptuk a visszahívás-kérésedet",
+   "javitott_szoveg": "Szia {Keresztnév}! Rögzítettük a kérésedet. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.\n\nHívandó telefonszám: {telefonszám}\nTéma: {téma}\n\nHa mégsem ezen a számon vagy elérhető, kérlek jelezd nekünk az ugyfelszolgalat@adozz.hu címen.",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A levelek felépítése alapvetően barátságos és közvetlen, a lényeges információk jól láthatóak. A hibák főleg a hiányzó e-mail tárgyakból, a renderelésből bent maradt duplázott CTA-szövegekből és a becsült vs. végleges adóösszegek körüli félreérthető megfogalmazásból adódnak.",
+ "csomag": 10,
+ "usage": {
+  "prompt_tokens": 2135,
+  "completion_tokens": 1111,
+  "total_tokens": 3246,
+  "cost": 0.0057675,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0057675,
+   "upstream_inference_prompt_cost": 0.00160125,
+   "upstream_inference_completions_cost": 0.00416625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

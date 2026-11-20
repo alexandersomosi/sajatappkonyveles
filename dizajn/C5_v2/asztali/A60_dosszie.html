@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adózz – Dosszié (gép)</title>
+<link rel="stylesheet" href="../v2.css">
+<link rel="stylesheet" href="v2_asztali.css">
+</head>
+<body class="asztali">
+<script src="../v2.js"></script>
+<aside class="oldalsav">
+  <span class="logo" data-meret="34" data-hatter="feher"></span>
+  <nav class="menu" aria-label="Menü">
+    <a href="A01_fooldal.html"><svg><use href="#i-fooldal"/></svg>Főoldal</a>
+    <a class="on" aria-current="page" href="A60_dosszie.html"><svg><use href="#i-dosszie"/></svg>Dosszié</a>
+    <a href="A60_dosszie.html"><svg><use href="#i-kamera"/></svg>Fotózás</a>
+    <a href="A70_uzenetek.html"><svg><use href="#i-uzenet"/></svg>Üzenetek<span class="pont"></span></a>
+    <a href="A80_fiok.html"><svg><use href="#i-fiok"/></svg>Fiók</a>
+  </nav>
+  <div class="sav-konyvelo">
+    <div class="ki"><img class="avatar" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt=""><div><b>Kovács Bence</b><span>a könyvelőd</span></div></div>
+    <button class="gomb-kis masod"><svg><use href="#i-telefon"/></svg>Visszahívást kérek</button>
+  </div>
+</aside>
+<div class="tartalom">
+  <header class="hos kis">
+    <div class="sor1">
+      <div class="ki"><img src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt=""><span><b>Kovács Bence</b>, a könyvelőd</span></div>
+      <span class="demo">DEMO</span>
+    </div>
+    <h1>Novemberi dosszié</h1>
+    <p>Itt van minden irat, amit küldtél, és amit a könyvelőd átnézett.</p>
+  </header>
+
+  <section class="feltolto sav" id="feltoltes">
+    <div class="tile t-kek"><svg><use href="#i-feltolt"/></svg></div>
+    <div class="sz"><h2>Húzd ide a fájlt, vagy válaszd ki a gépedről</h2><p>Kovács Bence megkapja, és ő teszi a helyére. Legfeljebb 25&nbsp;MB, PDF vagy fénykép.</p></div>
+    <button class="gomb"><svg><use href="#i-feltolt"/></svg>Fájl kiválasztása</button>
+  </section>
+
+  <main class="ketpanel">
+    <div class="oszlop">
+      <aside class="lista">
+        <div class="lista-elem on"><div class="l"><div class="c">November</div><div class="a">5 irat rendben · 2 kiállított számla</div></div><span class="db">8</span></div>
+        <div class="lista-elem"><div class="l"><div class="c">Október</div><div class="a">Szja-előleg beadva okt. 9.</div></div><span class="db">9</span></div>
+        <div class="lista-elem"><div class="l"><div class="c">Korábbiak</div><div class="a">Január–szeptember</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+      </aside>
+      <section class="k blokk atnezte">
+        <div class="fej-sor"><img class="avatar" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt=""><div><h3>Kovács Bence átnézte az iratokat</h3><div class="megj">ma 9:12</div></div></div>
+        <div class="nagy">5 <small>irat rendben</small></div>
+        <p>Minden rendben van, köszönöm.</p>
+        <div class="keres">
+          <h3>Kéri az októberi bankszámlakivonatot</h3>
+          <p>Az adóelőleg kiszámításához kell.</p>
+          <button class="gomb-masod"><svg><use href="#i-feltolt"/></svg>Kivonat feltöltése</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="reszlet">
+      <div class="reszlet-fej"><h2>Novemberi iratok</h2><button class="gomb-kis masod"><svg><use href="#i-plusz"/></svg>Fájl hozzáadása</button></div>
+      <div class="reszlet-torzs tab">
+        <div class="tabla-fej"><span></span><span>Irat</span><span>Állapot</span><span class="jobbra">Összeg</span><span></span></div>
+
+        <div class="reszlet-szak">Amit te küldtél</div>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-zold"><svg><use href="#i-pipa-kor"/></svg></div><div><div class="c">Telefonszámla, október</div><div class="a">nov. 8.</div></div><div class="a">Feldolgozva</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-sarga"><svg><use href="#i-nyugta"/></svg></div><div><div class="c">Papírbolt, nyomtatópapír</div><div class="a">ma 9:12</div></div><div class="a">Kovács Bence látta</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-sarga"><svg><use href="#i-nyugta"/></svg></div><div><div class="c">Pénztárgép havi összesítő</div><div class="a">tegnap 17:40</div></div><div class="a">Feltöltve</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+
+        <div class="reszlet-szak">Kiállított számlák<small>A kiállított számláid maguktól megjelennek itt – nem kell feltöltened őket.</small></div>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-sarga"><svg><use href="#i-ora"/></svg></div><div><div class="c">Gyöngyvirág Rendezvényház Kft.</div><div class="a">SZ-2026-0020 · nov. 18. · DEMO</div></div><div class="a">Még nem fizették ki (határidő: nov.&nbsp;21.)</div><div class="ossz">145&nbsp;000&nbsp;Ft</div><svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="tabla-sor" href="A62_szamla.html"><div class="tile kicsi t-zold"><svg><use href="#i-nyugta"/></svg></div><div><div class="c">Napfény Étterem Kft.</div><div class="a">SZ-2026-0019 · nov. 12. · DEMO</div></div><div class="a">Tegyél félre <span class="nowrap">kb. 29&nbsp;000&nbsp;Ft-ot</span></div><div class="ossz">418&nbsp;000&nbsp;Ft</div><svg class="chev"><use href="#i-chev"/></svg></a>
+
+        <div class="reszlet-szak">Levelek a NAV-tól<small>Amit a NAV küldött neked. Ezeket nem kell feltöltened.</small></div>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-szurke"><svg><use href="#i-level"/></svg></div><div><div class="c">Adószámla-értesítő</div><div class="a">Feldolgozva</div></div><div class="a">Nincs teendőd</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+
+        <div class="reszlet-szak">Szerződéseid<small>Az elfogadott szerződés PDF-ben. A NAV-hoz nem kell beadni.</small></div>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-kek"><svg><use href="#i-irat"/></svg></div><div><div class="c">Megbízási szerződés</div><div class="a">PDF, megnyithatod és letöltheted</div></div><div class="a">PDF</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+
+        <div class="reszlet-szak">Kovács Bence beadta</div>
+        <a class="tabla-sor" href="#"><div class="tile kicsi t-kek"><svg><use href="#i-irat-toll"/></svg></div><div><div class="c">Szja-előleg kiszámítása, III. negyedév</div><div class="a">okt. 9.</div></div><div class="a">Beadva</div><div class="ossz"></div><svg class="chev"><use href="#i-chev"/></svg></a>
+      </div>
+      <div class="reszlet-lab">A félreteendőt akkor számoljuk, amikor a pénz megérkezik: az átalányadózásban ez a bevétel napja.</div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

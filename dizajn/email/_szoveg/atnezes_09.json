@@ -1,0 +1,141 @@
+{
+ "gondok": [
+  {
+   "kulcs": "javasolt_00",
+   "ertheto": "nem",
+   "mi_a_gond": "Ez egy belső fejlesztői specifikációs jegyzet, nem tényleges kiküldhető rendszerüzenet.",
+   "javitott_cim": "",
+   "javitott_szoveg": "",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_01",
+   "ertheto": "részben",
+   "mi_a_gond": "Péter nem tudja, mi az a „Dosszié”, és túl hideg, hivatalos a megfogalmazás.",
+   "javitott_cim": "Megszűnik a szerződésed",
+   "javitott_szoveg": "A szerződésed {datum}-ig érvényes, addig a könyvelőd mindent a megszokott módon intéz. A hivatalos felmondólevelet csatoltuk ehhez az e-mailhez, és az appban a Dokumentumok között is megtalálod.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_03",
+   "ertheto": "részben",
+   "mi_a_gond": "Új könyvelőként nem egyértelmű, pontosan mit és hol kell tenni a technikai felhasználó javításához.",
+   "javitott_cim": "NAV-hiba: {clientName} számlái nem érkeznek meg",
+   "javitott_szoveg": "A NAV-számlák lekérdezése sikertelen volt ({hiba}). Kérlek, ellenőrizd és frissítsd az ügyfél technikai felhasználójának adatait az adminfelületen, különben a rendszer nem tudja letölteni a számláit.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_04",
+   "ertheto": "részben",
+   "mi_a_gond": "Péternek ijesztő lehet a hirtelen leállás; az új könyvelőnek a „Vond vissza a meghatalmazást” túl nyers és hiányos teendőlista.",
+   "javitott_cim": "Megszűnt az előfizetésed",
+   "javitott_szoveg": "Ügyfélnek: {datum}-tól megszűnt az Adózz.hu előfizetésed, több díjat nem vonunk le tőled. A korábbi számláidat és igazolásaidat az appban bármikor elérheted.\nKönyvelőnek ({clientName}): Kérlek, vond vissza a NAV-os meghatalmazást az Ügyfélkapun, és töröld a technikai felhasználót a rendszerből.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_05",
+   "ertheto": "nem",
+   "mi_a_gond": "Ez csak egy belső fejlesztői megjegyzés, hiányzik a konkrét sablonszöveg.",
+   "javitott_cim": "Megszűnt az előfizetésed",
+   "javitott_szoveg": "Az előfizetésed megszűnt, a továbbiakban nem vonunk le havidíjat. A korábbi dokumentumaidat az appban továbbra is megnézheted.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_06",
+   "ertheto": "részben",
+   "mi_a_gond": "A „Dosszié” belső elnevezés, Péter nem érti, hol keresse; a hangnem rideg.",
+   "javitott_cim": "Megszűnt a szerződésed",
+   "javitott_szoveg": "A mai naptól megszűnt a szerződésed, így a könyvelési szolgáltatás véget ért. A felmondólevelet megtalálod az appban, a Dokumentumok menüpont alatt.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "javasolt_11",
+   "ertheto": "részben",
+   "mi_a_gond": "Hideg és ijesztő: hirtelen megdrágul a szolgáltatás, nem világos, miért és mit tehet Péter.",
+   "javitott_cim": "Változik a havidíjad",
+   "javitott_szoveg": "{datum}-tól a havidíjad {osszeg} Ft lesz, mert a korábbi kedvezményes időszakod véget ért. A részleteket és a számlázási beállításaidat az appban a Fiók → Előfizetés menüpontban éred el.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_12",
+   "ertheto": "részben",
+   "mi_a_gond": "Péter megijed: miért törölte az ügyfélszolgálat az ő kártyáját? Hiányzik a magyarázat.",
+   "javitott_cim": "Töröltük a mentett bankkártyádat",
+   "javitott_szoveg": "Biztonsági okból vagy kérésedre töröltük a mentett bankkártyádat. Ahhoz, hogy az előfizetésed és a könyvelésed zavartalanul folytatódjon, kérlek, adj meg egy új kártyát az appban: Fiók → Előfizetés.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_13",
+   "ertheto": "részben",
+   "mi_a_gond": "Nem derül ki, ki az a {firstName} (ügyfélszolgálatos vagy a könyvelő), és mi a teendő, ha mégis kell a papír.",
+   "javitott_cim": "Nem tudjuk kiadni a kért igazolást",
+   "javitott_szoveg": "A könyvelőd, {firstName} sajnos nem tudta kiállítani a(z) {tipus} igazolást a következő ok miatt: {ok}. Ha már kifizetted a díját, automatikusan visszautaljuk. Ha kérdésed van, írj bátran a könyvelődnek az appban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_14",
+   "ertheto": "részben",
+   "mi_a_gond": "A „bekötésen” belső szakmai szleng, Péter nem érti, milyen bekötésről van szó egy mobilappban.",
+   "javitott_cim": "Üdv az Adózz.hu-ban!",
+   "javitott_szoveg": "Örülünk, hogy itt vagy! Az appban lépésről lépésre segítünk összekötni a fiókodat a NAV-val és a számlázóddal. Ha elakadnál, kérj visszahívást: a csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_17",
+   "ertheto": "részben",
+   "mi_a_gond": "A cím szokatlan és rideg; nem derül ki pontosan, hány perc kitölteni, és mi történik, ha elmulasztja.",
+   "javitott_cim": "Kérjük, töltsd ki az éves kérdőívet határidőre ({hatarido})",
+   "javitott_szoveg": "Kérlek, töltsd ki az éves adóbevallási kérdőívet {hatarido}-ig az appban, hogy a könyvelőd, {firstName} pontosan és időben beadhassa a bevallásodat a NAV-hoz.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "javasolt_19",
+   "ertheto": "részben",
+   "mi_a_gond": "Péter nem tudja, miért tiltották le a fiókját, és nincs konkrét segítségnyújtási útmutatás.",
+   "javitott_cim": "Értesítés fiók letiltásáról",
+   "javitott_szoveg": "Biztonsági okból felfüggesztettük az Adózz.hu fiókodat, így most nem tudsz belépni. Kérjük, válaszolj közvetlenül erre az e-mailre, vagy írj az ugyfelszolgalat@adozz.hu címre, hogy tisztázhassuk a helyzetet.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "javasolt_20",
+   "ertheto": "részben",
+   "mi_a_gond": "A „bekötés elején tart” szleng helyett pontosabban kellene jelezni az új könyvelőnek az állapotot (pl. regisztráció / adatfeltöltés).",
+   "javitott_cim": "Új ügyfél érkezett",
+   "javitott_szoveg": "Új ügyfeled érkezett: {clientName} (épp az adatai és a NAV-kapcsolat beállítását végzi).",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "minta_03_dijszamla",
+   "ertheto": "részben",
+   "mi_a_gond": "A szövegben duplán szerepel egymás után a gombfelirat („Letöltöm a számlát Letöltöm a számlát”).",
+   "javitott_cim": "Számla a havidíjról",
+   "javitott_szoveg": "Szia Péter! Elkészült a havidíjad számlája ({datum_tol} – {datum_ig}). Összeg: {osszeg} Ft. Számlaszám: {szamlaszam}. Fizetés: Kártyával fizetve. A számlát PDF-ben csatoltuk, illetve bármikor letöltheted az appban: Fiók → Díjak és számlák.",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A mintalevelek dizájnja és stílusa közvetlen és jól érthető, de a javasolt sablonok között sok a belső fejlesztői jegyzet és a technikai szleng (pl. „bekötés”, „technikai felhasználó”, „Dosszié”). Ügyfélszempontból fontos, hogy a felmondási és hibaüzenetek ne keltsenek felesleges riadalmat, a könyvelői üzeneteknél pedig egyértelmű legyen a konkrét teendő.",
+ "csomag": 9,
+ "usage": {
+  "prompt_tokens": 5528,
+  "completion_tokens": 2484,
+  "total_tokens": 8012,
+  "cost": 0.013461,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.013461,
+   "upstream_inference_prompt_cost": 0.004146,
+   "upstream_inference_completions_cost": 0.009315
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

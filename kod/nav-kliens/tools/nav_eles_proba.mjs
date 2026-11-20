@@ -17,6 +17,10 @@ const software = {
 };
 try {
   const client = createNavClient({ environment: 'prod', credentials: creds, software, maxRetries: 1 });
+  if (process.argv.includes('--reszletes')) {
+    try { const t = await client.queryTaxpayer(creds.taxNumber); console.log('queryTaxpayer OK:', t.name ?? '(név nélkül)'); process.exit(0); }
+    catch (e) { console.log('NAV hiba:', e?.code ?? '', '|', e?.navMessage ?? '', '|', e?.httpStatus ?? e?.status ?? ''); process.exit(1); }
+  }
   const k = await client.checkConnection();
   console.log(k.ok ? `Kapcsolat: RENDBEN – a NAV szerint: ${k.taxpayerName ?? '(név nélkül)'}` : `Kapcsolat: HIBA (${k.code ?? ''}) ${k.messageHu ?? ''}`);
   process.exit(k.ok ? 0 : 1);

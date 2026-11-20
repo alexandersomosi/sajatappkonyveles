@@ -1,0 +1,85 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.assist_task.valtozas_adatok",
+   "ertheto": "nem",
+   "mi_a_gond": "Ez egy könyvelői panelre szánt feladatértesítő szöveg, de tévesen ügyfélnek van címezve (kinek: ügyfél). Péterként megijednék: ki az a {clientName}, és miért tőlem várják az adatok átnézését?",
+   "javitott_cim": "Új adatok átnézése: {clientName} – {kindLabel}",
+   "javitott_szoveg": "Az ügyfél beküldte az új adatokat. Ellenőrizd a panelen.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.valtozas_bekuldes",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves címzés: az ügyfél kap egy könyvelőnek szóló utasítást ('Küldd be meghatalmazottként'). Péter nem tudja magát meghatalmazottként beküldeni, ez a könyvelő feladata.",
+   "javitott_cim": "Beküldhető: {clientName} – {kindLabel}",
+   "javitott_szoveg": "Az ügyfél jóváhagyta a változást. Küldd be a NAV-hoz meghatalmazottként.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.valtozas_atnezes",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves címzés: ez egy könyvelői feladat, nem az ügyfélé. Ügyfélként zavaró, hogy egy másik ügyfél ({clientName}) bejelentését kellene ellenőriznem és lezárnom.",
+   "javitott_cim": "Változásbejelentés ellenőrzése: {clientName}",
+   "javitott_szoveg": "{firstName} beküldte a változásbejelentést. Ellenőrizd az értesítést, és zárd le a feladatot.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.tax_due_soon.kata",
+   "ertheto": "részben",
+   "mi_a_gond": "A termék átalányadózóknak szól, a kata említése félrevezető és riadalmat kelthet egy átalányadósban, hogy vajon jó csomagban van-e vagy katát is kell-e fizetnie.",
+   "javitott_cim": "Fizesd be a tételes adót (kata): 50 000 Ft",
+   "javitott_szoveg": "A(z) {honap} havi kata fizetési határideje: {hatarido}. Az utaláshoz szükséges adatokat az appban találod.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.tax_due_soon.kata_ma",
+   "ertheto": "részben",
+   "mi_a_gond": "Átalányadós fókuszú appban a kata említése zavaró lehet, illetve hiányzik a hivatkozás, hogy hova és hogyan kell utalni.",
+   "javitott_cim": "Ma van a kata befizetési határideje",
+   "javitott_szoveg": "Utald el ma az 50 000 Ft-ot a(z) {honap} hónapra. Az utalási adatokat az appban találod.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.nudge.tobb",
+   "ertheto": "részben",
+   "mi_a_gond": "Túl homályos és rideg. Péterként nem derül ki, mekkora a baj, vagy mik ezek a teendők.",
+   "javitott_cim": "{n} elintézendő feladatod van",
+   "javitott_szoveg": "Nyisd meg a Kezdőlapot, és pörgesd át a teendőidet pár perc alatt.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.annual_due.kerdoiv",
+   "ertheto": "részben",
+   "mi_a_gond": "A cím végéről hiányzik a rag vagy elöljáró ('{hatarido}'-ig), így behelyettesítve magyartalan (pl. 'Éves zárás: töltsd ki a kérdőívet május 20.').",
+   "javitott_cim": "Éves zárás: kérdőív kitöltése ({hatarido}-ig)",
+   "javitott_szoveg": "Kb. 5 percet vesz igénybe. Ebből készíti el a könyvelőd az éves bevallásodat.",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A szövegek többsége közvetlen, emberi és kifejezetten jól eltalálja a siető vállalkozó igényeit. A legsúlyosabb hiba a jogosultsági és címzési elcsúszás: három kifejezetten könyvelői adminfeladat került az ügyfél üzenetei közé. Kisebb magyartalanságok (pl. hiányzó ragok a dátumnál) mellett az átalányadós fókuszú kontextusban a KATA-értesítők is megtévesztőek lehetnek.",
+ "csomag": 5,
+ "usage": {
+  "prompt_tokens": 2867,
+  "completion_tokens": 1409,
+  "total_tokens": 4276,
+  "cost": 0.007434,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.007434,
+   "upstream_inference_prompt_cost": 0.00215025,
+   "upstream_inference_completions_cost": 0.00528375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

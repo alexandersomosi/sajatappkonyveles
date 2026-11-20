@@ -1,0 +1,149 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.payment_disputed.szolgaltato_hiba",
+   "ertheto": "nem",
+   "mi_a_gond": "Bár az 'ügyfél' célcsoporthoz van sorolva, belső könyvelői/adminisztrátori nyelven íródott ('Az ügyfelet megkértük', 'A Stripe visszautasította'). Péter megijed és nem érti.",
+   "javitott_cim": "Sikertelen havidíj-fizetés",
+   "javitott_szoveg": "Nem tudtuk levonni a {osszeg} Ft-os havidíjadat a bankkártyádról ({hiba}). Kérjük, frissítsd a kártyaadataidat a Fiók menüben a szolgáltatás folytatásához!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.visszaterites_hiba",
+   "ertheto": "nem",
+   "mi_a_gond": "A szöveg a könyvelőnek/adminnak szól ('Nézd meg a Stripe-ban'), pedig Péter kapja. Neki teljesen értelmezhetetlen.",
+   "javitott_cim": "Visszatérítési hiba történt",
+   "javitott_szoveg": "A {osszeg} Ft-os visszatérítésed technikai hiba miatt nem ment át. Már vizsgáljuk a hibát, hamarosan jelentkezünk.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.vita_elveszett",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső szakzsargon ('Elvesztett vita', 'számla sztornója'), ráadásul harmadik személyben beszél az ügyfélről.",
+   "javitott_cim": "Visszatérítés lezárva",
+   "javitott_szoveg": "A banki jóváírás megtörtént, a {osszeg} Ft visszakerült a számládra. A javított számlát megtalálod a Fiókodban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.invoice_failed",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső adminisztrációs teendő üzenete ('Nézd meg: Díjszámlák'), nem az ügyfélnek való megfogalmazás.",
+   "javitott_cim": "Számlázási hiba történt",
+   "javitott_szoveg": "A {osszeg} Ft-os díjszámládat technikai hiba miatt nem tudtuk kiállítani. Dolgozunk a javításán, teendőd nincs.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.service_locked.kezi",
+   "ertheto": "részben",
+   "mi_a_gond": "Túl szűkszavú és ijesztő. Nincs leírva, miért szünetel és pontosan mit kell tenni a feloldásához.",
+   "javitott_cim": "Szünetel a könyvelésed",
+   "javitott_szoveg": "A könyvelési szolgáltatásod jelenleg szünetel. A részletekért és a folytatáshoz kérjük, írj nekünk az Üzenetek fülön!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.certificate_requested",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső feladatjelzés a könyvelőnek ('Igazolás-kérés: {clientName}'), nem ügyfélnek szóló visszajelzés.",
+   "javitott_cim": "Igazoláskérésedet rögzítettük",
+   "javitott_szoveg": "Megkaptuk a kérésedet ({tipus} – {cel}). Könyvelőd hamarosan benyújtja a NAV-hoz.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.certificate_status.elutasitva",
+   "ertheto": "részben",
+   "mi_a_gond": "Hideg és hiányzik a következő lépés (mit tegyen Péter, ha nem adható ki?).",
+   "javitott_cim": "A NAV elutasította az igazoláskérést",
+   "javitott_szoveg": "Nem adható ki a(z) {tipus} igazolás. Indoklás: {ok}. Kérjük, írj a könyvelődnek az Üzenetek fülön a megoldáshoz!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.income_statement_review",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői feladatértesítő keveredett az ügyfélüzenetek közé ('Az ügyfél kéri, hogy nézd át').",
+   "javitott_cim": "Kimutatás ellenőrzése folyamatban",
+   "javitott_szoveg": "Megkaptuk a kérésedet: könyvelőd hamarosan átnézi a(z) {from}–{to} időszaki bevételi kimutatásodat.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.income_statement_checked",
+   "ertheto": "részben",
+   "mi_a_gond": "Kissé magyartalan és gépies ('a PDF-en már rajta van az ellenőrzés').",
+   "javitott_cim": "{firstName} ellenőrizte a kimutatásodat",
+   "javitott_szoveg": "A(z) {from}–{to} időszaki bevételi kimutatásodat átnéztük. A jóváhagyott PDF-et letöltheted az appból.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.contract_terminated.rendes",
+   "ertheto": "részben",
+   "mi_a_gond": "Nagyon nyers, rideg hangvétel ('minden marad'). Nem derül ki, milyen levélről van szó.",
+   "javitott_cim": "Szerződés felmondása",
+   "javitott_szoveg": "A könyvelési szerződésed {datum} napjával megszűnik. A részleteket és a zárással kapcsolatos teendőket elküldtük e-mailben.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.contract_terminated.azonnali",
+   "ertheto": "részben",
+   "mi_a_gond": "Túlságosan rideg és ijesztő, nincs tisztázva, hol a levél.",
+   "javitott_cim": "Szerződésed azonnali hatállyal megszűnt",
+   "javitott_szoveg": "A könyvelési szerződésed a mai nappal megszűnt. A fontos tudnivalókat elküldtük az e-mail-címedre.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.contract_terminated.ugyfel_kerte",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'minden marad' szlengesen hangzik, a 'levélben olvasod' pontatlan.",
+   "javitott_cim": "Szerződésed megszüntetése folyamatban",
+   "javitott_szoveg": "Kérésedre a szerződésedet {datum} napjával megszüntetjük. A zárás részleteit és teendőit elküldtük e-mailben.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.contract_terminated",
+   "ertheto": "részben",
+   "mi_a_gond": "Rideg megfogalmazás ('minden marad', 'levélben olvasod').",
+   "javitott_cim": "Szerződés felmondása",
+   "javitott_szoveg": "A szerződésed {datum} napjával megszűnik. A részletekről e-mailben tájékoztattunk.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.contract_terminated",
+   "ertheto": "részben",
+   "mi_a_gond": "Kissé pongyola ('minden marad') egy hivatalos felmondó e-mailhez.",
+   "javitott_cim": "Tájékoztatás a könyvelési szerződés megszűnéséről",
+   "javitott_szoveg": "Tájékoztatunk, hogy a könyvelési szerződésed {datum} napjáig érvényes.\n\nA hivatalos felmondólevelet és a záró teendőket az appban, a Dosszié menüpontban találod.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.assist_task.felmondas",
+   "ertheto": "nem",
+   "mi_a_gond": "Ez egyértelműen belső könyvelői feladat/utasítás (NAV meghatalmazás, technikai felhasználó letiltása), Péter semmit sem ért belőle.",
+   "javitott_cim": "Felmondási teendők: {clientName}",
+   "javitott_szoveg": "Teendő: Szüntesd meg az ügyfél NAV-meghatalmazását 8 napon belül, és tiltsd le a technikai felhasználót a panelen!",
+   "sulyossag": "fontos"
+  }
+ ],
+ "osszbenyomas": "A csomagban súlyos szerep- és címzési tévesztések vannak: több belső adminisztrátori vagy könyvelői rendszerüzenet ügyféli push értesítésként van megjelölve, ami Péter számára érthetetlen szakzsargont eredményez. Emellett a szerződésbontással kapcsolatos értesítések túlságosan ridegek, gépiesek és pongyolák ('minden marad'). Tisztázni kell a címzettek köreit és emberibb, segítőkészebb hangnemre kell váltani.",
+ "csomag": 8,
+ "usage": {
+  "prompt_tokens": 2854,
+  "completion_tokens": 2397,
+  "total_tokens": 5251,
+  "cost": 0.01112925,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01112925,
+   "upstream_inference_prompt_cost": 0.0021405,
+   "upstream_inference_completions_cost": 0.00898875
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

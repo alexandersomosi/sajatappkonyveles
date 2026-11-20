@@ -1,0 +1,165 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.subscription_paused.vege",
+   "ertheto": "részben",
+   "mi_a_gond": "Magyartalan és rideg a megfogalmazás ('ismét a havidíj jár'). Péter nem érti rögtön, miért kapta és mi a teendő.",
+   "javitott_cim": "Vállalkozás újraindítva",
+   "javitott_szoveg": "{from}-tól újra aktív a vállalkozásod, így a könyvelési havidíjad is visszaáll a normál díjra.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.subscription_paused",
+   "ertheto": "részben",
+   "mi_a_gond": "Kissé nyers, nem világos, miért kell mégis fizetni {dij} Ft-ot.",
+   "javitott_cim": "Szünetel a vállalkozásod",
+   "javitott_szoveg": "{from}-tól a vállalkozásod szünetel. A teljes havidíj helyett a csökkentett, havi {dij} Ft-os készenléti díjra váltottunk.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.checkin_change",
+   "ertheto": "nem",
+   "mi_a_gond": "Ez egy könyvelői értesítés, ami tévesen az ügyfélnek van címezve. Péter nem érti, ki az a {clientName} (saját maga harmadik személyben?) és mik azok az {items}.",
+   "javitott_cim": "Havi adatok frissültek: {clientName}",
+   "javitott_szoveg": "Az ügyfél beküldte a változásokat: {items}. Ellenőrizd a profilján!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.annual_submitted",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői belső értesítés ügyfélként jelölve, ráadásul a '{feeState}' nyers rendszerkód vagy belső státusz, Péternek semmit sem mond.",
+   "javitott_cim": "Éves zárás beküldve: {clientName}",
+   "javitott_szoveg": "{clientName} beküldte az éves záró kérdőívet. Díj státusza: {feeState}.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_locked",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői admin üzenet vagy nagyon rosszul megfogalmazott ügyfél-figyelmeztetés. Harmadik személyben beszél Péterről ('{clientName}'), ijesztő és rideg.",
+   "javitott_cim": "Fiók zárolva: {clientName}",
+   "javitott_szoveg": "Az ügyfél fiókja elmaradás miatt zárolva lett. Tartozás: {mit}, {osszeg} Ft.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.employer_reported",
+   "ertheto": "nem",
+   "mi_a_gond": "Belső könyvelői feladat, ami az ügyfélnél jelenne meg. Az EFO és a döntési opciók Péternek értelmezhetetlenek.",
+   "javitott_cim": "Munkavállaló / EFO bejelentve: {clientName}",
+   "javitott_szoveg": "Az ügyfél alkalmazottat vagy egyszerűsített foglalkoztatottat jelentett. Válaszd ki a teendőt az adatlapján: egyedi ajánlat, külső számfejtés vagy elutasítás.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_task.adoszam",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői feladat Péternek címezve. Péter nem tudja, mi az az ONYA, sem azt, hogy miért tőle kérik a meghatalmazás utáni kitöltést.",
+   "javitott_cim": "Hiányzó adószám: {clientName}",
+   "javitott_szoveg": "Amint él a NAV meghatalmazás, másold be az adószámot az ONYA-ból az ügyfél adatlapjára.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_task.adozasi_mod",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői teendő. Ha ezt Péter kapja, teljesen összezavarodik: róla beszél harmadik személyben.",
+   "javitott_cim": "Adózási mód egyeztetés: {clientName}",
+   "javitott_szoveg": "Az ügyfél bizonytalan az adózási formájában (KATA vagy átalányadó). Ellenőrizd a NAV nyilvántartásban!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_task",
+   "ertheto": "nem",
+   "mi_a_gond": "Duplikált könyvelői feladat ügyfélnek címezve, belső ONYA zsargonnal.",
+   "javitott_cim": "Hiányzó adószám: {clientName}",
+   "javitott_szoveg": "Amint él a NAV meghatalmazás, másold be az adószámot az ONYA-ból az ügyfél adatlapjára.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.subscription_renewal_needed.nincs_kartya",
+   "ertheto": "részben",
+   "mi_a_gond": "Nyelvtanilag hibás toldalékolás ('{datum}-n').",
+   "javitott_cim": "Adj meg kártyát a következő hónaphoz",
+   "javitott_szoveg": "{datum} napján lejár az előfizetésed. Adj meg egy bankkártyát, hogy a könyvelésed folyamatos maradjon: Fiók → Előfizetés.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.payment_disputed",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői/adminisztrátori belső üzenet ügyfélként címkézve. Stripe zsargon, és harmadik személyben ír az ügyfélről.",
+   "javitott_cim": "Vitatott kártyás fizetés: {clientName}",
+   "javitott_szoveg": "Vitatott terhelés érkezett {osszeg} Ft összegben. Ellenőrizd a Stripe felületén!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.dupla",
+   "ertheto": "részben",
+   "mi_a_gond": "Ha Péter kapja, furcsa a saját nevét ({clientName}) látni a szöveg elején.",
+   "javitott_cim": "Dupla fizetés történt – visszautaltuk",
+   "javitott_szoveg": "Ugyanarra a hónapra kétszer érkezett be a havidíj, ezért a második levonást ({osszeg} Ft) automatikusan visszautaltuk.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.kulso_visszaterites",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői belső adminisztrációs értesítés (Stripe felület, számla-sztornó) ügyfélhez rendelve.",
+   "javitott_cim": "Külső visszatérítés: {clientName}",
+   "javitott_szoveg": "{osszeg} Ft közvetlenül a Stripe-on lett visszatérítve. A számlahelyesbítést elindítottuk.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.dupla_dij",
+   "ertheto": "részben",
+   "mi_a_gond": "Felesleges a {clientName} a címben egy ügyfél-értesítésnél, egyébként a 'dupla' kulcs duplikációja.",
+   "javitott_cim": "Dupla díjfizetés – visszautaltuk",
+   "javitott_szoveg": "Ugyanarra a díjra kétszer érkezett utalás. A második összeget ({osszeg} Ft) visszautaltuk, számla nem készült róla.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.payment_disputed.dupla_nem_ment",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői operációs teendő ('Fizetések oldalon térítsd vissza kézzel'), ami ügyfélnek címezve riadalmat és teljes zavart kelt.",
+   "javitott_cim": "Sikertelen visszautalás: {clientName}",
+   "javitott_szoveg": "Dupla terhelés történt ({osszeg} Ft). Az automatikus visszatérítés sikertelen volt, a rendszer 15 percenként újrapróbálja. Szükség esetén végezd el manuálisan a Fizetések menüben.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.osszeg_elteres",
+   "ertheto": "nem",
+   "mi_a_gond": "Adminisztrátori technikai hibaüzenet (Stripe API eltérés), az ügyfél semmit sem tud kezdeni vele.",
+   "javitott_cim": "Fizetési összeg eltérés: {clientName}",
+   "javitott_szoveg": "A Stripe a várt {osszeg} Ft-tól eltérő összeget vagy pénznemet jelzett. A tétel nincs elkönyvelve, ellenőrizd a Stripe felületén!",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.payment_disputed.felmondas_utan",
+   "ertheto": "nem",
+   "mi_a_gond": "Könyvelői/pénzügyes teendő, az ügyfélnek küldve abszurd ('térítsd vissza a Fizetések oldalon').",
+   "javitott_cim": "Felmondás utáni befizetés: {clientName}",
+   "javitott_szoveg": "{osszeg} Ft érkezett egy korábban megszüntetett előfizetésből. A szolgáltatás nem indult újra. Ha indokolt, térítsd vissza a Fizetések menüben.",
+   "sulyossag": "fontos"
+  }
+ ],
+ "osszbenyomas": "A csomag legsúlyosabb hibája, hogy számos kifejezetten belső, könyvelői vagy pénzügyi adminisztrációs teendő (Stripe-kezelés, ONYA, számlasztornó) 'ügyfél' címkével szerepel, ami Péter számára érthetetlen szakszavakat és riadalmat okoz. A valóban ügyfeleknek szánt értesítések többsége jó irányba indult el, de a magyartalan ragozásokon és a rideg bürokratikus megfogalmazásokon finomítani kell. A célközönség szétválasztását (ügyfél vs. könyvelői panel) a kulcsok szintjén rendbe kell tenni.",
+ "csomag": 7,
+ "usage": {
+  "prompt_tokens": 3091,
+  "completion_tokens": 3011,
+  "total_tokens": 6102,
+  "cost": 0.0136095,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0136095,
+   "upstream_inference_prompt_cost": 0.00231825,
+   "upstream_inference_completions_cost": 0.01129125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

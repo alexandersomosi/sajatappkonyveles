@@ -1,0 +1,157 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.callback_new",
+   "ertheto": "nem",
+   "mi_a_gond": "A 'kinek' mező hibásan 'ügyfél', miközben ez könyvelői feladatértesítő. Ha ügyfél kapja, teljesen értelmezhetetlen.",
+   "javitott_cim": "Új visszahívási kérés: {clientName}",
+   "javitott_szoveg": "Téma: {topicLabel}. Határidő: {dueText}. Keresd az Ügyfelek menüpontban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.callback_assigned",
+   "ertheto": "nem",
+   "mi_a_gond": "Ügyfélhez van rendelve tévesen, miközben ez a könyvelőnek szóló feladatkiosztás.",
+   "javitott_cim": "Feladatod érkezett: {clientName} visszahívása",
+   "javitott_szoveg": "Téma: {topicLabel}. Határidő: {dueText}. Részletek a panelen.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.callback_assigned.uj_szam",
+   "ertheto": "nem",
+   "mi_a_gond": "A célcsoport itt is könyvelő, nem ügyfél. Ezenkívül hiányzik, hol látja az új számot.",
+   "javitott_cim": "{clientName} új telefonszámot adott meg",
+   "javitott_szoveg": "Az új elérhetőséget megtalálod az adatlapján a panelen.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.callback_overdue",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves célcsoport ('ügyfél'). Könyvelői figyelmeztetés a határidő lejárta miatt.",
+   "javitott_cim": "Lejárt a határidő: {clientName}",
+   "javitott_szoveg": "A visszahívási kérés {createdText} érkezett. Kérjük, hívd vissza mielőbb a panelen keresztül.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.registration_submitted",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves célcsoport ('ügyfél'). Ez egy belső értesítés a könyvelőnek az ellenőrzendő dokumentumról.",
+   "javitott_cim": "Ellenőrzendő dokumentum: {clientName}",
+   "javitott_szoveg": "Feltöltötte a NAV-os értesítőt. Nézd át a Vállalkozás-indítás menüpontban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.registration_submitted.tevekenyseg",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves célcsoport ('ügyfél'). Zsargon és belső folyamat (ÖVTJ, Javítom gomb), valójában a könyvelő teendője.",
+   "javitott_cim": "Tevékenység rögzítése szükséges: {clientName}",
+   "javitott_szoveg": "Írd be az ÖVTJ-kódot a Vállalkozás-indítás oldalon a jóváhagyáshoz.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_needs_review.uj_vallalkozas",
+   "ertheto": "nem",
+   "mi_a_gond": "Téves célcsoport ('ügyfél'). A könyvelőnek szóló szakmai ellenőrzési feladat.",
+   "javitott_cim": "Új vállalkozás: {clientName}",
+   "javitott_szoveg": "A vállalkozás elindult. Nézd át a beállított költséghányadot és a járulékalapot az adatlapon.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.registration_reminder.tevekenyseg_segitett",
+   "ertheto": "részben",
+   "mi_a_gond": "Péter nem tudja, mi az a 'tevékenység sora', ez ijesztő és bürokratikus megfogalmazás.",
+   "javitott_cim": "Előkészítettük a vállalkozásod adatait",
+   "javitott_szoveg": "Kiválasztottuk a tevékenységi körödet. Nézd át az appban, és ha jó, hagyd jóvá. Utána {firstName} beküldi a NAV-nak.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_started",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'meghatalmazás' fogalma magyarázatlan, és a mondat kissé túl bonyolult Péternek a telefonon.",
+   "javitott_cim": "Beszéltünk – így indulunk el",
+   "javitott_szoveg": "Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a hivatalos képviseleti engedélyt (NAV meghatalmazás). Erről külön értesítünk majd.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.assist_mh_filed",
+   "ertheto": "részben",
+   "mi_a_gond": "Az ONYA rövidítés egy kezdő egyéni vállalkozónak teljesen idegen és ijesztő.",
+   "javitott_cim": "Hagyd jóvá a könyvelőd megbízását ({hatarido})",
+   "javitott_szoveg": "{firstName} beküldte a NAV-hoz a meghatalmazást. Lépj be a NAV online felületére (ONYA), és hagyd jóvá. Kb. 3 perc, az appban mutatjuk a lépéseket.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_mh_reminder",
+   "ertheto": "részben",
+   "mi_a_gond": "Az ONYA kifejezés magyarázat nélkül szerepel, nincs közvetlen útmutatás.",
+   "javitott_cim": "Ne felejtsd el jóváhagyni a könyvelődet",
+   "javitott_szoveg": "Még {hatarido} van időd elfogadni a megbízást a NAV online felületén (ONYA). Csak 3 perc, az appban segítünk.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.assist_mh_reminder.elso",
+   "ertheto": "részben",
+   "mi_a_gond": "Az ONYA kifejezés ismeretlen és idegen egy kezdő vállalkozónak.",
+   "javitott_cim": "Emlékeztető: hagyd jóvá a könyvelődet",
+   "javitott_szoveg": "Még {hatarido} van időd elfogadni a meghatalmazást a NAV online felületén (ONYA). Kb. 3 perc az egész.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.assist_mh_reminder.utolso_nap",
+   "ertheto": "részben",
+   "mi_a_gond": "Pánikkeltő hangnem ('különben a NAV törli'), és az ONYA sincs tisztázva.",
+   "javitott_cim": "Ma jár le a határidő!",
+   "javitott_szoveg": "Kérjük, még ma hagyd jóvá {firstName} meghatalmazását a NAV felületén (ONYA), hogy el tudja indítani a vállalkozásodat.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_mh_expired",
+   "ertheto": "részben",
+   "mi_a_gond": "Kissé száraz és hibáztató ('jóvá nem hagyott'). Hiányzik a megnyugtatás, hogy mit kell most tennie Péternek (semmit, amíg nem szólunk).",
+   "javitott_cim": "Újraküldjük a meghatalmazást",
+   "javitott_szoveg": "A korábbi meghatalmazási kérelem lejárt. {firstName} hamarosan újra beküldi a NAV-hoz, és értesítünk, amint jóvá tudod hagyni.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.assist_task",
+   "ertheto": "nem",
+   "mi_a_gond": "A célcsoport tévesen 'ügyfél'-re van állítva, miközben UJEGYKE kóddal ellátott belső könyvelői feladatról van szó.",
+   "javitott_cim": "Meghatalmazás benyújtása: {clientName}",
+   "javitott_szoveg": "Egyeztetés lezárult. Küldd be az UJEGYKE-t a következő ügycsoportokkal: {ugycsoportok}.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.assist_task.ujegyke",
+   "ertheto": "nem",
+   "mi_a_gond": "Szintén téves címzett ('ügyfél') egy tisztán könyvelői szakmai feladathoz.",
+   "javitott_cim": "UJEGYKE benyújtása: {clientName}",
+   "javitott_szoveg": "Egyeztetés kész. Add be a meghatalmazást a felületen: {ugycsoportok}.",
+   "sulyossag": "fontos"
+  }
+ ],
+ "osszbenyomas": "A legfőbb probléma a címzettek súlyos összekeverése: több kifejezetten belső, szakmai adminisztrációs feladat (pl. visszahívás-kezelés, UJEGYKE) 'ügyfél' kategóriaként szerepel, ami Péter számára érthetetlen és ijesztő lenne. Az ügyfeleknek szánt valós üzenetekben a NAV és az ONYA kapcsán érdemes kerülni a rideg hivatali nyelvezetet, és inkább egyszerű, lépésről lépésre követhető segítséget adni.",
+ "csomag": 3,
+ "usage": {
+  "prompt_tokens": 2976,
+  "completion_tokens": 2697,
+  "total_tokens": 5673,
+  "cost": 0.01234575,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01234575,
+   "upstream_inference_prompt_cost": 0.002232,
+   "upstream_inference_completions_cost": 0.01011375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

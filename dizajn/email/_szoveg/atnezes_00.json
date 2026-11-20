@@ -1,0 +1,109 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.tax_approved",
+   "ertheto": "részben",
+   "mi_a_gond": "A mondat végi ', {transfersText}' befejezetlen és magyartalan szerkezetű (pl. 'Utald el május 12-ig, 2 utalással.').",
+   "javitott_cim": "Fizetendő adó ({periodAdj}): {amount}",
+   "javitott_szoveg": "{firstName} kiszámolta az összeget. Utald el {dueDateText}-ig ({transfersText}). Részletek az appban.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.tax_approved.overdue",
+   "ertheto": "részben",
+   "mi_a_gond": "A mondat végi vessző és a beillesztett részlet nyelvtanilag szétesik; a cím nem jelzi, hogy már lejárt a határidő.",
+   "javitott_cim": "Lejárt határidő! Fizetendő ({periodAdj}): {amount}",
+   "javitott_szoveg": "{firstName} kiszámolta az adódat. A határidő ({dueDateText}) már elmúlt, kérlek, mielőbb utald el ({transfersText}).",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.tax_payment_verified.hipa",
+   "ertheto": "nem",
+   "mi_a_gond": "Üres a push értesítés címe. Cím nélkül a telefonos értesítés hibásnak tűnik vagy elveszik.",
+   "javitott_cim": "Iparűzési adó rendben",
+   "javitott_szoveg": "Az iparűzési adóelőleged rendben megérkezett az önkormányzathoz.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.tax_payment_mismatch.hipa",
+   "ertheto": "részben",
+   "mi_a_gond": "Üres az értesítés címe.",
+   "javitott_cim": "Eltérés az iparűzési adónál",
+   "javitott_szoveg": "{firstName} eltérést lát az iparűzési adóelőleged befizetésénél. Nyisd meg az appot az üzenetéért.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.tax_payment_mismatch",
+   "ertheto": "részben",
+   "mi_a_gond": "Nem egyértelmű azonnal a teendő, kissé rideg.",
+   "javitott_cim": "Eltérést találtunk a befizetésednél",
+   "javitott_szoveg": "{firstName} eltérést talált a {periodAdj} befizetésednél. Nyisd meg az appot, és nézd meg az üzenetét.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.message_new.accountant_changed",
+   "ertheto": "nem",
+   "mi_a_gond": "Rossz a címzett besorolása: ez az ügyfélnek szól ('Új könyvelőd van'), mégis könyvelői kategóriába került a metaadatban.",
+   "javitott_cim": "Új könyvelőt kaptál: {accountantName}",
+   "javitott_szoveg": "Mostantól {accountantName} intézi a könyvelésedet. Minden eddigi iratod és üzeneted megmaradt.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_message_new",
+   "ertheto": "részben",
+   "mi_a_gond": "Hibás a 'kinek' mező (ügyfél van megadva, pedig ez könyvelői panel értesítés). A szöveg feleslegesen redundáns.",
+   "javitott_cim": "Új üzenet: {clientName}",
+   "javitott_szoveg": "{clientName} új üzenetet küldött. Kattints a megtekintéshez.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_request_new",
+   "ertheto": "részben",
+   "mi_a_gond": "Hibás célcsoport-besorolás (ügyfél helyett könyvelőnek szól).",
+   "javitott_cim": "Új kérés: {clientName}",
+   "javitott_szoveg": "{clientName} új kérést rögzített: {title}",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_document_uploaded",
+   "ertheto": "részben",
+   "mi_a_gond": "Hibás célcsoport-besorolás (ügyfél helyett könyvelőnek szól).",
+   "javitott_cim": "Új dokumentum: {clientName}",
+   "javitott_szoveg": "{clientName} új iratot töltött fel: {title}",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.client_marked_paid",
+   "ertheto": "részben",
+   "mi_a_gond": "Hibás célcsoport-besorolás (könyvelő kapja, mégis ügyfél van jelölve); a mondat nyelvezete kissé távirati ('befizetés napja {paidOn}').",
+   "javitott_cim": "Befizetés jelzése: {clientName}",
+   "javitott_szoveg": "{clientName} jelezte a befizetést ({period}: {amount}, ekkor: {paidOn}).",
+   "sulyossag": "fontos"
+  }
+ ],
+ "osszbenyomas": "Az üzenetek zöme közvetlen, világos és laikus vállalkozóként is jól követhető. A legnagyobb hiba a hiányzó címeknél (üres HIPA push címek), a helyőrzők nyelvtani összefűzésénél, valamint a könyvelői és ügyféli szerepkörök összekeverésénél tapasztalható.",
+ "csomag": 0,
+ "usage": {
+  "prompt_tokens": 2783,
+  "completion_tokens": 1610,
+  "total_tokens": 4393,
+  "cost": 0.00812475,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00812475,
+   "upstream_inference_prompt_cost": 0.00208725,
+   "upstream_inference_completions_cost": 0.0060375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

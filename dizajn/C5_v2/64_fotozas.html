@@ -15,16 +15,19 @@
 .kamera .kis-gomb span{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center;color:#fff}
 .kamera .kis-gomb svg{width:24px;height:24px;fill:currentColor}
 .kamera .expo{width:78px;height:78px;border-radius:50%;border:4px solid #fff;display:grid;place-items:center;flex:none}
-.kamera .expo i{width:60px;height:60px;border-radius:50%;background:#fff;display:block}</style></head><body><script src="v2.js"></script>
+.kamera .expo i{width:60px;height:60px;border-radius:50%;background:#fff;display:block}
+/* 11-20 tulaj: a telefonon is lehessen fájlt (PDF) és galériából képet feltölteni, nem csak fotózni; a vaku a keret sarkába került */
+.kamera .vaku{position:absolute;right:10px;top:10px;height:34px;padding:0 12px 0 8px;border-radius:999px;background:rgba(0,0,0,.45);display:flex;align-items:center;gap:4px;font-size:13px;font-weight:650;color:#fff}
+.kamera .vaku svg{width:20px;height:20px}</style></head><body><script src="v2.js"></script>
 <div class="kamera">
 <div class="allapot" style="padding:0 18px"></div>
 <div class="felso"><span class="kerek">Mégse</span><span class="kap"><img class="avatar" style="width:28px;height:28px" src="../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt="">Kovács Bence kapja meg</span></div>
-<div class="keret"><i></i><i></i><i></i><i></i></div>
-<div class="tipp-sor"><b>Még nincs oldal</b><span>Tedd az iratot sötét alapra, és fotózd le.</span></div>
+<div class="keret"><i></i><i></i><i></i><i></i><span class="vaku" role="button" aria-label="Vaku: automatikus"><svg><use href="#i-vaku"/></svg>Auto</span></div>
+<div class="tipp-sor"><b>Még nincs oldal</b><span>Fotózd le sötét alapon, vagy válaszd ki a galériából vagy a fájljaid közül (PDF is jó).</span></div>
 <div class="vezerlok">
 <div class="kis-gomb"><span><svg><use href="#i-kep"/></svg></span>Galéria</div>
 <div class="expo" role="button" aria-label="Fénykép készítése"><i></i></div>
-<div class="kis-gomb"><span><svg><use href="#i-vaku"/></svg></span>Vaku: auto</div>
+<div class="kis-gomb"><span><svg><use href="#i-irat"/></svg></span>Fájl, PDF</div>
 </div></div>
 <nav class="nav" data-aktiv="fotozas" data-pont="uzenetek"></nav>
 </body></html>

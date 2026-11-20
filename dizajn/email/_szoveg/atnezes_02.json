@@ -1,0 +1,77 @@
+{
+ "gondok": [
+  {
+   "kulcs": "email.staff_client_removed",
+   "ertheto": "részben",
+   "mi_a_gond": "A megfogalmazás („vettek el tőled”) szükségtelenül ellenséges, vádló hangvételű egy belső rendszerüzenethez képest, és pánikkeltő lehet az új könyvelőnek.",
+   "javitott_cim": "Ügyfél átadva másnak: {clientName}",
+   "javitott_szoveg": "Szia!\n\n{clientName} ügyfelet a rendszer vagy az adminisztrátor átirányította egy másik könyvelőhöz, így az adatlapját már nem éred el.\n\nHa kérdésed van ezzel kapcsolatban, egyeztess a cégvezetővel.\n\n{brand}",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.generic",
+   "ertheto": "nem",
+   "mi_a_gond": "Nincs tárgya (címe), a törzsszöveg pedig pusztán egy lábléc magyarázat tartalom nélkül.",
+   "javitott_cim": "Értesítés a {brand} fiókodból",
+   "javitott_szoveg": "Szia!\n\nFontos értesítésed érkezett a fiókodba, kérjük, lépj be az appba a részletekért.\n\n—\n{brand} · Ezt a levelet azért kaptad, mert nálunk vezeted az egyéni vállalkozásodat.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.appointment_booked.video",
+   "ertheto": "részben",
+   "mi_a_gond": "Hiányzik az értesítés címe. Push értesítésnél cím nélkül a szöveg csonkának hat, és a {firstNameWith} toldalékolása hibaforrás lehet.",
+   "javitott_cim": "Időpont rögzítve",
+   "javitott_szoveg": "Videóhívás: {firstNameWith}, időpont: {when}. Ha mégsem érsz rá, az appban bármikor lemondhatod vagy módosíthatod.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.tax_reopened.neutral",
+   "ertheto": "részben",
+   "mi_a_gond": "Péter sietve nem tudja, milyen „kísérőlevélről” és „leveléről” van szó az adó kapcsán (valószínűleg a könyvelő összefoglaló magyarázata a havi adóról).",
+   "javitott_cim": "{firstName} módosította az adóösszesítőt",
+   "javitott_szoveg": "A {period} időszakra fizetendő összeg nem változott, de a könyvelőd pontosította a hozzá tartozó leírást. Részletek az appban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.callback_received",
+   "ertheto": "részben",
+   "mi_a_gond": "A feladat specifikációja szerint az időígéretnél kötelező megadni a munkanapokat és a sávot: „A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.”",
+   "javitott_cim": "Megkaptuk a visszahívási kérésed",
+   "javitott_szoveg": "A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között a {phoneMasked} számon. Telefonon sosem kérjük a jelszavadat vagy kártyaadataidat.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "email.registration_needs_fix",
+   "ertheto": "részben",
+   "mi_a_gond": "Nincs e-mail tárgy (cím), így Péter meg sem nyitja, miközben elakadt az induló bejelentése.",
+   "javitott_cim": "Javítandó adat a vállalkozásod bejelentésében",
+   "javitott_szoveg": "Szia!\n\nÁtnéztük a bejelentésedet, és egy dolgot javítani kell, hogy folytathassuk:\n\n{note}\n\nLépj be az appba a javításhoz, és ha kérdésed van, írj nekünk!\n\n{brand}",
+   "sulyossag": "fontos"
+  }
+ ],
+ "osszbenyomas": "A csomag kommunikációja összességében közvetlen, világos és támogató, kifejezetten jól illeszkedik egy kezdő vállalkozó igényeihez. A hibák többsége hiányzó e-mail tárgymezőkből vagy a belső adminisztratív megfogalmazások (pl. ügyfél elvétele) felesleges élességéből adódik. Apró pontosításokkal a folyamatok teljesen gördülékennyé tehetők.",
+ "csomag": 2,
+ "usage": {
+  "prompt_tokens": 3145,
+  "completion_tokens": 1307,
+  "total_tokens": 4452,
+  "cost": 0.00726,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00726,
+   "upstream_inference_prompt_cost": 0.00235875,
+   "upstream_inference_completions_cost": 0.00490125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,93 @@
+{
+ "gondok": [
+  {
+   "kulcs": "notif.onboarding_needs_review",
+   "ertheto": "nem",
+   "mi_a_gond": "Péter kap egy push-t a saját nevével ('Ellenőrizni kell: Szabó Péter'), amiből nem derül ki, mit és hol kellene ellenőriznie, a szöveg pedig egy nyers lépésnév.",
+   "javitott_cim": "Kérjük, ellenőrizd az adataidat",
+   "javitott_szoveg": "Nézd át az adataidat az appban a továbblépéshez: {step}.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_needs_fix.jovahagyas",
+   "ertheto": "részben",
+   "mi_a_gond": "Az 'ONYA' és a 'meghatalmazás' szakszavak egy kezdő vállalkozónak ijesztőek és érthetetlenek lehetnek magyarázat nélkül.",
+   "javitott_cim": "Fogadd el a könyvelőd megbízását a NAV-nál",
+   "javitott_szoveg": "Lépj be a NAV online felületére (ONYA), és fogadd el a meghatalmazást, hogy {firstName} intézhesse a könyvelésed: {note}",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.onboarding_done",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'be van kötve' kifejezés fejlesztői zsargon, egy vállalkozónak idegen.",
+   "javitott_cim": "Sikeres beállítás, indulhatunk!",
+   "javitott_szoveg": "Innentől {firstName} intézi a könyvelésed. Az appban mindig látod majd az aktuális teendőket és fizetendőket.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.appointment_cancelled",
+   "ertheto": "részben",
+   "mi_a_gond": "A 'lemondták' személytelen és hideg, Péter nem tudja, ki és miért mondta le a hívást.",
+   "javitott_cim": "Időpont törölve: {when}",
+   "javitott_szoveg": "A megbeszélt hívást lemondták. Nyiss új időpontot az appban, amikor neked megfelel.",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "notif.subscription_renewal_needed",
+   "ertheto": "részben",
+   "mi_a_gond": "Az 'új kártyaengedély kell' szokatlan banki zsargon, Péter nem biztos, hogy érti, mi a teendő.",
+   "javitott_cim": "Erősítsd meg a bankkártyádat",
+   "javitott_szoveg": "A bankkártyás fizetési jóváhagyásod hamarosan lejár. A Fiók menüpontban egy kattintással megújíthatod, hogy ne szakadjon meg a szolgáltatás.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "notif.fee_invoice_issued",
+   "ertheto": "nem",
+   "mi_a_gond": "A 'Megérkezett a havidíj' úgy hangzik, mintha Péter kapott volna pénzt, pedig ez díjbekérő vagy számla a levont díjról.",
+   "javitott_cim": "Elkészült a havi számlád: {amount}",
+   "javitott_szoveg": "A havidíjról szóló bizonylatot letöltheted a Fiók → Díjak és számlák menüpontban.",
+   "sulyossag": "fontos"
+  },
+  {
+   "kulcs": "email.auth_staff_invite",
+   "ertheto": "részben",
+   "mi_a_gond": "Furcsa és zavaró folyamat, hogy új munkatársként meghívó után az 'Elfelejtettem a jelszavam' gombra kell kattintani a belépéshez.",
+   "javitott_cim": "Meghívó a {brand} könyvelői felületére",
+   "javitott_szoveg": "Szia!\n\nMeghívtunk a {brand} könyvelői felületére ({panelUrl}).\nAz első belépéshez és a jelszavad beállításához kattints az „Elfelejtettem a jelszavam” gombra ezzel az e-mail-címmel, majd add meg ezt a kódot:\n\n{code}\n\nA kód 15 percig érvényes; ha lejár, kérj újat ugyanott.\n\n{brand}",
+   "sulyossag": "apró"
+  },
+  {
+   "kulcs": "email.auth_staff_invite_csapat",
+   "ertheto": "részben",
+   "mi_a_gond": "Szintén zavaró az 'Elfelejtettem a jelszavam' használata első aktiváláskor.",
+   "javitott_cim": "Meghívó a {brand} ügyfélszolgálati felületére",
+   "javitott_szoveg": "Szia!\n\nMeghívtunk a {brand} ügyfélszolgálati felületére ({panelUrl}).\nAz első belépéshez és a jelszavad beállításához kattints az „Elfelejtettem a jelszavam” gombra ezzel az e-mail-címmel, majd add meg ezt a kódot:\n\n{code}\n\nA kód 15 percig érvényes; ha lejár, kérj újat ugyanott.\n\n{brand}",
+   "sulyossag": "apró"
+  }
+ ],
+ "osszbenyomas": "A csomag alapvetően világos, lényegretörő és funkcionálisan jól felépített. A hibák főként a fejlesztői/banki szakzsargonból ('bekötve', 'kártyaengedély'), a megtévesztő számlaértesítésből, valamint az ONYA-meghatalmazás magyarázatlan említéséből adódnak.",
+ "csomag": 1,
+ "usage": {
+  "prompt_tokens": 3183,
+  "completion_tokens": 1602,
+  "total_tokens": 4785,
+  "cost": 0.00839475,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00839475,
+   "upstream_inference_prompt_cost": 0.00238725,
+   "upstream_inference_completions_cost": 0.0060075
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}
