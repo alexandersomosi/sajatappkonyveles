@@ -63,7 +63,8 @@ export function k29fDefaults(): Record<string, string> {
   flatten('k29f.konzol', CONSOLE_TEXTS, out);
   flatten('k29f.felmondas', TERMINATION_TEXTS, out);
   notif('contract_terminated', CONSOLE_NOTIFICATION_TEXTS.contract_terminated, out);
-  out['email.contract_terminated.body'] = `${CONSOLE_NOTIFICATION_TEXTS.contract_terminated.rendes.body}\n\nA felmondó levelet az appban, a Dossziéban találod.`;
+  // k7b: email.contract_terminated.* (the letter with the PDF attached) lives in content/k7b.ts – the old concatenation
+  // of the in-app body + a Dosszié sentence would say the Dosszié twice now that the body names it itself.
   notif('contract_reactivated', CONSOLE_NOTIFICATION_TEXTS.contract_reactivated, out);
   out['notif.price_changed.title'] = CONSOLE_NOTIFICATION_TEXTS.price_changed.title;
   out['notif.price_changed.body'] = CONSOLE_NOTIFICATION_TEXTS.price_changed.body;

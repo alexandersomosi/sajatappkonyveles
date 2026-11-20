@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { AppState, Platform } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useQueryClient } from '@tanstack/react-query';
-import type { AuthResult, AuthUser, RegisterInput } from '../_shared/api';
+import type { AuthResult, AuthUser, RegisterInput, RegisterPending } from '../_shared/api';
 import { ApiHiba, frissit, hozzaferesBeallit, post, tokenKezelo } from '../api/http';
 import { brand, ZAR_UTAN_MS } from '../config';
 import { beallitasIr, beallitasOlvas, titokIr, titokOlvas } from '../lib/tarolo';
@@ -20,7 +20,10 @@ interface AuthCtx {
   bio: { elerheto: boolean; be: boolean };
   belep(email: string, jelszo: string, opt?: { torlesVisszavon?: boolean }): Promise<{ mfaToken?: string }>;
   belepKoddal(mfaToken: string, kod: string): Promise<void>;
-  regisztral(adat: Omit<RegisterInput, 'platform'>): Promise<AuthResult>;
+  /** k7b (S16): no session yet – the server answers the same for a new and an existing address ("nézd meg a postafiókodat"). */
+  regisztral(adat: Omit<RegisterInput, 'platform'>): Promise<RegisterPending>;
+  /** The 6-digit code from the sign-up mail opens the session. */
+  regisztracioMegerosit(email: string, kod: string): Promise<{ mfaToken?: string }>;
   alkalmaz(r: AuthResult): Promise<void>;
   kilep(mindenhol?: boolean): Promise<void>;
   feloldas(): Promise<boolean>;
@@ -36,6 +39,7 @@ export function useAuth(): AuthCtx {
 }
 
 const clientKind = Platform.OS === 'web' ? 'web' : 'native';
+const platformja = (): 'web' | 'ios' | 'android' => (Platform.OS === 'web' ? 'web' : Platform.OS === 'ios' ? 'ios' : 'android');
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
@@ -149,10 +153,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await alkalmaz(r);
       },
       async regisztral(adat) {
-        const platform = Platform.OS === 'web' ? 'web' : Platform.OS === 'ios' ? 'ios' : 'android';
-        const r = await post<AuthResult>('/auth/register', { ...adat, platform }, { auth: false });
-        await alkalmaz(r);
-        return r;
+        return post<RegisterPending>('/auth/register', { ...adat, platform: platformja() }, { auth: false });
+      },
+      async regisztracioMegerosit(email, kod) {
+        try {
+          const r = await post<AuthResult>('/auth/register/verify', { email: email.trim(), code: kod.trim(), platform: platformja() }, { auth: false });
+          await alkalmaz(r);
+          return {};
+        } catch (e) {
+          if (e instanceof ApiHiba && e.code === 'mfa_required' && typeof e.data?.mfaToken === 'string') return { mfaToken: e.data.mfaToken };
+          throw e;
+        }
       },
       alkalmaz,
       async kilep(mindenhol) {

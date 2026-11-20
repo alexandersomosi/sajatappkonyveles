@@ -429,8 +429,12 @@ export function accRoutes(deps: Deps) {
     await auditC(c, deps.db, 'onboarding.step_reviewed', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { step, status: b.status } });
     const ap = await accountantParams(deps.db, acc.id);
     if (b.status === 'hianyos') await notify(deps, deps.db, { userId: cl.userId, kind: 'onboarding_needs_fix', params: { ...ap, note: b.note ?? '' }, link: '/bekotes' });
-    if (b.status === 'ugyfelre_var' && s === 'meghatalmazas')
-      await notify(deps, deps.db, { userId: cl.userId, kind: 'onboarding_needs_fix', variant: 'jovahagyas', params: { ...ap, note: b.note ?? `${ap.firstName} beadta a meghatalmazást. Hagyd jóvá az ONYA-ban 4 napon belül.` }, link: '/bekotes/meghatalmazas' });
+    if (b.status === 'ugyfelre_var' && s === 'meghatalmazas') {
+      // k7b: the body is "{note} Az appban lépésről lépésre megmutatjuk, hogyan." – the accountant's own note gets its full stop
+      const own = b.note?.trim();
+      const note = own ? (/[.!?…]$/.test(own) ? own : `${own}.`) : `${ap.firstName} beadta a meghatalmazást. Hagyd jóvá a NAV online felületén (ONYA) 4 napon belül.`;
+      await notify(deps, deps.db, { userId: cl.userId, kind: 'onboarding_needs_fix', variant: 'jovahagyas', params: { ...ap, note }, link: '/bekotes/meghatalmazas' });
+    }
     await checkCompletion(deps, deps.db, cl.id);
     await computeFlags(deps, deps.db, cl.id);
     return c.json(await onboardingState(deps, deps.db, cl.id));
@@ -1261,7 +1265,7 @@ export function accRoutes(deps: Deps) {
       await auditC(c, tx, 'message.sent', { targetType: 'message', targetId: m!.id, clientId: cl.id, details: { attachments: b.fileIds?.length ?? 0 } });
       return m!;
     });
-    await notify(deps, deps.db, { userId: cl.userId, kind: 'message_new', params: await accountantParams(deps.db, acc.id), link: '/uzenetek' });
+    await notify(deps, deps.db, { userId: cl.userId, kind: 'message_new', params: await accountantParams(deps.db, acc.id), link: '/uzenetek', emailKey: 'message_new' });
     const [dto] = await messageDtos(deps.db, [msg], 'accountant', acc.firstName);
     return c.json(dto, 201);
   });

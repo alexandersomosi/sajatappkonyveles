@@ -163,6 +163,9 @@ export const accCalculate = (id: string, periodKey: string, asOf?: string) =>
 export const accApprove = (calcId: string, body: { letterText: string; overrides?: { tbHuf?: number; szochoHuf?: number; szjaAdvanceHuf?: number; reason: string } }) =>
   api.post<unknown>(`/acc/tax-calculations/${e(calcId)}/approve`, body);
 export const accReopen = (periodId: string, reason: string) => api.post<unknown>(`/acc/tax-periods/${e(periodId)}/reopen`, { reason });
+/** k7b: the iparužési adóelőleg by hand (the amount is last year's tax; the önkormányzat's account number). */
+export const accHipaApprove = (periodId: string, body: { amountHuf: number; accountNumber?: string | null }) =>
+  api.post<unknown>(`/acc/tax-periods/${e(periodId)}/hipa-approve`, body);
 /** Fix the letter of an approved quarter; amounts stay, the client gets a neutral notice. */
 export const accUpdateLetter = (periodId: string, letterText: string) => api.post<unknown>(`/acc/tax-periods/${e(periodId)}/letter`, { letterText });
 export const accVerifyPayment = (periodId: string, items: { kind: PaymentItemKind; verification: 'rendben' | 'elteres'; note?: string }[]) =>

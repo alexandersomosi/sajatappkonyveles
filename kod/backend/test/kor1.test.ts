@@ -9,7 +9,7 @@ import { clients, onboardingSteps } from '../src/db/schema.js';
 import { safeErr, scrubText } from '../src/log.js';
 import { fillLegal } from '../src/legal.js';
 import { demoReceiptPng } from '../src/lib/png.js';
-import { lastCode, newClient, PW, setup, staff, type Harness } from './helpers.js';
+import { lastCode, newClient, PW, registerUnverified, setup, staff, type Harness } from './helpers.js';
 
 let h: Harness;
 let bence: Awaited<ReturnType<typeof staff>>;
@@ -117,7 +117,7 @@ describe('requests', () => {
 
 describe('unverified e-mail', () => {
   it('cannot submit identity papers, documents or messages', async () => {
-    const r = await h.json('POST', '/auth/register', { body: { email: 'nemigazolt@demo.kezjegy.test', password: PW, firstName: 'Nem', lastName: 'Igazolt', platform: 'android' }, headers: { 'x-forwarded-for': '198.51.111.1' } });
+    const r = await registerUnverified(h, 'nemigazolt@demo.kezjegy.test', { 'x-forwarded-for': '198.51.111.1' }, { first: 'Nem', last: 'Igazolt' });
     const msg = await h.json('POST', '/client/messages', { token: r.body.accessToken, body: { body: 'Szia' } });
     expect(msg.status).toBe(409);
     expect(msg.body.error.code).toBe('email_not_verified');

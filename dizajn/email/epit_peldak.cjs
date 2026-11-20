@@ -58,15 +58,15 @@ const L = [
   ['04_dijbekero_atutalas', { elonezet: '19 999 Ft, fizetési határidő: 2026. 11. 28.', cim: 'Díjbekérő a havidíjról', lablec_ok: OK_FIOK,
     gomb_szoveg: 'Letöltöm a díjbekérőt', gomb_link: 'https://adozz.hu/fiok/dijak',
     tartalom: E.p('Szia Péter!') + E.p('Itt vannak a havidíjad utalási adatai:')
-      + E.kv([['Összeg', '19 999 Ft', 1], ['Határidő', '2026. 11. 28.'], ['Kedvezményezett', brand.provider.legalName], ['Számlaszám', brand.provider.bankAccount], ['Közlemény', 'ADZ-10482']])
+      + E.kv([['Összeg', '19 999 Ft', 1], ['Határidő', '2026. 11. 28.'], ['Kedvezményezett', `${brand.provider.legalName} (az Adózz.hu üzemeltetője)`], ['Számlaszám', brand.provider.bankAccount], ['Közlemény', 'ADZ-10482']])
       + E.p('A közleményt pontosan így írd be, ebből tudjuk, hogy a te utalásod érkezett.')
       + E.tipp('állíts be állandó átutalást a netbankodban, így havonta nem kell rá gondolnod.')
       + E.kicsi('A díjbekérő PDF-je csatolva is van ehhez a levélhez.') }],
-  ['05_hatarido_emlekezteto', { elonezet: 'A IV. negyedévre kb. 154 000 Ft-ot kell befizetned.', cim: `Január 12-ig utald el a IV.${NB}negyedévi adót`, lablec_ok: OK_FIOK,
+  ['05_hatarido_emlekezteto', { elonezet: 'A IV. negyedévre 154 000 Ft-ot kell befizetned.', cim: `Január 12-ig utald el a IV.${NB}negyedévi adót`, lablec_ok: OK_FIOK,
     gomb_szoveg: 'Megnézem az utalási adatokat', gomb_link: 'https://adozz.hu/ado/negyedeves',
-    tartalom: E.p('Szia Péter!') + E.p('Közeleg a negyedéves befizetés. Az ' + E.egyben('október–decemberi') + ' bevételeid után nagyjából ennyit kell utalnod:')
-      + E.kv([['Szja-előleg', '41 000 Ft'], ['TB-járulék', '86 000 Ft'], ['Szociális hozzájárulási adó', '27 000 Ft'], ['Összesen (kb.)', '154 000 Ft', 1], ['Határidő', '2027. 01. 12.']])
-      + E.info('Ezek becsült összegek a rögzített bevételeid alapján. A pontos utalási adatokat az appban találod.') }],
+    tartalom: E.p('Szia Péter!') + E.p('Közeleg a negyedéves befizetés. Bence kiszámolta és jóváhagyta: az ' + E.egyben('október–decemberi') + ' bevételeid után ennyit kell utalnod:')
+      + E.kv([['Szja-előleg', '41 000 Ft'], ['TB-járulék', '86 000 Ft'], ['Szociális hozzájárulási adó', '27 000 Ft'], ['Összesen', '154 000 Ft', 1], ['Határidő', '2027. 01. 12.']])
+      + E.p('A számlaszámokat az appban találod. Ha már elutaltad, jelezd ott.') }],
   ['06_visszahivas', { elonezet: 'Megkaptuk a visszahívás-kérésedet.', cim: 'Megkaptuk a kérésedet',
     lablec_ok: 'Ezt a levelet azért kaptad, mert visszahívást kértél tőlünk.',
     tartalom: E.p('Szia Péter!') + E.p('Köszönjük, hogy szóltál! A csapatunk ' + E.egyben('24–48 órán') + ' belül visszahív, munkanapokon 9 és 17 óra között.')

@@ -105,7 +105,7 @@ describe('K2.1 – NULL → van → inditas → van → inditas keeps ONE regist
     const list = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, anna.userId), eq(notifications.kind, 'client_path_changed')));
     // the change it took back was notified – so a correcting badge with the final state follows
     expect(list.length).toBe(before + 1);
-    expect(list.at(-1)!.body).toBe('Most indítom → Már van vállalkozásom');
+    expect(list.at(-1)!.body).toBe('Van már vállalkozása? Eddig: „Most indítom”, most: „Már van vállalkozásom”.');
     const [last] = (await h.deps.db.select().from(auditLog).where(and(eq(auditLog.clientId, c.clientId), eq(auditLog.action, 'business_status.changed')))).slice(-1);
     expect((last!.details as { undo?: boolean }).undo).toBe(true);
   });

@@ -123,8 +123,9 @@ export function tulaj1119Defaults(): Record<string, string> {
     'Főállásban akkor is fizetsz havonta legalább {amount} járulékot (TB + szocho), ha kevés a bevételed. Ha a munkádhoz szakképzettség kell, legalább {amountKepesites}. Negyedévente fizeted.';
   out['visszahivas.csalas'] =
     'Telefonon soha nem kérjük a jelszavadat, a belépési kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted. Ha valaki ezt kéri, tedd le, és írj nekünk az alkalmazásban.';
+  // k7b: the only allowed time promise, word for word
   out['notif.callback_received.body'] =
-    'Kollégánk 24–48 órán belül hív a {phoneMasked} számon. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.';
+    'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A {phoneMasked} számon keresünk. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.';
   out['notif.registration_done.body'] = 'Rögzítettük az adószámodat. Jöhet a következő lépés.';
   out['notif.registration_done.kamara.title'] = 'Elindult a vállalkozásod!';
   out['notif.registration_done.kamara.body'] = 'Rögzítettük az adószámodat. Jöhet a következő lépés. Ne felejtsd el a kamarai regisztrációt: {hatarido}.';
@@ -132,7 +133,7 @@ export function tulaj1119Defaults(): Record<string, string> {
   // 11-19 javítás: the assisted client (mode 'segitett') – our accountant filed it, we record the adószám.
   out['notif.registration_checked.segitett.title'] = 'Átnéztük a bejelentésedet';
   out['notif.registration_checked.segitett.body'] = 'Átnéztük a NAV-os értesítést. Ha megjön az adószámod, rögzítjük, és szólunk.';
-  out['notif.registration_reminder.tevekenyseg_segitett.title'] = 'Megírtuk a tevékenységed sorát';
+  out['notif.registration_reminder.tevekenyseg_segitett.title'] = 'Kiválasztottuk a tevékenységed kódját';
   out['notif.registration_reminder.tevekenyseg_segitett.body'] = 'Nézd át az adataidat, és engedélyezd a bejelentést. Utána {firstName} beküldi. A NAV-os űrlapot nem kell kitöltened.';
   out['notif.registration_reminder.adatlap.title'] = 'Folytasd a kérdőívet';
   out['notif.registration_submitted.title'] = '{clientName} feltöltötte a NAV-os értesítést';
@@ -142,12 +143,13 @@ export function tulaj1119Defaults(): Record<string, string> {
     out[`${k}.title`] = title;
     out[`${k}.body`] = body;
   };
-  n('assist_started', 'Beszéltünk – így haladunk', 'Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a meghatalmazást. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.');
-  n('assist_mh_filed', 'Hagyd jóvá a meghatalmazást {hatarido}', '{firstName} beküldte a NAV-nak. Lépj be az ONYA-ba, és hagyd jóvá. Kb. 3 perc, megmutatjuk, hogyan.');
-  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.');
-  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.', 'elso');
-  n('assist_mh_reminder', 'Ma van az utolsó nap', 'Hagyd jóvá ma a meghatalmazást az ONYA-ban, különben a NAV törli.', 'utolso_nap');
-  n('assist_mh_expired', 'Lejárt a 4 nap', 'A NAV törölte a jóvá nem hagyott meghatalmazást. {firstName} újra beküldi, és szólunk.');
+  // k7b (SZOVEG_JAVITAS_LEVELEK 11, 12, 23–26): the client learns what the meghatalmazás is for and what the ONYA is
+  n('assist_started', 'Beszéltünk – így haladunk', 'Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a NAV-nak a meghatalmazást, hogy a nevedben intézhesse az ügyeidet. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.');
+  n('assist_mh_filed', 'Hagyd jóvá a meghatalmazást {hatarido}', '{firstName} beküldte a NAV-nak, hogy intézhesse helyetted a NAV-os ügyeidet. Hagyd jóvá a NAV online felületén (ONYA): kb. 3 perc, lépésről lépésre megmutatjuk.');
+  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc a NAV online felületén (ONYA), az appban megmutatjuk, hogyan.');
+  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc a NAV online felületén (ONYA), az appban megmutatjuk, hogyan.', 'elso');
+  n('assist_mh_reminder', 'Ma hagyd jóvá a meghatalmazást', 'Ma van az utolsó nap: lépj be a NAV online felületére (ONYA), és hagyd jóvá. Kb. 3 perc. Ha ma kimarad, a NAV törli a kérést, és újra kell kezdeni.', 'utolso_nap');
+  n('assist_mh_expired', 'Újra beküldjük a meghatalmazást', 'A 4 nap alatt nem érkezett jóváhagyás, ezért a NAV törölte a meghatalmazást. {firstName} újra beküldi, és szólunk, amikor jóváhagyhatod.');
   n('assist_consent_needed', 'Él a meghatalmazás – nézd át az adataidat', 'Ha rendben vannak, engedélyezd a bejelentést. Kb. 2 perc.');
   n('assist_consent_needed', 'Engedélyezd újra a bejelentést', 'Módosult a kérdőív, ezért nézd át újra.', 'ujra');
   n('assist_ev_filed', 'Bejelentettük a vállalkozásodat!', 'Elment a NAV-hoz. Rögzítjük az adószámodat, és szólunk.');
@@ -156,13 +158,13 @@ export function tulaj1119Defaults(): Record<string, string> {
   n('assist_task', 'Küldd be a meghatalmazást: {clientName}', 'Egyeztettünk vele. UJEGYKE meghatalmazottként: {ugycsoportok}.', 'ujegyke');
   n('assist_task', 'Jóváhagyta: {clientName}', 'Nézd meg az ONYA-ban, hogy él-e a meghatalmazás.', 'ellenorzes');
   n('assist_task', 'Beküldheted: {clientName} bejelentése', 'Engedélyezte a bejelentést. Küldd be a Vállalkozói Ügysegédben, meghatalmazottként.', 'bejelentes');
-  n('assist_task', 'Lejárt a 4 nap: {clientName}', 'Küldd be újra a meghatalmazást.', 'ujra');
+  n('assist_task', 'Küldd be újra a meghatalmazást: {clientName}', '4 napon belül nem lett jóváhagyva, ezért a NAV törölte.', 'ujra');
   n('assist_task', 'Nézd meg most: él-e {clientName} meghatalmazása?', 'Jelezte, hogy jóváhagyta, de a NAV 4 napja letelt. Nézd meg az ONYA-ban: ha él, „Él a meghatalmazás”; ha nem, „Nem él – a NAV törölte”, és küldd be újra.', 'ellenorzes_kesik');
   n('assist_task', 'Nézd át: {clientName} bejelentése', '{firstName} beküldte. Ellenőrizd az értesítést, és rögzítsd az adószámot.', 'atnezes');
   n('assist_approval_overdue', 'Ma jár le a jóváhagyás: {clientName}', 'Még nem hagyta jóvá. Hívd fel.');
   // 11-19 javító kör 2: our own step is late (daily, working days 09:00).
   n('assist_task', 'Késik: {clientName} – {what}', 'Lejárt a határidőnk, az ügyfél várja. Intézd ma, vagy írj neki, mikor lesz kész.', 'kesik');
-  n('client_path_changed', '{clientName} módosította a válaszát', '{fromLabel} → {toLabel}');
+  n('client_path_changed', '{clientName} módosította a válaszát', 'Van már vállalkozása? Eddig: „{fromLabel}”, most: „{toLabel}”.');
   return out;
 }
 

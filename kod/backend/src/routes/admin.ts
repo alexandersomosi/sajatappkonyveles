@@ -46,7 +46,7 @@ import { placeholdersOf, DEFAULT_TEXTS } from '../content.js';
 import { groupPlaceholders } from '../content/tulaj1118.js';
 import { notify, sendCodeEmail } from '../notify/notify.js';
 import brand from '../_shared/brand.json' with { type: 'json' };
-import { chargeDue, chargeSubscription, cancelSubscription, deleteCard } from '../services/subscription.js';
+import { chargeDue, chargeSubscription, cancelSubscription, deleteCard, hasUsableCard, notifyCardDeletedByAdmin, notifyServiceEnded } from '../services/subscription.js';
 import { clientName } from '../services/people.js';
 import type { AdminServiceStats, TeamMemberRow } from '../_shared/api.js';
 import { assistRequests, businessRegistrations, callbackAttempts, callbackRequests, teamMembers } from '../db/schema.js';
@@ -381,6 +381,8 @@ export function adminRoutes(deps: Deps) {
         .where(and(eq(subscriptions.clientId, id), sql`${subscriptions.status} <> 'canceled'`));
       await deleteCard(deps, id, { userId: auth(c).userId, role: 'admin' }).catch(() => undefined);
       await endRelationship(deps.db, id, now);
+      // k7b (LEVEL_LEFEDETTSEG #55): the same notices as a real period end (client e-mail + the accountant's task)
+      await notifyServiceEnded(deps, id, todayBudapest(now));
     }
     return c.json({ ok: true });
   });
@@ -445,7 +447,10 @@ export function adminRoutes(deps: Deps) {
   r.post('/subscriptions/:id/card/delete', async (c) => {
     const [s] = await deps.db.select().from(subscriptions).where(eq(subscriptions.id, param(c, 'id'))).limit(1);
     if (!s) throw E.notFound();
+    const had = await hasUsableCard(deps.db, s.clientId);
     await deleteCard(deps, s.clientId, { userId: auth(c).userId, role: 'admin' });
+    // k7b (LEVEL_LEFEDETTSEG #33): the client is told (only when there was a card to delete)
+    if (had) await notifyCardDeletedByAdmin(deps, s.clientId);
     return c.json({ ok: true });
   });
 

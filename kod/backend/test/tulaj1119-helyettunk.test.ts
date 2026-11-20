@@ -161,7 +161,7 @@ describe('K3.1–K3.5 – the EV happy path', () => {
     expect(r.staff).toBe(1);
     expect((await jobAssistApprovals(h.deps)).staff).toBe(0);
     const rem = await notifs(c.userId, 'assist_mh_reminder');
-    expect(rem.map((x) => x.title)).toEqual(['Még nem hagytad jóvá a meghatalmazást', 'Ma van az utolsó nap']);
+    expect(rem.map((x) => x.title)).toEqual(['Még nem hagytad jóvá a meghatalmazást', 'Ma hagyd jóvá a meghatalmazást']);
     expect((await notifs(anna.userId, 'assist_approval_overdue')).length).toBe(1);
     expect((await notifs(bence.userId, 'assist_approval_overdue')).length).toBe(1);
     // a message created at night keeps its push until 08:00
@@ -185,7 +185,7 @@ describe('K3.1–K3.5 – the EV happy path', () => {
     expect(row!.status).toBe('meghatalmazas_lejart');
     expect(row!.expiredCount).toBe(1);
     expect((await notifs(c.userId, 'assist_mh_expired')).length).toBe(1);
-    expect((await notifs(bence.userId, 'assist_task')).some((x) => x.title === 'Lejárt a 4 nap: Kiss Marika')).toBe(true);
+    expect((await notifs(bence.userId, 'assist_task')).some((x) => x.title === 'Küldd be újra a meghatalmazást: Kiss Marika')).toBe(true);
     const again = await h.json('POST', `/team/assists/${assistId}/ujegyke-filed`, { token: bence.token, body: { items: UJEGYKE, jogcim: '9' } });
     expect(again.status).toBe(200);
     expect(again.body.approvalDueOn).toBe('2026-11-26');

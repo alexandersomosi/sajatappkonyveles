@@ -373,7 +373,12 @@ describe('F9 – tulaj-konzol', () => {
     expect(sub!.cancelAtPeriodEnd).toBe(true);
     const [n] = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, c.userId), eq(notifications.kind, 'contract_terminated' as never)));
     expect(n!.title).toBe('Felmondtuk a szerződésedet');
-    expect(n!.wantEmail).toBe(true);
+    // k7b: the e-mail went straight, WITH the PDF – the in-app row sends no second one
+    expect(n!.wantEmail).toBe(false);
+    expect((n!.data as { letterMailed?: boolean }).letterMailed).toBe(true);
+    const letter = h.mails.filter((m) => m.to === 'f9c@demo.kezjegy.test' && m.template === 'contract_terminated');
+    expect(letter).toHaveLength(1);
+    expect((letter[0] as unknown as { attachments?: { filename: string }[] }).attachments?.[0]?.filename).toBe('felmondas.pdf');
     expect((await h.json('POST', `/admin/console/clients/${c.clientId}/terminate`, { token: admin.token, body: { kind: 'rendes', reason: 'Üzleti döntés' } })).status).toBe(409);
     // effectiveOn reached (moved to today instead of moving the clock: tokens and TOTP steps stay valid)
     const [t0] = await h.deps.db.select().from(clients).where(eq(clients.id, c.clientId));

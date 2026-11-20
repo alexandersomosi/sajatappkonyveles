@@ -9,7 +9,7 @@ import { pickAccountant } from '../src/services/accounts.js';
 import { runDataFixKor1 } from '../src/services/datastep.js';
 import { chargeDue, chargeSubscription } from '../src/services/subscription.js';
 import { heroPeriod, markPaid, paymentStatusOf, unmarkPaid, verifyPayment } from '../src/services/tax.js';
-import { lastCode, newClient, PW, setup, staff, type Harness } from './helpers.js';
+import { lastCode, newClient, PW, registerUnverified, setup, staff, type Harness } from './helpers.js';
 
 let h: Harness;
 let bence: Awaited<ReturnType<typeof staff>>;
@@ -65,8 +65,8 @@ async function assigned(email: string, o: { active?: boolean } = {}) {
 
 describe('the accountant\'s tax id is not handed to every registrant', () => {
   it('unverified and pre-contract accounts get null; after the contract the client gets it, audited once a day', async () => {
-    const reg = await h.json('POST', '/auth/register', { body: { email: 'friss@demo.kezjegy.test', password: PW, firstName: 'Friss', lastName: 'Fiók', platform: 'android' }, headers: { 'x-forwarded-for': '10.9.9.1' } });
-    expect(reg.status).toBe(201);
+    const reg = await registerUnverified(h, 'friss@demo.kezjegy.test', { 'x-forwarded-for': '10.9.9.1' }, { first: 'Friss', last: 'Fiók' });
+    expect(reg.status).toBe(200);
     const [cl] = await h.deps.db.select().from(clients).where(eq(clients.userId, reg.body.user.id));
     await h.deps.db.update(clients).set({ accountantId: bence.accountantId }).where(eq(clients.id, cl!.id));
     const unverified = await h.json('GET', '/client/onboarding', { token: reg.body.accessToken });

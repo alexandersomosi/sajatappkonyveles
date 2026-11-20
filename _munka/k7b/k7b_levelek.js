@@ -22,6 +22,7 @@ const FELADAT = `FORRÁS: ${P}/dizajn/email/LEVEL_LEFEDETTSEG.md (2. pont: esem�
 12) Admin törölte a mentett kártyát: ügyfél e-mail.
 13) Igazolás nem adható ki (elutasítva): ügyfél e-mail is (most csak push).
 14) SZÖVEGJAVÍTÁSOK: a ${P}/dizajn/email/SZOVEG_JAVITAS_LEVELEK.md összes "jogos" és "részben jogos" tételét (54, ebből 17 fontos) vezesd át a forrásba (_shared/*.ts, content/*.ts – a fájl megmondja, hol), a † jelölt egységesítésekkel együtt; és javítsd a fájlban talált két kódhibát (zarolas.ts:82 "havidíj és a éves zárás díja" ragozás; content/k29f.ts:66 a felmondás-levélben duplán kerülne a Dosszié-mondat). A notif.price_changed.body pontra végződő dátum utáni kötőjeles ragot is.
+15) KÉT KÖNYVELŐI HIBA (${P}/_munka/KONYVELO_LEFEDETTSEG.md): a) az iparűzési adóelőleg (HIPA) jóváhagyása: a backend végpont megvan (backend/src/routes/acc.ts:1033), de a panelen nincs gomb, és a "Számolás most" hibaüzenet nem létező kártyára küld (backend/src/services/tax.ts:223) – legyen jóváhagyó gomb a panel adó-kártyáján, és a hibaüzenet a valódi helyre mutasson; b) az éves SZJA- és HIPA-határidő a beadás után is "nincs kész" (backend/src/services/flags.ts:117, :119) – a rögzített beadás alapján legyen kész, ne álljon "lejárt"-ként a Határidő-figyelőben. Tesztekkel.
 Minden új levélhez: a szöveg a content rendszerben legyen (email.<kulcs>.subject/body a meglévő minta szerint, szerkeszthető), sablon-kulcs a mailer.send template mezőben, és teszt (a meglévő backend tesztek mintájára: a levél kimegy / nem megy ki duplán / a demo outboxba kerül).`
 
 phase('Építés')

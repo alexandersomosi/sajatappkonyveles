@@ -332,6 +332,23 @@ const ESEMENY: Record<string, string> = {
   employer_reported: 'Könyvelőnek: alkalmazottat jelzett',
   onboarding_task: 'Könyvelőnek: bekötési teendő (adószám, adózási mód)',
   generic: 'Minden e-mail',
+  // k7b (11-20): the new e-mails
+  contract_terminated: 'Felmondtuk a szerződését (a levélben a felmondó PDF)',
+  contract_terminated_hatalyos: 'A felmondás hatályba lépett',
+  message_new_ugyfelszolgalat: 'Új üzenet az ügyfélszolgálattól',
+  nav_hiba: 'Könyvelőnek és adminnak: NAV-hiba (technikai felhasználó)',
+  subscription_ended: 'Megszűnt az előfizetése',
+  subscription_ended_konyvelo: 'Könyvelőnek: megszűnt egy ügyfél előfizetése',
+  account_deletion_cancelled: 'Visszavonta a fiókja törlését',
+  account_deleted: 'Töröltük a fiókját',
+  export_failed: 'Nem készült el az adatmásolata',
+  export_failed_admin: 'Adminnak: nem készült el egy adatmásolat',
+  account_exists: 'Regisztráció már meglévő címmel („Már van fiókod”)',
+  price_changed: 'Változik a havidíja',
+  price_discount_revoked: 'Megszűnt a kedvezménye, változik a havidíja',
+  card_deleted_by_admin: 'Az ügyfélszolgálat törölte a mentett kártyáját',
+  certificate_status: 'Igazolás: állapotváltozás',
+  certificate_rejected: 'Nem adható ki az igazolás',
 };
 // Variants of an event (the second part of the middle key), e.g. notif.tax_approved.zero.title.
 const VALTOZAT: Record<string, string> = {
@@ -358,6 +375,17 @@ const VALTOZAT: Record<string, string> = {
   ellenorzes: 'nézd meg az ONYA-ban',
   bejelentes: 'küldd be a bejelentést',
   atnezes: 'csapat: nézd át az értesítést',
+  // k7b
+  azonnali: 'azonnali',
+  rendes: '30 napos felmondással',
+  ugyfel_kerte: 'az ügyfél kérésére',
+  ugyfel_kerte_azonnal: 'az ügyfél kérésére, azonnal',
+  hatalyos: 'hatályba lépett',
+  megszunt: 'megszűnt az előfizetés',
+  visszavonva: 'kedvezmény visszavonva',
+  admin: 'adminnak',
+  elofizetes: 'fut még az előfizetés',
+  lemondva: 'lemondott előfizetésnél',
 };
 const RESZ: Record<string, string> = { title: 'cím', body: 'szöveg', subject: 'tárgy', footer: 'lábléc' };
 const APPSZOVEG: Record<string, string> = {

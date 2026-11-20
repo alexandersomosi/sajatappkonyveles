@@ -91,11 +91,12 @@ async function ujUgyfel(email, lastName, firstName) {
   const password = `Pr0ba-${randomBytes(12).toString('base64url')}`;
   const r = await hiv(APP, 'POST', '/auth/register', { body: { email, password, firstName, lastName, platform: 'android' } });
   const j = await r.json();
-  if (r.status !== 201) throw new Error(`regisztráció ${r.status} ${JSON.stringify(j).slice(0, 300)}`);
+  // k7b (S16): the sign-up answers 202 without a session; the code from the mail opens it
+  if (r.status !== 202) throw new Error(`regisztráció ${r.status} ${JSON.stringify(j).slice(0, 300)}`);
   const sor = (await h.db.execute(sql`select body_text from demo_outbox where template = 'auth_email_code' order by created_at desc limit 1`)).rows[0];
   const kod = String(sor?.body_text ?? '').match(/\b(\d{6})\b/)?.[1];
-  const v = await hiv(APP, 'POST', '/auth/email/verify', { token: j.accessToken, body: { code: kod } });
-  if (v.status !== 200) throw new Error(`e-mail-kód ${v.status}`);
+  const v = await hiv(APP, 'POST', '/auth/register/verify', { body: { email, code: kod, platform: 'android' } });
+  if (v.status !== 201) throw new Error(`e-mail-kód ${v.status}`);
   ujak.set(email, password);
 }
 

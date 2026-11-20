@@ -182,7 +182,7 @@ describe('értesítések ideje és szövege', () => {
     const c2 = await h.json('POST', `/acc/clients/${k.clientId}/tax-periods/2026-Q1/calculate`, { token: bence.token, body: { asOf: '2026-04-05' } });
     await h.json('POST', `/acc/tax-calculations/${c2.body.id}/approve`, { token: bence.token, body: { letterText: 'Rendben.' } });
     const [n2] = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, k.userId), eq(notifications.kind, 'tax_approved')));
-    expect(n2!.title.replace(/[  ]/g, ' ')).toBe('Megvan az I. negyedévi összeg: 305 046 Ft');
+    expect(n2!.title.replace(/[  ]/g, ' ')).toBe('Mielőbb utald el az I. negyedévi összeget: 305 046 Ft'); // k7b: the overdue title says so
     expect(n2!.body).toContain('két külön utalással');
   });
 });
@@ -199,7 +199,9 @@ describe('iparűzési adó, éves határidők, nyugdíjas', () => {
     expect(hp.filing.reason).toContain('nincs külön bevallás');
     const calc = await h.json('POST', `/acc/clients/${c.clientId}/tax-periods/2026-HIPA-1/calculate`, { token: bence.token, body: {} });
     expect(calc.status).toBe(409);
-    expect(calc.body.error.message).toContain('kézzel');
+    // k7b: the message points to the real place (the advance's own card on the Adó tab)
+    expect(calc.body.error.message).toContain('Adó fülön');
+    expect(calc.body.error.message).toContain('Jóváhagyom és elküldöm');
     const noAcc = await h.json('POST', `/acc/tax-periods/${hp.id}/hipa-approve`, { token: bence.token, body: { amountHuf: 50_000 } });
     expect(noAcc.status).toBe(400);
     const ok = await h.json('POST', `/acc/tax-periods/${hp.id}/hipa-approve`, { token: bence.token, body: { amountHuf: 50_000, accountNumber: '11784009-15490012' } });
@@ -214,7 +216,7 @@ describe('iparűzési adó, éves határidők, nyugdíjas', () => {
     expect(titles.some((t) => t.startsWith('2027-05-20 Éves SZJA-bevallás (26SZJA) a 2026-os évről'))).toBe(true);
     expect(titles.some((t) => t.startsWith('2027-05-31 Iparűzési adó 2026'))).toBe(true);
     const [n] = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, c.userId), eq(notifications.kind, 'tax_approved')));
-    expect(n!.title.replace(/[  ]/g, ' ')).toBe('Megvan az iparűzési adóelőleg: 50 000 Ft');
+    expect(n!.title.replace(/[  ]/g, ' ')).toBe('Mielőbb utald el az iparűzési adóelőleget: 50 000 Ft'); // k7b: the overdue title says so
   });
 
   it('nyugdíjas: csak SZJA-előleg, nincs negyedéves bevallás, nem jelölhető beadottnak', async () => {

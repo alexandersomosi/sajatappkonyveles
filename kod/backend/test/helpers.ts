@@ -114,17 +114,30 @@ export function lastCode(h: Harness, to: string): string {
 /**
  * Registers a client through the API, verifies the e-mail, returns its token and ids. `active: true` puts the client
  * straight into lifecycle 'aktiv' (SPEC §26.5: dossier, uploads, tax and requests are locked before activation).
+ * k7b (S16): the sign-up answers 202 without a session; the code from the mail opens it (POST /auth/register/verify).
  */
 export async function newClient(h: Harness, email: string, o: { first?: string; last?: string; active?: boolean } = {}) {
   const ip = `10.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250)}`;
   const r = await h.json('POST', '/auth/register', { body: { email, password: PW, firstName: o.first ?? 'Teszt', lastName: o.last ?? 'Ügyfél', platform: 'android' }, headers: { 'x-forwarded-for': ip } });
-  if (r.status !== 201) throw new Error(`register failed ${r.status} ${JSON.stringify(r.body)}`);
-  const token = r.body.accessToken as string;
-  const v = await h.json('POST', '/auth/email/verify', { token, body: { code: lastCode(h, email) } });
-  if (v.status !== 200) throw new Error(`verify failed ${JSON.stringify(v.body)}`);
-  const [cl] = await h.deps.db.select().from(clients).where(eq(clients.userId, r.body.user.id)).limit(1);
+  if (r.status !== 202) throw new Error(`register failed ${r.status} ${JSON.stringify(r.body)}`);
+  const v = await h.json('POST', '/auth/register/verify', { body: { email, code: lastCode(h, email.toLowerCase()), platform: 'android' }, headers: { 'x-forwarded-for': ip } });
+  if (v.status !== 201) throw new Error(`verify failed ${v.status} ${JSON.stringify(v.body)}`);
+  const token = v.body.accessToken as string;
+  const [cl] = await h.deps.db.select().from(clients).where(eq(clients.userId, v.body.user.id)).limit(1);
   if (o.active) await h.deps.db.update(clients).set({ lifecycle: 'aktiv' }).where(eq(clients.id, cl!.id));
-  return { token, userId: r.body.user.id as string, clientId: cl!.id, refreshToken: r.body.refreshToken as string };
+  return { token, userId: v.body.user.id as string, clientId: cl!.id, refreshToken: v.body.refreshToken as string };
+}
+
+/**
+ * k7b: a signed-in client whose e-mail is NOT confirmed yet – registered, then signed in with the password (the way an
+ * older, unconfirmed sign-up comes back). Returns the login body (accessToken, user, refreshToken).
+ */
+export async function registerUnverified(h: Harness, email: string, headers: Record<string, string>, o: { first?: string; last?: string } = {}) {
+  const r = await h.json('POST', '/auth/register', { body: { email, password: PW, firstName: o.first ?? 'Teszt', lastName: o.last ?? 'Ügyfél', platform: 'android' }, headers });
+  if (r.status !== 202) throw new Error(`register failed ${r.status} ${JSON.stringify(r.body)}`);
+  const l = await h.json('POST', '/auth/login', { body: { email, password: PW, clientKind: 'native' }, headers });
+  if (l.status !== 200) throw new Error(`login failed ${l.status} ${JSON.stringify(l.body)}`);
+  return l;
 }
 
 export async function staff(h: Harness, role: 'accountant' | 'admin' | 'csapat', email: string, o: { firstName?: string; appointmentsEnabled?: boolean } = {}) {

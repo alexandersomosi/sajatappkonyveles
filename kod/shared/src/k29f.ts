@@ -268,7 +268,8 @@ export const CERT_NOTIFICATION_TEXTS = {
   certificate_status: {
     navnal: { title: 'Beadtuk az igazolás-kérésedet', body: '{tipus}: {firstName} beadta a NAV-nak. A NAV legfeljebb 6 nap alatt adja ki.' },
     kesz: { title: 'Kész az igazolásod', body: '{tipus}: letöltheted az appban.' },
-    elutasitva: { title: 'Nem adható ki az igazolás', body: '{tipus}: {ok}' },
+    // k7b: the next step (the reason {ok} arrives without its closing full stop)
+    elutasitva: { title: 'Nem adható ki az igazolás', body: '{tipus}: {ok}. Ha kérdésed van, írj a könyvelődnek az Üzenetekben.' },
   },
 } as const;
 
@@ -465,7 +466,7 @@ export const INCOME_STATEMENT_TEXTS = {
 } as const;
 export const INCOME_NOTIFICATION_TEXTS = {
   income_statement_review: { title: 'Kimutatás ellenőrzése: {clientName}', body: '{from}–{to}. Az ügyfél kéri, hogy nézd át.' },
-  income_statement_checked: { title: '{firstName} ellenőrizte a bevételi kimutatásodat', body: '{from}–{to}: a PDF-en már rajta van az ellenőrzés.' },
+  income_statement_checked: { title: '{firstName} ellenőrizte a bevételi kimutatásodat', body: '{from}–{to}: a letölthető PDF-en már látszik, hogy ellenőrizte.' },
 } as const;
 export interface IncomeStatementMonth {
   month: _MonthKey;
@@ -846,10 +847,11 @@ export const TERMINATION_TEXTS = {
   needSubReason: 'Válaszd ki az ÁSZF 8.5. szerinti okot.',
   alreadyTerminated: 'Ennek az ügyfélnek a szerződését már felmondtuk.',
   notifTitle: 'Felmondtuk a szerződésedet',
-  notifBody: '{datum}-ig minden marad. A részleteket a levélben olvasod.',
-  notifBodyNow: 'A szerződésed ma megszűnt. A részleteket a levélben olvasod.',
+  // k7b: {datum} is a long date ending in a full stop – never a hyphenated suffix after it
+  notifBody: 'A szerződésed {datum} napjával megszűnik, addig minden a megszokott módon megy tovább. A felmondó levelet az appban, a Dossziéban találod.',
+  notifBodyNow: 'A szerződésed ma megszűnt. A felmondó levelet az appban, a Dossziéban találod.',
   notifTitleClient: 'Megszűnik a szerződésed',
-  notifBodyClient: 'Ahogy kérted: {datum}-ig minden marad. A részleteket a levélben olvasod.',
+  notifBodyClient: 'Ahogy kérted, a szerződésed {datum} napjával megszűnik. A részleteket az appban, a Dossziéban lévő levélben olvasod.',
   reactivatedTitle: 'Újra nálunk vagy',
   reactivatedBody: 'Újraindítottuk a fiókodat. Fogadd el a szerződést, és add meg a kártyádat, és folytatjuk.',
   accTaskMeghatalmazas: 'Meghatalmazás megszüntetése a NAV-nál (8 napon belül)',
@@ -962,14 +964,15 @@ export const CONSOLE_TEXTS = {
 } as const;
 export const CONSOLE_NOTIFICATION_TEXTS = {
   contract_terminated: {
-    rendes: { title: 'Felmondtuk a szerződésedet', body: '{datum}-ig minden marad. A részleteket a levélben olvasod.' },
-    azonnali: { title: 'Felmondtuk a szerződésedet', body: 'A szerződésed ma megszűnt. A részleteket a levélben olvasod.' },
-    ugyfel_kerte: { title: 'Megszűnik a szerződésed', body: 'Ahogy kérted: {datum}-ig minden marad. A részleteket a levélben olvasod.' },
+    // k7b (SZOVEG_JAVITAS_LEVELEK 1–4): no "{datum}-ig" after a long date, and the letter is named where it is
+    rendes: { title: 'Felmondtuk a szerződésedet', body: 'A szerződésed {datum} napjával megszűnik, addig minden a megszokott módon megy tovább. A felmondó levelet az appban, a Dossziéban találod.' },
+    azonnali: { title: 'Felmondtuk a szerződésedet', body: 'A szerződésed ma megszűnt. A felmondó levelet az appban, a Dossziéban találod.' },
+    ugyfel_kerte: { title: 'Megszűnik a szerződésed', body: 'Ahogy kérted, a szerződésed {datum} napjával megszűnik. A részleteket az appban, a Dossziéban lévő levélben olvasod.' },
   },
   contract_reactivated: { title: 'Újra nálunk vagy', body: 'Újraindítottuk a fiókodat. Fogadd el a szerződést, add meg a kártyádat, és folytatjuk.' },
   price_changed: {
     title: 'Változik a havidíjad',
-    body: '{datum}-tól havi {osszeg} Ft. Ha nem szeretnéd, előtte lemondhatod: Fiók → Előfizetés.',
+    body: '{datum} napjától havi {osszeg} Ft. Ha nem szeretnéd, előtte lemondhatod: Fiók → Előfizetés.',
     lower: { title: 'Kedvezményt kaptál', body: '{szoveg}' },
   },
   profile_changed_by_admin: { title: 'Módosítottuk az adataidat', body: 'Ezeket írtuk át: {mezok}. Ha nem stimmel valami, írj nekünk.' },

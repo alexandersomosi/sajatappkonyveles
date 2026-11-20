@@ -16,6 +16,7 @@ import { T } from '@/ui/T';
 import { hibaUzenet } from '@/lib/hiba';
 import { nemTor, szam } from '@/lib/format';
 import { JOURNEY_TEXTS } from '@/_shared/bekotes';
+import { regEmailBeallit } from '@/lib/atadas';
 
 function utm(): { source?: string; medium?: string; campaign?: string; content?: string } | undefined {
   if (Platform.OS !== 'web' || typeof location === 'undefined') return undefined;
@@ -60,8 +61,10 @@ export default function Regisztracio() {
     setTolt(true);
     setHiba(null);
     try {
-      await regisztral({ email: email.trim(), password: jelszo, firstName: ker.trim(), lastName: vez.trim(), referralCode: kod || undefined, utm: utmAdat });
-      router.replace('/email-megerosites');
+      // k7b (S16): the answer is the same whether or not the address has an account – both go to "nézd meg a postafiókodat"
+      const r = await regisztral({ email: email.trim(), password: jelszo, firstName: ker.trim(), lastName: vez.trim(), referralCode: kod || undefined, utm: utmAdat });
+      regEmailBeallit(r.email || email.trim());
+      router.replace('/postafiok');
     } catch (e) {
       if (e instanceof ApiHiba && e.fields) setHibak({ email: e.fields.email ?? null, jelszo: e.fields.password ?? null });
       setHiba(hibaUzenet(e, 'Nem sikerült a regisztráció. Próbáld újra.', { jelolt: ['email', 'password'] }));

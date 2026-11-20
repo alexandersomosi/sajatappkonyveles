@@ -298,15 +298,21 @@ ut('POST', '/auth/login/totp', (_m, _q, t) => {
   tarolt('kj_minta', S.fk);
   return ok(authEredmeny());
 });
+// k7b (S16): the sign-up answers 202 "check your mailbox" (no session); the code opens it (/auth/register/verify)
 ut('POST', '/auth/register', (_m, _q, t) => {
   if (String(t.password ?? '').length < 10) return hiba(400, 'validation_failed', 'Nézd át a pirossal jelölt mezőt.', {}, { password: 'Legalább 10 karakter legyen.' });
+  return valasz(202, { status: 'check_email', email: String(t.email ?? '').trim().toLowerCase() });
+});
+ut('POST', '/auth/register/verify', (_m, _q, t) => {
+  if (!/^\d{6}$/.test(String(t.code))) return hiba(400, 'validation_failed', 'Nézd át a pirossal jelölt mezőt.', {}, { code: 'Ez a kód nem jó, vagy már lejárt. Nézd meg újra a levelet, vagy kérj új kódot.' });
   beallit('uj');
   S.belepve = true;
   tarolt('kj_minta', 'uj');
   const r = authEredmeny(true);
-  r.user.emailVerified = false;
+  r.user.emailVerified = true;
   return valasz(201, r);
 });
+ut('POST', '/auth/register/resend', (_m, _q, t) => valasz(202, { status: 'check_email', email: String(t.email ?? '') }));
 ut('POST', '/auth/email/verify', (_m, _q, t) => (/^\d{6}$/.test(String(t.code)) ? ok({ emailVerified: true }) : hiba(400, 'invalid_code', 'Ez a kód nem jó vagy lejárt.')));
 ut('POST', '/auth/email/resend', () => valasz(204));
 ut('POST', '/auth/refresh', () => (S.belepve ? ok(authEredmeny()) : hiba(401, 'unauthenticated', 'Lépj be újra.')));

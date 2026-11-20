@@ -85,7 +85,7 @@ describe('the new-invoice message = the invoice page', () => {
     const msg = await invoiceNotificationContent(h.deps, items);
     const page = (await reservesForInvoices(h.deps, h.deps.db, c.clientId, [inv!.id])).get(inv!.id)!;
     expect(items[0]!.reserveHuf).toBe(page.reserveHuf);
-    expect(msg.body).toBe(`Bodza Kiadó Kft. Tegyél félre kb. ${fmt(page.reserveHuf)} Ft-ot.`);
+    expect(msg.body).toBe(`Vevő: Bodza Kiadó Kft. Tegyél félre kb. ${fmt(page.reserveHuf)} Ft-ot.`); // k7b: „Vevő:” előtag
     expect(page.line).toContain(`kb. ${fmt(page.reserveHuf)} Ft-ot`);
   });
 });

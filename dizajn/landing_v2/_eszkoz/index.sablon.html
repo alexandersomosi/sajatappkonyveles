@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adózz.hu – Könyvelés átalányadózó és katás egyéni vállalkozóknak</title>
+<meta name="description" content="Saját, nyilvántartásba vett könyvelő átalányadózó és katás, alanyi ÁFA-mentes egyéni vállalkozóknak. Havi 19 999 Ft bruttó, nincs hűségidő. Az appban látod, mennyit tegyél félre adóra.">
+<meta name="theme-color" content="#1428DB">
+<link rel="icon" type="image/png" href="kepek/favicon.png">
+<!-- Minden saját forrásból jön (betű, logó, képek): élesben a CSP default-src 'self' mellett is működik, és nem küld adatot másnak. -->
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body id="top">
+
+<a class="ugras" href="#tartalom">Ugrás a tartalomra</a>
+
+<!-- ============ FEJLÉC ============ -->
+<header class="fejlec">
+  <div class="kontener fejlec-sor">
+    <!--logo-->
+    <nav class="menu" aria-label="Fő menü">
+      <a href="#hogyan">Hogyan működik</a>
+      <a href="#arak">Árak</a>
+      <a href="#konyvelo">Könyvelő</a>
+      <a href="#gyik">GYIK</a>
+    </nav>
+    <div class="fejlec-jobb">
+      <a class="belepes" href="https://app.adozz.hu/belepes">Belépés</a>
+      <a class="gomb gomb-fo gomb-kicsi" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
+      <details class="mobilmenu">
+        <summary aria-label="Menü"><span></span><span></span><span></span></summary>
+        <nav class="mobilmenu-lap" aria-label="Mobil menü">
+          <a href="#hogyan">Hogyan működik</a>
+          <a href="#arak">Árak</a>
+          <a href="#konyvelo">Könyvelő</a>
+          <a href="#gyik">GYIK</a>
+          <a href="https://app.adozz.hu/belepes">Belépés</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="tartalom">
+
+<!-- ============ HŐS ============ -->
+<section class="hos">
+  <div class="kontener hos-racs">
+    <div class="hos-szoveg">
+      <p class="felcim">Online könyvelés egyéni vállalkozóknak</p>
+      <h1>Saját könyvelő átalány&shy;adózóknak és katásoknak.</h1>
+      <p class="bevezeto">Valódi, nyilvántartásba vett könyvelő intézi a bevallásaidat és a NAV-os ügyeidet. Az appban pedig mindig látod, mennyit tegyél félre adóra, és mikor mit kell befizetned.</p>
+      <div class="hos-ar">
+        <span class="hos-ar-osszeg">19&nbsp;999&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></span>
+        <span class="hos-ar-meg">bruttó, minden külön díj <a href="#arak">kiírva</a></span>
+      </div>
+      <div class="gombsor">
+        <a class="gomb gomb-fo" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
+        <a class="gomb gomb-masod" href="#visszahivas">Visszahívást kérek</a>
+      </div>
+      <ul class="mikro">
+        <li><!--pipa-->A regisztrációhoz nem kell kártya</li>
+        <li><!--pipa-->Kártyával vagy átutalással fizethetsz</li>
+        <li><!--pipa-->Nincs hűségidő</li>
+      </ul>
+    </div>
+    <div class="hos-kep">
+      <figure class="termek">
+        <div class="bongeszo">
+          <div class="bongeszo-sav"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
+          <img src="kepek/app_asztali.webp" width="1440" height="914" alt="Az Adózz.hu gépes nézete: félretenni való összeg, idei keretek, határidők, visszahívás">
+        </div>
+        <div class="telefon telefon-hos">
+          <img src="kepek/app_fooldal.webp" width="780" height="1688" alt="Az Adózz.hu app főoldala telefonon: mennyit tegyél félre adóra, határidők">
+        </div>
+        <figcaption>Az app képei bemutató adatokkal készültek.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIZALMI SÁV ============ -->
+<section class="bizalom" aria-label="Miért bízhatsz bennünk">
+  <div class="kontener bizalom-racs">
+    <div class="bizalom-elem">
+      <!--ikon:igazolvany-->
+      <div><h2>Valódi könyvelő</h2><p>Nyilvántartásba vett könyvelő dolgozik neked, név szerint.</p></div>
+    </div>
+    <div class="bizalom-elem">
+      <!--ikon:pajzs-->
+      <div><h2>NAV-meghatalmazással</h2><p>Az Ügyfélkapu+- vagy DÁP-belépésedet és a jelszavadat soha nem kérjük el.</p></div>
+    </div>
+    <div class="bizalom-elem">
+      <!--ikon:lakat-->
+      <div><h2>Európai szerveren</h2><p>Az irataidat titkosítva tároljuk.</p></div>
+    </div>
+    <div class="bizalom-elem">
+      <!--ikon:epulet-->
+      <div><h2>Magyar cég</h2><p>Somosi Kft. · Adószám: 32769678-2-43 · <a href="#impresszum">Cégadatok</a></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KINEK SZÓL ============ -->
+<section class="szakasz" id="kinek">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Kinek szól</p>
+      <h2>Egy célcsoport, egy csomag.</h2>
+      <p class="bevezeto">Csak alanyi ÁFA-mentes egyéni vállalkozókkal dolgozunk, akik átalányadóval vagy katával adóznak. Ezért tudunk egyetlen, előre kiírt áron dolgozni.</p>
+    </div>
+    <div class="kinek-racs">
+      <div class="kartya kinek-igen">
+        <h3>Neked szól, ha</h3>
+        <ul class="lista lista-pipa">
+          <li><!--pipa-->átalányadózó vagy katás egyéni vállalkozó vagy,</li>
+          <li><!--pipa-->alanyi ÁFA-mentes vagy,</li>
+          <li><!--pipa-->alkalmazottad vagy alkalmi munkásod is lehet: a bérszámfejtést felárért vállaljuk,</li>
+          <li><!--pipa-->vagy most indítod a vállalkozásodat. Ebben is segítünk.</li>
+        </ul>
+      </div>
+      <div class="kartya kinek-nem">
+        <h3>Most nem neked szól, ha</h3>
+        <ul class="lista lista-nem">
+          <li><!--nem-->tételes költségelszámolással (vállalkozói SZJA-val) adózol,</li>
+          <li><!--nem-->ÁFA-körbe tartozol,</li>
+          <li><!--nem-->Kft.-d vagy Bt.-d van,</li>
+        </ul>
+        <p class="megjegyzes">Ha év közben változik a helyzeted, szólunk, és megbeszéljük, hogyan tovább.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOGYAN MŰKÖDIK ============ -->
+<section class="szakasz szakasz-szurke" id="hogyan">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Hogyan működik</p>
+      <h2>Négy lépés, és a könyvelésed rendben van.</h2>
+    </div>
+    <ol class="lepesek">
+      <li>
+        <span class="lepes-szam">1</span>
+        <h3>Regisztrálsz</h3>
+        <p>Megadod az e-mail-címedet, és válaszolsz pár kérdésre a vállalkozásodról. Kártya ehhez nem kell.</p>
+      </li>
+      <li>
+        <span class="lepes-szam">2</span>
+        <h3>Szerződés, meghatalmazás</h3>
+        <p>Elfogadod a szerződést, és a NAV-nál meghatalmazást adsz a könyvelődnek. Ha kéred, ő küldi be, te csak jóváhagyod.</p>
+      </li>
+      <li>
+        <span class="lepes-szam">3</span>
+        <h3>Visszahívás, ha kéred</h3>
+        <p>A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Utána fizetsz, kártyával vagy átutalással.</p>
+      </li>
+      <li>
+        <span class="lepes-szam">4</span>
+        <h3>Indul a könyvelés</h3>
+        <p>A könyvelőd bekapcsolja a könyvelést. A számláid maguktól bejönnek, te pedig az appban látod, mennyit tegyél félre.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ MIT KAPSZ ============ -->
+<section class="szakasz" id="mit-kapsz">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Mit kapsz</p>
+      <h2>Mindig tudod, hol tartasz az adóval.</h2>
+      <p class="bevezeto">Az app megmutatja, mennyit tegyél félre és mikor mit fizess. A számolást és a bevallást a könyvelőd végzi.</p>
+    </div>
+
+    <div class="funkcio">
+      <div class="funkcio-szoveg">
+        <p class="funkcio-cimke">Félretenni</p>
+        <h3>Minden számla után látod, mennyit tegyél félre.</h3>
+        <p>Az app a kiállított számláidból kiszámolja, mennyi adóra és járulékra számíts, hónapokra bontva. A befizetendő összeget negyedévente a könyvelőd hagyja jóvá.</p>
+        <p class="funkcio-meg"><!--pipa-->Pénzt nem vonunk le, és nem utalunk helyetted. Csak megmutatjuk.</p>
+      </div>
+      <div class="funkcio-kep">
+        <div class="telefon"><img src="kepek/app_felretesz.webp" width="780" height="1688" loading="lazy" alt="Ennyit tegyél félre: havonta, számlánként kiszámolt összegek az appban"></div>
+      </div>
+    </div>
+
+    <div class="funkcio funkcio-fordit">
+      <div class="funkcio-szoveg">
+        <p class="funkcio-cimke">Határidők</p>
+        <h3>Tudod, mit, mikorra és melyik számlára utalj.</h3>
+        <p>Az SZJA-előleget, a TB-járulékot és a szochót, katásként a havi katát tételesen látod: összeg, NAV-számlaszám, közlemény. Egy koppintással átmásolod a bankodba, és határidő előtt emlékeztetünk.</p>
+        <p class="funkcio-meg"><!--pipa-->Az adót te utalod el, így a pénzed végig nálad marad.</p>
+      </div>
+      <div class="funkcio-kep">
+        <div class="telefon"><img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" alt="Negyedéves SZJA-előleg és járulékok: összeg, NAV-számlaszám és közlemény másolható formában"></div>
+      </div>
+    </div>
+
+    <div class="funkcio">
+      <div class="funkcio-szoveg">
+        <p class="funkcio-cimke">Könyvelő</p>
+        <h3>A könyvelőd egy üzenetnyire van.</h3>
+        <p>Kérdezz tőle az appban, kérj jövedelemigazolást vagy nullás igazolást egy gombnyomással, és ha elakadsz, kérj visszahívást.</p>
+        <p class="funkcio-meg"><!--pipa-->A NAV leveleit is ő értelmezi és intézi, a meghatalmazásod alapján.</p>
+      </div>
+      <div class="funkcio-kep">
+        <div class="telefon"><img src="kepek/app_uzenetek.webp" width="780" height="1688" loading="lazy" alt="Üzenetek a könyvelővel és igazoláskérés egy gombnyomással"></div>
+      </div>
+    </div>
+
+    <div class="apro-racs">
+      <div class="apro">
+        <!--ikon:irat-->
+        <h3>Számlák maguktól</h3>
+        <p>A kiállított számláid a NAV Online Számla rendszeréből jönnek. Nem kell begépelned őket.</p>
+      </div>
+      <div class="apro">
+        <!--ikon:kamera-->
+        <h3>Fotózás és feltöltés</h3>
+        <p>Amit a könyvelőd kér, lefotózod vagy feltöltöd PDF-ben.</p>
+      </div>
+      <div class="apro">
+        <!--ikon:oszlopok-->
+        <h3>Keretek</h3>
+        <p>Látod, mennyit számlázhatsz még ÁFA nélkül. Katásként a kata-keretedet is, és szólunk, ha cégnek számlázol.</p>
+      </div>
+      <div class="apro">
+        <!--ikon:mobil-->
+        <h3>Telefonon és gépen</h3>
+        <p>Ugyanazt látod mindkettőn, a belépésed ugyanaz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KÖNYVELŐ ============ -->
+<section class="szakasz szakasz-szurke" id="konyvelo">
+  <div class="kontener konyvelo-racs">
+    <!-- HELYŐRZŐ: valódi fotó és adatok csak a könyvelő írásos hozzájárulásával. Stock- és AI-kép tilos. -->
+    <div class="kartya konyvelo-kartya">
+      <div class="helyorzo helyorzo-foto"><span>[KÖNYVELŐ FOTÓ]</span><small>valódi fotó, a könyvelő engedélyével</small></div>
+      <div class="konyvelo-adatok">
+        <p class="konyvelo-nev"><span class="helyorzo-szoveg">[NÉV]</span></p>
+        <p><span class="helyorzo-szoveg">[KÉPESÍTÉS]</span></p>
+        <p>Nyilvántartási szám: <span class="helyorzo-szoveg">[nyilvántartási szám]</span></p>
+        <blockquote><span class="helyorzo-szoveg">„[Egy mondat a könyvelőtől, a saját szavaival.]”</span></blockquote>
+      </div>
+    </div>
+    <div class="konyvelo-szoveg">
+      <p class="felcim">A könyvelőd</p>
+      <h2>Valódi könyvelő dolgozik neked.</h2>
+      <p class="bevezeto">A könyvelésedet nyilvántartásba vett könyvelő végzi. A nevét és a nyilvántartási számát a szerződésedben és az appban is látod. Érte úgy felelünk, mintha magunk dolgoznánk.</p>
+      <h3 class="kiscim">Amit a könyvelőd csinál</h3>
+      <ul class="lista lista-pipa">
+        <li><!--pipa-->Kiszámolja és beadja a negyedéves SZJA-előleget, TB-járulékot és szochót. Katásként figyeli a havi katát és a keretedet.</li>
+        <li><!--pipa-->Vezeti a bevételi nyilvántartásodat.</li>
+        <li><!--pipa-->A meghatalmazásod alapján tartja a kapcsolatot a NAV-val, és elmagyarázza a leveleit.</li>
+        <li><!--pipa-->Igazolásokat kér neked, és válaszol a kérdéseidre.</li>
+      </ul>
+      <div class="soha">
+        <h3>Amit soha nem kérünk el</h3>
+        <p>A jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet, a kódjaidat, és telefonon a kártyaadataidat. Ha valaki a nevünkben ezt kéri, tedd le, és írj nekünk.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIZTONSÁG ============ -->
+<section class="szakasz" id="biztonsag">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Biztonság</p>
+      <h2>Érthető meghatalmazás, védett adatok.</h2>
+    </div>
+    <div class="ket-kartya">
+      <div class="kartya kartya-keret">
+        <h3>A NAV-meghatalmazás, röviden</h3>
+        <ul class="lista lista-pont">
+          <li>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet a NAV-nál.</li>
+          <li>Te adod meg az ONYA-ban. Ha kéred, a könyvelőd küldi be, és te hagyod jóvá.</li>
+          <li>Bármikor visszavonhatod, ugyanott.</li>
+          <li>Az app soha nem küld be semmit a NAV-nak. A bevallást a könyvelőd adja be, miután átnézte.</li>
+        </ul>
+      </div>
+      <div class="kartya kartya-keret">
+        <h3>Az adataid</h3>
+        <ul class="lista lista-pont">
+          <li>Európai szerveren tároljuk őket, minden fájlt külön titkosítva.</li>
+          <li>A könyvelési irataidat csak a könyvelőd látja.</li>
+          <li>Nem adjuk el az adataidat, nem mutatunk hirdetést, és nincs követő süti.</li>
+          <li>Bármikor letöltheted őket, és kérheted a törlésüket. Amit a törvény miatt meg kell őriznünk, azt a határidőig elzárva tartjuk.</li>
+        </ul>
+        <a class="nyil-link" href="https://app.adozz.hu/jogi/adatkezeles">Adatkezelési tájékoztató</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÁRAK ============ -->
+<section class="szakasz szakasz-szurke" id="arak">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Árak</p>
+      <h2>Egy csomag, egy ár.<br>A külön díjakat is előre látod.</h2>
+    </div>
+    <div class="arkartya">
+      <div class="ar-fo">
+        <p class="ar-cimke">Havidíj</p>
+        <p class="ar-osszeg">19&nbsp;999&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></p>
+        <p class="ar-afa">bruttó, 27% ÁFA-val</p>
+        <p class="ar-ev">Egy teljes év az éves zárással együtt: <b>254&nbsp;987&nbsp;Ft</b></p>
+        <h3 class="kiscim">Benne van</h3>
+        <ul class="lista lista-pipa">
+          <li><!--pipa-->Saját, név szerint ismert könyvelő</li>
+          <li><!--pipa-->Bevételi nyilvántartás a NAV Online Számlából</li>
+          <li><!--pipa-->Negyedéves SZJA-előleg, TB-járulék és szocho kiszámítása és bevallása</li>
+          <li><!--pipa-->Katásként: a havi kata és a kata-keret figyelése</li>
+          <li><!--pipa-->Mennyit tegyél félre, számlánként</li>
+          <li><!--pipa-->Határidő-figyelés és emlékeztetők</li>
+          <li><!--pipa-->NAV-ügyek meghatalmazással, NAV-levelek értelmezése</li>
+          <li><!--pipa-->Igazolások kérése</li>
+          <li><!--pipa-->Üzenetek a könyvelődnek, visszahívás, ha kéred</li>
+          <li><!--pipa-->Ha most indulsz: segítség a vállalkozásod elindításához</li>
+        </ul>
+        <a class="gomb gomb-fo gomb-szeles" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
+        <p class="ar-mikro">A regisztrációhoz nem kell kártya. Ingyenes időszak nincs: ha kéred, előbb visszahívunk, és csak utána fizetsz.</p>
+      </div>
+      <div class="ar-kulon">
+        <h3>Külön díjak</h3>
+        <p class="ar-kulon-bev">Az éves zárás évente egyszer jár, ha a bevallásodat mi adjuk be. A többit csak akkor fizeted, ha kéred. Mindet előre látod az appban, és a jóváhagyásod nélkül nem kérjük.</p>
+        <dl class="dijlista">
+          <div class="dij">
+            <dt>Éves zárás<span>Az éves adóbevallások: SZJA vagy kata, és iparűzési adó.</span></dt>
+            <dd>14&nbsp;999&nbsp;Ft<small>/ év</small></dd>
+          </div>
+          <div class="dij">
+            <dt>Változás bejelentése helyetted<span>Költözés, új tevékenység, telephely. Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dd>4&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
+          </div>
+          <div class="dij">
+            <dt>Jogállás-változás bejelentése helyetted<span>Például főállásból mellékállásba.</span></dt>
+            <dd>7&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
+          </div>
+          <div class="dij">
+            <dt>Amíg szünetel a vállalkozásod<span>A havidíj helyett ezt fizeted.</span></dt>
+            <dd>2&nbsp;999&nbsp;Ft<small>/ hó</small></dd>
+          </div>
+          <div class="dij">
+            <dt>A vállalkozásod megszüntetése helyetted<span>Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dd>7&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
+          </div>
+          <div class="dij">
+            <dt>Bérszámfejtés<span>Ha alkalmazottat vagy alkalmi munkást foglalkoztatsz.</span></dt>
+            <dd class="dij-egyedi">egyedi ajánlat</dd>
+          </div>
+        </dl>
+        <p class="ar-kulon-meg">Szintén egyedi ajánlattal, előre és írásban: ÁFA-bevallás, képviselet NAV-ellenőrzésnél, korábbi évek rendbetétele.</p>
+      </div>
+    </div>
+    <ul class="ar-tenyek">
+      <li><!--pipa--><span><b>Kártyával vagy átutalással</b> fizethetsz, havonta előre.</span></li>
+      <li><!--pipa--><span><b>Nincs hűségidő.</b> Bármikor lemondhatod, a kifizetett hónap végéig minden marad.</span></li>
+      <li><!--pipa--><span><b>Minden ár bruttó,</b> 27% ÁFA-val. A részletek az <a href="https://app.adozz.hu/jogi/aszf">ÁSZF-ben</a>.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ ÖSSZEVETÉS ============ -->
+<section class="szakasz" id="osszevetes">
+  <div class="kontener">
+    <div class="szakasz-fej">
+      <p class="felcim">Összevetés</p>
+      <h2>Miben más, mint egy hagyományos könyvelőiroda?</h2>
+      <p class="bevezeto">Mindkettő jó választás lehet. Ez a különbség.</p>
+    </div>
+    <div class="tabla-keret">
+      <table class="tabla">
+        <thead>
+          <tr><th scope="col"><span class="rejtett">Szempont</span></th><th scope="col" class="oszlop-adozz">Adózz</th><th scope="col">Hagyományos iroda</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Ár</th><td class="oszlop-adozz" data-cim="Adózz">19&nbsp;999&nbsp;Ft/hó bruttó, minden díj kiírva ezen az oldalon</td><td data-cim="Hagyományos iroda">Irodánként eltér, sokszor egyedi ajánlat alapján</td></tr>
+          <tr><th scope="row">Könyvelő</th><td class="oszlop-adozz" data-cim="Adózz">Nyilvántartásba vett könyvelő, név szerint</td><td data-cim="Hagyományos iroda">Nyilvántartásba vett könyvelő</td></tr>
+          <tr><th scope="row">Mennyit tegyél félre</th><td class="oszlop-adozz" data-cim="Adózz">Az appban, számlánként, folyamatosan látod</td><td data-cim="Hagyományos iroda">Általában akkor tudod meg, amikor a könyvelő kiszámolja</td></tr>
+          <tr><th scope="row">Iratok</th><td class="oszlop-adozz" data-cim="Adózz">A kiállított számláid a NAV Online Számlából jönnek, a többit lefotózod</td><td data-cim="Hagyományos iroda">Irodánként eltér: papíron, e-mailben vagy online</td></tr>
+          <tr><th scope="row">Kapcsolat</th><td class="oszlop-adozz" data-cim="Adózz">Üzenet az appban, visszahívás munkanapokon 9 és 17 óra között</td><td data-cim="Hagyományos iroda">E-mail, telefon, sokszor személyesen is</td></tr>
+          <tr><th scope="row">Személyes találkozó</th><td class="oszlop-adozz" data-cim="Adózz">Nincs, minden online megy</td><td data-cim="Hagyományos iroda">Általában lehetséges</td></tr>
+          <tr><th scope="row">Hűségidő</th><td class="oszlop-adozz" data-cim="Adózz">Nincs, bármikor lemondhatod</td><td data-cim="Hagyományos iroda">Szerződéstől függ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="labjegyzet">A hagyományos irodák gyakorlata eltérő. A jobb oszlop általános tapasztalatot mutat, nem egy konkrét irodát.</p>
+  </div>
+</section>
+
+<!-- ============ VÉLEMÉNYEK (HELYŐRZŐ) ============ -->
+<!-- Csak valódi ügyfél véleménye kerülhet ide, névvel és írásos engedéllyel. Élesítés előtt ezt a szakaszt el kell rejteni, amíg nincs valódi vélemény. -->
+<section class="szakasz szakasz-szurke szakasz-kicsi" id="velemenyek">
+  <div class="kontener">
+    <div class="helyorzo helyorzo-sav">
+      <span>[Itt lesznek valódi ügyfélvélemények]</span>
+      <small>Csak valódi ügyféltől, névvel és engedéllyel. Élesítés előtt ezt a részt el kell rejteni.</small>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GYIK ============ -->
+<section class="szakasz" id="gyik">
+  <div class="kontener gyik-racs">
+    <div class="gyik-fej">
+      <p class="felcim">GYIK</p>
+      <h2>Gyakori kérdések</h2>
+      <p class="bevezeto">Nem találod a választ? Írj nekünk: <a href="mailto:ugyfelszolgalat@adozz.hu">ugyfelszolgalat@adozz.hu</a></p>
+    </div>
+    <div class="gyik-lista">
+      <details open>
+        <summary>Kinek szól az Adózz?</summary>
+        <p>Magyarországon nyilvántartott, alanyi ÁFA-mentes egyéni vállalkozóknak, akik átalányadóval vagy katával adóznak. Ha alkalmazottad vagy alkalmi munkásod is van, a bérszámfejtést felárért, egyedi ajánlat alapján vállaljuk. Ha év közben megváltozik az adózásod, vagy elveszíted az ÁFA-mentességet, szólunk, és megbeszéljük, hogyan tovább.</p>
+      </details>
+      <details>
+        <summary>Katás vagyok. Nekem is jó?</summary>
+        <p>Igen, ugyanennyiért. Az app figyeli a kata-keretedet, és szól, ha cégnek számlázol, mert ha egy cég fizet neked, megszűnhet a katád. Ha át kell állnod átalányadóra, ebben is segítünk.</p>
+      </details>
+      <details>
+        <summary>Mi van benne a havidíjban, és mi kerül külön?</summary>
+        <p>A havidíjban benne van a könyvelőd munkája, a negyedéves bevallások, a határidők figyelése, az igazolások kérése és az app minden funkciója. Külön díjas az éves zárás (évente egyszer), a helyetted intézett változás vagy megszüntetés, és a szünetelés idejére járó kisebb díj. A pontos lista az <a href="#arak">Árak</a> résznél van.</p>
+      </details>
+      <details>
+        <summary>Az adót is ti fizetitek be?</summary>
+        <p>Nem. Az adót te utalod el a NAV-nak. Mi megmondjuk, mennyit, mikorra és melyik számlaszámra, az utalást te indítod. Pénzt nem vonunk le, és nem utalunk helyetted.</p>
+      </details>
+      <details>
+        <summary>Mi az a NAV-meghatalmazás, és visszavonható?</summary>
+        <p>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet. Te adod meg az ONYA-ban, vagy ha kéred, a könyvelőd küldi be, és te hagyod jóvá. Bármikor visszavonhatod, ugyanott. Az Ügyfélkapu+- vagy DÁP-belépésedet és a jelszavadat soha nem kérjük el.</p>
+      </details>
+      <details>
+        <summary>Hol vannak az adataim, és ki látja őket?</summary>
+        <p>Európai szerveren, titkosítva. A könyvelési irataidat csak a könyvelőd látja. Ügyfélszolgálatunk csak azt látja, ami a bekötéshez és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="https://app.adozz.hu/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
+      </details>
+      <details>
+        <summary>Miért nincs próbaidő? Mikor kell fizetni?</summary>
+        <p>A havidíjért valódi könyvelő dolgozik neked, ezért ingyenes időszak nincs. A regisztrációhoz nem kell kártya. Ha kéred, előbb visszahívunk és mindent átbeszélünk, és csak utána fizetsz. Fizethetsz kártyával vagy átutalással.</p>
+      </details>
+      <details>
+        <summary>Hogyan mondhatom fel?</summary>
+        <p>Bármikor, az appban (Fiók &gt; Előfizetés &gt; Lemondás) vagy e-mailben. A lemondás a kifizetett hónap végén lép életbe, addig minden ugyanúgy működik, utána több díjat nem kérünk. Hűségidő nincs.</p>
+      </details>
+      <details>
+        <summary>Mi kell az induláshoz?</summary>
+        <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a pénzmosás elleni törvény miatt azonosítanunk kell az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.</p>
+      </details>
+      <details>
+        <summary>Még nincs vállalkozásom. Segítetek elindítani?</summary>
+        <p>Igen. Személyre szabott útmutatót kapsz képekkel és videóval, a bejelentést te küldöd be, és mi átnézzük a NAV-os értesítést. Ha elakadsz, 2026 végéig kérheted, hogy a könyvelőd intézze helyetted, meghatalmazottként (2027-től a nyilvántartást a gazdasági kamara vezeti). Ez is benne van a havidíjban.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ZÁRÓ CTA + VISSZAHÍVÁS ============ -->
+<section class="zaro" id="visszahivas">
+  <div class="kontener zaro-racs">
+    <div class="zaro-szoveg">
+      <h2>Legyen saját könyvelőd.</h2>
+      <p>Regisztrálj, válaszolj pár kérdésre, és ha kéred, előbb visszahívunk.</p>
+      <div class="gombsor">
+        <a class="gomb gomb-fo" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
+      </div>
+      <p class="zaro-mikro">19&nbsp;999&nbsp;Ft/hó bruttó · Nincs hűségidő · Kártya vagy átutalás</p>
+    </div>
+    <div class="zaro-kartya">
+      <!--ikon:telefon-->
+      <h3>Előbb beszélnél velünk?</h3>
+      <p>Regisztráció után az appban egy gombbal kérsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nem kötelező.</p>
+      <p class="zaro-email">Kérdésed van a regisztráció előtt? Írj nekünk:<br><a href="mailto:ugyfelszolgalat@adozz.hu">ugyfelszolgalat@adozz.hu</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ LÁBLÉC ============ -->
+<footer class="lablec">
+  <div class="kontener">
+    <div class="lablec-racs">
+      <div class="lablec-marka">
+        <!--logo-feher-->
+        <p>Online könyvelés átalányadózó és katás egyéni vállalkozóknak.</p>
+      </div>
+      <nav class="lablec-oszlop" aria-label="Szolgáltatás">
+        <h2>Szolgáltatás</h2>
+        <a href="#hogyan">Hogyan működik</a>
+        <a href="#arak">Árak</a>
+        <a href="#konyvelo">Könyvelő</a>
+        <a href="#gyik">GYIK</a>
+      </nav>
+      <nav class="lablec-oszlop" aria-label="Fiók">
+        <h2>Fiók</h2>
+        <a href="https://app.adozz.hu/regisztracio">Regisztráció</a>
+        <a href="https://app.adozz.hu/belepes">Belépés</a>
+      </nav>
+      <nav class="lablec-oszlop" aria-label="Jogi információk">
+        <h2>Jogi</h2>
+        <a href="https://app.adozz.hu/jogi/aszf">ÁSZF</a>
+        <a href="https://app.adozz.hu/jogi/adatkezeles">Adatkezelés</a>
+        <a href="#impresszum">Impresszum</a>
+      </nav>
+      <div class="lablec-oszlop">
+        <h2>Ügyfélszolgálat</h2>
+        <a href="mailto:ugyfelszolgalat@adozz.hu">ugyfelszolgalat@adozz.hu</a>
+        <p>Visszahívás munkanapokon 9 és 17 óra között.</p>
+      </div>
+    </div>
+    <div class="impresszum" id="impresszum">
+      <h2>Impresszum</h2>
+      <dl>
+        <div><dt>Szolgáltató</dt><dd>Somosi Kft.</dd></div>
+        <div><dt>Székhely</dt><dd>1123 Budapest, Nagyenyed utca 5.</dd></div>
+        <div><dt>Adószám</dt><dd>32769678-2-43</dd></div>
+        <div><dt>Cégjegyzékszám</dt><dd>01-09-441659 (Fővárosi Törvényszék Cégbírósága)</dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:ugyfelszolgalat@adozz.hu">ugyfelszolgalat@adozz.hu</a></dd></div>
+        <div><dt>Tárhelyszolgáltató</dt><dd>Contabo GmbH, Aschauer Straße 32a, 81549 München, Németország</dd></div>
+      </dl>
+    </div>
+    <div class="lablec-also">
+      <p>© 2026 Somosi Kft.</p>
+      <p>Ez az oldal nem használ sütit.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

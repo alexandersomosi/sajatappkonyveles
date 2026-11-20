@@ -12,6 +12,8 @@ import { TULAJ1119_REGI } from './content/tulaj1119_regi.js';
 import { k28Defaults } from './content/k28.js';
 import { k29fDefaults } from './content/k29f.js';
 import { k29Defaults } from './content/k29.js';
+import { k7bDefaults } from './content/k7b.js';
+import { K7B_REGI } from './content/k7b_regi.js';
 
 /**
  * jogi-reviewed §26 content texts (kod/jogi/app_szovegek.json → `tartalom`, same content keys). Read once at start from
@@ -31,13 +33,15 @@ const normText = (s: string) => s.replace(/\s+/g, ' ').trim();
 /**
  * SPEC §27.9.2: a jogi text that still equals the default §27 replaced word for word (tulaj1119_regi.ts) is superseded
  * by the new default; every other jogi text wins as before (B4 may reword it, and then the jogi wording counts).
+ * k7b: the same for the texts the 11-20 wording review changed (k7b_regi.ts).
  */
 function supersededJogi(jogi: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(Object.entries(jogi).filter(([k, v]) => !(k in TULAJ1119_REGI && normText(TULAJ1119_REGI[k]!) === normText(v))));
+  const old = (regi: Record<string, string>, k: string, v: string) => k in regi && normText(regi[k]!) === normText(v);
+  return Object.fromEntries(Object.entries(jogi).filter(([k, v]) => !old(TULAJ1119_REGI, k, v) && !old(K7B_REGI, k, v)));
 }
 
 /** Shipped defaults + the SPEC §26 and §27 texts generated from kod/shared, then the jogi-reviewed texts on top. */
-export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...k28Defaults(), ...k29Defaults(), ...k29fDefaults(), ...supersededJogi(jogiTartalom()) };
+export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...k28Defaults(), ...k29Defaults(), ...k29fDefaults(), ...k7bDefaults(), ...supersededJogi(jogiTartalom()) };
 
 export function placeholdersOf(s: string): string[] {
   return [...new Set([...s.matchAll(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g)].map((m) => m[1]!))];

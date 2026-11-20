@@ -545,10 +545,13 @@ async function notifyClientStatus(deps: Deps, cl: ClientRow, requestId: string, 
     userId: cl.userId,
     kind: 'certificate_status' as never,
     variant,
-    params: { ...p, tipus: CERT_TYPE_TEXTS[type].label, ok },
+    // the texts close the reason themselves ("Az oka: {ok}.") – the accountant's own full stop would double it
+    params: { ...p, tipus: CERT_TYPE_TEXTS[type].label, ok: ok.trim().replace(/[.!?…]+$/, '') },
     link: `/igazolas/${requestId}`,
     data: { requestId },
-    ...(variant === 'kesz' ? {} : { noEmail: true }),
+    // k7b (LEVEL_LEFEDETTSEG #47): "Nem tudjuk kiadni" goes by e-mail too (its own text, email.certificate_rejected);
+    // "beadtuk a NAV-nak" stays in-app + push only
+    ...(variant === 'kesz' ? {} : variant === 'elutasitva' ? { emailKey: 'certificate_rejected' } : { noEmail: true }),
   });
 }
 

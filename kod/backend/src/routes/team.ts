@@ -490,7 +490,7 @@ export function teamRoutes(deps: Deps) {
       await auditC(c, tx, 'message.sent', { targetType: 'message', targetId: m!.id, clientId: cl.id, details: { attachments: b.fileIds?.length ?? 0, by: 'csapat' } });
       return m!;
     });
-    await notify(deps, deps.db, { userId: cl.userId, kind: 'message_new', variant: 'csapat', params: { senderName: `${a.firstName} · ügyfélszolgálat` }, link: '/uzenetek' });
+    await notify(deps, deps.db, { userId: cl.userId, kind: 'message_new', variant: 'csapat', params: { senderName: `${a.firstName} · ügyfélszolgálat` }, link: '/uzenetek', emailKey: 'message_new_ugyfelszolgalat' });
     const [dto] = await messageDtos(deps.db, [msg], 'csapat', '', a.userId);
     return c.json(dto, 201);
   });

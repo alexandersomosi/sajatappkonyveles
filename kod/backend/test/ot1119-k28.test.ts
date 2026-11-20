@@ -191,7 +191,7 @@ describe('K2 – new-invoice notification', () => {
     const r = await rows();
     expect(r).toHaveLength(1);
     expect(r[0]!.title).toBe('Új kiállított számlád: 120 000 Ft');
-    expect(r[0]!.body).toMatch(/^Bodza Kiadó Kft\. Tegyél félre kb\. [\d ]+ Ft-ot\.$/);
+    expect(r[0]!.body).toMatch(/^Vevő: Bodza Kiadó Kft\. Tegyél félre kb\. [\d ]+ Ft-ot\.$/);
     expect((r[0]!.data as { pushNotBefore?: string }).pushNotBefore).toBe('2026-11-19T07:00:00.000Z');
     expect(r[0]!.link).toBe(`/szamla/${id}`);
   });
@@ -220,7 +220,7 @@ describe('K2 – new-invoice notification', () => {
     const id = await inv('E-7', { customer: 'Nagy Ilona', tax: null, vat: 'PRIVATE_PERSON' });
     await notifyNewInvoices(h.deps, c.clientId, [id], { firstSync: false });
     const r = (await rows()).sort((x, y) => y.createdAt.getTime() - x.createdAt.getTime())[0]!;
-    expect(r.body.startsWith('Magánszemély.')).toBe(true);
+    expect(r.body.startsWith('Vevő: Magánszemély.')).toBe(true);
     expect((r.data as { pushTitle?: string }).pushTitle).toBe('Új kiállított számlád érkezett');
     h.clock.set('2026-11-19T09:00:00Z');
   });

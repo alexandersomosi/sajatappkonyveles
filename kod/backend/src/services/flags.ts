@@ -4,7 +4,7 @@ import type { Deadline } from '../_shared/api.js';
 import type { ClientFlag } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { appointments, clients, clientTaxProfiles, deadlines, navCredentials, onboardingSteps, requests, subscriptions, taxPaymentItems, taxPeriods } from '../db/schema.js';
+import { annualClosings, appointments, clients, clientTaxProfiles, deadlines, navCredentials, onboardingSteps, requests, subscriptions, taxPaymentItems, taxPeriods } from '../db/schema.js';
 import { daysBetween, lastDayOfMonth, MONTHS_HU, todayBudapest } from '../lib/dates.js';
 import { nextWorkingDay } from '../lib/munkanap.js';
 import { KATA_RULES_2026 } from '../_shared/enums.js';
@@ -105,6 +105,13 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
   // return + difference and the HIPA return of each tax year whose date falls in the window.
   const fromYear = Number(from.slice(0, 4)) - 1;
   const toYear = Number(to.slice(0, 4));
+  // k7b (KONYVELO_LEFEDETTSEG, 2. hiba): the annual returns are "kész" once the accountant recorded the filing on the
+  // Éves zárás page (annual_closings.filed_szja_at / filed_hipa_at) – never "lejárt" in the Határidő-figyelő after that.
+  const closings = await db
+    .select({ taxYear: annualClosings.taxYear, filedSzjaAt: annualClosings.filedSzjaAt, filedHipaAt: annualClosings.filedHipaAt })
+    .from(annualClosings)
+    .where(eq(annualClosings.clientId, clientId));
+  const closingOf = (year: number) => closings.find((x) => x.taxYear === year);
   for (let y = Math.max(fromYear, 2026); y <= toYear; y++) {
     const prof = profiles.find((x) => x.year === y);
     if (!prof) continue;
@@ -114,9 +121,9 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       if (d.periodKey === String(y)) {
         if (prof.regime === 'kata') continue; // no 26SZJA for a KATA year (the '26KATA only above the keret)
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
-        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, false, '/hataridok'));
+        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, Boolean(closingOf(y)?.filedSzjaAt), '/hataridok'));
       } else if (d.periodKey === `${y}-HIPA`) {
-        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, false, '/hataridok'));
+        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, Boolean(closingOf(y)?.filedHipaAt), '/hataridok'));
       }
     }
   }

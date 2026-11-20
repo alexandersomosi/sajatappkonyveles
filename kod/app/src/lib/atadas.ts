@@ -4,6 +4,7 @@
 let mfaToken: string | null = null;
 let mfaIdo = 0;
 let jelszoEmail: string | null = null;
+let regEmail: string | null = null;
 
 const MFA_ELET_MS = 5 * 60_000;
 
@@ -27,4 +28,13 @@ export function jelszoEmailBeallit(e: string | null): void {
 
 export function jelszoEmailOlvas(): string {
   return jelszoEmail ?? '';
+}
+
+/** k7b: the address of a sign-up waiting for its code (regisztráció → postafiók). */
+export function regEmailBeallit(e: string | null): void {
+  regEmail = e?.trim() || null;
+}
+
+export function regEmailOlvas(): string {
+  return regEmail ?? '';
 }

@@ -14,7 +14,7 @@ import { stripInternalNotes } from '../src/legal.js';
 import { withUploadSlot } from '../src/files/upload.js';
 import { pickAccountant } from '../src/services/accounts.js';
 import { base32Decode, totp } from '../src/lib/totp.js';
-import { lastCode, newClient, pdfBytes, PW, setup, staff, type Harness } from './helpers.js';
+import { lastCode, newClient, pdfBytes, PW, registerUnverified, setup, staff, type Harness } from './helpers.js';
 
 let h: Harness;
 let bence: Awaited<ReturnType<typeof staff>>;
@@ -116,8 +116,8 @@ describe('S6 – storage quota per client', () => {
 
 describe('S7 – 2FA needs a confirmed e-mail; the first reset removes a stranger’s 2FA', () => {
   it('setup on an unconfirmed address → 409; a reset that confirms the mailbox clears TOTP', async () => {
-    const reg = await h.json('POST', '/auth/register', { body: { email: 'idegen@demo.kezjegy.test', password: PW, firstName: 'I', lastName: 'D', platform: 'android' }, headers: ip(150) });
-    expect(reg.status).toBe(201);
+    const reg = await registerUnverified(h, 'idegen@demo.kezjegy.test', ip(150), { first: 'I', last: 'D' });
+    expect(reg.status).toBe(200);
     const s = await h.json('POST', '/auth/totp/setup', { token: reg.body.accessToken });
     expect(s.status).toBe(409);
     expect(s.body.error.code).toBe('email_not_verified');

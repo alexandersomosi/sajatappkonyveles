@@ -135,7 +135,7 @@ export default function Ado({ c }: FulProps) {
               </button>
             ))}
           </div>
-          {p ? <Idoszak key={p.id} p={p} c={c} alapLevel={q.data!.defaultLetterText} /> : null}
+          {p ? p.kind === 'hipa' ? <HipaIdoszak key={p.id} p={p} c={c} /> : <Idoszak key={p.id} p={p} c={c} alapLevel={q.data!.defaultLetterText} /> : null}
         </>
       )}
     </>
@@ -313,6 +313,150 @@ function Idoszak({ p, c, alapLevel }: { p: AccTaxPeriod; c: FulProps['c']; alapL
         folyamatban={nyit.isPending}
       />
     </>
+  );
+}
+
+/** "11784009-15400017" or "11784009-15400017-03540000" (the server checks the same). */
+export function hipaSzamlaJo(s: string): boolean {
+  return /^\d{8}-\d{8}(-\d{8})?$/.test(s.trim());
+}
+
+/**
+ * k7b (KONYVELO_LEFEDETTSEG, 1. hiba): the iparűzési adóelőleg. The engine does not compute it (the amount comes from
+ * last year's tax), so the accountant types the amount and the önkormányzat's account number and approves it here
+ * (POST /acc/tax-periods/:id/hipa-approve). Approved: the same payment card as a quarter (check, mismatch) + reopen.
+ */
+function HipaIdoszak({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
+  const t = today();
+  const qc = useQueryClient();
+  const pir = usePirito();
+  const [osszeg, setOsszeg] = useState('');
+  const [szamla, setSzamla] = useState(c.taxProfile?.hipa.accountNumber ?? '');
+  const [megerosit, setMegerosit] = useState(false);
+  const [ujranyit, setUjranyit] = useState(false);
+  const inv = () => {
+    void qc.invalidateQueries({ queryKey: ['acc', 'tax', c.id] });
+    void qc.invalidateQueries({ queryKey: ['acc', 'client', c.id] });
+  };
+  const n = osszeg.trim() ? parseFt(osszeg) : null;
+  const jo = n !== null && n >= 0 && n <= 50_000_000;
+  const kellSzamla = jo && n! > 0;
+  const kesz = jo && (!kellSzamla || hipaSzamlaJo(szamla));
+  const jova = useMutation({
+    mutationFn: () => ep.accHipaApprove(p.id, { amountHuf: n!, accountNumber: kellSzamla ? szamla.trim() : null }),
+    onSuccess: () => {
+      pir.ok(n! > 0 ? `Elküldve. ${c.firstName} most látja: ${ft(n!)}, és értesítést kap.` : 'Rögzítetted: ebben a részletben nincs fizetendő.');
+      setMegerosit(false);
+      inv();
+    },
+    onError: pir.hiba,
+  });
+  const nyit = useMutation({ mutationFn: (reason: string) => ep.accReopen(p.id, reason), onSuccess: () => { pir.ok('Újranyitottad. Írd be újra az összeget.'); setUjranyit(false); inv(); }, onError: pir.hiba });
+  const d = napKulonbseg(p.dueDate, t);
+  if (p.calcStatus === 'jovahagyva')
+    return (
+      <div style={{ marginTop: 16 }}>
+        <Jovahagyott p={p} c={c} />
+        {p.paymentStatus !== 'ellenorizve' && (
+          <div className="gombsor" style={{ marginTop: 12, justifyContent: 'flex-end' }}>
+            <button className="gomb-v" onClick={() => setUjranyit(true)}>
+              Újranyitom (rossz lett az összeg)
+            </button>
+          </div>
+        )}
+        <MegjegyzesFiok
+          nyitva={ujranyit}
+          cim="Miért nyitod újra?"
+          bev={`Az előleg visszaáll jóváhagyás előttire, ${c.firstName} értesítést kap: „Módosítottam a fizetendőt”. Az okot a naplóba írjuk.`}
+          gomb="Újranyitom"
+          bezar={() => setUjranyit(false)}
+          kuld={(reason) => nyit.mutate(reason)}
+          folyamatban={nyit.isPending}
+        />
+      </div>
+    );
+  return (
+    <div className="lap" style={{ marginTop: 16 }}>
+      <div className="lap-fej">
+        <I3 n="szamolo" s={36} />
+        <div>
+          <h2>{nagybetu(negyedevNev(p.periodKey))}</h2>
+          <div className="megj">
+            Határidő: {datum(p.dueDate, { ev: true, nap: true })}
+            {d < 0 && <span className="cimke hiba" style={{ marginLeft: 8 }}>lejárt</span>}
+          </div>
+        </div>
+      </div>
+      <div className="belso" style={{ paddingTop: 0 }}>
+        <p style={{ marginTop: 0 }}>
+          Az iparűzési adóelőleget nem a motor számolja: az összege az előző évi iparűzési adóból jön, ahogy az éves bevallásban szerepel. Írd be ennek a részletnek az összegét és az önkormányzat
+          iparűzésiadó-számláját. A jóváhagyás után {c.firstName} az appban látja, mennyit és hova utaljon, és értesítést kap.
+        </p>
+        <div className="mezosor k2">
+          <label className="mezo">
+            <span className="felirat">Az előleg összege (Ft)</span>
+            <input className="doboz szam" inputMode="numeric" value={osszeg} placeholder="pl. 42 000" onChange={(e) => setOsszeg(e.target.value)} />
+          </label>
+          <label className="mezo">
+            <span className="felirat">Az önkormányzat iparűzésiadó-számlája</span>
+            <input className="doboz" value={szamla} placeholder="11784009-15400017-03540000" maxLength={40} onChange={(e) => setSzamla(e.target.value)} />
+            <span className="sugo">0 Ft-nál nem kell. A következő részletnél már kitöltjük.</span>
+          </label>
+        </div>
+        {osszeg.trim() && !jo && <div className="hiba-szoveg" style={{ color: 'var(--veszely)', marginTop: 6 }}>Egész forintot írj (nem lehet negatív).</div>}
+        {kellSzamla && szamla.trim() && !hipaSzamlaJo(szamla) && (
+          <div className="hiba-szoveg" style={{ color: 'var(--veszely)', marginTop: 6 }}>
+            A számlaszám 2×8 vagy 3×8 számjegy, kötőjellel (pl. 11784009-15400017-03540000).
+          </div>
+        )}
+        <div className="gombsor" style={{ marginTop: 16 }}>
+          <button
+            className="gomb-e"
+            disabled={!kesz || c.lifecycle === 'bekotes_alatt' || !!c.serviceLock}
+            title={c.serviceLock ? LOCK_TEXTS.panelDisabled : c.lifecycle === 'bekotes_alatt' ? 'A bekötés után hagyhatod jóvá.' : undefined}
+            onClick={() => setMegerosit(true)}
+          >
+            Jóváhagyom és elküldöm
+          </button>
+          {c.lifecycle === 'bekotes_alatt' && <span className="sugo" style={{ margin: 0 }}>A bekötés után hagyhatod jóvá.</span>}
+        </div>
+      </div>
+      <Fiok
+        nyitva={megerosit}
+        bezar={() => setMegerosit(false)}
+        ikon="boritek"
+        cim={`Elküldöd ${c.firstName} részére?`}
+        bev={n ? 'A jóváhagyás után azonnal megjelenik nála a befizetendők között, és értesítést kap telefonra és e-mailben.' : 'Ebben a részletben nincs fizetendő: nem kap értesítést, a határidő késznek látszik.'}
+        lab={
+          <>
+            <button className="gomb-e" disabled={jova.isPending} onClick={() => jova.mutate()}>
+              {jova.isPending ? 'Küldöm…' : 'Igen, jóváhagyom és elküldöm'}
+            </button>
+            <button className="gomb-sz" onClick={() => setMegerosit(false)}>
+              Még nem
+            </button>
+          </>
+        }
+      >
+        <dl className="adatok">
+          <dt>Időszak</dt>
+          <dd>{nagybetu(negyedevNev(p.periodKey))}</dd>
+          <dt>Fizetendő</dt>
+          <dd className="felkover">{ft(n ?? 0)}</dd>
+          {kellSzamla && (
+            <>
+              <dt>Számlaszám</dt>
+              <dd>{szamla.trim()}</dd>
+            </>
+          )}
+          <dt>Határidő</dt>
+          <dd>
+            {datum(p.dueDate, { ev: true, nap: true })}
+            {d < 0 && <span className="cimke hiba" style={{ marginLeft: 8 }}>lejárt</span>}
+          </dd>
+        </dl>
+      </Fiok>
+    </div>
   );
 }
 

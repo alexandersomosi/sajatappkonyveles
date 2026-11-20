@@ -142,7 +142,7 @@ describe('O2.2 – staff flow', () => {
     const fix = await h.json('PATCH', `/client/callbacks/${cb.id}`, { token: c.token, body: { phone: '+36 70 111 2233' } });
     expect(fix.body.needsNewPhone).toBe(false);
     const uj = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, anna.userId), eq(notifications.kind, 'callback_assigned')));
-    expect(uj.some((n) => n.body.includes('új telefonszámot adott meg'))).toBe(true);
+    expect(uj.some((n) => n.body.includes('Megadta az új számát'))).toBe(true);
     const later = await h.json('POST', `/team/callbacks/${cb.id}/attempts`, { token: anna.token, body: { outcome: 'kesobb_kerte', nextAttemptAfter: '2026-11-19T13:00:00.000Z' } });
     expect(later.body.status).toBe('folyamatban');
     expect((await h.json('GET', '/client/callbacks', { token: c.token })).body.open.statusText).toContain('körül hívunk újra');

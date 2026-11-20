@@ -14,3 +14,6 @@ A tulaj kérése (11-20 10:25): „írd fel, kérdezd később”. A k7 végén 
 Korábbi nyitott kérések tőle: fotó, a 35 tevékenység ÖVTJ-kódja, a 4 korábbi kérdés (k5).
 Ügyvédnek: beküldheti-e Dávid meghatalmazottként a változás-bejelentést, és elég-e az appban adott engedély
 (`kod\jogi\UGYVED_KERDESEK_k5.md`).
+
+## 11-20: a könyvelői felmérés 13 új szakmai kérdése
+- Lásd: _munka/KONYVELO_LEFEDETTSEG.md, "kérdések Dávidnak" rész (4 már itt is szerepel, 13 új).

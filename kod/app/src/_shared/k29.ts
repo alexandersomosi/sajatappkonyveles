@@ -166,7 +166,7 @@ export const PREDEBIT_TEXTS = {
   emailExtra: 'Lemondás után a kifizetett időszak végéig minden marad.',
   /** No active card 3 days before the charge (subscription_renewal_needed, variant 'nincs_kartya'). */
   noCardTitle: 'Adj meg kártyát a következő hónaphoz',
-  noCardBody: '{datum}-n jár le a kifizetett időszakod. Adj meg kártyát, hogy minden menjen tovább: Fiók → Előfizetés.',
+  noCardBody: 'Lejár a kifizetett időszakod ({datum}). Adj meg kártyát, hogy minden menjen tovább: Fiók → Előfizetés.',
 } as const;
 
 // ---------- §29.1.10 refunds, disputes (admin alerts) ----------

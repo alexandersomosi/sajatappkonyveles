@@ -1,0 +1,8 @@
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_004_w1_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_005_w2_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_006_w3_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_027_elofizetes_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_129_stripe_320.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_033_fooldal_kesz_utan_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_szerver_02_adozz_hu_390.png
+C:/Users/UpgradePC/konyvelo_app/kod/_qa/k7c3_ügyfél_410_admin_dijak_1440.png

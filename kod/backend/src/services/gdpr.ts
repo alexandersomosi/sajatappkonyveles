@@ -41,7 +41,8 @@ import { unlink } from 'node:fs/promises';
 import { ZipFileWriter, type ZipEntry } from '../lib/zip.js';
 import { log, safeErr } from '../log.js';
 import { audit } from '../audit.js';
-import { notify } from '../notify/notify.js';
+import { activeAdminEmails, notify, sendTemplateMail } from '../notify/notify.js';
+import { huLongDate } from '../_shared/bekotes.js';
 import { deleteCard, restoreAfterCancelledDeletion } from './subscription.js';
 import { sanitizeDisplayName } from '../lib/validators.js';
 import { fullDeclarations } from './kyc.js';
@@ -77,11 +78,32 @@ export async function cancelDeletion(deps: Deps, userId: string): Promise<void> 
     .update(users)
     .set({ status: 'active', deletionRequestedAt: null, deletionDueAt: null })
     .where(and(eq(users.id, userId), eq(users.status, 'pending_deletion')))
-    .returning({ id: users.id });
+    .returning({ id: users.id, email: users.email });
   if (!res.length) return;
   const [cl] = await deps.db.select({ id: clients.id }).from(clients).where(eq(clients.userId, userId)).limit(1);
   // The paid period continues as "cancelled at period end"; the home screen shows the end date.
   if (cl) await restoreAfterCancelledDeletion(deps, deps.db, cl.id);
+  // k7b (LEVEL_LEFEDETTSEG #60): the owner gets it in writing (only on the real transition above, so once per cancel);
+  // the subscription sentence only when a paid period really runs on
+  const [sub] = cl ? await deps.db.select({ status: subscriptions.status, cancelAtPeriodEnd: subscriptions.cancelAtPeriodEnd }).from(subscriptions).where(eq(subscriptions.clientId, cl.id)).limit(1) : [];
+  const runsOn = Boolean(sub && sub.status === 'active' && sub.cancelAtPeriodEnd);
+  await sendTemplateMail(deps, { to: res[0]!.email, key: 'account_deletion_cancelled', ...(runsOn ? { variant: 'elofizetes' } : {}) });
+}
+
+/**
+ * k7b (LEVEL_LEFEDETTSEG #63): an export that will not be retried ('hiba') – the client and the admins are told once
+ * (the transition to 'hiba' happens once per export row).
+ */
+async function exportFailedMails(deps: Deps, exportId: string, userId: string): Promise<void> {
+  const db = deps.db;
+  const [u] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  const [x] = await db.select({ createdAt: gdprExports.createdAt }).from(gdprExports).where(eq(gdprExports.id, exportId)).limit(1);
+  if (!u || u.status === 'deleted') return;
+  await sendTemplateMail(deps, { to: u.email, key: 'export_failed' });
+  const [cl] = await db.select({ firstName: clients.firstName, lastName: clients.lastName }).from(clients).where(eq(clients.userId, userId)).limit(1);
+  const name = cl ? `${cl.lastName} ${cl.firstName}`.trim() : u.displayName || 'Egy felhasználó';
+  for (const to of await activeAdminEmails(db)) await sendTemplateMail(deps, { to, key: 'export_failed_admin', params: { clientName: name, datum: huLongDate(todayBudapest(x?.createdAt ?? deps.now())) } });
+  await audit(db, { action: 'mail.export_failed', actorRole: 'system', targetType: 'gdpr_export', targetId: exportId, details: {} }).catch(() => undefined);
 }
 
 function json(name: string, data: unknown): ZipEntry {
@@ -258,8 +280,13 @@ export async function buildExport(deps: Deps, exportId: string): Promise<void> {
     await notify(deps, db, { userId: u.id, kind: 'gdpr_export_ready', link: '/fiok/adataim' });
   } catch (err) {
     log().error({ err: safeErr(err) }, 'gdpr export failed');
-    await db.update(gdprExports).set({ status: 'hiba', error: String((err as Error)?.message ?? err).slice(0, 200) }).where(eq(gdprExports.id, x.id));
+    const failed = await db
+      .update(gdprExports)
+      .set({ status: 'hiba', error: String((err as Error)?.message ?? err).slice(0, 200) })
+      .where(and(eq(gdprExports.id, x.id), sql`${gdprExports.status} <> 'hiba'`))
+      .returning({ id: gdprExports.id });
     await audit(db, { action: 'gdpr.export_failed', actorRole: 'system', targetType: 'gdpr_export', targetId: x.id, details: { attempts: x.attempts } }).catch(() => undefined);
+    if (failed.length) await exportFailedMails(deps, x.id, x.userId).catch((e2: Error) => log().warn({ err: safeErr(e2) }, 'export failure mail failed'));
   } finally {
     if (zw) await zw.abort();
     if (tmpPath) await unlink(tmpPath).catch(() => undefined);
@@ -275,9 +302,13 @@ export async function executeDeletion(deps: Deps, userId: string): Promise<void>
   const now = deps.now();
   const today = todayBudapest(now);
   const year = Number(today.slice(0, 4));
+  // k7b (LEVEL_LEFEDETTSEG #61): the real address is read BEFORE the pseudonymisation below; the mail goes once the
+  // deletion has really happened (after the commit), so a failed run never says "töröltük".
+  let deletedAddress: string | null = null;
   await db.transaction(async (tx) => {
     const [u] = await tx.select().from(users).where(eq(users.id, userId)).limit(1);
     if (!u || u.status !== 'pending_deletion') return;
+    deletedAddress = u.email;
     const [cl] = await tx.select().from(clients).where(eq(clients.userId, userId)).limit(1);
     await tx.delete(sessions).where(eq(sessions.userId, userId));
     await tx.delete(mfaChallenges).where(eq(mfaChallenges.userId, userId));
@@ -329,6 +360,7 @@ export async function executeDeletion(deps: Deps, userId: string): Promise<void>
       .where(eq(users.id, userId));
     await audit(tx, { action: 'gdpr.delete_executed', actorRole: 'system', targetType: 'user', targetId: userId, clientId: cl?.id ?? null });
   });
+  if (deletedAddress) await sendTemplateMail(deps, { to: deletedAddress, key: 'account_deleted' });
 }
 
 /** Every worker tick (≈ every minute): pending data exports, so "export, then delete" works the same hour. */
@@ -340,10 +372,11 @@ export async function runGdprExports(deps: Deps): Promise<number> {
     .update(gdprExports)
     .set({ status: 'hiba', error: 'A készítés kétszer megszakadt.' })
     .where(and(eq(gdprExports.status, 'folyamatban'), lt(gdprExports.startedAt, stale), sql`${gdprExports.attempts} >= ${EXPORT_MAX_ATTEMPTS}`))
-    .returning({ id: gdprExports.id });
+    .returning({ id: gdprExports.id, userId: gdprExports.userId });
   for (const d of dead) {
     log().error({ exportId: d.id }, 'gdpr export gave up after repeated failures – admin alert');
     await audit(db, { action: 'gdpr.export_failed', actorRole: 'system', targetType: 'gdpr_export', targetId: d.id, details: { gaveUp: true } }).catch(() => undefined);
+    await exportFailedMails(deps, d.id, d.userId).catch((err: Error) => log().warn({ err: safeErr(err) }, 'export failure mail failed'));
   }
   const pending = await db
     .select({ id: gdprExports.id })

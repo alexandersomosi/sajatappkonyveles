@@ -14,26 +14,78 @@ beforeAll(async () => {
 afterAll(async () => h.close());
 
 describe('register and e-mail verification', () => {
-  it('registers a client, e-mails a 6-digit code, verifies', async () => {
+  it('registers a client, e-mails a 6-digit code, the code opens the session (k7b: no session before it)', async () => {
     const r = await h.json('POST', '/auth/register', { body: { email: 'Uj.Ugyfel@demo.kezjegy.test', password: PW, firstName: 'Anna', lastName: 'Teszt', platform: 'android' } });
-    expect(r.status).toBe(201);
-    expect(r.body.user).toMatchObject({ email: 'uj.ugyfel@demo.kezjegy.test', role: 'client', emailVerified: false });
-    expect(r.body.refreshToken).toBeTruthy(); // native gets the refresh token in the body
+    expect(r.status).toBe(202);
+    expect(r.body).toEqual({ status: 'check_email', email: 'uj.ugyfel@demo.kezjegy.test' });
+    expect(r.body.accessToken).toBeUndefined();
+    expect(r.res.headers.get('set-cookie')).toBeNull();
     const code = lastCode(h, 'uj.ugyfel@demo.kezjegy.test');
-    const wrong = await h.json('POST', '/auth/email/verify', { token: r.body.accessToken, body: { code: code === '000000' ? '111111' : '000000' } });
+    const wrong = await h.json('POST', '/auth/register/verify', { body: { email: 'uj.ugyfel@demo.kezjegy.test', code: code === '000000' ? '111111' : '000000', platform: 'android' } });
     expect(wrong.status).toBe(400);
-    const ok = await h.json('POST', '/auth/email/verify', { token: r.body.accessToken, body: { code } });
-    expect(ok.body).toEqual({ emailVerified: true });
-    const onb = await h.json('GET', '/client/onboarding', { token: r.body.accessToken });
+    const ok = await h.json('POST', '/auth/register/verify', { body: { email: 'Uj.Ugyfel@demo.kezjegy.test', code, platform: 'android' } });
+    expect(ok.status).toBe(201);
+    expect(ok.body.user).toMatchObject({ email: 'uj.ugyfel@demo.kezjegy.test', role: 'client', emailVerified: true });
+    expect(ok.body.isNewUser).toBe(true);
+    expect(ok.body.refreshToken).toBeTruthy(); // native gets the refresh token in the body
+    const onb = await h.json('GET', '/client/onboarding', { token: ok.body.accessToken });
     expect(onb.body.steps.find((s: { step: string }) => s.step === 'fiok').status).toBe('kesz');
+    // the code works once; a confirmed account cannot be opened by a code again
+    const again = await h.json('POST', '/auth/register/verify', { body: { email: 'uj.ugyfel@demo.kezjegy.test', code, platform: 'android' } });
+    expect(again.status).toBe(400);
   });
 
-  it('rejects weak passwords and duplicate e-mails', async () => {
+  it('rejects weak passwords; an existing address gets the very same answer and a "Már van fiókod" mail (k7b, S16)', async () => {
     const weak = await h.json('POST', '/auth/register', { body: { email: 'gyenge@demo.kezjegy.test', password: 'qwertzuiop', firstName: 'A', lastName: 'B', platform: 'web' } });
     expect(weak.status).toBe(400);
     expect(weak.body.error.fields.password).toBeTruthy();
-    const dup = await h.json('POST', '/auth/register', { body: { email: 'uj.ugyfel@demo.kezjegy.test', password: PW, firstName: 'A', lastName: 'B', platform: 'web' } });
-    expect(dup.status).toBe(409);
+    const before = h.mails.length;
+    const usersBefore = (await h.deps.db.select({ id: users.id }).from(users)).length;
+    const dup = await h.json('POST', '/auth/register', { body: { email: 'uj.ugyfel@demo.kezjegy.test', password: PW, firstName: 'A', lastName: 'B', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.77' } });
+    const fresh = await h.json('POST', '/auth/register', { body: { email: 'masik.uj@demo.kezjegy.test', password: PW, firstName: 'A', lastName: 'B', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.78' } });
+    // same status, same body shape, no cookie in either case
+    expect(dup.status).toBe(202);
+    expect(fresh.status).toBe(202);
+    expect(Object.keys(dup.body).sort()).toEqual(Object.keys(fresh.body).sort());
+    expect(dup.body).toEqual({ status: 'check_email', email: 'uj.ugyfel@demo.kezjegy.test' });
+    expect(dup.res.headers.get('set-cookie')).toBeNull();
+    const newMails = h.mails.slice(before);
+    const toOwner = newMails.filter((m) => m.to === 'uj.ugyfel@demo.kezjegy.test');
+    expect(toOwner.map((m) => m.template)).toEqual(['account_exists']);
+    expect(toOwner[0]!.subject).toBe('Már van fiókod az Adózz-ban');
+    expect(toOwner[0]!.text).toContain('Elfelejtettem a jelszavam');
+    expect(toOwner[0]!.text).not.toMatch(/\b\d{6}\b/);
+    expect(newMails.filter((m) => m.to === 'masik.uj@demo.kezjegy.test').map((m) => m.template)).toEqual(['auth_email_code']);
+    // nothing changed on the existing account: no new user, the owner's password still works
+    expect((await h.deps.db.select({ id: users.id }).from(users)).length).toBe(usersBefore + 1);
+    expect((await h.json('POST', '/auth/login', { body: { email: 'uj.ugyfel@demo.kezjegy.test', password: PW, clientKind: 'native' } })).status).toBe(200);
+    // the code step answers an existing (confirmed) address exactly like a wrong code
+    const guess = await h.json('POST', '/auth/register/verify', { body: { email: 'uj.ugyfel@demo.kezjegy.test', code: '123456', platform: 'web' } });
+    const wrong = await h.json('POST', '/auth/register/verify', { body: { email: 'masik.uj@demo.kezjegy.test', code: lastCode(h, 'masik.uj@demo.kezjegy.test') === '123456' ? '654321' : '123456', platform: 'web' } });
+    const nobody = await h.json('POST', '/auth/register/verify', { body: { email: 'senki@demo.kezjegy.test', code: '123456', platform: 'web' } });
+    expect(guess.status).toBe(400);
+    expect(guess.body).toEqual(wrong.body);
+    expect(nobody.body).toEqual(wrong.body);
+    // a second try within the hour: same answer, no second "Már van fiókod" mail
+    const n2 = h.mails.length;
+    const dup2 = await h.json('POST', '/auth/register', { body: { email: 'uj.ugyfel@demo.kezjegy.test', password: PW, firstName: 'A', lastName: 'B', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.79' } });
+    expect(dup2.status).toBe(202);
+    expect(h.mails.slice(n2).filter((m) => m.template === 'account_exists')).toHaveLength(0);
+  });
+
+  it('a new code by address: always 202, a code only for an unconfirmed sign-up', async () => {
+    await h.json('POST', '/auth/register', { body: { email: 'ujkod@demo.kezjegy.test', password: PW, firstName: 'U', lastName: 'K', platform: 'android' }, headers: { 'x-forwarded-for': '198.51.100.81' } });
+    const first = lastCode(h, 'ujkod@demo.kezjegy.test');
+    const n = h.mails.length;
+    const a = await h.json('POST', '/auth/register/resend', { body: { email: 'ujkod@demo.kezjegy.test' }, headers: { 'x-forwarded-for': '198.51.100.81' } });
+    const b = await h.json('POST', '/auth/register/resend', { body: { email: 'senki2@demo.kezjegy.test' }, headers: { 'x-forwarded-for': '198.51.100.82' } });
+    const c = await h.json('POST', '/auth/register/resend', { body: { email: 'uj.ugyfel@demo.kezjegy.test' }, headers: { 'x-forwarded-for': '198.51.100.83' } });
+    expect([a.status, b.status, c.status]).toEqual([202, 202, 202]);
+    expect(h.mails.slice(n).map((m) => m.to)).toEqual(['ujkod@demo.kezjegy.test']);
+    const second = lastCode(h, 'ujkod@demo.kezjegy.test');
+    const ok = await h.json('POST', '/auth/register/verify', { body: { email: 'ujkod@demo.kezjegy.test', code: second, platform: 'android' }, headers: { 'x-forwarded-for': '198.51.100.81' } });
+    expect(ok.status).toBe(201);
+    void first;
   });
 });
 
@@ -227,8 +279,11 @@ describe('TOTP brute force', () => {
 
 describe('logout on the web', () => {
   it('a Bearer logout works even when the browser also sends the refresh cookie, and the cookie is dead afterwards', async () => {
-    const r = await h.json('POST', '/auth/register', { body: { email: 'webki@demo.kezjegy.test', password: PW, firstName: 'Web', lastName: 'Kilépő', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.240' } });
+    const reg = await h.json('POST', '/auth/register', { body: { email: 'webki@demo.kezjegy.test', password: PW, firstName: 'Web', lastName: 'Kilépő', platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.240' } });
+    expect(reg.status).toBe(202);
+    const r = await h.json('POST', '/auth/register/verify', { body: { email: 'webki@demo.kezjegy.test', code: lastCode(h, 'webki@demo.kezjegy.test'), platform: 'web' }, headers: { 'x-forwarded-for': '198.51.100.240' } });
     expect(r.status).toBe(201);
+    expect(r.body.refreshToken).toBeUndefined(); // the web gets the refresh token only as a cookie
     const cookie = (r.res.headers.get('set-cookie') ?? '').split(';')[0]!;
     expect(cookie).toMatch(/^__Host-kj_rt=/);
     const out = await h.req('POST', '/auth/logout', { token: r.body.accessToken, headers: { cookie } });
@@ -257,10 +312,12 @@ describe('e-mail codes under parallel guessing', () => {
 });
 
 describe('duplicate sign-up', () => {
-  it('answers 409, never 500', async () => {
+  it('parallel sign-ups of one address: the same 202 for all, one account, never 500 (k7b: never 409 either)', async () => {
     const body = { email: 'dupla@demo.kezjegy.test', password: PW, firstName: 'Dupla', lastName: 'Teszt', platform: 'android' };
     const res = await Promise.all([0, 1, 2].map((i) => h.json('POST', '/auth/register', { body, headers: { 'x-forwarded-for': `198.51.105.${i}` } })));
-    expect(res.map((x) => x.status).sort()).toEqual([201, 409, 409]);
+    expect(res.map((x) => x.status)).toEqual([202, 202, 202]);
+    expect(new Set(res.map((x) => JSON.stringify(x.body))).size).toBe(1);
+    expect((await h.deps.db.select({ id: users.id }).from(users).where(eq(users.email, 'dupla@demo.kezjegy.test'))).length).toBe(1);
   });
 });
 

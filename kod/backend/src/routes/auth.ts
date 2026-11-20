@@ -10,13 +10,13 @@ import { CODE_MESSAGES, RESET_CODE_MESSAGE, checkCode, codesIssuedSince, issueCo
 import { requireAuth } from '../auth/middleware.js';
 import { ProviderUnavailable, TokenRejected, type Provider } from '../auth/oidc.js';
 import { revokeAllSessions, revokeSession, rotateRefresh, signAccess, signMfa, verifyMfa, type ClientKind } from '../auth/tokens.js';
-import { assertJsonContentType, auth, param, readJson, sameSiteGuard, type C, type Env } from '../http/core.js';
+import { assertJsonContentType, auth, dbState, param, readJson, sameSiteGuard, type C, type Env } from '../http/core.js';
 import { hmacHex } from '../lib/crypto.js';
 import { ApiError, E } from '../lib/errors.js';
 import { hashPassword, passwordProblem, verifyPassword } from '../lib/password.js';
 import { base32Decode, newRecoveryCodes, newTotpSecret, otpauthUrl, verifyTotp } from '../lib/totp.js';
 import { isPlausibleEmail, normalizeEmail } from '../lib/validators.js';
-import { sendCodeEmail } from '../notify/notify.js';
+import { sendCodeEmail, sendTemplateMail } from '../notify/notify.js';
 import { createClientAccount, issueAuth, type IssuedAuth } from '../services/accounts.js';
 import { cancelDeletion } from '../services/gdpr.js';
 import brand from '../_shared/brand.json' with { type: 'json' };
@@ -145,6 +145,12 @@ export function authRoutes(deps: Deps) {
   }
 
   // ---------- register ----------
+  /**
+   * k7b (SPEC §27.11 S16, LEVEL_LEFEDETTSEG #3): the answer never tells whether the address already has an account.
+   * Always 202 { status: 'check_email' } and no session: a new address gets the account and a 6-digit code, an existing
+   * one gets the "Már van fiókod" mail (sign in / new password) and nothing else changes. The session comes after the
+   * code (POST /auth/register/verify). Both paths hash the password and send one mail, so they take about the same time.
+   */
   r.post('/register', async (c) => {
     limit(`reg-ip:${c.get('ipHmac')}`, 5, 3600_000);
     const b = await readJson(
@@ -164,47 +170,99 @@ export function authRoutes(deps: Deps) {
       throw E.validation({ email: 'A DEMO-ban még nem küldünk ki levelet, ezért csak kitalált címmel regisztrálhatsz, például valaki@demo.kezjegy.test.' });
     const pw = passwordProblem(b.password, b.email);
     if (pw) throw E.validation({ password: pw });
-    const [exists] = await deps.db.select({ id: users.id }).from(users).where(eq(users.email, b.email)).limit(1);
-    if (exists) throw E.conflict('Ezzel az e-mail-címmel már van fiókod. Lépj be, vagy kérj új jelszót.');
     const passwordHash = await hashPassword(b.password);
-    const { userId } = await deps.db.transaction((tx) =>
-      createClientAccount(deps, tx, {
-        email: b.email,
-        passwordHash,
-        firstName: b.firstName,
-        lastName: b.lastName,
-        emailVerified: false,
-        referralCode: b.referralCode,
-        utm: b.utm,
-        landing: b.platform,
-      }),
-    );
+    const [exists] = await deps.db.select({ id: users.id, status: users.status }).from(users).where(eq(users.email, b.email)).limit(1);
+    if (exists) {
+      // The owner is told by mail (at most once an hour per address – the answer is the same either way).
+      const once = deps.limiter.hit(`reg-exists:${k(b.email)}`, 1, 3600_000);
+      if (once.ok && exists.status !== 'deleted') await sendTemplateMail(deps, { to: b.email, key: 'account_exists' });
+      await auditC(c, deps.db, 'auth.register_existing', { actorUserId: null, actorRole: null, targetType: 'user', targetId: exists.id, details: { mailed: once.ok } });
+      return c.json({ status: 'check_email', email: b.email }, 202);
+    }
+    let userId: string;
+    try {
+      ({ userId } = await deps.db.transaction((tx) =>
+        createClientAccount(deps, tx, {
+          email: b.email,
+          passwordHash,
+          firstName: b.firstName,
+          lastName: b.lastName,
+          emailVerified: false,
+          referralCode: b.referralCode,
+          utm: b.utm,
+          landing: b.platform,
+        }),
+      ));
+    } catch (err) {
+      // two parallel sign-ups with the same new address: the other one made the account – the same answer here too
+      if (dbState(err)?.code === '23505') return c.json({ status: 'check_email', email: b.email }, 202);
+      throw err;
+    }
     const code = await issueCode(deps, deps.db, { email: b.email, purpose: 'verify_email', userId, ipHmac: c.get('ipHmac') });
     await sendCodeEmail(deps, b.email, 'auth_email_code', code);
-    const kind: ClientKind = b.platform === 'web' ? 'web' : 'native';
-    const issued = await issueAuth(deps, deps.db, { userId, clientKind: kind, ua: c.get('ua'), ipHmac: c.get('ipHmac'), isNewUser: true });
-    await auditC(c, deps.db, 'auth.login', { actorUserId: userId, actorRole: 'client', targetType: 'user', targetId: userId, details: { method: 'register' } });
-    return deliver(c, issued, kind, 201);
+    await auditC(c, deps.db, 'auth.registered', { actorUserId: userId, actorRole: 'client', targetType: 'user', targetId: userId, details: { platform: b.platform } });
+    return c.json({ status: 'check_email', email: b.email }, 202);
   });
 
-  // ---------- e-mail verification ----------
+  /** Marks the address confirmed and the client's 'fiok' step done (the code was checked by the caller). */
+  async function markEmailVerified(c: C, userId: string): Promise<void> {
+    await deps.db.transaction(async (tx) => {
+      await tx.update(users).set({ emailVerifiedAt: deps.now(), updatedAt: deps.now() }).where(eq(users.id, userId));
+      const [cl] = await tx.select({ id: clients.id }).from(clients).where(eq(clients.userId, userId)).limit(1);
+      if (cl)
+        await tx
+          .update(onboardingSteps)
+          .set({ status: 'kesz', completedAt: deps.now(), updatedAt: deps.now() })
+          .where(and(eq(onboardingSteps.clientId, cl.id), eq(onboardingSteps.step, 'fiok')));
+      // signed in: the session's user; the sign-up code step has no session yet – the account itself
+      await auditC(c, tx, 'auth.email_verified', { ...(c.get('auth') ? {} : { actorUserId: userId, actorRole: 'client' }), targetType: 'user', targetId: userId, clientId: cl?.id ?? null });
+    });
+    deps.sessionCache.clear();
+  }
+
+  /** One answer for a wrong, expired or missing code and for an address without a fresh sign-up (never tells which). */
+  const REGISTER_CODE_MESSAGE = 'Ez a kód nem jó, vagy már lejárt. Nézd meg újra a levelet, vagy kérj új kódot.';
+
+  /**
+   * k7b: the code from the sign-up mail opens the session (the new sign-up step after POST /auth/register). Only an
+   * active client account whose address is not confirmed yet can be opened this way; everything else – no account,
+   * a confirmed one, a wrong code – gets the same 400, so the endpoint tells nothing about the address either.
+   */
+  r.post('/register/verify', async (c) => {
+    const b = await readJson(c, z.object({ email, code: z.string().trim().max(10), platform: z.enum(['web', 'android', 'ios']).default('web') }));
+    limit(`regverify-ip:${c.get('ipHmac')}`, 20, 15 * 60_000);
+    limit(`regverify:${k(b.email)}`, 10, 15 * 60_000);
+    const [u] = await deps.db.select().from(users).where(eq(users.email, b.email)).limit(1);
+    // the comparison runs for every address (same work), a code only counts for a fresh, unconfirmed client account
+    const res = await checkCode(deps, deps.db, { email: b.email, purpose: 'verify_email', code: b.code, ipHmac: c.get('ipHmac') });
+    if (res === 'too_many') throw E.validation({ code: CODE_MESSAGES.too_many });
+    if (res !== 'ok' || !u || u.role !== 'client' || u.status !== 'active' || u.emailVerifiedAt) throw E.validation({ code: REGISTER_CODE_MESSAGE });
+    await markEmailVerified(c, u.id);
+    const kind: ClientKind = b.platform === 'web' ? 'web' : 'native';
+    return finishLogin(c, u.id, kind, { isNewUser: true, method: 'register' });
+  });
+
+  /** k7b: a new sign-up code by address (no session yet). Always 202; a code goes only to an unconfirmed client account. */
+  r.post('/register/resend', async (c) => {
+    const b = await readJson(c, z.object({ email }));
+    limit(`resend-ip:${c.get('ipHmac')}`, 5, 3600_000);
+    limit(`resend-mail:${k(b.email)}`, 3, 3600_000);
+    const [u] = await deps.db.select().from(users).where(eq(users.email, b.email)).limit(1);
+    if (u && u.role === 'client' && u.status === 'active' && !u.emailVerifiedAt && deps.mailer.mode !== 'disabled') {
+      const code = await issueCode(deps, deps.db, { email: b.email, purpose: 'verify_email', userId: u.id, ipHmac: c.get('ipHmac') });
+      await sendCodeEmail(deps, b.email, 'auth_email_code', code);
+    }
+    return c.json({ status: 'check_email', email: b.email }, 202);
+  });
+
+  // ---------- e-mail verification (signed in: an older sign-up, or the address changed by the admin) ----------
   r.post('/email/verify', authed, async (c) => {
     const a = auth(c);
     const b = await readJson(c, z.object({ code: z.string().trim().max(10) }));
     limit(`verify:${a.userId}`, 10, 15 * 60_000);
     const res = await checkCode(deps, deps.db, { email: a.email, purpose: 'verify_email', code: b.code, ipHmac: c.get('ipHmac') });
     if (res !== 'ok') throw E.validation({ code: CODE_MESSAGES[res] });
-    await deps.db.transaction(async (tx) => {
-      await tx.update(users).set({ emailVerifiedAt: deps.now(), updatedAt: deps.now() }).where(eq(users.id, a.userId));
-      const [cl] = await tx.select({ id: clients.id }).from(clients).where(eq(clients.userId, a.userId)).limit(1);
-      if (cl)
-        await tx
-          .update(onboardingSteps)
-          .set({ status: 'kesz', completedAt: deps.now(), updatedAt: deps.now() })
-          .where(and(eq(onboardingSteps.clientId, cl.id), eq(onboardingSteps.step, 'fiok')));
-      await auditC(c, tx, 'auth.email_verified', { targetType: 'user', targetId: a.userId, clientId: cl?.id ?? null });
-    });
-    deps.sessionCache.clear();
+    await markEmailVerified(c, a.userId);
     return c.json({ emailVerified: true });
   });
 

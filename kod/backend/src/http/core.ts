@@ -117,7 +117,7 @@ export function errorHandler(deps: Deps) {
   };
 }
 
-function dbState(err: unknown): { code: string; constraint?: string } | null {
+export function dbState(err: unknown): { code: string; constraint?: string } | null {
   let e: unknown = err;
   for (let i = 0; i < 4 && e && typeof e === 'object'; i++) {
     const o = e as { code?: unknown; constraint?: unknown; cause?: unknown };

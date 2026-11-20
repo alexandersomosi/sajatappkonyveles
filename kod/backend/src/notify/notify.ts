@@ -9,7 +9,8 @@ import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { accountants, clients, notificationPrefs, notifications, pushTokens, userNotificationSettings, users } from '../db/schema.js';
 import { log, safeErr } from '../log.js';
-import { addDays, budapestLocalToUtc, budapestParts } from '../lib/dates.js';
+import { addDays, budapestLocalToUtc, budapestParts, todayBudapest } from '../lib/dates.js';
+import type { MailAttachment, MailResult } from './mailer.js';
 
 export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boolean; to: 'client' | 'accountant' | 'any' }> = {
   tax_approved: { push: true, email: true, to: 'client' },
@@ -23,7 +24,8 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   request_new: { push: true, email: true, to: 'client' },
   request_reminder: { push: true, email: true, to: 'client' },
   request_done: { push: true, email: false, to: 'client' },
-  message_new: { push: true, email: false, to: 'client' },
+  // k7b (tulaj 11-20): e-mail on by default – at most one a day per client (notify() folds the rest, see mailGroup)
+  message_new: { push: true, email: true, to: 'client' },
   client_message_new: { push: false, email: false, to: 'accountant' },
   client_request_new: { push: false, email: false, to: 'accountant' },
   client_document_uploaded: { push: false, email: false, to: 'accountant' },
@@ -184,7 +186,15 @@ export interface NotifyInput {
   pushVariant?: string;
   /** Ready push text (wins over pushVariant). */
   pushText?: { title: string; body: string };
+  /**
+   * k7b: the e-mail has its own editable text – subject email.<emailKey>.subject, body email.<emailKey>.body (same
+   * params) – and goes out with template <emailKey>. Without it the e-mail repeats the in-app title and body.
+   */
+  emailKey?: string;
 }
+
+/** k7b: the daily cap of the "new message" e-mails (one a day per client; push and in-app rows are not capped). */
+export const MESSAGE_MAIL_GROUP = 'uzenet';
 
 /** Creates the in-app row (inside the caller's transaction if given) and schedules sending. */
 export async function notify(deps: Deps, db: DbOrTx, n: NotifyInput): Promise<string> {
@@ -218,14 +228,35 @@ export async function notify(deps: Deps, db: DbOrTx, n: NotifyInput): Promise<st
   let wantPush = (alwaysOn ? def.push : pref ? pref.push : def.push) && !n.noPush;
   // SPEC §28.2.3: the user's quiet hours apply to every push except "Most hív kollégánk".
   const quietUntil = wantPush && !QUIET_HOURS_EXEMPT_KINDS.includes(n.kind) ? pushNotBefore(deps.now(), await notificationSettingsOf(db, n.userId)) : null;
-  const wantEmail = (alwaysOn ? def.email : pref ? pref.email : def.email) && !n.noEmail;
+  let wantEmail = (alwaysOn ? def.email : pref ? pref.email : def.email) && !n.noEmail;
+  // k7b: "Új üzenet" e-mails – at most one a day (Budapest) per client; later messages that day only get the in-app row
+  // and the push. The reassignment notice (variant accountant_changed) is not a message and is never folded.
+  const mailGroup = n.kind === 'message_new' && n.variant !== 'accountant_changed' ? MESSAGE_MAIL_GROUP : null;
+  let emailFolded = false;
+  if (wantEmail && mailGroup) {
+    const dayStart = budapestLocalToUtc(todayBudapest(deps.now()), '00:00');
+    const [sent] = await db
+      .select({ id: notifications.id })
+      .from(notifications)
+      .where(and(eq(notifications.userId, n.userId), eq(notifications.kind, n.kind), eq(notifications.wantEmail, true), gte(notifications.createdAt, dayStart), sql`${notifications.data}->>'mailGroup' = ${mailGroup}`))
+      .limit(1);
+    if (sent) {
+      wantEmail = false;
+      emailFolded = true;
+    }
+  }
   let pushText = n.pushText ?? null;
   if (!pushText && n.pushVariant && (await deps.content.exists(`notif.${n.kind}.${n.pushVariant}.title`)))
     pushText = {
       title: await deps.content.render(`notif.${n.kind}.${n.pushVariant}.title`, params),
       body: await deps.content.render(`notif.${n.kind}.${n.pushVariant}.body`, params),
     };
-  const emailBody = wantEmail && n.emailBodyKey && (await deps.content.exists(n.emailBodyKey)) ? await deps.content.render(n.emailBodyKey, params) : null;
+  let emailBody = wantEmail && n.emailBodyKey && (await deps.content.exists(n.emailBodyKey)) ? await deps.content.render(n.emailBodyKey, params) : null;
+  let emailSubject: string | null = null;
+  if (wantEmail && n.emailKey) {
+    emailSubject = await deps.content.render(`email.${n.emailKey}.subject`, params);
+    emailBody = await deps.content.render(`email.${n.emailKey}.body`, params);
+  }
 
   // document_processed: at most one push per day – fold into today's row instead.
   if (n.kind === 'document_processed') {
@@ -264,6 +295,9 @@ export async function notify(deps: Deps, db: DbOrTx, n: NotifyInput): Promise<st
         ...(n.data ?? {}),
         ...(n.kind === 'document_processed' ? { count: Number(n.params?.count ?? 1) } : {}),
         ...(emailBody ? { emailBody } : {}),
+        ...(emailSubject ? { emailSubject, emailTemplate: n.emailKey } : {}),
+        ...(mailGroup ? { mailGroup } : {}),
+        ...(emailFolded ? { emailFolded: true } : {}),
         ...(quietUntil ? { pushNotBefore: quietUntil.toISOString() } : {}),
         ...(pushText ? { pushTitle: pushText.title, pushBody: pushText.body } : {}),
       },
@@ -293,6 +327,41 @@ export async function sendCodeEmail(
     log().error({ template: kind, err: safeErr(err) }, 'code mail failed');
     return 'disabled';
   }
+}
+
+/**
+ * k7b: a direct e-mail whose text lives in the content system – subject email.<key>[.<variant>].subject, body
+ * email.<key>[.<variant>].body (a variant falls back to the base key part by part), editable on /admin/szovegek – sent
+ * with template <key>. For what the notification path cannot do: an attachment, staff alerts, an address that is about
+ * to be pseudonymised. Never throws: a mail problem is logged and returned as 'failed' (the caller's action stands).
+ * Never call it inside an open transaction (the DEMO mailer writes demo_outbox through the pool).
+ */
+export async function sendTemplateMail(
+  deps: Deps,
+  m: { to: string; key: string; variant?: string; params?: Params; attachments?: MailAttachment[] },
+): Promise<MailResult | 'failed'> {
+  const params: Params = { brand: brand.name, appUrl: deps.cfg.appPublicUrl, panelUrl: deps.cfg.panelPublicUrl, ...(m.params ?? {}) };
+  const keyOf = async (part: 'subject' | 'body') => {
+    if (m.variant) {
+      const k = `email.${m.key}.${m.variant}.${part}`;
+      if (await deps.content.exists(k)) return k;
+    }
+    return `email.${m.key}.${part}`;
+  };
+  try {
+    const subject = await deps.content.render(await keyOf('subject'), params);
+    const text = await deps.content.render(await keyOf('body'), params);
+    return await deps.mailer.send({ to: m.to, subject, text, template: m.key, ...(m.attachments?.length ? { attachments: m.attachments } : {}) });
+  } catch (err) {
+    log().warn({ template: m.key, err: safeErr(err) }, 'template mail failed');
+    return 'failed';
+  }
+}
+
+/** k7b: the active admins (staff alerts by e-mail). */
+export async function activeAdminEmails(db: DbOrTx): Promise<string[]> {
+  const rows = await db.select({ email: users.email }).from(users).where(and(eq(users.role, 'admin'), eq(users.status, 'active')));
+  return [...new Set(rows.map((r) => r.email))];
 }
 
 /** Sends pending push/e-mail for recent notifications. Safe to run concurrently. */
@@ -360,8 +429,12 @@ export async function dispatchPending(deps: Deps, limit = 200): Promise<{ push: 
           const footer = await deps.content.render('email.generic.footer', { brand: brand.name });
           // Staff links open the panel, client links the app.
           const link = claimE.link ? `\n\n${u.role === 'client' ? deps.cfg.appPublicUrl : deps.cfg.panelPublicUrl}${claimE.link}` : '';
-          const emailBody = typeof (claimE.data as { emailBody?: unknown } | null)?.emailBody === 'string' ? String((claimE.data as { emailBody: string }).emailBody) : claimE.body;
-          const r = await deps.mailer.send({ to: u.email, subject: claimE.title, text: `${emailBody}${link}${footer}`, template: claimE.kind });
+          const d = (claimE.data ?? {}) as { emailBody?: unknown; emailSubject?: unknown; emailTemplate?: unknown };
+          const emailBody = typeof d.emailBody === 'string' ? d.emailBody : claimE.body;
+          // k7b: a dedicated e-mail text (NotifyInput.emailKey) has its own subject and template key
+          const subject = typeof d.emailSubject === 'string' ? d.emailSubject : claimE.title;
+          const template = typeof d.emailTemplate === 'string' ? d.emailTemplate : claimE.kind;
+          const r = await deps.mailer.send({ to: u.email, subject, text: `${emailBody}${link}${footer}`, template });
           if (r === 'disabled') await db.update(notifications).set({ error: 'mail_not_configured' }).where(eq(notifications.id, p.id));
           else mailN++;
         } catch (err) {

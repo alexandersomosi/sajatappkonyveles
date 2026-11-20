@@ -74,7 +74,7 @@ export function k29Defaults(): Record<string, string> {
   out['zarolas.mit.kezi'] = 'a könyvelésed';
   out['k29.zarolas.kezi_banner'] = 'Szünetel a könyvelésed. Írj nekünk, ha kérdésed van.';
   out['notif.service_locked.kezi.title'] = 'Szünetel a könyvelésed';
-  out['notif.service_locked.kezi.body'] = 'Írj nekünk az Üzenetek fülön, ha kérdésed van.';
+  out['notif.service_locked.kezi.body'] = 'Írj nekünk az Üzenetek fülön, és megbeszéljük, hogyan folytathatjuk.';
   // ---- §29.4.4 taxpayer lookup
   out['k29.adoszam.nem_elerheto'] = TAXPAYER_LOOKUP_K29.unavailableText;
   out['k29.adoszam.kezzel'] = TAXPAYER_LOOKUP_K29.manualButton;

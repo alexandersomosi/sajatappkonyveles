@@ -123,6 +123,14 @@ export function meRoutes(deps: Deps) {
     if (b.displayName) await deps.db.update(users).set({ displayName: b.displayName, updatedAt: deps.now() }).where(eq(users.id, a.userId));
     for (const p of b.notificationPrefs ?? []) {
       if ((p.kind as NotificationKind).startsWith('auth_')) continue;
+      // k7b: a row only for a real choice. A value equal to the default with no earlier row is not stored (older apps
+      // send every switch on "Mentés"), so a later change of a default – the message_new e-mail, 11-20 – still reaches
+      // everybody who never chose otherwise. An existing row is always updated.
+      const def = KIND_DEFAULTS[p.kind as NotificationKind];
+      if (def && p.push === def.push && p.email === def.email) {
+        const [had] = await deps.db.select({ kind: notificationPrefs.kind }).from(notificationPrefs).where(and(eq(notificationPrefs.userId, a.userId), eq(notificationPrefs.kind, p.kind))).limit(1);
+        if (!had) continue;
+      }
       await deps.db
         .insert(notificationPrefs)
         .values({ userId: a.userId, kind: p.kind, push: p.push, email: p.email })

@@ -61,12 +61,22 @@ $ertekek['NAV_DEV_NAME'] = Read-Host '   Fejlesztő neve (pl. Somosi Kft.)'
 $ertekek['NAV_DEV_CONTACT'] = Read-Host '   Fejlesztő e-mail címe'
 $ertekek['NAV_DEV_TAX_NUMBER'] = Read-Host '   Fejlesztő adószáma (8 számjegy, törzsszám)'
 Write-Host '5b) Saját NAV technikai felhasználó az adószám-kereséshez (a Somosi Kft. nevén; mind az öt, vagy egyik sem)'
-$ertekek['NAV_LOOKUP_MODE'] = Read-Host '   Mód: test vagy prod'
-$ertekek['NAV_LOOKUP_TAX_NUMBER'] = Read-Host '   A Somosi Kft. törzsszáma (8 számjegy)'
-$ertekek['NAV_LOOKUP_LOGIN'] = Read-Host '   Technikai felhasználó neve'
-$ertekek['NAV_LOOKUP_PASSWORD'] = Read-Secret '   Technikai felhasználó jelszava (nem látszik)'
-$ertekek['NAV_LOOKUP_SIGN_KEY'] = Read-Secret '   XML aláírókulcs (nem látszik)'
-$ertekek['NAV_LOOKUP_EXCHANGE_KEY'] = Read-Secret '   XML cserekulcs (nem látszik)'
+# 11-20: a nav_kulcs_mentes.ps1 ezen a gépen (HKCU) már elmentette és kipróbálta őket – "gep" = onnan veszi, nem kell újra beírni.
+$navGep = [Environment]::GetEnvironmentVariable('NAV_LOOKUP_LOGIN', 'User')
+$m = Read-Host ('   Mód: test vagy prod' + $(if ($navGep) { '; "gep" = a gépen tárolt, kipróbált éles adatok' } else { '' }))
+if ($navGep -and $m.Trim().ToLower() -eq 'gep') {
+    foreach ($n in 'NAV_LOOKUP_MODE','NAV_LOOKUP_TAX_NUMBER','NAV_LOOKUP_LOGIN','NAV_LOOKUP_PASSWORD','NAV_LOOKUP_SIGN_KEY','NAV_LOOKUP_EXCHANGE_KEY') {
+        $ertekek[$n] = [Environment]::GetEnvironmentVariable($n, 'User')
+    }
+    Write-Host '   A gépen tárolt NAV-adatokat használom (az értékek nem látszanak).' -ForegroundColor Green
+} else {
+    $ertekek['NAV_LOOKUP_MODE'] = $m
+    $ertekek['NAV_LOOKUP_TAX_NUMBER'] = Read-Host '   A Somosi Kft. törzsszáma (8 számjegy)'
+    $ertekek['NAV_LOOKUP_LOGIN'] = Read-Host '   Technikai felhasználó neve'
+    $ertekek['NAV_LOOKUP_PASSWORD'] = Read-Secret '   Technikai felhasználó jelszava (nem látszik)'
+    $ertekek['NAV_LOOKUP_SIGN_KEY'] = Read-Secret '   XML aláírókulcs (nem látszik)'
+    $ertekek['NAV_LOOKUP_EXCHANGE_KEY'] = Read-Secret '   XML cserekulcs (nem látszik)'
+}
 
 Write-Host '6) Díjszámla: Számlázz.hu Számla Agent (amíg nincs: DEMO díjbekérő, nem számla)'
 Write-Host '   FIGYELEM: az ÉLES Számla Agent kulcs első számlája elindítja a fizetős csomagot – csak élesítéskor (APP_ENV=production).' -ForegroundColor Yellow

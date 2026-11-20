@@ -105,7 +105,8 @@ export function k28Defaults(): Record<string, string> {
     const base = v === 'alap' ? 'notif.invoice_new' : `notif.invoice_new.${v}`;
     out[`${base}.title`] = t.title;
     out[`${base}.body`] = t.body;
-    out[`email.invoice_new${v === 'alap' ? '' : `.${v}`}.body`] = `${t.body}\n\n${NOTIFY_INVOICE_TEXTS.emailFooter}`;
+    // k7b: the e-mail has its own sentence (NOTIFY_INVOICE_TEXTS.email) + the same link line in all five
+    out[`email.invoice_new${v === 'alap' ? '' : `.${v}`}.body`] = `${NOTIFY_INVOICE_TEXTS.email[v]}\n\n${NOTIFY_INVOICE_TEXTS.emailFooter}`;
   }
   out['notif.invoice_new.rejtett.title'] = NOTIFY_INVOICE_TEXTS.rejtett.title;
   out['notif.invoice_new.rejtett.title_tobb'] = NOTIFY_INVOICE_TEXTS.rejtett.titleTobb;

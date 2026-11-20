@@ -138,7 +138,13 @@ export default function ErtesitesBeallitas() {
           tolt={ment.isPending || csend.isPending}
           onPress={async () => {
             try {
-              await ment.mutateAsync({ notificationPrefs: Object.entries(prefs).map(([kind, v]) => ({ kind, push: v.push, email: v.email })) });
+              // k7b: only the switches that really changed (an untouched one keeps following the default)
+              const eredeti = new Map((me.data?.notificationPrefs ?? []).map((x) => [x.kind as string, x]));
+              const valtozott = Object.entries(prefs).filter(([kind, v]) => {
+                const o = eredeti.get(kind);
+                return !o || o.push !== v.push || o.email !== v.email;
+              });
+              await ment.mutateAsync({ notificationPrefs: valtozott.map(([kind, v]) => ({ kind, push: v.push, email: v.email })) });
               await csend.mutateAsync({ notificationSettings: b });
               jelez({ szoveg: 'Elmentettük.', kesz: true });
             } catch (e) {

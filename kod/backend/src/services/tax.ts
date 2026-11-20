@@ -221,7 +221,8 @@ export async function recalcYear(deps: Deps, db: DbOrTx, clientId: string, year:
 /** A fresh calculation version of one quarter (accountant "Számolás"). */
 export async function calculatePeriod(deps: Deps, db: DbOrTx, clientId: string, periodKey: string, asOf: string, by: string): Promise<CalcRow> {
   if (/^\d{4}-HIPA-\d$/.test(periodKey))
-    throw E.conflict('Az iparűzési adóelőleget nem a motor hagyja jóvá: az összeg az előző évi adó. Add meg kézzel az Iparűzési adó kártyán (Jóváhagyás kézzel).');
+    // k7b (KONYVELO_LEFEDETTSEG, 1. hiba): the panel's Adó tab shows the advance with its own approval form
+    throw E.conflict('Az iparűzési adóelőleget nem a motor számolja: az összeg az előző évi adóból jön. Az Adó fülön kattints az előleg kártyájára, add meg az összeget és az önkormányzat számlaszámát, és nyomd meg: „Jóváhagyom és elküldöm”.');
   const m = /^(\d{4})-Q([1-4])$/.exec(periodKey);
   if (!m) throw E.validation({ periodKey: 'Negyedév kulcs kell, pl. 2026-Q3.' });
   const year = Number(m[1]);

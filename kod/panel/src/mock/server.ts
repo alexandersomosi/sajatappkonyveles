@@ -721,8 +721,31 @@ on('POST', '/acc/tax-calculations/:id/approve', ({ p, body }) => {
   logAudit('tax.approved', c, { periodKey: per.periodKey, totalHuf: r.totalHuf });
   return per;
 });
+// k7b: the iparűzési adóelőleg by hand (same rules as the server: an account number when the amount is > 0)
+on('POST', '/acc/tax-periods/:id/hipa-approve', ({ p, body }) => {
+  const { c, p: per } = findPeriod(p.id!);
+  if (per.kind !== 'hipa') throw new MockError(404, 'not_found', 'Nincs ilyen időszak.');
+  if (per.calcStatus === 'jovahagyva') throw new MockError(409, 'conflict', 'Ez az előleg már jóvá van hagyva. Előbb nyisd újra.');
+  const amount = Number(body.amountHuf ?? 0);
+  const acct = String(body.accountNumber ?? '').trim();
+  if (amount > 0 && !/^\d{8}-\d{8}(-\d{8})?$/.test(acct)) throw new MockError(400, 'validation_failed', 'Nézd át a pirossal jelölt mezőt.', { accountNumber: 'Add meg az önkormányzat iparűzésiadó-számláját (pl. 11784009-15400017-03540000).' });
+  per.calcStatus = 'jovahagyva';
+  per.paymentStatus = amount > 0 ? 'fizetendo' : 'nincs_fizetendo';
+  per.totalHuf = amount;
+  per.items = amount > 0 ? [{ id: `hipa-${per.id}`, kind: 'hipa_eloleg', label: 'Iparűzési adóelőleg', sublabel: 'helyi iparűzési adó', amountHuf: amount, dueDate: per.dueDate, accountName: 'Önkormányzat – iparűzési adó beszedési számla', accountNumber: acct, iban: '', reference: c.adoszam ?? '', markedPaidAt: null, verifiedAt: null } as never] : [];
+  logAudit('tax.hipa_approved', c, { periodKey: per.periodKey, totalHuf: amount });
+  return per;
+});
 on('POST', '/acc/tax-periods/:id/reopen', ({ p, body }) => {
   const { c, p: per } = findPeriod(p.id!);
+  if (per.kind === 'hipa') {
+    per.calcStatus = 'nincs';
+    per.paymentStatus = 'nincs_fizetendo';
+    per.items = [];
+    per.totalHuf = null;
+    logAudit('tax.reopened', c, { periodKey: per.periodKey, reason: body.reason });
+    return per;
+  }
   per.calcStatus = 'becsles';
   per.paymentStatus = 'nincs_fizetendo';
   per.items = [];

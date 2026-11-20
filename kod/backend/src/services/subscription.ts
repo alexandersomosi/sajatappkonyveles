@@ -14,7 +14,9 @@ import { randomBase32, randomToken } from '../lib/crypto.js';
 import { E } from '../lib/errors.js';
 import { log, safeErr } from '../log.js';
 import { audit } from '../audit.js';
-import { notify } from '../notify/notify.js';
+import { notify, sendTemplateMail } from '../notify/notify.js';
+import { huLongDate } from '../_shared/bekotes.js';
+import { clientName } from './people.js';
 import { FINAL_FAIL, FINAL_OK, SimplePayError, spSign, spTime, spVerify, salt as newSalt, type SpInvoice } from '../payments/simplepay.js';
 import { demoFeeInvoiceProvider, InvoiceNotConfigured } from '../payments/invoices.js';
 import { endRelationship } from './kyc.js';
@@ -682,6 +684,47 @@ export async function hasActiveCard(db: DbOrTx, sub: Pick<SubRow, 'clientId' | '
   return reg?.status === 'aktiv';
 }
 
+/**
+ * k7b (LEVEL_LEFEDETTSEG #54, #55): the subscription has really ended (the period end of a cancelled subscription, or
+ * the admin set the client "megszűnt"). The client is told (in-app + e-mail email.subscription_ended) and the
+ * accountant gets the closing task (withdraw the meghatalmazás, disable the technical user; e-mail
+ * email.subscription_ended_konyvelo). Callers run it once per transition (the status change guards it). A terminated
+ * client gets the termination notices instead (konzol-muveletek.ts applyTerminationEffect), never both.
+ */
+export async function notifyServiceEnded(deps: Deps, clientId: string, endedOn: string): Promise<void> {
+  const db = deps.db;
+  const [cl] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+  if (!cl || cl.terminated || cl.anonymizedAt) return;
+  const datum = huLongDate(endedOn);
+  await notify(deps, db, { userId: cl.userId, kind: 'subscription_canceled', variant: 'megszunt', params: { datum }, link: '/fiok/elofizetes', emailKey: 'subscription_ended' });
+  if (cl.accountantId) {
+    const { accountants } = await import('../db/schema.js');
+    const [acc] = await db.select({ userId: accountants.userId }).from(accountants).where(eq(accountants.id, cl.accountantId)).limit(1);
+    if (acc) await notify(deps, db, { userId: acc.userId, kind: 'assist_task', variant: 'megszunt', params: { clientName: clientName(cl), datum }, link: `/ugyfelek/${clientId}`, emailKey: 'subscription_ended_konyvelo' });
+  }
+}
+
+/**
+ * k7b (LEVEL_LEFEDETTSEG #33): the admin deleted the client's saved card – the client hears it by e-mail, with the way
+ * out (a new card, or nothing to do when the subscription is cancelled anyway). Only when a usable card was there.
+ */
+export async function notifyCardDeletedByAdmin(deps: Deps, clientId: string): Promise<void> {
+  const [row] = await deps.db.select({ email: users.email, status: users.status, firstName: clients.firstName }).from(clients).innerJoin(users, eq(users.id, clients.userId)).where(eq(clients.id, clientId)).limit(1);
+  if (!row || row.status === 'deleted') return;
+  const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
+  const running = Boolean(sub && ['active', 'past_due', 'suspended'].includes(sub.status) && !sub.cancelAtPeriodEnd);
+  const r = await sendTemplateMail(deps, { to: row.email, key: 'card_deleted_by_admin', ...(running ? {} : { variant: 'lemondva' }), params: { firstName: row.firstName } });
+  await audit(deps.db, { action: 'mail.card_deleted_by_admin', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { result: r } });
+}
+
+/** A usable saved card (Stripe / new DEMO payment method or an old SimplePay card registration) exists. */
+export async function hasUsableCard(db: DbOrTx, clientId: string): Promise<boolean> {
+  const [pm] = await db.select({ id: paymentMethods.id }).from(paymentMethods).where(and(eq(paymentMethods.clientId, clientId), eq(paymentMethods.status, 'aktiv'))).limit(1);
+  if (pm) return true;
+  const [reg] = await db.select({ id: cardRegistrations.id }).from(cardRegistrations).where(and(eq(cardRegistrations.clientId, clientId), eq(cardRegistrations.status, 'aktiv'))).limit(1);
+  return Boolean(reg);
+}
+
 /** SimplePay rule: card deletion must always be possible, without conditions (SPEC §9.6). */
 export async function deleteCard(deps: Deps, clientId: string, actor: { userId: string | null; role: string }): Promise<void> {
   // SPEC §29.1.11 (ÁSZF 8.4, unconditional): the Stripe / new DEMO card is detached at the provider and marked 'torolve'.
@@ -879,6 +922,8 @@ export async function runBillingJob(deps: Deps): Promise<Record<string, number>>
     await db.update(clients).set({ lifecycle: 'megszunt', updatedAt: now }).where(eq(clients.id, s.clientId));
     await endRelationship(db, s.clientId, now);
     await audit(db, { action: 'subscription.canceled', actorRole: 'system', targetType: 'subscription', targetId: s.id, clientId: s.clientId });
+    // k7b: the client and the accountant hear about it (a terminated client gets the termination notices instead)
+    if (!tcl?.terminated) await notifyServiceEnded(deps, s.clientId, s.currentPeriodEnd ?? today).catch((err: Error) => log().warn({ err: safeErr(err) }, 'service-ended notice failed'));
     out.canceled++;
   }
 

@@ -102,7 +102,7 @@ describe('order 2 – switching branches never loses what was typed or done', ()
     h.clock.set('2026-11-19T09:00:35Z');
     expect((await status(c.token, 'van', { undo: true })).status).toBe(200); // the toast: undo, but it reverses a notified change
     const n = (await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, anna.userId), eq(notifications.kind, 'client_path_changed')))).filter((x) => x.title.startsWith('Géza Gyors') || x.title.startsWith('Gyors Géza'));
-    expect(n.map((x) => x.body)).toEqual(['Most indítom → Már van vállalkozásom', 'Már van vállalkozásom → Most indítom', 'Most indítom → Már van vállalkozásom']);
+    expect(n.map((x) => x.body)).toEqual(['Van már vállalkozása? Eddig: „Most indítom”, most: „Már van vállalkozásom”.', 'Van már vállalkozása? Eddig: „Már van vállalkozásom”, most: „Most indítom”.', 'Van már vállalkozása? Eddig: „Most indítom”, most: „Már van vállalkozásom”.']);
     const a = await h.deps.db.select().from(auditLog).where(and(eq(auditLog.clientId, c.clientId), eq(auditLog.action, 'business_status.changed')));
     expect(a.filter((x) => (x.details as { undo?: boolean }).undo).length).toBe(1);
     h.clock.set('2026-11-19T09:01:00Z');
@@ -209,7 +209,7 @@ describe('order 3 – the assisted path: client is the blocker before the UJEGYK
     });
     expect(patch.status).toBe(200);
     const [n] = (await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, d.userId), eq(notifications.kind, 'registration_reminder')))).slice(-1);
-    expect(n!.title).toBe('Megírtuk a tevékenységed sorát');
+    expect(n!.title).toBe('Kiválasztottuk a tevékenységed kódját');
     expect(n!.body).toContain('Bence beküldi');
     expect(n!.link).toBe('/bekotes/vallalkozas/engedely');
   });

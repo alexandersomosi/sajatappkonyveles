@@ -14,6 +14,7 @@ import { audit } from '../audit.js';
 import { auth, type Env } from '../http/core.js';
 import { addDays, todayBudapest } from '../lib/dates.js';
 import { ApiError } from '../lib/errors.js';
+import { huArticle } from '../lib/nevelo.js';
 import { accountantParams, notify } from '../notify/notify.js';
 import { accountantUserOf } from './team.js';
 import { clientName, type ClientRow } from './people.js';
@@ -76,10 +77,12 @@ export async function computeServiceLock(deps: Deps, clientId: string): Promise<
   return next;
 }
 
-async function mitText(deps: Deps, reasons: ServiceLockReason[]): Promise<string> {
+export async function mitText(deps: Deps, reasons: ServiceLockReason[]): Promise<string> {
   const parts: string[] = [];
   for (const r of reasons) parts.push(await deps.content.get(`zarolas.mit.${r}`));
-  return parts.join(' és a ');
+  // k7b: "havidíj és az éves zárás díja" – the article of each later part follows its own first word (the first part's
+  // article stands in the template: "a {mit}")
+  return parts.map((p, i) => (i === 0 ? p : `${huArticle(p)} ${p}`)).join(' és ');
 }
 
 export async function serviceLockView(deps: Deps, cl: ClientRow): Promise<ServiceLockView | null> {

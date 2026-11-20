@@ -2,7 +2,7 @@
 // revenue items (§5.5 rule), recalculates the estimate and flags. Read-only towards NAV.
 import { and, eq, sql } from 'drizzle-orm';
 import type { Deps } from '../deps.js';
-import { clients, navCredentials, navInvoices, navSyncRuns, revenueItems } from '../db/schema.js';
+import { accountants, clients, navCredentials, navInvoices, navSyncRuns, revenueItems, users } from '../db/schema.js';
 import { isNavError, NavError, type NavCredentials, type NormalizedInvoice } from '../nav/types.js';
 import { todayBudapest } from '../lib/dates.js';
 import { log, safeErr } from '../log.js';
@@ -12,6 +12,8 @@ import { checkCompletion, setStep, stepStatus } from './onboarding.js';
 import { computeFlags } from './flags.js';
 import { recalcYear } from './tax.js';
 import { notifyNewInvoices, payerKindOf } from './szamla-ertesites.js';
+import { activeAdminEmails, sendTemplateMail } from '../notify/notify.js';
+import { clientName } from './people.js';
 
 export interface StoredCreds {
   login: string;
@@ -178,8 +180,39 @@ export async function syncClient(deps: Deps, clientId: string, o: { asOf?: strin
     if (added > 0) await recalcYear(deps, deps.db, clientId, Number(asOf.slice(0, 4)), { asOf });
     await computeFlags(deps, deps.db, clientId);
     if (added > 0) await notifyNewInvoices(deps, clientId, newIds, { firstSync }).catch((e2: Error) => log().warn({ err: safeErr(e2) }, 'invoice notification failed'));
+    // k7b (LEVEL_LEFEDETTSEG #71): working credentials ('rendben') just broke on the technical user or its rights → the
+    // accountant and the admins get ONE e-mail. The daily job skips 'hibas' credentials, so it never repeats; it comes
+    // again only after a fix (test or sync → 'rendben') and a new failure.
+    if (authErr && cred.status === 'rendben') await mailNavError(deps, clientId, e.messageHu || e.code, o.by ?? null).catch((e3: Error) => log().warn({ err: safeErr(e3) }, 'nav error mail failed'));
     return { runId, status: 'hiba', digestsSeen: seen, invoicesNew: added, errorCode: e.code, messageHu: e.messageHu };
   }
+}
+
+/** "Hibás a technikai felhasználó." → "hibás a technikai felhasználó" (it follows a colon); an acronym stays as it is. */
+export function navErrorPhrase(msg: string): string {
+  const t = msg.trim().replace(/[.!?…]+$/, '');
+  return /^\p{Lu}(?!\p{Lu})/u.test(t) ? t.charAt(0).toLocaleLowerCase('hu-HU') + t.slice(1) : t;
+}
+
+async function mailNavError(deps: Deps, clientId: string, message: string, byUserId: string | null): Promise<void> {
+  const [cl] = await deps.db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+  if (!cl) return;
+  const params = { clientName: clientName(cl), hiba: navErrorPhrase(message) };
+  const sentTo = new Set<string>();
+  if (cl.accountantId) {
+    const [acc] = await deps.db.select({ userId: users.id, email: users.email, status: users.status }).from(accountants).innerJoin(users, eq(users.id, accountants.userId)).where(eq(accountants.id, cl.accountantId)).limit(1);
+    // the accountant who pressed "Lekérdezés most" sees the error on the screen already
+    if (acc && acc.status === 'active' && acc.userId !== byUserId) {
+      await sendTemplateMail(deps, { to: acc.email, key: 'nav_hiba', params });
+      sentTo.add(acc.email);
+    }
+  }
+  for (const to of await activeAdminEmails(deps.db)) {
+    if (sentTo.has(to)) continue;
+    await sendTemplateMail(deps, { to, key: 'nav_hiba', variant: 'admin', params });
+    sentTo.add(to);
+  }
+  await audit(deps.db, { action: 'mail.nav_hiba', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { recipients: sentTo.size } });
 }
 
 /** Daily job: every client with working credentials, serially. */
