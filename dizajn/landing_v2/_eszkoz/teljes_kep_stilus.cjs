@@ -9,7 +9,7 @@ module.exports = function teljesKepStilus(vh) {
 @media (max-width: 980px) {
   .szinpad-mod .blepes { height: 0 !important; }
   .szinpad-mod .szinpad { position: relative !important; top: 0 !important; height: ${vh}px !important; height: calc(${vh}px - var(--fej)) !important; }
-  .szinpad-mod { --szw: min(270px, calc((${vh}px - var(--fej) - 300px) / 2.046)) !important; }
+  .szinpad-mod { --szw: min(252px, calc((${vh}px - var(--fej) - 310px) / 2.046)) !important; }
 }
 @media (min-width: 981px) {
   .szinpad-mod { --szw: min(330px, calc((${vh}px - var(--fej) - 110px) / 2.046)) !important; }

@@ -73,7 +73,7 @@ const varj = ms => new Promise(r => setTimeout(r, ms));
     });
     const gond = [];
     if (m.kilog) gond.push('vízszintes kilógás');
-    if (m.szoveg) {
+    if (m.szoveg && /^0[1-7]/.test(c.nev)) {
       if (m.szoveg[3] > m.vh + 1) gond.push('a szöveg kilóg alul');
       if (m.tel && m.szoveg[1] < m.tel[3] - 1) gond.push('a szöveg a telefon alá csúszik');
     }

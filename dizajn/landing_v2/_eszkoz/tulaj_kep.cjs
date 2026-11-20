@@ -18,6 +18,8 @@ const VH = +(vhArg || 900);
   await p.setViewport({ width: +szel, height: VH, deviceScaleFactor: +dpr });
   await p.goto(pathToFileURL(path.resolve(html)).href, { waitUntil: 'networkidle0', timeout: 60000 });
   await p.addStyleTag({ content: teljesKepStilus(VH) });
+  await p.waitForFunction(() => { const b = document.querySelector('.bemutato .blepes'); return !b || !matchMedia('(max-width: 980px)').matches || b.offsetHeight === 0; }, { timeout: 8000, polling: 100 })
+    .catch(() => hibak.push('a teljes oldalas kép stílusa nem érvényesült'));
   await p.evaluate(async () => { await document.fonts.ready; for (const i of document.images) { i.loading = 'eager'; if (!i.complete) await new Promise(r => { i.onload = i.onerror = r; }); } });
   const h = await p.evaluate(() => document.documentElement.scrollHeight);
   for (let y = 0; y < h; y += 600) { await p.evaluate(y => window.scrollTo(0, y), y); await new Promise(r => setTimeout(r, 60)); }

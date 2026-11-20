@@ -66,7 +66,9 @@ function figyel(page, naplo) {
     await page.goto(OLDAL, { waitUntil: 'networkidle0', timeout: 45000 }).catch(e => naplo.push('goto: ' + e.message));
     await page.evaluate(() => document.fonts && document.fonts.ready);
     await page.addStyleTag({ content: teljesKepStilus(n.h) });
-    const h = await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
+    await page.waitForFunction(() => { const b = document.querySelector('.bemutato .blepes'); return !b || !matchMedia('(max-width: 980px)').matches || b.offsetHeight === 0; }, { timeout: 8000, polling: 100 })
+      .catch(() => naplo.push('a teljes oldalas kép stílusa nem érvényesült'));
+    const h =await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
     await page.setViewport({ width: n.w, height: h, deviceScaleFactor: n.dpr });
     await page.evaluate(async () => {
       for (const img of document.images) { img.loading = 'eager'; if (!img.complete) await new Promise(r => { img.onload = img.onerror = r; }); }
