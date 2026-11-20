@@ -3,10 +3,10 @@
 // „DEMO”, pénz nem mozdul. A szerveroldali szabályok másolata egyszerűsítve (services/guided.ts).
 import type { JourneyView, NavAddress, OnboardingState, SubscriptionView, TaxpayerLookupResult } from '../../_shared/api';
 import { fillPlaceholders } from '../../_shared/bekotes';
-import { CARD_CONSENT_TEXT, CARD_CONSENT_UI, CARD_CONSENT_VERSION, PAYMENT_FAIL_TEXTS, type CardInfoView, type CheckoutResultView, type ClientPaymentItem, type DuePaymentView, type SubscriptionViewK29 } from '../../_shared/k29';
+import { CARD_CONSENT_TEXT, CARD_CONSENT_UI, CARD_CONSENT_VERSION, PAYMENT_FAIL_TEXTS, type CardInfoView, type CheckoutResultView, type ClientPaymentItem, type DuePaymentView, type FeeInvoiceItemK29, type SubscriptionViewK29 } from '../../_shared/k29';
 import { GUIDED_ORDER, GUIDED_OWN_ROUTES, GUIDED_STEP_ROUTES, GUIDED_TEXTS, type GuidedState, type GuidedStepKey, type GuidedStepView, type GuidedView } from '../../_shared/k29g';
 import type { Keres, Valasz } from '../http';
-import { BENCE } from './adatok';
+import { BENCE, dijszamlak } from './adatok';
 
 type Kezelo = (m: RegExpMatchArray, q: URLSearchParams, test: Record<string, unknown>, k: Keres) => Valasz | Promise<Valasz> | undefined;
 
@@ -168,10 +168,10 @@ export function k29Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
     c.lepes('elofizetes', 'kesz');
     c.elofizetesBeallit({ ...c.elofizetes(), status: 'active', mode: 'demo', cancelAtPeriodEnd: false, currentPeriodEnd: '2026-12-17', nextChargeAt: '2026-12-17T08:00:00Z', failedAttempts: 0 });
   };
-  ut('GET', '/client/subscription/consent', () => {
+  ut('GET', '/client/subscription/consent', (_m, q) => {
     if (c.kell()) return c.kell()!;
     // a card change while a paid month runs: no "most … az első hónapért" line (nothing is charged now)
-    const sablon = c.st().kartya ? CARD_CONSENT_TEXT.split('\n').filter((s) => !s.includes('{elsoOsszeg}')).join('\n') : CARD_CONSENT_TEXT;
+    const sablon = c.st().kartya && q.get('purpose') !== 'fizesd_ki' ? CARD_CONSENT_TEXT.split('\n').filter((s) => !s.includes('{elsoOsszeg}')).join('\n') : CARD_CONSENT_TEXT;
     const text = fillPlaceholders(sablon, { elsoOsszeg: '19 999', idoszak: '2026. 11. 17.–2026. 12. 17.', havidij: '19 999', szunetdij: '2 999' });
     return ok({ version: CARD_CONSENT_VERSION, text, sha256: 'minta', amountNowHuf: c.st().kartya ? 0 : 19_999, monthlyHuf: 19_999, pauseHuf: 2_999, period: c.st().kartya ? null : { start: '2026-11-17', end: '2026-12-17' }, provider: 'demo', paymentMode: 'demo', demo: true, checkbox: CARD_CONSENT_UI.checkbox, button: c.st().kartya ? CARD_CONSENT_UI.buttonNoAmount : CARD_CONSENT_UI.button, under: CARD_CONSENT_UI.under });
   });
@@ -208,6 +208,12 @@ export function k29Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
     return ok({ url: `minta:${cs}`, paymentId: cs, expiresAt: new Date(Date.now() + 30 * 60_000).toISOString(), mode: 'payment', cel: 'fizesd-ki', provider: 'demo', demo: true });
   });
   ut('GET', '/client/payments', () => c.kell() ?? ok(c.st().fizetesek));
+  // every fee invoice with its kind and status (the 2nd newest shows a reversed one with its storno PDF)
+  ut('GET', '/client/fee-invoices/k29', () => {
+    if (c.kell()) return c.kell()!;
+    const items: FeeInvoiceItemK29[] = dijszamlak().map((d, i) => ({ ...d, kind: 'szamla', status: i === 1 ? 'sztorno' : 'kiallitva', stornoFileId: i === 1 ? 'minta-pdf' : null, paymentId: null, label: 'Könyvelési szolgáltatás – havidíj' }));
+    return ok({ items });
+  });
   // a §29-es mezők a régi előfizetés-nézet mellé (a régi kezelő adja az alapot)
   ut('GET', '/client/subscription', () => {
     if (c.kell()) return c.kell()!;

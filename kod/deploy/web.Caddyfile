@@ -75,3 +75,9 @@
 	root * /srv/panel
 	import kezjegy_statikus
 }
+
+# SPEC §29.3.6: the adozz.hu landing page (static HTML + CSS, no script).
+:8082 {
+	root * /srv/landing
+	import kezjegy_statikus
+}

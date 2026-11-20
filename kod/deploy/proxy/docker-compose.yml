@@ -1,0 +1,57 @@
+# SPEC §29.3.2 – the Adózz public proxy (replaces the old shared appok-caddy-1). A SEPARATE compose project
+# ("kezjegy-proxy") so that up.sh's `docker compose up -d` of the main stack never tries to bind 80/443 and a deploy
+# never recreates the proxy. Switch, rollback and cleanup: atallas.sh (step by step, logged).
+# Lives OUTSIDE deploy/ on the server: /srv/kezjegy/proxy/ (feltolt.sh replaces deploy/ as a whole; the running proxy
+# must keep its config folder). atallas.sh copies it there from the uploaded deploy/proxy/.
+#   docker compose -p kezjegy-proxy -f /srv/kezjegy/proxy/docker-compose.yml up -d
+# The network kezjegy_edge is created by the main compose (deploy/docker-compose.yml).
+name: kezjegy-proxy
+
+services:
+  kezjegy-proxy:
+    # Pinned to the exact image already on appok-1 (Caddy v2.11.9, checked 11-20; the same image kezjegy-web uses).
+    image: caddy:2-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
+    container_name: kezjegy-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      # The whole config FOLDER (Caddyfile + sites/): "atallas.sh frissit" swaps the files inside it, never the folder,
+      # so a reload always sees the new files (a bind mount follows the folder it was started with).
+      - ./caddy:/etc/caddy:ro
+      - kezjegy_caddy_data:/data
+      - kezjegy_caddy_config:/config
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    # Runs as the image's root user INSIDE the container (file capabilities do not apply under no-new-privileges);
+    # it may only bind low ports and write its two volumes.
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    networks: [kezjegy_edge]
+    mem_limit: 256m
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  kezjegy_edge:
+    external: true
+    name: kezjegy_edge
+
+volumes:
+  # Filled from appok_caddy_data before the switch (atallas.sh tanusitvany): the sslip.io certificates are reused –
+  # sslip.io is not on the Public Suffix List, so its Let's Encrypt limit is shared by every sslip.io user.
+  kezjegy_caddy_data:
+    name: kezjegy_caddy_data
+    external: true
+  kezjegy_caddy_config:
+    name: kezjegy_caddy_config
+    external: true

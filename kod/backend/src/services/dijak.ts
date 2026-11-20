@@ -2,7 +2,7 @@
 // chargeable in production). One-off fees (annual closing, assisted change) are paid in advance with a ONE-TIME
 // SimplePay payment (simplepay_transactions.kind 'egyszeri'; DEMO uses the demo pay page) – never the recurring token.
 // A fee-bearing action starts only after FINISHED; a failed or abandoned payment changes nothing.
-import { and, asc, desc, eq, inArray, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, like, or, sql } from 'drizzle-orm';
 import type { FeeChargeView, FeePayStart, FeeSettingView, FeesView } from '../_shared/api.js';
 import { FEE_CHARGE_STATUS_LABELS, FEE_KIND_LABELS, FEE_UNIT_LABELS } from '../_shared/bekotes.js';
 import { ASSIST_KIND_LABELS, FEE_DEFAULTS, FEE_KINDS, FEE_RULES, ONE_OFF_FEE_KINDS, type FeeKind } from '../_shared/enums.js';
@@ -402,7 +402,7 @@ export async function runDataStepK29(deps: Deps): Promise<Record<string, unknown
   const faq = await db
     .update(faqItems)
     .set({ answer: NO_TRIAL_FAQ_ANSWER, updatedAt: deps.now() })
-    .where(and(eq(faqItems.question, 'Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?'), or(sql` like 'Amíg nincs adószámod, nem fizetsz semmit%'`, sql` like 'Akkor, amikor már megvan az adószámod%'`)))
+    .where(and(eq(faqItems.question, 'Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?'), or(like(faqItems.answer, 'Amíg nincs adószámod, nem fizetsz semmit%'), like(faqItems.answer, 'Akkor, amikor már megvan az adószámod%'))))
     .returning({ id: faqItems.id });
   const legacyDemo = await db.update(subscriptions).set({ provider: 'demo' }).where(and(eq(subscriptions.mode, 'demo'), eq(subscriptions.provider, 'simplepay'))).returning({ id: subscriptions.id });
   const value = { at: deps.now().toISOString(), inserted, confirmed, left, openChargesUndemo: undemo.length, providerBackfill: legacyDemo.length, faqNoTrial: faq.length };

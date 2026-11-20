@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
 import type { FulProps } from '../UgyfelAdatlap';
 import type { AccAnnualView } from '../../../api/types';
-import { DemoCimke, HibaSav, Masol, Toltes } from '../../../ui/kozos';
+import { HibaSav, Masol, Toltes } from '../../../ui/kozos';
 import { I3 } from '../../../ui/Icon3d';
 import { usePirito } from '../../../ui/Pirito';
 import { ANNUAL_TEXTS, FEE_CHARGE_STATUS_LABELS, LOCK_TEXTS, OTHER_INCOME_LABELS } from '../../../_shared/bekotes';
@@ -110,7 +110,7 @@ function Zaras({ c, a }: FulProps & { a: AccAnnualView }) {
               <dd>
                 {a.feeCharge ? (
                   <>
-                    {ft(a.feeCharge.amountHuf)} – {FEE_CHARGE_STATUS_LABELS[a.feeCharge.status].toLowerCase()} {a.feeCharge.demo && <DemoCimke />}
+                    {ft(a.feeCharge.amountHuf)} – {FEE_CHARGE_STATUS_LABELS[a.feeCharge.status].toLowerCase()}
                   </>
                 ) : (
                   <span className="halvany">a kérdőív elküldésekor terheljük</span>

@@ -260,13 +260,16 @@ const GYORS: { cim: string; ikon: Ikon3dNev; ut: string }[] = [
   { cim: 'Határidők', ikon: 'hataridok', ut: '/hataridok' },
 ];
 function Gyorsgombok() {
+  // SPEC §29.5/§29.6: 5 quick actions – on a 320 pt screen the labels get smaller so "Kimutatás" and "Határidők" do not touch
+  const { width } = useWindowDimensions();
+  const szuk = width < 360;
   return (
     <Lap style={{ flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 4 }}>
       <View accessibilityRole="menu" style={{ flex: 1, flexDirection: 'row' }}>
         {GYORS.map((g) => (
           <Pressable key={g.cim} accessibilityRole="button" accessibilityLabel={g.cim} onPress={() => router.push(g.ut as never)} style={({ pressed }) => [{ flex: 1, alignItems: 'center', gap: 4, minHeight: 56, justifyContent: 'center' }, pressed && { opacity: 0.7 }]}>
-            <Ikon3d nev={g.ikon} pt={32} arnyektalan={false} />
-            <T m={13.5} s={550} lh={1.2} kozep ls={-0.005}>
+            <Ikon3d nev={g.ikon} pt={szuk ? 28 : 32} arnyektalan={false} />
+            <T m={szuk ? 11.5 : 13.5} s={550} lh={1.2} kozep ls={szuk ? -0.02 : -0.005} numberOfLines={1}>
               {g.cim}
             </T>
           </Pressable>

@@ -8,6 +8,64 @@
 > fájlokkal. Ezeket a k7 költözteti át az Adózz alá (az adozz.hu-átállással együtt); addig érintetlenek.
 > Telepítés előtt/után az **Adózz** címeit nézd: api/app/konyvelo …sslip.io → 200.
 
+
+## k7 (SPEC §29) – saját proxy, adozz.hu, Stripe, Számlázz.hu – MÉG NEM ÉL (B1 backend, 11-20)
+
+**Új elrendezés a szerveren** (a `feltolt.sh` viszi fel, az `atallas.sh` teszi a helyére):
+```
+/srv/kezjegy/
+  proxy/                 ÚJ – az Adózz proxy (compose projekt: kezjegy-proxy, konténer: kezjegy-proxy, 80/443)
+    docker-compose.yml   a deploy/proxy/-ból másolva; image caddy:2-alpine@sha256:003a978… (a szerveren lévő v2.11.9)
+    caddy/Caddyfile      + caddy/sites/adozz.caddy – a mappa van csatolva (/etc/caddy), a fájlokat cseréljük benne
+  nyilvanos.env          ÚJ, 644 – CSAK nyilvános címek (APP/PANEL/API/LANDING_PUBLIC_URL, EXTRA_PUBLIC_ORIGINS);
+                         a compose a .env UTÁN tölti be (az nyer); az up.sh minden más kulcsot visszautasít
+  web/landing            ÚJ – az adozz.hu bemutató oldal (kod/landing/dist), kezjegy-web :8082
+```
+Miért nem a `deploy/proxy/` alatt fut: a `feltolt.sh` a `deploy/` mappát egészben cseréli, a futó proxy viszont a
+csatolt mappáját tartja – ezért a proxy a `/srv/kezjegy/proxy/`-ban él, és minden `up.sh` az `atallas.sh frissit`-tel
+validálja, fájlonként cseréli (a régi a `_regi/proxy_<idő>/`-be) és újratölti. Az átállás előtt az `up.sh` a régi
+`appok-caddy-1`-et tölti újra (konténernév alapján, `/srv/appok` útvonal nélkül). A `caddy-csatolas.sh` visszavonva
+(`deploy/_regi/caddy-csatolas_visszavonva_k7_1120.sh`).
+
+**Élesítés sorrendje (integrátor; minden lépés előtt Adózz health 200):**
+```bash
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'   # titkosított pg_dump, migráció 0017 (enum) + 0018 (csak bővít), worker: data.k29
+ssh appok-1 'bash /srv/kezjegy/deploy/seed-k29.sh'                          # Halmi Zsófia, Kerekes Anna (+ B2: igazolások, Fodor Márk …); 2. futás: semmi
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh elokeszit'          # fájlok, validálás, DNS (5 név = 45.94.65.74), a régi proxy 2 fájljának másolata
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh tanusitvany'        # appok_caddy_data → kezjegy_caddy_data (a sslip-tanúsítványok maradnak)
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh atall'              # ≈10–30 s kiesés; 90 s alatt nem 200 → automatikus VISSZAÁLLÍTÁS
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh adozz'              # adozz.hu 200, www → 301, app/konyvelo 200, api health 200, api / 404, Let's Encrypt
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh cimek'              # nyilvanos.env (adozz.hu), API + worker újra; mindkét címkészlet health
+# ≥ 1 óra tiszta proxy-napló után (a tulaj 11-20-án jóváhagyta a Gardoko-maradékok végleges törlését):
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh takarit TAKARIT'    # appok-caddy-1, appok_edge/_internal, appok_caddy_*, /srv/appok; caddy/ → _regi
+```
+Kézi visszaállítás a `takarit` előtt bármikor: `atallas.sh visszaall` (a kezjegy-proxy leáll, az appok-caddy-1 indul).
+Állapot: `atallas.sh allapot`. Napló: `/srv/kezjegy/_regi/proxy_atallas_<idő>_<lépés>.log`. A `pgtest_net`, `pgtest_nm`
+hálókhoz és a névtelen kötethez nem nyúl (nem része a jóváhagyásnak).
+
+**Fizetés és díjszámla a szerveren:** a szerver `PAYMENT_PROVIDER=demo` (alapérték) és `INVOICE_MODE=demo` marad. A
+Stripe TESZT-et a tulaj kapcsolja be az átállás után: `stripe_szerverre.ps1` (webhook-végpont a Stripe-nál
+`https://api.adozz.hu/api/v1/webhooks/stripe`, a 8 eseménnyel, API-verzió 2026-10-28.endive; vissza: `-Vissza`). A
+szerver `.env`-jében lévő `SZAMLAZZHU_AGENT_KEY` a Somosi Kft. ÉLES kulcsa: amíg `INVOICE_MODE=demo`, nem használjuk;
+`INVOICE_MODE=szamlazzhu` csak `SZAMLAZZHU_ACCOUNT`-tal indul, és DEMO szerveren csak `teszt` fiókkal. A régi DEMO
+előfizetések (SimplePay-DEMO kártya) a `demo` szolgáltatónál maradnak (data.k29), így senki nem zárolódik az átállástól.
+Ha a `.env`-ben `NEW_BUSINESS_CHARGE_POLICY=adoszam_utan` sor van, azt a tulaj törölje (az új alapérték `azonnal`).
+
+**Új env (mind opcionális; `env.example`):** `PAYMENT_PROVIDER`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`,
+`STRIPE_WEBHOOK_SECRET`, `STRIPE_STATEMENT_SUFFIX_HAVI` (HAVIDIJ), `STRIPE_CHECKOUT_LOCALE` (hu), `SZAMLAZZHU_ACCOUNT`,
+`SZAMLAZZHU_URL`, `NAV_LOOKUP_MODE/TAX_NUMBER/LOGIN/PASSWORD/SIGN_KEY/EXCHANGE_KEY` (mind az öt vagy egyik sem),
+`LANDING_PUBLIC_URL`, `EXTRA_PUBLIC_ORIGINS` (ez a kettő a `nyilvanos.env`-be).
+
+**Új workerfeladatok:** `predebit` 10:00, `suspension_warning` 10:05, `payments_reconcile` 15 percenként,
+`invoices_issue` percenként (a `billing` 06:00 a szolgáltató szerint ágazik el). Admin: `/admin/k29/{subscriptions,payments,fee-invoices,system}`.
+
+**Élesítés (valódi pénz, később – SPEC §29.11.3, [TULAJ]):** 1) Stripe-fiók aktiválása, Dashboard: rövid
+megnevezés `ADOZZ`, a Stripe saját nyugta-e-mailjei KI, Radar alapszabályok; 2) új, üres éles adatbázis (lent,
+„Élesítés” 1.); 3) `stripe_szerverre.ps1 -Eles` (élő kulcsok `Read-Host`-tal, élő webhook); 4) `kezjegy_kulcsok.ps1`:
+`APP_ENV=production`, `INVOICE_MODE=szamlazzhu`, `SZAMLAZZHU_ACCOUNT=eles`, ZeptoMail token, push, NAV lookup;
+5) Számlázz.hu éles fiók: „Rendelésszám ismétlődés tiltása” BE, e-számla BE; 6) egy valódi 19 999 Ft-os fizetés a
+tulaj kártyájával + visszatérítés → sztornó, ellenőrzés a Számlázz.hu-ban és a Stripe-ban.
+
 SPEC §20. A Kézjegy a Gardoko mellett fut ugyanazon a Contabo VPS-en, **saját** mappában, saját compose
 projektben, saját Postgresszel és hálózattal. Portot csak a közös Caddy (`appok-caddy-1`) publikál.
 

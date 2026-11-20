@@ -17,7 +17,8 @@ const backend = resolve(app, '../backend');
 // BACKEND_KOD: egy másik mappában fordított backend (dist/ + drizzle/ + node_modules), hogy a backend saját dist/-jét
 // ne írjuk felül, amíg ott más dolgozik. Alapból a kod/backend.
 const backendKod = resolve(process.env.BACKEND_KOD || backend);
-const gyoker = join(app, 'dist');
+// APP_DIST: egy másik mappába exportált webes build (a párhuzamos munkák ne írják felül egymás dist/-jét)
+const gyoker = resolve(process.env.APP_DIST || join(app, 'dist'));
 const PORT = Number(process.env.PORT || 8791);
 if (!existsSync(join(backendKod, 'dist/app.js'))) throw new Error('Előbb: kod/backend npm run build');
 if (!existsSync(join(gyoker, 'index.html'))) throw new Error('Előbb: npm run export:web');

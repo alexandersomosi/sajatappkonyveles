@@ -56,7 +56,9 @@ describe('jogi szövegek: nincs kitöltetlen {{…}}', () => {
     expect(ism).toContain('legfeljebb 12 alkalommal');
     expect(ism).toContain('2027. november 18-ig');
     const aszf = (await h.json('GET', '/legal/aszf')).body.markdown as string;
-    expect(aszf).toContain('legfeljebb 12 levonásra');
+    // SPEC §29.16 (k7): ÁSZF 7.2 – Stripe, no SimplePay token count any more
+    expect(aszf).toContain('A kártyás engedély a lemondásig vagy a kártya törléséig él.');
+    expect(aszf).not.toContain('legfeljebb 12 levonásra');
     const meg = (await h.json('GET', '/legal/megbizasi_szerzodes')).body.markdown as string;
     expect(meg).toContain('(a neved)');
     expect(meg).toMatch(/A könyvelőd végzi személyesen|a könyvelőd végzi személyesen/);

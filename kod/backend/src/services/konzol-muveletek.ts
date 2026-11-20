@@ -44,8 +44,9 @@ import { createDocumentFromBuffer } from './system-docs.js';
 import { closePause, openPause } from './szuneteltetes.js';
 import { computeServiceLock } from './zarolas.js';
 import { setStep } from './onboarding.js';
-import { waiveCharge } from './dijak.js';
-import { cancelSubscriptionK29, chargeFeeOffSessionByAdmin, createFeeChargeK29, effectiveMonthlyAmount, refundPayment, retryInvoice } from './payments.js';
+import { createFeeChargeK29, waiveCharge } from './dijak.js';
+import { cancelSubscriptionK29, chargeFeeOffSessionByAdmin, effectiveMonthlyAmount, refundPayment } from './payments.js';
+import { retryInvoice } from '../payments/invoices.js';
 
 const fmtN = (n: number) => new Intl.NumberFormat('hu-HU').format(n).replace(/ /g, ' ');
 const fmt = (n: number) => `${fmtN(n)} Ft`;

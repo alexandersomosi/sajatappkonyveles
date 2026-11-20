@@ -4,7 +4,7 @@
 # --no-web: only the API build context, deploy/ and caddy/ (the web builds on the server stay as they are).
 # Before: kod/app `npm run export:web` (→ app/dist) and kod/panel `npm run build` (→ panel/dist).
 # Sends: src/ (build context for the API image: shared, ado-motor, nav-kliens, backend, jogi – without
-# node_modules/dist), deploy/, caddy/kezjegy.caddy, web/app, web/panel. No secrets are in any of these.
+# node_modules/dist), deploy/ (+ deploy/proxy/), caddy/kezjegy.caddy, web/app, web/panel, web/landing. No secrets are in any of these.
 # On the server every replaced folder is first moved to /srv/kezjegy/_regi/<name>_<time> (nothing is deleted).
 # Then run on the server: bash /srv/kezjegy/deploy/up.sh   (see README.md for the first deploy).
 set -euo pipefail
@@ -70,11 +70,16 @@ if [ "$WEB_ONLY" = 0 ]; then
     shared ado-motor nav-kliens backend jogi | tar -C "$STAGE/kezjegy/src" -xf -
   mkdir -p "$STAGE/kezjegy/deploy"
   cp "$KOD"/deploy/*.sh "$KOD"/deploy/*.yml "$KOD"/deploy/web.Caddyfile "$KOD"/deploy/env.example "$KOD"/deploy/README.md "$STAGE/kezjegy/deploy/"
+  # SPEC §29.3: the Adózz proxy (atallas.sh copies it to /srv/kezjegy/proxy) and the public-URL example
+  cp "$KOD"/deploy/nyilvanos.env.example "$STAGE/kezjegy/deploy/"
+  tar -C "$KOD/deploy" -cf - --exclude='_regi' proxy | tar -C "$STAGE/kezjegy/deploy" -xf -
   cp "$KOD/deploy/kezjegy.caddy" "$STAGE/kezjegy/caddy/kezjegy.caddy"
 fi
 if [ "$NO_WEB" = 0 ]; then
   cp -r "$KOD/app/dist" "$STAGE/kezjegy/web/app"
   cp -r "$KOD/panel/dist" "$STAGE/kezjegy/web/panel"
+  # SPEC §29.3.6: the adozz.hu landing page (kod/landing/dist when built, else the folder's own index.html)
+  if [ -s "$KOD/landing/dist/index.html" ]; then cp -r "$KOD/landing/dist" "$STAGE/kezjegy/web/landing"; fi
   # Each build lists its own hashed files: the next deploy keeps exactly these for one more release, so a tab
   # opened before the deploy can still load its lazy chunks (QA kör 3; web.Caddyfile answers 404, not index.html).
   for w in app panel; do
@@ -82,7 +87,7 @@ if [ "$NO_WEB" = 0 ]; then
   done
 fi
 # Unix line endings for everything the server executes
-find "$STAGE/kezjegy" -maxdepth 2 \( -name '*.sh' -o -name '*.yml' -o -name '*.caddy' -o -name '*Caddyfile' \) -exec sed -i 's/\r$//' {} +
+find "$STAGE/kezjegy" -maxdepth 5 \( -name '*.sh' -o -name '*.yml' -o -name '*.caddy' -o -name '*Caddyfile' \) -exec sed -i 's/\r$//' {} +
 
 PKG="$STAGE/kezjegy.tar.gz"
 tar -C "$STAGE" -czf "$PKG" kezjegy
@@ -97,7 +102,7 @@ mkdir -p _regi web web/media
 U=$(mktemp -d /srv/kezjegy/.feltolt_XXXX)
 tar -C "$U" -xzf /tmp/kezjegy_feltolt.tar.gz
 mv /tmp/kezjegy_feltolt.tar.gz "_regi/feltoltes_$TS.tar.gz"
-for d in src deploy web/app web/panel; do
+for d in src deploy web/app web/panel web/landing; do
   [ -e "$U/kezjegy/$d" ] || continue
   # never swap in an empty folder
   [ -n "$(ls -A "$U/kezjegy/$d" 2>/dev/null)" ] || continue

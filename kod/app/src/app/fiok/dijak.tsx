@@ -11,8 +11,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { FeeChargeView } from '@/_shared/api';
 import { FEE_TEXTS, FEE_UNIT_LABELS, fillPlaceholders } from '@/_shared/bekotes';
 import { PAYMENT_SCREEN_TEXTS as P, type FeeInvoiceItemK29 } from '@/_shared/k29';
-import { K, useConfig, useDijak, useDijszamlak } from '@/api/hooks';
-import { useElofizetesK29 } from '@/api/hooks-k29';
+import { K, useConfig, useDijak } from '@/api/hooks';
+import { K29, useDijszamlakK29, useElofizetesK29 } from '@/api/hooks-k29';
 import { fajlMegnyit } from '@/lib/fajlok';
 import { hibaUzenet } from '@/lib/hiba';
 import { datumEvvel, szam } from '@/lib/format';
@@ -28,7 +28,7 @@ export default function Dijak() {
   const p = useLocalSearchParams<{ fizetve?: string; o?: string }>();
   const cfg = useConfig();
   const q = useDijak();
-  const szamlak = useDijszamlak();
+  const szamlak = useDijszamlakK29();
   const elo = useElofizetesK29();
   const qc = useQueryClient();
   const jelez = useJelzes();
@@ -65,7 +65,7 @@ export default function Dijak() {
       if (r.result === 'sikeres') {
         setLap(null);
         jelez({ szoveg: P.fees.paid, kesz: true });
-        for (const k of [['dijak'], K.dijszamlak, K.home, K.me]) void qc.invalidateQueries({ queryKey: k });
+        for (const k of [['dijak'], K.dijszamlak, K29.szamlak, K.home, K.me]) void qc.invalidateQueries({ queryKey: k });
       } else if (r.result === 'sikertelen') setLapHiba(r.message);
       else setLap(null);
     } catch (e) {
@@ -76,7 +76,7 @@ export default function Dijak() {
   };
 
   const elso = v?.open.find((d) => d.canPay) ?? null;
-  const lista = (szamlak.data?.items ?? v?.invoices ?? []) as FeeInvoiceItemK29[];
+  const lista = (szamlak.data ?? v?.invoices ?? []) as FeeInvoiceItemK29[];
   return (
     <Kepernyo
       ful="fiok"

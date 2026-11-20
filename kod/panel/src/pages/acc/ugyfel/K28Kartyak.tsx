@@ -328,7 +328,6 @@ function SzunetelKartya({ c }: FulProps) {
         <div className="szak-fej">
           <I3 n="tepnaptar" s={28} />
           <h2>{PAUSE_TEXTS.cardTitle}</h2>
-          {p.demo && <DemoCimke />}
         </div>
         <p>
           {datum(p.from, { ev: true })} óta{p.to ? `, ${datum(p.to, { ev: true })}-ig` : ''}. {fill(PAUSE_TEXTS.feeLine, { dij: szam(p.amountHuf) })} a havidíj helyett.

@@ -6,11 +6,12 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import * as k from '../../../api/k29f';
-import { CONSOLE_RULES, CONSOLE_TEXTS, type ConsoleOverview } from '../../../_shared/k29f';
-import { Fejlec, HibaSav, Toltes } from '../../../ui/kozos';
+import { CONSOLE_RULES, CONSOLE_TEXTS } from '../../../_shared/k29f';
+import { Fejlec, Fiok, HibaSav, Toltes } from '../../../ui/kozos';
+import { usePirito } from '../../../ui/Pirito';
 import { I3 } from '../../../ui/Icon3d';
 import { honapEv, szam } from '../../../lib/format';
-import { LepcsoProvider, MuveletFiok, type MuveletDef } from './lepcso';
+import { LepcsoProvider, useLepcsos } from './lepcso';
 
 function Csempe({ ertek, mi, to, ft, ikon }: { ertek: number; mi: string; to: string; ft?: boolean; ikon: Parameters<typeof I3>[0]['n'] }) {
   return (
@@ -42,37 +43,97 @@ function Oszlop({ sorok, ertek, cimke }: { sorok: { month: string }[]; ertek: (i
   );
 }
 
-function kozlemeny(o: ConsoleOverview | undefined): MuveletDef {
-  let darab: number | null = null;
-  return {
-    cim: 'Közlemény az ügyfeleknek',
-    bev: `Legfeljebb ${CONSOLE_RULES.announcementsPerDay} naponta. Előbb megszámoljuk a címzetteket, azt erősíted meg.`,
-    indok: false,
-    mezok: [
-      { kulcs: 'title', felirat: 'Cím (≤ 80)' },
-      { kulcs: 'body', felirat: 'Szöveg (≤ 600)', tipus: 'hosszu' },
-      { kulcs: 'kor', felirat: 'Kinek?', tipus: 'valaszto', alap: 'aktiv', opciok: [{ kulcs: 'aktiv', felirat: 'Aktív ügyfelek' }, { kulcs: 'bekotes_alatt', felirat: 'Bekötés alatt' }, { kulcs: 'mind', felirat: 'Mindenki' }] },
-      { kulcs: 'push', felirat: 'Push is', tipus: 'jelolo' },
-      { kulcs: 'email', felirat: 'E-mail is', tipus: 'jelolo' },
-    ],
-    osszegzes: (v) => (darab === null ? `Előbb megszámoljuk, hány ügyfél kapja (${o?.clients.active ?? '…'} aktív).` : `${darab} ügyfél kapja meg: „${v.title ?? ''}”.`),
-    kuld: async (v) => {
-      const filter = v.kor === 'mind' || !v.kor ? {} : { lifecycle: [v.kor] };
-      const body = { title: v.title ?? '', body: v.body ?? '', channels: { inApp: true as const, push: v.push === '1', email: v.email === '1' }, filter };
-      if (darab === null) {
-        const r = await k.consoleAnnounce(body);
-        darab = r.count;
-        throw new Error(`${r.count} ügyfél kapná. Nyomd meg újra a Megerősítem gombot a küldéshez.`);
-      }
-      return k.consoleAnnounce({ ...body, expectedCount: darab });
-    },
-    siker: (r) => `Elküldtük ${(r as { count: number }).count} ügyfélnek.`,
+/** "Közlemény": first a dry run counts the recipients, the send must echo that count (step-up first). */
+function KozlemenyFiok({ nyitva, bezar }: { nyitva: boolean; bezar: () => void }) {
+  const futtat = useLepcsos();
+  const pir = usePirito();
+  const [cim, setCim] = useState('');
+  const [szoveg, setSzoveg] = useState('');
+  const [kor, setKor] = useState<'aktiv' | 'bekotes_alatt' | 'mind'>('aktiv');
+  const [push, setPush] = useState(false);
+  const [email, setEmail] = useState(false);
+  const [darab, setDarab] = useState<number | null>(null);
+  const [fut, setFut] = useState(false);
+  const body = () => ({ title: cim.trim(), body: szoveg.trim(), channels: { inApp: true as const, push, email }, filter: kor === 'mind' ? {} : { lifecycle: [kor] } });
+  const valt = <T,>(f: (v: T) => void) => (v: T) => {
+    f(v);
+    setDarab(null);
   };
+  const szamol = async () => {
+    setFut(true);
+    try {
+      setDarab((await k.consoleAnnounce(body())).count);
+    } catch (e) {
+      pir.hiba(e);
+    } finally {
+      setFut(false);
+    }
+  };
+  const kuld = async () => {
+    if (darab === null) return;
+    setFut(true);
+    try {
+      const r = await futtat(() => k.consoleAnnounce({ ...body(), expectedCount: darab }));
+      pir.ok(`Elküldtük ${r.count} ügyfélnek.`);
+      bezar();
+    } catch (e) {
+      pir.hiba(e);
+      setDarab(null);
+    } finally {
+      setFut(false);
+    }
+  };
+  return (
+    <Fiok nyitva={nyitva} bezar={bezar} ikon="ertesites" cim="Közlemény az ügyfeleknek" bev={`Legfeljebb ${CONSOLE_RULES.announcementsPerDay} naponta. Előbb megszámoljuk a címzetteket, azt erősíted meg.`}>
+      <div style={{ display: 'grid', gap: 14 }}>
+        <label className="mezo">
+          <span className="felirat">Cím (legfeljebb {CONSOLE_RULES.announcementTitleMax} karakter)</span>
+          <input className="doboz" maxLength={CONSOLE_RULES.announcementTitleMax} value={cim} onChange={(e) => valt(setCim)(e.target.value)} />
+        </label>
+        <label className="mezo">
+          <span className="felirat">Szöveg (legfeljebb {CONSOLE_RULES.announcementBodyMax} karakter)</span>
+          <textarea className="doboz" maxLength={CONSOLE_RULES.announcementBodyMax} value={szoveg} onChange={(e) => valt(setSzoveg)(e.target.value)} />
+        </label>
+        <div className="mezo">
+          <span className="felirat">Kinek?</span>
+          <div className="valaszto">
+            {([['aktiv', 'Aktív ügyfelek'], ['bekotes_alatt', 'Bekötés alatt'], ['mind', 'Mindenki']] as const).map(([kk, f]) => (
+              <label key={kk}>
+                <input type="radio" name="kor" checked={kor === kk} onChange={() => valt(setKor)(kk)} /> {f}
+              </label>
+            ))}
+          </div>
+        </div>
+        <label className="jelolo">
+          <input type="checkbox" checked={push} onChange={(e) => valt(setPush)(e.target.checked)} /> Push-értesítés is
+        </label>
+        <label className="jelolo">
+          <input type="checkbox" checked={email} onChange={(e) => valt(setEmail)(e.target.checked)} /> E-mail is
+        </label>
+        {darab !== null ? (
+          <div className="uzenet-sav info" style={{ display: 'block' }}>
+            <b>{darab} ügyfél kapja meg</b> az appban{push ? ', push-ban' : ''}{email ? ' és e-mailben' : ''}: „{cim.trim()}”.
+          </div>
+        ) : null}
+        <div style={{ display: 'flex', gap: 10 }}>
+          {darab === null ? (
+            <button type="button" className="gomb-e" disabled={fut || cim.trim().length < 3 || szoveg.trim().length < 3} onClick={() => void szamol()}>
+              Megszámolom a címzetteket
+            </button>
+          ) : (
+            <button type="button" className="gomb-e" disabled={fut || darab === 0} onClick={() => void kuld()}>
+              Elküldöm {darab} ügyfélnek
+            </button>
+          )}
+        </div>
+      </div>
+    </Fiok>
+  );
 }
 
 function Tartalom() {
   const q = useQuery({ queryKey: ['admin', 'console', 'overview'], queryFn: k.consoleOverview });
-  const [kozl, setKozl] = useState<MuveletDef | null>(null);
+  const [kozl, setKozl] = useState(false);
   const o = q.data;
   return (
     <>
@@ -88,7 +149,7 @@ function Tartalom() {
             <Link className="gomb-m" to="/admin/konzol/ugyfelek">
               <I3 n="dosszie" s={22} /> Ügyfelek
             </Link>
-            <button type="button" className="gomb-m" onClick={() => setKozl(kozlemeny(o))}>
+            <button type="button" className="gomb-m" onClick={() => setKozl(true)}>
               <I3 n="ertesites" s={22} /> Közlemény
             </button>
           </div>
@@ -237,7 +298,7 @@ function Tartalom() {
           </>
         )}
       </div>
-      <MuveletFiok def={kozl} bezar={() => setKozl(null)} />
+      <KozlemenyFiok nyitva={kozl} bezar={() => setKozl(false)} />
     </>
   );
 }

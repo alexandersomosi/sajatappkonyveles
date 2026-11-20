@@ -36,6 +36,12 @@ GRANT USAGE ON SCHEMA public TO kezjegy_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO kezjegy_app;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO kezjegy_app;
 REVOKE UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON audit_log FROM kezjegy_app;
+-- SPEC §29.12: money records are never deleted by the app (SELECT/INSERT/UPDATE only)
+DO $$ BEGIN
+  IF to_regclass('public.payments') IS NOT NULL THEN
+    REVOKE DELETE, TRUNCATE ON payments, stripe_events, payment_methods, stripe_customers FROM kezjegy_app;
+  END IF;
+END $$;
 REVOKE ALL ON FUNCTION kezjegy_audit_purge(timestamptz) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION kezjegy_audit_purge(timestamptz) TO kezjegy_app;
 ALTER DEFAULT PRIVILEGES FOR ROLE kezjegy IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO kezjegy_app;

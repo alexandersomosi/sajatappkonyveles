@@ -1,54 +1,66 @@
-// FUNKCIOK 29: subscriptions – status, card, failures, retry / cancel.
+// SPEC §29.1.14 – Előfizetések: provider + mode chip (Stripe teszt / Stripe éles / DEMO / SimplePay), status, the next
+// charge (date + the effective amount), card, failures, "Fizesd ki" sent; filters incl. "Megerősítésre vár".
+// A server without §29 → the kept SimplePay view. Előtte: kod/panel/_regi/elotte_k7_b3/pages/admin/Elofizetesek.tsx
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { SUBSCRIPTION_STATUSES } from '../../_shared/enums';
+import type { AdminSubscriptionRowK29 } from '../../_shared/k29';
 import * as ep from '../../api/endpoints';
-import type { AdminSubscriptionRow } from '../../api/types';
+import { k29Elofizetesek, k29Rendszer, nincsK29, stripeHiba, szolgaltatoCimke } from '../../api/k29';
 import { Fejlec, Fiok, Ft, HibaSav, Toltes, Ures } from '../../ui/kozos';
 import { ElofizetesAllapot } from '../../ui/domain';
 import { usePirito } from '../../ui/Pirito';
-import { fizetesiHiba, MODE_LABEL, SUB_LABEL } from '../../lib/labels';
+import { fizetesiHiba, SUB_LABEL } from '../../lib/labels';
 import { datumRovid } from '../../lib/format';
-import { SUBSCRIPTION_STATUSES } from '../../_shared/enums';
+import { SimplePayElofizetesek } from './ElofizetesekSimplePay';
 
-/** "xxxx-xxxx-xxxx-4193" → "•••• 4193": the last four digits are what identifies a card. */
-export function rovidKartya(mask: string): string {
-  const veg = mask.replace(/[^0-9]/g, '').slice(-4);
-  return veg.length === 4 ? `•••• ${veg}` : mask;
-}
+export { rovidKartya } from './ElofizetesekSimplePay';
+
+const SZOLGALTATO: Record<string, string> = { stripe: 'Stripe', demo: 'DEMO fizetés', simplepay: 'SimplePay', disabled: 'nincs bekapcsolva' };
 
 export default function Elofizetesek() {
   const [sp, setSp] = useSearchParams();
   const status = sp.get('status') ?? '';
+  const problem = sp.get('problem') ?? '';
   const qc = useQueryClient();
   const pir = usePirito();
-  const q = useQuery({ queryKey: ['admin', 'subs', status], queryFn: () => ep.adminSubscriptions(status || undefined) });
-  // The header total never follows the filter: always every active subscription.
-  const mind = useQuery({ queryKey: ['admin', 'subs', ''], queryFn: () => ep.adminSubscriptions(undefined) });
-  const [lemond, setLemond] = useState<AdminSubscriptionRow | null>(null);
-  const inv = () => qc.invalidateQueries({ queryKey: ['admin', 'subs'] });
-  const ujra = useMutation({ mutationFn: (id: string) => ep.adminRetrySubscription(id), onSuccess: () => { pir.ok('Újrapróbáltuk a terhelést.'); void inv(); }, onError: pir.hiba });
-  const cancel = useMutation({ mutationFn: (id: string) => ep.adminCancelSubscription(id), onSuccess: () => { pir.ok('Lemondva a fizetési időszak végével.'); setLemond(null); void inv(); }, onError: pir.hiba });
-  const rows = q.data?.items ?? [];
-  // ONE definition of the MRR, the dashboard's (admin/dashboard.mrrHuf): subscriptions that will be charged again =
-  // active or past_due (the retry is running) and not cancelled at period end, test clients left out. Until the
-  // dashboard answers, the same rule is applied to the list.
+  const q = useQuery({ queryKey: ['admin', 'k29', 'subs', status, problem], queryFn: () => k29Elofizetesek({ status: status || undefined, problem: problem || undefined }) });
+  const mind = useQuery({ queryKey: ['admin', 'k29', 'subs', '', ''], queryFn: () => k29Elofizetesek({}) });
+  const rendszer = useQuery({ queryKey: ['admin', 'k29', 'system'], queryFn: k29Rendszer, retry: false });
   const attek = useQuery({ queryKey: ['admin', 'dashboard'], queryFn: ep.adminDashboard });
-  const mrrLista = (mind.data?.items ?? []).filter((r) => (r.status === 'active' || r.status === 'past_due') && !r.cancelAtPeriodEnd).reduce((a, r) => a + r.priceHuf, 0);
+  const [lemond, setLemond] = useState<AdminSubscriptionRowK29 | null>(null);
+  const inv = () => qc.invalidateQueries({ queryKey: ['admin', 'k29', 'subs'] });
+  const ujra = useMutation({ mutationFn: (id: string) => ep.adminRetrySubscription(id), onSuccess: () => { pir.ok('Újrapróbáltuk a levonást.'); void inv(); }, onError: pir.hiba });
+  const cancel = useMutation({ mutationFn: (id: string) => ep.adminCancelSubscription(id), onSuccess: () => { pir.ok('Lemondva a kifizetett időszak végével.'); setLemond(null); void inv(); }, onError: pir.hiba });
+  if (q.isError && nincsK29(q.error)) return <SimplePayElofizetesek />;
+  const rows = q.data ?? [];
+  // ONE MRR definition (admin/dashboard.mrrHuf): charged again = active or past_due, not cancelled at period end, no test clients
+  const mrrLista = (mind.data ?? []).filter((r) => (r.status === 'active' || r.status === 'past_due') && !r.cancelAtPeriodEnd && !r.isTest).reduce((a, r) => a + r.nextChargeHuf, 0);
   const mrr = attek.data?.mrrHuf ?? mrrLista;
+  const hitelesites = (mind.data ?? []).filter((r) => r.openAuthPayment).length;
+  const szolg = rendszer.data ? `${SZOLGALTATO[rendszer.data.paymentProvider] ?? rendszer.data.paymentProvider}${rendszer.data.paymentProvider === 'stripe' ? ` (${rendszer.data.stripe === 'live' ? 'éles' : 'teszt'})` : ''}` : 'Kártyás fizetés';
+  const valt = (o: Record<string, string>) => setSp(o, { replace: true });
   return (
     <>
-      <Fejlec felcim="Tulajdonos" cim="Előfizetések" mellek={mind.data ? <>SimplePay ismétlődő kártyás fizetés · havi ismétlődő díjbevétel (MRR): <b><Ft n={mrr} /></b> <span className="egyben">(élő és újrapróbálás alatt álló előfizetések, a lemondottak nélkül)</span></> : ' '} />
+      <Fejlec
+        felcim="Tulajdonos"
+        cim="Előfizetések"
+        mellek={mind.data ? <>{szolg} · havi ismétlődő díjbevétel (MRR): <b><Ft n={mrr} /></b> <span className="egyben">(élő és újrapróbálás alatt álló előfizetések, a lemondottak nélkül)</span></> : ' '}
+      />
       <div className="tartalom">
         <div className="szegmens" style={{ marginBottom: 16 }}>
-          <button className={!status ? 'on' : ''} onClick={() => setSp({}, { replace: true })}>
+          <button className={!status && !problem ? 'on' : ''} onClick={() => valt({})}>
             Mind
           </button>
           {SUBSCRIPTION_STATUSES.map((s) => (
-            <button key={s} className={status === s ? 'on' : ''} onClick={() => setSp({ status: s }, { replace: true })}>
+            <button key={s} className={status === s ? 'on' : ''} onClick={() => valt({ status: s })}>
               {SUB_LABEL[s]}
             </button>
           ))}
+          <button className={problem === 'hitelesites_kell' ? 'on' : ''} onClick={() => valt({ problem: 'hitelesites_kell' })}>
+            Megerősítésre vár{hitelesites ? <span className="db">{hitelesites}</span> : null}
+          </button>
         </div>
         {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
         <div className="lap">
@@ -57,81 +69,77 @@ export default function Elofizetesek() {
           ) : rows.length === 0 ? (
             <Ures n="ures_mappa" cim="Nincs ilyen előfizetés" />
           ) : (
-            <table className="tabla">
-              <thead>
-                <tr>
-                  <th className="elso">Ügyfél</th>
-                  <th>Állapot</th>
-                  <th className="jobb">Díj</th>
-                  <th className="tor">Következő terhelés</th>
-                  <th>Kártya</th>
-                  <th>Hiba</th>
-                  <th className="utolso" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => (
-                  <tr key={r.id}>
-                    <td className="elso">
-                      <div className="felkover">{r.client.name}</div>
-                      <div className="al">
-                        {MODE_LABEL[r.mode] ?? r.mode}
-                        {r.cancelAtPeriodEnd && ' · lemondta, időszak végén megszűnik'}
-                      </div>
-                    </td>
-                    <td>
-                      {r.cancelAtPeriodEnd && r.status === 'active' ? (
-                        <span className="cimke figyel">Lemondva{r.currentPeriodEnd ? `, ${datumRovid(r.currentPeriodEnd)} megszűnik` : ''}</span>
-                      ) : (
-                        <ElofizetesAllapot s={r.status} />
-                      )}
-                      {r.graceUntil && <div className="al">türelmi idő: {datumRovid(r.graceUntil)}</div>}
-                    </td>
-                    <td className="jobb">
-                      <Ft n={r.priceHuf} />
-                    </td>
-                    <td className="nt">{r.nextChargeAt ? datumRovid(r.nextChargeAt.slice(0, 10)) : '–'}</td>
-                    <td>
-                      {r.card ? (
-                        <>
-                          <span className="szam" title={r.card.mask}>{rovidKartya(r.card.mask)}</span>
-                          <div className="al">
-                            {r.card.status !== 'aktiv' ? (r.card.status === 'lejart' ? 'lejárt' : r.card.status === 'torolve' ? 'törölve' : 'függőben') : r.cancelAtPeriodEnd || r.status === 'canceled' ? 'nem terheljük többet' : `${r.card.tokensLeft} terhelés maradt`}
-                            {r.card.tokensLeft <= 1 && r.card.status === 'aktiv' && !r.cancelAtPeriodEnd && r.status !== 'canceled' && ' – új kártyaregisztráció kell'}
-                          </div>
-                        </>
-                      ) : (
-                        <span className="halvany">–</span>
-                      )}
-                    </td>
-                    <td>
-                      {r.failedAttempts > 0 ? (
-                        <>
-                          <span className="cimke hiba">{r.failedAttempts} sikertelen</span>
-                          <div className="al" title={fizetesiHiba(r.lastFailureCode, r.status === 'incomplete' ? 'regisztracio' : undefined).teendo || undefined}>
-                            {fizetesiHiba(r.lastFailureCode, r.status === 'incomplete' ? 'regisztracio' : undefined).mi}
-                          </div>
-                        </>
-                      ) : (
-                        <span className="halvany">–</span>
-                      )}
-                    </td>
-                    <td className="utolso jobb nt">
-                      {(r.status === 'past_due' || r.status === 'suspended') && (
-                        <button className="gomb-m kicsi csak-szoveg" disabled={ujra.isPending} onClick={() => ujra.mutate(r.id)}>
-                          Újrapróbálom
-                        </button>
-                      )}{' '}
-                      {r.status !== 'canceled' && !r.cancelAtPeriodEnd && (
-                        <button className="gomb-v" style={{ marginLeft: 10 }} onClick={() => setLemond(r)}>
-                          Lemondom
-                        </button>
-                      )}
-                    </td>
+            <div className="tabla-gorgo">
+              <table className="tabla tomor">
+                <thead>
+                  <tr>
+                    <th className="elso">Ügyfél</th>
+                    <th>Állapot</th>
+                    <th className="tor">Következő levonás</th>
+                    <th>Kártya</th>
+                    <th>Hiba</th>
+                    <th className="utolso" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {rows.map((r) => (
+                    <tr key={r.id} className={r.status === 'past_due' || r.status === 'suspended' ? 'lejart' : undefined}>
+                      <td className="elso">
+                        <div className="felkover">{r.client.name}</div>
+                        <div className="al">
+                          <span className={`cimke ${r.mode === 'live' ? 'info' : 'demo'}`}>{r.providerLabel || szolgaltatoCimke(r.provider, r.mode)}</span>
+                          {r.isTest ? ' · teszt-ügyfél' : ''}
+                        </div>
+                      </td>
+                      <td>
+                        {r.cancelAtPeriodEnd && r.status === 'active' ? <span className="cimke figyel">Lemondva{r.currentPeriodEnd ? `, ${datumRovid(r.currentPeriodEnd)} megszűnik` : ''}</span> : <ElofizetesAllapot s={r.status} />}
+                        {r.graceUntil ? <div className="al">türelmi idő: {datumRovid(r.graceUntil)}</div> : null}
+                        {r.openAuthPayment ? <div className="al">„Fizesd ki” elküldve – a bankja megerősítést kér</div> : null}
+                      </td>
+                      <td className="nt">
+                        {r.nextChargeAt && r.status !== 'canceled' && !r.cancelAtPeriodEnd ? (
+                          <>
+                            {datumRovid(r.nextChargeAt.slice(0, 10))}
+                            <div className="al">
+                              <Ft n={r.nextChargeHuf} />
+                            </div>
+                          </>
+                        ) : (
+                          <span className="halvany">–</span>
+                        )}
+                      </td>
+                      <td>{r.cardLabel ? <span className="szam">{r.cardLabel}</span> : <span className="halvany">nincs kártya</span>}</td>
+                      <td>
+                        {r.failedAttempts > 0 ? (
+                          <>
+                            <span className="cimke hiba">{r.failedAttempts} sikertelen</span>
+                            {r.lastFailureCode ? (
+                              <div className="al" title={fizetesiHiba(r.lastFailureCode).teendo || undefined}>
+                                {stripeHiba(r.lastFailureCode) ?? fizetesiHiba(r.lastFailureCode).mi}
+                              </div>
+                            ) : null}
+                          </>
+                        ) : (
+                          <span className="halvany">–</span>
+                        )}
+                      </td>
+                      <td className="utolso jobb nt">
+                        {(r.status === 'past_due' || r.status === 'suspended') && !r.openAuthPayment ? (
+                          <button className="gomb-m kicsi csak-szoveg" disabled={ujra.isPending} onClick={() => ujra.mutate(r.id)}>
+                            Újrapróbálom
+                          </button>
+                        ) : null}{' '}
+                        {r.status !== 'canceled' && !r.cancelAtPeriodEnd ? (
+                          <button className="gomb-v" style={{ marginLeft: 10 }} onClick={() => setLemond(r)}>
+                            Lemondom
+                          </button>
+                        ) : null}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
@@ -140,14 +148,14 @@ export default function Elofizetesek() {
         bezar={() => setLemond(null)}
         ikon="szamlaszam"
         cim="Lemondod az előfizetést?"
-        bev={lemond ? `${lemond.client.name} előfizetése a fizetett időszak végén (${lemond.currentPeriodEnd ? datumRovid(lemond.currentPeriodEnd) : '–'}) megszűnik. Több terhelés nem lesz.` : ''}
+        bev={lemond ? `${lemond.client.name} előfizetése a kifizetett időszak végén (${lemond.currentPeriodEnd ? datumRovid(lemond.currentPeriodEnd) : '–'}) megszűnik. Több levonás nem lesz.` : ''}
         lab={
           <button className="gomb-e" disabled={cancel.isPending} onClick={() => lemond && cancel.mutate(lemond.id)}>
             Igen, lemondom
           </button>
         }
       >
-        <p className="halvany">Az ügyfél értesítést kap. A könyvelő a lemondásig rendesen dolgozik.</p>
+        <p className="halvany">Az ügyfél értesítést kap. A könyvelő a lemondásig rendesen dolgozik. Felmondáshoz (ÁSZF 8.5.) a Konzolt használd.</p>
       </Fiok>
     </>
   );

@@ -48,6 +48,7 @@ import { MILESTONE_LABELS, MILESTONE_ORDER } from '../_shared/enums';
 import { installCsapat, ANNA } from './csapat';
 import { exportLetiltva, installHelyettunk } from './helyettunk';
 import { installK28, type K28Hooks } from './k28';
+import { installK29 } from './k29';
 /** SPEC §28 / §28.K extras of the list row and the client detail (set by installK28 below). */
 let k28: K28Hooks | null = null;
 
@@ -1082,6 +1083,8 @@ installHelyettunk({
 });
 // SPEC §28 / §28.K: reserve, earnings, allowances, notifications, check-in, annual closing, lock, EFO, fees (mock/k28.ts).
 k28 = installK28({ on, clients, role, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), logAudit, inv, revenue, msgs, fileMeta });
+// SPEC §29.1.14 (B3): payments, fee invoices, the payment block of Rendszer (mock/k29.ts).
+installK29({ on, clients, nev: name, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), logAudit, requireAdmin });
 /** SPEC §26.4: the service team gets 404 on accountant and owner endpoints (the API enforces the same). */
 function tiltott(path: string): boolean {
   const r = role();

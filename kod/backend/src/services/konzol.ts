@@ -51,6 +51,7 @@ import {
   payments,
   requests,
   sessions,
+  simplepayTransactions,
   subscriptionPauses,
   subscriptions,
   users,
@@ -239,11 +240,16 @@ export async function consoleOverview(deps: Deps): Promise<ConsoleOverview> {
     }
   }
   const pays = (await db.select().from(payments)).filter((p) => ids.has(p.clientId));
+  // the SimplePay era (PAYMENT_PROVIDER=simplepay or the old demo rows) counts too: FINISHED transactions
+  const legacy = (await db.select().from(simplepayTransactions).where(eq(simplepayTransactions.status, 'FINISHED'))).filter((t) => ids.has(t.clientId));
   const collectedPerMonth = months.map((m) => {
     const ok = pays.filter((p) => p.status === 'sikeres' && monthOf(p.succeededAt) === m);
-    const havidijHuf = ok.filter((p) => p.kind !== 'egyszeri').reduce((s, p) => s + p.amountHuf, 0);
-    const egyszeriHuf = ok.filter((p) => p.kind === 'egyszeri').reduce((s, p) => s + p.amountHuf, 0);
-    const visszaHuf = pays.reduce((s, p) => s + (p.refunds ?? []).filter((r) => r.status !== 'failed' && r.at.slice(0, 7) === m).reduce((a, r) => a + r.amountHuf, 0), 0);
+    const lg = legacy.filter((t) => monthOf(t.finishedAt) === m);
+    const havidijHuf = ok.filter((p) => p.kind !== 'egyszeri').reduce((s, p) => s + p.amountHuf, 0) + lg.filter((t) => t.kind === 'regisztracio' || t.kind === 'ismetlodo').reduce((s, t) => s + t.amountHuf, 0);
+    const egyszeriHuf = ok.filter((p) => p.kind === 'egyszeri').reduce((s, p) => s + p.amountHuf, 0) + lg.filter((t) => t.kind === 'egyszeri').reduce((s, t) => s + t.amountHuf, 0);
+    const visszaHuf =
+      pays.reduce((s, p) => s + (p.refunds ?? []).filter((r) => r.status !== 'failed' && r.at.slice(0, 7) === m).reduce((a, r) => a + r.amountHuf, 0), 0) +
+      lg.filter((t) => t.kind === 'visszaterites').reduce((s, t) => s + Math.abs(t.amountHuf), 0);
     return { month: m, havidijHuf, egyszeriHuf, visszaHuf, nettoHuf: havidijHuf + egyszeriHuf - visszaHuf };
   });
   const actionNeeded = pays.filter((p) => p.status === 'hitelesites_kell').length;
@@ -313,7 +319,7 @@ export async function consoleOverview(deps: Deps): Promise<ConsoleOverview> {
       upcoming7: up7,
       upcoming30: up30,
       feesByKind,
-      demoPayments: pays.filter((p) => p.mode === 'demo').length,
+      demoPayments: pays.filter((p) => p.mode === 'demo').length + legacy.filter((t) => t.mode === 'demo').length,
     },
     accountants: accRows,
   };
@@ -421,7 +427,7 @@ export async function consoleClientHeader(deps: Deps, id: string): Promise<Conso
     regime: (tp?.regime as 'atalany' | 'kata' | undefined) ?? null,
     accountant: acc ? { id: acc.id, name: acc.displayName } : null,
     subscriptionStatus: sub?.status ?? null,
-    locked: [...(cl.serviceLock?.reasons ?? []), ...(cl.serviceLockManual?.mode === 'zarolva' ? ['kezi'] : [])],
+    locked: [...new Set([...(cl.serviceLock?.reasons ?? []), ...(cl.serviceLockManual?.mode === 'zarolva' ? ['kezi'] : [])])].map((r) => ({ havidij: 'havidíj', eves_zaras: 'éves zárás', kezi: 'kézi' })[r] ?? r),
     manualLock: cl.serviceLockManual ? { mode: cl.serviceLockManual.mode, until: cl.serviceLockManual.until, reason: cl.serviceLockManual.reason } : null,
     terminated: t ? { kind: t.kind as TerminationKind, effectiveOn: t.effectiveOn, noticeAt: t.noticeAt, reasonShort: TERMINATION_KIND_LABELS[t.kind as TerminationKind] ?? t.kind } : null,
     anonymizedAt: cl.anonymizedAt?.toISOString() ?? null,
@@ -525,10 +531,14 @@ export async function consoleSection(deps: Deps, id: string, key: ConsoleSection
     }
     case 'fizetesek': {
       const rows = await db.select().from(payments).where(eq(payments.clientId, id)).orderBy(desc(payments.createdAt));
+      const regi = await db.select().from(simplepayTransactions).where(eq(simplepayTransactions.clientId, id)).orderBy(desc(simplepayTransactions.createdAt));
       return {
         key,
         title,
         tables: [
+          ...(regi.length
+            ? [{ title: 'Korábbi fizetések (SimplePay / DEMO)', columns: ['Idő', 'Fajta', 'Összeg', 'Állapot', 'Időszak', 'Mód'], rows: regi.map((t) => ({ cells: [dt(t.finishedAt ?? t.createdAt), t.kind, fmt(t.amountHuf), t.status, t.periodStart ? `${t.periodStart} – ${t.periodEnd ?? ''}` : null, t.mode] })) }]
+            : []),
           {
             title: 'Fizetések',
             columns: ['Idő', 'Fajta', 'Összeg', 'Állapot', 'Kártya', 'Visszautalva', 'Szolgáltató'],

@@ -50,7 +50,7 @@ function KartyaLepes() {
   const lepes0 = o.data?.steps.find((x) => x.step === 'elofizetes');
   const szerzodesNincs = !!o.data && o.data.steps.find((x) => x.step === 'szerzodes')?.status !== 'kesz' && lepes0?.status !== 'kesz';
   const lepes = lepes0 && !lepes0.locked && szerzodesNincs ? { ...lepes0, locked: true, lockedReason: STEP_LOCK_DEFAULT_TEXTS[LOCK_ELOFIZETES_SZERZODES_UTAN] } : lepes0;
-  const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva);
+  const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva, elo.data?.status === 'canceled' ? 'restart' : 'subscribe');
   const c = engedely.data;
   const demo = c?.demo ?? (cfg.data?.demo && fizetesSzolgaltato(cfg.data) === 'demo');
   const fej = <CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim={P.cardStep.bandTitle} al={P.cardStep.bandText.replace('{havidij}', szam(ar))} />;

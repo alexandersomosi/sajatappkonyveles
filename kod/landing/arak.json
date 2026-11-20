@@ -1,0 +1,44 @@
+{
+  "_megjegyzes": "GENERÁLT a kod/shared FEE_DEFAULTS-ból (kod/landing/build.mjs) – ne írd át kézzel.",
+  "sorok": [
+    {
+      "kind": "havidij",
+      "cim": "Havidíj",
+      "osszegHuf": 19999,
+      "egyseg": "hó",
+      "al": "Minden benne van, amit az app tud."
+    },
+    {
+      "kind": "eves_zaras",
+      "cim": "Éves zárás",
+      "osszegHuf": 14999,
+      "egyseg": "év",
+      "al": "Az éves SZJA- és iparűzésiadó-bevallás."
+    },
+    {
+      "kind": "valtozas_egyszeru",
+      "cim": "Változás bejelentése helyetted",
+      "osszegHuf": 4999,
+      "egyseg": "alkalom",
+      "al": "Költözés, új tevékenység, telephely – ha mi jelentjük be."
+    },
+    {
+      "kind": "valtozas_jogallas",
+      "cim": "Jogállás-változás bejelentése helyetted",
+      "osszegHuf": 7999,
+      "egyseg": "alkalom",
+      "al": "Például főállásból mellékállásba."
+    },
+    {
+      "kind": "szuneteltetesi_dij",
+      "cim": "Amíg szünetel a vállalkozásod",
+      "osszegHuf": 2999,
+      "egyseg": "hó",
+      "al": "A havidíj helyett."
+    }
+  ],
+  "magad": {
+    "cim": "Ha magad jelented be (útmutatóval)",
+    "osszegHuf": 0
+  }
+}

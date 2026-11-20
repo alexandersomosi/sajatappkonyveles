@@ -493,7 +493,7 @@ function Tartalom() {
                 <button type="button" className="gomb-m" onClick={() => nyit('zarolas')}>
                   <I3 n="lakat" s={22} /> Zárolás
                 </button>
-                <button type="button" className="gomb-e" aria-expanded={menu} onClick={() => setMenu((m) => !m)}>
+                <button type="button" className="gomb-m csak-szoveg" style={{ fontWeight: 750 }} aria-expanded={menu} onClick={() => setMenu((m) => !m)}>
                   {CONSOLE_TEXTS.actions} ▾
                 </button>
               </>
@@ -510,13 +510,14 @@ function Tartalom() {
           </div>
         }
         fulek={
-          <>
+          // 15 sections: two rows instead of a hidden horizontal scroll
+          <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: 2, width: '100%' }}>
             {c.sections.map((x) => (
               <button key={x.key} type="button" className={`ful${szakasz === x.key ? ' on' : ''}`} onClick={() => setSp({ szakasz: x.key }, { replace: true })}>
                 {x.label}
               </button>
             ))}
-          </>
+          </div>
         }
       />
       <div className="tartalom">

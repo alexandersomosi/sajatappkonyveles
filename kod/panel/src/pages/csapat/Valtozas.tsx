@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import type { ChangeData, NavAddress, TeamAssistDetailP } from '../../api/types';
-import { Masol, DemoCimke } from '../../ui/kozos';
+import { Masol } from '../../ui/kozos';
 import { I3 } from '../../ui/Icon3d';
 import { usePirito } from '../../ui/Pirito';
 import { CHANGE_FORM_TEXTS, CHANGE_HANDBOOK, FEE_KIND_LABELS } from '../../_shared/bekotes';
@@ -57,7 +57,6 @@ export function ValtozasDij({ d }: { d: TeamAssistDetailP }) {
         <b>
           {FEE_KIND_LABELS[f.kind]}: {ft(f.amountHuf)}
         </b>{' '}
-        {f.demo && <DemoCimke />}
         <div className="kicsi">
           {fizetve
             ? `Kifizette${f.paidAt ? `: ${idopont(f.paidAt, today())}` : ''}. Nekiláthatunk.`

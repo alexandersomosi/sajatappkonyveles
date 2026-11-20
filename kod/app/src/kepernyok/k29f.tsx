@@ -31,10 +31,10 @@ export function IgazolasAllapot({ v }: { v: CertificateView }) {
 }
 
 /** „Hol tart?” – az állapotok sorban, a legutóbbi felül. */
-export function Idovonal({ v }: { v: CertificateView }) {
+export function Idovonal({ v, kotott }: { v: CertificateView; kotott?: boolean }) {
   const sorok = [...v.timeline].reverse();
   return (
-    <Lap style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
+    <Lap kotott={kotott} style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
       {sorok.map((e, i) => (
         <View key={`${e.status}-${e.at}`} style={{ flexDirection: 'row', gap: 12, paddingVertical: 8 }}>
           <View style={{ width: 12, alignItems: 'center', paddingTop: 6 }}>
@@ -80,7 +80,7 @@ export function NaptarSzakasz() {
   return (
     <>
       <Szakasz ikon="hataridok" cim={CALENDAR_TEXTS.sectionTitle} megj={CALENDAR_TEXTS.sectionSub} />
-      <Lap style={{ paddingHorizontal: 16, paddingBottom: 14, gap: 10 }}>
+      <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 14, gap: 10 }}>
         {v?.enabled ? (
           <T m={14.5} s={600} c={szin.halvany} style={{ paddingLeft: 38 }}>
             {CALENDAR_TEXTS.on}

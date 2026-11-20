@@ -8,8 +8,15 @@ cd /srv/kezjegy/deploy
 DC=(docker compose --env-file /srv/kezjegy/.env -f docker-compose.yml)
 
 bash /srv/kezjegy/deploy/gen-env.sh
-mkdir -p /srv/kezjegy/data/files /srv/kezjegy/backups /srv/kezjegy/_regi /srv/kezjegy/web/app /srv/kezjegy/web/panel
+mkdir -p /srv/kezjegy/data/files /srv/kezjegy/backups /srv/kezjegy/_regi /srv/kezjegy/web/app /srv/kezjegy/web/panel /srv/kezjegy/web/landing
 chmod 700 /srv/kezjegy/data /srv/kezjegy/data/files /srv/kezjegy/backups
+
+# SPEC §29.3.3: /srv/kezjegy/nyilvanos.env holds PUBLIC values only (it is loaded after .env, the later file wins).
+# Any other key there is refused (key names are printed, never values).
+if [ -f /srv/kezjegy/nyilvanos.env ]; then
+  idegen=$(grep -vE '^\s*(#|$)' /srv/kezjegy/nyilvanos.env | cut -d= -f1 | grep -vxE 'APP_PUBLIC_URL|PANEL_PUBLIC_URL|API_PUBLIC_URL|LANDING_PUBLIC_URL|EXTRA_PUBLIC_ORIGINS' || true)
+  if [ -n "$idegen" ]; then echo "HIBA: a nyilvanos.env-ben csak nyilvános címek lehetnek. Idegen kulcs: $(echo $idegen | tr '\n' ' ')"; exit 1; fi
+fi
 
 # Refuse a broken web.Caddyfile before restarting anything.
 docker run --rm -v "$PWD/web.Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine \
@@ -56,8 +63,13 @@ if [ "$before" != "$after" ]; then "${DC[@]}" up -d --force-recreate kezjegy-api
 kint=$(sha256sum /srv/kezjegy/web/app/index.html | cut -d' ' -f1)
 bent=$(docker exec kezjegy-web sha256sum /srv/app/index.html 2>/dev/null | cut -d' ' -f1 || true)
 if [ "$kint" = "$bent" ]; then echo "kezjegy-web: az új app-build él"; else echo "FIGYELEM: a kezjegy-web nem a /srv/kezjegy/web/app mappát szolgálja ki"; fi
-# The shared Caddy imports /srv/kezjegy/caddy/*.caddy (once caddy-csatolas.sh ran): reload its config.
-if grep -q '^import /etc/caddy/kezjegy/' /srv/appok/deploy/Caddyfile 2>/dev/null; then
+# SPEC §29.3.2: the Adózz proxy (own compose project kezjegy-proxy in /srv/kezjegy/proxy, never recreated here). After the
+# switch every deploy validates the uploaded proxy config, swaps its files and reloads it (atallas.sh frissit). Before the
+# switch the old shared Caddy container is reloaded instead (by container name; no path into the old project).
+if [ -d /srv/kezjegy/proxy/caddy ]; then
+  bash /srv/kezjegy/deploy/proxy/atallas.sh frissit
+fi
+if ! docker ps --format '{{.Names}}' | grep -qx kezjegy-proxy && docker ps --format '{{.Names}}' | grep -qx appok-caddy-1 && docker exec appok-caddy-1 grep -q '^import /etc/caddy/kezjegy/' /etc/caddy/Caddyfile 2>/dev/null; then
   docker exec appok-caddy-1 caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
 fi
 

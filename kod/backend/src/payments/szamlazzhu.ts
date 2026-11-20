@@ -225,6 +225,13 @@ const decodeHeader = (v: string | null) => {
   }
 };
 
+/** The text of an XML element, CDATA-unwrapped (the Agent wraps values in CDATA). */
+function tagText(xml: string, name: string, within?: string): string | null {
+  const scope = within ? (new RegExp(`<${within}>([\\s\\S]*?)</${within}>`).exec(xml)?.[1] ?? '') : xml;
+  const m = new RegExp(`<${name}>\\s*(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?\\s*</${name}>`).exec(scope);
+  return m ? m[1]!.trim() : null;
+}
+
 export interface SzamlazzClient {
   issue(xml: string): Promise<SzResult>;
   storno(xml: string): Promise<SzResult>;
@@ -269,18 +276,19 @@ export function createSzamlazzClient(o: { url: string; fetch?: typeof fetch; tim
       const res = await post('action-szamla_agent_xml', xml);
       const text = await res.text();
       const headerCode = res.headers.get('szlahu_error_code');
-      const hibakod = /<hibakod>\s*([^<\s]+)\s*<\/hibakod>/.exec(text)?.[1] ?? headerCode;
+      const hibakod = tagText(text, 'hibakod') ?? headerCode;
       if (hibakod) {
         if (hibakod === '7') return null;
-        const msg = /<hibauzenet>([\s\S]*?)<\/hibauzenet>/.exec(text)?.[1] ?? decodeHeader(res.headers.get('szlahu_error')) ?? 'hiba';
+        const msg = tagText(text, 'hibauzenet') ?? decodeHeader(res.headers.get('szlahu_error')) ?? 'hiba';
         throw new SzamlazzError(`Számlázz.hu lekérdezés: ${msg.trim().slice(0, 160)}`, hibakod, false);
       }
       if (res.status >= 500) throw new SzamlazzError(`Számlázz.hu: HTTP ${res.status}`, `http_${res.status}`, true);
-      const number = /<alap>[\s\S]*?<szamlaszam>([^<]+)<\/szamlaszam>/.exec(text)?.[1]?.trim();
-      const pdfB64 = /<pdf>([\s\S]*?)<\/pdf>/.exec(text)?.[1]?.replace(/\s+/g, '');
+      const number = tagText(text, 'szamlaszam', 'alap');
+      const pdfB64 = tagText(text, 'pdf')?.replace(/\s+/g, '');
       if (!number) throw new SzamlazzError('Számlázz.hu lekérdezés: váratlan válasz', 'bad_response', true);
       const pdf = pdfB64 ? Buffer.from(pdfB64, 'base64') : Buffer.alloc(0);
-      const gross = Number(/<totalossz>[\s\S]*?<brutto>([^<]+)<\/brutto>/.exec(text)?.[1]);
+      const grossText = tagText(text, 'brutto', 'totalossz');
+      const gross = grossText ? Number(grossText) : Number.NaN;
       return { number, pdf, grossHuf: Number.isFinite(gross) ? gross : null };
     },
   };

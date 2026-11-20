@@ -26,6 +26,9 @@
   "exclude": [
     "src/**/*.test.ts",
     "src/_shared/index.ts",
-    "src/_shared/api.ts"
+    "src/_shared/api.ts",
+    "src/_shared/k29.ts",
+    "src/_shared/k29f.ts",
+    "src/_shared/k29g.ts"
   ]
 }

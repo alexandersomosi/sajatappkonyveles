@@ -43,7 +43,7 @@ function HataridokTartalom() {
         [...csoport.entries()].map(([ho, elemek], gi) => (
           <View key={ho}>
             <Szakasz cim={honapCim(ho, lista[0].dueDate.slice(0, 4))} style={gi === 0 ? { paddingTop: 6 } : undefined} />
-            <Lap>
+            <Lap kotott>
               {elemek.map((d, i) => {
                 const r = reszek(d.dueDate);
                 // A befizetést a kliens jelezte, de a könyvelő még nem ellenőrizte: nem „Kész”, csak semleges állapot.

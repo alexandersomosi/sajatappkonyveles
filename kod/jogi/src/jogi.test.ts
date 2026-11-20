@@ -188,7 +188,7 @@ describe('PDF', () => {
     expect(r.figyelmeztetesek).toEqual([]);
     expect(r.hianyzo).toEqual([]);
     expect(r.fajlnev).toBe(`Megbizasi_szerzodes_${(await betoltIndex()).find((e) => e.docType === 'megbizasi_szerzodes')!.version}.pdf`);
-    expect(r.fajlnev).toMatch(/^Megbizasi_szerzodes_2026-11-19(\.\d)?\.pdf$/);
+    expect(r.fajlnev).toMatch(/^Megbizasi_szerzodes_2026-11-20(\.\d)?\.pdf$/);
     const doc = await PDFDocument.load(r.pdf);
     expect(doc.getPageCount()).toBe(r.oldalak);
     expect(r.oldalak).toBeGreaterThanOrEqual(3);
@@ -265,13 +265,18 @@ describe('appszövegek', () => {
     expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/meghatalmazottként, a saját belépésével/);
     expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/soha nem kérjük el/);
     expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/10–15 perc/);
-    expect(valasz('Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?')).toMatch(/Amíg nincs adószámod, nem fizetsz semmit/);
+    // SPEC §29.4.2 (tulaj 11-20): nincs díjmentes időszak
+    expect(valasz('Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?')).toMatch(/a szerződés és a kártya megadása napjától fizeted/);
+    expect(valasz('Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?')).not.toMatch(/ingyenes|nem fizetsz semmit/);
     expect(valasz('Mit jelent, hogy jóvá kell hagynom a meghatalmazást?')).toMatch(/4 naptári napon belül/);
     expect(valasz('Mennyibe kerül, és mit kapok érte?')).toMatch(/A kiállított számláidat a NAV rendszeréből mi töltjük le\./);
   });
   it('a 11-19-én változott GYIK-elemeknél az elozo_* a régi szöveg szó szerint (SPEC §27.7.3 adatlépés)', async () => {
     const most = JSON.parse(await readFile(join(CSOMAG_GYOKER, 'app_szovegek.json'), 'utf8')) as { gyik: { kerdes: string; valasz: string; elozo_kerdes?: string; elozo_valasz?: string }[] };
     const regi = JSON.parse(await readFile(join(CSOMAG_GYOKER, '_regi', 'par27_elott_20261119', 'app_szovegek.json'), 'utf8')) as { gyik: { kerdes: string; valasz: string }[] };
+    // SPEC §29.4.2 (11-20): a havidíj kezdetéről szóló válasz újra változott – az előzménye a 11-20 előtti (az élő sorban az áll)
+    const regi1120 = JSON.parse(await readFile(join(CSOMAG_GYOKER, '_regi', 'k29_elott_20261120', 'app_szovegek.json'), 'utf8')) as { gyik: { kerdes: string; valasz: string }[] };
+    const HAVIDIJ = 'Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?';
     const valtozott = most.gyik.filter((g) => g.elozo_valasz !== undefined);
     expect(valtozott.map((g) => g.kerdes)).toEqual([
       'Mennyibe kerül, és mit kapok érte?',
@@ -283,7 +288,7 @@ describe('appszövegek', () => {
       'Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?',
     ]);
     for (const g of valtozott) {
-      const r = regi.gyik.find((x) => x.kerdes === (g.elozo_kerdes ?? g.kerdes));
+      const r = (g.kerdes === HAVIDIJ ? regi1120 : regi).gyik.find((x) => x.kerdes === (g.elozo_kerdes ?? g.kerdes));
       expect(r, g.kerdes).toBeDefined();
       expect(g.elozo_valasz, g.kerdes).toBe(r!.valasz);
       expect(g.valasz, g.kerdes).not.toBe(r!.valasz);
@@ -464,11 +469,18 @@ describe('SPEC §26 – tartalmi szabályok', () => {
   });
   it('a változott dokumentumok új verziót kaptak, és senkitől nem kérünk újra elfogadást (a tulaj élő fiókjai, SPEC §26.12, §27.10)', async () => {
     const index = await betoltIndex();
-    for (const t of ['aszf', 'adatkezeles', 'megbizasi_szerzodes', 'nav_meghatalmazas', 'adatfeldolgozoi', 'pmt_nyilatkozatok', 'app_szovegek']) {
+    for (const t of ['nav_meghatalmazas', 'adatfeldolgozoi', 'pmt_nyilatkozatok']) {
       const e = index.find((x) => x.docType === t)!;
       expect(e.version, t).toBe('2026-11-19');
       expect(e.effectiveFrom, t).toBe('2026-11-19');
     }
+    // SPEC §29.16 (k7, 11-20): Stripe, Számlázz.hu e-számla, nincs díjmentes időszak, kártyás engedély
+    for (const t of ['aszf', 'adatkezeles', 'megbizasi_szerzodes', 'app_szovegek', 'kartyas_fizetes']) {
+      const e = index.find((x) => x.docType === t)!;
+      expect(e.version, t).toBe('2026-11-20');
+      expect(e.effectiveFrom, t).toBe('2026-11-20');
+    }
+    expect((await readFile(join(CSOMAG_GYOKER, '_regi', 'k29_elott_20261120', 'aszf.md'), 'utf8')).length).toBeGreaterThan(1000);
     // a SimplePay-nyilatkozatok nem változtak
     for (const t of ['simplepay_adattovabbitas', 'simplepay_ismetlodo']) expect(index.find((x) => x.docType === t)!.version, t).toBe('2026-11-18');
     // a 11-18-i változat a _regi-ben megvan (a bekötés alatti fiókok azt fogadhatták el)

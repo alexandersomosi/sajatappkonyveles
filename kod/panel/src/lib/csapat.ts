@@ -186,6 +186,8 @@ export type MenuKulcs =
   | 'admin_ugyfelek'
   | 'admin_elofizetesek'
   | 'admin_fizetesek'
+  // SPEC §29.1.14 (B3)
+  | 'admin_dijszamlak'
   | 'admin_konyvelok'
   | 'admin_csapat'
   | 'admin_forrasok'
@@ -230,6 +232,8 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_ugyfelek: { to: '/admin/ugyfelek', felirat: 'Ügyfelek', ikon: 'dosszie' },
   admin_elofizetesek: { to: '/admin/elofizetesek', felirat: 'Előfizetések', ikon: 'szamlak' },
   admin_fizetesek: { to: '/admin/fizetesek', felirat: 'Fizetések', ikon: 'szamlaszam' },
+  // SPEC §29.1.14: fee invoices (Számlázz.hu)
+  admin_dijszamlak: { to: '/admin/dijszamlak', felirat: 'Díjszámlák', ikon: 'irat' },
   // SPEC §28.K.1: admin-editable fees (DEMO until confirmed)
   admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'szamolo' },
   // SPEC §29.5 F1: the certificate queue; §29.9 F9: the owner console
@@ -285,6 +289,7 @@ export function menuCsoportok(o: {
       el('admin_ugyfelek'),
       el('admin_elofizetesek'),
       el('admin_fizetesek'),
+      el('admin_dijszamlak'),
       el('admin_dijak'),
       el('admin_konyvelok'),
       el('admin_csapat'),

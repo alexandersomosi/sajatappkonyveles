@@ -65,7 +65,8 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
   const [be, setBe] = useState(false);
   const [hiba, setHiba] = useState<string | null>(null);
   const kartyaLap = !!kerdes && 'kartya' in kerdes;
-  const engedely = useKartyaEngedely(kartyaLap);
+  // a card change while money is due is a "Fizesd ki" with the new card (the server decides; the consent follows it)
+  const engedely = useKartyaEngedely(kartyaLap, e.due ? 'fizesd_ki' : 'card_update');
   const ma = maiNap();
   const havi = e.monthlyHuf ?? e.nextChargeAmountHuf ?? e.priceHuf;
   const fut = e.status === 'active' && !e.cancelAtPeriodEnd;

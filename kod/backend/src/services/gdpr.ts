@@ -307,7 +307,9 @@ export async function executeDeletion(deps: Deps, userId: string): Promise<void>
       await tx.update(appointments).set({ phoneEnc: null }).where(eq(appointments.clientId, cl.id));
       // Callback numbers and free texts go with the account (SPEC §26.12 retention is [JOGI]; the call log stays).
       await tx.update(callbackRequests).set({ phoneEnc: null, phoneMasked: null, note: null, needsNewPhone: false }).where(eq(callbackRequests.clientId, cl.id));
-      await tx.update(clients).set({ lifecycle: 'megszunt', phoneEnc: null, attribution: null, personalReferralCode: null, updatedAt: now }).where(eq(clients.id, cl.id));
+      // SPEC §29.9.6: the same anonymisation as the owner console's erasure (identity data gone, legal records kept)
+      const { anonymizeClientCore } = await import('./anonimizalas.js');
+      await anonymizeClientCore(deps, tx, cl.id);
     }
     await tx
       .update(users)

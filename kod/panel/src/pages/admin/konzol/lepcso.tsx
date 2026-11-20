@@ -198,7 +198,7 @@ export function MuveletFiok({ def, bezar, kesz }: { def: MuveletDef | null; beza
           {def.visszavonhatatlan ? <div style={{ marginTop: 4 }}>{CONSOLE_TEXTS.irreversible}</div> : null}
         </div>
         <div>
-          <button type="button" className={def.veszelyes ? 'gomb-v' : 'gomb-e'} disabled={fut || !indokOk} onClick={() => void kuld()}>
+          <button type="button" className="gomb-e" style={def.veszelyes ? { background: 'var(--veszely)' } : undefined} disabled={fut || !indokOk} onClick={() => void kuld()}>
             {CONSOLE_TEXTS.confirm}
           </button>
         </div>

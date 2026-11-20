@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Adózz.hu – a választott felirat-logó (8 + lendület)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Manrope:wght@800&display=block" rel="stylesheet">
+<style>
+/* A tulaj választása 11-20 13:45: "a 8-as vonallal jó lenne alatta" = kétszínű felirat (Adó + sárga zz + .hu) + sárga lendület alatta. */
+:root { --kek: #1428DB; --sarga: #FFC93C; --sotet: #10152B; }
+* { box-sizing: border-box; margin: 0; }
+body { background: #F4F6FC; font-family: Manrope, sans-serif; padding: 28px; width: 1200px; }
+h1 { font: 800 24px Manrope; color: var(--sotet); margin-bottom: 18px; }
+.sor { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.lap { height: 220px; border-radius: 18px; display: grid; place-items: center; }
+.feher { background: #fff; }
+.kek { background: var(--kek); }
+.logo { font-family: Poppins; font-weight: 800; letter-spacing: -.02em; line-height: 1; position: relative; display: inline-block; padding-bottom: .2em; white-space: nowrap; }
+.logo .zz { color: var(--sarga); }
+.feher .logo { color: var(--kek); }
+.feher .logo .zz { color: #F2B705; }  /* fehéren egy árnyalattal mélyebb sárga, hogy jól látsszon */
+.kek .logo { color: #fff; }
+.logo svg { position: absolute; left: .02em; right: .02em; bottom: -.02em; width: calc(100% - .04em); height: .26em; }
+.nagy { font-size: 72px; }
+.kicsi { font-size: 30px; }
+.cimke { font: 700 14px Manrope; color: #5A6280; margin: 4px 0 8px; }
+</style>
+</head>
+<body>
+<h1>Adózz.hu – a választott felirat-logó (8-as + sárga lendület alatta)</h1>
+<div class="cimke">Nagy méret</div>
+<div class="sor">
+  <div class="lap feher"><span class="logo nagy">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#F2B705" stroke-width="9" stroke-linecap="round"/></svg></span></div>
+  <div class="lap kek"><span class="logo nagy">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#FFC93C" stroke-width="9" stroke-linecap="round"/></svg></span></div>
+</div>
+<div class="cimke">Kis méret (fejléc, e-mail, számla)</div>
+<div class="sor">
+  <div class="lap feher" style="height:120px"><span class="logo kicsi">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#F2B705" stroke-width="11" stroke-linecap="round"/></svg></span></div>
+  <div class="lap kek" style="height:120px"><span class="logo kicsi">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#FFC93C" stroke-width="11" stroke-linecap="round"/></svg></span></div>
+</div>
+</body>
+</html>

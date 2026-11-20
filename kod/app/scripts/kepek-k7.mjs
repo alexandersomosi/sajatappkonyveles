@@ -78,6 +78,10 @@ const LOVESEK = [
   ['k7_18b_fizesd_ki_masik_kartya', '/fizesd-ki?minta=fizesd', 1.4, (p) => kattint(p, 'Másik kártyával fizetek')],
   ['k7_19_dijak', '/fiok/dijak?minta=norbert', 1.8],
   ['k7_19b_dij_fizetes', '/fiok/dijak?minta=norbert', 1, (p) => kattint(p, 'Fizetek')],
+  ['k7_19c_dijszamlak_sztorno', '/fiok/dijak?minta=kata', 2.2],
+  // §29.4.3 elválasztó: a belépési képernyők is
+  ['k7_20_belepes', '/belepes?minta=kint', 1],
+  ['k7_21_regisztracio', '/regisztracio?minta=kint', 1.6],
 ];
 
 async function egy(base, [nev, ut, szorzo, muvelet], szel, mag) {

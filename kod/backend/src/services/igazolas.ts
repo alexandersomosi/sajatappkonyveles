@@ -42,8 +42,7 @@ import { accountantUserOf, type StaffActor } from './team.js';
 import { clientName, type ClientRow } from './people.js';
 import { assertFeature } from './access.js';
 import { lockedError } from './zarolas.js';
-import { feeSetting } from './dijak.js';
-import { createFeeChargeK29 } from './payments.js';
+import { createFeeChargeK29, feeSetting, registerFeePurposeHandler } from './dijak.js';
 import { computeFlags } from './flags.js';
 
 export type CertRow = typeof certificateRequests.$inferSelect;
@@ -90,7 +89,7 @@ export async function certificateYears(deps: Deps, db: DbOrTx, clientId: string)
     .where(and(eq(annualClosings.clientId, clientId), inArray(annualClosings.status, ['beadva', 'kesz'])));
   const filedYears = new Set(filed.map((f) => f.year));
   const out: CertificateFormView['years'] = [];
-  for (const y of [cur - 1, cur - 2, cur - 3, cur]) {
+  for (const y of [cur, cur - 1, cur - 2, cur - 3]) {
     if (y === cur) {
       out.push({ year: y, ok: false, reason: CERT_FORM_TEXTS.yearCurrent });
       continue;
@@ -515,9 +514,17 @@ export async function accCertificateDetail(deps: Deps, db: DbOrTx, actor: StaffA
     timeline: ev.map((e) => ({
       status: e.status as CertStatus,
       at: e.at.toISOString(),
-      text: statusText(e.status as CertStatus, { firstName: fn, datum: huFullDate(todayBudapest(e.at)), ok: (x.rejectedReason as string | null) ?? '', osszeg: charge?.amountHuf ?? 0, koma: e.status === 'kesz' ? koma : null }),
+      // staff wording: the status label (+ the KOMA outcome / the reason), not the client's sentence
+      text:
+        e.status === 'kesz' && koma
+          ? `${CERT_STATUS_LABELS.kesz} – ${statusText('kesz', { firstName: fn, koma })}`
+          : e.status === 'elutasitva'
+            ? `${CERT_STATUS_LABELS.elutasitva}: ${(x.rejectedReason as string | null) ?? ''}`
+            : e.status === 'beerkezett' && e.note
+              ? `${CERT_STATUS_LABELS.beerkezett} (${e.note})`
+              : CERT_STATUS_LABELS[e.status as CertStatus] ?? e.status,
       by: e.by ? (names.get(e.by) || null) : null,
-      note: e.note ?? null,
+      note: e.status === 'beerkezett' ? null : (e.note ?? null),
     })),
     requestId: r.id,
   };
@@ -635,5 +642,11 @@ export async function openCertificateCount(db: DbOrTx, accountantId: string | nu
   const oldest = rows.reduce<Date | null>((m, x) => (!m || x.createdAt < m ? x.createdAt : m), null);
   return { n: rows.length, oldest };
 }
+
+// SPEC §29.1.15: a paid certificate fee moves the request on (dijra_var → beerkezett) and tells the accountant.
+registerFeePurposeHandler('igazolas', async (deps, _cl, ch) => {
+  const p = ch.purpose as { type: string; requestId?: string };
+  if (p.requestId) await onCertificateFeePaid(deps, p.requestId);
+});
 
 export { CERT_NOTIFICATION_TEXTS, monthKeyOf };

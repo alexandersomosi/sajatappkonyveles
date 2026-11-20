@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Főoldal (v2, kártyás)</title>
+<link rel="stylesheet" href="../C2_modern/app_v2/tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=block" rel="stylesheet">
+<style>
+/* v2 (tulaj 11-20): a ChatGPT-ben finomított irány, "ezt választanám a végleges dizájnhoz".
+   Egységes ikonrendszer (lapos ikon színes, lekerekített négyzetben), erősebb hierarchia, külön pénzügyi kártyák,
+   kiemelt sárga főgomb nyíllal, letisztult határidők (dátum + nyíl), finom árnyékok, modern alsó navigáció.
+   Kódból rajzolva, nem AI-kép. Az ikonok útvonalai a Material Icons (Apache 2.0) mintájára. */
+:root { --kek: #1428DB; --sarga: #FFC93C; --sarga-s: #E9AE12; --sotet: #10152B; --szurke: #5B6478; --hatter: #F3F5FB; --vonal: #ECEFF6; }
+* { box-sizing: border-box; margin: 0; }
+html, body { background: var(--hatter); }
+body { width: 390px; font-family: var(--betu-szoveg); color: var(--sotet); -webkit-font-smoothing: antialiased; }
+
+/* fejléc */
+.fej { position: relative; overflow: hidden; isolation: isolate; color: #fff; padding: 0 18px 24px; border-radius: 0 0 26px 26px;
+  background: linear-gradient(160deg, #1D35EC 0%, #1428DB 55%, #0F20BE 100%); box-shadow: 0 8px 24px rgba(20, 40, 219, .22); }
+.fej::before { content: ""; position: absolute; z-index: -1; width: 320px; height: 320px; right: -140px; top: -70px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.12), rgba(255,255,255,0) 70%); }
+.fej::after { content: ""; position: absolute; z-index: -1; width: 230px; height: 230px; right: -70px; top: 110px; border-radius: 50%; border: 30px solid rgba(255,255,255,.05); }
+.allapot { color: #fff; height: 46px; display: flex; align-items: center; justify-content: space-between; font-weight: 650; font-size: 16px; }
+.allapot .j { display: flex; gap: 6px; align-items: center; }
+.sor1 { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.wm8 { font-family: Poppins, sans-serif; font-weight: 800; letter-spacing: -.02em; line-height: 1; position: relative; display: inline-block; padding-bottom: .2em; white-space: nowrap; color: #fff; }
+.wm8 .zz { color: var(--sarga); }
+.wm8 svg { position: absolute; left: .02em; bottom: -.02em; width: calc(100% - .04em); height: .26em; }
+.demo { background: var(--sarga); color: var(--sotet); font-weight: 800; font-size: 12.5px; letter-spacing: .06em; padding: 6px 13px; border-radius: 999px; }
+.ki { display: flex; align-items: center; gap: 9px; margin-top: 12px; font-size: 15px; color: #D5DCFF; }
+.ki b { color: #fff; font-weight: 650; }
+.ki img { width: 32px; height: 32px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
+.fej h1 { font-weight: 800; font-size: 27px; line-height: 1.14; letter-spacing: -.025em; margin-top: 14px; }
+.fej h1 em { font-style: normal; color: var(--sarga); }
+.fej p { font-size: 15.5px; line-height: 1.45; color: #D5DCFF; margin-top: 8px; }
+.szamologep { position: absolute; z-index: -1; right: 14px; top: 118px; width: 78px; opacity: .14; transform: rotate(-9deg); }
+
+/* kártyák */
+main { padding: 14px 12px 112px; }
+.k { display: flex; gap: 12px; background: #fff; border-radius: 20px; padding: 16px 14px; margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(16,21,43,.04), 0 6px 20px rgba(16,21,43,.06); }
+.tile { flex: none; width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; }
+.tile svg { width: 24px; height: 24px; }
+/* félretenni-sor: cím és összeg egy vonalban, magyarázat alatta teljes szélességben */
+.tet { display: grid; grid-template-columns: 1fr auto; column-gap: 10px; align-items: baseline; padding: 9px 0; }
+.tet + .tet { border-top: 1px solid var(--vonal); }
+.tet .c { font-weight: 700; font-size: 15.5px; line-height: 1.3; }
+.tet .a { grid-column: 1 / -1; font-size: 14px; color: var(--szurke); line-height: 1.35; margin-top: 1px; }
+.t-sarga { background: #FFF0C9; } .t-kek { background: #E6EBFF; } .t-zold { background: #DFF5E8; } .t-narancs { background: #FFE9DA; }
+.tart { flex: 1; min-width: 0; }
+.k h2 { font-size: 18.5px; font-weight: 750; letter-spacing: -.015em; line-height: 1.25; margin-top: 1px; }
+.hsor { display: flex; align-items: center; gap: 10px; padding: 9px 0; }
+.hsor + .hsor { border-top: 1px solid var(--vonal); }
+.hsor .l { flex: 1; min-width: 0; }
+.hsor .c { font-weight: 700; font-size: 15.5px; line-height: 1.3; }
+.hsor .a { font-size: 14px; color: var(--szurke); line-height: 1.35; margin-top: 1px; }
+.osszeg { font-weight: 800; font-size: 18px; letter-spacing: -.01em; white-space: nowrap; }
+.osszeg small { font-size: 13px; font-weight: 600; margin-left: 3px; }
+.gomb { margin-top: 8px; width: 100%; height: 50px; border: 0; border-radius: 14px; background: var(--sarga); color: var(--sotet); font: inherit; font-weight: 750; font-size: 17px;
+  display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 0 var(--sarga-s), 0 6px 14px rgba(233,174,18,.25); }
+.gomb svg { width: 18px; height: 18px; }
+.link { display: inline-flex; align-items: center; gap: 4px; margin-top: 12px; color: var(--kek); font-weight: 650; font-size: 15.5px; text-decoration: underline; text-underline-offset: 3px; }
+.link svg { width: 16px; height: 16px; }
+.nagy { font-size: 25px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; margin-top: 2px; white-space: nowrap; }
+.k p { font-size: 15px; line-height: 1.45; color: #2A3247; margin-top: 4px; }
+.k p b { white-space: nowrap; }
+.csik { height: 9px; border-radius: 5px; background: #E6E9F2; margin-top: 12px; overflow: hidden; }
+.csik i { display: block; height: 100%; width: 81.6%; background: var(--sarga); border-radius: 5px; }
+.csik-alatt { display: flex; justify-content: space-between; margin-top: 8px; font-size: 14px; color: var(--szurke); white-space: nowrap; }
+.csik-alatt b { color: var(--sotet); font-weight: 750; }
+.hat .hsor { padding: 11px 0; }
+.hat .c { font-size: 15px; }
+.hat .hsor:first-of-type { padding-top: 6px; }
+.hat .d { font-size: 14.5px; color: var(--szurke); white-space: nowrap; }
+.chev { width: 18px; height: 18px; flex: none; color: #9AA2B5; }
+
+/* segítségkártya: enyhén kiemelve */
+.seg { background: #EAF0FF; box-shadow: none; border: 1px solid #D9E2FF; }
+.seg .fejsor { display: flex; align-items: center; gap: 10px; }
+.seg h2 { flex: 1; }
+.gomb-kis { flex: none; height: 42px; padding: 0 16px 0 13px; border-radius: 999px; background: var(--sarga); border: 0; font: inherit; font-weight: 750; font-size: 15.5px; color: var(--sotet);
+  display: flex; align-items: center; gap: 7px; box-shadow: 0 2px 0 var(--sarga-s); }
+.gomb-kis svg { width: 18px; height: 18px; fill: var(--sotet); }
+
+/* alsó navigáció */
+.nav { position: fixed; left: 0; width: 390px; bottom: 0; background: #fff; border-radius: 22px 22px 0 0; box-shadow: 0 -6px 22px rgba(16,21,43,.08);
+  display: flex; padding: 0 6px 22px; }
+.nav button { flex: 1; min-width: 0; width: 20%; margin: 0; height: auto; padding: 12px 0 0 !important; border: 0; background: none; font: inherit; font-size: 13px; font-weight: 600; color: #8A93A8; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 0 0; position: relative; }
+.nav svg { width: 26px; height: 26px; fill: currentColor; }
+.nav .on { color: var(--kek); font-weight: 750; }
+.nav .on::before { content: ""; position: absolute; top: 0; left: 20%; right: 20%; height: 3px; border-radius: 0 0 3px 3px; background: var(--kek); }
+.pont { position: absolute; top: 10px; left: calc(50% + 7px); width: 9px; height: 9px; border-radius: 50%; background: #EF3B3B; box-shadow: 0 0 0 2px #fff; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="chev" viewBox="0 0 24 24"><path d="M9 5.5l6.5 6.5L9 18.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="fej">
+  <div class="allapot"><span>9:41</span><span class="j">
+    <svg viewBox="0 0 18 12" width="18" fill="#fff"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+    <svg viewBox="0 0 16 12" width="16"><path d="M1.5 4.6a9.5 9.5 0 0 1 13 0M4.1 7.4a5.8 5.8 0 0 1 7.8 0" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="10.2" r="1.6" fill="#fff"/></svg>
+    <svg viewBox="0 0 27 13" width="27"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" opacity=".55"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#fff"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="#fff" opacity=".55"/></svg>
+  </span></div>
+  <div class="sor1">
+    <span class="wm8" style="font-size:30px">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#FFC93C" stroke-width="11" stroke-linecap="round"/></svg></span>
+    <span class="demo">DEMO</span>
+  </div>
+  <div class="ki"><img src="../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt=""><span><b>Kovács Bence</b>, a könyvelőd</span></div>
+  <svg class="szamologep" viewBox="0 0 64 80" aria-hidden="true"><rect x="2" y="2" width="60" height="76" rx="10" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="3"/><rect x="10" y="10" width="44" height="15" rx="4" fill="#fff" opacity=".7"/><g fill="#fff" opacity=".7"><rect x="10" y="33" width="12" height="10" rx="3"/><rect x="26" y="33" width="12" height="10" rx="3"/><rect x="42" y="33" width="12" height="10" rx="3"/><rect x="10" y="47" width="12" height="10" rx="3"/><rect x="26" y="47" width="12" height="10" rx="3"/><rect x="42" y="47" width="12" height="24" rx="3"/><rect x="10" y="61" width="12" height="10" rx="3"/><rect x="26" y="61" width="12" height="10" rx="3"/></g></svg>
+  <h1>Most kb. <em>250&nbsp;000&nbsp;Ft</em> legyen félretéve az&nbsp;adóra.</h1>
+  <p>Az idei számláid után eddig kb. 16&nbsp;170&nbsp;000&nbsp;Ft jött be. Ebből 317&nbsp;000&nbsp;Ft-ot már befizettél.</p>
+</header>
+
+<main>
+  <!-- Félretenni -->
+  <section class="k">
+    <div class="tile t-sarga"><svg viewBox="0 0 24 24"><path d="M5 7.5l10.2-3.6c.9-.3 1.8.3 1.8 1.2V7.5" fill="none" stroke="#10152B" stroke-width="1.8" stroke-linejoin="round"/><rect x="3" y="7.5" width="18" height="13" rx="3" fill="#FFC93C" stroke="#10152B" stroke-width="1.8"/><rect x="14" y="11.5" width="7" height="5" rx="2" fill="#fff" stroke="#10152B" stroke-width="1.8"/><circle cx="16.8" cy="14" r="1" fill="#10152B"/></svg></div>
+    <div class="tart">
+      <h2>Félretenni</h2>
+      <div class="tet"><div class="c">III. negyedév</div><div class="osszeg">96&nbsp;000<small>Ft</small></div><div class="a">Július–szeptember számlái után</div></div>
+      <div class="tet"><div class="c">IV. negyedév, eddig</div><div class="osszeg">154&nbsp;000<small>Ft</small></div><div class="a">Október és november számlái</div></div>
+      <button class="gomb">Félretettem<svg><use href="#chev"/></svg></button>
+      <a class="link" href="#">Számlánként megnézem<svg><use href="#chev"/></svg></a>
+    </div>
+  </section>
+
+  <!-- Idei kereteid -->
+  <section class="k">
+    <div class="tile t-kek"><svg viewBox="0 0 24 24"><rect x="3.5" y="3" width="13" height="18" rx="2.5" fill="#1F3BE0"/><path d="M7 8h6M7 12h6M7 16h3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M14.2 18.6l.5-2.6 5.4-5.4a1.3 1.3 0 0 1 1.9 0l.2.2a1.3 1.3 0 0 1 0 1.9l-5.4 5.4z" fill="#7C92FF" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg></div>
+    <div class="tart">
+      <h2>Idei kereteid</h2>
+      <div class="nagy">Még 3&nbsp;685&nbsp;000&nbsp;Ft</div>
+      <p>számlázhatsz ÁFA nélkül. Ennyi fér még az alanyi ÁFA-mentességbe.</p>
+      <div class="csik" role="img" aria-label="20 millióból 16,3 millió"><i></i></div>
+      <div class="csik-alatt"><span>eddig <b>16&nbsp;315&nbsp;000&nbsp;Ft</b></span><span>keret <b>20&nbsp;000&nbsp;000&nbsp;Ft</b></span></div>
+    </div>
+  </section>
+
+  <!-- Mennyit kerestem? -->
+  <section class="k">
+    <div class="tile t-zold"><svg viewBox="0 0 24 24" fill="#1FA855"><rect x="3.5" y="13" width="4.2" height="8" rx="1.6"/><rect x="9.9" y="8.5" width="4.2" height="12.5" rx="1.6"/><rect x="16.3" y="3.5" width="4.2" height="17.5" rx="1.6"/></svg></div>
+    <div class="tart">
+      <h2>Mennyit kerestem?</h2>
+      <div class="nagy">16&nbsp;170&nbsp;000&nbsp;Ft</div>
+      <p>bevételed jött be idén eddig. Adó és járulék után kb. 14&nbsp;527&nbsp;000&nbsp;Ft maradt neked. Ha így folytatod, év végéig kb. <b>19&nbsp;400&nbsp;000&nbsp;Ft</b> lesz a bevételed.</p>
+    </div>
+  </section>
+
+  <!-- Határidők -->
+  <section class="k hat">
+    <div class="tile t-narancs"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3" fill="#F97316"/><path d="M3 9.5h18" stroke="#C2410C" stroke-width="1.6"/><path d="M8 2.8v3.6M16 2.8v3.6" stroke="#9A3412" stroke-width="2" stroke-linecap="round"/><g fill="#fff"><rect x="6" y="12" width="3" height="2.6" rx=".8"/><rect x="10.5" y="12" width="3" height="2.6" rx=".8"/><rect x="15" y="12" width="3" height="2.6" rx=".8"/><rect x="6" y="16" width="3" height="2.6" rx=".8"/><rect x="10.5" y="16" width="3" height="2.6" rx=".8"/></g></svg></div>
+    <div class="tart">
+      <h2>Határidők</h2>
+      <div class="hsor"><div class="l"><div class="c">Szja-előleg, IV. negyedév</div></div><span class="d">dec. 12.</span><svg class="chev"><use href="#chev"/></svg></div>
+      <div class="hsor"><div class="l"><div class="c">Havi TB-járulék</div></div><span class="d">dec. 12.</span><svg class="chev"><use href="#chev"/></svg></div>
+    </div>
+  </section>
+
+  <!-- Ha elakadsz -->
+  <section class="k seg">
+    <div class="tile" style="background:none;width:40px"><svg viewBox="0 0 24 24" style="width:36px;height:36px"><path d="M5 3.5h14a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3h-8.5L6 21.2c-.5.4-1.2 0-1.2-.6v-3.1A3 3 0 0 1 2 14.5v-8a3 3 0 0 1 3-3z" fill="#1F3BE0"/><circle cx="7.6" cy="10.5" r="1.5" fill="#fff"/><circle cx="12" cy="10.5" r="1.5" fill="#fff"/><circle cx="16.4" cy="10.5" r="1.5" fill="#fff"/></svg></div>
+    <div class="tart">
+      <div class="fejsor"><h2>Ha elakadsz</h2><button class="gomb-kis"><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>Visszahívás</button></div>
+      <p>Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.</p>
+    </div>
+  </section>
+</main>
+
+<nav class="nav" aria-label="Fülek">
+  <button class="on"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Főoldal</button>
+  <button><svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>Dosszié</button>
+  <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12.5" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>Fotózás</button>
+  <button><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span class="pont"></span>Üzenetek</button>
+  <button><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Fiók</button>
+</nav>
+</body>
+</html>

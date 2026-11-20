@@ -633,7 +633,8 @@ export function UtmutatoLepesenkent({
             </T>
           ) : null}
           <T m={15.5} s={600} lh={1.45} style={{ marginTop: 12 }}>
-            {`${n} lépés. Egy képernyőn mindig csak egy, képpel.`}
+            {/* SPEC §29.7: a guide without pictures (megszüntetés) does not promise any */}
+            {`${n} lépés. Egy képernyőn mindig csak egy${kepek?.items?.length ? ', képpel' : ''}.`}
           </T>
           <GombE cim={kesz.length ? 'Folytatom' : 'Kezdjük'} onPress={() => ugrik(kesz.length ? (elsoNyitott < 0 ? n : elsoNyitott + 1) : 1)} style={{ marginTop: 14 }} />
         </Lap>

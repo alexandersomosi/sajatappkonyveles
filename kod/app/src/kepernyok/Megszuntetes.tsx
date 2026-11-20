@@ -77,10 +77,10 @@ export function MegszuntetesInfo() {
             {lock ? <ZaroltSor style={{ marginTop: 12 }} /> : <GombE cim={CHANGE_TEXTS.helyettunk.button} onPress={() => router.push(`/valtozas/${CLOSING_KIND}/kerem`)} style={{ marginTop: 12 }} />}
           </View>
           <GombM cim={CLOSING_TEXTS.selfButton} onPress={() => router.push(`/valtozas/${CLOSING_KIND}/utmutato`)} style={{ marginTop: 12 }} />
-          <T m={14.5} c={szin.halvany} kozep style={{ marginTop: 6 }}>
+          <T m={14.5} c={szin.halvany} style={{ marginTop: 6, paddingLeft: 4 }}>
             {CLOSING_TEXTS.selfLine}
           </T>
-          <Pressable accessibilityRole="link" onPress={() => router.push(visszahivasUt('valtozas_utmutato', 'megszuntetes' as never))} style={{ alignSelf: 'center', paddingVertical: 12, marginBottom: 6 }}>
+          <Pressable accessibilityRole="link" onPress={() => router.push(visszahivasUt('valtozas_utmutato', 'megszuntetes' as never))} style={{ alignSelf: 'flex-start', paddingVertical: 12, paddingLeft: 4, marginBottom: 6 }}>
             <T m={15.5} s={650} c={szin.tintakekSzoveg}>
               {CLOSING_TEXTS.talkFirst}
             </T>
@@ -157,7 +157,7 @@ export function MegszuntetesKerem() {
   return (
     <Kepernyo
       ful="fiok"
-      fejlec={<UrlapFej vissza={() => (i > 0 ? ugrik(i - 1) : vissza(`/valtozas/${CLOSING_KIND}`))} szakasz={CLOSING_TEXTS.helyettunkTitle} />}
+      fejlec={<UrlapFej vissza={() => (i > 0 ? ugrik(i - 1) : vissza(`/valtozas/${CLOSING_KIND}`))} szakasz="Megszüntetés" />}
       dokk={<GombE cim={gomb} tolt={ker.isPending} onPress={tovabb} />}
     >
       {lap === 'igy' ? (
@@ -169,7 +169,7 @@ export function MegszuntetesKerem() {
       ) : lap === 'datum' ? (
         <>
           <UrlapKerdes i={i} n={n} cim={CLOSING_TEXTS.formDateTitle} miert="Legkorábban holnap, legfeljebb 90 nap múlva." />
-          <Mezo felirat="A megszűnés napja" value={nap} onChangeText={setNap} placeholder={datumEvvel(napHozzaad(ma, 30))} keyboardType="numbers-and-punctuation" />
+          <Mezo felirat="A megszűnés napja" value={nap} onChangeText={setNap} placeholder={`${napHozzaad(ma, 30).replace(/-/g, '.')}.`} keyboardType="numbers-and-punctuation" />
           <T m={15.5} s={600} lh={1.45} c={szin.borostyanSzoveg} style={{ marginTop: 12 }}>
             {CLOSING_TEXTS.formDateWarn}
           </T>

@@ -146,6 +146,10 @@ export interface PublicConfig {
   mediaBaseUrl?: string;
   /** SPEC §26.1.7: when a new-business client is charged first. */
   newBusinessChargePolicy?: NewBusinessChargePolicy;
+  /** SPEC §29.14: the provider of NEW card flows and its mode ('test' | 'live' | 'demo' | 'sandbox' | null). */
+  paymentProvider?: 'stripe' | 'simplepay' | 'demo' | 'disabled';
+  paymentMode?: 'test' | 'live' | 'demo' | 'sandbox' | null;
+  simplepayEnabled?: boolean;
 }
 export interface Health {
   ok: boolean;

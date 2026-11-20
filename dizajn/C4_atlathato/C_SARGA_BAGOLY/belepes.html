@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Belépés</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Poppins:wght@800&display=block" rel="stylesheet">
+<style>
+/* Belépés: a tulaj 11-20 13:35: "bagoly csak a login oldalon legyen, máshol nem kell; Adózz.hu szöveg jó magában". */
+:root { --sarga: #FFC93C; --sarga-sotet: #E5AE16; --sarga-szoveg: #10152B; }
+html, body { background: #fff; }
+.fent { background: var(--neon); color: #fff; padding: 0 20px 26px; border-radius: 0 0 28px 28px; text-align: center; }
+.allapotsor { color: #fff; }
+.bagoly { width: 168px; height: auto; display: block; margin: 8px auto 0; }
+.szo { font-family: Nunito, sans-serif; font-weight: 900; font-size: 34px; letter-spacing: -.01em; margin-top: 6px; }
+.szo b { color: var(--sarga); font-weight: 900; }
+.fent p { font-size: 16px; line-height: 1.4; color: rgba(255,255,255,.82); margin-top: 4px; }
+.urlap { padding: 24px 20px 0; }
+label { display: block; font-weight: 650; font-size: 15px; color: var(--tinta); margin: 14px 0 6px; }
+.mezo { height: 52px; border-radius: 14px; border: 1.5px solid #D3DAFC; display: flex; align-items: center; padding: 0 14px; font-size: 17px; color: #8A92AE; }
+.gomb-e { margin-top: 22px; width: 100%; height: 54px; border: 0; border-radius: 16px; background: var(--sarga); color: var(--sarga-szoveg); font-weight: 750; font-size: 17.5px; box-shadow: 0 2px 0 var(--sarga-sotet); }
+.masod { margin-top: 14px; width: 100%; text-align: center; height: 52px; border-radius: 16px; border: 1.5px solid #D3DAFC; background: #fff; color: var(--neon); font-weight: 700; font-size: 16.5px; }
+.link { display: block; text-align: center; margin-top: 16px; font-size: 16px; color: var(--neon); text-decoration: underline; text-underline-offset: 4px; }
+.uj { text-align: center; margin-top: 22px; font-size: 16px; color: var(--halvany); }
+.uj a { color: var(--neon); font-weight: 700; }
+
+.wm8 { font-family: Poppins, sans-serif; font-weight: 800; letter-spacing: -.02em; line-height: 1; position: relative; display: inline-block; padding-bottom: .2em; white-space: nowrap; color: #fff; }
+.wm8 .zz { color: #FFC93C; }
+.wm8 svg { position: absolute; left: .02em; bottom: -.02em; width: calc(100% - .04em); height: .26em; }
+.masod { display: flex; align-items: center; justify-content: center; gap: 12px; color: #1F1F1F; }
+.masod .g { width: 22px; height: 22px; flex: none; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+<div class="fent">
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div>
+  <div style="margin-top:48px; margin-bottom:6px"><span class="wm8" style="font-size:46px">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#FFC93C" stroke-width="11" stroke-linecap="round"/></svg></span></div>
+  <p>A saját könyvelőd, a zsebedben.</p>
+</div>
+<div class="urlap">
+  <label>E-mail-cím</label>
+  <div class="mezo">pelda@email.hu</div>
+  <label>Jelszó</label>
+  <div class="mezo">••••••••</div>
+  <button class="gomb-e">Belépek</button>
+  <button class="masod"><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Belépés Google-fiókkal</span></button>
+  <a class="link" href="#">Elfelejtettem a jelszavam</a>
+  <div class="uj">Még nincs fiókod? <a href="#">Regisztrálok</a></div>
+</div>
+</body>
+</html>

@@ -27,6 +27,7 @@ const AdminAttekintes = lazy(() => import('./pages/admin/Attekintes'));
 const AdminUgyfelek = lazy(() => import('./pages/admin/Ugyfelek'));
 const AdminElofizetesek = lazy(() => import('./pages/admin/Elofizetesek'));
 const AdminFizetesek = lazy(() => import('./pages/admin/Fizetesek'));
+const AdminDijszamlak = lazy(() => import('./pages/admin/Dijszamlak'));
 const AdminKonyvelok = lazy(() => import('./pages/admin/Konyvelok'));
 const AdminCsapat = lazy(() => import('./pages/admin/Csapat'));
 const AdminForrasok = lazy(() => import('./pages/admin/Forrasok'));
@@ -141,6 +142,8 @@ export function App() {
                 <Route path="/admin/ugyfelek" element={<Csak szerep={AD}><AdminUgyfelek /></Csak>} />
                 <Route path="/admin/elofizetesek" element={<Csak szerep={AD}><AdminElofizetesek /></Csak>} />
                 <Route path="/admin/fizetesek" element={<Csak szerep={AD}><AdminFizetesek /></Csak>} />
+                {/* SPEC §29.1.14: fee invoices (Számlázz.hu) */}
+                <Route path="/admin/dijszamlak" element={<Csak szerep={AD}><AdminDijszamlak /></Csak>} />
                 <Route path="/admin/konyvelok" element={<Csak szerep={AD}><AdminKonyvelok /></Csak>} />
                 <Route path="/admin/csapat" element={<Csak szerep={AD}><AdminCsapat /></Csak>} />
                 <Route path="/admin/forrasok" element={<Csak szerep={AD}><AdminForrasok /></Csak>} />

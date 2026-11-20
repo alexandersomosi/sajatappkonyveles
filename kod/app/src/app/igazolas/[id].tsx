@@ -84,7 +84,7 @@ export default function IgazolasReszlet() {
             ) : null}
           </Lap>
           <Szakasz ikon="ora" cim={CERT_FORM_TEXTS.timelineTitle} />
-          <Idovonal v={v} />
+          <Idovonal v={v} kotott />
           <Szakasz ikon="irat" cim="Amit kértél" />
           <Lap style={{ paddingHorizontal: 16, paddingBottom: 10 }}>
             {[

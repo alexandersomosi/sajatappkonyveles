@@ -1,0 +1,86 @@
+/* adozz.hu – SPEC §29.3.6, C kinézet (dizajn/C4_atlathato/C_VEGLEGES): kék fejlécsáv rozettával, fehér szakaszok,
+   köztük 10 px-es teljes szélességű #D3DAFC sáv. Mobil először (390 / 320 px), asztalon középre, max. 720 px.
+   Nincs szkript, nincs süti, nincs külső betöltés (CSP: default-src 'self'). */
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-W400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-W600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-W650.ttf') format('truetype'); font-weight: 650; font-display: swap; }
+@font-face { font-family: 'Geist'; src: url('fonts/Geist-W700.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+:root {
+  --kek: #1428DB;
+  --kek-szoveg: #1226B8;
+  --tinta: #10152B;
+  --halvany: #505873;
+  --fejlec-halvany: #C9D2FF;
+  --hajszal: #E2E6F1;
+  --sav: #D3DAFC;
+  --gomb-m: #DFE4FD;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: #fff; color: var(--tinta); font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 16px; line-height: 1.45; }
+a { color: var(--kek-szoveg); }
+img { display: block; }
+.belso { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- kék sáv ---------- */
+.sav { background: var(--kek) url('kepek/rozetta.png') no-repeat right -140px top -120px / 440px 440px; color: #fff; padding: 20px 0 28px; }
+.marka { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; letter-spacing: -0.01em; }
+.marka img { border-radius: 12px; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.55); }
+.sav h1 { font-weight: 700; font-size: 30px; line-height: 1.12; letter-spacing: -0.024em; margin-top: 22px; }
+.sav .al { color: var(--fejlec-halvany); font-size: 17px; margin-top: 10px; }
+.sav .kicsi { color: var(--fejlec-halvany); font-size: 14.5px; margin-top: 12px; }
+.gombok { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+
+.gomb-e { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border-radius: 999px; background: var(--kek); color: #fff; font-weight: 650; font-size: 17px; text-decoration: none; }
+.sav .gomb-e { background: #fff; color: var(--kek); }
+.kapszula-sav { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.8); color: #fff; font-weight: 600; font-size: 16px; text-decoration: none; }
+.gomb-e:focus-visible, .kapszula-sav:focus-visible, a:focus-visible { outline: 3px solid #FFD25C; outline-offset: 2px; }
+
+/* ---------- szakaszok: a VÉGLEGES elválasztó ---------- */
+.szak { padding: 18px 0 20px; }
+.szak + .szak { border-top: 10px solid var(--sav); }
+.szak-fej { display: flex; align-items: center; gap: 10px; min-height: 32px; }
+.szak-fej h2 { font-weight: 650; font-size: 20px; line-height: 1.3; letter-spacing: -0.012em; }
+.i3 { width: 28px; height: 28px; flex: none; }
+.beljebb { padding-left: 38px; margin-top: 12px; }
+.halvany { color: var(--halvany); }
+
+.lista { list-style: none; margin-top: 6px; }
+.lista li { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; }
+.lista li + li { border-top: 1px solid var(--hajszal); }
+.lista li img { margin-top: 1px; }
+.lista b { display: block; font-weight: 600; font-size: 16.5px; }
+.lista span { display: block; color: var(--halvany); font-size: 15px; margin-top: 2px; }
+
+.lepesek { list-style: none; margin-top: 8px; padding-left: 38px; }
+.lepesek li { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; font-size: 16.5px; }
+.lepesek .szam { flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--gomb-m); color: var(--kek-szoveg); font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; }
+
+.arak { width: calc(100% - 38px); margin: 8px 0 0 38px; border-collapse: collapse; }
+.arak th, .arak td { padding: 12px 0; vertical-align: top; border-top: 1px solid var(--hajszal); }
+.arak tr:first-child th, .arak tr:first-child td { border-top: 0; }
+.arak th { text-align: left; font-weight: 600; font-size: 16px; padding-right: 12px; }
+.arak th span, .arak td span { display: block; font-weight: 400; color: var(--halvany); font-size: 14.5px; margin-top: 2px; }
+.arak td { text-align: right; font-weight: 700; font-size: 17px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---------- lábléc ---------- */
+.lab { border-top: 10px solid var(--sav); background: #F5F7FA; padding: 20px 0 28px; font-size: 14.5px; color: var(--halvany); }
+.lab p + p { margin-top: 6px; }
+.lab b { color: var(--tinta); }
+
+@media (max-width: 359px) {
+  .sav h1 { font-size: 26px; }
+  .gomb-e { padding: 0 20px; }
+  .beljebb, .lepesek { padding-left: 0; }
+  .arak { width: 100%; margin-left: 0; }
+}
+@media (min-width: 900px) {
+  .sav { padding: 36px 0 44px; background-position: right 8% top -100px; }
+  .sav h1 { font-size: 40px; }
+  .lista { display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; }
+  .lista li + li { border-top: 0; }
+  .lista li { border-top: 1px solid var(--hajszal); }
+  .lista li:nth-child(-n + 2) { border-top: 0; }
+}
+.nw { white-space: nowrap; }

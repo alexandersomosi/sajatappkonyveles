@@ -23,7 +23,8 @@
     "seed:tulaj1118": "node dist/seed/tulaj1118.js",
     "seed:tulaj1119": "node dist/seed/tulaj1119.js",
     "seed:ot1119": "node dist/seed/ot1119.js",
-    "seed:k28": "node dist/seed/k28.js"
+    "seed:k28": "node dist/seed/k28.js",
+    "seed:k29": "node dist/seed/k29.js"
   },
   "dependencies": {
     "@hono/node-server": "2.1.8",

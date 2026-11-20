@@ -2,8 +2,27 @@
 // @kezjegy/shared – SPEC §29 F1–F4, F9 (owner: B2 új-funkciók). Texts (tegező, short; content keys k29f.*), types and
 // DTOs of: F1 "Igazolást kérek", F2 Bevételi kimutatás, F3 Megszüntetés, F4 határidők a naptárban, F9 tulaj-konzol.
 // Imports only from ./enums and ./bekotes (neither imports this file), so there is no cycle.
+// Type-only imports: the backend runs this file as Node ESM (no extension resolution), so no value import from a sibling.
 import type { GuideTemplate, GuideTemplateStep, PersonalisedGuideField, PersonalisedGuideStep } from './bekotes';
-import { fillPlaceholders, huLongDate, UGYSEGED_URL } from './bekotes';
+
+/** = bekotes.ts UGYSEGED_URL */
+const UGYSEGED_URL = 'https://ugyfelportal.nav.gov.hu/vallalkozoi-ugyseged/main';
+const _HONAPOK = ['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'];
+/** = bekotes.ts huLongDate: "2026. december 1." */
+function huLongDate(iso: string | null | undefined): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso ?? '');
+  if (!m) return '';
+  return `${m[1]}. ${_HONAPOK[Number(m[2]) - 1] ?? ''} ${Number(m[3])}.`;
+}
+/** = bekotes.ts fillPlaceholders (the "A könyvelőd" fallback is lower case inside a sentence). */
+function fillPlaceholders(text: string, values: Record<string, string | undefined>): string {
+  return text.replace(/\{([A-Za-z0-9_]+)\}/g, (m, k: string, at: number) => {
+    const v = values[k];
+    if (v === undefined) return m;
+    if (/^A könyvelőd/.test(v) && at > 0 && !/[.!?:]\s*$/.test(text.slice(0, at))) return `a${v.slice(1)}`;
+    return v;
+  });
+}
 
 type _ISODate = string;
 type _ISODateTime = string;
@@ -413,7 +432,7 @@ export const INCOME_STATEMENT_TEXTS = {
   askCheck: 'Kérem, hogy {firstName} ellenőrizze',
   askSent: 'Elküldtük. {firstName} megnézi, és szól.',
   askPending: '{firstName} még nem nézte meg. Szólunk, ha kész.',
-  checked: '{firstName} ellenőrizte: {datum}.',
+  checked: '{firstName} ellenőrizte: {datum}',
   previewTitle: 'Ez lesz benne',
   official: 'Hivatalos jövedelemigazolást is kérhetsz: Igazolást kérek.',
   // PDF
@@ -431,7 +450,7 @@ export const INCOME_STATEMENT_TEXTS = {
   generated: 'Készült: {datum} {ido}, az {brand} appból.',
   honest:
     'Ez a kimutatás a NAV Online Számla rendszeréből letöltött számláid és az általad megadott egyéb bevételek alapján készült. **Nem hivatalos NAV-igazolás.** Hivatalos jövedelemigazolást az appban kérhetsz: Igazolást kérek.',
-  stamp: 'A könyvelőd, {nev} ellenőrizte: {datum}.',
+  stamp: 'A könyvelőd, {nev} ellenőrizte: {datum}',
   clientName: 'Név',
   evName: 'Vállalkozás neve',
   adoszam: 'Adószám',
@@ -441,13 +460,13 @@ export const INCOME_STATEMENT_TEXTS = {
   // panel
   panelTitle: 'Bevételi kimutatás',
   panelApprove: 'Ellenőriztem, rendben',
-  panelApproved: 'Ellenőrizted: {datum}. Az ügyfél PDF-jén rajta lesz a pecsét.',
+  panelApproved: 'Ellenőrizted: {datum} Az ügyfél PDF-jén rajta lesz a pecsét.',
   panelChanged: 'Az adatok változtak az ellenőrzés óta – nézd át újra.',
   panelReview: 'Az ügyfél kérte, hogy ellenőrizd.',
 } as const;
 export const INCOME_NOTIFICATION_TEXTS = {
   income_statement_review: { title: 'Kimutatás ellenőrzése: {clientName}', body: '{from}–{to}. Az ügyfél kéri, hogy nézd át.' },
-  income_statement_checked: { title: '{firstName} ellenőrizte a bevételi kimutatásodat', body: '{from}–{to}. A PDF-en már rajta van az ellenőrzés.' },
+  income_statement_checked: { title: '{firstName} ellenőrizte a bevételi kimutatásodat', body: '{from}–{to}: a PDF-en már rajta van az ellenőrzés.' },
 } as const;
 export interface IncomeStatementMonth {
   month: _MonthKey;

@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+// SPEC §29.3.6 – the adozz.hu landing page: plain static HTML + CSS, no script, no tracking, no cookie.
+// Prices come from ONE generated file (arak.json, made here from FEE_DEFAULTS of kod/shared – no hand-typed prices);
+// the company data from kod/shared/brand.json. Output: kod/landing/dist/ (what feltolt.sh uploads to /srv/kezjegy/web/landing).
+//   node kod/landing/build.mjs          (Node ≥ 23: reads the shared .ts with type stripping)
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ITT = dirname(fileURLToPath(import.meta.url));
+const KOD = resolve(ITT, '..');
+const KI = join(ITT, 'dist');
+mkdirSync(join(KI, 'fonts'), { recursive: true });
+mkdirSync(join(KI, 'kepek'), { recursive: true });
+
+const brand = JSON.parse(readFileSync(join(KOD, 'shared/brand.json'), 'utf8'));
+const { FEE_DEFAULTS } = await import(new URL('../shared/src/enums.ts', import.meta.url).href);
+
+// ---------- arak.json (generated, never hand-typed) ----------
+const ARAK_SOROK = [
+  ['havidij', 'Havidíj', 'hó', 'Minden benne van, amit az app tud.'],
+  ['eves_zaras', 'Éves zárás', 'év', 'Az éves SZJA- és iparűzésiadó-bevallás.'],
+  ['valtozas_egyszeru', 'Változás bejelentése helyetted', 'alkalom', 'Költözés, új tevékenység, telephely – ha mi jelentjük be.'],
+  ['valtozas_jogallas', 'Jogállás-változás bejelentése helyetted', 'alkalom', 'Például főállásból mellékállásba.'],
+  ['szuneteltetesi_dij', 'Amíg szünetel a vállalkozásod', 'hó', 'A havidíj helyett.'],
+];
+const arak = {
+  _megjegyzes: 'GENERÁLT a kod/shared FEE_DEFAULTS-ból (kod/landing/build.mjs) – ne írd át kézzel.',
+  sorok: ARAK_SOROK.map(([kind, cim, egyseg, al]) => ({ kind, cim, osszegHuf: FEE_DEFAULTS[kind].amountHuf, egyseg, al })),
+  magad: { cim: 'Ha magad jelented be (útmutatóval)', osszegHuf: 0 },
+};
+writeFileSync(join(ITT, 'arak.json'), JSON.stringify(arak, null, 2) + '\n', 'utf8');
+
+// ---------- helpers ----------
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const ft = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const APP = 'https://app.adozz.hu';
+const havidij = arak.sorok.find((s) => s.kind === 'havidij').osszegHuf;
+const supportHelyorzo = /^\[CÉGADAT/.test(brand.provider.supportEmail ?? '');
+
+// fonts (Geist from the app) and the few images (3D objects of the approved set, the mark)
+for (const s of [400, 600, 650, 700]) copyFileSync(join(KOD, `app/assets/fonts/Geist-W${s}.ttf`), join(KI, 'fonts', `Geist-W${s}.ttf`));
+copyFileSync(join(KOD, 'app/assets/fonts/OFL.txt'), join(KI, 'fonts', 'OFL.txt'));
+const KEPEK = ['fiok_28@2x', 'szamolo_28@2x', 'szamlak_28@2x', 'hataridok_28@2x', 'uzenetek_28@2x', 'bevallas_28@2x', 'tepnaptar_28@2x', 'szamlaszam_28@2x', 'kerdezek_28@2x'];
+for (const k of KEPEK) copyFileSync(join(KOD, `app/assets/ikon3d/${k}.png`), join(KI, 'kepek', `${k.replace('@2x', '')}.png`));
+copyFileSync(join(KOD, 'app/assets/icon.png'), join(KI, 'kepek', 'jel.png'));
+copyFileSync(join(KOD, 'app/assets/textura/rozetta@2x.png'), join(KI, 'kepek', 'rozetta.png'));
+copyFileSync(join(KOD, 'app/assets/favicon.png'), join(KI, 'favicon.png'));
+copyFileSync(join(ITT, 'stilus.css'), join(KI, 'stilus.css'));
+
+const ikon = (k) => `<img class="i3" src="kepek/${k}_28.png" width="28" height="28" alt="">`;
+const MIT = [
+  ['fiok', 'Saját könyvelő, név szerint', 'Neki írsz az appban, és ő ad be mindent a NAV-nál helyetted.'],
+  ['szamolo', 'Kiszámolja és beadja az adódat', 'Negyedévente megmondja, mennyit és melyik számlára utalj.'],
+  ['szamlak', 'A kiállított számláid maguktól bejönnek', 'Naponta letöltjük őket a NAV Online Számla rendszeréből.'],
+  ['hataridok', 'Emlékeztetők a határidőkre', 'Az appban és, ha kéred, a saját naptáradban is.'],
+  ['szamlaszam', 'Mennyit tegyél félre', 'Minden számlánál látod, mennyit tegyél félre az adóra.'],
+  ['uzenetek', 'Üzenet a könyvelődnek', 'Kérdezz bármikor, az appban válaszol.'],
+];
+const LEPESEK = [
+  'Regisztrálsz, és válaszolsz pár kérdésre.',
+  'Aláírod a szerződést, és engedélyt adsz a NAV-nál.',
+  'Megadod a kártyádat – az első hónapot ekkor fizeted.',
+  'A könyvelőd bekapcsolja a könyvelést.',
+];
+
+const html = `<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(brand.name)} – ${esc(brand.tagline.replace(/\.$/, ''))}</title>
+<meta name="description" content="Saját könyvelő átalányadós és katás egyéni vállalkozóknak. Havi ${ft(havidij)} Ft, minden benne van.">
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="stilus.css">
+</head>
+<body>
+<header class="sav">
+  <div class="belso">
+    <div class="marka"><img src="kepek/jel.png" width="44" height="44" alt=""><span>${esc(brand.name)}</span></div>
+    <h1>${esc(brand.tagline)}</h1>
+    <p class="al">Átalányadós és katás egyéni vállalkozóknak. Havi ${ft(havidij)}&nbsp;Ft, minden benne van.</p>
+    <div class="gombok">
+      <a class="gomb-e" href="${APP}/regisztracio">Regisztrálok</a>
+      <a class="kapszula-sav" href="${APP}/belepes">Belépés</a>
+    </div>
+    <p class="kicsi">Az első hónapot a kártyád megadásakor fizeted. Bármikor lemondhatod.</p>
+  </div>
+</header>
+<main>
+  <section class="szak">
+    <div class="belso">
+      <div class="szak-fej">${ikon('bevallas')}<h2>Mit kapsz?</h2></div>
+      <ul class="lista">
+${MIT.map(([k, c, a]) => `        <li>${ikon(k)}<div><b>${esc(c)}</b><span>${esc(a)}</span></div></li>`).join('\n')}
+      </ul>
+    </div>
+  </section>
+  <section class="szak">
+    <div class="belso">
+      <div class="szak-fej">${ikon('tepnaptar')}<h2>Így indulsz</h2></div>
+      <ol class="lepesek">
+${LEPESEK.map((l, i) => `        <li><span class="szam">${i + 1}</span><span>${esc(l)}</span></li>`).join('\n')}
+      </ol>
+      <p class="beljebb halvany">Ha még nincs vállalkozásod, lépésről lépésre segítünk elindítani – vagy intézzük helyetted.</p>
+    </div>
+  </section>
+  <section class="szak">
+    <div class="belso">
+      <div class="szak-fej">${ikon('szamolo')}<h2>Mennyibe kerül?</h2></div>
+      <table class="arak">
+        <tbody>
+${arak.sorok.map((s) => `          <tr><th scope="row">${esc(s.cim)}<span>${esc(s.al)}</span></th><td>${ft(s.osszegHuf)}&nbsp;Ft<span>/ ${esc(s.egyseg)}</span></td></tr>`).join('\n')}
+          <tr><th scope="row">${esc(arak.magad.cim)}<span>A változás-útmutatóinkkal.</span></th><td>0&nbsp;Ft</td></tr>
+        </tbody>
+      </table>
+      <p class="beljebb">Minden ár bruttó, 27% ÁFA-val. Bármikor lemondhatod: a kifizetett hónap végéig minden marad.</p>
+      <div class="beljebb"><a class="gomb-e" href="${APP}/regisztracio">Regisztrálok</a></div>
+    </div>
+  </section>
+  <section class="szak">
+    <div class="belso">
+      <div class="szak-fej">${ikon('kerdezek')}<h2>Ha kérdésed van</h2></div>
+      <p class="beljebb">${supportHelyorzo ? 'Ügyfélszolgálat: az appban, az Üzenetek fülön.' : `Írj nekünk: <a href="mailto:${esc(brand.provider.supportEmail)}">${esc(brand.provider.supportEmail)}</a>`}</p>
+    </div>
+  </section>
+</main>
+<footer class="lab">
+  <div class="belso">
+    <p><b>${esc(brand.provider.legalName)}</b> · ${esc(brand.provider.seat)}</p>
+    <p>Adószám: <span class="nw">${esc(brand.provider.taxNumber)}</span> · Cégjegyzékszám: <span class="nw">${esc(brand.provider.registryNumber)}</span></p>
+    <p><a href="${APP}/jogi/aszf">ÁSZF</a> · <a href="${APP}/jogi/adatkezeles">Adatkezelés</a></p>
+    <p class="halvany">Ez az oldal nem használ sütit, és nem követ.</p>
+  </div>
+</footer>
+</body>
+</html>
+`;
+writeFileSync(join(KI, 'index.html'), html, 'utf8');
+console.log(`landing -> ${KI} (havidíj ${havidij} Ft, ${arak.sorok.length} ár)`);

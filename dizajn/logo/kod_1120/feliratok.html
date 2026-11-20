@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Adózz.hu – feliratlogók kódból</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&family=Poppins:wght@800&family=Outfit:wght@800&family=Baloo+2:wght@800&family=Manrope:wght@800&family=Sora:wght@800&display=block" rel="stylesheet">
+<style>
+/* Feliratlogó-változatok kódból (nem AI), a tulaj kérése 11-20 13:30: "csinálj már kóddal egy képet, mutasd milyeneket tudsz".
+   Színek: kék #1428DB, sárga #FFC93C, sötét #10152B, világoskék #D3DAFC. */
+:root { --kek: #1428DB; --sarga: #FFC93C; --sotet: #10152B; --vkek: #D3DAFC; }
+* { box-sizing: border-box; margin: 0; }
+body { background: #F4F6FC; font-family: Manrope, sans-serif; padding: 28px; width: 1200px; }
+h1 { font: 800 26px Manrope; color: var(--sotet); margin-bottom: 18px; }
+.racs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.kartya { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 1px 0 #E3E7F3; }
+.cim { font: 700 15px Manrope; color: #5A6280; padding: 12px 18px 0; }
+.sav { display: flex; }
+.vilagos, .kek { flex: 1; height: 150px; display: grid; place-items: center; }
+.kek { background: var(--kek); }
+.wm { font-size: 54px; letter-spacing: -.02em; line-height: 1; white-space: nowrap; }
+.vilagos .wm { color: var(--kek); }
+.kek .wm { color: #fff; }
+.hu { color: var(--sarga); }
+.vilagos .hu.sotetebb { color: #E5A800; }
+
+/* 1 lekerekített vastag (Nunito 900) */
+.v1 { font-family: Nunito; font-weight: 900; }
+/* 2 geometrikus (Poppins 800), sárga ékezet */
+.v2 { font-family: Poppins; font-weight: 800; }
+.v2 .o { position: relative; }
+.v2 .o::after { content: ""; position: absolute; left: .24em; top: .2em; width: .2em; height: .075em; background: var(--sarga); border-radius: .04em; transform: rotate(-38deg); }
+/* 3 pipa az ó fölött (Outfit 800) */
+.v3 { font-family: Outfit; font-weight: 800; }
+.pipa { position: relative; display: inline-block; }
+.pipa svg { position: absolute; left: .02em; top: -.42em; width: .55em; height: .4em; }
+/* 4 kapszula-jelvény */
+.v4 { font-family: Nunito; font-weight: 900; padding: .16em .42em .2em; border-radius: 999px; font-size: 44px; }
+.vilagos .v4 { background: var(--kek); color: #fff; }
+.kek .v4 { background: #fff; color: var(--kek); }
+/* 5 sárga aláhúzó lendület (Sora 800) */
+.v5 { font-family: Sora; font-weight: 800; position: relative; padding-bottom: .16em; }
+.v5 svg { position: absolute; left: 0; right: 0; bottom: -.08em; width: 100%; height: .28em; }
+/* 6 kisbetűs, puha (Baloo 2 800) */
+.v6 { font-family: "Baloo 2"; font-weight: 800; font-size: 60px; }
+/* 7 sárga pont az A előtt, mint egy „kész” jel */
+.v7 { font-family: Manrope; font-weight: 800; display: flex; align-items: center; gap: .18em; font-size: 46px; }
+.v7 .kor { width: .62em; height: .62em; border-radius: 50%; background: var(--sarga); display: grid; place-items: center; }
+.v7 .kor svg { width: .4em; height: .4em; }
+/* 8 két szín: Adó kék, zz sárga */
+.v8 { font-family: Poppins; font-weight: 800; }
+.vilagos .v8 .zz { color: var(--sarga); -webkit-text-stroke: 0; }
+.kek .v8 .zz { color: var(--sarga); }
+</style>
+</head>
+<body>
+<h1>Adózz.hu – feliratlogók kódból (bal: fehér háttéren, jobb: a kék fejlécben)</h1>
+<div class="racs">
+
+  <div class="kartya"><div class="cim">1 · Lekerekített, vastag – barátságos</div><div class="sav">
+    <div class="vilagos"><span class="wm v1">Adózz<span class="hu sotetebb">.hu</span></span></div>
+    <div class="kek"><span class="wm v1">Adózz<span class="hu">.hu</span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">2 · Geometrikus, sárga ékezet az ó-n</div><div class="sav">
+    <div class="vilagos"><span class="wm v2">Ad<span class="o">o</span>zz<span class="hu sotetebb">.hu</span></span></div>
+    <div class="kek"><span class="wm v2">Ad<span class="o">o</span>zz<span class="hu">.hu</span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">3 · Az ó ékezete egy sárga pipa („el van intézve”)</div><div class="sav">
+    <div class="vilagos"><span class="wm v3">Ad<span class="pipa">o<svg viewBox="0 0 20 14"><path d="M2 7.5l5 5L18 2" fill="none" stroke="#FFC93C" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>zz<span class="hu sotetebb">.hu</span></span></div>
+    <div class="kek"><span class="wm v3">Ad<span class="pipa">o<svg viewBox="0 0 20 14"><path d="M2 7.5l5 5L18 2" fill="none" stroke="#FFC93C" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>zz<span class="hu">.hu</span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">4 · Kapszula-jelvény</div><div class="sav">
+    <div class="vilagos"><span class="wm v4">Adózz<span class="hu">.hu</span></span></div>
+    <div class="kek"><span class="wm v4">Adózz<span class="hu sotetebb">.hu</span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">5 · Sárga lendület alatta</div><div class="sav">
+    <div class="vilagos"><span class="wm v5">Adózz.hu<svg viewBox="0 0 200 20" preserveAspectRatio="none"><path d="M4 14 C 60 4, 140 2, 196 8" fill="none" stroke="#FFC93C" stroke-width="7" stroke-linecap="round"/></svg></span></div>
+    <div class="kek"><span class="wm v5">Adózz.hu<svg viewBox="0 0 200 20" preserveAspectRatio="none"><path d="M4 14 C 60 4, 140 2, 196 8" fill="none" stroke="#FFC93C" stroke-width="7" stroke-linecap="round"/></svg></span></div></div></div>
+
+  <div class="kartya"><div class="cim">6 · Kisbetűs, puha – közvetlen</div><div class="sav">
+    <div class="vilagos"><span class="wm v6">adózz<span class="hu sotetebb">.hu</span></span></div>
+    <div class="kek"><span class="wm v6">adózz<span class="hu">.hu</span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">7 · Sárga pipás kör előtte (ikonnak is jó)</div><div class="sav">
+    <div class="vilagos"><span class="wm v7"><span class="kor"><svg viewBox="0 0 20 16"><path d="M2.5 8.5l5 5L17.5 2.5" fill="none" stroke="#10152B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Adózz<span class="hu sotetebb">.hu</span></span></span></div>
+    <div class="kek"><span class="wm v7"><span class="kor"><svg viewBox="0 0 20 16"><path d="M2.5 8.5l5 5L17.5 2.5" fill="none" stroke="#10152B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Adózz<span class="hu">.hu</span></span></span></div></div></div>
+
+  <div class="kartya"><div class="cim">8 · Két szín: Adó + zz</div><div class="sav">
+    <div class="vilagos"><span class="wm v8">Adó<span class="zz">zz</span><span style="color:#1428DB">.hu</span></span></div>
+    <div class="kek"><span class="wm v8">Adó<span class="zz">zz</span><span style="color:#fff">.hu</span></span></div></div></div>
+
+</div>
+</body>
+</html>

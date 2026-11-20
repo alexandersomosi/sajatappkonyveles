@@ -1,11 +1,12 @@
 // SPEC §28.K.1 – /admin/dijak: the fee settings (monthly fee, KATA plan, annual closing, assisted changes, suspension
-// fee). Fees are settings, not code: every change is kept in the history; an unconfirmed amount carries the amber DEMO
-// mark everywhere and cannot be charged in production. Below: the one-off charges to waive or mark refunded.
+// fee). Fees are settings, not code: every change is kept in the history. SPEC §29.4.1 (owner 11-20): these are the
+// real prices – no DEMO mark any more, and an admin edit is the confirmation (the old "Megerősítem" stays only for a
+// row that is still unconfirmed). Below: the one-off charges to waive or mark refunded.
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import type { AdminFeeChargeRow, FeeSettingView } from '../../api/types';
-import { DemoCimke, Fejlec, Fiok, Ft, HibaSav, Toltes, Ures } from '../../ui/kozos';
+import { Fejlec, Fiok, Ft, HibaSav, Toltes, Ures } from '../../ui/kozos';
 import { I3 } from '../../ui/Icon3d';
 import { usePirito } from '../../ui/Pirito';
 import { ApiError } from '../../api/client';
@@ -22,6 +23,13 @@ const MIKOR: Record<string, string> = {
   valtozas_egyszeru: 'mielőtt a csapat bejelenti helyette – előre',
   valtozas_jogallas: 'mielőtt a csapat bejelenti helyette – előre',
   szuneteltetesi_dij: 'havonta a havidíj helyett, amíg szünetel',
+  // SPEC §29.5 / §29.7 (k7)
+  igazolas_jovedelem: 'amikor kéri – előre (0 Ft = benne van a havidíjban)',
+  igazolas_ado: 'amikor kéri – előre (0 Ft = benne van a havidíjban)',
+  igazolas_koma: 'amikor kéri – előre (0 Ft = benne van a havidíjban)',
+  igazolas_ev_kivonat: 'amikor kéri – előre (0 Ft = benne van a havidíjban)',
+  igazolas_egyeb: 'amikor kéri – előre (0 Ft = benne van a havidíjban)',
+  megszuntetes: 'mielőtt bejelentjük helyette – előre',
 };
 
 export default function Dijak() {
@@ -35,7 +43,7 @@ export default function Dijak() {
     mutationFn: (kind: string) => ep.adminConfirmFee(kind),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['admin', 'fees'] });
-      pir.ok('Megerősítetted. A DEMO jelzés eltűnt, élesben is terhelhető.');
+      pir.ok('Megerősítetted. Élesben is terhelhető.');
     },
     onError: pir.hiba,
   });
@@ -49,7 +57,7 @@ export default function Dijak() {
             Minden benne van a havidíjban; külön díjas csak az éves zárás, a helyettünk bejelentett változás és a szüneteltetés alatti kisebb díj.{' '}
             {demoDb > 0 && (
               <>
-                <b>{demoDb}</b> díj még DEMO: élesben addig nem terhelhető, amíg meg nem erősíted.
+                <b>{demoDb}</b> díj még nincs megerősítve: élesben addig nem terhelhető. Megerősíted a „Megerősítem” gombbal vagy egy módosítással.
               </>
             )}
           </>
@@ -61,10 +69,12 @@ export default function Dijak() {
           {q.isPending ? (
             <Toltes />
           ) : (
-            <table className="tabla">
+            // k7: 12 fee kinds since §29 – the table scrolls inside the card instead of pushing the actions out (1280 px)
+            <div className="tabla-gorgo">
+            <table className="tabla tomor">
               <thead>
                 <tr>
-                  <th className="elso" style={{ minWidth: 230 }}>Díj</th>
+                  <th className="elso" style={{ minWidth: 200 }}>Díj</th>
                   <th className="jobb">Összeg</th>
                   <th style={{ minWidth: 240 }}>Mikor terheljük</th>
                   <th>Állapot</th>
@@ -88,11 +98,15 @@ export default function Dijak() {
                         <span className="allapot">
                           <I3 n="befizetve_jel" s={18} />
                           <span>
-                            <span className="szo">Megerősítve</span> · {f.confirmedAt ? datum(f.confirmedAt.slice(0, 10)) : ''} · {f.confirmedBy?.firstName ?? ''}
+                            <span className="szo">Megerősítve</span>
+                            <div className="al">
+                              {f.confirmedAt ? datum(f.confirmedAt.slice(0, 10)) : ''}
+                              {f.confirmedBy?.firstName ? ` · ${f.confirmedBy.firstName}` : ''}
+                            </div>
                           </span>
                         </span>
                       ) : (
-                        <DemoCimke>{FEE_TEXTS.demoChip}</DemoCimke>
+                        <span className="cimke figyel">Nincs megerősítve</span>
                       )}
                     </td>
                     {/* integrator k6: the three actions may wrap (at 1440 px the nowrap cell pushed „Előzmények” out of the card) */}
@@ -113,6 +127,7 @@ export default function Dijak() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
         <p className="halvany kicsi" style={{ padding: '12px 4px' }}>
@@ -129,7 +144,7 @@ export default function Dijak() {
                 <tr key={i}>
                   <td className="elso nt">{idopont(h.changedAt, t)}</td>
                   <td className="jobb szam">{dijSzoveg(h.amountHuf, tortenet.unit)}</td>
-                  <td>{h.confirmed ? 'megerősítve' : 'DEMO'}</td>
+                  <td>{h.confirmed ? 'megerősítve' : 'nem megerősített'}</td>
                   <td className="utolso halvany kicsi">
                     {h.changedBy?.firstName ?? ''}
                     {h.note ? ` – ${h.note}` : ''}
@@ -163,7 +178,7 @@ function ModositFiok({ f, bezar, ma }: { f: FeeSettingView | null; bezar: () => 
     mutationFn: () => ep.adminPutFee({ kind: f!.kind, amountHuf: Number(osszeg.replace(/\s/g, '')), effectiveFrom: hatalyos || undefined, note: megj.trim() || undefined }),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['admin', 'fees'] });
-      pir.ok('Elmentve. Az új összeg DEMO, amíg meg nem erősíted.');
+      pir.ok('Elmentve. Ez az új ár – az ügyfelek ezt látják.');
       bezar();
     },
     onError: (e) => (e instanceof ApiError && e.fields ? setHibak(e.fields) : pir.hiba(e)),
@@ -178,7 +193,7 @@ function ModositFiok({ f, bezar, ma }: { f: FeeSettingView | null; bezar: () => 
         bezar();
       }}
       cim={`Módosítom: ${f?.label ?? ''}`}
-      bev="A módosított összeg DEMO lesz, amíg meg nem erősíted. Az előzményekben minden változás megmarad."
+      bev="Amit elmentesz, az az új ár: a mentés egyben a megerősítés. A havidíj emelése csak 30 nap múlva érvényes (ÁSZF 6.7.). Az előzményekben minden változás megmarad."
       ikon="szamolo"
       lab={
         <div className="gombsor">
@@ -293,7 +308,7 @@ function Terhelesek() {
                   <td className="elso">{x.client.name}</td>
                   <td>{x.label}</td>
                   <td className="jobb nt">
-                    <Ft n={x.amountHuf} /> {x.demo && <DemoCimke />}
+                    <Ft n={x.amountHuf} />
                   </td>
                   <td>
                     <span className={`cimke ${x.status === 'visszaterites_kell' ? 'hiba' : x.status === 'nyitott' ? 'figyel' : ''}`}>{x.statusText}</span>

@@ -2,7 +2,7 @@
 //  - clientRoutes (before the §28 routes): registerClientPaymentsK29 – card consent, hosted start, result polling,
 //    "Fizesd ki", one-off fees with the saved card, payments + invoices list, taxpayer lookup, business identity.
 //    The legacy SimplePay bodies ({acceptedDeclarations} / {platform: web|android|ios}) fall through (next()).
-//  - accRoutes: registerAccPaymentsK29 – POST /acc/clients/:id/adoszam.
+//  - (POST /acc/clients/:id/adoszam already exists since §28.K.9: routes/acc-k28.ts)
 //  - adminRoutes: registerAdminPaymentsK29 – /admin/k29/{subscriptions,payments,fee-invoices,system}.
 //  - app (/api/v1): paymentsPublicK29Routes – the Stripe back URL, the DEMO pay page, the Stripe webhook.
 import { readFileSync } from 'node:fs';
@@ -34,8 +34,6 @@ import { log } from '../log.js';
 import { fmtHuf } from '../payments/huf.js';
 import { retryInvoice } from '../payments/invoices.js';
 import { clientOfUser, clientName } from '../services/people.js';
-import { staffActor } from '../services/team.js';
-import { clientForStaff } from '../services/team.js';
 import {
   appOriginOfKey,
   applyDemoChoice,
@@ -55,7 +53,7 @@ import {
   STRIPE_BAD_PER_HOUR,
   type PaymentRow,
 } from '../services/payments.js';
-import { lookupTaxpayer, saveBusinessIdentity, setAdoszamByStaff } from '../services/adoszam-kereso.js';
+import { lookupTaxpayer, saveBusinessIdentity } from '../services/adoszam-kereso.js';
 
 const platformSchema = z.enum(['app', 'web']);
 const originSchema = z.string().trim().max(200).optional();
@@ -194,19 +192,6 @@ export function registerClientPaymentsK29(r: Hono<Env>, deps: Deps): void {
       }),
     );
     return c.json(await saveBusinessIdentity(deps, cl, b as never));
-  });
-}
-
-// =====================================================================================================================
-// /acc
-// =====================================================================================================================
-export function registerAccPaymentsK29(r: Hono<Env>, deps: Deps): void {
-  r.post('/clients/:id/adoszam', async (c) => {
-    const actor = await staffActor(deps.db, auth(c).userId, auth(c).role);
-    if (actor.role === 'csapat') throw E.notFound();
-    const cl = await clientForStaff(deps, deps.db, actor, param(c, 'id'));
-    const b = await readJson(c, z.strictObject({ adoszam: z.string().trim().max(13) }));
-    return c.json(await setAdoszamByStaff(deps, cl, b.adoszam, { userId: auth(c).userId, role: auth(c).role }));
   });
 }
 

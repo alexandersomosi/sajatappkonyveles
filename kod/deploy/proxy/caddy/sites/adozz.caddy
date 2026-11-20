@@ -1,0 +1,114 @@
+# SPEC §29.3 – every public Adózz host, served by the Adózz proxy (container kezjegy-proxy, compose project
+# kezjegy-proxy). Both host sets: adozz.hu (new) and the three sslip.io hosts (kept: the installed APK talks to
+# api.45-94-65-74.sslip.io, and web users keep their bookmarks). 45-94-65-74.sslip.io (Gardoko, deleted 11-20) has no
+# site block any more. The proxy reaches kezjegy-api / kezjegy-web over the kezjegy_edge network.
+# Automatic HTTPS (Let's Encrypt) for every name. Access logs are off on purpose (query strings can hold tokens and
+# signed file links). Validate before a reload:
+#   docker run --rm --network none -v /srv/kezjegy/proxy/caddy:/etc/caddy:ro caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+# (atallas.sh frissit does exactly this with the NEW folder before it swaps the files)
+
+(kezjegy_fejlecek) {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(self), microphone=(), geolocation=()"
+		-Server
+	}
+}
+
+# Panel and API hosts are not for search engines.
+(kezjegy_noindex) {
+	header X-Robots-Tag "noindex, nofollow"
+}
+
+# CSP only on the static pages (the API answers JSON with Cache-Control: no-store and sets its own CSP on the one
+# HTML page it serves, the DEMO payment page). Stripe Checkout is a full redirect: no Stripe origin is needed here.
+(kezjegy_csp) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: https://accounts.google.com; frame-src https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; script-src 'self' https://accounts.google.com/gsi/client; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+}
+
+# Accountant + admin panel: no Google sign-in there, so no Google origins at all.
+(kezjegy_csp_panel) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+}
+
+# The landing page adozz.hu: plain HTML + CSS, no script, no tracking, no cookie.
+(kezjegy_csp_landing) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+}
+
+(kezjegy_api) {
+	handle /api/* {
+		# Only the multipart upload routes may send up to 60 MB; the one-file routes (message attachments) 26 MB; the
+		# Stripe webhook 256 KB; everything else 1 MB (the API checks the same per route while streaming –
+		# backend/src/app.ts bodyLimitFor).
+		@kezjegy_egy_fajl path_regexp ^/api/v1/(client|acc|team)/attachments/?$
+		@kezjegy_feltoltes path_regexp ^/api/v1/(client/(kyc|documents(/[^/]+/versions)?|business-registration/filed)|acc/(clients/[^/]+/documents|documents/[^/]+/versions))/?$
+		@kezjegy_nem_feltoltes not path_regexp ^/api/v1/(client/(kyc|attachments|documents(/[^/]+/versions)?|business-registration/filed)|acc/(attachments|clients/[^/]+/documents|documents/[^/]+/versions)|team/attachments)/?$
+		@kezjegy_webhook path /api/v1/webhooks/stripe
+		request_body @kezjegy_egy_fajl {
+			max_size 26MB
+		}
+		request_body @kezjegy_feltoltes {
+			max_size 60MB
+		}
+		request_body @kezjegy_nem_feltoltes {
+			max_size 1MB
+		}
+		request_body @kezjegy_webhook {
+			max_size 256KB
+		}
+		# Caddy sets X-Forwarded-For to the real client IP (incoming values from untrusted clients are replaced); the
+		# API reads the last entry (TRUST_PROXY_HOPS=1).
+		reverse_proxy kezjegy-api:8080
+	}
+}
+
+# ---------- landing ----------
+adozz.hu {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_csp_landing
+	reverse_proxy kezjegy-web:8082
+}
+
+www.adozz.hu {
+	import kezjegy_fejlecek
+	redir https://adozz.hu{uri} permanent
+}
+
+# ---------- client web app (Expo web export) + same-origin API (first-party refresh cookie, no CORS) ----------
+app.adozz.hu, app.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_api
+	handle {
+		import kezjegy_csp
+		reverse_proxy kezjegy-web:8080
+	}
+}
+
+# ---------- accountant + admin panel (React + Vite) + same-origin API ----------
+konyvelo.adozz.hu, konyvelo.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_noindex
+	import kezjegy_api
+	handle {
+		import kezjegy_csp_panel
+		reverse_proxy kezjegy-web:8081
+	}
+}
+
+# ---------- API for the native app, the Stripe webhook, the payment back URLs, the iCal feed (nothing else) ----------
+api.adozz.hu, api.45-94-65-74.sslip.io {
+	encode zstd gzip
+	import kezjegy_fejlecek
+	import kezjegy_noindex
+	import kezjegy_api
+	handle {
+		respond "Not found" 404
+	}
+}

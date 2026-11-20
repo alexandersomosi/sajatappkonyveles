@@ -172,12 +172,3 @@ export async function saveBusinessIdentity(deps: Deps, cl: ClientRow, b: Busines
   await audit(db, { action: 'onboarding.business_identity', actorUserId: cl.userId, actorRole: 'client', targetType: 'client', targetId: cl.id, clientId: cl.id, details: { source: b.source, adoszam: Boolean(b.adoszam), afaWarning } });
   return { adoszam: b.adoszam, adoszamPending: b.adoszam === null, afaWarning };
 }
-
-/** POST /acc/clients/:id/adoszam – the accountant fills the adószám from ONYA (check digit; ÁFA code warning). */
-export async function setAdoszamByStaff(deps: Deps, cl: ClientRow, adoszam: string, by: { userId: string; role: string }): Promise<{ adoszam: string; afaWarning: boolean; message: string | null }> {
-  if (!isValidAdoszam(adoszam)) throw E.validation({ adoszam: 'Hibás adószám (formátum: 12345678-1-41, ellenőrző számjeggyel).' });
-  const afaWarning = adoszam[9] !== ALANYI_MENTES_VAT_CODE;
-  await deps.db.update(clients).set({ adoszam, adoszamPending: false, updatedAt: deps.now() }).where(eq(clients.id, cl.id));
-  await audit(deps.db, { action: 'acc.adoszam_set', actorUserId: by.userId, actorRole: by.role, targetType: 'client', targetId: cl.id, clientId: cl.id, details: { afaWarning } });
-  return { adoszam, afaWarning, message: afaWarning ? TAXPAYER_LOOKUP_TEXTS.panelAfaWarning : null };
-}

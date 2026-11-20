@@ -1,6 +1,6 @@
 # Kézjegy stack on appok-1 (/srv/kezjegy/deploy/docker-compose.yml) – SPEC §20.2.
 # Own compose project, own Postgres + volume, own networks. NO "ports:" anywhere: Docker bypasses ufw,
-# so only the shared Caddy (appok-caddy-1) publishes 80/443 and reaches kezjegy-api / kezjegy-web over
+# so only the proxy publishes 80/443 (SPEC §29.3: kezjegy-proxy, own compose project in proxy/; before the switch the old appok-caddy-1) and reaches kezjegy-api / kezjegy-web over
 # the kezjegy_edge network. The database sits on kezjegy_internal (internal: true, no internet).
 # Start with: bash /srv/kezjegy/deploy/up.sh   (passes --env-file /srv/kezjegy/.env)
 #
@@ -80,6 +80,9 @@ services:
     env_file:
       - path: ../.env
         required: true
+      # SPEC §29.3.3: public URLs only (APP/PANEL/API/LANDING_PUBLIC_URL, EXTRA_PUBLIC_ORIGINS); the later file wins
+      - path: ../nyilvanos.env
+        required: false
     environment:
       FILES_DIR: /data/files
       LEGAL_DIR: /app/legal
@@ -113,6 +116,8 @@ services:
     env_file:
       - path: ../.env
         required: true
+      - path: ../nyilvanos.env
+        required: false
     environment:
       SKIP_MIGRATIONS: "1"
       FILES_DIR: /data/files
@@ -148,6 +153,8 @@ services:
       - ../web/panel:/srv/panel:ro
       # SPEC §26.7.1: videos + guide images (kod/media, uploaded with feltolt.sh --media)
       - ../web/media:/srv/media:ro
+      # SPEC §29.3.6: the adozz.hu landing page (kod/landing, uploaded by feltolt.sh)
+      - ../web/landing:/srv/landing:ro
     read_only: true
     # Caddy's own state dirs, writable by the non-root user (static only: auto_https/admin are off).
     tmpfs:

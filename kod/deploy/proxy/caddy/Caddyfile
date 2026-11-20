@@ -1,0 +1,8 @@
+# SPEC §29.3.2 – global options of the Adózz proxy (kezjegy-proxy). The admin API listens inside the container only:
+#   docker exec kezjegy-proxy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+# Every site lives in sites/*.caddy (adozz.caddy).
+{
+	admin localhost:2019
+}
+
+import /etc/caddy/sites/*.caddy

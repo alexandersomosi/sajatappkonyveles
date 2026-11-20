@@ -139,7 +139,7 @@ engedély), `bekuldve` (bejelentettük, adószámra várunk), `ilona` (visszahí
 ## Tulaj-kérések 11-19 este (SPEC §28 + §28.K, k6)
 
 **Kinézet (§28.K.10, a tulaj választása 20:10 „a C sokkal jobb” + 20:20 „csak valami elválasztó köztük”):** fehér alap, a
-szakaszok teljes szélességű fehér sávok, köztük **8 pt-os `#EEF1F8` sáv**; árnyék, egymásra rakott lap, sötétítés nincs.
+szakaszok teljes szélességű fehér sávok, köztük **10 pt-os `#D3DAFC` sáv (C_VEGLEGES)**; árnyék, egymásra rakott lap, sötétítés nincs.
 Ez a közös elemekben él, így minden képernyő megkapja: `src/ui/teljes.tsx` (környezet + `SAV`), `src/ui/alap.tsx`
 (`Lap` teljes szélesség + sáv, `kotott`/`elso`; `Szakasz` 3D ikon 28 + sötét cím 18 + kapszula; `GombE` 52 és két sorra
 nőhet; `GombM` 40/44; `Sor` ikon 28, 52 magas), `src/ui/keret.tsx` (lapos 5 fülű fülsor 52 pt, Fotózás középen; `dokk` =
@@ -169,4 +169,32 @@ MINTA forgatókönyvek (új): `eszter` (kedvezmény vár), `balint` (25 év alat
 ```bash
 npm run export:minta && node scripts/kepek-k6.mjs       # k6_app_* → kod/_qa (390×844 és 320×640), PORT=8834
 ELOTTE=1 MAPPA=<régi dist> node scripts/kepek-k6.mjs    # a restyle előtti képek (k6_app_e*)
+```
+
+## Tulaj-kérések 11-20 (SPEC §29, k7 – B3)
+
+**Vezetett első indulás (§29.10 G, tulaj 10:30: „nem úgy volt, hogy így végigmegy először, ilyen bevezetősen?”).** A bekötés
+alatti ügyfél a Főoldal helyett a `/bevezeto`-ra kerül, amíg nem szól „Később folytatom”-ot, vagy nem látta a kész-képernyőt:
+3 üdvözlő lap (ki vagyunk · a könyvelőd · így indulunk + 19 999 Ft/hó, nincs díjmentes időszak), utána a lépések egyenként, a
+szerver sorrendjében (`GUIDED_ORDER`, `GET /client/guided` – a lista a meglévő journey-ből épül). A meglévő lépés-képernyők
+`?vezetett=<lépés>` paraméterrel nyílnak: nincs fülsor, a kék sávban „Vissza” (az előző lépés) · „Később folytatom” · egy
+folytonos haladás-csík; mentés után `bekotesre()` → a következő lépés. Átadás után (NAV, Bence, csapat) egyszer a „Most …
+jön” képernyő, és megy tovább a következővel. „Később folytatom” → a `/bekotes` tetején „Folytasd ott, ahol abbahagytad”.
+
+| Mi | Hol |
+|---|---|
+| Útválasztó, W1–W3, „Van már vállalkozásod?”, adószám-kereső (8. jegynél, „Hol találom?”, „Most nem tudom”, NAV nem elérhető → kézzel), várakozó és kész képernyő | `src/app/bevezeto/{index,udv,ut,adoszam,var,kesz}.tsx`, `src/kepernyok/Bevezeto.tsx`, `src/lib/bevezeto.ts` |
+| A vezetett fejléc (CimSor / UrlapFej / SavCim magától), fülsor nélkül; `bekotesre()`, `vezetettVissza()` | `src/ui/Vezetett.tsx`, `src/lib/vezetett.ts`, `src/ui/keret.tsx` |
+| Kártya-lépés a teljes kártyás engedéllyel (egy pipa), Stripe / DEMO fizetőoldal, eredmény (a szerver szerint, ≤ 30 mp lekérdezés), „Fizesd ki”, Fiók → Előfizetés (kártyacsere az engedéllyel, törlés, lemondás), Díjak és számlák (mentett kártyás fizetés, sztornó PDF), piros „Fizetésre vár” a Főoldalon | `src/app/bekotes/elofizetes.tsx`, `src/app/elofizetes/eredmeny.tsx`, `src/app/fizesd-ki.tsx`, `src/app/fiok/{elofizetes,dijak}.tsx`, `src/lib/fizetes.ts`, `src/kepernyok/KartyaEngedely.tsx`, `src/api/hooks-k29.ts` |
+| A SimplePay-képernyők megmaradtak (PAYMENT_PROVIDER=simplepay) | `src/kepernyok/simplepay/*.tsx`, `src/lib/simplepay.ts` |
+| Belépés, regisztráció, jelszó: a C kinézet (fehér alap, 10 pt-os sáv) | `src/app/(auth)/belepes.tsx`, `src/kepernyok/AuthKeret.tsx` |
+
+MINTA forgatókönyvek (új): `uj` (W1), `bevezeto_adoszam`, `bevezeto_var`, `bevezeto_kesz`, `bevezeto_szunet` (a „Folytasd”
+kártya), `kartya` (az utolsó lépés), `fizesd` (aktív ügyfél, a bankja megerősítést kér). Adószám-kereső a MINTA-ban: bármely
+8 jegy → „Németh Péter e.v.”, `22222222` → NAV nem elérhető, `99999999` → nincs ilyen, `11111111` → nem egyéni vállalkozás.
+
+```bash
+EXPO_PUBLIC_API_MODE=minta npx expo export -p web --output-dir dist-minta-k7b3 && node scripts/kepek-k7.mjs   # k7_* → kod/_qa
+# valódi backenddel: BACKEND_KOD=<lefordított backend> APP_DIST=dist-web-k7b3 PORT=8853 node scripts/helyi-proba.mjs
+BASE=http://127.0.0.1:8853 node scripts/k7-helyi.mjs     # k7_helyi_*: Péter W1→W3→lépés→Később→Folytatom, Levente, Kata
 ```

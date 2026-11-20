@@ -1,18 +1,103 @@
 // FUNKCIOK 33, 35: integration modes (DEMO / test / live), worker heartbeat, last NAV sync, backup age.
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router';
 import * as ep from '../../api/endpoints';
+import { k29Rendszer } from '../../api/k29';
 import { Fejlec, HibaSav, Toltes } from '../../ui/kozos';
 import { MODE_LABEL } from '../../lib/labels';
 import { idopont } from '../../lib/format';
 import { today } from '../../lib/today';
 
 const INTEGRACIOK: { k: 'nav' | 'simplepay' | 'mail' | 'push' | 'invoice'; nev: string; mit: string }[] = [
-  { k: 'simplepay', nev: 'SimplePay', mit: 'Kártyás előfizetés, havi terhelés' },
-  { k: 'mail', nev: 'E-mail (Brevo)', mit: 'Kódok, értesítések e-mailben' },
+  { k: 'mail', nev: 'E-mail (SMTP)', mit: 'Kódok, értesítések e-mailben (ZeptoMail)' },
   { k: 'nav', nev: 'NAV Online Számla', mit: 'Kiállított számlák napi letöltése' },
-  { k: 'invoice', nev: 'Díjszámla', mit: 'Számla a havidíjról (Számlázz.hu / Billingo)' },
   { k: 'push', nev: 'Telefonos értesítés', mit: 'Push az appba (Expo)' },
+  { k: 'simplepay', nev: 'SimplePay (tartalék)', mit: 'Kikapcsolva, csak ha visszaváltanánk' },
 ];
+
+const SZOLG: Record<string, string> = { stripe: 'Stripe', demo: 'DEMO fizetés (nem mozdul pénz)', simplepay: 'SimplePay', disabled: 'nincs bekapcsolva' };
+const SZAMLA: Record<string, string> = { szamlazzhu: 'Számlázz.hu', demo: 'DEMO díjbekérő (nem számla)', billingo: 'Billingo', disabled: 'nincs bekapcsolva' };
+
+/** SPEC §29.1.14: the payment and invoicing block – modes and counts only, never a key value. */
+function FizetesBlokk() {
+  const t = today();
+  const q = useQuery({ queryKey: ['admin', 'k29', 'system'], queryFn: k29Rendszer, refetchInterval: 60_000, retry: false });
+  const d = q.data;
+  if (q.isError) return null; // a server without §29: the old rows above tell the modes
+  return (
+    <div className="lap" style={{ marginBottom: 16 }}>
+      <div className="lap-fej">
+        <h2>Fizetés és számlázás</h2>
+        <span className="megj">A kulcsokat a stripe_szerverre.ps1 és a kezjegy_kulcsok.ps1 szkripttel adod meg.</span>
+      </div>
+      {!d ? (
+        <Toltes />
+      ) : (
+        <table className="tabla">
+          <tbody>
+            <tr>
+              <td className="elso">
+                <div className="felkover">Kártyás fizetés</div>
+                <div className="al">Havidíj, külön díjak, „Fizesd ki”</div>
+              </td>
+              <td className="utolso">
+                <Pont mode={d.paymentProvider === 'stripe' && d.stripe === 'live' ? 'live' : d.paymentProvider === 'disabled' ? 'off' : 'demo'} /> {SZOLG[d.paymentProvider] ?? d.paymentProvider}
+                {d.paymentProvider === 'stripe' ? ` – ${d.stripe === 'live' ? 'éles' : d.stripe === 'test' ? 'TESZT mód' : 'ki'}` : ''}
+              </td>
+            </tr>
+            <tr>
+              <td className="elso">
+                <div className="felkover">Stripe webhook</div>
+                <div className="al">Titok: {d.webhookSecret === 'megvan' ? 'megvan' : 'hiányzik'} · utolsó esemény: {d.lastWebhookAt ? idopont(d.lastWebhookAt, t) : 'még nem jött'}</div>
+              </td>
+              <td className="utolso">
+                {d.stuckEvents > 0 ? <span className="cimke hiba">Fennakadt Stripe-esemény: {d.stuckEvents}</span> : d.unprocessedEvents > 0 ? <span className="cimke figyel">Feldolgozásra vár: {d.unprocessedEvents}</span> : <span className="halvany">rendben</span>}
+              </td>
+            </tr>
+            <tr>
+              <td className="elso">
+                <div className="felkover">Egyeztetés a Stripe-pal</div>
+                <div className="al">15 percenként: ha egy webhook elveszne, innen pótoljuk</div>
+              </td>
+              <td className="utolso">{d.lastReconcileAt ? idopont(d.lastReconcileAt, t) : <span className="halvany">még nem futott</span>}</td>
+            </tr>
+            <tr>
+              <td className="elso">
+                <div className="felkover">Díjszámla</div>
+                <div className="al">E-számla minden sikeres fizetés után</div>
+              </td>
+              <td className="utolso">
+                <Pont mode={d.invoiceMode === 'szamlazzhu' && d.szamlazzhuAccount === 'eles' ? 'live' : d.invoiceMode === 'disabled' ? 'off' : 'demo'} /> {SZAMLA[d.invoiceMode] ?? d.invoiceMode}
+                {d.invoiceMode === 'szamlazzhu' ? ` – ${d.szamlazzhuAccount === 'eles' ? 'éles fiók' : 'teszt fiók (Tesztüzem)'}` : ''}
+              </td>
+            </tr>
+            <tr>
+              <td className="elso">
+                <div className="felkover">Teendő</div>
+                <div className="al">Számlahiba, fizetési gond, vitatott terhelés</div>
+              </td>
+              <td className="utolso">
+                {d.openInvoiceErrors > 0 ? (
+                  <Link className="cimke hiba" to="/admin/dijszamlak?status=hiba">
+                    {d.openInvoiceErrors} számlahiba
+                  </Link>
+                ) : null}{' '}
+                {d.invoicesInProgress > 0 ? <span className="cimke figyel">{d.invoicesInProgress} számla készül</span> : null}{' '}
+                {d.openPaymentProblems > 0 ? (
+                  <Link className="cimke hiba" to="/admin/fizetesek?szuro=problema">
+                    {d.openPaymentProblems} fizetési gond
+                  </Link>
+                ) : null}{' '}
+                {d.disputes > 0 ? <span className="cimke hiba">{d.disputes} vitatott terhelés</span> : null}
+                {!d.openInvoiceErrors && !d.invoicesInProgress && !d.openPaymentProblems && !d.disputes ? <span className="halvany">nincs</span> : null}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
 
 function Pont({ mode }: { mode: string }) {
   const ok = mode === 'live' || mode === 'prod' || mode === 'smtp' || mode === 'expo' || mode === 'szamlazzhu' || mode === 'billingo';
@@ -33,6 +118,7 @@ export default function Rendszer() {
       />
       <div className="tartalom">
         {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
+        <FizetesBlokk />
         {q.isPending ? (
           <Toltes />
         ) : (

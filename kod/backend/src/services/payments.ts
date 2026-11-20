@@ -628,11 +628,11 @@ export async function startDuePayment(
   });
 }
 
-async function cancelOpenIntents(deps: Deps, subscriptionId: string, periodStart: string): Promise<void> {
+async function cancelOpenIntents(deps: Deps, subscriptionId: string, periodStart: string, o: { onlyAuth?: boolean } = {}): Promise<void> {
   const rows = await deps.db
     .select()
     .from(payments)
-    .where(and(eq(payments.subscriptionId, subscriptionId), eq(payments.periodStart, periodStart), inArray(payments.status, ['hitelesites_kell', 'letrehozva'])));
+    .where(and(eq(payments.subscriptionId, subscriptionId), eq(payments.periodStart, periodStart), inArray(payments.status, o.onlyAuth ? ['hitelesites_kell'] : ['hitelesites_kell', 'letrehozva'])));
   for (const r of rows) {
     try {
       const prov = providerOf(deps, r.provider);
@@ -663,7 +663,7 @@ async function lineOf(deps: Deps, db: DbOrTx, p: PaymentRow): Promise<{ megnevez
   if (PAYMENT_MONTHLY_KINDS.includes(p.kind)) {
     const start = p.periodStart ?? todayBudapest(deps.now());
     const end = p.periodEnd ?? addMonths(start, 1);
-    if (await pauseOn(db, p.clientId, start)) return { megnevezes: INVOICE_LINE_TEXTS.szunetel.replace('{honap}', monthLabel(start.slice(0, 7))), unit: 'hó' };
+    if (await pauseOn(db, p.clientId, start)) return { megnevezes: INVOICE_LINE_TEXTS.szunetel.replace('{honap}', `${start.slice(0, 4)}. ${monthLabel(start.slice(0, 7)).toLowerCase()}`), unit: 'hó' };
     return { megnevezes: INVOICE_LINE_TEXTS.havidij.replace('{tol}', dotDate(start)).replace('{ig}', dotDate(addDays(end, -1))), unit: 'hó' };
   }
   const [ch] = p.feeChargeId ? await db.select().from(feeCharges).where(eq(feeCharges.id, p.feeChargeId)).limit(1) : [];
@@ -1082,6 +1082,8 @@ export async function chargeSubscriptionK29(deps: Deps, stale: SubRow): Promise<
     await computeFlags(deps, db, cl.id);
     return 'failed';
   }
+  // an older PaymentIntent of this month that waits for the bank's confirmation can never succeed later
+  await cancelOpenIntents(deps, sub.id, periodStart, { onlyAuth: true });
   const idem = `havidij:${sub.id}:${periodStart}:${today}`;
   const [row] = await db.insert(payments).values({ ...base, amountHuf, status: 'letrehozva', idempotencyKey: idem, paymentMethodId: card.id }).onConflictDoNothing().returning();
   if (!row) return 'skipped';
@@ -1503,6 +1505,13 @@ export async function jobPaymentsReconcile(deps: Deps): Promise<Record<string, n
         continue;
       }
       const prov = providerOf(deps, p.provider);
+      // a confirmation nobody gave in 3 days: cancelled at Stripe (the scheduler / Fizesd ki make a new attempt)
+      if (p.status === 'hitelesites_kell' && p.createdAt < new Date(now.getTime() - 3 * 86_400_000)) {
+        if (p.stripePaymentIntentId) await prov.cancelPending(p.stripePaymentIntentId);
+        await markCancelledAny(deps, p.id);
+        out.expired++;
+        continue;
+      }
       if (p.status === 'letrehozva' && p.stripeCheckoutSessionId) {
         await applyHosted(deps, p.id, await prov.retrieveHosted(p.stripeCheckoutSessionId));
         out.applied++;

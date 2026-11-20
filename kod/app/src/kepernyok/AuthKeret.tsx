@@ -1,15 +1,28 @@
-// A belépési folyamat egyszerű lapjai (regisztráció, jelszó, kód): tintakék sáv címmel, alatta fehér lap.
-import type { ReactNode } from 'react';
+// A belépési folyamat egyszerű lapjai (regisztráció, jelszó, kód): tintakék sáv címmel, alatta – SPEC §29.4.3, C_VEGLEGES –
+// fehér alapon teljes szélességű szakaszok, köztük a 10 pt-os #D3DAFC sáv (a sáv alatti első szakasz előtt nincs sáv).
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
-import { szin } from '../theme/tokens';
-import { Fejlec } from '../ui/alap';
+import { forma, szin } from '../theme/tokens';
+import { Fejlec, Lap } from '../ui/alap';
 import { MintaJel, vissza } from '../ui/keret';
+import { TeljesCtx } from '../ui/teljes';
 import { T } from '../ui/T';
 import { Pressable } from 'react-native';
 
 export function AuthKeret({ cim, al, children, visszaCim = 'Vissza a belépéshez', visszaHova = '/belepes', felso }: { cim: string; al?: string; children: ReactNode; visszaCim?: string | null; visszaHova?: string; felso?: ReactNode }) {
+  let elsoVolt = false;
+  let elsoLap = false;
+  const elemek = Children.map(children, (c) => {
+    if (!elsoVolt && isValidElement(c) && c.type === Lap) {
+      elsoVolt = true;
+      elsoLap = true;
+      return cloneElement(c as ReactElement<{ elso?: boolean }>, { elso: true });
+    }
+    if (c !== null && c !== undefined && c !== false) elsoVolt = true;
+    return c;
+  });
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: szin.alap }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: szin.lap }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 48 }}>
         <Fejlec rozX={110} rozY={96} alsoTer={20}>
           {visszaCim ? (
@@ -29,7 +42,9 @@ export function AuthKeret({ cim, al, children, visszaCim = 'Vissza a belépéshe
             </T>
           ) : null}
         </Fejlec>
-        <View style={{ paddingHorizontal: 16, paddingTop: 14 }}>{children}</View>
+        <TeljesCtx.Provider value>
+          <View style={{ paddingHorizontal: forma.margo, paddingTop: elsoLap ? 0 : 14 }}>{elemek}</View>
+        </TeljesCtx.Provider>
       </ScrollView>
       <MintaJel />
     </KeyboardAvoidingView>

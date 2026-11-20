@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Adataid</title>
+<link rel="stylesheet" href="../../C2_modern/app_v2/tokens.css">
+<link rel="stylesheet" href="../../C3_zold/kek.css">
+<link rel="stylesheet" href="kozos.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=block" rel="stylesheet">
+<style>
+:root { --sarga: #FFC93C; --sarga-sotet: #E5AE16; --sarga-szoveg: #10152B; }
+.wm8 { font-family: Poppins, sans-serif; font-weight: 800; letter-spacing: -.02em; line-height: 1; position: relative; display: inline-block; padding-bottom: .2em; white-space: nowrap; color: #fff; }
+.wm8 .zz { color: #FFC93C; }
+.wm8 svg { position: absolute; left: .02em; bottom: -.02em; width: calc(100% - .04em); height: .26em; }
+.marka { display: flex; align-items: center; margin-top: 6px; }
+.ki { display: flex; align-items: center; gap: 8px; min-height: 36px; margin-top: 2px; }
+.ki img.arckep { width: 30px; height: 30px; box-shadow: 0 0 0 1.5px rgba(255,255,255,.55); border-radius: 50%; }
+.ki .nev { flex: 1; font-size: 15px; color: var(--fejlec-halvany); }
+.ki .nev b { font-weight: 650; color: #fff; }
+.csik { flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,.26); overflow: hidden; }
+.csik i { display: block; height: 100%; border-radius: 3px; background: var(--sarga); }
+.fulek .f.on { position: relative; }
+.fulek .f.on::after { content: ""; position: absolute; top: 0; left: 30%; right: 30%; height: 3px; border-radius: 0 0 3px 3px; background: var(--sarga); }
+.gomb-e { background: var(--sarga); color: var(--sarga-szoveg); box-shadow: 0 2px 0 var(--sarga-sotet); border-radius: 16px; font-weight: 700; }
+
+.fejsav { padding-bottom: 16px; }
+.halad { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.halad .szam { font-weight: 750; font-size: 18px; color: var(--sarga); white-space: nowrap; }
+.halad .mi { font-size: 15px; color: var(--fejlec-halvany); }
+.kerdes { padding: 24px 16px 0; }
+.kerdes h1 { font-weight: 700; font-size: 26px; line-height: 1.2; letter-spacing: -.022em; }
+.kerdes .be { font-size: 16px; line-height: 1.45; color: var(--halvany); margin-top: 8px; }
+.mezok { padding: 8px 16px 0; }
+.m { display: block; padding: 14px 0; }
+.m + .m { border-top: 1px solid #E3E7F3; }
+.m .fel { display: block; font-weight: 650; font-size: 15px; margin-bottom: 7px; }
+.m .doboz { height: 54px; border-radius: 14px; border: 1.5px solid #D3DAFC; background: #fff; display: flex; align-items: center; padding: 0 14px; font-size: 17px; color: var(--tinta); }
+.m .doboz.f { border: 2px solid var(--neon); padding: 0 13px; box-shadow: 0 0 0 4px #E4E8FD; }
+.m .doboz.u { color: #7E86A3; }
+.m .seg { font-size: 14.5px; line-height: 1.4; color: var(--halvany); margin-top: 6px; }
+.hol { display: flex; align-items: center; gap: 8px; padding-top: 4px; }
+.hol img { width: 28px; height: 28px; }
+.hol .link { min-height: 40px; }
+.dokk .fo { display: flex; gap: 10px; padding: 10px 16px 6px; }
+.dokk .gomb-e { flex: 1; }
+.dokk .gomb-m { width: 112px; height: 52px; border-radius: 16px; border: 1.5px solid #D3DAFC; background: #fff; color: #1226B8; font-weight: 700; font-size: 17px; text-align: center; }
+.kes { display: block; text-align: center; font-size: 15.5px; color: #1226B8; text-decoration: underline; text-underline-offset: 4px; padding: 4px 0 10px; }
+main { padding-bottom: 190px; }
+</style>
+</head>
+<body>
+<script src="../../C2_modern/app_v2/kozos.js"></script>
+<header class="fejsav">
+  <div class="allapotsor"><span>9:41</span><span class="jelek"><svg viewBox="0 0 18 12" width="18"><use href="#terero"/></svg><svg viewBox="0 0 27 13" width="27"><use href="#akku"/></svg></span></div><div class="marka"><span class="wm8" style="font-size:24px">Adó<span class="zz">zz</span>.hu<svg viewBox="0 0 300 26" preserveAspectRatio="none"><path d="M6 18 C 90 6, 210 2, 294 10" fill="none" stroke="#FFC93C" stroke-width="11" stroke-linecap="round"/></svg></span></div><div class="ki"><img class="arckep" src="../../C2_modern/assets/avatar/karakter_1_lapos@2x.png" alt=""><div class="nev"><b>Kovács Bence</b>, a könyvelőd</div><span class="demo">DEMO</span></div>
+  <div class="halad"><div><span class="szam">3 / 9</span> <span class="mi">lépés</span></div><div class="csik"><i style="width:33.3%"></i></div></div>
+</header>
+<main>
+  <div class="kerdes">
+    <h1>Mik az adataid?</h1>
+    <p class="be">Ezekre a NAV-nál van szükség. Úgy írd be, ahogy a személyiden áll. Kb. 2 perc.</p>
+  </div>
+  <div class="mezok">
+    <div class="m"><span class="fel">Teljes neved</span><div class="doboz">Minta Katalin</div><div class="seg">A személyi igazolványod szerint.</div></div>
+    <div class="m"><span class="fel">Születési hely és idő</span><div class="doboz f">Miskolc, 1989. 04. 17.</div><div class="seg">Település, majd az időpont: éééé. hh. nn.</div></div>
+    <div class="m"><span class="fel">Anyja neve</span><div class="doboz u">Pl. Nagy Mária</div><div class="seg">Leánykori név, ahogy a személyin szerepel.</div></div>
+    <div class="m"><span class="fel">Lakcím</span><div class="doboz u">Irsz., település, utca, házszám</div><div class="seg">A lakcímkártyádon lévő bejelentett cím.</div></div>
+    <div class="hol"><img class="i3" src="../../C2_modern/assets/ikon3d/igazolas_28@2x.png" srcset="../../C2_modern/assets/ikon3d/igazolas_28@2x.png 2x, ../../C2_modern/assets/ikon3d/igazolas_28@3x.png 3x" alt=""><a class="link" href="#">Hol találom ezeket?</a></div>
+  </div>
+</main>
+<div class="dokk">
+  <div class="fo"><button class="gomb-m">Vissza</button><button class="gomb-e">Tovább</button></div>
+  <a class="kes" href="#">Később folytatom</a>
+  <nav class="fulek" aria-label="Fülek">
+<button class="f on"><img class="i3 " src="../../C2_modern/assets/ikon3d/fooldal_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fooldal_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fooldal_28@3x.png 3x" alt="">Főoldal</button>
+<button class="f"><img class="i3 dosszie" src="../../C2_modern/assets/ikon3d/dosszie_28@2x.png" srcset="../../C2_modern/assets/ikon3d/dosszie_28@2x.png 2x, ../../C2_modern/assets/ikon3d/dosszie_28@3x.png 3x" alt="">Dosszié</button>
+<button class="f"><img class="i3 " src="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fotozas_arnyektalan_28@3x.png 3x" alt="">Fotózás</button>
+<button class="f"><img class="i3 uzenetek" src="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png" srcset="../../C2_modern/assets/ikon3d/uzenetek_28@2x.png 2x, ../../C2_modern/assets/ikon3d/uzenetek_28@3x.png 3x" alt="">Üzenetek</button>
+<button class="f"><img class="i3 fiok" src="../../C2_modern/assets/ikon3d/fiok_28@2x.png" srcset="../../C2_modern/assets/ikon3d/fiok_28@2x.png 2x, ../../C2_modern/assets/ikon3d/fiok_28@3x.png 3x" alt="">Fiók</button>
+  </nav>
+  <div class="biztonsagi"></div>
+</div>
+<div class="otthon-jel"></div>
+</body></html>

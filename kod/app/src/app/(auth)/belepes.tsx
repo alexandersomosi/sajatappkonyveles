@@ -16,6 +16,7 @@ import { MintaJel } from '@/ui/keret';
 import { Mezo } from '@/ui/Mezo';
 import { Szojegy } from '@/ui/Szojegy';
 import { T } from '@/ui/T';
+import { TeljesCtx } from '@/ui/teljes';
 import { hibaUzenet } from '@/lib/hiba';
 
 export default function Belepes() {
@@ -58,7 +59,7 @@ export default function Belepes() {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: szin.alap }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: szin.lap }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 40, flexGrow: 1 }}>
         <Fejlec rozX={120} rozY={112} alsoTer={22}>
           <View style={{ paddingTop: 18, paddingHorizontal: 20 }}>
@@ -72,8 +73,10 @@ export default function Belepes() {
             {tobbi.join(',')} {nemTor(brand.subline)}
           </T>
         </Fejlec>
-        <View style={{ paddingHorizontal: 16, paddingTop: 14, flex: 1 }}>
-          <Lap style={{ padding: 18 }}>
+        {/* SPEC §29.4.3 (C_VEGLEGES): teljes szélességű szakaszok, köztük a 10 pt-os sáv */}
+        <TeljesCtx.Provider value>
+        <View style={{ paddingHorizontal: 16, flex: 1 }}>
+          <Lap elso style={{ padding: 18 }}>
             <Mezo
               felirat="E-mail-cím"
               value={email}
@@ -144,6 +147,7 @@ export default function Belepes() {
             <GombM cim="Regisztrálok" magas={46} onPress={() => router.push('/regisztracio')} />
           </Lap>
         </View>
+        </TeljesCtx.Provider>
       </ScrollView>
       <MintaJel />
     </KeyboardAvoidingView>

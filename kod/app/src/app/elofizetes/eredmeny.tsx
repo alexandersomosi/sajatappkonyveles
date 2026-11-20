@@ -32,7 +32,7 @@ function StripeEredmeny({ cs, cel, megszakitva }: { cs: string | null; cel: Host
   const cfg = useConfig();
   const g = useGuided();
   const [lejart, setLejart] = useState(false);
-  const r = useFizetesEredmeny(megszakitva && !cs ? null : cs, !lejart);
+  const r = useFizetesEredmeny(megszakitva && !cs ? null : cs, !lejart, megszakitva);
   const st = megszakitva && !r.data ? 'megszakitva' : (r.data?.status ?? (cs ? 'feldolgozas' : 'megszakitva'));
   useEffect(() => {
     const t = setTimeout(() => setLejart(true), PAYMENT_RULES.resultPollSeconds * 1000);
@@ -46,7 +46,7 @@ function StripeEredmeny({ cs, cel, megszakitva }: { cs: string | null; cel: Host
     if (st === 'feldolgozas') return;
     setLejart(true);
     // the server changed the subscription / fees: everything that shows them is reloaded
-    for (const k of [K.elofizetes, K.onboarding, K.home, K.me, ['dijak'], K29.esedekes, K29.fizetesek, KG.guided, K.dijszamlak]) void qc.invalidateQueries({ queryKey: k });
+    for (const k of [K.elofizetes, K.onboarding, K.home, K.me, ['dijak'], K29.esedekes, K29.fizetesek, K29.szamlak, KG.guided, K.dijszamlak]) void qc.invalidateQueries({ queryKey: k });
   }, [st, qc]);
   const demo = !!cfg.data?.demo && fizetesSzolgaltato(cfg.data) === 'demo';
   const bekotesben = !!g.data?.inOnboarding;

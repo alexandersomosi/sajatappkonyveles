@@ -76,7 +76,7 @@ export default function Regisztracio() {
   return (
     // S1 (SPEC §27.4.4): az ár a brand.json-ból (k3_kor2 nyelv 11.6), alatta egy sor az induló vállalkozóknak.
     <AuthKeret cim="Kezdjük az ismerkedéssel." al={`${nemTor(`Egyéni vállalkozóknak, havi ${szam(cfg.data?.brand.priceHufMonthlyGross || brand.priceHufMonthlyGross)} Ft.`)} Bármikor lemondhatod.
-${JOURNEY_TEXTS.signupNewBusiness}`}>
+${(cfg.data as { newBusinessChargePolicy?: string } | undefined)?.newBusinessChargePolicy === 'adoszam_utan' ? JOURNEY_TEXTS.signupNewBusiness : JOURNEY_TEXTS.signupNewBusinessAzonnal}`}>
       <Lap style={{ padding: 18 }}>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Mezo felirat="Vezetéknév" value={vez} onChangeText={valt('vez', setVez)} autoComplete="family-name" textContentType="familyName" hiba={hibak.vez} style={{ flex: 1 }} />

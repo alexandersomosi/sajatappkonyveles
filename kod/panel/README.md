@@ -130,7 +130,7 @@ _kepek/         képernyőképek
   szakasszal, mentés után a tétel jóváhagyva (`?kieso=&ig=&kedvezmeny=csed_gyed`). Új fül **Éves zárás** (§28.K.3): év-váltó, állapot, határidők, díj (DEMO),
   a kérdőív válaszai (visszatérítési számla „Mutasd”), iratok, ellenőrzőlista, „Tervezet feltöltése”, „Beadtam az SZJA-bevallást / a kata-nyilatkozatot”,
   „Beadtam a HIPA-bevallást”. **Napló** fülön „Értesítések, amiket kapott” (értesítési napló, lásd lent).
-- **Áttekintés** (C-stílusú kártyák, szakaszok közt 8 px `#EEF1F8` sáv): „Ezt látja az ügyfél” (Félretenni most + Mennyit keresett; fiókban a számlánkénti
+- **Áttekintés** (C-stílusú kártyák, szakaszok közt 10 px `#D3DAFC` sáv): „Ezt látja az ügyfél” (Félretenni most + Mennyit keresett; fiókban a számlánkénti
   félretenni-tábla és a havi kereset-tábla, csak olvasásra), Kata-kártya (keret-mérő, következő befizetés, céges számla figyelmeztetés), Szünetel,
   Alkalmazottak/EFO döntés (§28.K.7, szöveg az ügyfélnek kötelező, kivéve „nincs teendő”), „Adószám hiányzik – töltsd ki az ONYA-ból” (§28.K.9),
   Adózási mód átállítása (átalány ↔ kata, dátummal), havi ellenőrzés tételei, továbbító e-mail-cím (DEMO).
@@ -173,3 +173,20 @@ _kepek/         képernyőképek
    `csed_gyed`-re is (az nem megy a motorba, csak lezárja a tételt).
 7. A változás-fajtáknál a `TeamAssistDetail.checklist` csak a ténylegesen meglévő fázisokat adja (a `hivas` csak visszahíváskor) – a panel ebből dönti el,
    mutat-e hívás-fázist.
+
+## SPEC §29 (k7, B3) – fizetés és számlázás a tulajdonosnak
+
+| Oldal | Mit mutat |
+|---|---|
+| `/admin/elofizetesek` | szolgáltató + mód (Stripe teszt / Stripe éles / DEMO / SimplePay), állapot, következő levonás (dátum + a tényleges összeg), kártya, hibák egyszerű szavakkal, „Fizesd ki” elküldve; szűrő: „Megerősítésre vár” |
+| `/admin/fizetesek` | minden fizetés (első hónap, havidíj, külön díj, „Fizesd ki”): összeg, eredmény, kártya, Stripe-link, visszautalt összeg, vitatott terhelés, számla; **Visszatérítés** = a konzol művelete (összeg + ok + kódos megerősítés; a számlát a szerver sztornózza / helyesbíti). A régi SimplePay-tranzakciók: `?nezet=simplepay` |
+| `/admin/dijszamlak` (új) | minden díjszámla: kiállítva / készül / hiba / sztornózva, szám, fiók (teszt / éles / DEMO), hibakód és üzenet, próbálkozások, „Újrapróbálom” (a szerver előbb a Számlázz.hu-ban keres), PDF |
+| `/admin/rendszer` | új blokk „Fizetés és számlázás”: Stripe mód, webhook titok megvan/hiányzik, utolsó webhook, fennakadt események, utolsó egyeztetés, számlázás módja + fiók, nyitott számlahibák – kulcs soha |
+| `/admin/dijak` | a valódi árak: nincs DEMO jel, a módosítás egyben a megerősítés |
+
+Fájlok: `src/api/k29.ts`, `src/ui/Megerosites.tsx` (a konzol kódos megerősítése), `src/pages/admin/{Elofizetesek,Fizetesek,Dijszamlak,Rendszer,Dijak}.tsx`,
+a megtartott SimplePay-nézetek `src/pages/admin/{ElofizetesekSimplePay,FizetesekSimplePay}.tsx`, mock: `src/mock/k29.ts`.
+
+```bash
+npx vite build --mode mock --outDir dist-mock-k7b3 && node scripts/kepek-k7.mjs   # k7_panel_* (1440, 1280) → kod/_qa
+```

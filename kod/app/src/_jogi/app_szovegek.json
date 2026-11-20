@@ -5,8 +5,8 @@
   "helyorzok": "{{...}} – a listát lásd README.md és src/helyorzok.ts. A tegező, rövid mondatok szándékosak. A „tartalom” blokk a backend tartalomszövegeinek formáját követi: {egy kapcsos zárójel} = futásidejű érték, a backend tölti ki.",
   "tartalom": "A „tartalom” kulcsai pontosan a SPEC §26.8.1 / §26.11 tartalomkulcsai (content_texts). A backend ezeket alapértéknek veheti (a jogászé az utolsó szó); a kod/backend/src/content/defaults.hu.json ugyanezen kulcsainak egyezniük kell vele. Eltérés a SPEC §26.11 szövegétől: lásd tartalom_elteresek.",
   "tartalom_elteresek": "notif.callback_received.body: „vagy a kártyaadataidat, és nem lépünk be helyetted” (egyezzen a visszahivas.csalas szöveggel, SPEC §27.3.7). notif.registration_checked.title: „Rendben van a bejelentésed” helyett „Átnéztük a bejelentésedet” (az átnézésünk nem hatósági ellenőrzés, ÁSZF 4/A.3.). notif.assist_ev_filed.title: „Bejelentettük a vállalkozásodat!” helyett „{firstName} beküldte a bejelentésedet!” (a bejelentést a könyvelő küldi be meghatalmazottként, nem a cég – ÁSZF 4/C.6.). notif.registration_done.body: a SPEC §27.8 alapszövege; a kamarai határidőt a kamara_reminder viszi. notif.assist_mh_reminder: az alap kulcs = az „elso” változat (ha a szerver változat nélkül küldi).",
-  "verzio": "2026-11-19",
-  "gyik_elozo": "SPEC §27.7.3: a 11-19-én változott GYIK-elemeknél az elozo_kerdes / elozo_valasz a pontos régi szöveg ({{helyőrzőkkel}}, ahogy itt állt). A backend adatlépése mindkettőt ugyanúgy kitölti (fillLegal), és csak akkor írja át az élő faq_items sort, ha a kérdése ÉS a válasza még szó szerint a régi; az admin által szerkesztett sorhoz nem nyúl. Új kérdés (elozo_kerdes nélkül): ha még nincs ilyen kérdés, felveszi.",
+  "verzio": "2026-11-20",
+  "gyik_elozo": "SPEC §27.7.3: a változott GYIK-elemeknél (legutóbb 11-20: a havidíj kezdete, SPEC §29.4.2) az elozo_kerdes / elozo_valasz a pontos régi szöveg ({{helyőrzőkkel}}, ahogy itt állt). A backend adatlépése mindkettőt ugyanúgy kitölti (fillLegal), és csak akkor írja át az élő faq_items sort, ha a kérdése ÉS a válasza még szó szerint a régi; az admin által szerkesztett sorhoz nem nyúl. Új kérdés (elozo_kerdes nélkül): ha még nincs ilyen kérdés, felveszi.",
   "helyettunk": "A helyettunk.* szövegek a kod/shared ASSIST_TEXTS megfelelő szövegeinek jogásznak szóló másolatai ({firstName} = {{konyvelo.keresztnev}}, {accountantName} = {{konyvelo.nev}}). Az app és a szerver a shared szövegeket mutatja; az npm run ellenoriz figyelmeztet, ha eltérnek. Ha a jogász módosít, a SPEC §24-be kell jelezni, és a shared szövegét is át kell írni."
  },
  "szovegek": {
@@ -23,7 +23,7 @@
   "megujulas.rovid": "Az előfizetésed havonta magától megújul, amíg le nem mondod.",
   "megujulas.engedely": "{{elofizetes.alkalom}} alkalommal, alkalmanként legfeljebb {{elofizetes.max_osszeg}}, {{elofizetes.lejarat_ig}} vonhatunk le a kártyádról. Bármikor törölheted a kártyádat a Fiók oldalon.",
   "megujulas.kovetkezo": "Következő levonás: {{elofizetes.kovetkezo_levonas}}, {{dij.havi_brutto}}.",
-  "megujulas.lejar_hamarosan": "A kártyás engedélyed {{elofizetes.lejarat_ig}} érvényes. Add meg újra a kártyádat, hogy ne szakadjon meg a könyvelésed.",
+  "megujulas.lejar_hamarosan": "A kártyád {{elofizetes.lejarat_ig}} lejár. Add meg az újat, hogy ne szakadjon meg a könyvelésed.",
   "fizetes.gomb": "Kártyás fizetés",
   "fizetes.simplepay_link": "Fizetési tájékoztató (SimplePay)",
   "fizetes.biztonsag": "A fizetés a SimplePay oldalán történik. A kártyád számát mi nem látjuk.",
@@ -32,7 +32,7 @@
   "fizetes.sikertelen": "Sikertelen tranzakció. SimplePay tranzakcióazonosító: {{simplepay.tranzakcio}}. Kérjük, ellenőrizd a tranzakció során megadott adatok helyességét. Amennyiben minden adatot helyesen adtál meg, a visszautasítás okának kivizsgálása érdekében vedd fel a kapcsolatot kártyakibocsátó bankoddal.",
   "fizetes.megszakitva": "Megszakítottad a fizetést.",
   "fizetes.idotullepes": "Lejárt a tranzakció maximális ideje. Kezdd újra a fizetést.",
-  "fizetes.levonas_sikertelen": "Nem sikerült levonni a havidíjat. Az első sikertelen próbától számítva 1, 3 és 7 nap múlva újra megpróbáljuk. Ha lejárt vagy megváltozott a kártyád, add meg az újat.",
+  "fizetes.levonas_sikertelen": "Nem sikerült levonni a havidíjat. Az első sikertelen próbától számítva 1, 3 és 7 nap múlva újra megpróbáljuk. Ha a bankod megerősítést kér, az appban a „Fizesd ki” gombbal fizeted ki. Ha lejárt vagy megváltozott a kártyád, add meg az újat.",
   "fizetes.szunetel_figyelmeztetes": "Ha {{elofizetes.szunetel_datum_ig}} nem rendeződik a díj, szüneteltetnünk kell a könyvelésedet. Közelgő határidőd: {{hatarido.kovetkezo}}.",
   "fizetes.szunetel": "Szünetel a könyvelésed, mert nem sikerült levonni a díjat. Az irataidat látod, de {{konyvelo.keresztnev}} most nem dolgozik rajtuk, és bevallást sem ad be. Add meg a kártyádat, és folytatjuk.",
   "arvaltozas.ertesites": "{{arvaltozas.datum_tol}} a havidíj {{arvaltozas.uj_ar}} lesz. Ha nem szeretnéd, addig díjmentesen lemondhatod.",
@@ -52,7 +52,7 @@
   "lemondas.azonnali": "Azonnal szeretnél kilépni? Írj nekünk: {{ceg.email}}. A kifizetett hónapból hátralévő napok díját visszautaljuk.",
   "kartya_torles.gomb": "Kártya törlése",
   "kartya_torles.kerdes": "Törlöd a kártyádat?",
-  "kartya_torles.kovetkezmeny": "A kártyád regisztrációját a SimplePay törli, és többé nem vonunk le róla. Az előfizetésed {{elofizetes.idoszak_vege_ig}} él; utána csak akkor folytatódik, ha új kártyát adsz meg.",
+  "kartya_torles.kovetkezmeny": "A kártyádat a fizetési szolgáltatónál is töröljük, és többé nem vonunk le róla. Az előfizetésed {{elofizetes.idoszak_vege_ig}} él; utána csak akkor folytatódik, ha új kártyát adsz meg.",
   "kartya_torles.kesz": "Töröltük a kártyádat. {{elofizetes.idoszak_vege_ig}} minden működik.",
   "szerzodes.bevezeto": "Olvasd el, és fogadd el egyenként. Mindegyiket letöltheted PDF-ben is.",
   "szerzodes.kiemelt_cim": "Erre külön figyelj",
@@ -89,13 +89,13 @@
   "uj_vallalkozas.mit_teszunk": "Alapból útmutatót adunk képekkel és videóval, a bejelentést te küldöd be, és utána átnézzük a NAV-os értesítést. Ha nem boldogulsz vele, kérd: „Intézzétek helyettem”. Ilyenkor felhívunk, és {{konyvelo.keresztnev}} meghatalmazottként, a saját belépésével, az általad jóváhagyott adatokkal küldi be. A belépési adataidat egyik esetben sem kérjük el.",
   "uj_vallalkozas.felelosseg": "A bejelentés a te nyilatkozatod a NAV felé, akkor is, ha {{konyvelo.keresztnev}} küldi be helyetted. Az útmutató és a beküldött adatok a válaszaidból készülnek, ezért figyelj, hogy pontosak legyenek. Az adatok valóságáért te felelsz, és beküldés után a bejelentést nem lehet visszavonni.",
   "uj_vallalkozas.nem_taroljuk": "A bejelentéshez a TAJ-számodat, anyukád nevét és a születési adataidat nem kérjük el: ezeket a NAV-os űrlapba te írod be, vagy a NAV tölti ki. (Az azonosításnál a pénzmosás elleni törvény miatt néhányat később megadsz; TAJ-számot ott sem kérünk.)",
-  "uj_vallalkozas.dij": "Amíg nincs adószámod, nem fizetsz semmit. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat.",
+  "uj_vallalkozas.dij": "A havidíjat a szerződés és a kártyád megadása napjától fizeted. Ebben benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése és a visszahívás.",
   "uj_vallalkozas.nyilvanos": "A székhelyed címe nyilvános lesz: bárki megnézheti a nyilvántartásban.",
   "becsles.megjegyzes": "Becslés. A végleges összeget a könyvelőd hagyja jóvá.",
   "adatok_letoltese.leiras": "Egy ZIP-fájlt készítünk minden adatodról és iratodról. Ha kész, szólunk. A letöltési link 24 óráig él.",
   "fiok_torles.cim": "Fiók törlése",
   "fiok_torles.kovetkezmeny": [
-   "Azonnal kilépünk minden eszközödről, és leállítjuk az előfizetést. A SimplePay törli a kártyádat.",
+   "Azonnal kilépünk minden eszközödről, és leállítjuk az előfizetést. A kártyádat is töröljük.",
    "30 napig meggondolhatod magad: ha addig belépsz, visszavonhatod.",
    "Utána mindent törlünk, kivéve amit a törvény miatt meg kell őriznünk: az azonosítást és a díjszámlákat 8 évig, a könyvelési iratokat az adó elévüléséig. Ezeket elzárva, titkosítva tartjuk, és a határidő végén töröljük.",
    "Ha még fut egy negyedév, a bevallását nem adjuk be. Erről gondoskodnod kell.",
@@ -168,8 +168,8 @@
   },
   {
    "kerdes": "Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?",
-   "valasz": "Amíg nincs adószámod, nem fizetsz semmit: az útmutató, az értesítés átnézése, a visszahívás, és ha kéred, a bejelentés intézése is ingyenes. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat. Az első havidíjat ekkor vonjuk le, és a könyvelésed is ekkor indul.",
-   "elozo_valasz": "Amíg nincs adószámod, nem fizetsz semmit: az útmutató, az igazolás átnézése és a visszahívás ingyenes. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat. Az első havidíjat ekkor vonjuk le, és a könyvelésed is ekkor indul."
+   "valasz": "A havidíjat a szerződés és a kártya megadása napjától fizeted. Ebben benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése és a visszahívás.",
+   "elozo_valasz": "Amíg nincs adószámod, nem fizetsz semmit: az útmutató, az értesítés átnézése, a visszahívás, és ha kéred, a bejelentés intézése is ingyenes. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat. Az első havidíjat ekkor vonjuk le, és a könyvelésed is ekkor indul."
   },
   {
    "kerdes": "Mit jelent, hogy jóvá kell hagynom a meghatalmazást?",

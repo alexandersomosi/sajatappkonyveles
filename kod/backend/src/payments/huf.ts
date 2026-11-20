@@ -27,7 +27,9 @@ export function grossToLine(gross: number, o: { vatPct?: number; whole?: boolean
   return { netto, afa, brutto: gross };
 }
 
-/** "19 999" (narrow no-break space like the rest of the app's amounts). */
+/** "19 999" – the same grouping as the rest of the app's amounts (kedvezmeny.fmt). */
 export function fmtHuf(n: number): string {
-  return new Intl.NumberFormat('hu-HU', { maximumFractionDigits: 0 }).format(n);
+  const r = Math.round(n);
+  const s = Math.abs(r).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return r < 0 ? `-${s}` : s;
 }

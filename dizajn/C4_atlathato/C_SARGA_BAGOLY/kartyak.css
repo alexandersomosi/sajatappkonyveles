@@ -1,0 +1,33 @@
+/* KÁRTYÁS VÁLTOZAT (tulaj 11-20 14:30, egy ChatGPT-javaslat alapján: "nagyon tetszik"):
+   halványszürke oldalháttér, minden szakasz külön fehér, lekerekített kártya térközzel, a kék fejléc alul lekerekítve,
+   a „Ha elakadsz” enyhén kiemelt (világoskék) segítségkártya, az alsó sáv fix, finom felső árnyékkal.
+   A kék-sárga arculat (felirat-logó, sárga gombok) változatlan. */
+html, body { background: #F2F4FA !important; }
+.fejsav { border-radius: 0 0 24px 24px; padding-bottom: 22px !important; box-shadow: 0 6px 18px rgba(20, 40, 219, .18); }
+main { padding: 14px 12px 0 !important; }
+.szak {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px !important;
+  margin: 0 0 12px;
+  border: 0 !important;
+  box-shadow: 0 1px 2px rgba(16, 21, 43, .05), 0 4px 14px rgba(16, 21, 43, .06);
+}
+.szak + .szak { border-top: 0 !important; }
+.szak:last-of-type { background: #EEF2FF; box-shadow: none; border: 1px solid #DCE3FB !important; }
+.dokk { background: #fff; box-shadow: 0 -6px 18px rgba(16, 21, 43, .08); }
+.dokk::before { display: none !important; }
+.fulek { border-top: 0 !important; }
+main { padding-bottom: 104px !important; }
+.szak b, .szak .e, .sav-s b { white-space: nowrap; }
+/* Félretenni-lista: minden hónap külön kártya */
+.honap {
+  background: #fff;
+  border-radius: 18px;
+  padding: 14px 16px 6px !important;
+  margin: 0 0 12px;
+  box-shadow: 0 1px 2px rgba(16, 21, 43, .05), 0 4px 14px rgba(16, 21, 43, .06);
+}
+.honap + .honap { border-top: 0 !important; }
+.becs { padding: 4px 6px 12px !important; }
+.szak .kapszula { white-space: nowrap; }

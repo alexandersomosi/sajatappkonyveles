@@ -1,0 +1,69 @@
+{
+  "at": "2026-11-20T10:53:37.607Z",
+  "stripeApiVersion": "2026-10-28.endive",
+  "stripe": {
+    "customer": "cus_Vf9l3cmQlJf9cb",
+    "checkoutPayment": "cs_test_a0EDkwf0L7FSdKobnLwlbha5j2OanWQe4HmD18DAULu44RG2lr5xqMXOGk",
+    "checkoutSetup": "cs_test_c0dphRUWQ0kz7V00SQlo4fVztSSMU9qLIf16NZhcsPvDgDi1mZigJz0Wjv"
+  },
+  "stripeCards": [
+    {
+      "card": "4242 4242 4242 4242",
+      "paymentMethod": "pm_1UdpRnAhvFBYnw0K8FC7zYCz",
+      "outcome": "succeeded",
+      "providerRef": "pi_3UdpRoAhvFBYnw0K08HWuYe1",
+      "code": null,
+      "declineCode": null,
+      "idempotentRepeat": "succeeded",
+      "refund": {
+        "id": "re_3UdpRoAhvFBYnw0K0QJwQwKs",
+        "status": "succeeded",
+        "refundedHuf": 5000
+      }
+    },
+    {
+      "card": "4000 0025 0000 3155",
+      "paymentMethod": "pm_1UdpRrAhvFBYnw0KNUYXwbMF",
+      "outcome": "requires_auth",
+      "providerRef": "pi_3UdpRsAhvFBYnw0K1rNumZ7K",
+      "code": null,
+      "declineCode": null,
+      "idempotentRepeat": "requires_auth",
+      "afterCancel": "canceled"
+    },
+    {
+      "card": "4000 0027 6000 3184",
+      "paymentMethod": "pm_1UdpRuAhvFBYnw0KXZKQB9YK",
+      "outcome": "requires_auth",
+      "providerRef": "pi_3UdpRvAhvFBYnw0K1cD8fHqF",
+      "code": null,
+      "declineCode": null,
+      "idempotentRepeat": "requires_auth",
+      "afterCancel": "canceled"
+    },
+    {
+      "card": "4000 0000 0000 0341",
+      "paymentMethod": "pm_1UdpRwAhvFBYnw0KRq6Q97Tx",
+      "outcome": "declined",
+      "providerRef": "pi_3UdpRxAhvFBYnw0K1HT2U66W",
+      "code": "card_declined",
+      "declineCode": "generic_decline",
+      "idempotentRepeat": "declined"
+    },
+    {
+      "card": "4000 0000 0000 9995",
+      "attach": "refused",
+      "code": "card_declined",
+      "declineCode": "insufficient_funds"
+    }
+  ],
+  "szamlazzhu": {
+    "key": "ADZ-44b204bdf9504d399c30",
+    "number": "E-SDSDS-2026-1",
+    "grossFromHeader": 19999,
+    "pdfBytes": 569980,
+    "queryFound": "E-SDSDS-2026-1",
+    "storno": "E-SDSDS-2026-2",
+    "stornoPdfBytes": 570096
+  }
+}

@@ -30,7 +30,7 @@ export default function FizesdKi() {
   const [hiba, setHiba] = useState<string | null>(null);
   const [masik, setMasik] = useState(false);
   const [be, setBe] = useState(false);
-  const engedely = useKartyaEngedely(masik || !!e.data?.consentNeeded);
+  const engedely = useKartyaEngedely(masik || !!e.data?.consentNeeded, 'fizesd_ki');
   const d = due.data ?? e.data?.due ?? null;
   const demo = !!cfg.data?.demo && (fizetesSzolgaltato(cfg.data) === 'demo' || e.data?.provider === 'demo');
 

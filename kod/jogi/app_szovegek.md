@@ -2,7 +2,7 @@ TERVEZET – jogász ellenőrzi. Nem végleges, nem jogi tanács.
 
 # Rövid jogi szövegek az appban
 
-Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-szovegek). Ne szerkeszd kézzel: a JSON-t írd át, és futtasd újra. A félkövér rész a szöveg kulcsa, az app ezzel hivatkozik rá.
+Verzió: 2026-11-20. Ez a fájl az app_szovegek.json-ból készül (npm run app-szovegek). Ne szerkeszd kézzel: a JSON-t írd át, és futtasd újra. A félkövér rész a szöveg kulcsa, az app ezzel hivatkozik rá.
 
 ## Ár
 
@@ -28,7 +28,7 @@ Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **megujulas.kovetkezo** – Következő levonás: {{elofizetes.kovetkezo_levonas}}, {{dij.havi_brutto}}.
 
-**megujulas.lejar_hamarosan** – A kártyás engedélyed {{elofizetes.lejarat_ig}} érvényes. Add meg újra a kártyádat, hogy ne szakadjon meg a könyvelésed.
+**megujulas.lejar_hamarosan** – A kártyád {{elofizetes.lejarat_ig}} lejár. Add meg az újat, hogy ne szakadjon meg a könyvelésed.
 
 ## Fizetés (SimplePay)
 
@@ -48,7 +48,7 @@ Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **fizetes.idotullepes** – Lejárt a tranzakció maximális ideje. Kezdd újra a fizetést.
 
-**fizetes.levonas_sikertelen** – Nem sikerült levonni a havidíjat. Az első sikertelen próbától számítva 1, 3 és 7 nap múlva újra megpróbáljuk. Ha lejárt vagy megváltozott a kártyád, add meg az újat.
+**fizetes.levonas_sikertelen** – Nem sikerült levonni a havidíjat. Az első sikertelen próbától számítva 1, 3 és 7 nap múlva újra megpróbáljuk. Ha a bankod megerősítést kér, az appban a „Fizesd ki” gombbal fizeted ki. Ha lejárt vagy megváltozott a kártyád, add meg az újat.
 
 **fizetes.szunetel_figyelmeztetes** – Ha {{elofizetes.szunetel_datum_ig}} nem rendeződik a díj, szüneteltetnünk kell a könyvelésedet. Közelgő határidőd: {{hatarido.kovetkezo}}.
 
@@ -88,7 +88,7 @@ Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **kartya_torles.kerdes** – Törlöd a kártyádat?
 
-**kartya_torles.kovetkezmeny** – A kártyád regisztrációját a SimplePay törli, és többé nem vonunk le róla. Az előfizetésed {{elofizetes.idoszak_vege_ig}} él; utána csak akkor folytatódik, ha új kártyát adsz meg.
+**kartya_torles.kovetkezmeny** – A kártyádat a fizetési szolgáltatónál is töröljük, és többé nem vonunk le róla. Az előfizetésed {{elofizetes.idoszak_vege_ig}} él; utána csak akkor folytatódik, ha új kártyát adsz meg.
 
 **kartya_torles.kesz** – Töröltük a kártyádat. {{elofizetes.idoszak_vege_ig}} minden működik.
 
@@ -160,7 +160,7 @@ Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **uj_vallalkozas.nem_taroljuk** – A bejelentéshez a TAJ-számodat, anyukád nevét és a születési adataidat nem kérjük el: ezeket a NAV-os űrlapba te írod be, vagy a NAV tölti ki. (Az azonosításnál a pénzmosás elleni törvény miatt néhányat később megadsz; TAJ-számot ott sem kérünk.)
 
-**uj_vallalkozas.dij** – Amíg nincs adószámod, nem fizetsz semmit. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat.
+**uj_vallalkozas.dij** – A havidíjat a szerződés és a kártyád megadása napjától fizeted. Ebben benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése és a visszahívás.
 
 **uj_vallalkozas.nyilvanos** – A székhelyed címe nyilvános lesz: bárki megnézheti a nyilvántartásban.
 
@@ -178,7 +178,7 @@ Verzió: 2026-11-19. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **fiok_torles.kovetkezmeny**
 
-- Azonnal kilépünk minden eszközödről, és leállítjuk az előfizetést. A SimplePay törli a kártyádat.
+- Azonnal kilépünk minden eszközödről, és leállítjuk az előfizetést. A kártyádat is töröljük.
 - 30 napig meggondolhatod magad: ha addig belépsz, visszavonhatod.
 - Utána mindent törlünk, kivéve amit a törvény miatt meg kell őriznünk: az azonosítást és a díjszámlákat 8 évig, a könyvelési iratokat az adó elévüléséig. Ezeket elzárva, titkosítva tartjuk, és a határidő végén töröljük.
 - Ha még fut egy negyedév, a bevallását nem adjuk be. Erről gondoskodnod kell.
@@ -272,7 +272,7 @@ Korábbi kérdés (2026-11-19-ig): „Miért nem ti jelentitek be a vállalkozá
 
 **12. Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?**
 
-Amíg nincs adószámod, nem fizetsz semmit: az útmutató, az értesítés átnézése, a visszahívás, és ha kéred, a bejelentés intézése is ingyenes. A kártyádat akkor kérjük, amikor rögzítettük az adószámodat. Az első havidíjat ekkor vonjuk le, és a könyvelésed is ekkor indul.
+A havidíjat a szerződés és a kártya megadása napjától fizeted. Ebben benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése és a visszahívás.
 
 (A válasz 2026-11-19-én változott.)
 
@@ -350,7 +350,7 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.assist_started.title** – Beszéltünk – így haladunk
 
-**notif.assist_started.body** – {firstName} hamarosan beküldi a meghatalmazást. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.
+**notif.assist_started.body** – Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a meghatalmazást. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.
 
 **notif.assist_mh_filed.title** – Hagyd jóvá a meghatalmazást {hatarido}
 
@@ -358,11 +358,11 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.assist_mh_reminder.title** – Még nem hagytad jóvá a meghatalmazást
 
-**notif.assist_mh_reminder.body** – {hatarido} van időd. Kb. 3 perc az ONYA-ban.
+**notif.assist_mh_reminder.body** – Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.
 
 **notif.assist_mh_reminder.elso.title** – Még nem hagytad jóvá a meghatalmazást
 
-**notif.assist_mh_reminder.elso.body** – {hatarido} van időd. Kb. 3 perc az ONYA-ban.
+**notif.assist_mh_reminder.elso.body** – Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.
 
 **notif.assist_mh_reminder.utolso_nap.title** – Ma van az utolsó nap
 
