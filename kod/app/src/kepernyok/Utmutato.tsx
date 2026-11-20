@@ -22,6 +22,7 @@ import { alapMagyarazat, MiEz } from '../ui/Magyarazat';
 import { T } from '../ui/T';
 import { VideoKartya } from '../ui/Video';
 import { Elakadtal } from '../ui/Visszahivas';
+import { useVezetettParam, VezetettFelsoSor, VezetettHaladas } from '../ui/Vezetett';
 import { router, useLocalSearchParams } from 'expo-router';
 
 /** A lépés egyes soraihoz tartozó magyarázat (SPEC §26.8.2: „Mi ez?” a megfelelő sorokon). */
@@ -402,13 +403,22 @@ export function UtmutatoTorzs({
 export function SavCim({ vissza, visszaCim = 'Vissza', cim, al, jobb, children }: { vissza: () => void; visszaCim?: string; cim: string; al?: string; jobb?: string; children?: React.ReactNode }) {
   // Long single words ("NAV-meghatalmazást") must fit a 320 px screen at large text too (review k3c2).
   const keskeny = useWindowDimensions().width < 360;
+  // SPEC §29.10.3: in the guided run the band gets "Vissza" + "Később folytatom" and the progress bar
+  const vezetett = useVezetettParam();
   return (
     <Fejlec rozX={300} rozY={70} alsoTer={18}>
-      <Pressable accessibilityRole="link" onPress={vissza} hitSlop={6} style={{ minHeight: 40, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'flex-start' }}>
-        <T m={16} s={500} c="#fff" alahuz>
-          {visszaCim}
-        </T>
-      </Pressable>
+      {vezetett ? (
+        <>
+          <VezetettFelsoSor vissza={vissza} kulcs={vezetett} />
+          <VezetettHaladas style={{ marginTop: 8, marginBottom: 6, paddingHorizontal: 20 }} />
+        </>
+      ) : (
+        <Pressable accessibilityRole="link" onPress={vissza} hitSlop={6} style={{ minHeight: 40, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'flex-start' }}>
+          <T m={16} s={500} c="#fff" alahuz>
+            {visszaCim}
+          </T>
+        </Pressable>
+      )}
       <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10, paddingTop: 4, paddingHorizontal: 20 }}>
         <T m={keskeny ? 24 : 27} maxFontSizeMultiplier={1.15} s={700} lh={1.17} ls={-0.024} c="#fff" style={{ flex: 1 }} accessibilityRole="header">
           {cim}

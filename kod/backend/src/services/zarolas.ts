@@ -20,11 +20,17 @@ import { clientName, type ClientRow } from './people.js';
 import { fmt } from './kedvezmeny.js';
 import { planAmountHuf } from './dijak.js';
 
-export type ServiceLock = NonNullable<ClientRow['serviceLock']>;
+export type ServiceLock = { reasons: ServiceLockReason[]; since: string; amountHuf: number };
 
 export async function lockReasonsOf(deps: Deps, db: DbOrTx, clientId: string): Promise<{ reasons: ServiceLockReason[]; amountHuf: number }> {
   const reasons: ServiceLockReason[] = [];
   let amount = 0;
+  // SPEC §29.9.4: the admin's manual lock ('zarolva' → reason 'kezi') or grace ('feloldva' until a day: no automatic lock)
+  const [man] = await db.select({ m: clients.serviceLockManual }).from(clients).where(eq(clients.id, clientId)).limit(1);
+  const manual = man?.m ?? null;
+  const today = todayBudapest(deps.now());
+  if (manual?.mode === 'zarolva') reasons.push('kezi');
+  if (manual?.mode === 'feloldva' && (!manual.until || manual.until >= today)) return { reasons, amountHuf: 0 };
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (sub?.status === 'suspended') {
     reasons.push('havidij');
@@ -57,7 +63,7 @@ export async function computeServiceLock(deps: Deps, clientId: string): Promise<
   const mit = await mitText(deps, reasons);
   if (next && !was) {
     await audit(db, { action: 'lock.on', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { reasons } });
-    await notify(deps, db, { userId: cl.userId, kind: 'service_locked', params: { ...params, mit, osszeg: fmt(amountHuf) }, link: reasons.includes('havidij') ? '/fiok/elofizetes' : '/fiok/dijak' });
+    await notify(deps, db, { userId: cl.userId, kind: 'service_locked', ...(reasons.length === 1 && reasons[0] === 'kezi' ? { variant: 'kezi' } : {}), params: { ...params, mit, osszeg: fmt(amountHuf) }, link: reasons.includes('havidij') ? '/fiok/elofizetes' : reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek' });
     const acc = await accountantUserOf(db, cl);
     if (acc) await notify(deps, db, { userId: acc.userId, kind: 'client_locked', params: { clientName: clientName(cl), mit, osszeg: fmt(amountHuf) }, link: `/ugyfelek/${cl.id}` });
   } else if (!next && was) {
@@ -78,12 +84,14 @@ export async function serviceLockView(deps: Deps, cl: ClientRow): Promise<Servic
   if (!l) return null;
   const params = await accountantParams(deps.db, cl.accountantId);
   const mit = await mitText(deps, l.reasons);
+  const onlyManual = l.reasons.length === 1 && l.reasons[0] === 'kezi';
   return {
     reasons: l.reasons,
     since: l.since,
     amountHuf: l.amountHuf,
-    text: await deps.content.render('zarolas.banner', { ...params, mit, osszeg: fmt(l.amountHuf) }),
-    payRoute: l.reasons.includes('havidij') ? '/fiok/elofizetes' : '/fiok/dijak',
+    // SPEC §29.9.4: a manual lock has its own short text (no amount)
+    text: onlyManual ? await deps.content.render('k29.zarolas.kezi_banner', params) : await deps.content.render('zarolas.banner', { ...params, mit, osszeg: fmt(l.amountHuf) }),
+    payRoute: l.reasons.includes('havidij') ? '/fiok/elofizetes' : l.reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek',
   };
 }
 
@@ -157,7 +165,7 @@ export async function jobServiceLockCheck(deps: Deps): Promise<number> {
   const ids = new Set<string>();
   for (const r of await db.select({ id: subscriptions.clientId }).from(subscriptions).where(eq(subscriptions.status, 'suspended'))) ids.add(r.id);
   for (const r of await db.select({ id: annualClosings.clientId }).from(annualClosings).where(eq(annualClosings.status, 'dijra_var'))) ids.add(r.id);
-  for (const r of await db.select({ id: clients.id, l: clients.serviceLock }).from(clients)) if (r.l) ids.add(r.id);
+  for (const r of await db.select({ id: clients.id, l: clients.serviceLock, m: clients.serviceLockManual }).from(clients)) if (r.l || r.m) ids.add(r.id);
   let n = 0;
   for (const id of ids) if (await computeServiceLock(deps, id)) n++;
   // one extra notice when a tax deadline is within 14 days while locked

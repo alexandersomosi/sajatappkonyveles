@@ -11,7 +11,7 @@ import { useMe, useValtozasKer, useValtozasModosit, useValtozasok } from '@/api/
 import { hibaUzenet } from '@/lib/hiba';
 import { maiNap, szam } from '@/lib/format';
 import { dijFizetes } from '@/lib/simplepay';
-import { valtozasFajta } from '@/lib/utmutato';
+import { valtozasFajta, valtozasSor } from '@/lib/utmutato';
 import { DemoDij } from '@/kepernyok/k28';
 import { UrlapFej, UrlapKerdes } from '@/kepernyok/Urlap';
 import { lapCim, URES_VADAT, vadatBol, valtozasAdat, valtozasEllenoriz, valtozasLapok, ValtozasLap, valtozasSorok, type VAdat } from '@/kepernyok/ValtozasUrlap';
@@ -20,14 +20,22 @@ import { GombE, HibaSzoveg, Kapcsolo, Lap, Szakasz } from '@/ui/alap';
 import { IgyMegy, SohaBelepes } from '@/ui/Helyettunk';
 import { Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
+import { CLOSING_KIND } from '@/_shared/k29f';
+import { MegszuntetesKerem } from '@/kepernyok/Megszuntetes';
 
 export default function ValtozasKerem() {
   // k6c2 (§28.K.5): POST /client/assist is refused while the fee lock is on – show the lock, not a form that fails at the end
   return (
     <ZarolasKapu cim="Bejelentjük helyetted" ful="fiok">
-      <ValtozasKeremTartalom />
+      <KeremValaszto />
     </ZarolasKapu>
   );
+}
+
+/** SPEC §29.7 F3: a megszüntetés űrlapja külön képernyő-test. */
+function KeremValaszto() {
+  const p = useLocalSearchParams<{ fajta: string }>();
+  return p.fajta === CLOSING_KIND ? <MegszuntetesKerem /> : <ValtozasKeremTartalom />;
 }
 
 function ValtozasKeremTartalom() {
@@ -91,7 +99,7 @@ function ValtozasKeremTartalom() {
   };
   const fizetendo = lap === 'osszegzes' && dij && dij.amountHuf > 0 && !hivjatok && !hivasKell && !p.assist;
   const gomb = lap === 'igy' ? 'Kezdjük' : lap === 'osszegzes' ? (p.assist ? 'Mentem' : fizetendo ? fillPlaceholders(FEE_TEXTS.payButtonAmount, { dij: szam(dij!.amountHuf) }) : CHANGE_TEXTS.send) : 'Tovább';
-  const cimke = fillPlaceholders(CHANGE_TEXTS.sheetTitle, { kindLabel: CHANGE_TEXTS.sorok[kind].title });
+  const cimke = fillPlaceholders(CHANGE_TEXTS.sheetTitle, { kindLabel: valtozasSor(kind).title });
 
   return (
     <Kepernyo
@@ -117,7 +125,7 @@ function ValtozasKeremTartalom() {
       ) : lap === 'osszegzes' ? (
         <>
           <UrlapKerdes i={i} n={lapok.length - 1} cim={CHANGE_FORM_TEXTS.summaryTitle} miert={`${cimke}. Ha valami nem stimmel, lépj vissza.`} />
-          <Szakasz ikon="irat" cim={CHANGE_TEXTS.sorok[kind].title} />
+          <Szakasz ikon="irat" cim={valtozasSor(kind).title} />
           <Lap style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
             {valtozasSorok(kind, a).map((s, n) => (
               <T key={n} m={16} lh={1.5} style={{ paddingLeft: 38 }}>

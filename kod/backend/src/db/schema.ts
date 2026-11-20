@@ -348,7 +348,7 @@ export const clients = pgTable(
     disabledAt: ts(),
     disabledReason: text(),
     /** SPEC §28.K.5: the accounting service is locked for an unpaid fee (null = open). */
-    serviceLock: jsonb().$type<{ reasons: ('havidij' | 'eves_zaras')[]; since: string; amountHuf: number } | null>(),
+    serviceLock: jsonb().$type<{ reasons: ('havidij' | 'eves_zaras' | 'kezi')[]; since: string; amountHuf: number } | null>(),
     /** SPEC §28.K.9: "Most nem tudom" – the accountant fills the adószám later from ONYA. */
     adoszamPending: boolean().notNull().default(false),
     /** SPEC §28.K.11: "Hogyan adózol most?" */
@@ -356,6 +356,27 @@ export const clients = pgTable(
     /** SPEC §28.K.12 (6): personal forwarding address <code>@<MAILBOX_DOMAIN> and the ≤ 3 extra senders. */
     mailboxCode: text().unique(),
     mailboxSenders: text().array().notNull().default(sql`'{}'::text[]`),
+    // ---- SPEC §29.12 (0018_k29.sql) ----
+    /** §29.10 guided first run (null = never started). */
+    guided: jsonb().$type<{ welcomeSeenAt?: string | null; pausedAt?: string | null; finishedAt?: string | null; lastKey?: string | null; doneSeenAt?: string | null } | null>(),
+    /** §29.4.4: where the business identity came from ('nav' lookup or 'kezi'). */
+    businessIdentitySource: text().$type<'nav' | 'kezi'>(),
+    /** §29.4.4: the confirmed business identity (EV name, seat, ÁFA answer) – the fee invoice buyer name. */
+    businessIdentity: jsonb().$type<{
+      name: string;
+      seat: { zip: string; city: string; line: string } | null;
+      alanyiMentes: 'igen' | 'nem' | 'nem_tudom';
+      afaWarning: boolean;
+      demo: boolean;
+      savedAt: string;
+      taxStatus?: string;
+    } | null>(),
+    /** §29.9.4: the admin's manual lock ('zarolva') or grace ('feloldva' until a day). */
+    serviceLockManual: jsonb().$type<{ mode: 'zarolva' | 'feloldva'; until: string | null; reason: string; by: string; at: string } | null>(),
+    /** §29.9.5: termination (felmondás). */
+    terminated: jsonb().$type<{ kind: string; subReason?: string | null; reason: string; noticeAt: string; effectiveOn: string; by: string; appliedAt?: string | null } | null>(),
+    /** §29.9.6: anonymised (never a hard delete). */
+    anonymizedAt: ts(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -826,6 +847,27 @@ export const certificateRequests = pgTable('certificate_requests', {
   submittedToNavAt: ts(),
   documentId: uuid(),
   createdAt: createdAt(),
+  // ---- SPEC §29.5 F1 (0018_k29.sql; legacy certificate_type values kept, mapped in code) ----
+  status: text().notNull().default('beerkezett'),
+  userName: text(),
+  purposeKind: text(),
+  purposeText: text(),
+  neededBy: day(),
+  paperCopy: boolean().notNull().default(false),
+  paperTo: text(),
+  paperAddress: text(),
+  extended: text(),
+  official: text(),
+  englishRequested: boolean().notNull().default(false),
+  otherText: text(),
+  feeChargeId: uuid(),
+  rejectedReason: text(),
+  iktatoszam: text(),
+  komaOutcome: text(),
+  komaDate: day(),
+  copies: integer().notNull().default(1),
+  doneAt: ts(),
+  updatedAt: ts(),
 });
 
 export const messages = pgTable(
@@ -966,7 +1008,15 @@ export const subscriptions = pgTable('subscriptions', {
   graceUntil: day(),
   cardRegistrationId: uuid().references(() => cardRegistrations.id),
   renewalNotifiedAt: ts(),
+  /** SPEC §29.1.2: a Stripe test-mode subscription is stored as 'sandbox' (payments.mode says 'test'). */
   mode: text().$type<'demo' | 'sandbox' | 'live'>().notNull(),
+  // ---- SPEC §29.1.2 (0018_k29.sql) ----
+  /** The provider that saved the card charges it (backfill: mode 'demo' → 'demo', else 'simplepay'). */
+  provider: text().$type<'stripe' | 'simplepay' | 'demo'>().notNull().default('simplepay'),
+  /** The active card of the Stripe / new demo flow (payment_methods). Null = the legacy SimplePay card_registrations. */
+  paymentMethodId: uuid(),
+  predebitNotifiedFor: day(),
+  suspensionWarnedFor: day(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -1025,23 +1075,54 @@ export const simplepayTransactions = pgTable(
   (t) => [index().on(t.clientId), index().on(t.status)],
 );
 
-export const feeInvoices = pgTable('fee_invoices', {
-  id: id(),
-  clientId: uuid()
-    .notNull()
-    .references(() => clients.id),
-  simplepayTransactionId: uuid().references(() => simplepayTransactions.id),
-  provider: text().$type<'demo' | 'szamlazzhu' | 'billingo'>().notNull(),
-  number: text(),
-  issuedOn: day(),
-  amountHuf: integer().notNull(),
-  pdfFileId: uuid(),
-  externalId: text(),
-  status: text().$type<'kiallitva' | 'hiba' | 'sztorno'>().notNull(),
-  error: text(),
-  demo: boolean().notNull().default(false),
-  createdAt: createdAt(),
-});
+export const feeInvoices = pgTable(
+  'fee_invoices',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    simplepayTransactionId: uuid().references(() => simplepayTransactions.id),
+    provider: text().$type<'demo' | 'szamlazzhu' | 'billingo'>().notNull(),
+    number: text(),
+    issuedOn: day(),
+    /** Gross amount (negative for a correction invoice of a partial refund). */
+    amountHuf: integer().notNull(),
+    pdfFileId: uuid(),
+    externalId: text(),
+    /** SPEC §29.2.3: 'folyamatban' = queued / retrying (query-first). */
+    status: text().$type<'folyamatban' | 'kiallitva' | 'hiba' | 'sztorno'>().notNull(),
+    error: text(),
+    demo: boolean().notNull().default(false),
+    createdAt: createdAt(),
+    // ---- SPEC §29.2 (0018_k29.sql) ----
+    paymentId: uuid(),
+    kind: text().$type<'szamla' | 'sztorno' | 'helyesbito'>().notNull().default('szamla'),
+    /** rendelesSzam = szamlaKulsoAzon (ADZ-…; +S storno, +H{n} correction). */
+    externalKey: text().unique(),
+    /** 'teszt' | 'eles' (Számlázz.hu) | 'demo'. */
+    providerAccount: text(),
+    stornoOf: uuid(),
+    attempts: integer().notNull().default(0),
+    nextRetryAt: ts(),
+    lastErrorCode: text(),
+    /** Buyer snapshot at payment time (name, address, adószám, e-mail, first name). */
+    buyer: jsonb().$type<FeeInvoiceBuyer | null>(),
+    /** The line of the invoice (megnevezes, unit) and the gross amount it was built from. */
+    line: jsonb().$type<{ megnevezes: string; unit: 'hó' | 'alkalom'; grossHuf: number } | null>(),
+    alertedAt: ts(),
+  },
+  (t) => [index('fee_invoices_status_next_retry_idx').on(t.status, t.nextRetryAt)],
+);
+export interface FeeInvoiceBuyer {
+  name: string;
+  firstName: string;
+  zip: string | null;
+  city: string | null;
+  address: string | null;
+  adoszam: string | null;
+  email: string;
+}
 
 // ---------- 5.10 notifications ----------
 export const notifications = pgTable(
@@ -1539,7 +1620,16 @@ export const feeCharges = pgTable(
       .references(() => clients.id),
     kind: text().$type<(typeof FEE_KINDS)[number]>().notNull(),
     amountHuf: integer().notNull(),
-    purpose: jsonb().$type<{ type: 'valtozas'; assistId: string } | { type: 'eves_zaras'; annualId: string }>().notNull(),
+    /** SPEC §29.1.2: widened (no DB constraint). */
+    purpose: jsonb()
+      .$type<
+        | { type: 'valtozas'; assistId: string }
+        | { type: 'eves_zaras'; annualId: string }
+        | { type: 'igazolas'; requestId: string }
+        | { type: 'megszuntetes'; assistId: string }
+        | { type: 'admin'; note: string }
+      >()
+      .notNull(),
     status: text().$type<(typeof FEE_CHARGE_STATUSES)[number]>().notNull().default('nyitott'),
     dueOn: day(),
     simplepayTransactionId: uuid(),
@@ -1552,6 +1642,8 @@ export const feeCharges = pgTable(
     createdBy: uuid(),
     createdAt: createdAt(),
     paidAt: ts(),
+    /** SPEC §29.1.2: the successful payments row (Stripe / new demo flow). */
+    paymentId: uuid(),
   },
   (t) => [index().on(t.clientId, t.status), check('fee_charges_kind_chk', sql`${t.kind} in ${inList(FEE_KINDS)}`), check('fee_charges_status_chk', sql`${t.status} in ${inList(FEE_CHARGE_STATUSES)}`)],
 );
@@ -1699,3 +1791,216 @@ export const mailboxLog = pgTable(
 );
 
 void WORK_KINDS;
+
+// =====================================================================================================================
+// SPEC §29 (k7) – migrations 0017_k29_enumok.sql + 0018_k29.sql. Additive only. Written by B1 for A, B, D, F, G.
+// =====================================================================================================================
+
+/** §29.1.2: one row per attempt to move money (provider-neutral: stripe | demo; SimplePay keeps its own tables). */
+export const payments = pgTable(
+  'payments',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    subscriptionId: uuid(),
+    feeChargeId: uuid(),
+    kind: text().$type<'elso_havi' | 'havi' | 'egyszeri' | 'fizesd_ki' | 'kartya'>().notNull(),
+    provider: text().$type<'stripe' | 'demo' | 'simplepay'>().notNull(),
+    mode: text().$type<'test' | 'live' | 'demo' | 'sandbox'>().notNull(),
+    amountHuf: integer().notNull(),
+    periodStart: day(),
+    periodEnd: day(),
+    status: text()
+      .$type<'letrehozva' | 'feldolgozas' | 'hitelesites_kell' | 'sikeres' | 'sikertelen' | 'megszakitva' | 'bizonytalan' | 'duplikalt'>()
+      .notNull()
+      .default('letrehozva'),
+    initiated: text().$type<'ugyfel' | 'utemezo' | 'admin'>().notNull(),
+    offSession: boolean().notNull().default(false),
+    attemptDay: day(),
+    idempotencyKey: text().notNull().unique(),
+    stripePaymentIntentId: text().unique(),
+    stripeCheckoutSessionId: text().unique(),
+    stripeChargeId: text(),
+    stripeSetupIntentId: text(),
+    /** The hosted page (Checkout URL / DEMO pay page), KJD1-encrypted; handed back while the session is open. */
+    hostedUrlEnc: text(),
+    hostedExpiresAt: ts(),
+    /** 'payment' | 'setup' (card change without money: amount 0, never 'sikeres' for a period). */
+    hostedMode: text().$type<'payment' | 'setup'>(),
+    /** The hosted payment saves the card (setup_future_usage): first month, Fizesd ki, a first one-off without a card. */
+    saveCard: boolean().notNull().default(false),
+    platform: text().$type<'app' | 'web'>(),
+    /** Short key of the allowed app origin the web client returns to (a = adozz, s = sslip …). */
+    returnOrigin: text(),
+    /** 'elofizetes' | 'dij' | 'fizesd-ki' – where the result screen goes. */
+    cel: text(),
+    consentId: uuid(),
+    paymentMethodId: uuid(),
+    failureCode: text(),
+    declineCode: text(),
+    cardBrand: text(),
+    cardLast4: text(),
+    refundedHuf: integer().notNull().default(0),
+    refunds: jsonb().$type<{ n: number; amountHuf: number; refundRef: string | null; status: string; reason: string; by: string | null; at: string }[]>().notNull().default([]),
+    disputeStatus: text(),
+    feeInvoiceId: uuid(),
+    /** The admin was told about this row (duplicate, dispute, outside refund) – once. */
+    alertedAt: ts(),
+    appliedAt: ts(),
+    succeededAt: ts(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    index('payments_client_created_idx').on(t.clientId, t.createdAt),
+    index('payments_open_status_idx').on(t.status).where(sql`status in ('letrehozva', 'feldolgozas', 'bizonytalan', 'hitelesites_kell')`),
+    uniqueIndex('payments_one_success_per_period')
+      .on(t.subscriptionId, t.periodStart)
+      .where(sql`kind in ('elso_havi', 'havi', 'fizesd_ki') and status = 'sikeres'`),
+    check('payments_kind_chk', sql`${t.kind} in ('elso_havi', 'havi', 'egyszeri', 'fizesd_ki', 'kartya')`),
+    check('payments_status_chk', sql`${t.status} in ('letrehozva', 'feldolgozas', 'hitelesites_kell', 'sikeres', 'sikertelen', 'megszakitva', 'bizonytalan', 'duplikalt')`),
+    check('payments_amount_chk', sql`${t.amountHuf} >= 0`),
+  ],
+);
+
+/** §29.1.2: the saved card (brand, last 4, expiry, Stripe ids – never more). */
+export const paymentMethods = pgTable(
+  'payment_methods',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    provider: text().$type<'stripe' | 'demo'>().notNull(),
+    mode: text().$type<'test' | 'live' | 'demo'>().notNull(),
+    stripeCustomerId: text(),
+    stripePaymentMethodId: text().unique(),
+    brand: text(),
+    last4: text(),
+    expMonth: smallint(),
+    expYear: smallint(),
+    status: text().$type<'aktiv' | 'torolve' | 'lejart' | 'lecserelve'>().notNull().default('aktiv'),
+    consentId: uuid(),
+    createdAt: createdAt(),
+    detachedAt: ts(),
+  },
+  (t) => [index('payment_methods_client_idx').on(t.clientId, t.status), check('payment_methods_status_chk', sql`${t.status} in ('aktiv', 'torolve', 'lejart', 'lecserelve')`)],
+);
+
+/** §29.1.2: one Stripe customer per client and mode (test and live are different objects). */
+export const stripeCustomers = pgTable(
+  'stripe_customers',
+  {
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    mode: text().$type<'test' | 'live'>().notNull(),
+    customerId: text().notNull().unique(),
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.clientId, t.mode] })],
+);
+
+/** §29.1.8: received webhook events (no payloads stored). */
+export const stripeEvents = pgTable('stripe_events', {
+  id: text().primaryKey(),
+  type: text().notNull(),
+  mode: text().$type<'test' | 'live'>().notNull(),
+  stripeCreatedAt: ts(),
+  receivedAt: ts().notNull().defaultNow(),
+  processedAt: ts(),
+  attempts: integer().notNull().default(0),
+  lastError: text(),
+});
+
+/** §29.9.4: an own price / discount / free months of one client (revocable, history kept). */
+export const clientPriceOverrides = pgTable(
+  'client_price_overrides',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    kind: text().$type<'egyedi_ar' | 'kedvezmeny_szazalek' | 'ingyenes_honap'>().notNull(),
+    amountHuf: integer(),
+    percent: smallint(),
+    months: smallint(),
+    fromPeriod: day().notNull(),
+    untilPeriod: day(),
+    reason: text().notNull(),
+    createdBy: uuid(),
+    createdAt: createdAt(),
+    revokedAt: ts(),
+    revokedBy: uuid(),
+    revokeReason: text(),
+  },
+  (t) => [index('client_price_overrides_client_idx').on(t.clientId), check('client_price_overrides_kind_chk', sql`${t.kind} in ('egyedi_ar', 'kedvezmeny_szazalek', 'ingyenes_honap')`)],
+);
+
+/** §29.9.1: the admin's step-up (TOTP) per session; writes need verified_at ≥ now − 10 min. */
+export const adminStepUps = pgTable('admin_step_ups', {
+  sessionId: uuid().primaryKey(),
+  userId: uuid().notNull(),
+  verifiedAt: ts().notNull(),
+});
+
+/** §29.9.4: announcements to many clients. */
+export const announcements = pgTable('announcements', {
+  id: id(),
+  title: text().notNull(),
+  body: text().notNull(),
+  channels: jsonb().$type<{ inApp: boolean; push: boolean; email: boolean }>().notNull(),
+  filter: jsonb().$type<Record<string, unknown>>().notNull().default({}),
+  recipientCount: integer().notNull().default(0),
+  createdBy: uuid(),
+  createdAt: createdAt(),
+});
+
+/** §29.5: status timeline of a certificate request. */
+export const certificateEvents = pgTable(
+  'certificate_events',
+  {
+    id: id(),
+    requestId: uuid()
+      .notNull()
+      .references(() => requests.id),
+    status: text().notNull(),
+    at: ts().notNull().defaultNow(),
+    by: uuid(),
+    note: text(),
+  },
+  (t) => [index('certificate_events_request_idx').on(t.requestId, t.at)],
+);
+
+/** §29.6: the accountant checked exactly this data (hash) of an income statement. */
+export const incomeStatementApprovals = pgTable(
+  'income_statement_approvals',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    fromMonth: char({ length: 7 }).notNull(),
+    toMonth: char({ length: 7 }).notNull(),
+    dataSha256: text().notNull(),
+    approvedBy: uuid().notNull(),
+    approvedAt: ts().notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('income_statement_approvals_uq').on(t.clientId, t.fromMonth, t.toMonth, t.dataSha256)],
+);
+
+/** §29.8: the client's secret iCal feed (lookup by sha256(token); token_enc so the link can be copied again). */
+export const calendarFeeds = pgTable('calendar_feeds', {
+  clientId: uuid()
+    .primaryKey()
+    .references(() => clients.id),
+  tokenHash: text().notNull().unique(),
+  tokenEnc: text().notNull(),
+  createdAt: createdAt(),
+  rotatedAt: ts(),
+  revokedAt: ts(),
+  lastFetchedAt: ts(),
+  fetchCount: integer().notNull().default(0),
+});

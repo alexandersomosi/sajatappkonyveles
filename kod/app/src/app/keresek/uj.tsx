@@ -2,7 +2,7 @@
 // tevékenységváltozás, kérdés. Típus nélkül választó. Elküldés után kérés-kártya jelenik meg az Üzenetekben is.
 import { useState } from 'react';
 import { View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useLocalSearchParams } from 'expo-router';
 import { ApiHiba } from '@/api/http';
 import { useHome, useKeresek, useKeresKuld } from '@/api/hooks';
 import { szin } from '@/theme/tokens';
@@ -51,7 +51,8 @@ function UjKeresTartalom() {
       <Kepernyo ful="fooldal" fejlec={<CimSor visszaCim="Vissza" vissza={() => vissza('/')} cim="Mit kérsz?" al={`${fn} intézi a NAV-nál, és szól, ha kész.`} />}>
         <Lap>
           {(['jovedelemigazolas', 'nullas_igazolas', 'koztartozasmentes_igazolas'] as Tipus[]).map((t, i) => (
-            <Sor key={t} elso={i === 0} ikon="igazolas" cim={LEIRAS[t].cim} al={LEIRAS[t].mi} onPress={() => setTipus(t)} />
+            // SPEC §29.5: az igazolás-kártyák az új „Igazolást kérek” űrlapra visznek
+            <Sor key={t} elso={i === 0} ikon="igazolas" cim={LEIRAS[t].cim} al={LEIRAS[t].mi} onPress={() => router.push(`/igazolas/uj?tipus=${t}`)} />
           ))}
         </Lap>
         <Lap style={{ marginTop: 12 }}>
@@ -180,6 +181,8 @@ function UjKeresTartalom() {
 export default function UjKeres() {
   const p = useLocalSearchParams<{ tipus?: string }>();
   const csakKerdes = p.tipus === 'kerdes';
+  // SPEC §29.5: a régi igazolás-linkek (Főoldal, értesítések) az új űrlapra mennek
+  if (p.tipus === 'jovedelemigazolas' || p.tipus === 'nullas_igazolas' || p.tipus === 'koztartozasmentes_igazolas') return <Redirect href={`/igazolas/uj?tipus=${p.tipus}`} />;
   // k6c2 (§28.K.5): while the fee lock is on, POST /client/requests is refused – the form is not even started
   if (csakKerdes)
     return (

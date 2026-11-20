@@ -43,14 +43,14 @@ A jogalapok a GDPR (az Európai Unió 2016/679 rendelete) 6. cikk (1) bekezdése
 
 ## 2.3. Kártyás fizetés
 
-- **Adatok:** a kártya utolsó 4 számjegye, a lejárat, a SimplePay tranzakció-azonosítója, az ismétlődő levonáshoz kapott azonosító (token, titkosítva), a fizetések eredménye. A kártyád teljes számát és biztonsági kódját a SimplePay kezeli, mi soha nem látjuk.
-- **Mire:** a havidíj levonása.
+- **Adatok:** a kártya típusa, utolsó 4 számjegye és lejárata; a Stripe-nál kapott azonosítók (ügyfél-, fizetés- és kártyaazonosító; nem a kártyaszám); a fizetések összege, ideje és eredménye; a visszautalások; a kártyás engedélyed (a „Kártyás fizetés – engedély” szövegének változata, az elfogadás ideje). A kártyád teljes számát és biztonsági kódját a Stripe kezeli, mi soha nem látjuk. A Stripe-nak a nevedet, az e-mail-címedet és a fiókod belső azonosítóját adjuk át; adóazonosító jelet, adószámot nem.
+- **Mire:** a havidíj és az általad megrendelt külön díjak levonása, a levonás előtti értesítés, a sikertelen levonás kezelése („Fizesd ki”), visszautalás.
 - **Jogalap:** szerződés; a fizetések könyvelése: jogi kötelezettség.
-- **Meddig:** a tokent a kártyád törléséig vagy lejáratáig; a fizetések adatait 8 évig (számviteli törvény, 2000. évi C. törvény 169. §).
+- **Meddig:** a kártya azonosítóját a kártyád törléséig vagy lejáratáig; a fizetések adatait 8 évig (számviteli törvény, 2000. évi C. törvény 169. §).
 
 ## 2.4. Díjszámlák
 
-- **Adatok:** név, cím, a számla adatai és összege.
+- **Adatok:** név (a vállalkozásod neve), cím (a székhelyed, ha nincs, a lakcímed), adószám, e-mail-cím, a számla adatai és összege. A számlát a Számlázz.hu rendszerében állítjuk ki elektronikusan, és a Számlázz.hu e-mailben elküldi neked; a PDF-et az appban is megőrizzük. [KÖNYVELŐ: a vevő címe a számlán]
 - **Mire:** a díjról szóló számla kiállítása és megőrzése.
 - **Jogalap:** jogi kötelezettség (az általános forgalmi adóról szóló 2007. évi CXXVII. törvény és a számviteli törvény).
 - **Meddig:** 8 évig.
@@ -62,6 +62,14 @@ A jogalapok a GDPR (az Európai Unió 2016/679 rendelete) 6. cikk (1) bekezdése
 - **Mire:** a bevételi nyilvántartás vezetése, az adó kiszámítása, a bevallások elkészítése és beadása, igazolások kérése.
 - **Jogalap:** szerződés. A NAV-nak a könyvelőd a te meghatalmazásod alapján ad be bevallást.
 - **Meddig:** az adó megállapításához való jog elévüléséig: annak az évnek a végétől számított 5 évig, amelyben a bevallást be kellett adni (az adózás rendjéről szóló 2017. évi CL. törvény 202. §). Ha NAV-eljárás folyik, annak végéig. A szerződés megszűnése után ezeket az adatokat már csak a munkánk igazolására és jogi igények miatt tartjuk meg (jogos érdek), elzárva. [JOGI: megőrzés a szerződés vége után]
+
+## 2.5/A. Az adószámod alapján kikeressük a vállalkozásod adatait
+
+- **Adatok:** az adószámod első 8 számjegye, és amit a NAV erre visszaad: a vállalkozás neve, székhelye, hogy egyéni vállalkozás-e, és az ÁFA-kód.
+- **Mire:** hogy a bekötéskor ne kelljen begépelned a vállalkozásod adatait, csak rábólintanod. Amit jóváhagysz, az a fiókodba kerül (2.5. pont).
+- **Honnan:** a NAV Online Számla rendszeréből, a saját technikai felhasználónkkal.
+- **Jogalap:** a szerződéskötés előtt a te kérésedre tett lépés, utána a szerződés (GDPR 6. cikk (1) bekezdés b) pont). [JOGI]
+- **Meddig:** a lekérdezés eredményét legfeljebb 24 óráig a szerver memóriájában tartjuk (hogy ugyanazt ne kérdezzük le újra), adatbázisba nem írjuk, és nem naplózzuk. Amit jóváhagysz, az a 2.5. pont szerint marad meg.
 
 ## 2.6. A NAV Online Számla kapcsolat
 
@@ -97,6 +105,14 @@ A jogalapok a GDPR (az Európai Unió 2016/679 rendelete) 6. cikk (1) bekezdése
 - **Jogalap:** szerződés. A telefonos (push) értesítéshez a telefonod kéri az engedélyedet; ezt bármikor visszavonhatod a telefon beállításaiban vagy az appban.
 - **Jó tudni:** a push-értesítés a zárolt képernyőn is látszhat. Ha nem szeretnéd, kapcsold ki az appban.
 - **Meddig:** az értesítéseket 1 évig, az értesítési azonosítót a kijelentkezésig vagy amíg a telefonod érvényesnek jelzi.
+
+## 2.9/A. Határidők a saját naptáradban
+
+- **Adatok:** egy titkos, csak a te naptáradnak szóló link (feliratkozás), és hogy mikor kérdezte le utoljára a naptárad.
+- **Mi van a naptárban:** csak a határidők neve és napja (például „SZJA-bevallás”). Összeg, név, adószám és a könyvelőd neve nincs benne.
+- **Mire:** hogy a határidőid a saját naptáradban is ott legyenek.
+- **Jogalap:** szerződés; csak akkor jön létre, ha bekapcsolod.
+- **Meddig:** amíg ki nem kapcsolod, új linket nem kérsz, vagy a szerződés meg nem szűnik. A régi link azonnal megszűnik.
 
 ## 2.10. Biztonsági napló
 
@@ -154,9 +170,10 @@ A webes app csak a működéshez feltétlenül szükséges sütit használja (a 
 
 - **A könyvelőd** (alvállalkozónk): könyvelés, adószámítás, bevallás, azonosítás. Mindent lát, ami a könyveléshez kell.
 - **Contabo GmbH** (Aschauer Straße 32a, 81549 München, Németország): a szerver üzemeltetése. Az adatok az Európai Unióban vannak. [ELLENŐRIZNI]
-- **SimplePay** – SimplePay Zrt. (korábban OTP Mobil Kft.; 1138 Budapest, Váci út 135–139.): kártyás fizetés. [ELLENŐRIZNI: pontos cégnév és székhely a SimplePay-szerződésből]
-- **E-mail-küldő szolgáltató:** Brevo (Sendinblue SAS, Franciaország) – rendszerüzenetek, kódok, értesítések küldése. [TULAJ: szerződéskor ellenőrizni]
-- **Számlázó szolgáltató:** [CÉGADAT: a számlázó szolgáltató neve] – a díjszámlák kiállítása. [TULAJ: Számlázz.hu (KBOSS.hu Kft.) vagy Billingo]
+- **Stripe** – Stripe Payments Europe, Ltd. (1 Grand Canal Street Lower, Grand Canal Dock, Dublin, D02 H210, Írország): kártyás fizetés, a kártyaadatok kezelése. [ELLENŐRIZNI: a Stripe szerződés szerinti pontos szerepe (adatfeldolgozó vagy önálló adatkezelő a kártyaadatoknál) és a harmadik országba továbbítás]
+- **SimplePay** – SimplePay Zrt. (1138 Budapest, Váci út 135–139.): csak akkor, ha a kártyás fizetést újra a SimplePay intézné. Most nem használjuk.
+- **E-mail-küldő szolgáltató:** Zoho Corporation B.V. (ZeptoMail; Hollandia) – rendszerüzenetek, kódok, értesítések küldése. [TULAJ: szerződéskor ellenőrizni]
+- **Számlázó szolgáltató:** KBOSS.hu Kft. (Számlázz.hu; 1031 Budapest, Záhony utca 7.): a díjszámlák kiállítása, megőrzése és elküldése e-mailben. [ELLENŐRIZNI: cégadatok a szerződésből]
 - **Push-értesítés:** az Expo (650 Industries, Inc., USA), az értesítést a Google (Android) vagy az Apple (iPhone) juttatja el a telefonodra. [JOGI: harmadik országba továbbítás jogalapja, például EU–USA adatvédelmi keretrendszer vagy általános szerződési feltételek]
 - **Telefonos szolgáltató:** [CÉGADAT: a telefonszolgáltató neve] – a visszahívások. [TULAJ/JOGI: milyen telefonról hívunk vissza; ha felhőalapú telefonközpontot használunk, az adatfeldolgozó, és itt fel kell tüntetni]
 - **Biztonsági mentés:** titkosított mentés másik európai szerveren [TULAJ: ha bekapcsolja, például Hetzner Online GmbH, Németország]. A mentést a szolgáltató nem tudja elolvasni.
@@ -199,7 +216,7 @@ Az app a számláid alapján becslést készít a fizetendő adóról. Ez nem v�
 
 - **Hozzáférés és másolat:** megnézheted az adataidat. Az appban: Fiók > Adataim letöltése. Egy fájlt kapsz minden adatoddal és iratoddal.
 - **Helyesbítés:** a hibás adatot kijavíthatod a Fiók oldalon, vagy szólj nekünk.
-- **Törlés:** az appban: Fiók > Fiók törlése. A belépésed azonnal megszűnik, az előfizetést leállítjuk, a kártyádat a SimplePay törli. 30 napig visszavonhatod. Utána mindent törlünk, kivéve amit a törvény miatt meg kell őriznünk (2.3–2.5. és 2.7. pont); ezeket elzárva, titkosítva tartjuk, és a határidő végén töröljük.
+- **Törlés:** az appban: Fiók > Fiók törlése. A belépésed azonnal megszűnik, az előfizetést leállítjuk, a kártyádat a Stripe-nál is töröljük. 30 napig visszavonhatod. Utána mindent törlünk, kivéve amit a törvény miatt meg kell őriznünk (2.3–2.5. és 2.7. pont); ezeket elzárva, titkosítva tartjuk, és a határidő végén töröljük. A törlés azt jelenti, hogy a nevedet, az elérhetőségeidet és az azonosítóidat kitöröljük vagy felismerhetetlenné tesszük (anonimizálás). A számlák, a fizetések, az adóügyi iratok és a pénzmosás elleni azonosítás adatai a törvényi határidőig megmaradnak (8. pont), mert ezeket nem törölhetjük.
 - **Korlátozás:** kérheted, hogy egy ideig csak tároljuk az adatot, de ne használjuk.
 - **Adathordozhatóság:** az adataidat géppel olvasható formában (JSON és az eredeti fájlok) letöltheted, és átviheted máshova.
 - **Tiltakozás:** a jogos érdeken alapuló adatkezelés ellen tiltakozhatsz (2.10–2.11. pont).
@@ -213,6 +230,8 @@ Először írj nekünk: {{ceg.email}}. Panasszal a hatósághoz is fordulhatsz: 
 
 ## 8. Megőrzési idők egy helyen
 
+- az adószám-keresés eredménye: legfeljebb 24 óra, csak a szerver memóriájában;
+- a naptár-link: amíg ki nem kapcsolod;
 - belépési munkamenetek, e-mail-kódok: 90 nap;
 - értesítések: 1 év;
 - elfogadott dokumentumok igazolása, panaszok: 5 év;

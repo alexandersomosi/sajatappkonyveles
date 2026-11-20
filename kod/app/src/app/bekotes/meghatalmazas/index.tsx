@@ -26,6 +26,7 @@ import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { KiemeltKartya, SegitsegAllapot, useUt, VarakozasKartya } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { bekotesre } from '@/lib/vezetett';
 
 function Kesz({ cim, szoveg }: { cim: string; szoveg: string }) {
   return (
@@ -89,7 +90,7 @@ export default function Meghatalmazas() {
     try {
       await kuld.mutateAsync({ method: mod, fileId: fajl?.fileId });
       jelez({ szoveg: `Köszönjük! ${fn} ellenőrzi a NAV-nál.`, kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (e) {
       setHiba(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'));
       jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'));

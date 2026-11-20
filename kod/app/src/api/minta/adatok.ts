@@ -12,8 +12,10 @@ import { DEMO_ALAIRAS } from '../../theme/utak';
 // SPEC §26: 'indul' = új vállalkozás, adatlapnál; 'utmutato' = kész az útmutató; 'levente' = beküldte, átnézzük.
 // SPEC §28 / §28.K (k6): 'eszter' kedvezmény vár, 'balint' 25 év alatti (jóváhagyva), 'norbert' havi ellenőrzés + díj, 'adam'
 // székhely-engedély, 'eves' éves zárás kérdőív, 'zarolt' díj-zárolás, 'szunetel' szüneteltetés, 'tamas' bekötés + EFO.
-export type Forgatokonyv = 'kata' | 'fizetendo' | 'befizetve' | 'ures' | 'peter' | 'uj' | 'indul' | 'utmutato' | 'levente' | 'marika' | 'david' | 'ilona' | 'engedely' | 'bekuldve' | 'kamara' | 'eszter' | 'balint' | 'norbert' | 'adam' | 'eves' | 'zarolt' | 'szunetel' | 'tamas';
-export const FORGATOKONYVEK: Forgatokonyv[] = ['kata', 'fizetendo', 'befizetve', 'ures', 'peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'eszter', 'balint', 'norbert', 'adam', 'eves', 'zarolt', 'szunetel', 'tamas'];
+export type Forgatokonyv = 'kata' | 'fizetendo' | 'befizetve' | 'ures' | 'peter' | 'uj' | 'indul' | 'utmutato' | 'levente' | 'marika' | 'david' | 'ilona' | 'engedely' | 'bekuldve' | 'kamara' | 'eszter' | 'balint' | 'norbert' | 'adam' | 'eves' | 'zarolt' | 'szunetel' | 'tamas'
+  // SPEC §29 (k7): the guided first run and the card / "Fizesd ki" screens
+  | 'bevezeto_adoszam' | 'bevezeto_var' | 'bevezeto_kesz' | 'bevezeto_szunet' | 'kartya' | 'fizesd';
+export const FORGATOKONYVEK: Forgatokonyv[] = ['kata', 'fizetendo', 'befizetve', 'ures', 'peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'eszter', 'balint', 'norbert', 'adam', 'eves', 'zarolt', 'szunetel', 'tamas', 'bevezeto_adoszam', 'bevezeto_var', 'bevezeto_kesz', 'bevezeto_szunet', 'kartya', 'fizesd'];
 
 export const BENCE: AccountantPublic = {
   id: 'minta-konyvelo-bence',

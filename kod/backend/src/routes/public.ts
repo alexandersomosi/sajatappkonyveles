@@ -13,6 +13,7 @@ import { cardRegistrations, faqItems, feeCharges, simplepayTransactions } from '
 import type { Env } from '../http/core.js';
 import { E } from '../lib/errors.js';
 import { fillLegalPublic, legalValuesFromConfig } from '../legal.js';
+import { paymentModeOf } from '../config.js';
 import { todayBudapest } from '../lib/dates.js';
 import { decodeBack, spSign, spTime, spVerify, salt } from '../payments/simplepay.js';
 import { DEMO_MERCHANT, handleIpn, IPN_BAD_PER_HOUR, tokenInfoSentence } from '../services/subscription.js';
@@ -50,7 +51,8 @@ export function publicRoutes(deps: Deps) {
       newBusinessChargePolicy: cfg.newBusinessChargePolicy,
     };
     c.header('Cache-Control', 'public, max-age=60');
-    return c.json({ ...body, simplepayEnabled: cfg.simplepay.mode !== 'disabled' });
+    // SPEC §29.14: the payment provider of new card flows (+ simplepayEnabled kept for old app builds)
+    return c.json({ ...body, paymentProvider: cfg.payment.provider, paymentMode: paymentModeOf(cfg), simplepayEnabled: cfg.payment.provider !== 'disabled' });
   });
 
   r.get('/legal/:docType', (c) => {

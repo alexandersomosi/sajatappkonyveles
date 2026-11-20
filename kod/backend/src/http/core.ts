@@ -215,7 +215,8 @@ export function param(c: C, name: string): string {
  * public origins and (outside production) local dev hosts are allowed; native apps send no Origin at all.
  */
 export function sameSiteGuard(deps: Deps): MiddlewareHandler<Env> {
-  const allowed = new Set([deps.cfg.appPublicUrl, deps.cfg.panelPublicUrl, deps.cfg.apiPublicUrl].map((u) => {
+  // SPEC §29.3.4: APP/PANEL/API/LANDING_PUBLIC_URL + EXTRA_PUBLIC_ORIGINS (adozz.hu and the kept sslip hosts).
+  const allowed = new Set([deps.cfg.appPublicUrl, deps.cfg.panelPublicUrl, deps.cfg.apiPublicUrl, ...(deps.cfg.publicOrigins ?? [])].map((u) => {
     try {
       return new URL(u).origin;
     } catch {

@@ -47,7 +47,8 @@ export function generatedDefaults(): Record<string, string> {
   out['korlatozott.aktivalas_hint_reszlet'] = 'Még {n} lépés, és minden megnyílik. Ebből {m} a tiéd, a többi a mi dolgunk.';
   out['korlatozott.aktivalas_hint_mienk'] = 'Még {n} lépés, és minden megnyílik. Ezek már a mi dolgunk: szólunk, ha kész.';
   out['bekotes.zarolt.bejelentes_utan'] = 'Ha beküldted a bejelentést, ez is megnyílik.';
-  out['bekotes.zarolt.elofizetes_adoszam_utan'] = 'Akkor kérjük a kártyádat, ha már megvan az adószámod. Addig minden ingyenes.';
+  // SPEC §29.4.2: no free period (kept only for the env option NEW_BUSINESS_CHARGE_POLICY=adoszam_utan)
+  out['bekotes.zarolt.elofizetes_adoszam_utan'] = 'A kártyádat a szerződés után kérjük.';
   out['bekotes.zarolt.nav_bekotes'] = 'Ha megvan az adószámod, a könyvelőd beköti a számláidat.';
   // round 1 (2026-11-19): the meghatalmazás opens after the megbízási szerződés; nobody pays before the branch question
   out['bekotes.zarolt.szerzodes_utan'] = 'Előbb fogadd el a megbízási szerződést. Utána megmutatjuk, kinek és hogyan adsz meghatalmazást.';

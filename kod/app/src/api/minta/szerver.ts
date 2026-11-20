@@ -18,6 +18,7 @@ import { bekotes1119, engedelyOsszegzes, kezdo1119, NYITOTT_SEGITSEG, segitsegNe
 import { utmutatoEpit } from '../../lib/utmutato';
 import { munkanapotHozzaad, napKulcs } from '../../lib/ut';
 import { k28CsendBeallit, k28Home, k28Kezdo, k28Me, k28SzamlaTartalek, k28Utak, type K28Allapot } from './k28';
+import { k29Kezdo, k29Utak, type K29Allapot } from './k29';
 
 const tarolt = (k: string, v?: string | null): string | null => {
   try {
@@ -69,8 +70,27 @@ const S = {
   t: kezdo1118(kezdo.fk) as Allapot1118,
   u: { assists: [], chamber: null, pathChangedAt: null, szamlalo: 1 } as Allapot1119,
   k: k28Kezdo(kezdo.fk, '2026-11-17') as K28Allapot,
+  g: k29Kezdo(kezdo.fk, '2026-11-17') as K29Allapot,
 };
-const BEKOTES_FK = ['peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'tamas'];
+const BEKOTES_FK = ['peter', 'uj', 'indul', 'utmutato', 'levente', 'marika', 'david', 'ilona', 'engedely', 'bekuldve', 'kamara', 'tamas', 'bevezeto_adoszam', 'bevezeto_var', 'bevezeto_kesz', 'bevezeto_szunet', 'kartya'];
+/** SPEC §29.10 minta-forgatókönyvek: „van” út, a vezetett indulás különböző pontjain. */
+function bevezetoAllapot(fk: Forgatokonyv) {
+  if (!S.onboarding || !['bevezeto_adoszam', 'bevezeto_var', 'bevezeto_kesz', 'bevezeto_szunet', 'kartya'].includes(fk)) return;
+  S.t.path = 'van';
+  const kesz = (step: string, status: 'kesz' | 'konyvelore_var' = 'kesz') => {
+    S.onboarding!.steps = S.onboarding!.steps.map((s) => (s.step === step ? { ...s, status, completedAt: '2026-11-16T09:00:00Z' } : s));
+  };
+  if (fk !== 'bevezeto_adoszam') {
+    kesz('adatok');
+    S.k.kedvezmeny = { ...S.k.kedvezmeny, gate: 'nem_jar' };
+  }
+  if (fk === 'bevezeto_var' || fk === 'bevezeto_kesz' || fk === 'kartya') {
+    kesz('szerzodes');
+    kesz('meghatalmazas', 'konyvelore_var');
+  }
+  if (fk === 'bevezeto_kesz' || fk === 'kartya') kesz('azonositas', 'konyvelore_var');
+  if (fk === 'bevezeto_kesz') kesz('elofizetes');
+}
 function beallit(fk: Forgatokonyv) {
   S.fk = fk;
   S.ma = fk === 'fizetendo' || fk === 'befizetve' ? '2026-10-09' : fk === 'ures' ? '2026-11-02' : '2026-11-17';
@@ -90,6 +110,8 @@ function beallit(fk: Forgatokonyv) {
   S.t = kezdo1118(fk);
   S.u = kezdo1119(fk, S.t, S.onboarding, S.ma);
   S.k = k28Kezdo(fk, S.ma);
+  S.g = k29Kezdo(fk, S.ma);
+  bevezetoAllapot(fk);
   maBeallit(S.ma);
 }
 beallit(S.fk);
@@ -112,7 +134,7 @@ const K6_SZEMELYEK: Record<string, { id: string; email: string; nev: string; fir
 };
 const szemely = () =>
   K6_SZEMELYEK[S.fk] ??
-  (S.fk === 'peter' || S.fk === 'uj'
+  (S.fk === 'peter' || S.fk === 'uj' || S.fk.startsWith('bevezeto') || S.fk === 'kartya'
     ? PETER
     : ['indul', 'utmutato', 'levente', 'kamara'].includes(S.fk)
       ? LEVENTE
@@ -257,6 +279,8 @@ ut('GET', '/config', () =>
     googleClientIds: {},
     legal: { aszf: '2026-11-17', adatkezeles: '2026-11-17', megbizasi_szerzodes: '2026-11-17', simplepay_adattovabbitas: '2026-11-17', simplepay_ismetlodo: '2026-11-17' },
     simplepayMode: 'demo',
+    // SPEC §29.14: the payment provider of the server (MINTA: the DEMO pay page)
+    ...({ paymentProvider: 'demo', paymentMode: 'demo' } as object),
   } satisfies PublicConfig),
 );
 ut('POST', '/auth/login', (_m, _q, t) => {
@@ -752,6 +776,28 @@ ut('POST', '/client/business-registration/chamber', (_m, _q, t) => {
 {
   const elotte = utak.length;
   k28Utak(ut, { st: () => S.k, ma: () => S.ma, aktiv: () => !S.onboarding && S.belepve, ok, hiba: (st, c, m, e = {}, f) => hiba(st, c, m, e, f), kell });
+  utak.unshift(...utak.splice(elotte));
+}
+// SPEC §29 végpontjai: a legelejére (a /client/subscription új mezői és a kártyás engedély a régi kezelők előtt)
+{
+  const elotte = utak.length;
+  k29Utak(ut, {
+    st: () => S.g,
+    ma: () => S.ma,
+    aktiv: () => !S.onboarding && S.belepve,
+    journey: () => bekotesNezet()?.journey ?? null,
+    onboarding: () => S.onboarding,
+    firstName: () => szemely().firstName,
+    kedvezmenyKesz: () => !!(S.k.kedvezmeny.gate || S.k.kedvezmeny.submittedAt),
+    elofizetes: () => S.elofizetes,
+    elofizetesBeallit: (e) => {
+      S.elofizetes = e;
+    },
+    lepes: (step, status) => lepes(step, status),
+    ok,
+    hiba: (st, c, m, e = {}, f) => hiba(st, c, m, e, f),
+    kell,
+  });
   utak.unshift(...utak.splice(elotte));
 }
 

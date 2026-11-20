@@ -143,7 +143,8 @@ export function bekotes1119(alap: OnboardingState, t: Allapot1118, u: Allapot111
       if (step === 'meghatalmazas' && !a) s = { ...s, locked: !szerzKesz, lockedReason: szerzKesz ? undefined : 'Előbb fogadd el a szerződést.' };
       const bejelentve = !!t.reg && ['beadva', 'javitas', 'ellenorizve', 'kesz'].includes(t.reg.status);
       if (step === 'azonositas' && !bejelentve) s = { ...s, locked: true, lockedReason: 'Ha bejelentettük a vállalkozásodat, ez is megnyílik.' };
-      if (step === 'elofizetes' && t.reg?.status !== 'kesz') s = { ...s, locked: true, lockedReason: 'Akkor kérjük a kártyádat, ha már megvan az adószámod. Addig minden ingyenes.' };
+      // SPEC §29.4.2 (no free period): the card right after the contract
+      if (step === 'elofizetes' && !szerzKesz && s.status !== 'kesz') s = { ...s, locked: true, lockedReason: 'A kártyádat a szerződés után kérjük.' };
       if (step === 'nav_bekotes' && t.reg?.status !== 'kesz') s = { ...s, locked: true, lockedReason: 'A bejelentés és a meghatalmazás után Bence köti be a kiállított számláidat.' };
     }
     return s;

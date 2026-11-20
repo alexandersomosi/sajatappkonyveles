@@ -20,6 +20,7 @@ import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { bekotesre } from '@/lib/vezetett';
 
 export default function JovahagyasUtmutato() {
   const { o } = useUt();
@@ -64,7 +65,7 @@ export default function JovahagyasUtmutato() {
     try {
       await jovahagy.mutateAsync(a.id);
       jelez({ szoveg: fillPlaceholders(ASSIST_TEXTS.approvedToast, { firstName: fn }), kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (e) {
       jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'));
     }

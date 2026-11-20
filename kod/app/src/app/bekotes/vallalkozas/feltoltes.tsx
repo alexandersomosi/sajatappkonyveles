@@ -24,6 +24,7 @@ import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
 import { csakInditasUton } from '@/ui/UtVedelem';
+import { bekotesre } from '@/lib/vezetett';
 
 function IgazolasFeltoltes() {
   const me = useMe();
@@ -87,7 +88,7 @@ function IgazolasFeltoltes() {
       setFolyamat(0);
       await kuld.mutateAsync({ form, folyamat: setFolyamat });
       jelez({ szoveg: 'Megkaptuk. Átnézzük, általában 1 munkanapon belül.', kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (err) {
       if (err instanceof ApiHiba && err.fields) setH(err.fields);
       setHiba(hibaUzenet(err, 'Nem sikerült feltölteni. Próbáld újra.', { jelolt: ['file', 'filedOn', 'channel', 'adoszam'] }));

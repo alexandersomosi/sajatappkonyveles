@@ -162,7 +162,8 @@ export function bekotes1118(alap: OnboardingState, a: Allapot1118): OnboardingSt
     if (step === 'vallalkozas_inditas') s = { step, status: rs ? REGISTRATION_STEP_STATUS[rs] : 'ugyfelre_var', note: rs === 'javitas' ? (a.reg?.fixNote ?? undefined) : undefined };
     if (a.path === 'inditas') {
       if ((step === 'meghatalmazas' || step === 'azonositas') && !bejelentve) s = { ...s, locked: true, lockedReason: 'Ha beküldted a bejelentést, ez is megnyílik.' };
-      if (step === 'elofizetes' && rs !== 'kesz') s = { ...s, locked: true, lockedReason: 'Akkor kérjük a kártyádat, ha már megvan az adószámod. Addig minden ingyenes.' };
+      // SPEC §29.4.2 (no free period): the card right after the contract, also on the new-business path
+      if (step === 'elofizetes' && regiLepes.get('szerzodes')?.status !== 'kesz' && s.status !== 'kesz') s = { ...s, locked: true, lockedReason: 'A kártyádat a szerződés után kérjük.' };
       if (step === 'nav_bekotes' && rs !== 'kesz') s = { ...s, locked: true, lockedReason: 'A bejelentés és a meghatalmazás után Bence köti be a számláidat.' };
     }
     return s;

@@ -42,7 +42,7 @@ A szerződés kezdete: {{szerzodes.kezdete}}. A szerződésre a(z) {{brand.name}
 
 2.6. **A becslés nem végleges.** Az app év közben becslést mutat. A fizetendő összeg akkor végleges, amikor {{konyvelo.nev}} jóváhagyta. Jóváhagyás után levelet is kapsz tőle az appban.
 
-2.7. **Ha most indítod a vállalkozásodat.** Alapból útmutatót adunk a bejelentéshez, a bejelentést te küldöd be a saját nevedben, és utána átnézzük a NAV-os értesítést (ÁSZF 4/A. pont). Az önálló úton ez nem képviselet és nem jogi tanácsadás. Ha kéred (ÁSZF 4/C. pont), {{konyvelo.nev}} a NAV-nál nyilvántartott állandó meghatalmazottadként, a saját belépésével beküldi a vállalkozásod bejelentését az egyéni vállalkozói nyilvántartásba. Ezt csak az appban adott, külön írásos utasításod alapján teszi meg, pontosan az általad jóváhagyott adatokkal. A bejelentés akkor is a te nyilatkozatod, és az adatok valóságáért te felelsz. Az utasításodat (PDF-ben) és a NAV-os értesítést a dossziédban megőrizzük. A könyvelés az adószámod rögzítése után indul.
+2.7. **Ha most indítod a vállalkozásodat.** Alapból útmutatót adunk a bejelentéshez, a bejelentést te küldöd be a saját nevedben, és utána átnézzük a NAV-os értesítést (ÁSZF 4/A. pont). Az önálló úton ez nem képviselet és nem jogi tanácsadás. Ha kéred (ÁSZF 4/C. pont), {{konyvelo.nev}} a NAV-nál nyilvántartott állandó meghatalmazottadként, a saját belépésével beküldi a vállalkozásod bejelentését az egyéni vállalkozói nyilvántartásba. Ezt csak az appban adott, külön írásos utasításod alapján teszi meg, pontosan az általad jóváhagyott adatokkal. A bejelentés akkor is a te nyilatkozatod, és az adatok valóságáért te felelsz. Az utasításodat (PDF-ben) és a NAV-os értesítést a dossziédban megőrizzük. A díjat a kártyád megadásától fizeted (5.1. pont); az adószámodhoz kötött munka (például a kiállított számláid letöltése a NAV-ból) az adószámod rögzítése után indul.
 
 ## 3. Mit vállalsz te
 
@@ -78,7 +78,7 @@ A szerződés kezdete: {{szerzodes.kezdete}}. A szerződésre a(z) {{brand.name}
 
 ## 5. Díj
 
-5.1. A díj havi {{dij.havi_brutto}} (bruttó), havonta előre, bankkártyával, az ÁSZF szerint. A díj minden 2.1. pont szerinti munkát tartalmaz. Ha most indítod a vállalkozásodat, a díjfizetés az adószámod rögzítése után indul; az addigi segítség ingyenes (ÁSZF 4/A.6. pont). [TULAJ: a díj kezdete]
+5.1. A díj havi {{dij.havi_brutto}} (bruttó, 27% ÁFA-val), havonta előre, bankkártyával, az ÁSZF szerint. A díj minden 2.1. pont szerinti munkát tartalmaz. A díjfizetés a szerződés elfogadása és a kártyád megadása napján indul, akkor is, ha most indítod a vállalkozásodat: a bejelentéshez adott segítség is a havidíj része (ÁSZF 4/A.6. pont). A külön díjas szolgáltatások díját az ÁSZF 6.3/A. pontja szerint, a jóváhagyásod után vonjuk le. A díjról e-számlát kapsz (ÁSZF 6.4. pont).
 
 5.2. A díjról minden hónapban elektronikus számlát kapsz.
 

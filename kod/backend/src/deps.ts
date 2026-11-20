@@ -15,6 +15,10 @@ import { createDispatcher } from './notify/notify.js';
 import { createPush, type PushSender } from './notify/push.js';
 import { createSimplePayApi, type SimplePayApi } from './payments/simplepay.js';
 import { createFeeInvoiceProvider, type FeeInvoiceProvider } from './payments/invoices.js';
+import type { PaymentProvider } from './payments/provider.js';
+import { createStripeProvider } from './payments/stripe.js';
+import { createDemoProvider } from './payments/demo.js';
+import { createSzamlazzClient, type SzamlazzClient } from './payments/szamlazzhu.js';
 
 export interface Deps {
   cfg: Config;
@@ -31,6 +35,10 @@ export interface Deps {
   legal: LegalStore;
   simplepay: SimplePayApi | null;
   invoices: FeeInvoiceProvider;
+  /** SPEC §29.1: the providers of the payments table (stripe only when keys are configured; demo always, in-process). */
+  payments: { stripe: PaymentProvider | null; demo: PaymentProvider };
+  /** SPEC §29.2: the Számla Agent client (only with INVOICE_MODE=szamlazzhu). */
+  szamlazz: SzamlazzClient | null;
   verifyIdToken: IdTokenVerifier;
   navClient: NavClientFactory;
   sessionCache: SessionCache;
@@ -66,6 +74,8 @@ export function buildDeps(cfg: Config, db: Db, o: DepsOverrides = {}): Deps {
           ? createSimplePayApi({ baseUrl: cfg.simplepay.baseUrl, merchant: cfg.simplepay.merchant, secret: cfg.simplepay.secret, fetch: f })
           : null,
     invoices: o.invoices ?? createFeeInvoiceProvider(cfg),
+    payments: o.payments ?? { stripe: cfg.payment.stripe ? createStripeProvider({ cfg: cfg.payment.stripe }) : null, demo: createDemoProvider({ apiPublicUrl: cfg.apiPublicUrl, now }) },
+    szamlazz: o.szamlazz !== undefined ? o.szamlazz : cfg.invoice.mode === 'szamlazzhu' ? createSzamlazzClient({ url: cfg.invoice.szamlazzhuUrl, fetch: f }) : null,
     verifyIdToken: o.verifyIdToken ?? createIdTokenVerifier({ google: cfg.google.clientIds, apple: cfg.appleBundleId }),
     navClient: o.navClient ?? createNavFactory(cfg, now),
     sessionCache: o.sessionCache ?? new SessionCache(now),

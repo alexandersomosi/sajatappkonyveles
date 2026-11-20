@@ -1,91 +1,68 @@
-// Előfizetés (FUNKCIOK 3): mit kapsz havi 19 999 Ft-ért; a token paraméterei érthetően; a SimplePay két kötelező
-// nyilatkozata; a SimplePay tájékoztató linkje; „Kártyás fizetés” → böngésző. DEMO módban jól látható jelzés.
+// SPEC §29.1.13 – the card step (guided run and /bekotes/elofizetes): "Utolsó lépés: a kártyád", what the client gets,
+// the card consent in full with one checkbox, "Tovább a kártyához ({osszeg} Ft)" → the Stripe page (or the DEMO pay page).
+// No free period: the first month is paid now (§29.4.2). PAYMENT_PROVIDER=simplepay → the kept SimplePay screen.
+// Előtte (SimplePay): kod/app/_regi/elotte_k7_b3/src/app/bekotes/elofizetes.tsx
 import { useState } from 'react';
+import { View } from 'react-native';
 import { STEP_LOCK_DEFAULT_TEXTS } from '@/_shared/bekotes';
 import { LOCK_ELOFIZETES_SZERZODES_UTAN } from '@/_shared/enums';
-import { Linking, View } from 'react-native';
+import { CARD_CONSENT_UI, PAYMENT_SCREEN_TEXTS as P } from '@/_shared/k29';
 import { ApiHiba } from '@/api/http';
-import { useConfig, useElofizetes, useJogi, useOnboarding } from '@/api/hooks';
+import { useConfig, useOnboarding } from '@/api/hooks';
+import { useElofizetesK29, useKartyaEngedely } from '@/api/hooks-k29';
 import { brand } from '@/config';
-import { datumEvvel, napHozzaad, szam } from '@/lib/format';
-import { kartyasFizetes } from '@/lib/simplepay';
-import { szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Felsorolas } from '@/ui/alap';
-import { ma } from '@/ui/ido';
-import { KeszJel } from '@/ui/kepek';
-import { CimSor, Kepernyo, vissza } from '@/ui/keret';
-import { MiEz } from '@/ui/Magyarazat';
-import { Elakadtal } from '@/ui/Visszahivas';
-import { Ikon3d } from '@/ui/kepek';
-import { T } from '@/ui/T';
-import { szoveg, szovegLista } from '@/lib/szovegek';
-import { DemoFizetesJel } from '@/ui/DemoJel';
+import { szam } from '@/lib/format';
+import { fizetesSzolgaltato, kartyaMentes } from '@/lib/fizetes';
 import { hibaUzenet } from '@/lib/hiba';
-
-function Nyilatkozat({ tipus, be, valt, cim }: { tipus: string; be: boolean; valt: (b: boolean) => void; cim: string }) {
-  const j = useJogi(tipus);
-  const [nyitva, setNyitva] = useState(false);
-  return (
-    <View style={{ marginTop: 6 }}>
-      <Pipa be={be} valt={valt}>
-        <T m={15.5} lh={1.45}>
-          {cim}
-        </T>
-      </Pipa>
-      <GombSz cim={nyitva ? 'Elrejtem a szöveget' : 'A teljes szöveg'} m={14.5} onPress={() => setNyitva((x) => !x)} style={{ marginLeft: 36, paddingVertical: 4 }} />
-      {nyitva ? (
-        <View style={{ marginLeft: 36, marginTop: 4, padding: 12, borderRadius: 12, backgroundColor: szin.nyomott }}>
-          <T m={14} lh={1.5} c={szin.tinta}>
-            {j.data?.markdown.replace(/[#*]/g, '').trim() ?? (j.isLoading ? 'Betöltjük…' : 'Most nem sikerült betölteni a szöveget.')}
-          </T>
-        </View>
-      ) : null}
-    </View>
-  );
-}
+import { szovegLista } from '@/lib/szovegek';
+import { bekotesre } from '@/lib/vezetett';
+import { engedelyGomb, KartyaEngedely } from '@/kepernyok/KartyaEngedely';
+import { SimplePayKartyaLepes } from '@/kepernyok/simplepay/KartyaLepes';
+import { szin } from '@/theme/tokens';
+import { Felsorolas, GombE, GombM, HibaSzoveg, Lap, Szakasz } from '@/ui/alap';
+import { DemoFizetesJel } from '@/ui/DemoJel';
+import { Ikon3d } from '@/ui/kepek';
+import { Betolt, CimSor, Hiba, Kepernyo, vissza } from '@/ui/keret';
+import { MiEz } from '@/ui/Magyarazat';
+import { T } from '@/ui/T';
+import { Elakadtal } from '@/ui/Visszahivas';
 
 export default function Elofizetes() {
   const cfg = useConfig();
-  const elo = useElofizetes();
+  if (cfg.isLoading) return <Kepernyo><Betolt /></Kepernyo>;
+  if (fizetesSzolgaltato(cfg.data) === 'simplepay') return <SimplePayKartyaLepes />;
+  return <KartyaLepes />;
+}
+
+function KartyaLepes() {
+  const cfg = useConfig();
+  const elo = useElofizetesK29();
   const o = useOnboarding();
-  const [adat, setAdat] = useState(false);
-  const [ism, setIsm] = useState(false);
+  const [be, setBe] = useState(false);
   const [tolt, setTolt] = useState(false);
   const [hiba, setHiba] = useState<string | null>(null);
-  const ar = cfg.data?.brand.priceHufMonthlyGross || brand.priceHufMonthlyGross;
+  const ar = elo.data?.monthlyHuf ?? cfg.data?.brand.priceHufMonthlyGross ?? brand.priceHufMonthlyGross;
   const acc = o.data?.accountant;
   const aktiv = elo.data?.status === 'active';
-  const demo = cfg.data?.simplepayMode === 'demo';
-  // a backend /config: simplepayEnabled=false → éles módban nincs kulcs, a fizetés ki van kapcsolva (SPEC §9.7, §24)
-  const kikapcsolva = (cfg.data as { simplepayEnabled?: boolean } | undefined)?.simplepayEnabled === false;
-  const vege = datumEvvel(napHozzaad(ma(), 365));
+  const kikapcsolva = fizetesSzolgaltato(cfg.data) === 'disabled';
 
-  async function fizet() {
-    if (!adat || !ism) return setHiba('A fizetéshez mindkét nyilatkozatot el kell fogadnod.');
-    setHiba(null);
-    setTolt(true);
-    try {
-      await kartyasFizetes();
-    } catch (e) {
-      setHiba(hibaUzenet(e, 'Nem sikerült elindítani a fizetést.'));
-    } finally {
-      setTolt(false);
-    }
-  }
-
-  // SPEC §26.1.7: új vállalkozásnál a kártyát csak az adószám után kérjük (a szerver 409 'step_locked'-del is véd).
+  // SPEC §27.4.2: a kártya mindkét úton a szerződés után jön (a szerver zárja; régebbi szervernél itt is).
   const lepes0 = o.data?.steps.find((x) => x.step === 'elofizetes');
-  // SPEC §27.4.2: mindkét úton a szerződés után (a szerver zárja; régebbi szervernél itt is).
   const szerzodesNincs = !!o.data && o.data.steps.find((x) => x.step === 'szerzodes')?.status !== 'kesz' && lepes0?.status !== 'kesz';
   const lepes = lepes0 && !lepes0.locked && szerzodesNincs ? { ...lepes0, locked: true, lockedReason: STEP_LOCK_DEFAULT_TEXTS[LOCK_ELOFIZETES_SZERZODES_UTAN] } : lepes0;
+  const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva);
+  const c = engedely.data;
+  const demo = c?.demo ?? (cfg.data?.demo && fizetesSzolgaltato(cfg.data) === 'demo');
+  const fej = <CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim={P.cardStep.bandTitle} al={P.cardStep.bandText.replace('{havidij}', szam(ar))} />;
+
   if (lepes?.locked) {
     return (
-      <Kepernyo ful="fooldal" fejlec={<CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim="Előfizetés" al={`Havi ${szam(ar)} Ft, bruttó. Bármikor lemondhatod.`} />}>
-        <Lap style={{ padding: 18 }}>
+      <Kepernyo ful="fooldal" fejlec={fej}>
+        <Lap style={{ padding: 16 }}>
           <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
             <Ikon3d nev="lakat" pt={44} label="Zárolva" />
             <T m={17} s={600} lh={1.45} style={{ flex: 1 }}>
-              {lepes.lockedReason ?? 'Akkor kérjük a kártyádat, ha már megvan az adószámod. Addig minden ingyenes.'}
+              {lepes.lockedReason ?? 'A kártyádat a szerződés után kérjük.'}
             </T>
           </View>
           <MiEz kulcs="elofizetes" style={{ alignSelf: 'flex-start', marginTop: 8 }} />
@@ -95,62 +72,81 @@ export default function Elofizetes() {
     );
   }
 
+  async function tovabb() {
+    if (!c) return;
+    if (!be) return setHiba('Előbb pipáld be, hogy elolvastad és engedélyezed.');
+    setHiba(null);
+    setTolt(true);
+    try {
+      await kartyaMentes(elo.data?.status === 'canceled' ? 'restart' : 'subscribe', c);
+    } catch (e) {
+      if (e instanceof ApiHiba && e.status === 409 && /consent|szöveg/i.test(`${e.code} ${e.message}`)) {
+        setBe(false);
+        void engedely.refetch();
+        setHiba(CARD_CONSENT_UI.changed);
+      } else setHiba(hibaUzenet(e, 'Nem sikerült elindítani a fizetést. Próbáld újra.'));
+    } finally {
+      setTolt(false);
+    }
+  }
+
+  if (aktiv) {
+    return (
+      <Kepernyo ful="fooldal" fejlec={fej} dokk={<GombE cim="Tovább" onPress={() => bekotesre()} />}>
+        <Lap style={{ padding: 16 }}>
+          <T m={18} s={650} lh={1.35}>
+            Az előfizetésed él.
+          </T>
+          <T m={16} c={szin.halvany} lh={1.5} style={{ marginTop: 4 }}>
+            {elo.data?.cardInfo ? `A kártyád: ${elo.data.cardInfo.label}. ` : ''}A részleteket a Fiók oldalon látod.
+          </T>
+        </Lap>
+      </Kepernyo>
+    );
+  }
+
   return (
-    <Kepernyo ful="fooldal" fejlec={<CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim="Előfizetés" al={`Havi ${szam(ar)} Ft, bruttó. Bármikor lemondhatod.`} />}>
-      <MiEz kulcs="elofizetes" style={{ alignSelf: 'flex-start', marginLeft: 4, marginBottom: 6 }} />
-      {demo ? <DemoFizetesJel /> : null}
-      <Lap style={{ padding: 18 }}>
-        <T m={17} s={650} lh={1.4}>
-          Mit kapsz ezért?
-        </T>
+    <Kepernyo ful="fooldal" fejlec={fej} dokk={c && !kikapcsolva ? <GombE cim={engedelyGomb(c)} onPress={() => void tovabb()} tolt={tolt} disabled={!be} /> : undefined}>
+      {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
+      <Szakasz ikon="igazolas" cim="Mit kapsz ezért?" jobbra={<MiEz kulcs="elofizetes" />} />
+      <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <Felsorolas
+          style={{ paddingLeft: 38 }}
           elemek={[
             ...szovegLista('ar.mit_kapsz', {}, ['Saját könyvelő, aki név szerint ismer.', 'Kiszámolja, mennyit kell fizetned, és beadja a bevallásaidat.']),
             ...(acc?.responseTimeText ? [`${acc.firstName}: ${acc.responseTimeText.charAt(0).toLowerCase()}${acc.responseTimeText.slice(1)}.`] : []),
           ]}
         />
       </Lap>
-
-      {aktiv ? (
-        <Lap style={{ padding: 18, marginTop: 12 }}>
-          <T m={17} s={650} lh={1.4}>
-            Az előfizetésed él.
+      <Szakasz ikon="szamlaszam" cim="Kártyás fizetés – engedély" />
+      <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+        {engedely.isLoading ? (
+          <Betolt />
+        ) : engedely.error || !c ? (
+          <Hiba hiba={engedely.error} ujra={() => void engedely.refetch()} />
+        ) : (
+          <KartyaEngedely
+            c={c}
+            be={be}
+            valt={(b) => {
+              setBe(b);
+              if (b) setHiba(null);
+            }}
+            alatta={
+              <T m={14.5} c={szin.halvany} lh={1.45} style={{ marginTop: 8 }}>
+                {CARD_CONSENT_UI.underLong}
+              </T>
+            }
+          />
+        )}
+        {kikapcsolva ? (
+          <T m={15} s={600} c={szin.veszely} lh={1.45} style={{ marginTop: 12 }}>
+            A kártyás fizetés még nincs bekapcsolva. Amint elindul, szólunk.
           </T>
-          <T m={15} c={szin.halvany} lh={1.5} style={{ marginTop: 4, marginBottom: 14 }}>
-            A kártyád: {elo.data?.card?.mask ?? '–'}. A részleteket a Fiók oldalon látod.
-          </T>
-          <GombM cim="Vissza a bekötéshez" onPress={() => vissza('/bekotes')} />
-        </Lap>
-      ) : (
-        <Lap style={{ padding: 18, marginTop: 12 }}>
-          <T m={17} s={650} lh={1.4}>
-            Így működik a havidíj
-          </T>
-          <T m={15.5} lh={1.5} style={{ marginTop: 6 }}>
-            Most kifizeted az első hónapot, és a kártyádat elmentjük a SimplePay-nél. Utána havonta egyszer, legfeljebb {szam(ar)} Ft-ot vonunk le.
-          </T>
-          <View style={{ marginTop: 10, borderRadius: 12, backgroundColor: szin.nyomott, padding: 12 }}>
-            <T m={15} lh={1.5}>
-              {szoveg('megujulas.engedely', { 'elofizetes.lejarat_ig': `${vege.replace(/\.$/, '')}-ig`, 'elofizetes.max_osszeg': `${szam(ar)} Ft` }, `12 alkalommal, legfeljebb ${szam(ar)} Ft, ${vege.replace(/\.$/, '')}-ig vonhatunk le a kártyádról. Bármikor törölheted a kártyádat a Fiók oldalon.`)}
-            </T>
-          </View>
-          <Nyilatkozat tipus="simplepay_adattovabbitas" be={adat} valt={setAdat} cim={szoveg('szerzodes.simplepay_adattovabbitas', {}, 'Elfogadom az adattovábbítási nyilatkozatot.')} />
-          <Nyilatkozat tipus="simplepay_ismetlodo" be={ism} valt={setIsm} cim={szoveg('szerzodes.simplepay_ismetlodo', {}, 'Elfogadom az ismétlődő bankkártyás fizetés feltételeit.')} />
-          {kikapcsolva ? (
-            <T m={15} s={600} c={szin.veszely} lh={1.45} style={{ marginTop: 12 }}>
-              A kártyás fizetés még nincs bekapcsolva. Amint elindul, szólunk.
-            </T>
-          ) : null}
-          <HibaSzoveg szoveg={hiba} />
-          <GombE cim={szoveg('fizetes.gomb', {}, 'Kártyás fizetés')} onPress={fizet} tolt={tolt} disabled={!adat || !ism || kikapcsolva} style={{ marginTop: 16 }} />
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 10 }}>
-            <GombSz cim={szoveg('fizetes.simplepay_link', {}, 'Fizetési tájékoztató (SimplePay)')} m={13.5} onPress={() => void Linking.openURL('https://simplepay.hu/fizetesi-tajekoztato/')} />
-          </View>
-          <T m={13.5} c={szin.halvany} lh={1.45} kozep style={{ marginTop: 4 }}>
-            {szoveg('fizetes.biztonsag', {}, 'A fizetés a SimplePay oldalán történik. A kártyád számát mi nem látjuk.')}
-          </T>
-        </Lap>
-      )}
+        ) : null}
+        <HibaSzoveg szoveg={hiba} />
+        {hiba === CARD_CONSENT_UI.changed ? <GombM cim="Újra elolvasom" onPress={() => void engedely.refetch()} style={{ marginTop: 8 }} /> : null}
+      </Lap>
       <Elakadtal forras="elofizetes" tema="elofizetes" style={{ marginTop: 6, marginLeft: 4 }} />
     </Kepernyo>
   );

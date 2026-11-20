@@ -22,6 +22,10 @@ import { T } from '@/ui/T';
 import { useEvSegitseg, useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
 import { csakInditasUton } from '@/ui/UtVedelem';
+import { vezetettHref, vezetettKulcs } from '@/lib/vezetett';
+
+/** SPEC §29.10: inside the guided run the upload is the next guided step ('ertesites'). */
+const feltoltesUt = () => (vezetettKulcs() ? vezetettHref('/bekotes/vallalkozas/feltoltes', 'ertesites') : '/bekotes/vallalkozas/feltoltes');
 
 function BejelentesUtmutato() {
   const me = useMe();
@@ -115,7 +119,7 @@ function BejelentesUtmutato() {
         {segitsegLink ? <SegitsegCsik fajta="ev" fn={fn} onPress={segitsegLink} style={{ marginBottom: 12 }} /> : null}
         <UtmutatoTorzs g={g} kepek={kepek.data} valaszok={{ workKind: r?.answers.workKind, euPartner: r?.answers.euPartner }} kesz={h.kesz} valt={h.valt} fn={fn} pipak={elokeszit.pipak} pipal={elokeszit.valt} />
         {feltolthet ? (
-          <GombE cim="Feltöltöm az értesítést" onPress={() => router.push('/bekotes/vallalkozas/feltoltes')} style={{ marginTop: 18 }} />
+          <GombE cim="Feltöltöm az értesítést" onPress={() => router.push(feltoltesUt() as never)} style={{ marginTop: 18 }} />
         ) : r ? (
           <T m={15.5} lh={1.5} c={szin.halvanyAlapon} style={{ marginTop: 16, paddingHorizontal: 4 }}>
             {r.statusText}
@@ -143,7 +147,7 @@ function BejelentesUtmutato() {
         pipal={elokeszit.valt}
         lepes={lp.lepes}
         ugrik={lp.ugrik}
-        vege={feltolthet ? { cim: 'Feltöltöm az értesítést', onPress: () => router.push('/bekotes/vallalkozas/feltoltes') } : null}
+        vege={feltolthet ? { cim: 'Feltöltöm az értesítést', onPress: () => router.push(feltoltesUt() as never) } : null}
         segitseg={segitsegLink}
         egyben={() => router.setParams({ egyben: '1' })}
       />

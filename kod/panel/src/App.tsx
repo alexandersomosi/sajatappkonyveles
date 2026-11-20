@@ -36,6 +36,11 @@ const AdminDemoPosta = lazy(() => import('./pages/admin/DemoPosta'));
 const AdminRendszer = lazy(() => import('./pages/admin/Rendszer'));
 const HaviValtozasok = lazy(() => import('./pages/acc/HaviValtozasok'));
 const AdminDijak = lazy(() => import('./pages/admin/Dijak'));
+// SPEC §29 F1 / F9 (B2)
+const Igazolasok = lazy(() => import('./pages/acc/Igazolasok'));
+const KonzolAttekintes = lazy(() => import('./pages/admin/konzol/Attekintes'));
+const KonzolUgyfelek = lazy(() => import('./pages/admin/konzol/Ugyfelek'));
+const KonzolUgyfelKartya = lazy(() => import('./pages/admin/konzol/UgyfelKartya'));
 
 let goTotpSetup: (() => void) | null = null;
 const onApiError = (e: unknown) => {
@@ -146,6 +151,13 @@ export function App() {
                 {/* SPEC §28.K.2 / §28.K.1 */}
                 <Route path="/havi-valtozasok" element={<Csak szerep={['konyvelo', 'admin', 'csapat']}><HaviValtozasok /></Csak>} />
                 <Route path="/admin/dijak" element={<Csak szerep={AD}><AdminDijak /></Csak>} />
+                {/* SPEC §29.5 F1: the certificate queue (accountant: own clients; admin: all) */}
+                <Route path="/igazolasok" element={<Csak szerep={['konyvelo', 'admin']}><Igazolasok /></Csak>} />
+                <Route path="/igazolasok/:id" element={<Csak szerep={['konyvelo', 'admin']}><Igazolasok /></Csak>} />
+                {/* SPEC §29.9 F9: the owner console (admin + TOTP; writes need a step-up) */}
+                <Route path="/admin/konzol" element={<Csak szerep={AD}><KonzolAttekintes /></Csak>} />
+                <Route path="/admin/konzol/ugyfelek" element={<Csak szerep={AD}><KonzolUgyfelek /></Csak>} />
+                <Route path="/admin/konzol/ugyfelek/:id" element={<Csak szerep={AD}><KonzolUgyfelKartya /></Csak>} />
                 <Route path="/admin/beallitasok" element={<Csak szerep={AD}><Beallitasok /></Csak>} />
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />

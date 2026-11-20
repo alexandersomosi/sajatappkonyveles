@@ -314,13 +314,13 @@ describe('K5 – change guides and the assisted change with the prepaid fee', ()
     expect(g0.body.video).toBeNull();
     expect(JSON.stringify(g0.body)).toContain('az új címed irányítószáma');
     const list = await h.json('GET', '/client/change-guides', { token: c.token });
-    expect(list.body.items.map((i: { kind: string }) => i.kind)).toHaveLength(6);
+    expect(list.body.items.map((i: { kind: string }) => i.kind)).toHaveLength(7); // SPEC §29.7: + valtozas_megszuntetes
   });
   it('POST /client/assist (change kind) → dijra_var + a 4 999 Ft DEMO charge; team actions 409 fee_unpaid', async () => {
     const r = await h.json('POST', '/client/assist', { token: c.token, body: { kind: 'valtozas_szekhely', source: 'helyettunk_valtozas', change } });
     expect(r.status).toBe(201);
     expect(r.body.assist.status).toBe('dijra_var');
-    expect(r.body.feeCharge).toMatchObject({ kind: 'valtozas_egyszeru', amountHuf: 4_999, demo: true, status: 'nyitott' });
+    expect(r.body.feeCharge).toMatchObject({ kind: 'valtozas_egyszeru', amountHuf: 4_999, demo: false, status: 'nyitott' }); // SPEC §29.4.1: real price
     assistId = r.body.assist.id;
     const g1 = await h.json('GET', '/client/guides/valtozas_szekhely', { token: c.token });
     expect(JSON.stringify(g1.body)).toContain('1117');
@@ -389,14 +389,14 @@ describe('P – fees admin, D – service lock, F – EFO', () => {
     h.clock.set('2026-11-19T09:00:00Z');
     await relog();
   });
-  it('fee settings: list, change (unconfirmed again), confirm, history', async () => {
+  it('fee settings: list, change (SPEC §29.4.1: an admin edit is the confirmation), confirm, history', async () => {
     const l = await h.json('GET', '/admin/fees', { token: admin.token });
     expect(l.status).toBe(200);
     expect(l.body.items.find((x: { kind: string }) => x.kind === 'havidij')).toMatchObject({ amountHuf: 19_999, confirmed: true });
-    expect(l.body.items.find((x: { kind: string }) => x.kind === 'eves_zaras')).toMatchObject({ amountHuf: 14_999, confirmed: false });
+    expect(l.body.items.find((x: { kind: string }) => x.kind === 'eves_zaras')).toMatchObject({ amountHuf: 14_999, confirmed: true });
     expect((await h.json('PUT', '/admin/fees', { token: admin.token, body: { kind: 'havidij', amountHuf: 24_999 } })).status).toBe(400); // a rise needs effectiveFrom ≥ +30 days
     const ch = await h.json('PUT', '/admin/fees', { token: admin.token, body: { kind: 'eves_zaras', amountHuf: 15_999 } });
-    expect(ch.body.items.find((x: { kind: string }) => x.kind === 'eves_zaras')).toMatchObject({ amountHuf: 15_999, confirmed: false });
+    expect(ch.body.items.find((x: { kind: string }) => x.kind === 'eves_zaras')).toMatchObject({ amountHuf: 15_999, confirmed: true });
     const cf = await h.json('POST', '/admin/fees/eves_zaras/confirm', { token: admin.token });
     const ez = cf.body.items.find((x: { kind: string }) => x.kind === 'eves_zaras');
     expect(ez.confirmed).toBe(true);

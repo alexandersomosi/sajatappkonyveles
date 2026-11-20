@@ -7,12 +7,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ZarolasKapu } from '@/ui/ZarolasKapu';
 import type { AllowanceAnswers, AllowanceChildAnswer, AllowanceClientPreview } from '@/_shared/api';
 import { ALLOWANCE_QUESTION_TEXTS as Q, ALLOWANCE_TEXTS, fillPlaceholders } from '@/_shared/bekotes';
-import { useKedvezmenyBecsles, useKedvezmenyek, useKedvezmenyValasz, useMe } from '@/api/hooks';
+import { useKedvezmenyBecsles, useKedvezmenyek, useKedvezmenyKapu, useKedvezmenyValasz, useMe } from '@/api/hooks';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre } from '@/lib/vezetett';
+import { useVezetettParam } from '@/ui/Vezetett';
 import { maiNap, szam } from '@/lib/format';
 import { HonapValaszto, IgenNem, IgenNemSor, Kapszulak, Lepteto, UrlapFej, UrlapKerdes } from '@/kepernyok/Urlap';
 import { szin } from '@/theme/tokens';
-import { GombE, HibaSzoveg, Lap, Pipa } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa } from '@/ui/alap';
 import { Arckep, type Ikon3dNev } from '@/ui/kepek';
 import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { Mezo } from '@/ui/Mezo';
@@ -67,6 +69,19 @@ function KedvezmenyKerdoivTartalom() {
   const [toltve, setToltve] = useState(false);
   const [hiba, setHiba] = useState<string | null>(null);
   const [elonezet, setElonezet] = useState<AllowanceClientPreview | null>(null);
+  // SPEC §29.10.3: in the guided run the gate comes first ("Nem jár" → the next guided step)
+  const vk = useVezetettParam();
+  const kapu = useKedvezmenyKapu();
+  const [kapuKesz, setKapuKesz] = useState(false);
+  const kapuValt = async (gate: 'nem_jar' | 'kesobb') => {
+    try {
+      await kapu.mutateAsync({ year: ev, gate });
+      if (gate === 'nem_jar') jelez({ szoveg: ALLOWANCE_TEXTS.kapu.nemJarToast, kesz: true });
+    } catch {
+      /* a kapu válasza nem akadályozza a bekötést */
+    }
+    bekotesre();
+  };
 
   // előtöltés a korábbi válaszokból („Valami változott – módosítom”)
   useEffect(() => {
@@ -105,6 +120,18 @@ function KedvezmenyKerdoivTartalom() {
     );
   }
 
+  if (vk && !kapuKesz && kert === 0 && !q.data?.answers) {
+    return (
+      <Kepernyo ful="fiok" fejlec={<UrlapFej vissza={() => vissza('/bekotes')} szakasz="Adókedvezmények" />} dokk={<GombE cim={ALLOWANCE_TEXTS.kapu.primary} onPress={() => setKapuKesz(true)} />}>
+        <UrlapKerdes cim={ALLOWANCE_TEXTS.kapu.title} miert={ALLOWANCE_TEXTS.kapu.body} ikon="igazolas" />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <GombM cim={ALLOWANCE_TEXTS.kapu.nemJar} tolt={kapu.isPending} onPress={() => void kapuValt('nem_jar')} />
+          <GombSz cim={ALLOWANCE_TEXTS.kapu.kesobb} m={16} onPress={() => void kapuValt('kesobb')} />
+        </View>
+      </Kepernyo>
+    );
+  }
+
   const ellenoriz = (): string | null => {
     const v = ALLOWANCE_TEXTS.validation;
     if (lap === 'K1' && !a.birthMonth) return v.birth;
@@ -127,7 +154,8 @@ function KedvezmenyKerdoivTartalom() {
     try {
       await ment.mutateAsync({ year: ev, answers: kuld, submit: true });
       jelez({ szoveg: fillPlaceholders(ALLOWANCE_TEXTS.sentToast, { firstName: fn }), kesz: true });
-      router.replace('/kedvezmenyek');
+      if (vk) bekotesre();
+      else router.replace('/kedvezmenyek');
     } catch (e) {
       setHiba(hibaUzenet(e, 'Nem sikerült elküldeni. Próbáld újra.'));
     }

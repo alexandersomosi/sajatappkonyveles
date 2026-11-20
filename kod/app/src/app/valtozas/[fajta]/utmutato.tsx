@@ -8,7 +8,7 @@ import type { ChangeKind } from '@/_shared/enums';
 import { ApiHiba } from '@/api/http';
 import { useMe, useUtmutato, useUtmutatoHaladas, useUtmutatoKepek } from '@/api/hooks';
 import { maiNap } from '@/lib/format';
-import { valtozasFajta, valtozasUtmutatoEpit } from '@/lib/utmutato';
+import { valtozasFajta, valtozasSor, valtozasUtmutatoEpit } from '@/lib/utmutato';
 import { SavCim, useHaladas, useLepesParam, UtmutatoLepesenkent, UtmutatoTorzs } from '@/kepernyok/Utmutato';
 import { Betolt, Hiba, Kepernyo, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
@@ -19,19 +19,21 @@ export default function ValtozasUtmutato() {
   const kind = (valtozasFajta(p.fajta) ? p.fajta : 'valtozas_szekhely') as ChangeKind;
   const me = useMe();
   const fn = me.data?.accountant?.firstName ?? 'a könyvelőd';
-  const q = useUtmutato(kind);
-  const kepek = useUtmutatoKepek(kind);
-  const haladasMent = useUtmutatoHaladas(kind);
+  // SPEC §29.7: the closing guide uses the same endpoints (the GuideKind type predates it)
+  const gk = kind as Parameters<typeof useUtmutato>[0];
+  const q = useUtmutato(gk);
+  const kepek = useUtmutatoKepek(gk);
+  const haladasMent = useUtmutatoHaladas(gk);
   // régebbi szerver (még nincs változás-útmutató): ugyanabból a megosztott sablonból itt épül fel
   const nincsVegpont = q.error instanceof ApiHiba && (q.error.status === 404 || q.error.code === 'not_found');
   const g: Guide | undefined = q.data ?? (nincsVegpont ? valtozasUtmutatoEpit(kind, { change: null, firstName: fn, kesz: [], ma: maiNap() }) : undefined);
-  const h = useHaladas(kind, g, (k) => haladasMent.mutateAsync(k));
+  const h = useHaladas(gk, g, (k) => haladasMent.mutateAsync(k));
   const lp = useLepesParam(g?.steps.length ?? 0);
   const fej = (
     <SavCim
       vissza={() => (p.egyben !== '1' && lp.lepes > 0 ? lp.ugrik(lp.lepes - 1) : vissza(`/valtozas/${kind}`))}
       visszaCim="Vissza"
-      cim={g?.title ?? CHANGE_TEXTS.sorok[kind].title}
+      cim={g?.title ?? valtozasSor(kind).title}
       al={`Kb. ${kind === 'valtozas_adoadat' ? 15 : 10} perc, ingyenes. Te küldöd be a saját belépéseddel.`}
     />
   );

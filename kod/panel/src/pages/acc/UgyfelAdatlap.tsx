@@ -25,6 +25,7 @@ const Visszahivasok = lazy(() => import('./ugyfel/Visszahivasok'));
 const Naplo = lazy(() => import('./ugyfel/Naplo'));
 const Kedvezmenyek = lazy(() => import('./ugyfel/Kedvezmenyek'));
 const EvesZaras = lazy(() => import('./ugyfel/EvesZaras'));
+const Kimutatas = lazy(() => import('./ugyfel/Kimutatas'));
 
 export type FulProps = { c: AccClientDetail };
 const FULEK: { kulcs: string; felirat: string; db?: (c: AccClientDetail) => number; rejtve?: (c: AccClientDetail) => boolean }[] = [
@@ -34,6 +35,8 @@ const FULEK: { kulcs: string; felirat: string; db?: (c: AccClientDetail) => numb
   { kulcs: 'dosszie', felirat: 'Dosszié' },
   { kulcs: 'nav', felirat: 'Kiállított számlák' }, // SPEC §27.5.2 (slug unchanged)
   { kulcs: 'bevetelek', felirat: 'Bevételek' },
+  // SPEC §29.6 F2: the income statement the client downloads, and "Ellenőriztem, rendben"
+  { kulcs: 'kimutatas', felirat: 'Kimutatás', rejtve: (c) => c.lifecycle === 'bekotes_alatt' },
   { kulcs: 'ado', felirat: 'Adó' },
   // SPEC §28.3.6: between Adó and Üzenetek, badge = allowancesPending; a KATA client has none (§28.K.11)
   { kulcs: 'kedvezmenyek', felirat: 'Kedvezmények', db: (c) => c.allowancesPending ?? 0, rejtve: (c) => c.taxRegime === 'kata' || c.lifecycle === 'bekotes_alatt' && !(c.allowancesPending ?? 0) },
@@ -76,6 +79,8 @@ export default function UgyfelAdatlap() {
         return <NavSzamlak c={c} />;
       case 'bevetelek':
         return <Bevetelek c={c} />;
+      case 'kimutatas':
+        return <Kimutatas c={c} />;
       case 'ado':
         return <Ado c={c} />;
       case 'uzenetek':

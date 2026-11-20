@@ -20,6 +20,7 @@ import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { szoveg } from '@/lib/szovegek';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre } from '@/lib/vezetett';
 
 // A lakcímkártyának CSAK a lakcímes oldala kell: a másik oldalon a személyi azonosító van, azt a Pmt. 7. § (8) szerint
 // nem másolhatjuk (jogi megjegyzés, SPEC §24). Útlevélnél csak az adatoldal kell.
@@ -212,7 +213,7 @@ export default function Azonositas() {
       await qc.invalidateQueries({ queryKey: K.kyc });
       await qc.invalidateQueries({ queryKey: K.onboarding });
       jelez({ szoveg: `Elküldted. ${fn} átnézi.`, kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (err) {
       setHiba(hibaUzenet(err, 'Nem sikerült elküldeni. Próbáld újra.'));
     } finally {

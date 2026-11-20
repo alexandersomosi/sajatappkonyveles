@@ -159,6 +159,6 @@ describe('O5.1 – explainers (backend)', () => {
   it('/config exposes the media base and the charge policy', async () => {
     const cfg = await h.json('GET', '/config');
     expect(cfg.body.mediaBaseUrl).toMatch(/\/media\/$/);
-    expect(cfg.body.newBusinessChargePolicy).toBe('adoszam_utan');
+    expect(cfg.body.newBusinessChargePolicy).toBe('azonnal'); // SPEC §29.4.2: no free period
   });
 });

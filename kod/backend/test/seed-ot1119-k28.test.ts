@@ -70,7 +70,7 @@ describe('seed:ot1119 + seed:k28', () => {
     const il = await h.json('GET', '/client/home', { token: tokens['ilona.fazekas']! });
     expect(il.body.lock.reasons).toEqual(['havidij']);
     const f = await h.json('GET', '/client/fees', { token: tokens['norbert.kiss']! });
-    expect(f.body.open[0]).toMatchObject({ kind: 'valtozas_jogallas', amountHuf: 7_999, demo: true });
+    expect(f.body.open[0]).toMatchObject({ kind: 'valtozas_jogallas', amountHuf: 7_999, demo: false }); // SPEC §29.4.1
     const an = await h.json('GET', '/client/annual?year=2026', { token: tokens['balint.toth']! });
     expect(an.body.status).toBe('nem_indult');
   });

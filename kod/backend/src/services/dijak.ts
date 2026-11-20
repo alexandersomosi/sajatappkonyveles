@@ -8,7 +8,9 @@ import { FEE_CHARGE_STATUS_LABELS, FEE_KIND_LABELS, FEE_UNIT_LABELS } from '../_
 import { ASSIST_KIND_LABELS, FEE_DEFAULTS, FEE_KINDS, FEE_RULES, ONE_OFF_FEE_KINDS, type FeeKind } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { annualClosings, assistRequests, cardRegistrations, checkinItems, clients, feeCharges, feeInvoices, feeSettingHistory, feeSettings, simplepayTransactions, subscriptions, users } from '../db/schema.js';
+import { annualClosings, assistRequests, cardRegistrations, certificateEvents, certificateRequests, checkinItems, clients, faqItems, feeCharges, feeInvoices, feeSettingHistory, feeSettings, simplepayTransactions, subscriptions, systemState, users } from '../db/schema.js';
+import { FEE_OWNER_PRICES_1120 } from '../_shared/enums.js';
+import { PAYMENT_RULES, type FeePurposeK29 } from '../_shared/k29.js';
 import { audit } from '../audit.js';
 import { addDays, todayBudapest } from '../lib/dates.js';
 import { ApiError, E } from '../lib/errors.js';
@@ -205,10 +207,48 @@ export async function applyFeeFinished(deps: Deps, txId: string, ipnTransactionI
   await runPurpose(deps, cl, charge);
 }
 
-/** The action a paid charge unlocks (assist dijra_var → egyeztetve; annual dijra_var → konyvelonel). */
+/**
+ * SPEC §29.1.7 / §29.1.15: what a paid (or waived) charge of the new purposes unlocks. B2 registers its own handlers
+ * ('igazolas' → the certificate request goes from 'dijra_var' to 'beerkezett'; 'megszuntetes' may add more) without
+ * editing this file. Without a handler the defaults below run.
+ */
+export type FeePurposeHandler = (deps: Deps, cl: ClientRow, ch: FeeChargeRow) => Promise<void>;
+const PURPOSE_HANDLERS = new Map<string, FeePurposeHandler>();
+export function registerFeePurposeHandler(type: 'igazolas' | 'megszuntetes' | 'admin', fn: FeePurposeHandler): void {
+  PURPOSE_HANDLERS.set(type, fn);
+}
+
+/** Exported for services/payments.ts (the Stripe / new DEMO flow). */
+export async function runPurposeFor(deps: Deps, cl: ClientRow, ch: FeeChargeRow): Promise<void> {
+  return runPurpose(deps, cl, ch);
+}
+
+/** The action a paid charge unlocks (assist dijra_var → egyeztetve; annual dijra_var → konyvelonel; §29 purposes). */
 async function runPurpose(deps: Deps, cl: ClientRow, ch: FeeChargeRow): Promise<void> {
   const db = deps.db;
   const acc = await accountantUserOf(db, cl);
+  const custom = PURPOSE_HANDLERS.get(ch.purpose.type);
+  if (custom) {
+    await custom(deps, cl, ch);
+  } else if (ch.purpose.type === 'igazolas') {
+    // default (no B2 handler loaded): the certificate request waits no more for the fee
+    const rid = ch.purpose.requestId;
+    const moved = await db.update(certificateRequests).set({ status: 'beerkezett', updatedAt: deps.now() }).where(and(eq(certificateRequests.requestId, rid), eq(certificateRequests.status, 'dijra_var'))).returning({ id: certificateRequests.requestId });
+    if (moved.length) await db.insert(certificateEvents).values({ requestId: rid, status: 'beerkezett', at: deps.now(), note: 'díj kifizetve' });
+  } else if (ch.purpose.type === 'megszuntetes') {
+    const [a] = await db.select().from(assistRequests).where(eq(assistRequests.id, ch.purpose.assistId)).limit(1);
+    if (a && a.status === 'dijra_var') {
+      const next = a.callbackId ? 'visszahivas_kerve' : 'egyeztetve';
+      await db.update(assistRequests).set({ status: next, statusChangedAt: deps.now(), updatedAt: deps.now() }).where(eq(assistRequests.id, a.id));
+      await audit(db, { action: 'assist.dij_fizetve', actorRole: 'system', targetType: 'assist', targetId: a.id, clientId: cl.id, details: { kind: a.kind, to: next } });
+      if (acc && next === 'egyeztetve') await notify(deps, db, { userId: acc.userId, kind: 'assist_task', variant: 'valtozas_adatok', params: { clientName: clientName(cl), kindLabel: ASSIST_KIND_LABELS[a.kind] }, link: `/helyettunk/${a.id}` });
+    }
+  }
+  if (ch.purpose.type === 'igazolas' || ch.purpose.type === 'megszuntetes' || ch.purpose.type === 'admin') {
+    const { computeServiceLock } = await import('./zarolas.js');
+    await computeServiceLock(deps, cl.id);
+    return;
+  }
   if (ch.purpose.type === 'valtozas') {
     const [a] = await db.select().from(assistRequests).where(eq(assistRequests.id, ch.purpose.assistId)).limit(1);
     if (a && a.status === 'dijra_var') {
@@ -300,15 +340,75 @@ export async function updateFeeSetting(deps: Deps, db: DbOrTx, kind: FeeKind, am
   const cur = await feeSetting(db, kind);
   const today = todayBudapest(deps.now());
   const plan = kind === 'havidij' || kind === 'havidij_kata';
+  // SPEC §29.4.1: whole forints, 0 (free) or at least the Stripe HUF minimum
+  if (!Number.isInteger(amountHuf) || amountHuf < 0 || (amountHuf > 0 && amountHuf < PAYMENT_RULES.minChargeHuf))
+    throw E.validation({ amountHuf: `0 Ft (ingyenes) vagy legalább ${PAYMENT_RULES.minChargeHuf} Ft, egész forintban.` });
   if (plan && amountHuf > cur.amountHuf) {
     const min = addDays(today, FEE_RULES.priceRiseNoticeDays);
     if (!o.effectiveFrom || o.effectiveFrom < min) throw E.validation({ effectiveFrom: `Emelésnél legalább ${FEE_RULES.priceRiseNoticeDays} nap múlva (${min} vagy később).` });
   }
-  // a changed amount is unconfirmed again until the owner confirms it
-  const v = { amountHuf, confirmedAt: null, confirmedBy: null, effectiveFrom: o.effectiveFrom ?? null, updatedBy: o.by, updatedAt: deps.now() };
+  // SPEC §29.4.1 (owner 11-20): an admin edit IS the confirmation – the price is real from now on (no DEMO mark).
+  const v = { amountHuf, confirmedAt: deps.now(), confirmedBy: o.by, effectiveFrom: o.effectiveFrom ?? null, updatedBy: o.by, updatedAt: deps.now() };
   await db.insert(feeSettings).values({ kind, unit: FEE_DEFAULTS[kind].unit, ...v }).onConflictDoUpdate({ target: feeSettings.kind, set: v });
-  await db.insert(feeSettingHistory).values({ kind, amountHuf, confirmed: false, changedBy: o.by, changedAt: deps.now(), note: o.note ?? null });
-  await audit(db, { action: 'fee.setting_changed', actorUserId: o.by, actorRole: 'admin', targetType: 'fee_setting', details: { kind, amountHuf } });
+  await db.insert(feeSettingHistory).values({ kind, amountHuf, confirmed: true, changedBy: o.by, changedAt: deps.now(), note: o.note ?? null });
+  await audit(db, { action: 'fee.setting_changed', actorUserId: o.by, actorRole: 'admin', targetType: 'fee_setting', details: { kind, amountHuf, confirmed: true } });
+}
+
+/**
+ * SPEC §29.1.15 createFeeChargeK29: a fee charge of any kind (amount from fee_settings unless given; null when 0 Ft).
+ * Purpose 'admin' (the console adds a fee): the caller sends fee_due; the client pays in the app (never charged without his tap).
+ */
+export async function createFeeChargeK29(deps: Deps, db: DbOrTx, i: { clientId: string; kind: FeeKind; amountHuf?: number; purpose: FeePurposeK29; by: string | null }): Promise<FeeChargeRow | null> {
+  const s = await feeSetting(db, i.kind);
+  const amount = i.amountHuf ?? s.amountHuf;
+  if (!Number.isInteger(amount) || amount < 0) throw E.validation({ amountHuf: 'Egész forint kell.' });
+  if (amount === 0) return null;
+  if (amount < PAYMENT_RULES.minChargeHuf) throw E.validation({ amountHuf: `Legalább ${PAYMENT_RULES.minChargeHuf} Ft.` });
+  const [row] = await db
+    .insert(feeCharges)
+    .values({ clientId: i.clientId, kind: i.kind, amountHuf: amount, purpose: i.purpose, status: 'nyitott', dueOn: addDays(todayBudapest(deps.now()), 14), demo: false, createdBy: i.by, createdAt: deps.now() })
+    .returning();
+  await audit(db, { action: 'fee.charge_created', actorUserId: i.by, actorRole: i.purpose.type === 'admin' ? 'admin' : i.by ? 'client' : 'system', targetType: 'fee_charge', targetId: row!.id, clientId: i.clientId, details: { kind: i.kind, amountHuf: amount, purpose: i.purpose.type } });
+  // the caller notifies (fee_due for an admin fee, the purpose's own texts otherwise)
+  return row!;
+}
+
+/**
+ * SPEC §29.4.1 / §29.12 data step `data.k29` (worker start, idempotent): fee_settings rows of the new kinds; every row
+ * whose amount equals the owner's real price of 11-20 and is unconfirmed → confirmed ("Tulaj 11-20: végleges ár"); a
+ * row with another amount (an admin edit) stays and is listed in the audit; subscriptions.provider backfill check.
+ */
+export const NO_TRIAL_FAQ_ANSWER = 'A havidíjat a szerződés és a kártya megadása napjától fizeted. Ebben benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése és a visszahívás.';
+
+export async function runDataStepK29(deps: Deps): Promise<Record<string, unknown>> {
+  const db = deps.db;
+  const [done] = await db.select().from(systemState).where(eq(systemState.key, 'data.k29')).limit(1);
+  const inserted = await ensureFeeSettings(deps, db);
+  if (done) return { already: true, inserted };
+  const confirmed: string[] = [];
+  const left: { kind: string; amountHuf: number }[] = [];
+  for (const [kind, price] of Object.entries(FEE_OWNER_PRICES_1120) as [FeeKind, number][]) {
+    const [r] = await db.select().from(feeSettings).where(eq(feeSettings.kind, kind)).limit(1);
+    if (!r || r.confirmedAt) continue;
+    if (r.amountHuf === price) {
+      await db.update(feeSettings).set({ confirmedAt: deps.now(), updatedAt: deps.now() }).where(eq(feeSettings.kind, kind));
+      await db.insert(feeSettingHistory).values({ kind, amountHuf: price, confirmed: true, changedAt: deps.now(), note: 'Tulaj 11-20: végleges ár' });
+      confirmed.push(kind);
+    } else left.push({ kind, amountHuf: r.amountHuf });
+  }
+  // open charges of these kinds lose the DEMO mark (the price is real)
+  const undemo = await db.update(feeCharges).set({ demo: false }).where(and(eq(feeCharges.demo, true), eq(feeCharges.status, 'nyitott'))).returning({ id: feeCharges.id });
+  // SPEC §29.4.2: the FAQ answer that promised a free period (only when it is still one of our old default texts)
+  const faq = await db
+    .update(faqItems)
+    .set({ answer: NO_TRIAL_FAQ_ANSWER, updatedAt: deps.now() })
+    .where(and(eq(faqItems.question, 'Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?'), or(sql` like 'Amíg nincs adószámod, nem fizetsz semmit%'`, sql` like 'Akkor, amikor már megvan az adószámod%'`)))
+    .returning({ id: faqItems.id });
+  const legacyDemo = await db.update(subscriptions).set({ provider: 'demo' }).where(and(eq(subscriptions.mode, 'demo'), eq(subscriptions.provider, 'simplepay'))).returning({ id: subscriptions.id });
+  const value = { at: deps.now().toISOString(), inserted, confirmed, left, openChargesUndemo: undemo.length, providerBackfill: legacyDemo.length, faqNoTrial: faq.length };
+  await db.insert(systemState).values({ key: 'data.k29', value }).onConflictDoNothing();
+  await audit(db, { action: 'datastep.k29', actorRole: 'system', targetType: 'system', targetId: 'data.k29', details: value });
+  return value;
 }
 
 export async function confirmFeeSetting(deps: Deps, db: DbOrTx, kind: FeeKind, by: string): Promise<void> {

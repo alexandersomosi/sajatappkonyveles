@@ -22,6 +22,8 @@ import { Ikon3d, KeszJel, type Ikon3dNev } from './kepek';
 import { useAuth } from '../auth/AuthProvider';
 import { useZarolt } from './Zarolt';
 import { T } from './T';
+import { useVezetettParam, VezetettFelsoSor, VezetettHaladas } from './Vezetett';
+import { vezetettJelol, vezetettVissza } from '../lib/vezetett';
 
 /** SPEC §28.K.10 (C): lapos, teljes szélességű fülsor, 52 pt magas, fölötte egy hajszálvonal. */
 export const FULSOR_MAGASSAG = 52;
@@ -236,6 +238,11 @@ export function Kepernyo({
   gorgetoRef?: Ref<ScrollViewInstance>;
 } & ScrollViewProps) {
   const ins = useSafeAreaInsets();
+  // SPEC §29.10.3: a guided step screen (`?vezetett=<lépés>`) is full screen – no tab bar, no lock band – and while it is
+  // on top, "Vissza" and the save go along the guided run (lib/vezetett).
+  const vezetett = useVezetettParam();
+  useEffect(() => (vezetett ? vezetettJelol(vezetett) : undefined), [vezetett]);
+  if (vezetett) ful = undefined;
   const alsoTer = (ful ? FULSOR_MAGASSAG + 24 + (Platform.OS === 'web' ? 0 : ins.bottom) : 40 + ins.bottom) + (dokk ? DOKK_MAGASSAG : 0);
   // C + elválasztó: a kék sáv alatti első szakasz előtt nincs sáv; a CimSor fehér címe után viszont van.
   const cimSorAlatt = isValidElement(fejlec) && fejlec.type === CimSor;
@@ -278,11 +285,18 @@ export function Kepernyo({
  * a szakasz nevével középen), alatta fehéren a képernyő címe 26-os és egy mondat másodlagos szöveggel.
  */
 export function CimSor({ vissza, visszaCim, cim, al, szakasz }: { vissza?: () => void; visszaCim?: string; cim: string; al?: string; szakasz?: string }) {
-  const vissza2 = vissza ?? (() => (router.canGoBack() ? router.back() : router.replace('/')));
+  const vissza2 = vissza ?? (() => (vezetettVissza() ? undefined : router.canGoBack() ? router.back() : router.replace('/')));
+  const vezetett = useVezetettParam();
   return (
     <View style={{ backgroundColor: szin.lap }}>
-      <Fejlec rozX={318} rozY={70} alsoTer={12}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, paddingRight: 70 }}>
+      <Fejlec rozX={318} rozY={70} alsoTer={vezetett ? 16 : 12}>
+        {vezetett ? (
+          <>
+            <VezetettFelsoSor vissza={vissza2} kulcs={vezetett} />
+            <VezetettHaladas style={{ marginTop: 8, paddingHorizontal: 16 }} />
+          </>
+        ) : null}
+        <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, paddingRight: 70, display: vezetett ? 'none' : 'flex' }}>
           {visszaCim ? (
             <Pressable
               accessibilityRole="link"
@@ -318,6 +332,8 @@ export function CimSor({ vissza, visszaCim, cim, al, szakasz }: { vissza?: () =>
 }
 
 export function vissza(alap = '/') {
+  // SPEC §29.10.3: leaving a guided step screen goes to the previous guided step, not to the checklist
+  if (vezetettVissza()) return;
   if (router.canGoBack()) router.back();
   else router.replace(alap as never);
 }

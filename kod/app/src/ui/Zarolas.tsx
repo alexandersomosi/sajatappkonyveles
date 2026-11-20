@@ -26,7 +26,8 @@ export function ZarolasSav() {
         {lock.text || fillPlaceholders(LOCK_TEXTS.banner, { firstName: fn, mit: LOCK_TEXTS.mit.havidij, osszeg: String(lock.amountHuf) })}
       </T>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, marginTop: 8, flexWrap: 'wrap' }}>
-        <GombM cim={LOCK_TEXTS.bannerButton} onPress={() => router.push(lock.payRoute as never)} />
+        {/* §29.9.4: a manual lock ('kezi') has nothing to pay – only the message link */}
+        {lock.reasons.every((r) => (r as string) === 'kezi') ? null : <GombM cim={LOCK_TEXTS.bannerButton} onPress={() => router.push(lock.payRoute as never)} />}
         <GombSz cim={LOCK_TEXTS.bannerLink} c={szin.borostyanSzoveg} m={15.5} onPress={() => router.push('/uzenetek')} style={{ paddingVertical: 6 }} />
       </View>
     </View>

@@ -2,6 +2,8 @@
 // útmutató felépítése a sablonból. Az útmutatót a szerver építi (GET /client/guides/:kind); ez a függvény ugyanazt
 // csinálja a MINTA-szervernek és tartaléknak, ha egy régebbi szerver még nem ismeri a végpontot.
 import type { BusinessRegistrationAnswers, Guide, GuideImage, GuideImageManifest, GuideStep } from '../_shared/api';
+import { CHANGE_TEXTS } from '../_shared/bekotes';
+import { CLOSING_KIND, CLOSING_TEXTS, personaliseClosingGuide } from '../_shared/k29f';
 import { personaliseChangeGuide, personaliseGuide, PREPARE_ITEMS, type ChangeGuideData } from '../_shared/bekotes';
 import { CHANGE_KINDS, CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT, GUIDE_ACTION_LABELS, GUIDE_IMAGE_LABELS, GUIDE_VIDEO, VIDEO_FILES, type ChangeKind, type GuideKind } from '../_shared/enums';
 
@@ -68,13 +70,22 @@ export interface UtmutatoKornyezet {
 
 export const valtozasFajta = (k: string): k is ChangeKind => (CHANGE_KINDS as readonly string[]).includes(k);
 
+/** A hub-sor címe és mondata: a §28.5 fajtáké a CHANGE_TEXTS-ből, a megszüntetésé (SPEC §29.7) a k29f.ts-ből. */
+export function valtozasSor(kind: ChangeKind): { title: string; line: string } {
+  if (kind === CLOSING_KIND) return CLOSING_TEXTS.hubRow;
+  return (CHANGE_TEXTS.sorok as Record<string, { title: string; line: string }>)[kind] ?? CLOSING_TEXTS.hubRow;
+}
+
 /** SPEC §28.5.3: a változás-útmutató ugyanabból a megosztott sablonból (personaliseChangeGuide), mint a szerveren. */
 export function valtozasUtmutatoEpit(kind: ChangeKind, k: { change: ChangeGuideData | null; firstName: string; kesz: string[]; ma: string }): Guide {
-  const p = personaliseChangeGuide(kind, { change: k.change, firstName: k.firstName, progress: k.kesz, ugysegedValidUntil: CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT });
+  const p =
+    kind === CLOSING_KIND
+      ? personaliseClosingGuide({ change: null, firstName: k.firstName, progress: k.kesz, regime: null, ugysegedValidUntil: CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT })
+      : personaliseChangeGuide(kind, { change: k.change, firstName: k.firstName, progress: k.kesz, ugysegedValidUntil: CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT });
   const steps: GuideStep[] = p.steps.map((s) => ({ ...s, fields: s.fields.map((f) => ({ ...f, actionLabel: GUIDE_ACTION_LABELS[f.action] })) }));
   const elavult = k.ma > p.validUntil;
   return {
-    kind,
+    kind: kind as Guide['kind'],
     version: p.version,
     title: p.title,
     intro: p.intro,

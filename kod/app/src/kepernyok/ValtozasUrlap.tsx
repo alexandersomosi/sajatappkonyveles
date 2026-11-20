@@ -35,6 +35,9 @@ export function valtozasLapok(kind: ChangeKind, a: VAdat): VLap[] {
       return ['folytatas'];
     case 'valtozas_adoadat':
       return a.items.includes('munkavegzes') ? ['tetelek', 'munka', 'datum'] : ['tetelek', 'datum'];
+    default:
+      // SPEC §29.7: 'valtozas_megszuntetes' has its own form (kepernyok/Megszuntetes.tsx)
+      return [];
   }
 }
 
@@ -123,6 +126,9 @@ export function valtozasAdat(kind: ChangeKind, a0: VAdat): ChangeData {
       return { kind, from: a.from };
     case 'valtozas_adoadat':
       return { kind, items: a.items, workKind: a.items.includes('munkavegzes') ? a.workKind : null, effectiveOn: a.effectiveOn, note: a.note.trim() || null };
+    default:
+      // SPEC §29.7: the closing has its own form (kepernyok/Megszuntetes.tsx)
+      throw new Error('valtozas_megszuntetes: saját űrlap');
   }
 }
 
@@ -158,6 +164,8 @@ export function valtozasSorok(kind: ChangeKind, a0: VAdat): string[] {
       return [`Újrakezdés: ${a.from}`];
     case 'valtozas_adoadat':
       return [...a.items.map((i) => F.adoadatItems[i]), ...(a.workKind ? [WORK_KIND_LABELS[a.workKind]] : []), `Mikortól: ${a.effectiveOn}`];
+    default:
+      return [];
   }
 }
 

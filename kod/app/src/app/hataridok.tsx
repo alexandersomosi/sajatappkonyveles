@@ -1,17 +1,18 @@
 // Határidő-naptár (FUNKCIOK 18): hónapok szerint (befizetés, bevallás, kérés, időpont), borostyán „még N nap”
-// címkével; mindegyik naptárba tehető (.ics). Üresen: tépőnaptár.
+// címkével; mindegyik naptárba tehető (Google / Apple / Outlook), és az egész naptár feliratkozható (SPEC §29.8). Üresen: tépőnaptár.
 import { Pressable, View } from 'react-native';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { useHataridok, useHome } from '@/api/hooks';
-import { letoltMegnyit } from '@/lib/fajlok';
+import { CALENDAR_TEXTS } from '@/_shared/k29f';
+import { NaptarSzakasz, SorNaptarLap } from '@/kepernyok/k29f';
 import { hatraVan, honapCim, reszek, szam } from '@/lib/format';
 import { szin } from '@/theme/tokens';
-import { Cimke, GombSz, Lap, Szakasz } from '@/ui/alap';
+import { Cimke, GombM, Lap, Szakasz } from '@/ui/alap';
 import { Ikon3d, KeszJel, Targykep, type Ikon3dNev } from '@/ui/kepek';
-import { Betolt, CimSor, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
+import { Betolt, CimSor, Hiba, Kepernyo, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { ZaroltKapu } from '@/ui/Zarolt';
-import { hibaUzenet } from '@/lib/hiba';
 
 const IKON: Record<string, Ikon3dNev> = { befizetes: 'szamlaszam', bevallas: 'bevallas', keres: 'feltoltes', idopont: 'hataridok', egyeb: 'ertesites' };
 
@@ -19,7 +20,8 @@ function HataridokTartalom() {
   const q = useHataridok();
   const home = useHome();
   const fn = home.data?.accountant.firstName ?? 'a könyvelőd';
-  const jelez = useJelzes();
+  // SPEC §29.8 F4: a sor „Naptárba” lapja (Google / Apple / Outlook)
+  const [naptarId, setNaptarId] = useState<string | null>(null);
   // SPEC §26.2.9: az időpont-határidők (régi foglalások) már nem látszanak.
   const lista = [...(q.data?.items ?? [])].filter((d) => d.kind !== 'idopont').sort((a, b) => a.dueDate.localeCompare(b.dueDate));
   const csoport = new Map<string, typeof lista>();
@@ -29,6 +31,7 @@ function HataridokTartalom() {
   }
   return (
     <Kepernyo ful="fooldal" fejlec={<CimSor visszaCim="Vissza" vissza={() => vissza('/')} cim="Határidők" al="Előtte mindig szólunk: értesítésben és e-mailben is." />}>
+      <NaptarSzakasz />
       {q.isLoading ? <Betolt /> : q.error ? <Hiba hiba={q.error} ujra={() => void q.refetch()} /> : !lista.length ? (
         <Lap style={{ padding: 18, alignItems: 'center' }}>
           <Targykep nev="hatarido_naptar" style={{ marginBottom: 8 }} />
@@ -100,7 +103,7 @@ function HataridokTartalom() {
                         ) : null}
                       </View>
                       {!kesz && !ellenorzesre ? (
-                        <GombSz cim="Naptárba teszem" m={14.5} style={{ paddingVertical: 6 }} onPress={() => letoltMegnyit(`/client/deadlines/${d.id}/ics`, 'hatarido.ics', 'text/calendar').catch((e: unknown) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')))} />
+                        <GombM cim={CALENDAR_TEXTS.rowButton} ikon="hataridok" magas={36} style={{ alignSelf: 'flex-start', marginTop: 8 }} onPress={() => setNaptarId(d.id)} />
                       ) : null}
                     </View>
                   </Pressable>
@@ -110,6 +113,7 @@ function HataridokTartalom() {
           </View>
         ))
       )}
+      <SorNaptarLap id={naptarId} lathato={Boolean(naptarId)} bezar={() => setNaptarId(null)} />
     </Kepernyo>
   );
 }

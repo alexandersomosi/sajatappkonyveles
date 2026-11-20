@@ -21,6 +21,8 @@ import { useEvSegitseg, KiemeltSor, MostEzJonKartya, SegitsegAllapot, UtLista, u
 import { useLatta, VideoKartya } from '@/ui/Video';
 import { JovahagytamGomb } from '@/ui/Helyettunk';
 import { VisszahivasAllapot, VisszahivasKartya, visszahivasUt } from '@/ui/Visszahivas';
+import { useGuided } from '@/api/hooks-k29g';
+import { FolytasKartya } from '@/kepernyok/Bevezeto';
 
 /** S2 – „Van már egyéni vállalkozásod?” két válasszal (a „Még nincs” után a „Hogyan jelentsük be?” lap jön, S3). */
 function ElagazasKartya({ rovid = false }: { rovid?: boolean }) {
@@ -114,6 +116,9 @@ export default function Bekotes() {
   const utv = useUtvaltas();
   const evNyitva = useEvSegitseg();
   const latta = useLatta('bekotes', me.data?.user.id);
+  // SPEC §29.10.1: after "Később folytatom" the checklist opens with "Folytasd ott, ahol abbahagytad" on top
+  const gv = useGuided();
+  const folytas = gv.data && gv.data.inOnboarding && (gv.data.paused || gv.data.show) && gv.data.currentKey ? gv.data : null;
   // „Mi kell még?” (zárolt funkció lap) → /bekotes?kovetkezo=1: a „Most ez jön” kártyához görgetünk (SPEC §26.5.3).
   const { kovetkezo } = useLocalSearchParams<{ kovetkezo?: string }>();
   const gorgeto = useRef<ScrollViewInstance>(null);
@@ -193,6 +198,7 @@ export default function Bekotes() {
       }
       tartalomStilus={{ paddingTop: 14 }}
     >
+      {folytas ? <FolytasKartya v={folytas} elso /> : null}
       {nincs ? (
         <>
           {/* Amíg a kérdés nyitott, a videó alacsony kártya – kis képernyőn egy sor –, hogy mindkét válasz a fülsor

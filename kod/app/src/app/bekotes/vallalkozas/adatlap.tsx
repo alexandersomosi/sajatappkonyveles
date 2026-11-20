@@ -31,6 +31,7 @@ import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
 import { csakInditasUton } from '@/ui/UtVedelem';
+import { bekotesre, vezetettKulcs } from '@/lib/vezetett';
 
 const LAPOK = ['Mielőtt elkezded', 'Mivel foglalkozol?', 'Hol lesz a székhelyed?', 'Hogyan dolgozol majd?', 'Mikor indulsz?'];
 const EU_LABELS: Record<EuPartnerAnswer, string> = { nem: 'Nem', igen: 'Igen', nem_tudom: 'Nem tudom' };
@@ -289,11 +290,12 @@ function Adatlap() {
       if (!marBekuldte) await bekuld.mutateAsync();
       if (segitett) {
         jelez({ szoveg: `Megkaptuk. Ezekkel az adatokkal jelenti be ${fn}.`, kesz: true });
-        router.replace('/bekotes');
+        bekotesre();
         return;
       }
       jelez({ szoveg: marBekuldte ? 'Elmentettük. Az útmutatód frissült.' : 'Elkészült a személyre szabott útmutatód.', kesz: true });
-      router.replace('/bekotes/vallalkozas/utmutato');
+      if (vezetettKulcs()) bekotesre();
+      else router.replace('/bekotes/vallalkozas/utmutato');
     } catch (e) {
       if (e instanceof ApiHiba && e.fields) {
         setH(e.fields);

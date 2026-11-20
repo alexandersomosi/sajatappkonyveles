@@ -17,9 +17,17 @@ import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
 import { ZaroltSor } from '@/ui/ZarolasKapu';
 import { useServiceLock } from '@/ui/Zarolas';
+import { CLOSING_KIND } from '@/_shared/k29f';
+import { MegszuntetesInfo } from '@/kepernyok/Megszuntetes';
 
 export default function ValtozasInfo() {
   const { fajta } = useLocalSearchParams<{ fajta: string }>();
+  // SPEC §29.7 F3: a megszüntetésnek saját info-lapja van (választás + visszahívás)
+  if (fajta === CLOSING_KIND) return <MegszuntetesInfo />;
+  return <ValtozasInfoTartalom fajta={fajta} />;
+}
+
+function ValtozasInfoTartalom({ fajta }: { fajta: string }) {
   const me = useMe();
   const fn = me.data?.accountant?.firstName ?? 'a könyvelőd';
   const v = useValtozasok();
@@ -31,8 +39,8 @@ export default function ValtozasInfo() {
     );
   }
   const kind = fajta as ChangeKind;
-  const info = CHANGE_TEXTS.info[kind];
-  const sor = CHANGE_TEXTS.sorok[kind];
+  const info = CHANGE_TEXTS.info[kind as Exclude<ChangeKind, typeof CLOSING_KIND>];
+  const sor = CHANGE_TEXTS.sorok[kind as Exclude<ChangeKind, typeof CLOSING_KIND>];
   const elem = v.data?.items.find((i) => i.kind === kind);
   const nyitott = elem?.openAssist ?? null;
   const fk = changeFeeKind(kind, kind === 'valtozas_adoadat' ? ['munkavegzes'] : []);

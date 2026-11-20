@@ -21,6 +21,8 @@ import { activityPending } from './_shared/bekotes.js';
 import { answersOf } from './services/registration.js';
 import { assistDigestLine, jobDefsTulaj1119 } from './jobs-tulaj1119.js';
 import { jobDefsK28, k28DigestLines } from './jobs-k28.js';
+import { jobDefsK29f } from './jobs-k29f.js';
+import { jobDefsK29 } from './jobs-k29.js';
 
 /** Creates a notification only once per dedupe key (stored in notifications.data.dedupe). */
 async function notifyOnce(deps: Deps, key: string, n: NotifyInput): Promise<boolean> {
@@ -330,6 +332,8 @@ export function jobDefs(deps: Deps): JobDef[] {
     { name: 'staff_digest', slot: at(8, 0), run: (d) => jobStaffDigest(d) },
     { name: 'registration_reminders', slot: at(10, 0), run: (d) => jobRegistrationReminders(d) },
     ...jobDefsTulaj1119(), // SPEC §27.8 (B1): assist_approvals every 15 min, kamara_reminders daily 10:00
+    ...jobDefsK29f(), // SPEC §29.9.5 F9: termination_effective 06:10 (+ calendar feed revoke)
+    ...jobDefsK29(), // SPEC §29.13 (B1): predebit 10:00, suspension_warning 10:05, payments_reconcile /15 min, invoices_issue /min
     ...jobDefsK28(), // SPEC §28 / §28.K: allowances yearly/monthly, check-in, reminders, annual closing, service lock
     { name: 'gdpr', slot: at(3, 30), run: (d) => runGdprJob(d) },
     {

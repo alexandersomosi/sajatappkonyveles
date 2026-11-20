@@ -11,6 +11,7 @@ import { createLogger, log, setLogger, safeErr } from './log.js';
 import { runDataFixKor1, runDataStepTulaj1118, runDataStepTulaj1119, runFaqSafetyFix } from './services/datastep.js';
 import { runDataStepK28, runDataStepOt1119 } from './services/datastep-k28.js';
 import { runDataStepK6c } from './services/datastep-k6c.js';
+import { runDataStepK29 } from './services/dijak.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -81,6 +82,13 @@ async function main(): Promise<void> {
     log().info(r, 'data step k6c');
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step k6c failed');
+  }
+  // SPEC §29.4.1 / §29.12 (B1): data.k29 – fee settings of the new kinds, the owner's real prices confirmed, provider backfill.
+  try {
+    const r = await runDataStepK29(deps);
+    log().info(r, 'data step k29');
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step k29 failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

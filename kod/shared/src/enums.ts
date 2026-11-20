@@ -231,6 +231,8 @@ export const LEGAL_DOC_TYPES = [
   'simplepay_adattovabbitas',
   'simplepay_ismetlodo',
   'app_szovegek',
+  // SPEC §29.1.3 (DB: ADD VALUE in 0017_k29_enumok.sql): the card consent of the Stripe flow.
+  'kartyas_fizetes',
 ] as const;
 export type LegalDocType = (typeof LEGAL_DOC_TYPES)[number];
 
@@ -322,6 +324,22 @@ export const NOTIFICATION_KINDS = [
   'client_locked',
   'employer_reported',
   'onboarding_task',
+  // SPEC §29.13 (DB: ADD VALUE in 0017_k29_enumok.sql, this order)
+  'charge_upcoming',
+  'payment_action_needed',
+  'payment_refunded',
+  'payment_disputed',
+  'invoice_failed',
+  'certificate_requested',
+  'certificate_status',
+  'income_statement_checked',
+  'income_statement_review',
+  'contract_terminated',
+  'contract_reactivated',
+  'price_changed',
+  'profile_changed_by_admin',
+  'announcement',
+  'guided_continue',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 /** Kinds never sent any more and hidden from the client's notification settings (SPEC §26.2.9). */
@@ -549,7 +567,8 @@ export const REGISTRATION_CHECK_LABELS: Record<RegistrationCheckItem, string> = 
 /** When a new-business client is charged first (env NEW_BUSINESS_CHARGE_POLICY; [OWNER] decision, SPEC §26.1.7). */
 export const NEW_BUSINESS_CHARGE_POLICIES = ['adoszam_utan', 'azonnal'] as const;
 export type NewBusinessChargePolicy = (typeof NEW_BUSINESS_CHARGE_POLICIES)[number];
-export const NEW_BUSINESS_CHARGE_POLICY_DEFAULT: NewBusinessChargePolicy = 'adoszam_utan';
+/** SPEC §29.4.2 (owner 11-20 "paid from day one"): no free period – the card step opens right after the contract. */
+export const NEW_BUSINESS_CHARGE_POLICY_DEFAULT: NewBusinessChargePolicy = 'azonnal';
 /** Suggested cost-ratio class of an activity (SPEC §26.1.3). 'ellenorizendo' = the accountant tells; no number shown. */
 export const COST_CLASSES = ['altalanos', 'lista80', 'kiskereskedelem', 'ellenorizendo'] as const;
 export type CostClass = (typeof COST_CLASSES)[number];
@@ -741,6 +760,8 @@ export const CALLBACK_TOPICS = [
   'valtozas_helyettem',
   'eves_zaras',
   'adozasi_mod',
+  // SPEC §29.7 F3: "Előbb beszéljük meg" on the closing choice (DB: callback_requests_topic_chk widened in 0018_k29.sql)
+  'megszuntetes',
 ] as const;
 export type CallbackTopic = (typeof CALLBACK_TOPICS)[number];
 export const CALLBACK_TOPIC_LABELS: Record<CallbackTopic, string> = {
@@ -758,6 +779,7 @@ export const CALLBACK_TOPIC_LABELS: Record<CallbackTopic, string> = {
   valtozas_helyettem: 'Intézzétek helyettem: változás bejelentése',
   eves_zaras: 'Éves zárás, bevallás',
   adozasi_mod: 'Adózási mód (átalány vagy kata)',
+  megszuntetes: 'A vállalkozás megszüntetése',
 };
 /** Topics that are assisted-path requests → the assist kind they open (SPEC §27.3.2). */
 export const CALLBACK_ASSIST_TOPIC: Partial<Record<CallbackTopic, 'vallalkozas_bejelentes' | 'meghatalmazas'>> = {
@@ -1019,6 +1041,8 @@ export const ASSIST_KINDS = [
   'valtozas_szuneteltetes',
   'valtozas_adoadat',
   'valtozas_folytatas',
+  // SPEC §29.7 F3 (DB: assist_requests_kind_chk widened in 0018_k29.sql)
+  'valtozas_megszuntetes',
 ] as const;
 export type AssistKind = (typeof ASSIST_KINDS)[number];
 export const ASSIST_KIND_LABELS: Record<AssistKind, string> = {
@@ -1030,6 +1054,7 @@ export const ASSIST_KIND_LABELS: Record<AssistKind, string> = {
   valtozas_szuneteltetes: 'Szüneteltetés',
   valtozas_adoadat: 'Adózási adat változása',
   valtozas_folytatas: 'Szüneteltetés befejezése',
+  valtozas_megszuntetes: 'A vállalkozás megszüntetése',
 };
 /** The callback topic each kind uses (CALLBACK_TOPICS). */
 export const ASSIST_CALLBACK_TOPIC: Record<AssistKind, CallbackTopic> = {
@@ -1041,6 +1066,7 @@ export const ASSIST_CALLBACK_TOPIC: Record<AssistKind, CallbackTopic> = {
   valtozas_szuneteltetes: 'valtozas_helyettem',
   valtozas_adoadat: 'valtozas_helyettem',
   valtozas_folytatas: 'valtozas_helyettem',
+  valtozas_megszuntetes: 'valtozas_helyettem',
 };
 /**
  * assist_requests.status (SPEC §27.3.4). Kind 'meghatalmazas' skips 'meghatalmazas_el', 'ugyfel_engedelyezte' and
@@ -1187,6 +1213,7 @@ export const ASSIST_PHASES: Record<AssistKind, readonly AssistCheckPhase[]> = {
   valtozas_szuneteltetes: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
   valtozas_adoadat: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
   valtozas_folytatas: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
+  valtozas_megszuntetes: ['hivas', 'valtozas_adatok', 'valtozas_bejelentes'],
 };
 /** Items that are NOT required (and not shown) for kind 'meghatalmazas' (the client already has / does not start an EV). */
 export const ASSIST_CHECK_NOT_FOR_MH: readonly AssistCheckItem[] = ['nincs_elo_ev', 'afa_mentes_kor', 'ugycsoport_ev'];
@@ -1414,10 +1441,12 @@ export const CHANGE_KINDS = [
   'valtozas_szuneteltetes',
   'valtozas_adoadat',
   'valtozas_folytatas',
+  // SPEC §29.7 F3 – "A vállalkozás megszüntetése" (guide + "Megszüntetjük helyetted", fee kind 'megszuntetes').
+  'valtozas_megszuntetes',
 ] as const;
 export type ChangeKind = (typeof CHANGE_KINDS)[number];
 /** Filed in the Vállalkozói Ügysegéd (valid until env CHANGE_UGYSEGED_VALID_UNTIL); 'valtozas_adoadat' goes to ONYA (T101E). */
-export const CHANGE_UGYSEGED_KINDS: readonly ChangeKind[] = ['valtozas_szekhely', 'valtozas_tevekenyseg', 'valtozas_telephely', 'valtozas_szuneteltetes', 'valtozas_folytatas'];
+export const CHANGE_UGYSEGED_KINDS: readonly ChangeKind[] = ['valtozas_szekhely', 'valtozas_tevekenyseg', 'valtozas_telephely', 'valtozas_szuneteltetes', 'valtozas_folytatas', 'valtozas_megszuntetes'];
 export const CHANGE_UGYSEGED_VALID_UNTIL_DEFAULT = '2026-12-31';
 export const CHANGE_ADOADAT_VALID_UNTIL = '2027-12-31';
 /** env CHANGE_DONE_BY_FILER_ALLOWED default: four eyes on change-done. */
@@ -1430,6 +1459,7 @@ export const CHANGE_KIND_ICON: Record<ChangeKind, Icon3dAny> = {
   valtozas_szuneteltetes: 'tepnaptar',
   valtozas_adoadat: 'bevallas',
   valtozas_folytatas: 'tepnaptar',
+  valtozas_megszuntetes: 'irat',
 };
 /** Items of a tax-data change (T101E). SPEC §28.5.6 + §28.K.1 / §28.K.11 (pension, KATA in / out). */
 export const CHANGE_TAX_ITEMS = ['munkavegzes', 'nyugdijba_vonulas', 'kozossegi_adoszam', 'kata_belepes', 'kata_kilepes', 'atalany_kilepes', 'afa_kilepes', 'egyeb'] as const;
@@ -1458,6 +1488,8 @@ export const CHANGE_FOLLOWUP_KEYS: Record<ChangeKind, readonly string[]> = {
   valtozas_szuneteltetes: ['szunetel_szakasz', 'szunetel_dij', 'folytatas_emlekezteto'],
   valtozas_adoadat: ['adoprofil_statusz', 'adozasi_mod'],
   valtozas_folytatas: ['szunetel_lezaras', 'szunetel_dij_lezaras', 'hipa_atnezes'],
+  // SPEC §29.7: CHANGE_FOLLOWUPS.valtozas_megszuntetes (labels in k29f.ts; 'elofizetes_lezaras' ends the subscription).
+  valtozas_megszuntetes: ['zaro_jarulek_bevallas', 'szja_eves', 'kata_zaro', 'hipa_soron_kivuli', 'afa_ellenorzes', 'meghatalmazas_megszuntetes', 'elofizetes_lezaras'],
 };
 
 // =====================================================================================================================
@@ -1465,32 +1497,60 @@ export const CHANGE_FOLLOWUP_KEYS: Record<ChangeKind, readonly string[]> = {
 // =====================================================================================================================
 
 // ---------- §28.K.1 prices and fees ----------
-export const FEE_KINDS = ['havidij', 'havidij_kata', 'eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas', 'szuneteltetesi_dij'] as const;
+// SPEC §29.4.1 / §29.12: + the certificate fees (F1, default 0 Ft) and the closing fee (F3, priced as the legal-status change).
+export const FEE_KINDS = [
+  'havidij',
+  'havidij_kata',
+  'eves_zaras',
+  'valtozas_egyszeru',
+  'valtozas_jogallas',
+  'szuneteltetesi_dij',
+  'igazolas_jovedelem',
+  'igazolas_ado',
+  'igazolas_koma',
+  'igazolas_ev_kivonat',
+  'igazolas_egyeb',
+  'megszuntetes',
+] as const;
 export type FeeKind = (typeof FEE_KINDS)[number];
 export const FEE_UNITS = ['ho', 'ev', 'alkalom'] as const;
 export type FeeUnit = (typeof FEE_UNITS)[number];
 /**
- * Defaults seeded into fee_settings (admin-editable, history kept). `confirmed: false` = shown with the amber DEMO chip
- * and not chargeable in APP_ENV=production until the owner confirms it in /admin/dijak (SPEC §28.K.1).
+ * Defaults seeded into fee_settings (admin-editable, history kept). SPEC §29.4.1 (owner 11-20): every price is REAL – no
+ * DEMO mark any more; an admin edit is itself the confirmation. The "unconfirmed → not chargeable in production" rule stays
+ * in code (it never triggers now).
  */
 export const FEE_DEFAULTS: Record<FeeKind, { amountHuf: number; unit: FeeUnit; confirmed: boolean; note: string }> = {
   havidij: { amountHuf: 19_999, unit: 'ho', confirmed: true, note: 'Tulaj 2026-11-19 19:30: 19 999 Ft' },
   havidij_kata: { amountHuf: 19_999, unit: 'ho', confirmed: true, note: 'Tulaj 2026-11-19 17:25: „Ugyanannyi lesz”' },
-  eves_zaras: { amountHuf: 14_999, unit: 'ev', confirmed: false, note: 'DEMO-érték, a tulaj megerősítésére vár' },
-  valtozas_egyszeru: { amountHuf: 4_999, unit: 'alkalom', confirmed: false, note: 'Tulaj ~15:00 „Ez jó lesz” – megerősítés az /admin/dijak oldalon' },
-  valtozas_jogallas: { amountHuf: 7_999, unit: 'alkalom', confirmed: false, note: 'Tulaj ~15:00 „Ez jó lesz” – megerősítés az /admin/dijak oldalon' },
-  szuneteltetesi_dij: { amountHuf: 2_999, unit: 'ho', confirmed: false, note: 'DEMO-érték, a tulaj megerősítésére vár' },
+  eves_zaras: { amountHuf: 14_999, unit: 'ev', confirmed: true, note: 'Tulaj 11-20: végleges ár' },
+  valtozas_egyszeru: { amountHuf: 4_999, unit: 'alkalom', confirmed: true, note: 'Tulaj 11-20: végleges ár' },
+  valtozas_jogallas: { amountHuf: 7_999, unit: 'alkalom', confirmed: true, note: 'Tulaj 11-20: végleges ár' },
+  szuneteltetesi_dij: { amountHuf: 2_999, unit: 'ho', confirmed: true, note: 'Tulaj 11-20: végleges ár' },
+  igazolas_jovedelem: { amountHuf: 0, unit: 'alkalom', confirmed: true, note: 'SPEC §29.5: benne van a havidíjban' },
+  igazolas_ado: { amountHuf: 0, unit: 'alkalom', confirmed: true, note: 'SPEC §29.5: benne van a havidíjban' },
+  igazolas_koma: { amountHuf: 0, unit: 'alkalom', confirmed: true, note: 'SPEC §29.5: benne van a havidíjban' },
+  igazolas_ev_kivonat: { amountHuf: 0, unit: 'alkalom', confirmed: true, note: 'SPEC §29.5: benne van a havidíjban' },
+  igazolas_egyeb: { amountHuf: 0, unit: 'alkalom', confirmed: true, note: 'SPEC §29.5: benne van a havidíjban' },
+  megszuntetes: { amountHuf: 7_999, unit: 'alkalom', confirmed: true, note: 'Tulaj 11-20: a jogállás-változással azonos ár' },
 };
+/** SPEC §29.4.1 data step: the owner's real prices of 11-20 (a fee_settings row with exactly this amount gets confirmed). */
+export const FEE_OWNER_PRICES_1120: Partial<Record<FeeKind, number>> = { eves_zaras: 14_999, valtozas_egyszeru: 4_999, valtozas_jogallas: 7_999, szuneteltetesi_dij: 2_999 };
 /** Monthly plan codes (plans.code) and their fee setting. */
 export const PLAN_CODES = ['havi', 'havi_kata'] as const;
 export type PlanCode = (typeof PLAN_CODES)[number];
 export const PLAN_FEE_KIND: Record<PlanCode, FeeKind> = { havi: 'havidij', havi_kata: 'havidij_kata' };
-/** One-off fees: a one-time SimplePay payment per charge (simplepay_transactions.kind 'egyszeri'), never the recurring token. */
-export const ONE_OFF_FEE_KINDS: readonly FeeKind[] = ['eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas'];
+/**
+ * One-off fees. SPEC §29.1.7: paid in the app with the saved card after the client's tap (Stripe), or on a hosted page;
+ * under PAYMENT_PROVIDER=simplepay still a one-time SimplePay payment (never the recurring token).
+ */
+export const ONE_OFF_FEE_KINDS: readonly FeeKind[] = ['eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas', 'igazolas_jovedelem', 'igazolas_ado', 'igazolas_koma', 'igazolas_ev_kivonat', 'igazolas_egyeb', 'megszuntetes'];
 /** A change the client files himself with our guide costs nothing (a rule, not a setting). */
 export const CHANGE_FEE_RULES = { selfService: 0 } as const;
 /** Which fee an ASSISTED change pays (SPEC §28.K.1); null = no fee (for CHANGE_TAX_ITEMS_CALL_FIRST: no filing until agreed). */
 export function changeFeeKind(kind: ChangeKind, items: readonly ChangeTaxItem[] = []): FeeKind | null {
+  // SPEC §29.7: "Megszüntetjük helyetted" has its own fee (default = the legal-status change price).
+  if (kind === 'valtozas_megszuntetes') return 'megszuntetes';
   if (kind !== 'valtozas_adoadat') return 'valtozas_egyszeru';
   if (items.some((i) => CHANGE_TAX_ITEMS_CALL_FIRST.includes(i))) return null;
   if (items.some((i) => CHANGE_TAX_ITEMS_JOGALLAS.includes(i))) return 'valtozas_jogallas';
@@ -1499,7 +1559,8 @@ export function changeFeeKind(kind: ChangeKind, items: readonly ChangeTaxItem[] 
 /** fee_charges.status. 'visszavonva' = cancelled before payment (its purpose was cancelled or closed). */
 export const FEE_CHARGE_STATUSES = ['nyitott', 'fizetve', 'visszavonva', 'visszaterites_kell', 'visszaterites_megtortent', 'elengedve'] as const;
 export type FeeChargeStatus = (typeof FEE_CHARGE_STATUSES)[number];
-export const FEE_PURPOSE_TYPES = ['valtozas', 'eves_zaras'] as const;
+// SPEC §29.1.2: + certificates (F1), the closing (F3), a fee the admin added (§29.9.4).
+export const FEE_PURPOSE_TYPES = ['valtozas', 'eves_zaras', 'igazolas', 'megszuntetes', 'admin'] as const;
 export type FeePurposeType = (typeof FEE_PURPOSE_TYPES)[number];
 export const FEE_RULES = {
   /** A rise of havidij / havidij_kata applies to running subscriptions only from ≥ today + 30 days [JOGI]. */
@@ -1626,7 +1687,7 @@ export const REMINDER_GROUP_KINDS: Record<ReminderGroup, readonly NotificationKi
   ra_var: ['nudge', 'checkin_due', 'request_reminder'],
 };
 /** Cannot be switched off (payment and lock texts). */
-export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked'];
+export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated'];
 /** Variants used by §28.K.4 (content notif.<kind>.<variant>.*). */
 export const REMINDER_VARIANTS = {
   tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'hipa'],
@@ -1639,7 +1700,8 @@ export const NUDGE_SUBJECTS = ['havi_ellenorzes', 'kedvezmeny_kerdes', 'eves_ker
 export type NudgeSubject = (typeof NUDGE_SUBJECTS)[number];
 
 // ---------- §28.K.5 D – unpaid fee lock ----------
-export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras'] as const;
+// SPEC §29.9.4: 'kezi' = locked by the admin (clients.service_lock_manual mode 'zarolva').
+export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras', 'kezi'] as const;
 export type ServiceLockReason = (typeof SERVICE_LOCK_REASONS)[number];
 export const SERVICE_LOCK_ERROR_CODE = 'service_locked';
 /** What stays open, what is read-only and what is locked while clients.service_lock is set (SPEC §28.K.5). */
@@ -1653,12 +1715,13 @@ export const SERVICE_LOCK_RULES = {
 } as const;
 
 // ---------- §28.K.6 E – suspension availability fee ----------
-export const PAUSE_SOURCES = ['valtozas', 'konyvelo'] as const;
+// SPEC §29.9.4: 'admin' = opened / closed in the owner console.
+export const PAUSE_SOURCES = ['valtozas', 'konyvelo', 'admin'] as const;
 export type PauseSource = (typeof PAUSE_SOURCES)[number];
 export const PAUSE_RULES = {
   feeKind: 'szuneteltetesi_dij',
-  /** The EV is deleted after 2 years without resumption [ELLENŐRIZENDŐ Evectv.]; reminders before that mark. */
-  maxYears: 2,
+  /** SPEC §29.0 / [NAV-SZ]: szüneteltetés max. 3 years (notices since 2021-07-01); reminders before that mark. */
+  maxYears: 3,
   reminderDaysBefore: [60, 30],
 } as const;
 

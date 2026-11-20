@@ -32,6 +32,8 @@ import {
 import { auditC } from '../audit.js';
 import { requireAuth } from '../auth/middleware.js';
 import { registerAdminK28Routes } from './acc-k28.js';
+import { registerAdminPaymentsK29 } from './payments-k29.js';
+import { registerAdminConsoleRoutes } from './admin-konzol.js';
 import { issueCode } from '../auth/codes.js';
 import { hmacHex } from '../lib/crypto.js';
 import { endRelationship } from '../services/kyc.js';
@@ -69,7 +71,7 @@ const LEGACY_CONTENT_KEY = /^(notif|email)\.appointment_(booked|reminder|cancell
 const LOCKED_CONTENT_KEY = /^email\.auth_(email_code|password_reset_code|staff_invite|staff_invite_csapat)\./;
 
 /** Tells the client (message + push) and both accountants (e-mail) about a reassignment. */
-async function reassignmentNotices(deps: Deps, cl: typeof clients.$inferSelect, fromAccId: string | null, toAccId: string | null): Promise<void> {
+export async function reassignmentNotices(deps: Deps, cl: typeof clients.$inferSelect, fromAccId: string | null, toAccId: string | null): Promise<void> {
   const accRow = async (id: string | null) =>
     id ? (await deps.db.select({ a: accountants, email: users.email }).from(accountants).innerJoin(users, eq(users.id, accountants.userId)).where(eq(accountants.id, id)).limit(1))[0] ?? null : null;
   const from = await accRow(fromAccId);
@@ -97,6 +99,10 @@ export function adminRoutes(deps: Deps) {
   r.use('*', requireAuth(deps, { roles: ['admin'] }));
   // SPEC §28.K.1: /admin/fees, /admin/fee-charges/:id/{waive,refunded}
   registerAdminK28Routes(r, deps);
+  // SPEC §29.1.14 (B1): /admin/k29/{subscriptions,payments,fee-invoices,system}
+  registerAdminPaymentsK29(r, deps);
+  // SPEC §29.9 F9: the owner console (/admin/console/**; TOTP + step-up)
+  registerAdminConsoleRoutes(r, deps);
 
   /**
    * DEMO only: no mail leaves the server and the Demo-postafiók hides other staff members' sign-in mails, so a newly

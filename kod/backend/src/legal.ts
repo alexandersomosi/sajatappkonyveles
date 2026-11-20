@@ -32,6 +32,8 @@ const TITLES: Record<LegalDocType, string> = {
   simplepay_adattovabbitas: 'Adattovábbítási nyilatkozat (SimplePay)',
   simplepay_ismetlodo: 'Ismétlődő bankkártyás fizetés nyilatkozat',
   app_szovegek: 'Szövegek az appban',
+  // SPEC §29.1.3 (jogi/kartyas_fizetes.md, B3)
+  kartyas_fizetes: 'Kártyás fizetés – engedély',
 };
 
 /** The documents a client must accept in the `szerzodes` onboarding step. */

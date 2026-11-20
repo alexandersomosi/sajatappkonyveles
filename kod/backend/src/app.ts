@@ -14,7 +14,9 @@ import { clientRoutes } from './routes/client.js';
 import { fileRoutes } from './routes/files.js';
 import { meRoutes } from './routes/me.js';
 import { publicRoutes } from './routes/public.js';
+import { paymentsPublicK29Routes } from './routes/payments-k29.js';
 import { teamRoutes } from './routes/team.js';
+import { naptarRoutes } from './routes/public-naptar.js';
 
 // Multipart upload routes – the only ones that may send up to 60 MB (Caddy mirrors this, kezjegy.caddy).
 export const UPLOAD_PATH = /^\/api\/v1\/(client\/(kyc|attachments|documents(\/[^/]+\/versions)?|business-registration\/filed)|acc\/(attachments|clients\/[^/]+\/documents|documents\/[^/]+\/versions)|team\/attachments)\/?$/;
@@ -27,6 +29,8 @@ export function bodyLimitFor(path: string): number {
   if (SINGLE_FILE_PATH.test(path)) return MAX_SINGLE_FILE_REQUEST_BYTES;
   if (UPLOAD_PATH.test(path)) return MAX_REQUEST_BYTES;
   if (path === '/api/v1/webhooks/simplepay/ipn') return 64 * KB;
+  // SPEC §29.1.8: Stripe events are small; 256 KB is plenty
+  if (path === '/api/v1/webhooks/stripe') return 256 * KB;
   if (path === '/api/v1/auth/refresh') return 8 * KB;
   return 1024 * KB;
 }
@@ -63,6 +67,8 @@ export function createApp(deps: Deps) {
 
   const api = new Hono<Env>();
   api.route('/', publicRoutes(deps));
+  // SPEC §29.1 (B1): Stripe back URL, DEMO pay page, Stripe webhook
+  api.route('/', paymentsPublicK29Routes(deps));
   api.route('/auth', authRoutes(deps));
   api.route('/me', meRoutes(deps));
   api.route('/client', clientRoutes(deps));
@@ -70,6 +76,8 @@ export function createApp(deps: Deps) {
   api.route('/admin', adminRoutes(deps));
   api.route('/team', teamRoutes(deps));
   api.route('/files', fileRoutes(deps));
+  // SPEC §29.8 F4: the client's secret iCal feed (public, token in the path)
+  api.route('/naptar', naptarRoutes(deps));
   app.route('/api/v1', api);
   return app;
 }

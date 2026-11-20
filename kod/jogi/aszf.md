@@ -7,12 +7,12 @@ Ez a(z) {{brand.name}} szolgáltatás Általános Szerződési Feltételei (ÁSZ
 ## Röviden – a legfontosabbak egy helyen
 
 - **Mit kapsz:** saját, név szerint ismert könyvelőt. Kiszámolja, mennyi adót és járulékot kell fizetned, beadja a bevallásaidat, és válaszol a kérdéseidre. Az app ebben segít: itt látod, mennyit és meddig kell fizetned, és ide töltöd fel az iratokat.
-- **Ár:** havi {{dij.havi_brutto}} (bruttó). Bankkártyával fizeted, havonta előre, automatikusan.
+- **Ár:** havi {{dij.havi_brutto}} (bruttó, 27% ÁFA-val). Bankkártyával fizeted, havonta előre, automatikusan. Az első hónapot a kártyád megadásakor fizeted; minden levonás előtt 3 nappal szólunk.
 - **Lemondás:** bármikor, az appban, pár koppintással. A már kifizetett hónap végéig dolgozunk.
 - **Az adót te fizeted be** a NAV-nak. Mi megmondjuk, mennyit, mikorra és melyik számlaszámra; az utalást te indítod.
 - **A NAV felé a könyvelőd a meghatalmazottad.** Az app soha nem küld be semmit a NAV-nak. A bevallást a könyvelő adja be, miután átnézte.
 - **Kinek szól:** alanyi adómentes, átalányadózó egyéni vállalkozóknak.
-- **Ha még nincs vállalkozásod:** alapból személyre szabott útmutatót adunk képekkel és videóval, a bejelentést te küldöd be, és utána átnézzük a NAV-os értesítést (4/A. pont). Ha nem boldogulsz vele, kérheted, hogy intézzük helyetted: felhívunk, és a könyvelőd meghatalmazottként, a saját belépésével, az általad jóváhagyott adatokkal küldi be (4/C. pont). Amíg nincs adószámod, nem fizetsz semmit.
+- **Ha még nincs vállalkozásod:** alapból személyre szabott útmutatót adunk képekkel és videóval, a bejelentést te küldöd be, és utána átnézzük a NAV-os értesítést (4/A. pont). Ha nem boldogulsz vele, kérheted, hogy intézzük helyetted: felhívunk, és a könyvelőd meghatalmazottként, a saját belépésével, az általad jóváhagyott adatokkal küldi be (4/C. pont). A havidíjat a szerződés és a kártyád megadása napjától fizeted; ebben benne van a vállalkozásod elindítása is.
 - **A NAV-meghatalmazás:** te adod meg az ONYA-ban, vagy ha kéred, a könyvelőd küldi be, és te hagyod jóvá (4/C. pont).
 - **A belépésedet soha nem kérjük el.** Az Ügyfélkapu+- vagy DÁP-belépésedet, a jelszavadat és a kódjaidat senkinek nem kell megadnod, nekünk sem, és nem lépünk be helyetted (4/C.5. pont).
 - **Visszahívás:** ha elakadsz, kérj visszahívást. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között (4/B. pont).
@@ -42,7 +42,7 @@ Ez a(z) {{brand.name}} szolgáltatás Általános Szerződési Feltételei (ÁSZ
 
 Ha most indítod a vállalkozásodat, a kártyádat csak akkor kérjük, amikor az adószámodat már rögzítettük (4/A.6. pont).
 
-2.4. A szerződés akkor jön létre, amikor az ÁSZF-et és a Megbízási szerződést elfogadod. Ezt e-mailben 48 órán belül visszaigazoljuk. Díjat csak a sikeres kártyás fizetés után kell fizetned, és a munkát is az első sikeres fizetés után kezdjük. Az új vállalkozás indításához adott segítség (4/A. és 4/C. pont) és a visszahívás (4/B. pont) ezt megelőzően is ingyenes.
+2.4. A szerződés akkor jön létre, amikor az ÁSZF-et és a Megbízási szerződést elfogadod. Ezt e-mailben 48 órán belül visszaigazoljuk. Az első havidíjat a kártyád megadásakor fizeted, és a munkát az első sikeres fizetés után kezdjük. A visszahívás (4/B. pont) a szerződéskötés előtt is kérhető, külön díj nélkül.
 
 2.5. A szerződés nyelve magyar. Az elfogadott szöveget eltároljuk, a pontos időponttal és verzióval együtt. Az appban bármikor megnézheted és letöltheted PDF-ben.
 
@@ -109,7 +109,7 @@ Ha nem boldogulsz vele, a bejelentést a kérésedre és az utasításod szerint
 
 4/A.5. **Az útmutató érvényessége.** Az útmutató a NAV 2026-os felületéhez készült, a NAV 2026. március 19-i tájékoztatója („A Vállalkozói Ügysegéd útmutatója”) és a NAV 2026. február 19-i bemutatófilmje alapján. A NAV felülete változhat. 2027. január 1-jétől az egyéni vállalkozók nyilvántartását a gazdasági kamara vezeti; addig frissítjük az útmutatót, és ha egy rész elavult, az appban jelezzük. Ha a képernyőd eltér az útmutatótól, ne találgass: kérj visszahívást.
 
-4/A.6. **Díj.** Az útmutató, az értesítés átnézése, a visszahívás és a 4/C. pont szerinti segítség ingyenes. A havidíjat akkor kezdjük levonni, amikor az adószámodat rögzítettük, és megadtad a kártyádat: az első hónapot ekkor fizeted, és a könyvelés ettől indul. Ha meggondolod magad, és nem jelented be a vállalkozásodat, semmit nem kell fizetned. [TULAJ: a díj kezdete – a másik lehetőség, hogy a díj a szerződés elfogadása után azonnal indul]
+4/A.6. **Díj.** A havidíjat a szerződés elfogadása és a kártyád megadása napjától fizeted: az első hónapot a kártya megadásakor. A havidíjban benne van a vállalkozásod elindítása is: az útmutató, az értesítés átnézése, a visszahívás és a 4/C. pont szerinti segítség. Ha meggondolod magad, a 8.1. pont szerint bármikor lemondhatod; a kifizetett hónap végéig minden marad. [TULAJ 11-20: nincs díjmentes időszak – a díj a szerződés és a kártya után azonnal indul]
 
 4/A.7. **Ha hibát találunk.** Ha az útmutatónk hibája miatt kell javítanod a bejelentést, megmutatjuk, hogyan teheted meg, és ha kéred, visszahívunk. [JOGI/TULAJ: felelősségi szabály a szerződéskötés előtt, ingyen adott útmutatóért; elég-e erre az ÁSZF, vagy a regisztrációkor külön el kell fogadtatni]
 
@@ -159,7 +159,7 @@ Ha nem boldogulsz vele, a bejelentést a kérésedre és az utasításod szerint
 
 4/C.6. **Ki jár el.** A NAV-nál csak a könyvelőd jár el helyetted, meghatalmazottként. A csapatunk (ügyfélszolgálat) felhív és szervez, de a NAV-nál nem jár el, és semmit nem küld be. A beküldött bejelentés NAV-os értesítését a csapatunk egy másik tagja is átnézi, mielőtt rögzítjük az adószámodat. [KÖNYVELŐ/JOGI: a meghatalmazás jogcíme 9 (könyvelő, a nyilvántartási számmal) vagy 60]
 
-4/C.7. **Díj.** Ez a szolgáltatás része, külön díjat nem kérünk érte. Ha most indítod a vállalkozásodat, a havidíj ekkor is csak az adószámod rögzítése után indul (4/A.6. pont). [TULAJ: nincs külön díj – megerősíteni]
+4/C.7. **Díj.** Ez a szolgáltatás része, külön díjat nem kérünk érte. Ha most indítod a vállalkozásodat, ez is benne van a havidíjban (4/A.6. pont). [TULAJ: nincs külön díj – megerősíteni]
 
 4/C.8. **Meddig érhető el.** A vállalkozás bejelentését 2026. december 31-ig tudjuk így intézni, mert 2027. január 1-jétől az egyéni vállalkozók nyilvántartását a gazdasági kamara vezeti, és ott más szabályok lehetnek. Ha a bejelentésben adott segítséget szüneteltetjük, az appban jelezzük, és visszahívással segítünk. A NAV-meghatalmazás beküldését ez nem érinti. [TULAJ/JOGI: a határidő és a szüneteltetés feltételei]
 
@@ -187,25 +187,27 @@ Ha nem boldogulsz vele, a bejelentést a kérésedre és az utasításod szerint
 
 ## 6. Díj és fizetés
 
-6.1. A díj havi {{dij.havi_brutto}}, ami bruttó összeg. [TULAJ: a Kft. ÁFA-helyzete; ha ÁFA-s, „amely 27% ÁFA-t tartalmaz”]
+6.1. A díj havi {{dij.havi_brutto}}, ami bruttó összeg, amely 27% ÁFA-t tartalmaz. A külön díjas szolgáltatások (például az éves zárás, a helyetted bejelentett változás) díját az appban, a Díjak és számlák oldalon látod, mielőtt megrendeled őket; ezek is bruttó összegek.
 
 6.2. A díjat bankkártyával fizeted, havonta előre. Az első hónapot a kártya megadásakor fizeted. A következő levonás egy hónappal később, ugyanazon a napon esedékes; ha az adott hónapban nincs ilyen nap, a hónap utolsó napján. A következő levonás napját mindig látod a Fiók > Előfizetés oldalon.
 
-6.3. A kártyás fizetést a SimplePay intézi. A kártyád teljes számát mi nem látjuk és nem tároljuk. Az ismétlődő levonáshoz külön nyilatkozatot fogadsz el, amely megmutatja, hány alkalommal, legfeljebb mekkora összeget és meddig vonhatunk le.
+6.3. A kártyás fizetést a Stripe (Stripe Payments Europe, Ltd.) intézi, a saját biztonságos fizetőoldalán. A kártyád adatait a Stripe kezeli; mi csak a kártya típusát, utolsó négy számjegyét és lejáratát látjuk, a teljes számát nem. A havi levonáshoz az appban, a kártya megadása előtt külön engedélyt adsz („Kártyás fizetés – engedély”): ez megmutatja, mennyit és mikor vonunk le. Minden levonás előtt 3 nappal szólunk az összegről és a napról. [JOGI: a kártyás engedély szövege]
 
-6.4. Minden sikeres fizetés után elektronikus számlát kapsz. Az appban és e-mailben is megtalálod.
+6.3/A. **Külön díjak a mentett kártyáról.** Amit az appban külön megrendelsz (például az éves zárást vagy egy helyetted bejelentett változást), annak díját az appban, a te jóváhagyásod után vonjuk le a mentett kártyádról; másik kártyával is fizetheted. Jóváhagyás nélkül egyszeri díjat nem vonunk le. [JOGI: a megrendelt díj levonása a mentett kártyáról]
 
-6.5. **Ha nem sikerül levonni a díjat,** szólunk, és 1, 3 és 7 nap múlva újra próbáljuk. Közben új kártyát is megadhatsz. Ha a díj a lejárat után 14 nappal sincs rendezve, a szolgáltatást szüneteltetjük. Erről legalább 5 nappal előtte szólunk. Szünetelés alatt az iratokat látod, de a könyvelő nem dolgozik, és bevallást sem ad be. Ha emiatt egy határidő veszélybe kerül, külön figyelmeztetünk, hogy időben intézkedni tudj. Ha a díjat rendezed, a szolgáltatás folytatódik. [TULAJ: türelmi idő hossza]
+6.4. Minden sikeres fizetés után elektronikus számlát (e-számlát) kapsz, amelyet a Számlázz.hu (KBOSS.hu Kft.) rendszerében állítunk ki. Az elektronikus számlát elfogadod. Az appban (Fiók > Díjak és számlák) és e-mailben is megtalálod. Ha visszautalunk, a számlát sztornózzuk vagy helyesbítjük, és ezt is megkapod.
+
+6.5. **Ha nem sikerül levonni a díjat,** szólunk, és 1, 3 és 7 nap múlva újra próbáljuk. A bankod megerősítést is kérhet: ilyenkor az appban („Fizesd ki”) fizeted ki pár lépésben. Közben új kártyát is megadhatsz. Ha a díj a lejárat után 14 nappal sincs rendezve, a szolgáltatást szüneteltetjük. Erről legalább 5 nappal előtte szólunk. Szünetelés alatt az iratokat látod, de a könyvelő nem dolgozik, és bevallást sem ad be. Ha emiatt egy határidő veszélybe kerül, külön figyelmeztetünk, hogy időben intézkedni tudj. Ha a díjat rendezed, a szolgáltatás folytatódik. [TULAJ: türelmi idő hossza]
 
 6.6. Késedelmi kamatot és behajtási költségátalányt nem számítunk fel. [TULAJ: döntés]
 
-6.7. **Árváltozás.** Az árat legalább 30 nappal előre, e-mailben és az appban jelezzük. Az új ár csak az értesítés után kezdődő következő havi időszaktól érvényes. Ha nem fogadod el, addig díjmentesen lemondhatod. Ha az új ár nagyobb annál, amit a kártyás engedélyed megenged, a következő levonáshoz újra meg kell adnod a kártyádat.
+6.7. **Árváltozás.** Az árat legalább 30 nappal előre, e-mailben és az appban jelezzük. Az új ár csak az értesítés után kezdődő következő havi időszaktól érvényes. Ha nem fogadod el, addig díjmentesen lemondhatod.
 
 ## 7. Automatikus megújulás
 
 7.1. Az előfizetésed havonta magától megújul, amíg le nem mondod.
 
-7.2. A kártyás engedély korlátozott: legfeljebb {{elofizetes.alkalom}} levonásra szól, és legfeljebb {{elofizetes.honapok}} hónapig érvényes. Mielőtt lejár, vagy ha a kártyád lejár, legalább 30 nappal előtte szólunk. A megújításhoz újra meg kell adnod a kártyádat. Ha nem teszed meg, az előfizetésed a kifizetett hónap végén megszűnik, és további díjat nem vonunk le.
+7.2. A kártyás engedély a lemondásig vagy a kártya törléséig él. Minden levonás előtt 3 nappal szólunk. Ha a kártyád lejár, legalább 30 nappal előtte szólunk, hogy adj meg újat; ha nem teszed meg, az előfizetésed a kifizetett hónap végén megszűnik, és további díjat nem vonunk le.
 
 ## 8. Lemondás és felmondás
 
@@ -224,6 +226,8 @@ Ha nem boldogulsz vele, a bejelentést a kérésedre és az utasításod szerint
 - jogellenes tevékenységre akarod használni a szolgáltatást, vagy erre kéred a könyvelőt;
 - a könyvelővel vagy velünk szemben bántó, fenyegető módon viselkedsz.
 
+A felmondást írásban, e-mailben és az appban is megkapod. Benne van az elszámolás: a kifizetett időszakok, a visszautalások és a még nyitott díjak. A felmondási idő alatt a kifizetett időszak után már nem vonunk le díjat. [JOGI: a rendes felmondás napjaira eső díj]
+
 8.6. **A szerződés végén:**
 
 - a könyvelőd 8 napon belül megszünteti a NAV-nál a meghatalmazást (te magad is visszavonhatod az ONYA-ban);
@@ -239,7 +243,7 @@ Ha nem boldogulsz vele, a bejelentést a kérésedre és az utasításod szerint
 
 - késve vagy hiányosan adtad át az adatokat, iratokat, vagy valótlan adatot adtál meg;
 - a kiszámolt adót nem fizetted be időben;
-- olyan külső ok miatt nem tudtunk teljesíteni, amelyre nincs ráhatásunk (például a NAV, a SimplePay vagy a bankok rendszerének hibája, áramszünet, természeti csapás).
+- olyan külső ok miatt nem tudtunk teljesíteni, amelyre nincs ráhatásunk (például a NAV, a Stripe, a Számlázz.hu vagy a bankok rendszerének hibája, áramszünet, természeti csapás).
 
 9.3. A felelősségkorlátozás nem vonatkozik a szándékosan okozott kárra, és az életben, testi épségben vagy egészségben okozott kárra (Ptk. 6:152. §).
 

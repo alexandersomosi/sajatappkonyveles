@@ -4,9 +4,11 @@
 import { fmt as fmtHuf } from './kedvezmeny.js';
 import { and, asc, count, desc, eq, inArray, isNull, lt, lte, or, sql } from 'drizzle-orm';
 import type { SubscriptionStartResult, SubscriptionView } from '../_shared/api.js';
+import { CARD_CONSENT_VERSION, type SubscriptionViewK29 } from '../_shared/k29.js';
+import { paymentModeOf } from '../config.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { cardRegistrations, clients, consents, feeInvoices, paymentTokens, plans, simplepayTransactions, subscriptions, users } from '../db/schema.js';
+import { cardRegistrations, clients, consents, feeInvoices, paymentMethods, paymentTokens, plans, simplepayTransactions, subscriptions, users } from '../db/schema.js';
 import { addDays, addMonths, budapestLocalToUtc, huFullDateIg, todayBudapest } from '../lib/dates.js';
 import { randomBase32, randomToken } from '../lib/crypto.js';
 import { E } from '../lib/errors.js';
@@ -64,7 +66,33 @@ export function nextPaidStart(sub: Pick<SubRow, 'status' | 'currentPeriodEnd'> |
   return today;
 }
 
-export async function subscriptionView(deps: Deps, db: DbOrTx, clientId: string): Promise<SubscriptionView> {
+/** SPEC §29.1.15 subscriptionView: the legacy fields + the §29 ones (provider, card, effective amount, due month). */
+export async function subscriptionView(deps: Deps, db: DbOrTx, clientId: string): Promise<SubscriptionViewK29> {
+  const base = await subscriptionViewLegacy(deps, db, clientId);
+  const k = await import('./payments.js');
+  const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
+  const [cl] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+  const today = todayBudapest(deps.now());
+  const nextStart = sub?.currentPeriodEnd && sub.currentPeriodEnd > today ? sub.currentPeriodEnd : today;
+  const eff = await k.effectiveMonthlyAmount(deps, db, clientId, nextStart);
+  const [u] = cl ? await db.select({ id: users.id }).from(users).where(eq(users.id, cl.userId)).limit(1) : [];
+  const [c] = u ? await db.select({ id: consents.id }).from(consents).where(and(eq(consents.userId, u.id), eq(consents.docType, 'kartyas_fizetes'), eq(consents.version, CARD_CONSENT_VERSION))).limit(1) : [];
+  return {
+    ...base,
+    provider: sub?.provider ?? null,
+    paymentProvider: deps.cfg.payment.provider,
+    paymentMode: paymentModeOf(deps.cfg),
+    cardInfo: await k.cardOfClient(deps, db, clientId),
+    monthlyHuf: eff.amountHuf,
+    monthlySource: eff.source,
+    nextChargeAmountHuf: eff.amountHuf,
+    priceDemo: false,
+    due: cl ? await k.dueView(deps, cl) : null,
+    consentNeeded: !c,
+  };
+}
+
+async function subscriptionViewLegacy(deps: Deps, db: DbOrTx, clientId: string): Promise<SubscriptionView> {
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   const m = deps.cfg.simplepay.mode === 'disabled' ? 'live' : deps.cfg.simplepay.mode;
   const today = todayBudapest(deps.now());
@@ -594,8 +622,9 @@ export async function cancelSubscription(deps: Deps, clientId: string, userId: s
 export async function resumeSubscription(deps: Deps, clientId: string, userId: string): Promise<void> {
   const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (!sub || !sub.cancelAtPeriodEnd || sub.status === 'canceled') throw E.conflict('Nincs visszavonható lemondás.');
-  const [reg] = sub.cardRegistrationId ? await deps.db.select({ status: cardRegistrations.status }).from(cardRegistrations).where(eq(cardRegistrations.id, sub.cardRegistrationId)).limit(1) : [];
-  if (reg?.status !== 'aktiv') throw E.conflict('A kártyádat közben töröltük, ezért add meg újra az „Előfizetés folytatása” gombbal.');
+  const [cl] = await deps.db.select({ terminated: clients.terminated }).from(clients).where(eq(clients.id, clientId)).limit(1);
+  if (cl?.terminated) throw E.conflict('A szerződésed felmondtuk, ezért az előfizetést nem lehet folytatni. Írj nekünk, ha kérdésed van.');
+  if (!(await hasActiveCard(deps.db, sub))) throw E.conflict('A kártyádat közben töröltük, ezért add meg újra az „Előfizetés folytatása” gombbal.');
   await deps.db.update(subscriptions).set({ cancelAtPeriodEnd: false, updatedAt: deps.now() }).where(eq(subscriptions.id, sub.id));
   await audit(deps.db, { action: 'subscription.resumed', actorUserId: userId, actorRole: 'client', targetType: 'subscription', targetId: sub.id, clientId });
 }
@@ -620,13 +649,27 @@ export async function serviceNotice(deps: Deps, db: DbOrTx, clientId: string): P
   const today = todayBudapest(deps.now());
   if (sub.status === 'canceled') return { kind: sub.currentPeriodEnd && sub.currentPeriodEnd > today ? 'megszunik' : 'megszunt', endsOn: sub.currentPeriodEnd ?? null, canResume: false };
   if (!sub.cancelAtPeriodEnd) return undefined;
+  return { kind: 'megszunik', endsOn: sub.currentPeriodEnd ?? null, canResume: await hasActiveCard(db, sub) };
+}
+
+/** The card the subscription is charged with is still usable (new payment_methods row, or the old card registration). */
+export async function hasActiveCard(db: DbOrTx, sub: Pick<SubRow, 'clientId' | 'paymentMethodId' | 'cardRegistrationId'>): Promise<boolean> {
+  if (sub.paymentMethodId) {
+    const [pm] = await db.select({ status: paymentMethods.status }).from(paymentMethods).where(and(eq(paymentMethods.clientId, sub.clientId), eq(paymentMethods.status, 'aktiv'))).limit(1);
+    return pm?.status === 'aktiv';
+  }
   const [reg] = sub.cardRegistrationId ? await db.select({ status: cardRegistrations.status }).from(cardRegistrations).where(eq(cardRegistrations.id, sub.cardRegistrationId)).limit(1) : [];
-  return { kind: 'megszunik', endsOn: sub.currentPeriodEnd ?? null, canResume: reg?.status === 'aktiv' };
+  return reg?.status === 'aktiv';
 }
 
 /** SimplePay rule: card deletion must always be possible, without conditions (SPEC §9.6). */
 export async function deleteCard(deps: Deps, clientId: string, actor: { userId: string | null; role: string }): Promise<void> {
+  // SPEC §29.1.11 (ÁSZF 8.4, unconditional): the Stripe / new DEMO card is detached at the provider and marked 'torolve'.
+  const { detachAllCards } = await import('./payments.js');
+  const pms = await detachAllCards(deps, clientId);
   const regs = await deps.db.select().from(cardRegistrations).where(and(eq(cardRegistrations.clientId, clientId), inArray(cardRegistrations.status, ['aktiv', 'fuggo'])));
+  if (pms) await audit(deps.db, { action: 'subscription.card_deleted', actorUserId: actor.userId, actorRole: actor.role, targetType: 'client', targetId: clientId, clientId, details: { cards: pms, provider: 'k29' } });
+  if (pms && !regs.length) return;
   for (const reg of regs) {
     if (reg.mode !== 'demo' && reg.status === 'aktiv' && reg.simplepayCardId) {
       if (!deps.simplepay) throw E.notConfigured('A SimplePay-kapcsolat nincs bekapcsolva; a kártyát a SimplePay ügyfélszolgálatán keresztül tudjuk törölni.');
@@ -675,6 +718,12 @@ export async function chargeSubscription(deps: Deps, stale: SubRow): Promise<'ch
   // (round 1, 2026-11-19).
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.id, stale.id)).limit(1);
   if (!sub || !chargeDue(sub, todayBudapest(now))) return 'skipped';
+  // SPEC §29.1.12: a subscription is charged by the provider that saved its card. Stripe and the new DEMO cards
+  // (payment_methods) go through services/payments.ts; the old SimplePay / SimplePay-DEMO cards stay below.
+  if (sub.paymentMethodId || sub.provider === 'stripe') {
+    const { chargeSubscriptionK29 } = await import('./payments.js');
+    return chargeSubscriptionK29(deps, sub);
+  }
   const [pending] = await db
     .select({ id: simplepayTransactions.id })
     .from(simplepayTransactions)
@@ -703,9 +752,10 @@ export async function chargeSubscription(deps: Deps, stale: SubRow): Promise<'ch
   const periodEnd = addMonths(periodStart, 1);
   const orderRef = orderRefFor(now);
   const m: Mode = sub.mode;
-  // SPEC §28.K.6: during szüneteltetés the availability fee instead of the plan fee.
-  const { chargeAmountHuf } = await import('./szuneteltetes.js');
-  const amount = await chargeAmountHuf(deps, db, sub, periodStart);
+  // SPEC §28.K.6 + §29.1.15: the pause fee / the client's own price / a free month (effectiveMonthlyAmount).
+  const k29 = await import('./payments.js');
+  const { amountHuf: amount } = await k29.effectiveMonthlyAmount(deps, db, sub.clientId, periodStart);
+  if (amount === 0) return k29.chargeSubscriptionK29(deps, sub);
   const [t] = await db
     .insert(simplepayTransactions)
     .values({ orderRef, kind: 'ismetlodo', clientId: cl.id, subscriptionId: sub.id, cardRegistrationId: sub.cardRegistrationId, tokenId: tok.id, amountHuf: amount, status: 'INIT', periodStart, periodEnd, mode: m })
@@ -745,9 +795,21 @@ export async function chargeSubscription(deps: Deps, stale: SubRow): Promise<'ch
 
 export async function renewalCheck(deps: Deps, clientId: string): Promise<void> {
   const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
-  if (!sub || sub.status !== 'active' || sub.cancelAtPeriodEnd || !sub.cardRegistrationId) return;
+  if (!sub || sub.status !== 'active' || sub.cancelAtPeriodEnd) return;
   const now = deps.now();
   if (sub.renewalNotifiedAt && sub.renewalNotifiedAt.getTime() > now.getTime() - 25 * 86_400_000) return;
+  if (sub.paymentMethodId) {
+    // SPEC §29.1.11: a Stripe card expiring within 30 days (the SimplePay token rules do not apply)
+    const { activeCardOf, cardView } = await import('./payments.js');
+    const pm = await activeCardOf(deps.db, clientId);
+    if (pm && !cardView(pm, now).expiringSoon) return;
+    const [cl] = await deps.db.select({ userId: clients.userId }).from(clients).where(eq(clients.id, clientId)).limit(1);
+    if (!cl) return;
+    await deps.db.update(subscriptions).set({ renewalNotifiedAt: now }).where(eq(subscriptions.id, sub.id));
+    await notify(deps, deps.db, { userId: cl.userId, kind: 'subscription_renewal_needed', link: '/fiok/elofizetes' });
+    return;
+  }
+  if (!sub.cardRegistrationId) return;
   const [reg] = await deps.db.select().from(cardRegistrations).where(eq(cardRegistrations.id, sub.cardRegistrationId)).limit(1);
   const [n] = await deps.db.select({ n: count() }).from(paymentTokens).where(and(eq(paymentTokens.cardRegistrationId, sub.cardRegistrationId), eq(paymentTokens.status, 'aktiv')));
   const left = Number(n?.n ?? 0);
@@ -778,7 +840,15 @@ export async function runBillingJob(deps: Deps): Promise<Record<string, number>>
     .from(subscriptions)
     .where(and(eq(subscriptions.cancelAtPeriodEnd, true), inArray(subscriptions.status, ['active', 'past_due', 'suspended']), lte(subscriptions.currentPeriodEnd, today)));
   for (const s of ending) {
+    // SPEC §29.9.5: a terminated client's relationship ends on terminated.effectiveOn (the console job), not earlier.
+    const [tcl] = await db.select({ terminated: clients.terminated }).from(clients).where(eq(clients.id, s.clientId)).limit(1);
+    if (tcl?.terminated?.effectiveOn && tcl.terminated.effectiveOn > today) continue;
     await db.update(subscriptions).set({ status: 'canceled', canceledAt: now, nextChargeAt: null, nextRetryAt: null, updatedAt: now }).where(eq(subscriptions.id, s.id));
+    // SPEC §29.1.11: no charge any more – the saved card (Stripe / new DEMO) is detached.
+    if (s.paymentMethodId) {
+      const { detachAllCards } = await import('./payments.js');
+      await detachAllCards(deps, s.clientId).catch((err: Error) => log().warn({ err: safeErr(err) }, 'card detach at period end failed'));
+    }
     if (s.cardRegistrationId) {
       const toks = await db.select().from(paymentTokens).where(and(eq(paymentTokens.cardRegistrationId, s.cardRegistrationId), eq(paymentTokens.status, 'aktiv')));
       for (const t of toks) {

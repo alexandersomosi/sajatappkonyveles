@@ -24,6 +24,9 @@ import { hibaUzenet } from '@/lib/hiba';
 import { fillPlaceholders, JOURNEY_TEXTS, LOCK_TEXTS, PAUSE_TEXTS } from '@/_shared/bekotes';
 import { useServiceLock } from '@/ui/Zarolas';
 import { beallitasIr, beallitasOlvas } from '@/lib/tarolo';
+import { useGuided } from '@/api/hooks-k29g';
+import { useElofizetesK29 } from '@/api/hooks-k29';
+import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
 
 /** S25 – egyszeri kártya az első aktív Főoldalon: „Kész a bekötés!” (SPEC §27.4.4). Csak ezen a telefonon jegyzi meg. */
 function AktivalasKartya({ ugyfel, fn }: { ugyfel: string; fn: string }) {
@@ -60,6 +63,9 @@ function AktivalasKartya({ ugyfel, fn }: { ugyfel: string; fn: string }) {
 
 type LapNev = null | 'hogyan' | 'szamlaszamok' | 'befizettem';
 
+/** SPEC §29.9.4: the client text of a manual lock (SERVICE_LOCK_REASONS 'kezi'). */
+const KEZI_ZAROLAS = 'Szünetel a könyvelésed. Írj nekünk, ha kérdésed van.';
+
 function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
   const hero = h.hero;
   // The big amount must never break inside the number ("305 04 / 6 Ft" at 320 px with large text, review k3c2).
@@ -90,7 +96,12 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
             ikon: 'hataridok',
             cim: lock ? LOCK_TEXTS.heroTitle : 'Most nincs mit fizetned',
             // k6c2: under the lock banner never "Bence szól…" – the bookkeeping is paused until the fee is paid
-            mondat: lock ? fillPlaceholders(LOCK_TEXTS.heroNote, { mit: lock.reasons.map((r) => LOCK_TEXTS.mit[r] ?? r).join(' és ') }) : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
+            // §29.9.4: a manual lock by the admin ('kezi') is not about an unpaid fee
+            mondat: lock
+              ? lock.reasons.every((r) => r === 'kezi')
+                ? KEZI_ZAROLAS
+                : fillPlaceholders(LOCK_TEXTS.heroNote, { mit: lock.reasons.filter((r) => r !== 'kezi').map((r) => (LOCK_TEXTS.mit as Record<string, string>)[r] ?? r).join(' és ') })
+              : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
           }
         : hero.state === 'jovahagyva'
           ? { ikon: 'szamlaszam', cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(), mondat: hero.dueDate ? `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.` : null }
@@ -243,7 +254,9 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
 const GYORS: { cim: string; ikon: Ikon3dNev; ut: string }[] = [
   { cim: 'Feltöltés', ikon: 'feltoltes', ut: '/feltoltes' },
   { cim: 'Kérdezek', ikon: 'kerdezek', ut: '/uzenetek' },
-  { cim: 'Igazolás', ikon: 'igazolas', ut: '/keresek/uj' },
+  // SPEC §29.5 / §29.6: „Igazolást kérek” és a bevételi kimutatás egy koppintásra
+  { cim: 'Igazolás', ikon: 'igazolas', ut: '/igazolas' },
+  { cim: 'Kimutatás', ikon: 'kivonat', ut: '/kimutatas' },
   { cim: 'Határidők', ikon: 'hataridok', ut: '/hataridok' },
 ];
 function Gyorsgombok() {
@@ -316,10 +329,23 @@ function SzolgaltatasVege({ n, fn }: { n: NonNullable<ClientHome['serviceNotice'
   );
 }
 
+/**
+ * SPEC §29.10.1: a client in onboarding lands in the guided first run (`/bevezeto`) until he pauses it ("Később
+ * folytatom") or saw its done screen; otherwise on the checklist (`/bekotes`). A server without §29 → the checklist.
+ */
+function BekotesKapu() {
+  const g = useGuided();
+  if (g.isLoading) return <Kepernyo ful="fooldal"><Betolt /></Kepernyo>;
+  return <Redirect href={g.data?.show ? '/bevezeto' : '/bekotes'} />;
+}
+
 export default function Fooldal() {
   const param = useLocalSearchParams<{ lap?: string; lepes?: string }>();
   const home = useHome();
   const h = home.data;
+  // SPEC §29.1.5: an unpaid month (bank check, decline, expired card) → red line + "Fizesd ki" on the Főoldal
+  const elo = useElofizetesK29(!!h && h.client.onboardingComplete);
+  const due = elo.data?.due ?? null;
   const idoszak = useIdoszak(h?.hero.periodId);
   const [lap, setLap] = useState<LapNev>((['hogyan', 'szamlaszamok', 'befizettem'] as const).find((x) => x === param.lap) ?? null);
 
@@ -332,7 +358,7 @@ export default function Fooldal() {
 
   if (home.isLoading) return <Kepernyo ful="fooldal"><Betolt /></Kepernyo>;
   if (home.error || !h) return <Kepernyo ful="fooldal"><Hiba hiba={home.error} ujra={() => void home.refetch()} /></Kepernyo>;
-  if (h.hero.state === 'bekotes_alatt' || !h.client.onboardingComplete) return <Redirect href="/bekotes" />;
+  if (h.hero.state === 'bekotes_alatt' || !h.client.onboardingComplete) return <BekotesKapu />;
 
   const fn = h.accountant.firstName;
   const limits = h.limits;
@@ -344,8 +370,19 @@ export default function Fooldal() {
     <Kepernyo
       ful="fooldal"
       fejlec={<Sav h={h} lap={setLap} />}
-      dokk={fizetendo ? <GombE cim={HOME_K_TEXTS.paidButton} onPress={() => setLap('befizettem')} /> : undefined}
+      dokk={fizetendo ? <GombE cim={HOME_K_TEXTS.paidButton} onPress={() => setLap('befizettem')} /> : due ? <GombE cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} /> : undefined}
     >
+      {due ? (
+        <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, backgroundColor: szin.veszelyAlap }}>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <Ikon3d nev="szamlaszam" pt={28} />
+            <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg} style={{ flex: 1 }}>
+              {fillPlaceholders(P29.fizesdKi.homeBanner, { osszeg: szam(due.amountHuf) })}
+            </T>
+            {fizetendo ? <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} /> : null}
+          </Pressable>
+        </Lap>
+      ) : null}
       {h.twoNumbers ? <KetSzam v={h.twoNumbers} /> : null}
       <AktivalasKartya ugyfel={h.client.id} fn={fn} />
       {h.serviceNotice ? <SzolgaltatasVege n={h.serviceNotice} fn={fn} /> : null}

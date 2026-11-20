@@ -99,6 +99,23 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   client_locked: { push: false, email: false, to: 'accountant' },
   employer_reported: { push: false, email: false, to: 'accountant' },
   onboarding_task: { push: false, email: false, to: 'accountant' },
+  // SPEC §29.13 – client payment texts are always on (ALWAYS_ON_KINDS); staff alerts go to the admins.
+  charge_upcoming: { push: true, email: true, to: 'client' },
+  payment_action_needed: { push: true, email: true, to: 'client' },
+  payment_refunded: { push: true, email: true, to: 'client' },
+  payment_disputed: { push: false, email: true, to: 'accountant' },
+  invoice_failed: { push: false, email: true, to: 'accountant' },
+  certificate_requested: { push: false, email: false, to: 'accountant' },
+  // e-mail on by default for 'kesz'; the other variants are sent with noEmail (B2)
+  certificate_status: { push: true, email: true, to: 'client' },
+  income_statement_checked: { push: true, email: false, to: 'client' },
+  income_statement_review: { push: false, email: false, to: 'accountant' },
+  contract_terminated: { push: true, email: true, to: 'client' },
+  contract_reactivated: { push: true, email: true, to: 'client' },
+  price_changed: { push: false, email: true, to: 'client' },
+  profile_changed_by_admin: { push: false, email: true, to: 'client' },
+  announcement: { push: true, email: true, to: 'client' },
+  guided_continue: { push: true, email: false, to: 'client' },
 };
 
 /** SPEC §28.2.3: the defaults when a user has no user_notification_settings row. */

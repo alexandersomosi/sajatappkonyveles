@@ -20,6 +20,7 @@ import { CimSor, Kepernyo, vissza } from '@/ui/keret';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre, vezetettHref, vezetettKulcs } from '@/lib/vezetett';
 
 type Urlap = {
   lastName: string; firstName: string; phone: string; adoazonositoJel: string; zip: string; city: string; line: string;
@@ -51,7 +52,10 @@ export default function Adatok() {
   // 11-19 javítás: „Mentem, tovább” → a lista SOROS lépése (journey.currentKey): ha a kérdőív már kész, az útmutató vagy
   // a Főoldal jön, nem újra a kérdőív 1. lapja.
   const mentesUtan = (cur?: string | null, ut?: string | null) =>
-    p.utana === 'adatlap'
+    // SPEC §29.10: in the guided run the server says what comes next
+    vezetettKulcs()
+      ? bekotesre()
+      : p.utana === 'adatlap'
       ? router.replace({ pathname: '/bekotes/vallalkozas/adatlap', params: { lap: p.utanaLap ?? '1' } })
       : p.utana === 'vallalkozas'
         ? cur && ut && ['kerdoiv', 'bejelentes', 'ertesites', 'vegso_jovahagyas'].includes(cur)
@@ -154,7 +158,8 @@ export default function Adatok() {
       e.city = u.city.trim() ? null : 'Írd be a települést.';
       e.line = u.line.trim().length >= 3 ? null : 'Írd be az utcát és a házszámot.';
     } else if (n === 2) {
-      e.adoszam = adoszamHiba(u.adoszam);
+      // §28.K.9 "Most nem tudom": a könyvelő később tölti ki az adószámot – addig nem kötelező
+      e.adoszam = profil.data?.adoszamPending && !u.adoszam.trim() ? null : adoszamHiba(u.adoszam);
       e.hqMunicipality = u.hqMunicipality.trim() ? null : 'Melyik településen van a székhelyed?';
       e.activityText = u.activityText.trim() ? null : 'Pár szóban: mivel foglalkozol?';
       e.activityAnswer = u.activityAnswer ? null : 'Válassz egyet.';
@@ -198,7 +203,7 @@ export default function Adatok() {
     }
     const adat: ClientProfileInput = {
       firstName: u.firstName.trim(), lastName: u.lastName.trim(), phone: normalizeHuPhone(u.phone) ?? (u.phone.trim() || undefined), adoazonositoJel: u.adoazonositoJel.replace(/\s/g, ''),
-      adoszam: adoszamFormaz(u.adoszam), evNyilvantartasiSzam: u.evNyilvantartasiSzam.trim() || undefined,
+      adoszam: u.adoszam.trim() ? adoszamFormaz(u.adoszam) : '', evNyilvantartasiSzam: u.evNyilvantartasiSzam.trim() || undefined,
       address: { zip: u.zip.trim(), city: u.city.trim(), line: u.line.trim() }, hqMunicipality: u.hqMunicipality.trim(), activityText: u.activityText.trim(),
       activityAnswer: u.activityAnswer as ActivityAnswer, taxStatus: u.taxStatus as TaxStatus, evSince: datumNormal(u.evSince), previousAccountant: u.previousAccountant.trim() || undefined,
       hasSeparateBusinessAccount: u.hasSeparateBusinessAccount === 'igen',
@@ -207,7 +212,7 @@ export default function Adatok() {
     try {
       await ment.mutateAsync(adat);
       // SPEC §28.K.7 + §28.3.4: a „van” út mentése után az alkalmazott/EFO kérdés, majd egyszer a kedvezmény-kapu
-      router.replace('/bekotes/alkalmazottak');
+      router.replace(vezetettKulcs() ? vezetettHref('/bekotes/alkalmazottak', vezetettKulcs()!) : '/bekotes/alkalmazottak');
     } catch (e) {
       if (e instanceof ApiHiba && e.code === 'path_required') {
         setHiba(e.message);

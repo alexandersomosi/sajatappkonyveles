@@ -76,6 +76,8 @@ import { currentRegistrationOf } from '../services/registration.js';
 import { teamViews } from './team.js';
 import { openAssistOf } from '../services/assist.js';
 import { accDetailK28, hasResponseTimePromise, registerAccK28Routes } from './acc-k28.js';
+import { registerAccPaymentsK29 } from './payments-k29.js';
+import { registerAccK29fRoutes } from './acc-k29f.js';
 import { pendingAllowances } from '../services/kedvezmeny.js';
 import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
 
@@ -99,6 +101,10 @@ export function accRoutes(deps: Deps) {
   r.use('*', (c, next) => (c.req.method === 'GET' && /\/acc\/checkin-items\/?$/.test(c.req.path) ? queueAuth : accAuth)(c, next));
   // SPEC §28 / §28.K (reserve, earnings, allowances, check-in queue, annual closing, EFO, regime) + the service lock
   registerAccK28Routes(r, deps);
+  // SPEC §29.4.4 (B1): POST /acc/clients/:id/adoszam
+  registerAccPaymentsK29(r, deps);
+  // SPEC §29 F1 certificate queue + F2 income statement check
+  registerAccK29fRoutes(r, deps);
 
   async function me(c: C): Promise<AccountantRow> {
     return accountantOfUser(deps.db, auth(c).userId);

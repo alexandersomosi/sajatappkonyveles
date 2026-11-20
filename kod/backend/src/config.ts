@@ -9,6 +9,17 @@ export type SimplePayMode = 'demo' | 'sandbox' | 'live' | 'disabled';
 export type InvoiceMode = 'demo' | 'szamlazzhu' | 'billingo' | 'disabled';
 export type NavMode = 'demo' | 'test' | 'prod' | 'disabled';
 export type PushMode = 'demo' | 'expo' | 'disabled';
+/** SPEC §29.1.1: env PAYMENT_PROVIDER (+ 'disabled' = production without a provider). */
+export type PaymentProviderCfg = 'stripe' | 'simplepay' | 'demo' | 'disabled';
+
+export interface StripeCfg {
+  mode: 'test' | 'live';
+  secretKey: string;
+  publishableKey: string;
+  webhookSecret: string;
+  suffixHavi: string;
+  locale: string;
+}
 
 export interface Config {
   version: string;
@@ -45,7 +56,16 @@ export interface Config {
     baseUrl: string;
   };
   planPriceHuf: number;
-  invoice: { mode: InvoiceMode; szamlazzhuKey: string; billingoKey: string };
+  /** SPEC §29.1.1: the payment provider of NEW card flows (existing subscriptions keep theirs, §29.1.12). */
+  payment: { provider: PaymentProviderCfg; stripe?: StripeCfg };
+  /** SPEC §29.2.1: szamlazzhuAccount 'teszt' | 'eles' (required with INVOICE_MODE=szamlazzhu). */
+  invoice: { mode: InvoiceMode; szamlazzhuKey: string; billingoKey: string; szamlazzhuAccount: 'teszt' | 'eles' | null; szamlazzhuUrl: string };
+  /** SPEC §29.3.4: LANDING_PUBLIC_URL and the extra (sslip) origins; every allowed public origin; the app origins with short keys. */
+  landingPublicUrl: string;
+  publicOrigins: string[];
+  appOrigins: { key: string; origin: string }[];
+  /** SPEC §29.4.4: our own NAV technical user for the adószám lookup (all five or none). */
+  navLookup: { mode: 'test' | 'prod'; taxNumber: string; login: string; password: string; signKey: string; exchangeKey: string } | null;
   nav: {
     mode: NavMode;
     softwareId: string;
@@ -123,9 +143,97 @@ function url(env: NodeJS.ProcessEnv, k: string, d: string): string {
 }
 
 function chargePolicy(env: NodeJS.ProcessEnv): 'adoszam_utan' | 'azonnal' {
-  const v = str(env, 'NEW_BUSINESS_CHARGE_POLICY', 'adoszam_utan');
+  // SPEC §29.4.2: no free period – default 'azonnal' (the env value adoszam_utan stays possible).
+  const v = str(env, 'NEW_BUSINESS_CHARGE_POLICY', 'azonnal');
   if (v !== 'adoszam_utan' && v !== 'azonnal') throw new ConfigError('NEW_BUSINESS_CHARGE_POLICY: adoszam_utan vagy azonnal.');
   return v;
+}
+
+/** sk_test_/rk_test_ → test, sk_live_/rk_live_ → live; pk_ likewise; else null. Never logs the value. */
+export function stripeKeyMode(key: string): 'test' | 'live' | null {
+  const m = /^(?:sk|rk|pk)_(test|live)_[A-Za-z0-9]+$/.exec(key);
+  return m ? (m[1] as 'test' | 'live') : null;
+}
+
+/** SPEC §29.1.1: PAYMENT_PROVIDER + the Stripe keys, with the live/test guards. */
+function paymentCfg(env: NodeJS.ProcessEnv, appEnv: AppEnv): Config['payment'] {
+  const raw = str(env, 'PAYMENT_PROVIDER', appEnv === 'demo' ? 'demo' : '');
+  let provider: PaymentProviderCfg;
+  if (raw === '') provider = 'disabled';
+  else if (raw === 'stripe' || raw === 'simplepay' || raw === 'demo' || raw === 'disabled') provider = raw;
+  else throw new ConfigError('PAYMENT_PROVIDER: stripe, simplepay vagy demo.');
+  if (provider === 'demo' && appEnv !== 'demo') throw new ConfigError('PAYMENT_PROVIDER=demo csak DEMO szerveren (APP_ENV=demo) lehet.');
+  const sk = str(env, 'STRIPE_SECRET_KEY');
+  const pk = str(env, 'STRIPE_PUBLISHABLE_KEY');
+  const wh = str(env, 'STRIPE_WEBHOOK_SECRET');
+  let stripe: StripeCfg | undefined;
+  if (sk || provider === 'stripe') {
+    const skMode = stripeKeyMode(sk);
+    if (provider === 'stripe' && !sk) throw new ConfigError('PAYMENT_PROVIDER=stripe: a STRIPE_SECRET_KEY hiányzik.');
+    if (!skMode || !/^(sk|rk)_/.test(sk)) throw new ConfigError('STRIPE_SECRET_KEY: sk_test_…/sk_live_… (vagy rk_…) alakú kulcs kell.');
+    if (appEnv === 'demo' && skMode === 'live') throw new ConfigError('Élő Stripe-kulcs nem lehet DEMO szerveren.');
+    if (appEnv === 'production' && skMode === 'test') throw new ConfigError('Éles szerveren (APP_ENV=production) nem lehet teszt Stripe-kulcs.');
+    if (pk) {
+      const pkMode = stripeKeyMode(pk);
+      if (!pkMode || !pk.startsWith('pk_')) throw new ConfigError('STRIPE_PUBLISHABLE_KEY: pk_test_…/pk_live_… alakú kulcs kell.');
+      if (pkMode !== skMode) throw new ConfigError('A Stripe nyilvános és titkos kulcsa nem ugyanabból a módból való (teszt / éles).');
+    }
+    if (provider === 'stripe' && !wh) throw new ConfigError('PAYMENT_PROVIDER=stripe: a STRIPE_WEBHOOK_SECRET hiányzik (stripe_szerverre.ps1 hozza létre).');
+    if (wh && !wh.startsWith('whsec_')) throw new ConfigError('STRIPE_WEBHOOK_SECRET: whsec_… alakú titok kell.');
+    const suffix = str(env, 'STRIPE_STATEMENT_SUFFIX_HAVI', 'HAVIDIJ').toUpperCase();
+    if (!/^[A-Z0-9 .-]{1,22}$/.test(suffix)) throw new ConfigError('STRIPE_STATEMENT_SUFFIX_HAVI: legfeljebb 22 latin betű, szám, szóköz.');
+    stripe = { mode: skMode, secretKey: sk, publishableKey: pk, webhookSecret: wh, suffixHavi: suffix, locale: str(env, 'STRIPE_CHECKOUT_LOCALE', 'hu') };
+  }
+  return { provider, ...(stripe ? { stripe } : {}) };
+}
+
+/** SPEC §29.3.4: the allowed public origins (APP/PANEL/API/LANDING + EXTRA_PUBLIC_ORIGINS) and the app origins with short keys. */
+function originsCfg(env: NodeJS.ProcessEnv, urls: { app: string; panel: string; api: string; landing: string }): { publicOrigins: string[]; appOrigins: { key: string; origin: string }[] } {
+  const origin = (u: string) => new URL(u).origin;
+  const extra: string[] = [];
+  for (const raw of str(env, 'EXTRA_PUBLIC_ORIGINS')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)) {
+    let u: URL;
+    try {
+      u = new URL(raw);
+    } catch {
+      throw new ConfigError('EXTRA_PUBLIC_ORIGINS: vesszővel elválasztott https címek kellenek.');
+    }
+    if (u.protocol !== 'https:' && !(u.hostname === 'localhost' || u.hostname === '127.0.0.1')) throw new ConfigError('EXTRA_PUBLIC_ORIGINS: csak https cím lehet.');
+    extra.push(u.origin);
+  }
+  const publicOrigins = [...new Set([origin(urls.app), origin(urls.panel), origin(urls.api), origin(urls.landing), ...extra])];
+  // app origins: the APP_PUBLIC_URL first, then the extra origins whose host starts with "app." (the web client hosts)
+  const appList = [origin(urls.app), ...extra.filter((o) => /^https?:\/\/app\./.test(o))];
+  const keyOf = (o: string) => (/\.adozz\.hu$/.test(new URL(o).hostname) ? 'a' : /sslip\.io$/.test(new URL(o).hostname) ? 's' : 'x');
+  const used = new Map<string, number>();
+  const appOrigins = [...new Set(appList)].map((o) => {
+    const base = keyOf(o);
+    const n = used.get(base) ?? 0;
+    used.set(base, n + 1);
+    return { key: n === 0 ? base : `${base}${n}`, origin: o };
+  });
+  return { publicOrigins, appOrigins };
+}
+
+/** SPEC §29.4.4: NAV_LOOKUP_* – all five or none. */
+function navLookupCfg(env: NodeJS.ProcessEnv): Config['navLookup'] {
+  const v = {
+    taxNumber: str(env, 'NAV_LOOKUP_TAX_NUMBER'),
+    login: str(env, 'NAV_LOOKUP_LOGIN'),
+    password: str(env, 'NAV_LOOKUP_PASSWORD'),
+    signKey: str(env, 'NAV_LOOKUP_SIGN_KEY'),
+    exchangeKey: str(env, 'NAV_LOOKUP_EXCHANGE_KEY'),
+  };
+  const filled = Object.values(v).filter(Boolean).length;
+  if (filled === 0) return null;
+  if (filled !== 5) throw new ConfigError('NAV_LOOKUP_*: mind az öt kell (adószám, login, jelszó, aláírókulcs, cserekulcs), vagy egyik sem.');
+  if (!/^\d{8}$/.test(v.taxNumber)) throw new ConfigError('NAV_LOOKUP_TAX_NUMBER: 8 számjegy (törzsszám).');
+  const mode = str(env, 'NAV_LOOKUP_MODE', 'test');
+  if (mode !== 'test' && mode !== 'prod') throw new ConfigError('NAV_LOOKUP_MODE: test vagy prod.');
+  return { mode, ...v };
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -178,6 +286,15 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (invMode === 'demo' && !isDemo) invMode = 'disabled';
   if (invMode === 'szamlazzhu' && !str(env, 'SZAMLAZZHU_AGENT_KEY')) invMode = isDemo ? 'demo' : 'disabled';
   if (invMode === 'billingo' && !str(env, 'BILLINGO_API_KEY')) invMode = isDemo ? 'demo' : 'disabled';
+  // SPEC §29.2.1: the account kind is required with szamlazzhu; a live account never runs on the DEMO server.
+  const accRaw = str(env, 'SZAMLAZZHU_ACCOUNT');
+  if (accRaw && accRaw !== 'teszt' && accRaw !== 'eles') throw new ConfigError('SZAMLAZZHU_ACCOUNT: teszt vagy eles.');
+  const szamlazzhuAccount = (accRaw || null) as 'teszt' | 'eles' | null;
+  if (invMode === 'szamlazzhu') {
+    if (!szamlazzhuAccount) throw new ConfigError('INVOICE_MODE=szamlazzhu: a SZAMLAZZHU_ACCOUNT (teszt vagy eles) is kell.');
+    if (isDemo && szamlazzhuAccount !== 'teszt') throw new ConfigError('Éles Számlázz.hu-fiók nem lehet DEMO szerveren: az első éles számla elindítja a fizetős csomagot.');
+    if (!isDemo && szamlazzhuAccount === 'teszt') throw new ConfigError('Éles szerveren (APP_ENV=production) nem lehet a Számlázz.hu teszt fiókja.');
+  }
 
   // --- NAV ---
   const navRaw = str(env, 'NAV_MODE', 'demo');
@@ -192,6 +309,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   let pushMode: PushMode = pushRaw === 'expo' ? 'expo' : isDemo ? 'demo' : 'disabled';
   if (pushRaw && !['demo', 'expo'].includes(pushRaw)) throw new ConfigError('PUSH_MODE: demo vagy expo.');
   if (pushMode === 'demo' && !isDemo) pushMode = 'disabled';
+
+  const urls = {
+    app: url(env, 'APP_PUBLIC_URL', 'https://app.45-94-65-74.sslip.io'),
+    panel: url(env, 'PANEL_PUBLIC_URL', 'https://konyvelo.45-94-65-74.sslip.io'),
+    api: url(env, 'API_PUBLIC_URL', 'https://api.45-94-65-74.sslip.io'),
+    landing: url(env, 'LANDING_PUBLIC_URL', 'https://adozz.hu'),
+  };
+  const origins = originsCfg(env, urls);
 
   const cfg: Config = {
     version: str(env, 'APP_VERSION', '0.1.0'),
@@ -237,7 +362,18 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
         spMode === 'live' ? 'https://secure.simplepay.hu/payment/v2' : 'https://sandbox.simplepay.hu/payment/v2',
     },
     planPriceHuf: int(env, 'PLAN_PRICE_HUF', brand.priceHufMonthlyGross, 100, 10_000_000),
-    invoice: { mode: invMode, szamlazzhuKey: str(env, 'SZAMLAZZHU_AGENT_KEY'), billingoKey: str(env, 'BILLINGO_API_KEY') },
+    payment: paymentCfg(env, appEnv),
+    invoice: {
+      mode: invMode,
+      szamlazzhuKey: str(env, 'SZAMLAZZHU_AGENT_KEY'),
+      billingoKey: str(env, 'BILLINGO_API_KEY'),
+      szamlazzhuAccount,
+      szamlazzhuUrl: url(env, 'SZAMLAZZHU_URL', 'https://www.szamlazz.hu/szamla/'),
+    },
+    landingPublicUrl: urls.landing,
+    publicOrigins: origins.publicOrigins,
+    appOrigins: origins.appOrigins,
+    navLookup: navLookupCfg(env),
     nav: {
       mode: navMode,
       softwareId,
@@ -287,5 +423,17 @@ export function integrationModes(c: Config) {
     mail: c.mail.mode,
     push: c.push.mode,
     invoice: c.invoice.mode,
+    // SPEC §29.1.1 / §29.2.1 (names only, never a key)
+    payment: c.payment.provider,
+    stripe: c.payment.stripe?.mode ?? 'off',
+    szamlazzhuAccount: c.invoice.szamlazzhuAccount ?? '-',
   };
+}
+
+/** The mode of NEW payments ('demo' provider → 'demo'; Stripe → its key mode). */
+export function paymentModeOf(c: Config): 'test' | 'live' | 'demo' | 'sandbox' | null {
+  if (c.payment.provider === 'demo') return 'demo';
+  if (c.payment.provider === 'stripe') return c.payment.stripe?.mode ?? null;
+  if (c.payment.provider === 'simplepay') return c.simplepay.mode === 'disabled' ? null : c.simplepay.mode === 'live' ? 'live' : c.simplepay.mode === 'demo' ? 'demo' : 'sandbox';
+  return null;
 }

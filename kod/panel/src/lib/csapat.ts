@@ -195,7 +195,10 @@ export type MenuKulcs =
   | 'admin_rendszer'
   // SPEC §28.K.2 / §28.K.1
   | 'havi'
-  | 'admin_dijak';
+  | 'admin_dijak'
+  // SPEC §29.5 / §29.9 (B2)
+  | 'igazolasok'
+  | 'admin_konzol';
 export interface MenuElem {
   kulcs: MenuKulcs;
   to: string;
@@ -229,6 +232,9 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_fizetesek: { to: '/admin/fizetesek', felirat: 'Fizetések', ikon: 'szamlaszam' },
   // SPEC §28.K.1: admin-editable fees (DEMO until confirmed)
   admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'szamolo' },
+  // SPEC §29.5 F1: the certificate queue; §29.9 F9: the owner console
+  igazolasok: { to: '/igazolasok', felirat: 'Igazolások', ikon: 'igazolas' },
+  admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'szamolo' },
   admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'fiok', karakter: true },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
   admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'fiok' },
@@ -260,7 +266,7 @@ export function menuCsoportok(o: {
     return out;
   }
   if (o.konyvelo) {
-    const munka = [el('ugyfelek'), el('hatarido'), el('keresek'), el('havi')];
+    const munka = [el('ugyfelek'), el('hatarido'), el('keresek'), el('igazolasok'), el('havi')];
     if (o.konyvelonekVoltVisszahivasa) munka.push(el('visszahivasok'));
     if (o.konyvelonekVoltHelyettunk) munka.push(el('helyettunk'));
     out.push({ cim: 'Munka', elemek: munka });
@@ -269,12 +275,13 @@ export function menuCsoportok(o: {
   if (o.admin) {
     // An admin who is also an accountant already has Visszahívások / Intézzük helyette under Munka.
     const szolg = [el('vallalkozas')];
-    if (!o.konyvelo) szolg.push(el('havi'));
+    if (!o.konyvelo) szolg.push(el('havi'), el('igazolasok'));
     if (!(o.konyvelo && o.konyvelonekVoltHelyettunk)) szolg.unshift(el('helyettunk'));
     if (!(o.konyvelo && o.konyvelonekVoltVisszahivasa)) szolg.unshift(el('visszahivasok'));
     out.push({ cim: 'Ügyfélszolgálat', elemek: szolg });
     const admin = [
       el('admin'),
+      el('admin_konzol'),
       el('admin_ugyfelek'),
       el('admin_elofizetesek'),
       el('admin_fizetesek'),

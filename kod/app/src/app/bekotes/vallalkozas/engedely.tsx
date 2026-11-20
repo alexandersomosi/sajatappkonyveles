@@ -19,6 +19,7 @@ import { T } from '@/ui/T';
 import { useUt } from '@/ui/Ut';
 import { Elakadtal } from '@/ui/Visszahivas';
 import { csakInditasUton } from '@/ui/UtVedelem';
+import { bekotesre } from '@/lib/vezetett';
 
 function Engedely() {
   const { o } = useUt();
@@ -121,7 +122,7 @@ function Engedely() {
               try {
                 await kuld.mutateAsync({ id: ev.id, hash: s.hash, declaration: true, instruction: true });
                 jelez({ szoveg: fillPlaceholders(ASSIST_TEXTS.consentToast, { firstName: fn }), kesz: true });
-                router.replace('/bekotes');
+                bekotesre();
               } catch (e) {
                 if (e instanceof ApiHiba && e.code === 'assist_consent_stale') {
                   void q.refetch();

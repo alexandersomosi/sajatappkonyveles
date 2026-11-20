@@ -3184,7 +3184,19 @@ export const EXPLAINERS_28: readonly ExplainerDefault[] = [
 // {keret}, {pct}, {hatarido}. Prices are never written into a text: {dij} / {havidij} come from fee_settings.
 // =====================================================================================================================
 
-type _FeeKind = 'havidij' | 'havidij_kata' | 'eves_zaras' | 'valtozas_egyszeru' | 'valtozas_jogallas' | 'szuneteltetesi_dij';
+type _FeeKind =
+  | 'havidij'
+  | 'havidij_kata'
+  | 'eves_zaras'
+  | 'valtozas_egyszeru'
+  | 'valtozas_jogallas'
+  | 'szuneteltetesi_dij'
+  | 'igazolas_jovedelem'
+  | 'igazolas_ado'
+  | 'igazolas_koma'
+  | 'igazolas_ev_kivonat'
+  | 'igazolas_egyeb'
+  | 'megszuntetes';
 type _CheckinItem = 'munkaviszony' | 'nyugdij' | 'koltozes' | 'tevekenyseg' | 'csalad' | 'alkalmazott' | 'szuneteltetes' | 'folytatas' | 'kata_ceges' | 'egyeb';
 type _AnnualStatus = 'nem_indult' | 'kerdoiv' | 'dijra_var' | 'konyvelonel' | 'jovahagyasra_var' | 'beadva' | 'kesz';
 type _EmployerAnswer = 'nincs' | 'alkalmazott' | 'efo' | 'mindketto' | 'hamarosan';
@@ -3198,6 +3210,13 @@ export const FEE_KIND_LABELS: Record<_FeeKind, string> = {
   valtozas_egyszeru: 'Változás bejelentése helyetted',
   valtozas_jogallas: 'Jogállás-változás bejelentése helyetted',
   szuneteltetesi_dij: 'Rendelkezésre állási díj',
+  // SPEC §29.5 / §29.7
+  igazolas_jovedelem: 'Jövedelemigazolás intézése',
+  igazolas_ado: 'Adóigazolás intézése',
+  igazolas_koma: 'KOMA-ügyintézés',
+  igazolas_ev_kivonat: 'EV-nyilvántartási kivonat intézése',
+  igazolas_egyeb: 'Más igazolás intézése',
+  megszuntetes: 'A vállalkozás megszüntetése helyetted',
 };
 export const FEE_UNIT_LABELS: Record<'ho' | 'ev' | 'alkalom', string> = { ho: '/ hó', ev: '/ év', alkalom: '/ alkalom' };
 export const FEE_CHARGE_STATUS_LABELS: Record<'nyitott' | 'fizetve' | 'visszavonva' | 'visszaterites_kell' | 'visszaterites_megtortent' | 'elengedve', string> = {

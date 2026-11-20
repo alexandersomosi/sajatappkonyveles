@@ -16,6 +16,7 @@ import { Elakadtal } from '@/ui/Visszahivas';
 import { T } from '@/ui/T';
 import { szoveg, szovegLista } from '@/lib/szovegek';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre } from '@/lib/vezetett';
 
 // Az adatkezelési tájékoztatót tudomásul veszed (nem hozzájárulás), a másik kettőt elfogadod (jogi megjegyzés, SPEC §24).
 const IRATOK: { tipus: LegalDocType; cim: string; mirol: string; pdf?: boolean; pipa: string }[] = [
@@ -41,7 +42,7 @@ export default function Szerzodes() {
     try {
       await elfogad.mutateAsync({ items: IRATOK.map((i) => ({ docType: i.tipus, version: verziok[i.tipus] ?? '' })) });
       jelez({ szoveg: 'Elfogadtad. A szerződést e-mailben is elküldjük.', kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (e) {
       setHiba(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'));
     }

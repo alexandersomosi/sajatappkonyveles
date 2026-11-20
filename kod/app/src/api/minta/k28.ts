@@ -2,6 +2,7 @@
 // A félreteendő összeg itt a §28.1 szabály egyszerűsített mása (45%, főfoglalkozású, minimum alatti alap: az adómentes
 // rész után csak SZJA); a valódi számot a szerver az adómotorral számolja. Semmit nem küld sehova.
 import fixtures from '../../_shared/demo/fixtures.json';
+import { valtozasSor } from '../../lib/utmutato';
 import type {
   AllowanceAnswers, AllowanceItemView, AllowanceState, AnnualAnswers, AnnualView, AssistView, ChangeData, ChangeGuidesView, CheckinItemAnswer,
   CheckinView, ClientHome, EarningsCard, EarningsMonthView, EarningsView, FeeChargeView, FeesView, InvoiceReserveView, NotificationSettings,
@@ -417,7 +418,7 @@ export function k28Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
     const st = c.st();
     const v: ChangeGuidesView = {
       items: CHANGE_KINDS.filter((k) => (st.szunetel ? k !== 'valtozas_szuneteltetes' : k !== 'valtozas_folytatas')).map((k) => ({
-        kind: k, title: CHANGE_TEXTS.sorok[k].title, line: CHANGE_TEXTS.sorok[k].line, icon: CHANGE_KIND_ICON[k], outdated: false,
+        kind: k, title: valtozasSor(k).title, line: valtozasSor(k).line, icon: CHANGE_KIND_ICON[k], outdated: false,
         openAssist: st.valtozasok.find((a) => a.kind === k && !['kesz', 'visszavonva', 'lezarva'].includes(a.status)) ?? null,
       })),
     };
@@ -454,7 +455,7 @@ export function k28Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
       ch.kind === 'valtozas_szekhely' || ch.kind === 'valtozas_telephely'
         ? [`${ch.address.zip} ${ch.address.city}${ch.address.district ? ` ${ch.address.district} kerület` : ''}`, `${ch.address.streetName} ${ch.address.streetType} ${ch.address.houseNumber}.`, `Érvényes: ${ch.effectiveOn.replace(/-/g, '. ')}.`]
         : [JSON.stringify(ch)];
-    return ok({ version: '2026-11-19.ot', hash: `minta-${a.id}`, blocks: [{ key: 'cim', title: CHANGE_TEXTS.sorok[a.kind as ChangeKind].title, lines, editRoute: `/valtozas/${a.kind}/kerem?assist=${a.id}` }], canConsent: true, missing: [] });
+    return ok({ version: '2026-11-19.ot', hash: `minta-${a.id}`, blocks: [{ key: 'cim', title: valtozasSor(a.kind as ChangeKind).title, lines, editRoute: `/valtozas/${a.kind}/kerem?assist=${a.id}` }], canConsent: true, missing: [] });
   });
   ut('POST', '/client/assist/:id/consent', (m) => {
     const a = c.st().valtozasok.find((x) => x.id === m[1]);
@@ -536,7 +537,7 @@ export function k28Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
     };
     return ok(v);
   });
-  ut('POST', '/client/fees/:id/pay', (m) => {
+  ut('POST', '/client/fees/:id/pay', (m, _q, t) => {
     const st = c.st();
     const d = st.dijak.find((x) => x.id === m[1]);
     if (!d) return hiba(404, 'not_found', 'Nincs ilyen díj.');
@@ -555,6 +556,14 @@ export function k28Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
       }
       if (st.havi) st.havi = { ...st.havi, items: st.havi.items.map((i) => (i.assistId === aid ? { ...i, status: 'csapatnal', statusText: `${FN} nekilátott.`, feeCharge: d } : i)) };
     } else if (st.eves) st.eves = { ...annualAlap('konyvelonel'), answers: st.eves.answers, feeCharge: d };
+    // SPEC §29.1.7: the new body {platform, useSavedCard} → FeePayResultK29 (saved card: paid at once; else the made-up page)
+    if (typeof t.useSavedCard === 'boolean') {
+      return ok(
+        t.useSavedCard
+          ? { result: 'sikeres', chargeId: d.id, paymentId: `minta-fizetes-${d.id}`, amountHuf: d.amountHuf, cardLabel: 'DEMO •••• 4242' }
+          : { result: 'atiranyitas', chargeId: d.id, paymentId: `minta-fizetes-${d.id}`, url: `minta:MINTA-DIJ-${d.id}`, amountHuf: d.amountHuf },
+      );
+    }
     return ok({ paymentUrl: `/fiok/dijak?fizetve=${d.id}`, orderRef: `MINTA-${d.id}`, chargeId: d.id, amountHuf: d.amountHuf, demo: true });
   });
   ut('PUT', '/client/onboarding/employer', (_m, _q, t) => {

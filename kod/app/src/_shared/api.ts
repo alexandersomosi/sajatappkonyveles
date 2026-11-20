@@ -1819,7 +1819,13 @@ export interface FeeChargeView {
   demo: boolean;
   status: FeeChargeStatus;
   statusText: string;
-  purpose: { type: 'valtozas'; assistId: string } | { type: 'eves_zaras'; annualId: string };
+  /** SPEC §29.1.2: widened (FeePurposeK29 in k29.ts). */
+  purpose:
+    | { type: 'valtozas'; assistId: string }
+    | { type: 'eves_zaras'; annualId: string }
+    | { type: 'igazolas'; requestId: string }
+    | { type: 'megszuntetes'; assistId: string }
+    | { type: 'admin'; note: string };
   dueOn: ISODate | null;
   createdAt: ISODateTime;
   paidAt: ISODateTime | null;

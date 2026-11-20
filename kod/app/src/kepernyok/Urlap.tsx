@@ -6,8 +6,19 @@ import { betu, forma, szin } from '@/theme/tokens';
 import { Fejlec } from '@/ui/alap';
 import { Ikon3d, type Ikon3dNev } from '@/ui/kepek';
 import { T } from '@/ui/T';
+import { useVezetettParam, VezetettFelsoSor, VezetettHaladas } from '@/ui/Vezetett';
 
 export function UrlapFej({ vissza, szakasz }: { vissza: () => void; szakasz: string }) {
+  // SPEC §29.10.3: inside the guided run the band carries "Később folytatom" and the progress bar instead of the name
+  const vezetett = useVezetettParam();
+  if (vezetett) {
+    return (
+      <Fejlec rozX={318} rozY={70} alsoTer={16}>
+        <VezetettFelsoSor vissza={vissza} kulcs={vezetett} />
+        <VezetettHaladas style={{ marginTop: 8, paddingHorizontal: 16 }} />
+      </Fejlec>
+    );
+  }
   return (
     <Fejlec rozX={318} rozY={70} alsoTer={12}>
       <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16 }}>

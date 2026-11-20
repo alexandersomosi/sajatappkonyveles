@@ -16,6 +16,7 @@ import { ApiHiba, post, put } from '@/api/http';
 import { useMe, useOnboarding, useSegitsegKer, useSegitsegLemond, useVisszahivasKer, useVisszahivasok } from '@/api/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre } from '@/lib/vezetett';
 import { segitsegFajta } from '@/lib/ut';
 import { forma, szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Szakasz, Valaszto } from '@/ui/alap';
@@ -144,7 +145,7 @@ export default function Helyettunk() {
       }
       await ker.mutateAsync({ kind: fajta, source: forras, ...(norm ? { phone: norm, savePhoneToProfile: mentsd } : {}), window: sav, note: megj.trim() || undefined });
       jelez({ szoveg: ASSIST_TEXTS.toast, kesz: true });
-      router.replace('/bekotes');
+      bekotesre();
     } catch (err) {
       if (err instanceof ApiHiba && err.code === 'assist_already_open') {
         void o.refetch();
@@ -161,7 +162,7 @@ export default function Helyettunk() {
           if (fajta === 'meghatalmazas') await post('/client/onboarding/meghatalmazas', { method: 'onya_konyvelo' }).catch(() => undefined);
           await regiCb.mutateAsync({ ...(norm ? { phone: norm, savePhoneToProfile: mentsd } : {}), topic: fajta === 'meghatalmazas' ? 'meghatalmazas' : 'vallalkozas_inditas', window: sav, source: 'bekotes', note: `${CALLBACK_TOPIC_LABELS[ASSIST_CALLBACK_TOPIC[fajta]]}.${megj.trim() ? ` ${megj.trim()}` : ''}`.slice(0, CALLBACK_RULES.noteMaxChars) });
           jelez({ szoveg: ASSIST_TEXTS.toast, kesz: true });
-          router.replace('/bekotes');
+          bekotesre();
           return;
         } catch (e2) {
           setHiba(hibaUzenet(e2, 'Nem sikerült elküldeni. Próbáld újra.'));

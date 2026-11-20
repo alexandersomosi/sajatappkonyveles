@@ -134,7 +134,9 @@ export default function Fiok() {
         <Sor elso ikon="szamlaszam" cim="Előfizetés" al={eloAl} onPress={() => router.push('/fiok/elofizetes')} />
         {/* S22: a díjszámlák és a határidők a bekötés után jelennek meg (k3_kor2 walkthrough 20). */}
         {bekotes ? null : <Sor ikon="irat" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />}
-        <Sor ikon="igazolas" cim="Kérések" al="Igazolások, adatváltozás" onPress={() => router.push('/keresek')} />
+        <Sor ikon="igazolas" cim="Igazolások" al="Jövedelem- és adóigazolás, KOMA, kivonat" onPress={() => router.push('/igazolas')} />
+        <Sor ikon="kivonat" cim="Bevételi kimutatás" al="A bevételeid havonta, PDF-ben" onPress={() => router.push('/kimutatas')} />
+        <Sor ikon="kerdezek" cim="Kérések" al="Adatváltozás, kérdés" onPress={() => router.push('/keresek')} />
         {bekotes ? null : hf.zarva('hataridok') ? (
           <Sor ikon="hataridok" cim="Határidők" al="A bekötés után nyílik meg." jobbra={lakat} label="Határidők" zaroltOk={hf.ok('hataridok') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'hataridok' })} />
         ) : (

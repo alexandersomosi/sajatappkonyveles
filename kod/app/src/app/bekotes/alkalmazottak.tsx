@@ -8,6 +8,7 @@ import { ALLOWANCE_TEXTS, EMPLOYER_ANSWER_LABELS, EMPLOYER_TEXTS, fillPlaceholde
 import { EMPLOYER_ANSWERS, type EmployerAnswer } from '@/_shared/enums';
 import { useAlkalmazottValasz, useKedvezmenyKapu, useOnboarding } from '@/api/hooks';
 import { hibaUzenet } from '@/lib/hiba';
+import { bekotesre, vezetettHref, vezetettKulcs } from '@/lib/vezetett';
 import { maiNap } from '@/lib/format';
 import { Kapszulak, UrlapFej, UrlapKerdes } from '@/kepernyok/Urlap';
 import { szin } from '@/theme/tokens';
@@ -34,12 +35,12 @@ export default function Alkalmazott() {
     } catch {
       /* a kapu válasza nem akadályozza a bekötést */
     }
-    router.replace('/bekotes');
+    bekotesre();
   };
 
   if (kapuLap) {
     return (
-      <Kepernyo ful="fooldal" fejlec={<UrlapFej vissza={() => router.replace('/bekotes')} szakasz="Adókedvezmények" />} dokk={<GombE cim={ALLOWANCE_TEXTS.kapu.primary} onPress={() => router.replace('/kedvezmenyek/kerdoiv')} />}>
+      <Kepernyo ful="fooldal" fejlec={<UrlapFej vissza={() => vissza('/bekotes')} szakasz="Adókedvezmények" />} dokk={<GombE cim={ALLOWANCE_TEXTS.kapu.primary} onPress={() => router.replace(vezetettKulcs() ? vezetettHref('/kedvezmenyek/kerdoiv', 'kedvezmenyek') : '/kedvezmenyek/kerdoiv')} />}>
         <UrlapKerdes cim={ALLOWANCE_TEXTS.kapu.title} miert={ALLOWANCE_TEXTS.kapu.body} ikon="igazolas" />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
           <GombM cim={ALLOWANCE_TEXTS.kapu.nemJar} onPress={() => void kapuValt('nem_jar')} />
@@ -61,6 +62,8 @@ export default function Alkalmazott() {
             try {
               await valasz.mutateAsync({ answer: v });
               setHiba(null);
+              // SPEC §29.10: in the guided run the allowance gate is its own next step
+              if (vezetettKulcs()) return bekotesre();
               setKapuLap(true);
             } catch (e) {
               setHiba(hibaUzenet(e, 'Nem sikerült menteni. Próbáld újra.'));

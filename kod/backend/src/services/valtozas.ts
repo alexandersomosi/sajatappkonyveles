@@ -44,6 +44,8 @@ import { accountantUserOf, notifyQueueOwners, type StaffActor } from './team.js'
 import { clientName, type ClientRow } from './people.js';
 import { fmt } from './kedvezmeny.js';
 import { closePause, openPause } from './szuneteltetes.js';
+import { CLOSING_FOLLOWUP_LABELS, CLOSING_KIND, CLOSING_RULES, CLOSING_TEXTS, personaliseClosingGuide, type ClosingChangeData } from '../_shared/k29f.js';
+import { clientTaxProfiles } from '../db/schema.js';
 
 export const isChangeKind = (k: string | null | undefined): k is ChangeKind => (CHANGE_KINDS as readonly string[]).includes(k ?? '');
 
@@ -78,11 +80,24 @@ export const changeDataSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('valtozas_szuneteltetes'), from: iso, to: iso.nullable() }),
   z.strictObject({ kind: z.literal('valtozas_adoadat'), items: z.array(z.enum(CHANGE_TAX_ITEMS)).min(1, { error: 'Válaszd ki, mi változik.' }), workKind: z.enum(WORK_KINDS).nullish(), effectiveOn: iso, note: z.string().trim().max(CHANGE_RULES.noteMaxChars).nullish() }),
   z.strictObject({ kind: z.literal('valtozas_folytatas'), from: iso }),
+  // SPEC §29.7 F3: the closing day (≥ tomorrow, ≤ today + 90), employees this year
+  z.strictObject({ kind: z.literal('valtozas_megszuntetes'), closingOn: iso, hadEmployees: z.boolean(), note: z.string().trim().max(CHANGE_RULES.noteMaxChars).nullish() }),
 ]) as unknown as z.ZodType<ChangeData>;
+
+/** SPEC §29.7: the closing change data (not part of the shared ChangeData union – k29f.ts ClosingChangeData). */
+export function closingData(c: unknown): ClosingChangeData | null {
+  return c && typeof c === 'object' && (c as { kind?: string }).kind === CLOSING_KIND ? (c as ClosingChangeData) : null;
+}
 
 /** Date rules that need "today" (§28.5.6). Throws a field-level 400. */
 export function checkChangeDates(deps: Deps, c: ChangeData): void {
   const today = todayBudapest(deps.now());
+  const cz = closingData(c);
+  if (cz) {
+    if (cz.closingOn < addDays(today, CLOSING_RULES.minAheadDays)) throw E.validation({ 'change.closingOn': CLOSING_TEXTS.validationDatePast });
+    if (cz.closingOn > addDays(today, CLOSING_RULES.maxAheadDays)) throw E.validation({ 'change.closingOn': CLOSING_TEXTS.validationDateFar });
+    return;
+  }
   if (c.kind === 'valtozas_szuneteltetes') {
     if (c.from < today) throw E.validation({ 'change.from': 'A szüneteltetés nem kezdődhet a múltban.' });
     if (c.from > addDays(today, CHANGE_RULES.szunetelStartMaxAheadDays)) throw E.validation({ 'change.from': `Legfeljebb ${CHANGE_RULES.szunetelStartMaxAheadDays} nappal előre.` });
@@ -93,6 +108,8 @@ export function checkChangeDates(deps: Deps, c: ChangeData): void {
 }
 
 export function effectiveOnOf(c: ChangeData): string {
+  const cz = closingData(c);
+  if (cz) return cz.closingOn;
   return 'effectiveOn' in c ? c.effectiveOn : c.from;
 }
 
@@ -120,6 +137,7 @@ async function latestChange(db: DbOrTx, clientId: string, kind: ChangeKind): Pro
 export async function buildChangeGuide(deps: Deps, db: DbOrTx, cl: ClientRow, kind: ChangeKind): Promise<Guide> {
   const open = await latestChange(db, cl.id, kind);
   const params = await accountantParams(db, cl.accountantId);
+  if (kind === CLOSING_KIND) return buildClosingGuide(deps, db, cl, open, params);
   const p = personaliseChangeGuide(kind, {
     change: open && isOpenAssist(open.status) && open.changeData ? (open.changeData as unknown as ChangeGuideData) : null,
     firstName: String(params.firstName),
@@ -142,6 +160,36 @@ export async function buildChangeGuide(deps: Deps, db: DbOrTx, cl: ClientRow, ki
     outdated,
     outdatedText: outdated ? await deps.content.render('valtozas.elavult', params).then((t) => t || '2027-től a vállalkozói nyilvántartást a kamara vezeti. Ezt az útmutatót frissítjük; addig kérj visszahívást, és segítünk.') : null,
     ...(kind === 'valtozas_tevekenyseg' ? { activityPending: p.activityPending } : {}),
+  };
+}
+
+/** SPEC §29.7 F3: the closing guide (drawn pictures until real captures exist). */
+async function buildClosingGuide(deps: Deps, db: DbOrTx, cl: ClientRow, open: AssistRow | null, params: Record<string, unknown>): Promise<Guide> {
+  const year = Number(todayBudapest(deps.now()).slice(0, 4));
+  const [tp] = await db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
+  const p = personaliseClosingGuide({
+    change: open && isOpenAssist(open.status) ? closingData(open.changeData) : null,
+    firstName: String(params.firstName),
+    firstNameWith: String(params.firstNameWith),
+    firstNameAcc: String(params.firstNameAcc ?? ''),
+    progress: await changeProgress(db, cl.id, CLOSING_KIND),
+    regime: (tp?.regime as 'atalany' | 'kata' | undefined) ?? 'atalany',
+    ugysegedValidUntil: validUntilOf(deps, CLOSING_KIND),
+  });
+  const steps: GuideStep[] = p.steps.map((st) => ({ ...st, fields: st.fields.map((f): GuideField => ({ ...f, actionLabel: GUIDE_ACTION_LABELS[f.action] })) }));
+  const outdated = todayBudapest(deps.now()) > p.validUntil;
+  return {
+    kind: CLOSING_KIND as never,
+    version: p.version,
+    title: p.title,
+    intro: `${p.intro}`,
+    outro: p.outro,
+    video: null,
+    prepare: [],
+    steps,
+    imagesManifest: `utmutato/${CLOSING_KIND}/kepek.json`,
+    outdated,
+    outdatedText: outdated ? CLOSING_TEXTS.outdated : null,
   };
 }
 
@@ -277,6 +325,12 @@ export function addressLine(a: { zip: string; city: string; district?: string | 
 
 export function changeBlocks(c: ChangeData): { key: string; title: string; lines: string[]; editRoute: string | null }[] {
   const edit = `/valtozas/${c.kind}/urlap`;
+  const cz = closingData(c);
+  if (cz)
+    return [
+      { key: 'datum', title: CLOSING_TEXTS.summaryDate, lines: [huLongDate(cz.closingOn), CLOSING_TEXTS.formDateWarn], editRoute: edit },
+      { key: 'alkalmazott', title: CLOSING_TEXTS.summaryEmployees, lines: [cz.hadEmployees ? 'Igen' : 'Nem'], editRoute: edit },
+    ];
   switch (c.kind) {
     case 'valtozas_szekhely':
       return [
@@ -423,14 +477,15 @@ export async function changeFiled(deps: Deps, db: DbOrTx, actor: StaffActor, row
 export function followupViews(row: AssistRow, refs: Map<string, NonNullable<ChangeFollowupView['by']>>): ChangeFollowupView[] {
   if (!isChangeKind(row.kind)) return [];
   const c = row.changeData;
+  const cz = closingData(c);
   const p: Record<string, string> = {
-    from: c && 'from' in c ? huLongDate(c.from) : c && 'effectiveOn' in c ? huLongDate(c.effectiveOn) : '',
+    from: cz ? huLongDate(cz.closingOn) : c && 'from' in c ? huLongDate(c.from) : c && 'effectiveOn' in c ? huLongDate(c.effectiveOn) : '',
     to: c && c.kind === 'valtozas_szuneteltetes' && c.to ? huLongDate(c.to) : 'nyitott',
     date: c ? huLongDate(effectiveOnOf(c)) : '',
   };
   return CHANGE_FOLLOWUP_KEYS[row.kind].map((key) => {
     const f = row.followups?.[key];
-    const label = (CHANGE_FOLLOWUP_LABELS[key] ?? key).replace(/\{(\w+)\}/g, (_, k: string) => p[k] ?? '');
+    const label = (CHANGE_FOLLOWUP_LABELS[key] ?? (CLOSING_FOLLOWUP_LABELS as Record<string, string>)[key] ?? key).replace(/\{(\w+)\}/g, (_, k: string) => p[k] ?? '');
     return { key, label, done: Boolean(f?.done), doneAt: f?.at ?? null, by: f?.by ? (refs.get(f.by) ?? null) : null };
   });
 }
@@ -460,6 +515,11 @@ export async function patchFollowup(deps: Deps, db: DbOrTx, actor: StaffActor, r
   const c = row.changeData;
   if (done && key === 'szunetel_dij' && c?.kind === 'valtozas_szuneteltetes') await openPause(deps, db, cl.id, c.from, { to: c.to, source: 'valtozas', by: actor.userId });
   if (done && key === 'szunetel_dij_lezaras' && c?.kind === 'valtozas_folytatas') await closePause(deps, db, cl.id, addDays(c.from, -1), actor.userId);
+  const cz = closingData(c);
+  if (done && cz) {
+    const { onClosingFollowup } = await import('./megszuntetes.js');
+    await onClosingFollowup(deps, db, actor, cl, cz, key);
+  }
   return u!;
 }
 

@@ -50,6 +50,9 @@ import { clientLegalPdf, filledLegalText } from '../services/contracts.js';
 import { markdownToPdf } from '../lib/pdf.js';
 import { pepAad } from '../services/kyc.js';
 import { augmentHome, invoiceReserves, registerClientK28Routes } from './client-k28.js';
+import { registerClientPaymentsK29 } from './payments-k29.js';
+import { registerClientK29gRoutes } from './client-k29g.js';
+import { registerClientK29fRoutes } from './client-k29f.js';
 import { clientServiceLock } from '../services/zarolas.js';
 import { blocksActivation, employerRow } from '../services/alkalmazott.js';
 
@@ -100,7 +103,13 @@ export function clientRoutes(deps: Deps) {
   // SPEC §28.K.5: the service lock for an unpaid fee (403 service_locked on the listed writes).
   r.use('*', clientServiceLock(deps));
   // SPEC §28 / §28.K routes (change kinds of /guides and /assist first; the rest falls through).
+  // SPEC §29.1 / §29.4.4 (B1): Stripe / DEMO card flows, fees with the saved card, taxpayer lookup (legacy bodies fall through).
+  registerClientPaymentsK29(r, deps);
   registerClientK28Routes(r, deps);
+  // SPEC §29.10 G: the guided first run (GET/POST /client/guided).
+  registerClientK29gRoutes(r, deps);
+  // SPEC §29 F1/F2/F4: certificates, income statement, calendar (+ the label-only /deadlines/:id/ics).
+  registerClientK29fRoutes(r, deps);
   // SPEC §26: branch question, new-business registration, guides, explainers, access matrix, callbacks.
   registerBekotesRoutes(r, deps);
 
@@ -122,7 +131,8 @@ export function clientRoutes(deps: Deps) {
       .refine((v) => v === '' || /^\d{10}$/.test(v), { error: '10 számjegy.' })
       .refine((v) => v === '' || isValidAdoazonositoJel(v), { error: 'Ez az adóazonosító jel nem stimmel. Nézd meg a kártyán.' })
       .optional(),
-    adoszam: z.string().trim().refine(isValidAdoszam, { error: 'Ez az adószám nem stimmel (formátum: 12345678-1-23).' }),
+    // SPEC §28.K.9 / §29.10: '' is accepted only when the client chose "Most nem tudom" (adoszamPending) – checked below
+    adoszam: z.string().trim().refine((v) => v === '' || isValidAdoszam(v), { error: 'Ez az adószám nem stimmel (formátum: 12345678-1-23).' }),
     evNyilvantartasiSzam: z.string().trim().max(20).optional(),
     // Same rules as the new-business form (SPEC §26.1.3): a Hungarian postcode never starts with 0.
     address: z.object({
@@ -161,6 +171,8 @@ export function clientRoutes(deps: Deps) {
       adoazonositoJelMasked: cl.adoazonositoLast3 ? `•••••••${cl.adoazonositoLast3}` : '',
       suggestedCostRatio: costRatioForActivity(cl.activityAnswer ?? 'egyeb'),
       confirmedCostRatio: tp?.costRatioSource === 'konyvelo_megerositette' ? (tp.costRatio as 45 | 80 | 90) : null,
+      // §28.K.9 / §29.10: the Adataid form skips the adószám after "Most nem tudom"
+      ...(cl.adoszamPending ? { adoszamPending: true } : {}),
     };
   }
 
@@ -214,9 +226,11 @@ export function clientRoutes(deps: Deps) {
     if (b.phone && !isValidPhone(b.phone)) throw E.validation({ phone: 'Ez nem tűnik telefonszámnak.' });
     if (b.evSince > todayBudapest(deps.now())) throw E.validation({ evSince: 'Nem lehet a jövőben.' });
     if (b.evSince < EV_SINCE_MIN) throw E.validation({ evSince: 'Nézd meg az évszámot: 1990 előtti dátumot nem tudunk elfogadni.' });
+    // §28.K.9 "Most nem tudom": onboarding is never blocked on the adószám – the accountant fills it from ONYA later
+    if (!b.adoszam && !cl.adoszamPending && !cl.adoszam) throw E.validation({ adoszam: 'Add meg az adószámodat (formátum: 12345678-1-23).' });
     // The service is for alanyi ÁFA-mentes sole traders only: the middle digit of the adószám (ÁFA-kód) must be 1.
     // 2 = ÁFA-körös, 3 = EVA, 4/5 = csoportos. Before round 1 (2026-11-19) such a client could go on, sign and pay.
-    if (b.adoszam.split('-')[1] !== '1') {
+    if (b.adoszam && b.adoszam.split('-')[1] !== '1') {
       await auditC(c, deps.db, 'client.profile_refused', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { reason: 'afa_kod', afaKod: b.adoszam.split('-')[1] } });
       throw new ApiError(400, 'validation_failed', await deps.content.render('adatok.stop.nem_afamentes', {}), { adoszam: await deps.content.render('adatok.stop.nem_afamentes', {}) }, { stop: 'nem_afamentes' });
     }
@@ -238,7 +252,7 @@ export function clientRoutes(deps: Deps) {
                 adoazonositoLast3: adoJel.slice(-3),
               }
             : {}),
-          adoszam: b.adoszam,
+          ...(b.adoszam ? { adoszam: b.adoszam } : {}),
           evNyilvantartasiSzam: b.evNyilvantartasiSzam ?? null,
           // An already active legacy client without an answer is an existing business (only onboarding asks first).
           ...(cl.businessStatus ? {} : { businessStatus: 'van' as const }),
