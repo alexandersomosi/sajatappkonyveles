@@ -1,0 +1,36 @@
+TELEFONKERET – EREDET ÉS FELHASZNÁLÁSI JOG
+Fájlok: telefon_keret.svg (fő, 4,6 KB, vektoros), telefon_keret.webp (868x1776, 2x raszteres, átlátszó, 50 KB)
+Dátum: 2026-11-20
+
+EREDET
+Saját készítés. A keretet a kódból rajzoltuk (kézzel írt SVG: lekerekített téglalapok, színátmenetek, maszk).
+Nincs benne letöltött kép, sablon, betű vagy más fél kódja, és MI-vel (AI) generált kép sincs benne.
+Harmadik fél licence nem vonatkozik rá. Az Adózz.hu oldalán szabadon használható, módosítható, saját szerverről kiszolgálható.
+
+MÁRKAJELZÉS
+Általános, márkajelzés nélküli okostelefon: nincs logó és felirat, nincs Apple-jellegzetesség
+(nincs Dynamic Island vagy notch, nincs Ring/Silent kapcsoló, nincs bal oldali hangerőgomb-sor).
+Kör alakú előlapi kamerakivágás, jobb oldalon hangerő- és bekapcsológomb (sok gyártó telefonján ilyen).
+Ne írjuk mellé, hogy „iPhone” vagy más típusnév.
+
+MIÉRT NEM KÉSZ, LETÖLTHETŐ KERET (ellenőrizve 2026-11-20)
+- Apple Design Resources, „Product Bezels” (https://developer.apple.com/design/resources/):
+  az Apple marketing-licence csak az App Store-ból letölthető alkalmazásokhoz és csak Apple Developer Program-tagnak ad jogot
+  (https://developer.apple.com/app-store/marketing/guidelines/, Marketing Artwork License Agreement 1. pont).
+  Ezenkívül tilt minden módosítást, például árnyék, tükröződés hozzáadását vagy kivágást. -> nem használható.
+- Meta „Design at Meta – Devices” (https://www.meta.com/design-at-meta/tools/devices/, licenc: https://www.meta.com/design-at-meta/license/):
+  csak prototípusra és makettre szól, kereskedelmi célra csak írásos engedéllyel használható,
+  a készülékképeken a gyártók jogai is rajta vannak. -> nem használható.
+- picturepan2/devices.css (MIT, https://github.com/picturepan2/devices.css): tiszta CSS, de lapos, sematikus hatású, iPhone 14 Pro-utánzat,
+  a kijelzője 390x830 (a mi képeink 390x844). -> nem elég valósághű.
+- Magic UI „iPhone” komponens (MIT, https://magicui.design): lapos, szürke vonalrajz. -> nem valósághű.
+- ephread/PommePlate (CC0, https://github.com/ephread/PommePlate): régi iPhone-modellek (X, 11 Pro, notch), a tárolót 2023-ban archiválták. -> elavult.
+- blaineam/Monkr (MIT tároló): a telefonkeretei az Apple bezel-képei, ezekre az Apple licence vonatkozik. -> nem használható.
+
+MÉRETEK (viewBox 0 0 434 888; 1 egység = 1 CSS px, ha a keret 434 px széles)
+- Készüléktest: x 3–431, y 3–885 (428x882), sarok r63
+- Fém perem: 4,5 egység széles; fekete kijelzőperem 7,5-től 22-ig
+- Kijelző (ide kerül az app képe): x 22, y 22, 390x844, sarok r44
+  = left 5,069%, top 2,477%, width 89,862%, height 95,045%, sarok 11,282% / 5,213% (vízszintes/függőleges)
+- Látható nyílás (átlátszó a kereten): x 22,5, y 22,5, 389x843, r43,5 (a perem 0,5 egységgel rálóg a képre, így nincs világos varrat)
+- Kamera: középpont (217, 44), r6,4; oldalgombok: x 431–433,6, y 196–298 és 330–396

@@ -1,0 +1,183 @@
+{
+ "ido": "2026-11-20T21:39:37",
+ "modell": "google/gemini-3.8-flash",
+ "kepek": [
+  "gep_01.png",
+  "gep_02.png",
+  "gep_03.png",
+  "gep_04.png",
+  "gep_05.png",
+  "gep_06.png",
+  "gep_07.png",
+  "gep_08.png",
+  "gep_09.png"
+ ],
+ "kep_meret": [
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   199
+  ],
+  [
+   1100,
+   777
+  ],
+  [
+   1100,
+   777
+  ],
+  [
+   1100,
+   777
+  ]
+ ],
+ "szakaszok": "fejléc → hős (bal: szürke előcím, cím, bevezető, sárga gomb + „Visszahívást kérek →” szöveglink, ár-sor; jobb: EGY telefon valósághű kerettel, csak árnyékkal, a képernyők maguktól váltakoznak) → bizalmi sor (4 hasáb vonalakkal, ikon nélkül) → „Kiket könyvelünk?” (kétszínű cím, két hasáb vonallal) → „Így indul a könyvelésed” (4 lépés keretes rácsban, szürke alap) → sötét „Mit kapsz” (7 lépés: szám + címke, cím, szöveg; a képen állóképként lépésenként egy telefon; élőben gépen ragadós telefon a jobb oldalon, görgetésre vált) + a szakasz végén a gépes app-kép → „Ki könyvel neked?” + „Ezt csinálja a könyvelőd egy negyedévben” (vonalas lista) → biztonság (két hasáb vonalas tételekkel + 1 keretes figyelmeztetés) → árak (szürke alap, egy fehér panel) → összevetés táblázat → sárga csíkos szaggatott doboz = BELSŐ HELYŐRZŐ, élesítés előtt kikerül, NE ÉRTÉKELD → GYIK → kék záró sáv → sötét lábléc.",
+ "rendszer": "Az Adózz.hu egy magyar online könyvelés-szolgáltatás alanyi áfamentes, átalányadózó és katás egyéni vállalkozóknak: nyilvántartásba vett, név szerint ismert könyvelő + mobilapp. 19 999 Ft/hó bruttó, éves zárás 14 999 Ft/év. Szolgáltató: Somosi Kft. A weboldalt főleg telefonon nézik majd.\nEz egy még NEM élő dizájnminta 2. változata. Az 1. változatot a tulaj és egy külső szem „tipikus AI/Tailwind-landingnak” találta (pasztell szakaszok, ikonos kártyák, „Neked ebből:” színes bal szegélyű dobozok, idővonal ikonokkal, 3 kis kártya, vezérlősor a hős-telefon alatt). A 2. változat ezeket kivette, és modern SaaS-oldalak (Qonto, Kontist, Attio, Stripe, Billingo) mintájára épült: fehér alap, 1 sötét és 1 kék sáv, vonalakkal tagolt hasábok, kevés doboz, Geist 600-as címek, valódi app-képek valósághű telefonkeretben.\nKötöttségek: arculat (kék #1428DB, sárga főgomb #FFC93C, sötét #10152B, Geist); nem lesz kitalált vélemény/ügyfélszám/statisztika/díj, könyvelő-fotó, AI-kép, MI-említés, válaszidő-ígéret (egy engedett mondat a záróban), külső betű/CDN. Az app-képeken a „Kovács Bence” név bemutató adat (külön tulaji döntés, most NE értékeld). Csak valós funkció. Az árak maradnak.",
+ "feladat": "Két szemmel nézd végig: TERVEZŐ (tapasztalt magyar webdizájner, felismeri a sablonos/AI-generált landingot) és VÁLLALKOZÓ (40 körüli villanyszerelő vagy kozmetikus, aki érzi, ha valami gépies vagy nem igazi cég).\nElőbb a 9 gépes képszelet jön (1440 px, fentről lefelé), utána 3 telefonos kép (390 px széles nézet, egymás mellé tett szeletek, balról jobbra, fentről lefelé haladva).\nKérdés: maradt-e még AI/sablon-hatás, MI és MIÉRT; mi lett jó; mit tenne még egy valódi ügynökség, hogy kézzel tervezett, valódi magyar cég hatása legyen (a kötöttségeken belül). Csak a még MEGLÉVŐ problémákat írd, konkrétan (szakasz, elem, képszám), megvalósítható javítással. Ne javasolj új színt, ikonsort, kártyát vagy dobozt. Magyarul, tömören. Válasz CSAK JSON:\n{\"osszkep\":{\"tervezo_ai_hatas_1_10\":<1=kézzel tervezett, 10=tiszta AI-sablon>,\"vallalkozo_ai_hatas_1_10\":<szám>,\"tervezo_egy_mondatban\":\"...\",\"vallalkozo_egy_mondatban\":\"...\",\"legerosebb_maradt_ai_jel\":\"...\"},\n\"maradt_ai_jelek\":[{\"resz\":\"...\",\"kep\":\"<g3 vagy t2>\",\"miert_ai\":\"...\",\"javitas\":\"...\",\"sulyossag\":\"nagy|közepes|kicsi\"}],\n\"szoveg\":[{\"idezet\":\"<PONTOS idézet>\",\"kep\":\"...\",\"gond\":\"...\",\"emberibb\":\"...\"}],\n\"telefonon\":[{\"mi\":\"...\",\"kep\":\"...\",\"javitas\":\"...\"}],\n\"jo_lett\":[\"...\"],\n\"top_5_javitas\":[\"<rangsorolva>\"]}",
+ "valasz": {
+  "osszkep": {
+   "tervezo_ai_hatas_1_10": 4,
+   "vallalkozo_ai_hatas_1_10": 3,
+   "tervezo_egy_mondatban": "Sokkal érettebb, tiszta Stripe/Linear jellegű struktúra, de a sötét sáv monoton 7 lépéses hossza és a túlságosan steril szürke vonalas blokkok még árulkodnak a generált vázról.",
+   "vallalkozo_egy_mondatban": "Világos, nem köntörfalaz és rögtön kiírja az árakat, de a rengeteg egymás alatti képernyő és jogi tétel miatt kicsit hűvös, hatósági érzésem marad.",
+   "legerosebb_maradt_ai_jel": "A sötét 'Mit kapsz' blokk 7 lépéses, teljesen egy kaptafára húzott szöveg-mockup ritmusa (szám + kis felirat + cím + 3 sor leírás végtelenítve)."
+  },
+  "maradt_ai_jelek": [
+   {
+    "resz": "Mit kapsz (sötét szakasz felépítése)",
+    "kep": "g2-g5",
+    "miert_ai": "A 01-től 07-ig tartó számozott lista egyhangúan ismétlődik bal oldalon, miközben jobb oldalon csak a mockup cserélődik; tipikus 'feature dump' sablon.",
+    "javitas": "Vonj össze rokon funkciókat legfeljebb 4-5 fókuszpontba, vagy a 'Gépen is ugyanaz' blokkot emeld ki vizuálisan külön záró elemként, ne 8. halk pontként.",
+    "sulyossag": "nagy"
+   },
+   {
+    "resz": "Így indul a könyvelésed (4 oszlopos rács)",
+    "kep": "g2",
+    "miert_ai": "A 01-04 felülvonalas, csupasz számozás a leggyakoribb modern Tailwind/Framer komponens, hiányzik belőle a valódi folyamatfolytonosság.",
+    "javitas": "A számok helyett kapjon a lépések közötti kapcsolat egy finom nyilat vagy folyamatjelző vízszintes fonalat desktopon, mobilon pedig ne sima tördelés legyen.",
+    "sulyossag": "közepes"
+   },
+   {
+    "resz": "Biztonsági figyelmeztető doboz ('Ha valaki a nevünkben keres')",
+    "kep": "g6",
+    "miert_ai": "Egy magányos, vékony fekete keretes doboz az üres tér közepén; úgy néz ki, mintha a prompt végére illesztett biztonsági szöveg nem talált volna saját komponenst.",
+    "javitas": "Olvaszd bele bal oldali vagy jobb oldali oszlopba 'Fontos:' kiemeléssel ahelyett, hogy külön árválkodó kártyaként lebeg a vonalak alatt.",
+    "sulyossag": "közepes"
+   },
+   {
+    "resz": "Összehasonlító táblázat",
+    "kep": "g7",
+    "miert_ai": "A klasszikus 'Mi vs. Hagyományos megoldás' matrica, ahol a másik fél mindig mindenben bizonytalan vagy rosszabb ('Irodánként eltér').",
+    "javitas": "A 'Hagyományos iroda' oszlop helyett a 'Könyvelőiroda személyesen' megközelítést nevezd meg korrekten, és hagyd el a túlzó kontrasztos sablonszövegeket.",
+    "sulyossag": "kicsi"
+   }
+  ],
+  "szoveg": [
+   {
+    "idezet": "A szerződést a Somosi Kft.-vel kötöd. A könyvelőd munkájáért mi felelünk, úgy, mintha magunk dolgoznánk.",
+    "kep": "g5",
+    "gond": "Bizonytalanságot szül: kiderül, hogy a könyvelő valójában alvállalkozó, a 'mintha magunk' fordulat jogászkodó és mesterkélt.",
+    "emberibb": "A szerződést velünk kötöd (Somosi Kft.), a könyvelőd munkájáért pedig teljes anyagi és szakmai felelősséget vállalunk."
+   },
+   {
+    "idezet": "Mindig tudod, hol tartasz az adóval. A bevallást a könyvelőd készíti, az app arra való, hogy közben te is képben legyél.",
+    "kep": "g2",
+    "gond": "Túlbeszélt, magyarázkodó alcím-jellegű cím.",
+    "emberibb": "A bevallást a könyvelőd intézi. Az appból csak látod, mennyi az adód, és mikor kell utalnod."
+   },
+   {
+    "idezet": "Nem csúszol bele véletlenül az áfába",
+    "kep": "g4",
+    "gond": "Szlenges és kicsit negatív framing.",
+    "emberibb": "Időben látod, ha közelíted az alanyi áfamentes keretedet."
+   }
+  ],
+  "telefonon": [
+   {
+    "mi": "Összevetés szakasz mobil nézete",
+    "kep": "t3",
+    "javitas": "A táblázat mobilon soronkénti kék/fekete szövegpárokká esik szét, ami nehezen olvasható összehasonlításként; érdemesebb vízszintesen lapozható mini-táblázatként megtartani."
+   },
+   {
+    "mi": "Hős szekció alatti bizalmi sor",
+    "kep": "t1",
+    "javitas": "Mobilon a 4 hasáb egymás alá kerülve végtelen görgetést csinál még a lényeg előtt; 2x2-es kompakt rácsba kell rendezni finom osztóvonalakkal."
+   },
+   {
+    "mi": "Mit kapsz görgetési hossz",
+    "kep": "t1-t2",
+    "javitas": "A 7 telefonos képernyő és leírás egymás alatt brutálisan megnyújtja a mobilos oldalt; a képernyőket érdemes horizontális swipe-kártyákká alakítani mobilon."
+   }
+  ],
+  "jo_lett": [
+   "A hős szekció tiszta, fókuszált, a telefonos app valódi képernyője azonnal eladja az értékajánlatot felesleges sallangok nélkül.",
+   "A 'Kiket könyvelünk? / Neked szól / Most nem neked szól' bontás konkrét, egyenes és szokatlanul őszinte a magyar piacon.",
+   "Az árazási táblázat teljesen transzparens, nincs eldugott apróbetű vagy 'kérj egyedi ajánlatot' ködösítés.",
+   "Eltűntek a semmitmondó stock ikonok, pasztell hátterek és lekerekített 'bubble' kártyák; a tipográfia szigorú és üzleti."
+  ],
+  "top_5_javitas": [
+   "1. Rövídítsd vagy tagold a 'Mit kapsz' 7 lépését (mobilon vízszintes görgetés, desktopon 4-5 logikai csoport), hogy megszűnjön a végtelen mockup-folyam.",
+   "2. A bizalmi 4 tételt mobilon alakítsd 2x2-es kompakt blokká, hogy ne tolja le 4 képernyőnyivel a tartalmat.",
+   "3. Az összehasonlító táblázat mobilos tördelését tedd kártyásabbá vagy vízszintesen görgethetővé a jelenlegi vertikális szöveghalmaz helyett.",
+   "4. A 'Ha valaki a nevünkben keres' figyelmeztetést integráld a biztonsági oszlopok alá természetes lábjegyzetként, külön keret nélkül.",
+   "5. Tisztázd a felelősségvállalási szöveget a 'Ki könyvel neked?' résznél, hogy eloszlasd az alvállalkozós közvetítő-látszatot."
+  ]
+ },
+ "finish_reason": "stop",
+ "hiba": "",
+ "usage": {
+  "prompt_tokens": 14369,
+  "completion_tokens": 2059,
+  "total_tokens": 16428,
+  "cost": 0.018498,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.018498,
+   "upstream_inference_prompt_cost": 0.01077675,
+   "upstream_inference_completions_cost": 0.00772125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "koltseg_usd": 0.018498
+}

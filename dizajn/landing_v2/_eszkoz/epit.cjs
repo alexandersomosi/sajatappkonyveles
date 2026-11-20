@@ -20,8 +20,9 @@ function ikon(n) {
 // hogy az oldal semmit ne kérjen idegen szervertől (élesben a CSP csak saját forrást enged).
 const LOGO = `<a class="logo" href="#top"><img src="kepek/logo.png" width="138" height="38" alt="Adózz.hu – az oldal teteje"></a>`;
 const LOGO_FEHER = `<a class="logo logo-feher" href="#top"><img src="kepek/logo_feher.png" width="138" height="38" loading="lazy" alt="Adózz.hu – az oldal teteje"></a>`;
-const PIPA = '<svg class="pipa" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".13"/><path d="M5.9 10.4l2.6 2.6 5.6-5.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const NEM = '<svg class="pipa nem" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="currentColor" opacity=".12"/><path d="M6.5 10h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+// 2. kör (11-20 este): vékony, egyszínű pipa karika nélkül (a színes karikás pipa AI-sablon hatású volt).
+const PIPA = '<svg class="pipa" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.3 8.5l2.9 2.9 6.5-6.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const NEM = '<svg class="pipa nem" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 8h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
 let html = fs.readFileSync(path.join(__dirname, 'index.sablon.html'), 'utf8');
 html = html
