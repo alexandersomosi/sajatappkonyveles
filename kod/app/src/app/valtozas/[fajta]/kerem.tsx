@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { ZarolasKapu } from '@/ui/ZarolasKapu';
 import { CHANGE_FORM_TEXTS, CHANGE_TEXTS, FEE_TEXTS, fillPlaceholders } from '@/_shared/bekotes';
 import { changeFeeKind, CHANGE_TAX_ITEMS_CALL_FIRST, FEE_DEFAULTS, type ChangeKind } from '@/_shared/enums';
 import { useMe, useValtozasKer, useValtozasModosit, useValtozasok } from '@/api/hooks';
@@ -21,6 +22,15 @@ import { Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 
 export default function ValtozasKerem() {
+  // k6c2 (§28.K.5): POST /client/assist is refused while the fee lock is on – show the lock, not a form that fails at the end
+  return (
+    <ZarolasKapu cim="Bejelentjük helyetted" ful="fiok">
+      <ValtozasKeremTartalom />
+    </ZarolasKapu>
+  );
+}
+
+function ValtozasKeremTartalom() {
   const p = useLocalSearchParams<{ fajta: string; lap?: string; assist?: string }>();
   const kind = (valtozasFajta(p.fajta) ? p.fajta : 'valtozas_szekhely') as ChangeKind;
   const me = useMe();

@@ -1,6 +1,6 @@
 # Könyvelő-app – funkciólista (2026-11-17, a tulaj 11-18-i kéréseivel)
 
-Célcsoport: alanyi ÁFA-mentes, átalányadós egyéni vállalkozók. Ár: 20 000 Ft bruttó/hó. A NAV felé a könyvelő a meghatalmazott.
+Célcsoport: alanyi ÁFA-mentes, átalányadós egyéni vállalkozók. Ár: 19 999 Ft bruttó/hó. A NAV felé a könyvelő a meghatalmazott.
 
 ## Ügyfél (mobilapp + böngésző)
 ### Bekötés

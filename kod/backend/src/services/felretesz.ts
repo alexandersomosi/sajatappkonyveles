@@ -8,9 +8,9 @@ import type { InvoiceReserveView, ReserveCard, ReserveListItem, ReserveView } fr
 import { RESERVE_ROUND_HUF, type ReserveEstimateReason, type ReserveZone } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { clientTaxProfiles, navInvoices, reserveMarks, reserveYears, revenueItems, revenueReserves, taxPeriods } from '../db/schema.js';
+import { clients, clientTaxProfiles, navInvoices, reserveMarks, reserveYears, revenueItems, revenueReserves, taxPeriods } from '../db/schema.js';
 import { audit } from '../audit.js';
-import { daysBetween, huDayMonthIg, MONTHS_HU, todayBudapest } from '../lib/dates.js';
+import { daysBetween, huDayMonthIg, MONTHS_ADJ_HU, MONTHS_HU, todayBudapest } from '../lib/dates.js';
 import { ENGINE_VERSION, reserveSeries, roundReserve, type ReserveItemInput, type YearInput, type YearResult } from '../tax/engine.js';
 import { earningsBasis, kb1000 } from './kereset.js';
 import { accountantParams } from '../notify/notify.js';
@@ -105,7 +105,59 @@ export interface ReserveLineData {
   estimated: boolean;
 }
 
-export async function reserveView(deps: Deps, r: ReserveLineData | null, o: { amountHuf: number; nextYear: boolean; year: number }): Promise<InvoiceReserveView> {
+/** k6c2: what the one-liner and "Miért ennyi?" need to know about the client (status, ratio, approved allowances). */
+export interface ReserveCtx {
+  status: 'fofoglalkozasu' | 'mellekallasu' | 'nyugdijas';
+  costRatio: number;
+  /** any approved, in-year allowance */
+  kedvezmeny: boolean;
+  /** an approved anyák / 30 év alatti anyák exemption: no SZJA on the income */
+  szjaMentes: boolean;
+  firstName: string;
+}
+
+export async function reserveCtx(db: DbOrTx, clientId: string, year: number): Promise<ReserveCtx> {
+  const [tp] = await db.select({ status: clientTaxProfiles.status, costRatio: clientTaxProfiles.costRatio }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, year))).limit(1);
+  const rows = (await allowanceRows(db, clientId, year)).filter((r) => r.status === 'jovahagyva' && r.inYear && r.kind !== 'csed_gyed');
+  const [cl] = await db.select({ accountantId: clients.accountantId }).from(clients).where(eq(clients.id, clientId)).limit(1);
+  const params = await accountantParams(db, cl?.accountantId);
+  return {
+    status: (tp?.status ?? 'fofoglalkozasu') as ReserveCtx['status'],
+    costRatio: tp?.costRatio ?? 45,
+    kedvezmeny: rows.length > 0,
+    szjaMentes: rows.some((r) => r.kind === 'anyak' || r.kind === 'anya30'),
+    firstName: String(params.firstName),
+  };
+}
+
+/** k6c2: the "Miért ennyi?" sheet: only the non-zero parts (exact, no "kb."), a signed total, the bullets that apply. */
+async function miertOf(deps: Deps, r: ReserveLineData, ctx: ReserveCtx): Promise<NonNullable<InvoiceReserveView['miert']>> {
+  const rows: string[] = [];
+  if (r.szjaHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szja', { szja: fmt(r.szjaHuf) }));
+  if (r.tbHuf !== 0) rows.push(await deps.content.render('felretesz.miert.tb', { tb: fmt(r.tbHuf) }));
+  if (r.szochoHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szocho', { szocho: fmt(r.szochoHuf) }));
+  const total =
+    r.reserveHuf > 0
+      ? await deps.content.render('felretesz.miert.osszesen', { felre: fmt(r.reserveHuf) })
+      : r.reserveHuf < 0
+        ? await deps.content.render('felretesz.miert.osszesen_sztorno', { felre: fmt(Math.abs(r.reserveHuf)) })
+        : await deps.content.get('felretesz.miert.osszesen_nulla');
+  const keys: string[] = ['bevezeto'];
+  if (r.zone === 'sztorno') keys.push('sztorno');
+  keys.push('adomentes');
+  if (ctx.szjaMentes || r.zone === 'kedvezmeny') keys.push('szja_mentes');
+  else keys.push('szja');
+  if (ctx.status === 'nyugdijas') keys.push('nyugdijas');
+  else if (ctx.status === 'mellekallasu') keys.push('mellek', 'negyedev');
+  else keys.push('minimum', 'negyedev', 'fix');
+  if (r.zone === 'nem_novel' && r.rawHuf < 0) keys.push('csjk');
+  keys.push('zaras');
+  const bullets: string[] = [];
+  for (const k of keys) bullets.push(await deps.content.render(`felretesz.miert.pont.${k}`, { jovedelemArany: String(100 - ctx.costRatio), firstName: ctx.firstName }));
+  return { rows, total, bullets };
+}
+
+export async function reserveView(deps: Deps, r: ReserveLineData | null, o: { amountHuf: number; nextYear: boolean; year: number; ctx?: ReserveCtx }): Promise<InvoiceReserveView> {
   const zone: ReserveZone = r?.zone ?? 'nincs_adat';
   const felre = fmt(Math.abs(r?.reserveHuf ?? 0));
   const p = { osszeg: fmt(Math.abs(o.amountHuf)), felre };
@@ -113,6 +165,8 @@ export async function reserveView(deps: Deps, r: ReserveLineData | null, o: { am
   if (o.nextYear && zone !== 'nincs_adat') line += await deps.content.get('felretesz.jovore');
   const listKey = zone === 'nincs_adat' ? null : (r?.reserveHuf ?? 0) > 0 ? 'felretesz.lista.felre' : zone === 'sztorno' ? 'felretesz.lista.sztorno' : zone === 'adomentes' ? 'felretesz.lista.adomentes' : 'felretesz.lista.nem_novel';
   const partsKey = zone === 'csak_szja' || zone === 'teljes' || zone === 'kedvezmeny' ? `felretesz.reszek.${zone}` : null;
+  // k6c2: "Innentől minden számládból félre kell tenned" only when this invoice itself needs a reserve
+  const thresholdKey = !r?.crossesTaxFree ? null : r.reserveHuf > 0 ? 'felretesz.kuszob' : o.ctx?.kedvezmeny ? 'felretesz.kuszob_kedvezmeny' : 'felretesz.kuszob_nem_novel';
   return {
     year: r?.year ?? o.year,
     reserveHuf: r?.reserveHuf ?? 0,
@@ -125,7 +179,8 @@ export async function reserveView(deps: Deps, r: ReserveLineData | null, o: { am
     line,
     listLine: listKey ? await deps.content.render(listKey, p) : null,
     partsText: partsKey ? await deps.content.get(partsKey) : null,
-    thresholdText: r?.crossesTaxFree ? await deps.content.get('felretesz.kuszob') : null,
+    thresholdText: thresholdKey ? await deps.content.get(thresholdKey) : null,
+    miert: r && zone !== 'nincs_adat' && o.ctx ? await miertOf(deps, r, o.ctx) : null,
   };
 }
 
@@ -139,13 +194,17 @@ export async function reservesForInvoices(deps: Deps, db: DbOrTx, clientId: stri
     .where(and(eq(revenueItems.clientId, clientId), inArray(revenueItems.navInvoiceId, invoiceIds), isNull(revenueItems.deletedAt)));
   const invs = await db.select({ id: navInvoices.id, issueDate: navInvoices.issueDate, grossHuf: navInvoices.grossHuf }).from(navInvoices).where(inArray(navInvoices.id, invoiceIds));
   const years = [...new Set(items.map((i) => Number(i.receivedOn.slice(0, 4))))];
-  for (const y of years) await ensureReserves(deps, db, clientId, y);
+  const ctxs = new Map<number, ReserveCtx>();
+  for (const y of years) {
+    await ensureReserves(deps, db, clientId, y);
+    ctxs.set(y, await reserveCtx(db, clientId, y));
+  }
   const rr = items.length ? await db.select().from(revenueReserves).where(inArray(revenueReserves.revenueItemId, items.map((i) => i.id))) : [];
   for (const inv of invs) {
     const it = items.find((i) => i.navInvoiceId === inv.id);
     const r = it ? rr.find((x) => x.revenueItemId === it.id) : undefined;
     const year = it ? Number(it.receivedOn.slice(0, 4)) : Number(inv.issueDate.slice(0, 4));
-    out.set(inv.id, await reserveView(deps, r ?? null, { amountHuf: inv.grossHuf, nextYear: Boolean(it && it.receivedOn.slice(0, 4) > inv.issueDate.slice(0, 4)), year }));
+    out.set(inv.id, await reserveView(deps, r ?? null, { amountHuf: inv.grossHuf, nextYear: Boolean(it && it.receivedOn.slice(0, 4) > inv.issueDate.slice(0, 4)), year, ctx: ctxs.get(year) }));
   }
   return out;
 }
@@ -175,7 +234,14 @@ const ceil1000 = (n: number) => (n <= 0 ? 0 : Math.ceil(n / RESERVE_ROUND_HUF) *
  * cash needed for the payments; what comes back later is said in one sentence). So the card, the "Eddigi adód" and
  * "Mennyit kerestem?" never show two different "eddig" amounts. The rows under it are rounded "kb." values.
  */
-export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: string): Promise<ReserveCard | null> {
+export interface HeroInfo {
+  state: string;
+  periodKey?: string;
+  periodLabel?: string;
+  futureFixedMonths?: number[];
+}
+
+export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: string, hero?: HeroInfo): Promise<ReserveCard | null> {
   const year = Number(today.slice(0, 4));
   const yr = await ensureReserves(deps, db, cl.id, year);
   if (!yr) return null;
@@ -198,7 +264,10 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
   const h = result.hipa;
   const hipaAnnualHuf = h && h.method === 'savos' ? (h.annualHuf ?? null) : null;
   const hipaHuf = soFar.reduce((a, m) => a + m.hipaHuf, 0);
-  const invoicesHuf = Math.max(0, A - fixedHuf - hipaHuf);
+  const invoicesPart = Math.max(0, A - fixedHuf - hipaHuf);
+  // k6c2: the row shows exactly what the per-invoice list on /felretesz adds up to (items received so far, each rounded up
+  // to 1 000; a storno counts negative). A is still "one eddig" (= Mennyit kerestem?), so the row says it is rounded up.
+  const listedHuf = Math.max(0, rows.filter((x) => x.receivedOn <= today).reduce((a, x) => a + x.r.reserveHuf, 0));
   // B: the quarters that ended before today (approved amount, else the engine estimate) + HIPA periods due by today
   const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
   let B = 0;
@@ -217,21 +286,32 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
   const next = periods.find((p) => p.dueDate >= today && p.paymentStatus !== 'befizetve_jelezve' && p.paymentStatus !== 'ellenorizve');
   const [mark] = await db.select().from(reserveMarks).where(and(eq(reserveMarks.clientId, cl.id), eq(reserveMarks.year, year))).limit(1);
   const zero = keepNowHuf <= 0;
+  let hipaInB = 0;
+  for (const p of periods) if (p.kind === 'hipa' && p.dueDate <= today) hipaInB += p.calcStatus === 'jovahagyva' ? (await activeItems(db, p.id)).reduce((a, i) => a + i.amountHuf, 0) : (h?.advances.find((x) => x.dueDate === p.dueDate)?.amountHuf ?? 0);
   const p2 = { firstName, keepNow: fmt(keepNowHuf), A: fmt(ceil1000(A)), B: fmt(B) };
   const markedHuf = mark ? mark.markedHuf : null;
   const remaining = Math.max(0, keepNowHuf - (markedHuf ?? 0));
-  // The blue band above shows the whole running quarter (with the fixed járulék of its months still to come): say so.
-  const qOfMonth = Math.ceil(month / 3);
-  const futureFixedInQuarter = yr.fixedByMonth.slice(month, qOfMonth * 3).reduce((a, b) => a + b, 0);
   const detail = await deps.content.render(zero ? 'felretesz.kartya.detail_zero' : 'felretesz.kartya.detail', p2);
-  // only on the Főoldal, under its blue band (the /felretesz screen has no quarter band)
-  const heroNote = !zero && futureFixedInQuarter > 0 ? (await deps.content.get('felretesz.kartya.detail_hero')).trim() : null;
+  // k6c2: one line whenever the blue band (the hero) and "Most" differ, for whatever reason – only on the Főoldal
+  const notes: string[] = [];
+  if (hero) {
+    const qOfMonth = Math.ceil(month / 3);
+    const fut = (hero.futureFixedMonths ?? []).filter((m) => m > month && m <= qOfMonth * 3 && (yr.fixedByMonth[m - 1] ?? 0) > 0);
+    if (hero.state === 'becsles' && hero.periodKey === `${year}-Q${qOfMonth}` && fut.length)
+      notes.push(await deps.content.render('felretesz.kartya.hero_fix', { negyedev: hero.periodLabel ?? '', honapok: honapokAdj(fut) }));
+    else if ((hero.state === 'jovahagyva' || (hero.state === 'becsles' && hero.periodKey !== `${year}-Q${qOfMonth}`)) && hero.periodLabel)
+      notes.push(await deps.content.render('felretesz.kartya.hero_lezart', { negyedev: hero.periodLabel }));
+    const hipaInKeep = Math.max(0, hipaHuf - hipaInB);
+    if (!zero && hipaInKeep >= 500 && hero.state !== 'nincs_fizetendo') notes.push(await deps.content.render('felretesz.kartya.hero_hipa', { hipa: fmt(kb1000(hipaInKeep)) }));
+  }
+  const heroNote = notes.length ? notes.join(' ') : null;
   const refundHuf = basis.refundHuf;
   return {
     year,
     keepNowHuf,
     accruedHuf: A,
-    invoicesHuf: kb1000(invoicesHuf),
+    invoicesHuf: listedHuf,
+    invoicesSub: listedHuf > 0 && listedHuf !== kb1000(invoicesPart) ? await deps.content.get('felretesz.kartya.row_szamlak_sub') : null,
     fixedHuf,
     fixedMonthlyHuf,
     hipaHuf: kb1000(hipaHuf),
@@ -267,11 +347,12 @@ export async function reserveList(deps: Deps, db: DbOrTx, cl: ClientRow, year: n
   const invIds = items.map((i) => i.navInvoiceId).filter((x): x is string => Boolean(x));
   const invs = invIds.length ? await db.select().from(navInvoices).where(inArray(navInvoices.id, invIds)) : [];
   const priv = await deps.content.get('felretesz.kepernyo.private_person');
+  const ctx = await reserveCtx(db, cl.id, year);
   const byMonth = new Map<number, ReserveListItem[]>();
   for (const it of items) {
     const inv = invs.find((x) => x.id === it.navInvoiceId);
     const r = rr.find((x) => x.revenueItemId === it.id) ?? null;
-    const view = await reserveView(deps, r, { amountHuf: it.amountHuf, nextYear: false, year });
+    const view = await reserveView(deps, r, { amountHuf: it.amountHuf, nextYear: false, year, ctx });
     const title = inv ? inv.customerName?.trim() || priv : await deps.content.render('felretesz.kepernyo.manual_item', { description: it.description });
     const m = Number(it.receivedOn.slice(5, 7));
     const upcoming = it.receivedOn > asOf;
@@ -292,19 +373,29 @@ export async function reserveList(deps: Deps, db: DbOrTx, cl: ClientRow, year: n
   const months = [];
   for (const [month, list] of [...byMonth.entries()].sort((a, b) => b[0] - a[0])) {
     const now = list.filter((x) => !x.upcoming);
-    const reserveHuf = now.reduce((a, x) => a + Math.max(0, x.reserve.reserveHuf), 0);
+    // k6c2: the month's sum as the rows say it (a storno counts negative); 0 → "nem kell félretenned"
+    const reserveHuf = now.reduce((a, x) => a + x.reserve.reserveHuf, 0);
     const upcomingCount = list.length - now.length;
-    const p = { n: String(now.length), felre: fmt(reserveHuf), u: String(upcomingCount) };
+    const p = { n: String(now.length), felre: fmt(Math.abs(reserveHuf)), u: String(upcomingCount) };
+    const key = reserveHuf > 0 ? 'month_sub' : reserveHuf < 0 ? 'month_sub_kevesebb' : 'month_sub_nulla';
     months.push({
       month,
       label: MONTHS_HU[month - 1] ?? String(month),
       items: list.sort((a, b) => (a.receivedOn < b.receivedOn ? 1 : -1)),
       reserveHuf,
       upcomingCount,
-      sub: await deps.content.render(upcomingCount ? 'felretesz.kepernyo.month_sub_upcoming' : 'felretesz.kepernyo.month_sub', p),
+      sub: await deps.content.render(`felretesz.kepernyo.${key}${upcomingCount ? '_upcoming' : ''}`, p),
     });
   }
-  return { card, months };
+  // the total line = the Főoldal row (Σ of the month sums above)
+  const totalText = card.invoicesHuf > 0 ? await deps.content.render('felretesz.kepernyo.total', { felre: fmt(card.invoicesHuf) }) : null;
+  return { card, months, ...(totalText ? { totalText } : {}) };
+}
+
+/** [11, 12] → "novemberi és decemberi" */
+function honapokAdj(ms: number[]): string {
+  const n = ms.map((m) => MONTHS_ADJ_HU[m - 1] ?? '');
+  return n.length <= 1 ? (n[0] ?? '') : `${n.slice(0, -1).join(', ')} és ${n.at(-1)}`;
 }
 
 /** "2026-11-20" → "november 20." */

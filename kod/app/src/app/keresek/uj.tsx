@@ -9,6 +9,7 @@ import { szin } from '@/theme/tokens';
 import { GombE, HibaSzoveg, Lap, Sor, Valaszto } from '@/ui/alap';
 import { ma } from '@/ui/ido';
 import { CimSor, Kepernyo, useJelzes, vissza } from '@/ui/keret';
+import { ZarolasKapu } from '@/ui/ZarolasKapu';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { ZaroltKapu } from '@/ui/Zarolt';
@@ -179,10 +180,18 @@ function UjKeresTartalom() {
 export default function UjKeres() {
   const p = useLocalSearchParams<{ tipus?: string }>();
   const csakKerdes = p.tipus === 'kerdes';
-  if (csakKerdes) return <UjKeresTartalom />;
+  // k6c2 (§28.K.5): while the fee lock is on, POST /client/requests is refused – the form is not even started
+  if (csakKerdes)
+    return (
+      <ZarolasKapu cim="Kérésed van?">
+        <UjKeresTartalom />
+      </ZarolasKapu>
+    );
   return (
     <ZaroltKapu feature="igazolas_keres" ful="fooldal" cim="Igazolás kérése">
-      <UjKeresTartalom />
+      <ZarolasKapu cim="Igazolás kérése">
+        <UjKeresTartalom />
+      </ZarolasKapu>
     </ZaroltKapu>
   );
 }

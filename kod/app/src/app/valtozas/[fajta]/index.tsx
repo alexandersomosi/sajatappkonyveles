@@ -15,6 +15,8 @@ import { Ikon3d, type Ikon3dNev } from '@/ui/kepek';
 import { Kepernyo, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { Elakadtal } from '@/ui/Visszahivas';
+import { ZaroltSor } from '@/ui/ZarolasKapu';
+import { useServiceLock } from '@/ui/Zarolas';
 
 export default function ValtozasInfo() {
   const { fajta } = useLocalSearchParams<{ fajta: string }>();
@@ -35,7 +37,10 @@ export default function ValtozasInfo() {
   const nyitott = elem?.openAssist ?? null;
   const fk = changeFeeKind(kind, kind === 'valtozas_adoadat' ? ['munkavegzes'] : []);
   const dij = fk ? FEE_DEFAULTS[fk] : null;
-  const sz = (s: string) => fillPlaceholders(s, { firstName: fn });
+  const pauseDij = FEE_DEFAULTS.szuneteltetesi_dij;
+  // k6c2: the pause fee with its amount (no surprise fee), DEMO while unconfirmed
+  const sz = (s: string) => fillPlaceholders(s, { firstName: fn, pauseFee: `${szam(pauseDij.amountHuf)}${pauseDij.confirmed ? '' : ' (DEMO)'}` });
+  const { lock } = useServiceLock();
   // [ELLENŐRIZENDŐ] mondat csak akkor, ha a tény igazolt (SPEC §28.5.1)
   const ellenorzott = CHANGE_FACTS.find((f) => f.key === 'szunetel_hossz')?.verified;
   const figyelj = [...info.figyelj, ...(ellenorzott ? (info.figyeljEllenorizendo ?? []) : [])];
@@ -81,12 +86,15 @@ export default function ValtozasInfo() {
             {dij ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginTop: 6 }}>
                 <T m={15} s={600} lh={1.4} szam>
-                  {`Díja: ${szam(dij.amountHuf)} Ft, előre fizetve.`}
+                  {/* k6c2: the adóadat fee depends on the item (közösségi adószám 4 999, the others 7 999) */}
+                  {kind === 'valtozas_adoadat'
+                    ? `Díja: ${szam(FEE_DEFAULTS.valtozas_egyszeru.amountHuf)} vagy ${szam(FEE_DEFAULTS.valtozas_jogallas.amountHuf)} Ft, attól függően, mi változik. Előre fizetve.`
+                    : `Díja: ${szam(dij.amountHuf)} Ft, előre fizetve.`}
                 </T>
                 {!dij.confirmed ? <DemoDij /> : null}
               </View>
             ) : null}
-            <GombE cim={CHANGE_TEXTS.helyettunk.button} onPress={() => router.push(`/valtozas/${kind}/kerem`)} style={{ marginTop: 12 }} />
+            {lock ? <ZaroltSor style={{ marginTop: 12 }} /> : <GombE cim={CHANGE_TEXTS.helyettunk.button} onPress={() => router.push(`/valtozas/${kind}/kerem`)} style={{ marginTop: 12 }} />}
           </View>
           <GombM cim={CHANGE_TEXTS.selfFree} onPress={() => router.push(`/valtozas/${kind}/utmutato`)} style={{ marginTop: 12, marginBottom: 16 }} />
         </View>

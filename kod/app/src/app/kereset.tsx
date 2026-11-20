@@ -31,8 +31,8 @@ function KeresetTartalom() {
           vissza={() => vissza('/')}
           ikon="kivonat"
           cim={EARNINGS_TEXTS.screenTitle}
-          nagy={v ? `kb. ${szam(Math.round(v.ytd.netHuf / 1000) * 1000)} Ft` : null}
-          mondat={v && utolso ? fillPlaceholders(EARNINGS_TEXTS.screenSub, { year: String(v.year), honap: utolso.label.toLocaleLowerCase('hu-HU') }) : null}
+          nagy={v ? `kb. ${szam(Math.abs(Math.round(v.ytd.netHuf / 1000) * 1000))} Ft` : null}
+          mondat={v && utolso ? fillPlaceholders(v.ytd.netHuf < 0 ? EARNINGS_TEXTS.screenSubNegative : EARNINGS_TEXTS.screenSub, { year: String(v.year), honap: utolso.label.toLocaleLowerCase('hu-HU') }) : null}
         />
       }
     >
@@ -79,7 +79,13 @@ function KeresetTartalom() {
             <View style={{ paddingLeft: BELJEBB }}>
               {v.projection.reliable && v.projection.netHuf != null ? (
                 <>
-                  <NagySzam huf={v.projection.netHuf} elotte="kb." />
+                  {v.projection.netHuf < 0 ? (
+                    <T m={20} s={700} lh={1.3} szam>
+                      {fillPlaceholders(EARNINGS_TEXTS.projectionNegative, { projNet: szam(Math.abs(v.projection.netHuf)) })}
+                    </T>
+                  ) : (
+                    <NagySzam huf={v.projection.netHuf} elotte="kb." />
+                  )}
                   <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 2 }}>
                     {fillPlaceholders(EARNINGS_TEXTS.projectionSub, { projRev: szam(v.projection.revenueHuf ?? 0), projTaxes: szam(v.projection.taxesHuf ?? 0) })}
                   </T>
@@ -89,7 +95,7 @@ function KeresetTartalom() {
                 </>
               ) : (
                 <T m={16} lh={1.45}>
-                  {EARNINGS_TEXTS.projectionNotYet}
+                  {v.projection.text || EARNINGS_TEXTS.projectionNotYet}
                 </T>
               )}
             </View>

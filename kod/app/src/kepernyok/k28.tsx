@@ -131,7 +131,7 @@ export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
             </T>
           ) : null}
           <View style={{ marginTop: 6 }}>
-            <OsszegSor elso cim={RESERVE_TEXTS.kartya.rowSzamlak} huf={c.invoicesHuf} kb={c.invoicesHuf > 0} />
+            <OsszegSor elso cim={RESERVE_TEXTS.kartya.rowSzamlak} al={c.invoicesSub ?? null} huf={c.invoicesHuf} kb={c.invoicesHuf > 0} />
             {c.fixedMonthlyHuf > 0 ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowFix} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowFixSub, { fixedMonthly: szam(c.fixedMonthlyHuf) })} huf={c.fixedHuf} /> : null}
             {c.hipaAnnualHuf != null ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowHipa} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowHipaSub, { hipaAnnual: szam(c.hipaAnnualHuf) })} huf={c.hipaHuf} kb={c.hipaHuf > 0} /> : null}
             <OsszegSor cim={RESERVE_TEXTS.kartya.rowLezart} al={RESERVE_TEXTS.kartya.rowLezartSub} huf={c.dueOrPaidHuf} />
@@ -319,11 +319,23 @@ export function TartalekBlokk({ r, haviFix, fn }: { r: InvoiceReserveView; haviF
 
 export function MiertLap({ lathato, bezar, r, fn }: { lathato: boolean; bezar: () => void; r: InvoiceReserveView; fn: string }) {
   const m = RESERVE_TEXTS.miert;
-  const sorok = [
-    fillPlaceholders(m.szja, { szja: szam(r.parts.szjaHuf) }),
-    fillPlaceholders(m.tb, { tb: szam(r.parts.tbHuf) }),
-    fillPlaceholders(m.szocho, { szocho: szam(r.parts.szochoHuf) }),
-  ];
+  // k6c2: the server builds the sheet for the client's status and the zone (no zero parts, a signed total, the bullets
+  // that apply); the fallback below is only for an older server
+  const sorok = r.miert
+    ? r.miert.rows
+    : [
+        r.parts.szjaHuf ? fillPlaceholders(m.szja, { szja: szam(r.parts.szjaHuf) }) : null,
+        r.parts.tbHuf ? fillPlaceholders(m.tb, { tb: szam(r.parts.tbHuf) }) : null,
+        r.parts.szochoHuf ? fillPlaceholders(m.szocho, { szocho: szam(r.parts.szochoHuf) }) : null,
+      ].filter((x): x is string => Boolean(x));
+  const osszesen = r.miert
+    ? r.miert.total
+    : r.reserveHuf > 0
+      ? fillPlaceholders(m.osszesen, { felre: szam(r.reserveHuf) })
+      : r.reserveHuf < 0
+        ? fillPlaceholders(m.osszesenSztorno, { felre: szam(Math.abs(r.reserveHuf)) })
+        : m.osszesenNulla;
+  const pontok = r.miert ? r.miert.bullets : fillPlaceholders(m.szoveg, { jovedelemArany: '55', firstName: fn }).split('\n');
   return (
     <AlsoLap lathato={lathato} bezar={bezar}>
       <T m={20} s={700} lh={1.3} accessibilityRole="header" style={{ marginRight: 80 }}>
@@ -335,17 +347,15 @@ export function MiertLap({ lathato, bezar, r, fn }: { lathato: boolean; bezar: (
             {s}
           </T>
         ))}
-        <T m={16} s={700} lh={1.5} szam style={{ paddingVertical: 6, borderTopWidth: 1, borderTopColor: szin.hajszal }}>
-          {fillPlaceholders(m.osszesen, { felre: szam(Math.max(0, r.reserveHuf)) })}
+        <T m={16} s={700} lh={1.5} szam style={{ paddingVertical: 6, borderTopWidth: sorok.length ? 1 : 0, borderTopColor: szin.hajszal }}>
+          {osszesen}
         </T>
       </View>
-      {fillPlaceholders(m.szoveg, { jovedelemArany: '55', firstName: fn })
-        .split('\n')
-        .map((s, i) => (
-          <T key={i} m={16} lh={1.5} style={{ marginTop: i ? 4 : 14 }}>
-            {s}
-          </T>
-        ))}
+      {pontok.map((s, i) => (
+        <T key={i} m={16} lh={1.5} style={{ marginTop: i ? 4 : 14 }}>
+          {s}
+        </T>
+      ))}
     </AlsoLap>
   );
 }

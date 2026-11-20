@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import type { ChangeData, NavAddress } from '@/_shared/api';
 import { CHANGE_FORM_TEXTS as F } from '@/_shared/bekotes';
 import { CHANGE_RULES, SEAT_RIGHT_LABELS, SEAT_RIGHTS, STREET_TYPES, WORK_KIND_LABELS, WORK_KINDS, type ChangeKind, type ChangeTaxItem, type SeatRight, type WorkKind } from '@/_shared/enums';
-import { datumBe, napHozzaad } from '@/lib/format';
+import { datumBe, datumPontos, napHozzaad } from '@/lib/format';
 import { Kapszulak } from '@/kepernyok/Urlap';
 import { Mezo } from '@/ui/Mezo';
 
@@ -62,8 +62,16 @@ export function lapCim(kind: ChangeKind, lap: VLap): string {
 }
 
 const datumRe = /^\d{4}-\d{2}-\d{2}$/;
+/**
+ * k6c2: a dátummezők a beírt szöveget tartják (gépelés közben nem alakítjuk át – a „2026.12.0” + „1” korábban
+ * „2026-12-001”-et adott); ISO-vá csak ellenőrzéskor, küldéskor és az összegzésben lesz.
+ */
+export function isoDatumok(a: VAdat): VAdat {
+  return { ...a, effectiveOn: datumBe(a.effectiveOn), from: datumBe(a.from), to: a.to ? datumBe(a.to) : '' };
+}
 /** Mezőszintű ellenőrzés (SPEC §28.5.6 üzenetei). */
-export function valtozasEllenoriz(kind: ChangeKind, lap: VLap, a: VAdat, ma: string): string | null {
+export function valtozasEllenoriz(kind: ChangeKind, lap: VLap, a0: VAdat, ma: string): string | null {
+  const a = isoDatumok(a0);
   const v = F.validation;
   if (lap === 'cim') {
     if (!/^\d{4}$/.test(a.zip)) return v.zip;
@@ -100,7 +108,8 @@ function cim(a: VAdat): NavAddress {
 }
 
 /** Az űrlap állapotából a szerver ChangeData-ja. */
-export function valtozasAdat(kind: ChangeKind, a: VAdat): ChangeData {
+export function valtozasAdat(kind: ChangeKind, a0: VAdat): ChangeData {
+  const a = isoDatumok(a0);
   switch (kind) {
     case 'valtozas_szekhely':
       return { kind, address: cim(a), effectiveOn: a.effectiveOn, right: a.right ?? 'tulajdon', provider: a.right === 'szekhelyszolgaltatasi_szerzodes' ? { name: a.providerName, adoszam: a.providerAdoszam } : null, alsoHomeAddress: false };
@@ -122,17 +131,19 @@ export function vadatBol(c: ChangeData | null | undefined): VAdat {
   if (!c) return URES_VADAT;
   const x: VAdat = { ...URES_VADAT };
   if ('address' in c) Object.assign(x, { zip: c.address.zip, city: c.address.city, district: c.address.district ?? '', streetName: c.address.streetName, streetType: c.address.streetType, houseNumber: c.address.houseNumber, building: c.address.building ?? '', floor: c.address.floor ?? '', door: c.address.door ?? '' });
-  if ('effectiveOn' in c) x.effectiveOn = c.effectiveOn;
+  if ('effectiveOn' in c) x.effectiveOn = datumPontos(c.effectiveOn);
   if ('right' in c) x.right = c.right;
   if (c.kind === 'valtozas_tevekenyseg') Object.assign(x, { mode: c.mode, ownWords: c.ownWords ?? c.activities[0]?.label ?? '' });
-  if (c.kind === 'valtozas_szuneteltetes') Object.assign(x, { from: c.from, to: c.to ?? '' });
-  if (c.kind === 'valtozas_folytatas') x.from = c.from;
+  if (c.kind === 'valtozas_szuneteltetes') Object.assign(x, { from: datumPontos(c.from), to: c.to ? datumPontos(c.to) : '' });
+  if (c.kind === 'valtozas_folytatas') x.from = datumPontos(c.from);
   if (c.kind === 'valtozas_adoadat') Object.assign(x, { items: c.items, workKind: c.workKind ?? null, note: c.note ?? '' });
   return x;
 }
 
 /** Összegző sorok („Ezt jelentjük be”). */
-export function valtozasSorok(kind: ChangeKind, a: VAdat): string[] {
+export function valtozasSorok(kind: ChangeKind, a0: VAdat): string[] {
+  // k6c2: the dates as the client typed them ("2026.12.01."), whatever form they were entered in
+  const a = (() => { const x = isoDatumok(a0); return { ...x, effectiveOn: datumPontos(x.effectiveOn), from: datumPontos(x.from), to: x.to ? datumPontos(x.to) : '' }; })();
   const c = cim(a);
   const tobbi = [c.building, c.floor, c.door].filter(Boolean).join(', ');
   switch (kind) {
@@ -171,7 +182,7 @@ export function ValtozasLap({ kind, lap, a, set }: { kind: ChangeKind; lap: VLap
     );
   }
   if (lap === 'datum') {
-    return <Mezo felirat={kind === 'valtozas_telephely' ? F.dateHintTelephely : kind === 'valtozas_szekhely' ? F.dateHintSzekhely : 'A változás napja'} placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.effectiveOn} onChangeText={(t) => set({ effectiveOn: datumBe(t) })} />;
+    return <Mezo felirat={kind === 'valtozas_telephely' ? F.dateHintTelephely : kind === 'valtozas_szekhely' ? F.dateHintSzekhely : 'A változás napja'} placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.effectiveOn} onChangeText={(t) => set({ effectiveOn: t })} />;
   }
   if (lap === 'jogcim') {
     return (
@@ -206,12 +217,12 @@ export function ValtozasLap({ kind, lap, a, set }: { kind: ChangeKind; lap: VLap
   if (lap === 'szunet') {
     return (
       <View style={{ gap: 12 }}>
-        <Mezo felirat="Kezdőnap" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: datumBe(t) })} />
-        <Mezo felirat={F.szunetelTo} placeholder="2027.06.30." keyboardType="numbers-and-punctuation" value={a.to} onChangeText={(t) => set({ to: datumBe(t) })} />
+        <Mezo felirat="Kezdőnap" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: t })} />
+        <Mezo felirat={F.szunetelTo} placeholder="2027.06.30." keyboardType="numbers-and-punctuation" value={a.to} onChangeText={(t) => set({ to: t })} />
       </View>
     );
   }
-  if (lap === 'folytatas') return <Mezo felirat="Az újrakezdés napja" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: datumBe(t) })} />;
+  if (lap === 'folytatas') return <Mezo felirat="Az újrakezdés napja" placeholder="2026.12.01." keyboardType="numbers-and-punctuation" value={a.from} onChangeText={(t) => set({ from: t })} />;
   if (lap === 'tetelek') {
     return (
       <Kapszulak

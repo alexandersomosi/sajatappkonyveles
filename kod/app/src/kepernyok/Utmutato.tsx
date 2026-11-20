@@ -135,9 +135,12 @@ function UtmutatoKepElem({ k, kind }: { k: UtmutatoKep; kind: GuideKind }) {
               {k.caption}
             </T>
           ) : null}
-          <T m={12} lh={1.4} c={szin.halvany} style={{ marginTop: k.caption ? 2 : 0 }}>
-            {cimke}
-          </T>
+          {/* k6c2: a normalised picture carries its source line on the image (sourceShort): not repeated under it */}
+          {k.sourceShort ? null : (
+            <T m={12} lh={1.4} c={szin.halvany} style={{ marginTop: k.caption ? 2 : 0 }}>
+              {cimke}
+            </T>
+          )}
         </View>
         {!hiba ? (
           <Pressable accessibilityRole="button" accessibilityLabel="Kép nagyítása" hitSlop={8} onPress={() => setNagy(true)} style={({ pressed }) => ({ minHeight: 36, paddingHorizontal: 12, borderRadius: forma.gomb, backgroundColor: pressed ? szin.gombMNyomott : szin.gombMAlap, justifyContent: 'center' })}>

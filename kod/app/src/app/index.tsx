@@ -21,7 +21,8 @@ import { Elakadtal } from '@/ui/Visszahivas';
 import { BevetelOszlopok, Mero, PipaMondat } from '@/ui/Mero';
 import { T } from '@/ui/T';
 import { hibaUzenet } from '@/lib/hiba';
-import { fillPlaceholders, JOURNEY_TEXTS } from '@/_shared/bekotes';
+import { fillPlaceholders, JOURNEY_TEXTS, LOCK_TEXTS, PAUSE_TEXTS } from '@/_shared/bekotes';
+import { useServiceLock } from '@/ui/Zarolas';
 import { beallitasIr, beallitasOlvas } from '@/lib/tarolo';
 
 /** S25 – egyszeri kártya az első aktív Főoldalon: „Kész a bekötés!” (SPEC §27.4.4). Csak ezen a telefonon jegyzi meg. */
@@ -76,15 +77,24 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
     });
   }, [hero.state, attunes]);
   const fn = h.accountant.firstName;
+  const { lock } = useServiceLock();
   const osszeg = szam(hero.amountHuf ?? 0);
+  // k6c2: an estimate carries "kb." → rounded to 1 000; "Eddig" only when the amount really is what gathered so far
+  // (the running quarter of a főfoglalkozású already holds the fixed járulék of its months still to come)
+  const kerek = szam(Math.round((hero.amountHuf ?? 0) / 1000) * 1000);
   const fo: { ikon: Ikon3dNev; cim: string; mondat: string | null } =
     hero.state === 'befizetve'
       ? { ikon: 'befizetve', cim: 'Befizetted', mondat: `${osszeg} Ft, ${hero.paidOn ? datumAn(hero.paidOn) : ''}. ${hero.verified ? `${fn} látta a kivonatodon: megérkezett.` : `${fn} a kivonatodon ellenőrzi.`}` }
       : hero.state === 'nincs_fizetendo'
-        ? { ikon: 'hataridok', cim: 'Most nincs mit fizetned', mondat: hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.` }
+        ? {
+            ikon: 'hataridok',
+            cim: 'Most nincs mit fizetned',
+            // k6c2: under the lock banner never "Bence szól…" – the bookkeeping is paused until the fee is paid
+            mondat: lock ? fillPlaceholders(LOCK_TEXTS.heroNote, { mit: lock.reasons.map((r) => LOCK_TEXTS.mit[r] ?? r).join(' és ') }) : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
+          }
         : hero.state === 'jovahagyva'
           ? { ikon: 'szamlaszam', cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(), mondat: hero.dueDate ? `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.` : null }
-          : { ikon: 'szamolo', cim: `Eddig kb. ${osszeg} Ft`, mondat: `${hero.periodLabel ? `${nagybetu(hero.periodLabel)}, becslés. ` : 'Becslés. '}${hero.dueDate ? `Befizetés ${datumIg(hero.dueDate)}. ` : ''}${hero.note ?? `${fn} a negyedév végén véglegesíti.`}` };
+          : { ikon: 'szamolo', cim: hero.futureFixedMonths?.length ? `Kb. ${kerek} Ft` : `Eddig kb. ${kerek} Ft`, mondat: `${hero.periodLabel ? `${nagybetu(hero.periodLabel)}, becslés. ` : 'Becslés. '}${hero.dueDate ? `Befizetés ${datumIg(hero.dueDate)}. ` : ''}${hero.note ?? `${fn} a negyedév végén véglegesíti.`}` };
   return (
     <Fejlec rozX={318} rozY={128} alsoTer={20}>
       {/* ki a könyvelőd */}
@@ -342,6 +352,7 @@ export default function Fooldal() {
       {h.pause ? <SzunetelKartya p={h.pause} /> : null}
       {h.checkin ? <HaviKartya c={h.checkin} /> : null}
       {h.annual && h.annual.status !== 'nem_indult' && h.annual.status !== 'kesz' ? <EvesKartya a={h.annual} fn={fn} /> : null}
+      {/* k6c2 (tulaj 11-19 20:20 „csak valami elválasztó köztük”): a levél saját szakasz, fölötte a 10 pt-os sáv */}
       {h.letter ? <Level level={h.letter} alairasUt={h.accountant.signatureSvgPath} befizetve={h.hero.state === 'befizetve' && lap !== 'befizettem'} /> : null}
       <FizetesLap h={h} lap={setLap} />
       <Gyorsgombok />
@@ -382,12 +393,19 @@ export default function Fooldal() {
 
       <Szakasz ikon="hataridok" cim="Idei kereteid" />
       <Lap>
+        {h.pause ? (
+          // k6c2: szüneteltetés alatt nem számlázhat – nincs „Még … Ft-ot számlázhatsz ÁFA nélkül”
+          <T m={16} lh={1.45} style={{ paddingTop: 14, paddingHorizontal: 16, paddingBottom: 14 }}>
+            {PAUSE_TEXTS.limitsPaused}
+          </T>
+        ) : (
         <Mero
           meter={limits.afa}
           mellek="Ennyi fér még az alanyi ÁFA-mentességbe. A csíkozott rész az, amennyit ilyen tempóban év végéig várhatóan számlázol."
           balVeg={`eddig ${szam(limits.afa.usedHuf)} Ft`}
           jobbVeg={`a keret ${szam(limits.afa.limitHuf)} Ft`}
         />
+        )}
         {limits.kata ? null : <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />}
         {limits.kata ? null : limits.adomentes.reached ? (
           <PipaMondat
@@ -404,7 +422,7 @@ export default function Fooldal() {
             </T>
           </View>
         )}
-        {!limits.kata && limits.atalanyCap.ratio >= 0.5 ? (
+        {!limits.kata && !h.pause && limits.atalanyCap.ratio >= 0.5 ? (
           <>
             <View style={{ height: 1, backgroundColor: szin.hajszal, marginHorizontal: 16 }} />
             <Mero

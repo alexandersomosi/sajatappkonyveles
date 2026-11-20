@@ -342,7 +342,7 @@ export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, t
     home.allowancesHint = null;
   } else {
     try {
-      home.reserve = await reserveCard(deps, db, cl, today);
+      home.reserve = await reserveCard(deps, db, cl, today, home.hero);
     } catch {
       home.reserve = null;
     }

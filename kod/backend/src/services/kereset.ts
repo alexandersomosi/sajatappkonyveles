@@ -14,6 +14,7 @@ import { capitalize, MONTHS_HU } from '../lib/dates.js';
 import { accountantParams } from '../notify/notify.js';
 import { calculateYear, earningsByMonth, projectYear, yearEndSettlement, type YearInput, type YearResult } from '../tax/engine.js';
 import { activeItems, engineInput, type CalcResultJson } from './tax.js';
+import { pauseOn } from './szuneteltetes.js';
 import { fmt } from './kedvezmeny.js';
 import type { ClientRow } from './people.js';
 
@@ -35,8 +36,10 @@ export interface EarningsBasisData {
   /** The last month that counts as "so far" (12 for a past year). */
   lastMonth: number;
   basisOf: Record<string, EarningsBasis>;
-  /** Comes back in the annual return (overpaid SZJA advances + year-end csjk), for the year so far. */
+  /** Comes back in the annual return: the overpaid SZJA advances only (k6c2), for the year so far. */
   refundHuf: number;
+  /** k6c2: an unused családi kedvezmény the accountant settles in the annual return (said without an amount). */
+  csaladiUnused: boolean;
 }
 
 /** The common basis of "Mennyit kerestem?" and the home Félretenni card. Null without a profile / rules. */
@@ -65,15 +68,16 @@ export async function earningsBasis(db: DbOrTx, cl: ClientRow, year: number, tod
   const hipaAnnual = result.hipa && result.hipa.method === 'savos' ? (result.hipa.annualHuf ?? 0) : 0;
   const months = earningsByMonth(result, { hipaAnnualHuf: hipaAnnual, approved });
   const lastMonth = year < curYear ? 12 : Number(today.slice(5, 7));
-  const refundHuf = yearEndSettlement(result, approved).totalHuf;
-  return { input, result, months, lastMonth, basisOf, refundHuf };
+  const refundHuf = yearEndSettlement(result, approved).szjaRefundHuf;
+  const csaladiUnused = (result.allowances?.csaladiUnusedHuf ?? 0) > 0;
+  return { input, result, months, lastMonth, basisOf, refundHuf, csaladiUnused };
 }
 
 export async function earnings(deps: Deps, db: DbOrTx, cl: ClientRow, year: number, today: string): Promise<EarningsData | null> {
   const curYear = Number(today.slice(0, 4));
   const b = await earningsBasis(db, cl, year, today);
   if (!b) return null;
-  const { input, months, lastMonth, basisOf, refundHuf } = b;
+  const { input, months, lastMonth, basisOf, refundHuf, csaladiUnused } = b;
   const params = await accountantParams(db, cl.accountantId);
   const noteText = await deps.content.get('kereset.no_revenue_note');
   const views: EarningsMonthView[] = [];
@@ -95,10 +99,16 @@ export async function earnings(deps: Deps, db: DbOrTx, cl: ClientRow, year: numb
   const sum = views.reduce((a, v) => ({ revenueHuf: a.revenueHuf + v.revenueHuf, taxesHuf: a.taxesHuf + v.taxesHuf, netHuf: a.netHuf + v.netHuf }), { revenueHuf: 0, taxesHuf: 0, netHuf: 0 });
   // the year's real tax so far: what the advances overpaid comes back in the annual return
   const ytd = { revenueHuf: sum.revenueHuf, taxesHuf: sum.taxesHuf - refundHuf, netHuf: sum.netHuf + refundHuf };
-  const refund = refundHuf > 0 ? { huf: refundHuf, text: await deps.content.render('kereset.refund', { refund: fmt(kb1000(refundHuf)) }) } : null;
+  const refundParts: string[] = [];
+  if (refundHuf > 0) refundParts.push(await deps.content.render('kereset.refund', { refund: fmt(kb1000(refundHuf)) }));
+  if (csaladiUnused) refundParts.push(await deps.content.render('kereset.csaladi_ev_vegen', params));
+  const refund = refundParts.length ? { huf: refundHuf, text: refundParts.join(' ') } : null;
   // projection (only for the running year)
   let projection: EarningsView['projection'];
-  if (year === curYear) {
+  // k6c2: while paused (szüneteltetés) no invoicing is allowed – no "ha így folytatod" projection
+  const paused = year === curYear && Boolean(await pauseOn(db, cl.id, today));
+  if (paused) projection = { reliable: false, revenueHuf: null, taxesHuf: null, netHuf: null, text: await deps.content.get('kereset.projection_paused') };
+  else if (year === curYear) {
     const pr = projectYear(input);
     projection = pr.reliable
       ? {
@@ -127,9 +137,13 @@ export async function earnings(deps: Deps, db: DbOrTx, cl: ClientRow, year: numb
     ytdNetHuf: ytd.netHuf,
     ytdRevenueHuf: ytd.revenueHuf,
     ytdTaxesHuf: ytd.taxesHuf,
-    sentence: await deps.content.render('kereset.card_sentence', { ytdNet: fmt(kb1000(ytd.netHuf)) }),
+    // k6c2: a negative year reads as "több volt az adód és a járulékod, mint a bevételed", never "kb. -1 164 000 Ft maradt"
+    sentence: await deps.content.render(ytd.netHuf < 0 ? 'kereset.card_sentence_negative' : 'kereset.card_sentence', { ytdNet: fmt(kb1000(Math.abs(ytd.netHuf))) }),
     sub: await deps.content.render('kereset.card_sub', { ytdRevenue: fmt(ytd.revenueHuf), ytdTaxes: fmt(kb1000(ytd.taxesHuf)) }),
-    projectionText: projection.reliable && projection.netHuf !== null ? await deps.content.render('kereset.card_projection', { projNet: fmt(projection.netHuf) }) : null,
+    projectionText:
+      projection.reliable && projection.netHuf !== null
+        ? await deps.content.render(projection.netHuf < 0 ? 'kereset.card_projection_negative' : 'kereset.card_projection', { projNet: fmt(Math.abs(projection.netHuf)) })
+        : null,
     refundText: refundHuf > 0 ? await deps.content.render('kereset.card_refund', { refund: fmt(kb1000(refundHuf)) }) : null,
   };
   return { view, card };

@@ -371,6 +371,8 @@ export interface Hero {
   paidOn?: ISODate;
   verified?: boolean;
   note?: string;
+  /** k6c2: an estimate of the RUNNING quarter that already holds the fixed járulék of these future months (e.g. [12]). */
+  futureFixedMonths?: number[];
 }
 export interface ExplanationLine {
   label: string;
@@ -1494,6 +1496,8 @@ export interface InvoiceReserveView {
   partsText: string | null;
   /** The crossesTaxFree sentence. */
   thresholdText: string | null;
+  /** k6c2: the "Miért ennyi?" sheet, built for this client's status and zone (rows without zero parts, signed total, bullets). */
+  miert?: { rows: string[]; total: string; bullets: string[] } | null;
 }
 export interface ReserveCard {
   year: number;
@@ -1525,6 +1529,8 @@ export interface ReserveCard {
   refundText?: string | null;
   /** k6c: Főoldal only – how the card relates to the blue band's quarter amount (null = nothing to say). */
   heroNote?: string | null;
+  /** k6c2: the sub-line of the "Az idei számláid után" row (e.g. rounding up per invoice). */
+  invoicesSub?: string | null;
 }
 export interface ReserveListItem {
   revenueItemId: string;
@@ -1542,6 +1548,8 @@ export interface ReserveView {
   card: ReserveCard;
   /** reserveHuf: Σ positive reserves of the items received so far (the upcoming ones are left out); upcomingCount: those left out. */
   months: { month: number; label: string; items: ReserveListItem[]; reserveHuf?: number; upcomingCount?: number; sub?: string }[];
+  /** k6c2: "Az idei számláid után összesen kb. X Ft" – the same number as the Főoldal row. */
+  totalText?: string;
 }
 
 // ---------- §28.2 notification settings ----------
@@ -1650,7 +1658,8 @@ export interface AllowanceClientPreviewInput {
   answers: AllowanceAnswers;
 }
 export interface AllowanceClientPreview {
-  items: { kind: AllowanceKind; label: string; effectYearHuf: number | null; onlyAnnual: boolean }[];
+  /** k6c2: effectYearHuf is the kind's MARGINAL share (29/H order); covered = another allowance already uses its base; line = its one-line meaning. */
+  items: { kind: AllowanceKind; label: string; effectYearHuf: number | null; onlyAnnual: boolean; line?: string; covered?: boolean }[];
 }
 // staff
 export interface AccAllowanceItem extends AllowanceItemView {

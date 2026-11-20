@@ -99,8 +99,16 @@ function runBuckets(profile: TaxProfileInput, buckets: readonly number[], approv
   return lOf(calculateYear(input));
 }
 
-function zoneOf(raw: number, d: { szja: number; tb: number; szocho: number }, incomeAfter: number, taxFree: number): ReserveZone {
-  if (raw < 0) return 'sztorno';
+/**
+ * k6c2: 'sztorno' only for an item that takes money back (negative amount: storno / downward modification). A normal
+ * (positive) item may still lower the year's tax – a főfoglalkozású under the minimum with in-year családi
+ * járulékkedvezmény: the csjk cap is min(minimálbér, the month's income), so more income means more csjk while the TB
+ * stays at the minimum. Such an item is 'nem_novel' with reserve 0 (conservative, SPEC §28.1.2 rule 5: we never tell the
+ * client to keep LESS because of a new invoice); its raw value stays for the telescoping check and the staff.
+ */
+function zoneOf(raw: number, d: { szja: number; tb: number; szocho: number }, incomeAfter: number, taxFree: number, amountHuf = 1): ReserveZone {
+  if (amountHuf < 0) return raw < 0 ? 'sztorno' : incomeAfter <= taxFree ? 'adomentes' : 'nem_novel';
+  if (raw < 0) return 'nem_novel';
   if (raw === 0) return incomeAfter <= taxFree ? 'adomentes' : 'nem_novel';
   if (d.szja > 0) return d.tb + d.szocho > 0 ? 'teljes' : 'csak_szja';
   return 'kedvezmeny';
@@ -155,15 +163,17 @@ export function reserveSeries(profile: TaxProfileInput, items: ReserveItemInput[
         if (ad.raw > d.raw) d = ad;
       }
     }
+    const zone = zoneOf(d.raw, d, next.income, taxFree, it.amountHuf);
     lines.push({
       id: it.id,
       seq,
       rawHuf: d.raw,
-      reserveHuf: roundReserve(d.raw),
+      // a positive item never lowers the reserve (k6c2): only a storno gives back
+      reserveHuf: d.raw < 0 && zone !== 'sztorno' ? 0 : roundReserve(d.raw),
       szjaHuf: d.szja,
       tbHuf: d.tb,
       szochoHuf: d.szocho,
-      zone: zoneOf(d.raw, d, next.income, taxFree),
+      zone,
       crossesTaxFree: prev.income <= taxFree && next.income > taxFree,
       estimated: !!it.estimated,
     });
@@ -335,15 +345,20 @@ export function hipaByMonth(year: YearResult, annual: number): number[] {
 export interface YearEndSettlement {
   /** Σ SZJA advances (approved where approved) − the year's SZJA (the last quarter's cumulative): returned in the annual return. */
   szjaRefundHuf: number;
-  /** The fel nem használt családi kedvezmény turned into családi járulékkedvezmény in the annual return (estimate). */
+  /**
+   * STAFF ONLY: the fel nem használt családi kedvezmény that MAY become családi járulékkedvezmény in the annual return
+   * (SPEC §28.3.7 a). Nobody has approved it, and it is often 0 on the EV side (the spouse takes the unused share, or a
+   * mellékállású uses it as csjk on the salary), so it is never part of a client-facing amount (k6c2).
+   */
   csjkYearEndHuf: number;
+  /** What the CLIENT is told comes back: the overpaid SZJA advances only (= szjaRefundHuf). */
   totalHuf: number;
 }
 
 /**
- * SPEC §28.4 (round 2 of 2026-11-19): the quarterly SZJA advances never go below 0, so after a late allowance (or a
- * front-loaded year) their sum can exceed the year's SZJA; the difference comes back in the annual return. The
- * unused családi kedvezmény may also become a járulékkedvezmény there. Both are estimates for the year so far.
+ * SPEC §28.4 (round 2 of 2026-11-19, k6c2): the quarterly SZJA advances never go below 0, so after a late allowance (or
+ * a front-loaded year) their sum can exceed the year's SZJA; the difference comes back in the annual return – the only
+ * refund a client-facing total may count. The unused családi kedvezmény is reported separately for the accountant.
  */
 export function yearEndSettlement(year: YearResult, approved?: Record<string, { szjaHuf: number }>): YearEndSettlement {
   const last = year.quarters.at(-1);
@@ -351,17 +366,17 @@ export function yearEndSettlement(year: YearResult, approved?: Record<string, { 
   const paid = year.quarters.reduce((a, q) => a + (approved?.[q.periodKey]?.szjaHuf ?? q.szjaAdvanceHuf), 0);
   const szjaRefundHuf = Math.max(0, paid - (last.szjaCumulativeHuf ?? paid));
   const csjkYearEndHuf = Math.max(0, year.allowances?.annualCsjkPotentialHuf ?? 0);
-  return { szjaRefundHuf, csjkYearEndHuf, totalHuf: szjaRefundHuf + csjkYearEndHuf };
+  return { szjaRefundHuf, csjkYearEndHuf, totalHuf: szjaRefundHuf };
 }
 
 export interface YearProjection {
   reliable: boolean;
   revenueHuf: number;
-  /** SZJA + TB (after csjk) + szocho + HIPA of the projected year, after the year-end settlement (the year's real tax). */
+  /** SZJA + TB (after csjk) + szocho + HIPA of the projected year, after the overpaid SZJA advances come back (the year's real tax). */
   taxesHuf: number;
   hipaHuf: number;
   netHuf: number;
-  /** Comes back in the annual return (overpaid SZJA advances + year-end csjk); already deducted from taxesHuf. */
+  /** Comes back in the annual return (overpaid SZJA advances only, k6c2); already deducted from taxesHuf. */
   refundHuf: number;
 }
 

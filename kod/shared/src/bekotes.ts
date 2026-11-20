@@ -1946,16 +1946,37 @@ export const RESERVE_TEXTS = {
     kedvezmeny: 'TB-járulék, szocho – SZJA-t a kedvezményed miatt nem fizetsz',
   },
   kuszob: 'Ezzel a számlával elfogyott az adómentes részed. Innentől minden számládból félre kell tenned.',
+  /** k6c2: the crossing invoice adds nothing (an allowance / the minimum covers it): never "innentől minden számládból". */
+  kuszobNemNovel: 'Ezzel a számlával elfogyott az adómentes részed, de ettől most sem nő az adód.',
+  kuszobKedvezmeny: 'Ezzel a számlával elfogyott az adómentes részed, de a kedvezményed miatt most sem nő az adód.',
   haviFix: 'A havi fix járulékot ({havi} Ft) ettől függetlenül fizeted.',
   becslesSor: 'Becslés: a fizetési határidővel számoltunk. Ha később fizetnek, változhat.',
   blockTitle: 'Ennyit tegyél félre',
   miertLink: 'Miért ennyi?',
   miert: {
     title: 'Miért ennyi?',
-    szja: 'SZJA kb. {szja} Ft',
-    tb: 'TB-járulék kb. {tb} Ft',
-    szocho: 'Szocho kb. {szocho} Ft',
-    osszesen: 'Összesen, felfelé kerekítve: kb. {felre} Ft',
+    /** k6c2: the parts are exact (no "kb."), zero parts are left out. */
+    szja: 'SZJA: {szja} Ft',
+    tb: 'TB-járulék: {tb} Ft',
+    szocho: 'Szocho: {szocho} Ft',
+    osszesen: 'Összesen, ezresre felfelé kerekítve: {felre} Ft',
+    osszesenSztorno: 'Összesen: kb. {felre} Ft-tal kevesebbet kell félretenned',
+    osszesenNulla: 'Összesen: ebből most nem kell félretenned',
+    /** k6c2: the explanation, picked by the client's status and the zone (felretesz.miert.pont.<key>). */
+    pont: {
+      bevezeto: 'Annyit mutatunk, amennyivel ez a számla megnöveli az idei adódat. Ezért nem mindig ugyanannyi:',
+      adomentes: '• Az első 1 936 800 Ft jövedelmed adómentes. Amíg ebben jársz, a számláidból nem kell félretenned.',
+      szja: '• Utána a számla {jovedelemArany}%-a számít jövedelemnek, ennek 15%-a SZJA.',
+      szjaMentes: '• A jóváhagyott kedvezményed miatt a jövedelmed után most nem fizetsz SZJA-t.',
+      minimum: '• Ha a jövedelmed már a havi minimum fölött van, TB-járulék (18,5%) és szocho (13%) is jár rá.',
+      mellek: '• Mellékállásban nincs havi minimum: a jövedelmed után TB-járulék (18,5%) és szocho (13%) jár.',
+      nyugdijas: '• Nyugdíjasként TB-járulékot és szochót nem fizetsz, csak SZJA-t.',
+      negyedev: '• A járulékot negyedévente számoljuk, ezért az év elején egy nagy számla többe kerülhet, mint ugyanannyi bevétel elosztva.',
+      fix: '• Főállásban a havi fix járulékot akkor is fizeted, ha nincs bevételed. Ezt a Főoldalon külön mutatjuk.',
+      csjk: '• A családi járulékkedvezményed a bevételeddel együtt nő, ezért ez a számla most a járulékodat csökkenti. Ezt nem vonjuk le, hogy biztosan maradjon pénzed.',
+      sztorno: '• Ez a számla egy korábbi bevételt vesz vissza, ezért kevesebb adóval kell számolnod.',
+      zaras: 'Felfelé kerekítünk ezresre, hogy inkább maradjon pénzed, mint hogy hiányozzon. A befizetendő összeget negyedévente {firstName} hagyja jóvá.',
+    },
     /** felretesz.miert.szoveg (final, SPEC §28.1.5). */
     szoveg:
       'Annyit mutatunk, amennyivel ez a számla megnöveli az idei adódat. Ezért nem mindig ugyanannyi:\n• Az első 1 936 800 Ft jövedelmed adómentes. Amíg ebben jársz, a számláidból nem kell félretenned.\n• Utána a számla {jovedelemArany}%-a számít jövedelemnek, ennek 15%-a SZJA.\n• Ha a jövedelmed már a havi minimum fölött van, TB-járulék (18,5%) és szocho (13%) is jár rá.\n• A járulékot negyedévente számoljuk, ezért az év elején egy nagy számla többe kerülhet, mint ugyanannyi bevétel elosztva.\n• Főállásban a havi fix járulékot akkor is fizeted, ha nincs bevételed. Ezt a Főoldalon külön mutatjuk.\nFelfelé kerekítünk ezresre, hogy inkább maradjon pénzed, mint hogy hiányozzon. A befizetendő összeget negyedévente {firstName} hagyja jóvá.',
@@ -1977,8 +1998,14 @@ export const RESERVE_TEXTS = {
       'Az idei bevételed után eddig kb. {A} Ft adóval kell számolnod. Ebből {B} Ft a lezárt negyedévekre esik: azt már befizetted, vagy most kell befizetned.',
     /** Appended when the running quarter still has future months with a fixed járulék (the blue band counts them). */
     detailHero: ' Fent a kék sávban az egész negyedév van, itt csak az eddigi hónapok.',
-    /** Round 2 of 11-19: overpaid SZJA advances / year-end csjk. */
-    refund: 'Kb. {refund} Ft-ot az éves bevallásban visszakapsz. Addig a befizetéshez ez is kell.',
+    /** Round 2 of 11-19 (k6c2: overpaid SZJA advances only – the year-end csjk is the accountant's). */
+    refund: 'Az eddigi SZJA-előlegeidből kb. {refund} Ft az éves bevallásban visszajár. Addig a befizetéshez ez is kell.',
+    /** k6c2: the Főoldal line under the card when the blue band and "Most" differ (felretesz.kartya.hero_*). */
+    heroFix: 'Fent a kék sávban a(z) {negyedev} becslése van, a {honapok} fix járulékkal együtt; itt csak az eddigi hónapok.',
+    heroHipa: 'Itt az iparűzési adó is benne van (kb. {hipa} Ft), fent nincs.',
+    heroLezart: 'Fent a kék sávban a lezárt {negyedev} összege van: itt a „Lezárt negyedévek” sorban szerepel.',
+    /** k6c2: the invoice row = Σ of the per-invoice amounts on /felretesz (each rounded up). */
+    rowSzamlakSub: 'számlánként felfelé kerekítve',
     detailZero: 'Ami eddig összegyűlt, az a lezárt negyedévekre esik, és azt már befizetted, vagy most kell befizetned.',
     rowSzamlak: 'Az idei számláid után',
     rowFix: 'Havi fix járulék eddig',
@@ -2001,6 +2028,13 @@ export const RESERVE_TEXTS = {
     upcoming: 'Várható: {datum} Még nincs benne a fenti összegben.',
     monthSub: '{n} tétel · félretenni kb. {felre} Ft',
     monthSubUpcoming: '{n} tétel · félretenni kb. {felre} Ft · {u} várható',
+    /** k6c2: a month with nothing to put aside / a month that lowers the reserve. */
+    monthSubNulla: '{n} tétel · nem kell félretenned',
+    monthSubNullaUpcoming: '{n} tétel · nem kell félretenned · {u} várható',
+    monthSubKevesebb: '{n} tétel · kb. {felre} Ft-tal kevesebbet kell félretenned',
+    monthSubKevesebbUpcoming: '{n} tétel · kb. {felre} Ft-tal kevesebbet kell félretenned · {u} várható',
+    /** k6c2: the total line at the top of /felretesz = the Főoldal row. */
+    total: 'Az idei számláid után összesen kb. {felre} Ft',
     help: 'Elakadtál? Kérj visszahívást',
   },
 } as const;
@@ -2129,7 +2163,11 @@ export const ALLOWANCE_TEXTS = {
     javasolt: '{firstName} átnézi',
     kerdes: '{firstName} kérdezett: {question}',
     kerdesButton: 'Válaszolok',
-    jovahagyva: 'Jár · {monthsText} · idén kb. {effectYear} Ft-tal kevesebb adó',
+    /** k6c2: the kind's MARGINAL share on the "idén eddig" basis of the band (the rows add up to it). */
+    jovahagyva: 'Jár · {monthsText} · idén eddig kb. {effectYear} Ft-tal kevesebb adó',
+    /** k6c2: another allowance already uses its base (29/H order). */
+    jovahagyvaFedi: 'Jár · {monthsText} · most nem csökkenti tovább az adódat: a másik kedvezményed miatt nem marad rá adó.',
+    jovahagyvaFediCsaladi: 'Jár · {monthsText} · a másik kedvezményed miatt most nem marad rá SZJA. A fel nem használt részt az éves bevallásban {firstName} számolja el.',
     /** k6c: approved, but no effect yet (no revenue above the adómentes rész): never "kb. 0 Ft-tal kevesebb". */
     jovahagyvaMegNincs: 'Jár · {monthsText} · ha lesz bevételed, kevesebb adót fizetsz miatta',
     jovahagyvaEvVegen: 'Jár · az éves bevallásban számoljuk el',
@@ -2137,6 +2175,9 @@ export const ALLOWANCE_TEXTS = {
     edit: 'Valami változott – módosítom',
     footer: 'A jóváhagyott kedvezményt a negyedéves adóelőlegedben számoljuk el. Ha év közben valami nem stimmel, az éves bevallásban rendezzük.',
   },
+
+  /** k6c2: the családi line when an anyák / 30 év alatti exemption already covers the SZJA (kedvezmeny.sor_csaladi_anya). */
+  sorCsaladiAnya: 'SZJA-t az anyák kedvezménye miatt nem fizetsz, ezért a családi kedvezmény a TB-járulékodat csökkentheti (családi járulékkedvezmény). Amit nem használsz fel, azt az éves bevallásban számoljuk el.',
   /** K12 when nothing applies. */
   semmi: { title: 'Most úgy tűnik, nem jár kedvezmény', body: 'Ha változik valami (például babát vártok), itt bármikor megadhatod.', button: 'Rendben' },
   sentToast: 'Elküldtük. {firstName} átnézi, és szól.',
@@ -2253,6 +2294,9 @@ export const ALLOWANCE_QUESTION_TEXTS = {
     title: 'Ezek járhatnak neked',
     effect: 'kb. {x} Ft-tal kevesebb adó idén',
     effectAnnual: 'Év végén számoljuk el',
+    /** k6c2: another proposed allowance already uses the base. */
+    effectCovered: 'A másik kedvezményed mellett most nem marad rá adó',
+    effectCoveredCsaladi: 'Most nem marad rá SZJA – a maradékot év végén számoljuk el',
     /** k6c: an in-year allowance without an estimate yet (the next screen says the same). */
     effectQuarterly: 'A negyedéves adódban számoljuk el',
     note: 'Megjegyzés {firstName} számára (nem kötelező)',
@@ -2307,11 +2351,17 @@ export const ALLOWANCE_PANEL_TEXTS = {
 export const EARNINGS_TEXTS = {
   cardTitle: 'Mennyit kerestem?',
   cardSentence: 'Idén eddig kb. {ytdNet} Ft maradt neked',
+  /** k6c2: revenue below the fixed costs – never "kb. -1 164 000 Ft maradt neked". */
+  cardSentenceNegative: 'Idén eddig kb. {ytdNet} Ft-tal több volt az adód és a járulékod, mint a bevételed.',
   cardSub: '{ytdRevenue} Ft bevételből, kb. {ytdTaxes} Ft adó és járulék után.',
   cardProjection: 'Ha így folytatod, év végéig kb. {projNet} Ft marad.',
+  cardProjectionNegative: 'Ha így folytatod, év végéig kb. {projNet} Ft-tal több lesz az adód és a járulékod, mint a bevételed.',
   cardLink: 'Havonta megnézem',
   screenTitle: 'Mennyit kerestem?',
   screenSub: '{year}. január–{honap}, adók és járulékok után',
+  /** k6c2: the blue band when the year so far is negative. */
+  screenSubNegative: '{year}. január–{honap}: ennyivel több volt az adód és a járulékod, mint a bevételed',
+  projectionNegative: 'kb. {projNet} Ft-tal több adó és járulék, mint bevétel',
   /** kereset.line (final). */
   line: 'Ennyi marad a bevételedből, miután levontuk az SZJA-t, a TB-járulékot, a szochót és az iparűzési adót. A költségeidet (anyag, telefon, autó) ebből fizeted – ezeket nem látjuk.',
   monthSub: 'bevétel {rev} · adó {taxes}',
@@ -2327,11 +2377,15 @@ export const EARNINGS_TEXTS = {
   projectionSub: 'Ha így folytatod: kb. {projRev} Ft bevételből, kb. {projTaxes} Ft adóval.',
   projectionNote: 'Ez csak előrejelzés: az eddigi bevételed tempójával számol.',
   projectionNotYet: 'Az év végi előrejelzést 2 hónap után mutatjuk.',
+  /** k6c2: no year-end projection while the business is paused (no invoicing then). */
+  projectionPaused: 'Amíg szünetel a vállalkozásod, nem mutatunk év végi előrejelzést.',
   howLink: 'Hogyan számoljuk?',
   disclaimer: 'Becslés. A végleges adót {firstName} hagyja jóvá.',
-  /** Round 2 of 11-19: the SZJA advances never go below 0 – after a late allowance part of them comes back. */
-  refund: 'Az eddigi előlegekből kb. {refund} Ft az éves bevallásban visszajár. A fenti adóban ezt már levontuk.',
-  cardRefund: 'Ebből kb. {refund} Ft az éves bevallásban visszajár.',
+  /** Round 2 of 11-19 (k6c2): the SZJA advances never go below 0 – after a late allowance part of them comes back. Only
+   *  the overpaid SZJA counts; the unused családi kedvezmény is the accountant's (a line without an amount). */
+  refund: 'Az eddigi SZJA-előlegeidből kb. {refund} Ft az éves bevallásban visszajár. A fenti adóban ezt már levontuk.',
+  cardRefund: 'Az eddigi SZJA-előlegeidből kb. {refund} Ft az éves bevallásban visszajár – a fenti adóban ezt már levontuk.',
+  csaladiEvVegen: 'A fel nem használt családi kedvezményedet az éves bevallásban {firstName} számolja el.',
   /** KATA view (SPEC §28.K.11). */
   kataLine: 'A kata mindent fedez: nincs külön SZJA, TB és szocho.',
 } as const;
@@ -2386,7 +2440,7 @@ export const CHANGE_TEXTS = {
         'Szünetelés alatt nem dolgozhatsz a vállalkozásodban, és nem állíthatsz ki számlát.',
         'A kezdőnapot nem adhatod meg visszamenőleg, és később nem módosíthatod. Jól gondold meg.',
         'Ha újra kezdenéd, azt is be kell jelentened. Szólj nekünk előtte.',
-        'Szünetelés alatt a havidíj helyett csak a kisebb rendelkezésre állási díjat fizeted.',
+        'Szünetelés alatt a havidíj helyett csak a rendelkezésre állási díjat fizeted: havi {pauseFee} Ft.',
       ],
       /** [ELLENŐRIZENDŐ] – shown only after B4 confirmed it (SPEC §28.5.1 fact 3). */
       figyeljEllenorizendo: ['Legalább egy hónapig, legfeljebb két évig tarthat.'],
@@ -3219,6 +3273,8 @@ export const CHECKIN_TEXTS = {
   /** k6c: under the "Köszönjük!" title the sentence does not thank again. */
   noneBody: 'Jövő hónapban újra rákérdezünk.',
   doneBody: '{firstName} megkapta, és szól, ha teendő van.',
+  /** k6c2: an assisted change whose fee is still unpaid – the team starts after the payment. */
+  doneBodyFee: 'Fizesd ki a díjat, és {firstName} nekilát.',
   /** k6c: an item whose fee is paid (the assist is with the accountant). */
   itemPaid: 'Kifizetted a díjat. {firstName} nekilát.',
 } as const;
@@ -3448,6 +3504,10 @@ export const LOCK_TEXTS = {
   deadlineNotice: 'Közeleg egy határidő: {date}. Amíg a díj nincs rendezve, ezt nem tudjuk intézni helyetted.',
   lockedAction: 'Ez most szünetel, mert nincs kifizetve a {mit}. A fizetés után újra működik.',
   supportSender: 'Ügyfélszolgálat',
+  /** k6c2: the messages header while locked (the banner link opens this thread). */
+  supportLine: 'Ügyfélszolgálat: a díjról is itt írhatsz nekünk.',
+  /** k6c2: the Főoldal blue band while locked – never only "Most nincs mit fizetned". */
+  heroNote: 'Adót most nem kell fizetned. A könyvelésed viszont szünetel, amíg a {mit} nincs kifizetve.',
   /** Panel (staff wording). */
   panelChip: 'Zárolva: díj elmaradt ({since} óta, {osszeg} Ft)',
   panelDisabled: 'Zárolva: a díj nincs kifizetve. A fizetés után újra működik.',
@@ -3461,6 +3521,8 @@ export const PAUSE_TEXTS = {
   cardButton: 'Újrakezdeném',
   feeLine: 'Rendelkezésre állási díj: {dij} Ft / hó',
   ended: 'Újra dolgozol: {from} ismét a havidíj jár.',
+  /** k6c2: the Idei kereteid card while paused (no invoicing during szüneteltetés). */
+  limitsPaused: 'Amíg szünetel a vállalkozásod, nem állíthatsz ki számlát. Ha újrakezded, itt újra látod a kereteidet.',
 } as const;
 
 // ---------- §28.K.7 F – employees / EFO (content alkalmazott.*) ----------

@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { ZarolasKapu } from '@/ui/ZarolasKapu';
 import type { AllowanceAnswers, AllowanceChildAnswer, AllowanceClientPreview } from '@/_shared/api';
 import { ALLOWANCE_QUESTION_TEXTS as Q, ALLOWANCE_TEXTS, fillPlaceholders } from '@/_shared/bekotes';
 import { useKedvezmenyBecsles, useKedvezmenyek, useKedvezmenyValasz, useMe } from '@/api/hooks';
@@ -44,6 +45,15 @@ export function lapok(a: AllowanceAnswers, k: Kapcsolok, nyugdijas = false): Lap
 const IKON: Record<Lap, Ikon3dNev> = { K0: 'igazolas', K1: 'tepnaptar', K2: 'fiok', K3: 'fiok', K4: 'fiok', K5: 'tepnaptar', K6: 'fiok', K7: 'szamolo', K8: 'igazolas', K9: 'irat', K10: 'ora', K11: 'lakat', K12: 'igazolas' };
 
 export default function KedvezmenyKerdoiv() {
+  // k6c2 (§28.K.5): PUT /client/allowances/answers is refused while the fee lock is on
+  return (
+    <ZarolasKapu cim="Adókedvezmények" ful="fiok">
+      <KedvezmenyKerdoivTartalom />
+    </ZarolasKapu>
+  );
+}
+
+function KedvezmenyKerdoivTartalom() {
   const p = useLocalSearchParams<{ lap?: string }>();
   const ev = Number(maiNap().slice(0, 4));
   const q = useKedvezmenyek(ev);
@@ -162,8 +172,22 @@ export default function KedvezmenyKerdoiv() {
                   <T m={16} s={600} lh={1.35}>
                     {x.label}
                   </T>
+                  {/* k6c2 (§28.3.4 K12): the one-line meaning, then the marginal effect (the rows add up) */}
+                  {x.line ? (
+                    <T m={15} lh={1.4}>
+                      {x.line}
+                    </T>
+                  ) : null}
                   <T m={15} lh={1.4} c={szin.halvany} szam>
-                    {x.onlyAnnual ? Q.K12.effectAnnual : x.effectYearHuf == null || x.effectYearHuf <= 0 ? Q.K12.effectQuarterly : fillPlaceholders(Q.K12.effect, { x: szam(x.effectYearHuf) })}
+                    {x.onlyAnnual
+                      ? Q.K12.effectAnnual
+                      : x.covered
+                        ? x.kind === 'csaladi'
+                          ? Q.K12.effectCoveredCsaladi
+                          : Q.K12.effectCovered
+                        : x.effectYearHuf == null || x.effectYearHuf <= 0
+                          ? Q.K12.effectQuarterly
+                          : fillPlaceholders(Q.K12.effect, { x: szam(x.effectYearHuf) })}
                   </T>
                 </View>
               ))}

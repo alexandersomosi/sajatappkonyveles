@@ -113,3 +113,17 @@ describe('C17 overpaid SZJA advance (családi kedvezmény from September, 8 000 
   });
 });
 
+
+// k6c2: the unused családi kedvezmény (possible year-end csjk) is staff information – never in a client-facing refund.
+describe('year-end settlement: the client refund is the overpaid SZJA only', () => {
+  it('csjkYearEndHuf may be > 0, totalHuf = szjaRefundHuf', () => {
+    const all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const k = { birthMonth: '1990-05', anyak: { jogcim: 'ket' as const, months: all }, csaladi: { months: all.map((month) => ({ month, eltartott: 2, children: [{}, {}] })), csjkInYear: false } };
+    const r = calculateYear({ profile: { year: 2026, costRatio: 45, status: 'mellekallasu', guaranteedMinimum: false, kedvezmenyek: k }, revenue: monthly({ 1: 600_000, 2: 600_000, 3: 600_000, 4: 600_000, 5: 600_000, 6: 600_000, 7: 600_000, 8: 600_000, 9: 600_000, 10: 600_000, 11: 600_000 }, 2026, 10), asOf: '2026-12-31' });
+    const s = yearEndSettlement(r);
+    expect(s.totalHuf).toBe(s.szjaRefundHuf);
+    expect(s.csjkYearEndHuf).toBeGreaterThan(0);
+    const p = projectYear({ profile: { year: 2026, costRatio: 45, status: 'mellekallasu', guaranteedMinimum: false, kedvezmenyek: k }, revenue: [], asOf: '2026-11-20' });
+    expect(p.refundHuf).toBe(0);
+  });
+});

@@ -525,6 +525,12 @@ export function clientRoutes(deps: Deps) {
         // "Befizetted …, november 18-án": the day the LAST transfer was made (the payment was complete then).
         const paidDates = items.map((i) => i.markedPaidOn).filter((d): d is string => Boolean(d)).sort();
         const paidOn = paidDates.at(-1) ?? undefined;
+        // k6c2: the running quarter's estimate already holds the fixed járulék of its months still to come (főfoglalkozású):
+        // the band must not call that "eddig ennyi gyűlt össze"
+        const hq = hp.state === 'becsles' && !hp.closed ? comp?.result.quarters.find((q) => q.periodKey === p.periodKey) : undefined;
+        const futureFixedMonths = hq ? hq.months.filter((l) => l.future && l.insured && (l.minimumHuf ?? 0) > 0).map((l) => l.month) : [];
+        const futureAdj = futureFixedMonths.map((m) => MONTHS_ADJ_HU[m - 1] ?? '');
+        const honapok = futureAdj.length <= 1 ? (futureAdj[0] ?? '') : `${futureAdj.slice(0, -1).join(', ')} és ${futureAdj.at(-1)}`;
         hero = {
           state: hp.state,
           periodId: p.id,
@@ -535,7 +541,10 @@ export function clientRoutes(deps: Deps) {
           daysLeft: daysLeft(today, p.dueDate),
           ...(paidOn ? { paidOn } : {}),
           verified: p.paymentStatus === 'ellenorizve',
-          ...(hp.state === 'becsles' ? { note: await deps.content.render(hp.closed ? 'ui.hero.veglegesites_note' : 'ui.hero.becsles_note', { firstName: ap.firstName }) } : {}),
+          ...(hp.state === 'becsles'
+            ? { note: await deps.content.render(hp.closed ? 'ui.hero.veglegesites_note' : futureFixedMonths.length ? 'ui.hero.becsles_note_fix' : 'ui.hero.becsles_note', { firstName: ap.firstName, honapok }) }
+            : {}),
+          ...(futureFixedMonths.length ? { futureFixedMonths } : {}),
           ...(p.paymentStatus === 'elteres' ? { note: `${ap.firstName} eltérést látott a befizetésnél. Nézd meg az üzeneteidet.` } : {}),
         };
         if (hp.state === 'jovahagyva' || hp.state === 'befizetve') {
@@ -544,7 +553,7 @@ export function clientRoutes(deps: Deps) {
         } else if (hp.state === 'becsles') {
           letter = {
             greeting: `Kedves ${cl.firstName}!`,
-            body: await deps.content.render(hp.closed ? 'ui.home.letter_veglegesites' : 'ui.home.letter_becsles', { firstName: ap.firstName }),
+            body: await deps.content.render(hp.closed ? 'ui.home.letter_veglegesites' : hero.futureFixedMonths?.length ? 'ui.home.letter_becsles_fix' : 'ui.home.letter_becsles', { firstName: ap.firstName }),
             signedBy: ap.displayName,
             signedRole: 'könyvelőd',
             date: today,

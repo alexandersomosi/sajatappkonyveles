@@ -1,7 +1,7 @@
 // 06 Üzenetek (FUNKCIOK 16–17): saját képernyő fülsor nélkül; fejléc a könyvelővel és a válaszidő-vállalással;
 // kérés-csempék; beszélgetés (saját buborék tintakék), kérés-kártyák, csatolmány; lebegő író sor „Küldés” kapszulával.
 import { useEffect, useRef, useState } from 'react';
-import { SUGGESTED_QUESTIONS } from '@/_shared/bekotes';
+import { LOCK_TEXTS, SUGGESTED_QUESTIONS } from '@/_shared/bekotes';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, TextInput, useWindowDimensions, View, type ScrollViewInstance } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
@@ -15,6 +15,7 @@ import { csatolmanyFeltolt, fajlMegnyit, MAX_MERET } from '@/lib/fajlok';
 import { dativ, mikorIdovel } from '@/lib/format';
 import { arnyek, betu, forma, szin } from '@/theme/tokens';
 import { Allapot, Fejlec } from '@/ui/alap';
+import { useServiceLock } from '@/ui/Zarolas';
 import { ma } from '@/ui/ido';
 import { Arckep, Ikon3d, type Ikon3dNev } from '@/ui/kepek';
 import { Betolt, Fulsor, FULSOR_MAGASSAG, Hiba, MintaJel, useJelzes } from '@/ui/keret';
@@ -111,6 +112,8 @@ export default function Uzenetek() {
   const kuld = useUzenetKuld();
   const jelez = useJelzes();
   const hf = useHozzaferes();
+  // k6c2 (§28.K.5): the lock banner's "Írok az ügyfélszolgálatnak" opens this thread – say who answers
+  const { lock } = useServiceLock();
   const zarolt = useZarolt();
   const vh = useVisszahivasok();
   const nyitottVh = vh.data?.open ?? null;
@@ -192,6 +195,11 @@ export default function Uzenetek() {
             {acc?.responseTimeText ? (
               <T m={14} lh={1.35} c="#fff" numberOfLines={2}>
                 {acc.responseTimeText}
+              </T>
+            ) : null}
+            {lock ? (
+              <T m={14} lh={1.35} c="#fff" numberOfLines={2}>
+                {LOCK_TEXTS.supportLine}
               </T>
             ) : null}
             {hf.korlatozott && !egyOszlop ? (

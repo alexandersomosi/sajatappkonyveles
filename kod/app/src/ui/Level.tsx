@@ -9,6 +9,7 @@ import { datum } from '../lib/format';
 import { arnyek, forma, szin } from '../theme/tokens';
 import { KeszJel } from './kepek';
 import { T } from './T';
+import { SAV, useTeljes } from './teljes';
 
 const PAPIR = require('../../assets/textura/papirszal.png');
 
@@ -44,9 +45,15 @@ export function Alairas({ ut, kulcs, szelesseg = 120 }: { ut: string; kulcs: str
 }
 
 export function Level({ level, alairasUt, befizetve, style }: { level: Letter; alairasUt: string | null; befizetve?: boolean; style?: object }) {
+  // k6c2 (tulaj 11-19 20:20, „csak valami elválasztó köztük”; SPEC §28.K.10): a szakaszos képernyőn a levél is teljes
+  // szélességű szakasz, fölötte a 10 pt-os #D3DAFC sáv – nem egy árnyékos kártya, ami az előző szakaszhoz tapad.
+  const teljes = useTeljes();
+  const keret = teljes
+    ? { marginHorizontal: -forma.margo, borderTopWidth: SAV.vastag, borderTopColor: SAV.szin, backgroundColor: szin.levelPapir }
+    : { borderRadius: forma.level, backgroundColor: szin.levelPapir, ...arnyek.papir };
   return (
-    <View style={[{ borderRadius: forma.level, backgroundColor: szin.levelPapir, ...arnyek.papir }, style]}>
-      <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: forma.level, overflow: 'hidden' }}>
+    <View style={[keret, style]}>
+      <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: teljes ? 0 : forma.level, overflow: 'hidden' }}>
         <Image source={PAPIR} resizeMode="repeat" style={{ width: '100%', height: '100%', opacity: 0.5 }} />
       </View>
       <View style={{ paddingTop: 16, paddingHorizontal: 20, paddingBottom: 10 }}>

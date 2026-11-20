@@ -345,7 +345,7 @@ ut('GET', '/legal/:doc', (m) =>
     docType: m[1],
     version: '2026-11-17',
     title: LEGAL_CIM[m[1]] ?? m[1],
-    markdown: `# ${LEGAL_CIM[m[1]] ?? m[1]}\n\n**MINTA – a valódi szöveget a jogász véglegesíti.** Ez a képernyő bemutató módban fut, a végleges jogi szöveg a szerverről jön.\n\n## Röviden\n\n- A szolgáltatást a Somosi Kft. nyújtja, havi 20 000 Ft-ért.\n- A könyvelőd a NAV felé a meghatalmazottad.\n- Bármikor lemondhatod; a már kifizetett hónap végéig minden marad.\n`,
+    markdown: `# ${LEGAL_CIM[m[1]] ?? m[1]}\n\n**MINTA – a valódi szöveget a jogász véglegesíti.** Ez a képernyő bemutató módban fut, a végleges jogi szöveg a szerverről jön.\n\n## Röviden\n\n- A szolgáltatást a Somosi Kft. nyújtja, havi 19 999 Ft-ért.\n- A könyvelőd a NAV felé a meghatalmazottad.\n- Bármikor lemondhatod; a már kifizetett hónap végéig minden marad.\n`,
   }),
 );
 ut('GET', '/content/faq', () =>

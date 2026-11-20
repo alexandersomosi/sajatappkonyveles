@@ -13,11 +13,11 @@ import {
 import { changeFeeKind, EMPLOYER_ANSWERS, FEE_DEFAULTS, type ChangeKind, type CheckinHow, type CheckinItem, type CheckinWeeklyHours, type EmployerAnswer } from '@/_shared/enums';
 import { useHaviEllenorzes, useHaviValasz, useMe } from '@/api/hooks';
 import { hibaUzenet } from '@/lib/hiba';
-import { datumBe, maiNap, szam } from '@/lib/format';
+import { datumBe, datumPontos, maiNap, szam } from '@/lib/format';
 import { dijFizetes } from '@/lib/simplepay';
 import { DemoDij } from '@/kepernyok/k28';
 import { Kapszulak, UrlapFej, UrlapKerdes } from '@/kepernyok/Urlap';
-import { URES_VADAT, valtozasAdat, valtozasEllenoriz, valtozasLapok, ValtozasLap, lapCim, type VAdat, type VLap } from '@/kepernyok/ValtozasUrlap';
+import { URES_VADAT, valtozasAdat, valtozasEllenoriz, valtozasLapok, ValtozasLap, valtozasSorok, lapCim, type VAdat, type VLap } from '@/kepernyok/ValtozasUrlap';
 import { forma, szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, HibaSzoveg, Lap, Szakasz } from '@/ui/alap';
 import { Ikon3d } from '@/ui/kepek';
@@ -99,12 +99,12 @@ export default function HaviEllenorzes() {
       if (x.how === 'helyettunk' && fajta) {
         change =
           fajta === 'valtozas_adoadat'
-            ? { kind: 'valtozas_adoadat', items: [it === 'nyugdij' ? 'nyugdijba_vonulas' : 'munkavegzes'], workKind: it === 'munkaviszony' ? (x.hours === 'legalabb_36' ? 'munkaviszony_mellett' : 'rovid_munkaviszony_mellett') : 'nyugdij_mellett', effectiveOn: x.since || maiNap(), note: null }
+            ? { kind: 'valtozas_adoadat', items: [it === 'nyugdij' ? 'nyugdijba_vonulas' : 'munkavegzes'], workKind: it === 'munkaviszony' ? (x.hours === 'legalabb_36' ? 'munkaviszony_mellett' : 'rovid_munkaviszony_mellett') : 'nyugdij_mellett', effectiveOn: datumBe(x.since) || maiNap(), note: null }
             : valtozasAdat(fajta, x.v);
       }
       return {
         item: it,
-        ...(x.since ? { since: x.since } : {}),
+        ...(x.since ? { since: datumBe(x.since) } : {}),
         ...(x.hours ? { weeklyHours: x.hours } : {}),
         ...(x.choice ? { choice: x.choice } : {}),
         ...(x.how ? { how: x.how } : {}),
@@ -117,7 +117,7 @@ export default function HaviEllenorzes() {
   const ellenoriz = (): string | null => {
     if (lp.t === 'tetel') {
       const x = v(lp.item);
-      if ((lp.item === 'munkaviszony' || lp.item === 'nyugdij') && !/^\d{4}-\d{2}-\d{2}$/.test(x.since)) return 'Írd be a dátumot így: 2026-11-03.';
+      if ((lp.item === 'munkaviszony' || lp.item === 'nyugdij') && !/^\d{4}-\d{2}-\d{2}$/.test(datumBe(x.since))) return 'Írd be a dátumot így: 2026.11.03.';
       if (lp.item === 'munkaviszony' && !mellek && !x.hours) return 'Válaszd ki, heti hány órában.';
       if (lp.item === 'koltozes' && !x.choice) return 'Válaszd ki, mi változik.';
       if (lp.item === 'alkalmazott' && !x.employer) return 'Válassz egyet.';
@@ -186,7 +186,7 @@ export default function HaviEllenorzes() {
         </>
       ) : (
         <>
-          <UrlapKerdes i={i} n={lepesek.length - 1} cim="Ezt küldöd el" miert={`${fn} megkapja, és ha teendő van, szól.`} />
+          <UrlapKerdes valtozo i={i} n={lepesek.length - 1} cim="Ezt küldöd el" miert={`${fn} megkapja, és ha teendő van, szól.`} />
           <Lap kotott>
             {igen.map((it, n) => {
               const x = v(it);
@@ -197,10 +197,26 @@ export default function HaviEllenorzes() {
                   <T m={16} s={600} lh={1.35}>
                     {CHECKIN_ITEM_TEXTS[it].question}
                   </T>
-                  <T m={15} lh={1.4} c={szin.halvany}>
-                    {x.how === 'helyettunk' ? 'Bejelentjük helyetted' : x.how === 'magatol' ? 'Magad jelented be (ingyenes)' : x.how === 'kerdes' ? 'Előbb beszéljük meg' : it === 'alkalmazott' && x.employer ? EMPLOYER_ANSWER_LABELS[x.employer] : 'Szólunk, ha teendő van'}
-                    {fk ? ` · díja ${szam(FEE_DEFAULTS[fk].amountHuf)} Ft, előre fizetve` : ''}
-                  </T>
+                  {/* k6c2: what changes (the new address, the date), not only how */}
+                  {(it === 'munkaviszony' || it === 'nyugdij') && x.since ? (
+                    <T m={15} lh={1.4} szam>
+                      {`Mióta: ${datumPontos(datumBe(x.since))}`}
+                    </T>
+                  ) : null}
+                  {x.how === 'helyettunk' && fajta && fajta !== 'valtozas_adoadat'
+                    ? valtozasSorok(fajta, x.v).map((s) => (
+                        <T key={s} m={15} lh={1.4} szam>
+                          {s}
+                        </T>
+                      ))
+                    : null}
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <T m={15} lh={1.4} c={szin.halvany} szam>
+                      {x.how === 'helyettunk' ? 'Bejelentjük helyetted' : x.how === 'magatol' ? 'Magad jelented be (ingyenes)' : x.how === 'kerdes' ? 'Előbb beszéljük meg' : it === 'alkalmazott' && x.employer ? EMPLOYER_ANSWER_LABELS[x.employer] : 'Szólunk, ha teendő van'}
+                      {fk ? ` · díja ${szam(FEE_DEFAULTS[fk].amountHuf)} Ft, előre fizetve` : ''}
+                    </T>
+                    {fk && !FEE_DEFAULTS[fk].confirmed ? <DemoDij /> : null}
+                  </View>
                 </View>
               );
             })}
@@ -218,9 +234,9 @@ function TetelLap({ item, x, set, fn, i, n, mellek }: { item: CheckinItem; x: Va
   const eredmeny = item === 'munkaviszony' ? munkaEredmeny(mellek, x.hours) : item === 'nyugdij' ? CHECKIN_RESULT_TEXTS.nyugdij : null;
   return (
     <>
-      <UrlapKerdes i={i} n={n} cim={CHECKIN_ITEM_TEXTS[item].question} />
+      <UrlapKerdes valtozo i={i} n={n} cim={CHECKIN_ITEM_TEXTS[item].question} />
       {item === 'munkaviszony' || item === 'nyugdij' ? (
-        <Mezo felirat={item === 'nyugdij' ? FU.pensionSince : FU.since} placeholder="2026.11.03." keyboardType="numbers-and-punctuation" value={x.since} onChangeText={(t) => set({ since: datumBe(t) })} style={{ marginBottom: 14 }} />
+        <Mezo felirat={item === 'nyugdij' ? FU.pensionSince : FU.since} placeholder="2026.11.03." keyboardType="numbers-and-punctuation" value={x.since} onChangeText={(t) => set({ since: t })} style={{ marginBottom: 14 }} />
       ) : null}
       {item === 'munkaviszony' && !mellek ? (
         <View style={{ marginBottom: 14 }}>
@@ -319,7 +335,12 @@ function Eredmeny({ c, fn }: { c: CheckinView | null; fn: string }) {
         <UrlapKerdes cim="Ezt a hónapot lezártuk" miert={CHECKIN_TEXTS.expired} ikon="kerdezek" />
       ) : (
         <>
-          <UrlapKerdes cim="Köszönjük!" miert={fillPlaceholders(CHECKIN_TEXTS.doneBody, { firstName: fn })} ikon="kerdezek" />
+          {/* k6c2: while a fee is unpaid, the team has not started: say what the client has to do */}
+          <UrlapKerdes
+            cim="Köszönjük!"
+            miert={fillPlaceholders(c.items.some((x) => x.feeCharge && x.feeCharge.status === 'nyitott') ? CHECKIN_TEXTS.doneBodyFee : CHECKIN_TEXTS.doneBody, { firstName: fn })}
+            ikon="kerdezek"
+          />
           <Szakasz ikon="irat" cim="Ezekkel foglalkozunk" />
           <Lap>
             {/* only the items answered "igen" (they have a status); the "nem" answers are not listed (k6c) */}
@@ -332,17 +353,19 @@ function Eredmeny({ c, fn }: { c: CheckinView | null; fn: string }) {
                   {x.statusText ?? ''}
                 </T>
                 {x.feeCharge && x.feeCharge.status === 'nyitott' ? (
-                  <GombM
-                    cim={fillPlaceholders(FEE_TEXTS.payButtonAmount, { dij: szam(x.feeCharge.amountHuf) })}
-                    style={{ marginTop: 8 }}
-                    onPress={async () => {
-                      try {
-                        await dijFizetes(x.feeCharge!.id);
-                      } catch (e) {
-                        jelez(hibaUzenet(e, FEE_TEXTS.payFailed));
-                      }
-                    }}
-                  />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                    <GombM
+                      cim={fillPlaceholders(FEE_TEXTS.payButtonAmount, { dij: szam(x.feeCharge.amountHuf) })}
+                      onPress={async () => {
+                        try {
+                          await dijFizetes(x.feeCharge!.id);
+                        } catch (e) {
+                          jelez(hibaUzenet(e, FEE_TEXTS.payFailed));
+                        }
+                      }}
+                    />
+                    {x.feeCharge.demo ? <DemoDij /> : null}
+                  </View>
                 ) : null}
                 {x.status === 'ugyfel_intezi' ? <GombSz cim="Megnézem az útmutatót" m={16} onPress={() => router.push('/valtozas')} /> : null}
               </View>

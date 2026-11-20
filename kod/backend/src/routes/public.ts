@@ -6,8 +6,10 @@ import { Hono } from 'hono';
 import brand from '../_shared/brand.json' with { type: 'json' };
 import { LEGAL_DOC_TYPES, type LegalDocType } from '../_shared/enums.js';
 import type { PublicConfig } from '../_shared/api.js';
+import { FEE_KIND_LABELS } from '../_shared/bekotes.js';
+import { fmt as fmtHuf } from '../services/kedvezmeny.js';
 import type { Deps } from '../deps.js';
-import { cardRegistrations, faqItems, simplepayTransactions } from '../db/schema.js';
+import { cardRegistrations, faqItems, feeCharges, simplepayTransactions } from '../db/schema.js';
 import type { Env } from '../http/core.js';
 import { E } from '../lib/errors.js';
 import { fillLegalPublic, legalValuesFromConfig } from '../legal.js';
@@ -107,8 +109,11 @@ export function publicRoutes(deps: Deps) {
     const [t] = await deps.db.select().from(simplepayTransactions).where(eq(simplepayTransactions.orderRef, o)).limit(1);
     if (!t || t.mode !== 'demo') throw E.notFound();
     const [reg] = t.cardRegistrationId ? await deps.db.select().from(cardRegistrations).where(eq(cardRegistrations.id, t.cardRegistrationId)).limit(1) : [];
-    const sentence = await tokenInfoSentence(deps, deps.cfg.simplepay.recurringTimes, t.amountHuf, reg?.tokensUntil ?? deps.now());
-    const amount = `${new Intl.NumberFormat('hu-HU').format(t.amountHuf)} Ft`;
+    // k6c2: a one-off fee (change, annual closing) is not the monthly fee and carries no card-token sentence
+    const [fee] = t.kind === 'egyszeri' ? await deps.db.select({ kind: feeCharges.kind }).from(feeCharges).where(eq(feeCharges.simplepayTransactionId, t.id)).limit(1) : [];
+    const heading = fee ? (FEE_KIND_LABELS[fee.kind] ?? 'díj') : 'havidíj';
+    const sentence = t.kind === 'egyszeri' ? 'Egyszeri díj: csak ezt az összeget vonjuk le, a kártyádat nem mentjük el.' : await tokenInfoSentence(deps, deps.cfg.simplepay.recurringTimes, t.amountHuf, reg?.tokensUntil ?? deps.now());
+    const amount = `${fmtHuf(t.amountHuf)} Ft`;
     const done = Boolean(t.appliedAt);
     // form-action also governs the redirects after the submit (→ /back → app host or the kezjegy:// deep link),
     // and in production the API and the web app are different hosts, so both targets must be listed.
@@ -122,7 +127,7 @@ export function publicRoutes(deps: Deps) {
 h1{font-size:22px;margin:0 0 6px}.a{font-size:34px;font-weight:800;margin:10px 0}p{line-height:1.5}button{width:100%;min-height:48px;border-radius:999px;border:0;font-size:16px;font-weight:600;margin-top:10px;cursor:pointer}
 .ok{background:#1428DB;color:#fff}.no{background:#fff;color:#1226B8;border:2px solid #1428DB}small{color:#505873}</style></head><body><main>
 <div class="b">DEMO FIZETÉS – nem valódi kártya, nem vonunk le pénzt.</div>
-<div class="s"><h1>${esc(brand.name)} – havidíj</h1><div class="a">${esc(amount)}</div>
+<div class="s"><h1>${esc(brand.name)} – ${esc(heading.toLowerCase())}</h1><div class="a">${esc(amount)}</div>
 <p>${esc(sentence)}</p><p><small>Rendelés: ${esc(t.orderRef)}</small></p>
 ${done ? `<p><strong>Ez a fizetés már lezárult (${esc(t.status)}).</strong></p>` : `<form method="post" action="/api/v1/payments/demo/pay"><input type="hidden" name="o" value="${esc(t.orderRef)}"><input type="hidden" name="eredmeny" value="ok"><button class="ok" type="submit">Sikeres fizetés szimulálása</button></form>
 <form method="post" action="/api/v1/payments/demo/pay"><input type="hidden" name="o" value="${esc(t.orderRef)}"><input type="hidden" name="eredmeny" value="fail"><button class="no" type="submit">Sikertelen fizetés szimulálása</button></form>`}

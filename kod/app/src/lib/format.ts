@@ -301,5 +301,15 @@ export function datumBe(t: string): string {
   const s = t.trim();
   const m = /^(\d{4})\D+(\d{1,2})\D+(\d{1,2})\D*$/.exec(s) ?? /^(\d{4})(\d{2})(\d{2})$/.exec(s);
   if (!m) return s;
-  return `${m[1]}-${m[2]!.padStart(2, '0')}-${m[3]!.padStart(2, '0')}`;
+  const ho = Number(m[2]);
+  const nap = Number(m[3]);
+  // k6c2: a half-typed day ("2026.12.0") is not a date yet – the text stays as typed
+  if (ho < 1 || ho > 12 || nap < 1 || nap > 31) return s;
+  return `${m[1]}-${String(ho).padStart(2, '0')}-${String(nap).padStart(2, '0')}`;
+}
+
+/** „2026-12-01” → „2026.12.01.” (a beírt alakkal azonos); minden más változatlan. */
+export function datumPontos(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[1]}.${m[2]}.${m[3]}.` : iso;
 }

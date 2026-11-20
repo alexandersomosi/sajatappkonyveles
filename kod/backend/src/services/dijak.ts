@@ -2,13 +2,13 @@
 // chargeable in production). One-off fees (annual closing, assisted change) are paid in advance with a ONE-TIME
 // SimplePay payment (simplepay_transactions.kind 'egyszeri'; DEMO uses the demo pay page) – never the recurring token.
 // A fee-bearing action starts only after FINISHED; a failed or abandoned payment changes nothing.
-import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, or, sql } from 'drizzle-orm';
 import type { FeeChargeView, FeePayStart, FeeSettingView, FeesView } from '../_shared/api.js';
 import { FEE_CHARGE_STATUS_LABELS, FEE_KIND_LABELS, FEE_UNIT_LABELS } from '../_shared/bekotes.js';
 import { ASSIST_KIND_LABELS, FEE_DEFAULTS, FEE_KINDS, FEE_RULES, ONE_OFF_FEE_KINDS, type FeeKind } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { annualClosings, assistRequests, cardRegistrations, clients, feeCharges, feeInvoices, feeSettingHistory, feeSettings, simplepayTransactions, subscriptions, users } from '../db/schema.js';
+import { annualClosings, assistRequests, cardRegistrations, checkinItems, clients, feeCharges, feeInvoices, feeSettingHistory, feeSettings, simplepayTransactions, subscriptions, users } from '../db/schema.js';
 import { audit } from '../audit.js';
 import { addDays, todayBudapest } from '../lib/dates.js';
 import { ApiError, E } from '../lib/errors.js';
@@ -217,6 +217,13 @@ async function runPurpose(deps: Deps, cl: ClientRow, ch: FeeChargeRow): Promise<
       await audit(db, { action: 'assist.dij_fizetve', actorRole: 'system', targetType: 'assist', targetId: a.id, clientId: cl.id, details: { kind: a.kind, to: next } });
       if (acc && next === 'egyeztetve') await notify(deps, db, { userId: acc.userId, kind: 'assist_task', variant: 'valtozas_adatok', params: { clientName: clientName(cl), kindLabel: ASSIST_KIND_LABELS[a.kind] }, link: `/helyettunk/${a.id}` });
     }
+    // k6c2: the monthly check-in item behind this fee follows the payment – the ball is with the team now
+    const moved = await db
+      .update(checkinItems)
+      .set({ status: 'csapatnal', updatedAt: deps.now() })
+      .where(and(eq(checkinItems.clientId, cl.id), eq(checkinItems.status, 'dijra_var'), or(eq(checkinItems.feeChargeId, ch.id), eq(checkinItems.assistId, ch.purpose.assistId))))
+      .returning({ id: checkinItems.id });
+    if (moved.length) await audit(db, { action: 'checkin.item_fee_paid', actorRole: 'system', targetType: 'client', targetId: cl.id, clientId: cl.id, details: { items: moved.length } });
   } else {
     const [an] = await db.select().from(annualClosings).where(eq(annualClosings.id, ch.purpose.annualId)).limit(1);
     if (an && an.status === 'dijra_var') {

@@ -32,7 +32,7 @@ export default function ValtozasUtmutato() {
       vissza={() => (p.egyben !== '1' && lp.lepes > 0 ? lp.ugrik(lp.lepes - 1) : vissza(`/valtozas/${kind}`))}
       visszaCim="Vissza"
       cim={g?.title ?? CHANGE_TEXTS.sorok[kind].title}
-      al="Kb. 10 perc, ingyenes. Te küldöd be a saját belépéseddel."
+      al={`Kb. ${kind === 'valtozas_adoadat' ? 15 : 10} perc, ingyenes. Te küldöd be a saját belépéseddel.`}
     />
   );
   if (!g) {

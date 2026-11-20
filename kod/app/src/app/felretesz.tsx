@@ -38,6 +38,19 @@ function FelreteszTartalom() {
               </T>
             </Lap>
           ) : null}
+          {v.totalText ? (
+            // k6c2: the same number as the Főoldal row "Az idei számláid után" (= the month sums below)
+            <Lap style={{ paddingHorizontal: 16, paddingVertical: 12 }}>
+              <T m={16} s={600} lh={1.4} szam>
+                {v.totalText}
+              </T>
+              {v.card.invoicesSub ? (
+                <T m={14} lh={1.4} c={szin.halvany}>
+                  {v.card.invoicesSub}
+                </T>
+              ) : null}
+            </Lap>
+          ) : null}
           {v.months.map((m) => (
             <Fragment key={m.month}>
               <Szakasz ikon="szamlak" cim={nagybetu(m.label)} megj={m.sub ?? `${m.items.length} tétel · félretenni kb. ${szam(m.items.reduce((a, b) => a + (b.upcoming ? 0 : Math.max(0, b.reserve.reserveHuf)), 0))} Ft`} />

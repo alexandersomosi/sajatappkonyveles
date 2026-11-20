@@ -137,3 +137,32 @@ describe('R4 25 év alatti (2003-01) mellékállású: 3 000 000 in January, 3 0
   });
 });
 
+
+// k6c2 (2026-11-20): a főfoglalkozású under the minimum with in-year csjk – the csjk cap is min(minimálbér, the month's
+// income) (NAV 100 6.1), so a normal invoice LOWERS the year's TB. That is not a storno: zone nem_novel, reserve 0
+// (conservative); only a negative item is 'sztorno'. Telescoping of the raw values still holds.
+describe('R9b főfogl. under the minimum + anyák (2) + családi 2/2 csjk év közben', () => {
+  const all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const p = prof('fofoglalkozasu', {
+    kedvezmenyek: {
+      birthMonth: '1990-05',
+      anyak: { jogcim: 'ket', months: all },
+      csaladi: { months: all.map((month) => ({ month, eltartott: 2, children: [{}, {}] })), csjkInYear: true },
+    },
+  });
+  const items = [item('2026-01-10', 100_000), item('2026-01-20', 100_000), ...monthsOf(240_000, 12, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11])];
+  const s = reserveSeries(p, items);
+  it('every positive invoice: reserve ≥ 0, never sztorno; at least one raw < 0 becomes nem_novel / 0', () => {
+    expect(s.lines.every((l) => l.reserveHuf >= 0 && l.zone !== 'sztorno')).toBe(true);
+    const neg = s.lines.filter((l) => l.rawHuf < 0);
+    expect(neg.length).toBeGreaterThan(0);
+    expect(neg.every((l) => l.zone === 'nem_novel' && l.reserveHuf === 0)).toBe(true);
+  });
+  it('telescoping still holds on the raw values', () => {
+    expect(s.lines.reduce((a, l) => a + l.rawHuf, 0) + s.baseHuf).toBe(s.totalHuf);
+  });
+  it('a real storno (negative item) is still sztorno with a negative reserve', () => {
+    const st = reserveSeries(prof('mellekallasu'), [...monthsOf(1_000_000, 10, all), item('2026-12-15', -120_000)]);
+    expect(st.lines.at(-1)).toMatchObject({ zone: 'sztorno', reserveHuf: -30_000 });
+  });
+});
