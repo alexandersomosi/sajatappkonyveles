@@ -268,7 +268,7 @@ function UjIgazolasTartalom() {
         </>
       ) : lap === 'hatarido' ? (
         <>
-          <UrlapKerdes {...szamlalo} cim={CERT_FORM_TEXTS.neededByTitle} miert="Ha egy napig kell, írd be (például 2026-12-15). Ha nem sürgős, hagyd üresen." />
+          <UrlapKerdes {...szamlalo} cim={CERT_FORM_TEXTS.neededByTitle} miert="Ha egy adott napig kell, írd be (például 2026-12-15). Ha nem sürgős, hagyd üresen." />
           <Mezo felirat="Dátum" value={hatarido} onChangeText={setHatarido} placeholder={napHozzaad(ma, 14)} keyboardType="numbers-and-punctuation" />
           {kozel ? (
             <T m={15} lh={1.45} c={szin.borostyanSzoveg} style={{ marginTop: 10 }}>

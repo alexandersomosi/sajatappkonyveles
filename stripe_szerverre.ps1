@@ -25,7 +25,10 @@ $Esemenyek = @(
   'payment_intent.payment_failed',
   'charge.refunded',
   'charge.dispute.created',
-  'payment_method.automatically_updated'
+  'payment_method.automatically_updated',
+  'refund.failed',
+  'charge.refund.updated',
+  'charge.dispute.closed'
 )
 
 function Lepes([string]$nev, [bool]$ok) {

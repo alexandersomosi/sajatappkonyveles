@@ -69,6 +69,10 @@ export default function KonzolUgyfelek() {
           >
             <I3 n="kerdezek" s={20} />
             <input value={kereso} onChange={(e) => setKereso(e.target.value)} placeholder="Név, e-mail, adószám vagy telefon vége" aria-label="Keresés" />
+            {/* k7c2: a visible button too (Enter still works) */}
+            <button type="submit" className="gomb-m">
+              Keresés
+            </button>
           </form>
           <div className="szegmens">
             {SZUROK.map((s) => (

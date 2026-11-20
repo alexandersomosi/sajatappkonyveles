@@ -284,17 +284,25 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   if (!['demo', 'szamlazzhu', 'billingo'].includes(invRaw)) throw new ConfigError('INVOICE_MODE: demo, szamlazzhu vagy billingo.');
   let invMode: InvoiceMode = invRaw as InvoiceMode;
   if (invMode === 'demo' && !isDemo) invMode = 'disabled';
-  if (invMode === 'szamlazzhu' && !str(env, 'SZAMLAZZHU_AGENT_KEY')) invMode = isDemo ? 'demo' : 'disabled';
   if (invMode === 'billingo' && !str(env, 'BILLINGO_API_KEY')) invMode = isDemo ? 'demo' : 'disabled';
   // SPEC §29.2.1: the account kind is required with szamlazzhu; a live account never runs on the DEMO server.
   const accRaw = str(env, 'SZAMLAZZHU_ACCOUNT');
   if (accRaw && accRaw !== 'teszt' && accRaw !== 'eles') throw new ConfigError('SZAMLAZZHU_ACCOUNT: teszt vagy eles.');
   const szamlazzhuAccount = (accRaw || null) as 'teszt' | 'eles' | null;
-  if (invMode === 'szamlazzhu') {
-    if (!szamlazzhuAccount) throw new ConfigError('INVOICE_MODE=szamlazzhu: a SZAMLAZZHU_ACCOUNT (teszt vagy eles) is kell.');
+  if (invMode === 'szamlazzhu' && szamlazzhuAccount) {
     if (isDemo && szamlazzhuAccount !== 'teszt') throw new ConfigError('Éles Számlázz.hu-fiók nem lehet DEMO szerveren: az első éles számla elindítja a fizetős csomagot.');
     if (!isDemo && szamlazzhuAccount === 'teszt') throw new ConfigError('Éles szerveren (APP_ENV=production) nem lehet a Számlázz.hu teszt fiókja.');
   }
+  // k7c2: the KEY follows the server kind and the account, never the label alone. A DEMO server reads ONLY
+  // SZAMLAZZHU_TEST_AGENT_KEY (its SZAMLAZZHU_AGENT_KEY is the owner's LIVE Somosi Kft. key and is never read there);
+  // a production server reads ONLY SZAMLAZZHU_AGENT_KEY. A missing key → no Számlázz.hu (DEMO díjbekérő on DEMO).
+  const relevantKey = isDemo ? str(env, 'SZAMLAZZHU_TEST_AGENT_KEY') : str(env, 'SZAMLAZZHU_AGENT_KEY');
+  if (invMode === 'szamlazzhu' && !relevantKey) invMode = isDemo ? 'demo' : 'disabled';
+  if (invMode === 'szamlazzhu' && !szamlazzhuAccount) throw new ConfigError('INVOICE_MODE=szamlazzhu: a SZAMLAZZHU_ACCOUNT (teszt vagy eles) is kell.');
+  const szamlazzhuKey = invMode === 'szamlazzhu' ? relevantKey : '';
+  // k7c2 B8: live card money always needs its invoice – a live Stripe key without the live Számlázz.hu route does not start
+  if (!isDemo && str(env, 'PAYMENT_PROVIDER') === 'stripe' && stripeKeyMode(str(env, 'STRIPE_SECRET_KEY')) === 'live' && !(invMode === 'szamlazzhu' && szamlazzhuAccount === 'eles'))
+    throw new ConfigError('Élő Stripe-fizetéshez az éles Számlázz.hu kell (INVOICE_MODE=szamlazzhu, SZAMLAZZHU_ACCOUNT=eles, SZAMLAZZHU_AGENT_KEY) – különben a befolyt pénzről nem készülne számla.');
 
   // --- NAV ---
   const navRaw = str(env, 'NAV_MODE', 'demo');
@@ -365,7 +373,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     payment: paymentCfg(env, appEnv),
     invoice: {
       mode: invMode,
-      szamlazzhuKey: str(env, 'SZAMLAZZHU_AGENT_KEY'),
+      szamlazzhuKey,
       billingoKey: str(env, 'BILLINGO_API_KEY'),
       szamlazzhuAccount,
       szamlazzhuUrl: url(env, 'SZAMLAZZHU_URL', 'https://www.szamlazz.hu/szamla/'),

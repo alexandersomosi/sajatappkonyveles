@@ -75,7 +75,7 @@ export async function seedK29f(deps: Deps, o: { credentialsFile: string }): Prom
     // the approved income statement of this year (the stamp shows while the data stay the same)
     const from = `${today.slice(0, 4)}-01`;
     const to = today.slice(0, 7);
-    const d = await statementData(deps.db, kata.id, from, to);
+    const d = await statementData(deps.db, kata.id, from, to, today);
     await deps.db.insert(incomeStatementApprovals).values({ clientId: kata.id, fromMonth: from, toMonth: to, dataSha256: d.hash, approvedBy: ctx.bence.userId, approvedAt: ctx.at(20) }).onConflictDoNothing();
     // a calendar feed (the token itself is never printed or stored in plain text)
     const token = randomToken(32);

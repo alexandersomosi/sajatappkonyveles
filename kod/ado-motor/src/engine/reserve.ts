@@ -224,6 +224,28 @@ function evenly(amount: number, n: number): number[] {
 }
 
 /**
+ * k7c2: month i's net TB = its own gross TB − its own csjk. A negative month is set to 0 and its excess is taken from the
+ * other months by their remaining TB (repeated until none is negative); the parts always sum to `target` (= Σ gross − Σ csjk).
+ */
+export function netOfOwnCsjk(gross: readonly number[], csjk: readonly number[], target: number): number[] {
+  const out = gross.map((g, i) => g - (csjk[i] ?? 0));
+  for (let guard = 0; guard < 10; guard++) {
+    const excess = out.reduce((a, x) => a + (x < 0 ? -x : 0), 0);
+    if (excess === 0) break;
+    for (let i = 0; i < out.length; i++) if (out[i]! < 0) out[i] = 0;
+    const take = splitByWeights(excess, out);
+    for (let i = 0; i < out.length; i++) out[i] = out[i]! - take[i]!;
+  }
+  // rounding guard: the sum is the quarter's net TB exactly
+  const diff = target - out.reduce((a, x) => a + x, 0);
+  if (diff !== 0) {
+    const k = out.reduce((best, x, i) => (x > out[best]! ? i : best), 0);
+    out[k] = out[k]! + diff;
+  }
+  return out;
+}
+
+/**
  * SPEC §28.4.2. Monthly attribution of the year's taxes: every tax goes to the month whose own income caused it.
  *  - SZJA: the quarter's advance by the months' taxable part after the month-bound exemptions (B2);
  *  - TB (after csjk) and szocho: the fixed minimum of a főfoglalkozású month stays in that month; the rest of the
@@ -302,9 +324,11 @@ export function earningsByMonth(
       (l) => l.szochoHuf,
       (l) => (l.minimumHuf !== null ? permille(roundDiv(l.minimumHuf * szMinPct, 100), szPermille) : 0),
     );
-    // TB after csjk: the quarter's net TB in the proportions of the gross attribution (sums stay exact)
+    // TB after csjk (k7c2): each month's OWN csjk is taken off that month's own gross TB – the csjk earned in October is
+    // never moved onto a future December. A month going below 0 gives its excess to the quarter's other months by their
+    // remaining TB, so the sum stays the quarter's net TB exactly.
     const tbNet = ms.reduce((a, l) => a + l.tbHuf - (l.csjkHuf ?? 0), 0);
-    const tbEng = tbNet === 0 ? ms.map(() => 0) : tbGrossOwn.some((x) => x > 0) ? splitByWeights(tbNet, tbGrossOwn) : spreadEvenOver(tbNet, insuredIdx);
+    const tbEng = tbNet === 0 ? ms.map(() => 0) : tbGrossOwn.some((x) => x > 0) ? netOfOwnCsjk(tbGrossOwn, ms.map((l) => l.csjkHuf ?? 0), tbNet) : spreadEvenOver(tbNet, insuredIdx);
     let szjaEng = splitByWeights(q.szjaAdvanceHuf, ms.map((l) => B2[l.month]!));
     if (q.szjaAdvanceHuf > 0 && szjaEng.every((x) => x === 0)) szjaEng = spreadEvenOver(q.szjaAdvanceHuf, activeIdx);
     let tbM = tbEng;
@@ -312,11 +336,20 @@ export function earningsByMonth(
     let szjaM = szjaEng;
     const ap = o.approved?.[q.periodKey];
     if (ap) {
-      const scale = (target: number, eng: number[], fallbackMask: number[]) =>
-        eng.some((x) => x > 0) ? splitByWeights(target, eng) : target > 0 ? spreadEvenOver(target, fallbackMask) : eng.map(() => 0);
+      // k7c2 T8: when the engine part is 0 (e.g. a later allowance made the recomputed SZJA 0) the approved amount follows
+      // the months' own taxable parts, and only then an even split
+      const scale = (target: number, eng: number[], fallbackMask: number[], ownWeights?: number[]) =>
+        eng.some((x) => x > 0)
+          ? splitByWeights(target, eng)
+          : target > 0 && ownWeights && ownWeights.some((x) => x > 0)
+            ? splitByWeights(target, ownWeights)
+            : target > 0
+              ? spreadEvenOver(target, fallbackMask)
+              : eng.map(() => 0);
       tbM = scale(ap.tbHuf, tbEng, insuredIdx);
       szM = scale(ap.szochoHuf, szEng, insuredIdx);
-      szjaM = scale(ap.szjaHuf, szjaEng, activeIdx);
+      const own = ms.map((l) => (B2[l.month]! > 0 ? B2[l.month]! : 0));
+      szjaM = scale(ap.szjaHuf, szjaEng, activeIdx, own.some((x) => x > 0) ? own : ms.map((l) => T[l.month]!));
     }
     idx.forEach((i, k) => {
       const row = out[i]!;

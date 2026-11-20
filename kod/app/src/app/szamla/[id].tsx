@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { K, useMe, useNavSzamla } from '@/api/hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import type { ClientHome } from '@/_shared/api';
+import type { ClientHome, KataRiskItem } from '@/_shared/api';
 import { TartalekBlokk } from '@/kepernyok/k28';
 import { datum, datumEvvel, szam } from '@/lib/format';
 import { szin } from '@/theme/tokens';
@@ -47,12 +47,24 @@ function SzamlaTartalom() {
   const lapos = nyers as { customerName?: string | null; customerVatStatus?: string | null; payerKind?: string | null } | undefined;
   const magan = lapos?.customerVatStatus === 'PRIVATE_PERSON' || lapos?.payerKind === 'maganszemely';
   const vevo = s?.customer?.name?.trim() || (!magan ? lapos?.customerName?.trim() : '') || 'Magánszemély';
+  const kataRisk = (nyers as { kataRisk?: KataRiskItem } | undefined)?.kataRisk ?? null;
   return (
     <Kepernyo ful="dosszie" fejlec={<CimSor visszaCim="Vissza a számlákhoz" vissza={() => vissza('/dosszie')} cim={s?.invoiceNumber ?? 'Számla'} al={s ? [vevo, s.demo ? 'DEMO, nem valódi számla' : ''].filter(Boolean).join(' · ') : undefined} />}>
       {q.isLoading ? <Betolt /> : q.error || !s ? <Hiba hiba={q.error} ujra={() => void q.refetch()} /> : (
         <>
+          {/* k7c2 (SPEC §28.K.11): katásként cégnek számlázni veszélyes – piros sor a számlán */}
+          {kataRisk ? (
+            <Lap style={{ padding: 16, backgroundColor: szin.veszelyAlap }}>
+              <T m={16} s={700} lh={1.35} c={szin.veszelySzoveg}>
+                {kataRisk.title}
+              </T>
+              <T m={15} lh={1.45} c={szin.veszelySzoveg} style={{ marginTop: 4 }}>
+                {kataRisk.text}
+              </T>
+            </Lap>
+          ) : null}
           {/* SPEC §28.1.5: az első blokk: mennyit tegyél félre ebből a számlából */}
-          {s.reserve ? <TartalekBlokk r={s.reserve} haviFix={home?.reserve?.fixedMonthlyHuf ?? null} fn={fn} /> : null}
+          {s.reserve && !kataRisk ? <TartalekBlokk r={s.reserve} haviFix={home?.reserve?.fixedMonthlyHuf ?? null} fn={fn} /> : null}
           <Szakasz ikon="szamlak" cim="A számla" />
           <Lap>
             <Sor2 elso cim="Összeg" ertek={<Osszeg szoveg={szam(s.grossAmountHuf)} m={18} />} />

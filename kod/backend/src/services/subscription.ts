@@ -50,10 +50,13 @@ function demoPayUrl(deps: Deps, orderRef: string): string {
 }
 
 export async function ensurePlan(deps: Deps, db: DbOrTx): Promise<void> {
+  // k7c2: the plan row carries the fee the server really charges (fee_settings 'havidij'), not the env value
+  const { planAmountHuf } = await import('./dijak.js');
+  const price = await planAmountHuf(deps, db, 'havi');
   await db
     .insert(plans)
-    .values({ code: 'havi', name: 'Havi előfizetés', priceHuf: deps.cfg.planPriceHuf, interval: 'month' })
-    .onConflictDoUpdate({ target: plans.code, set: { priceHuf: deps.cfg.planPriceHuf } });
+    .values({ code: 'havi', name: 'Havi előfizetés', priceHuf: price, interval: 'month' })
+    .onConflictDoUpdate({ target: plans.code, set: { priceHuf: price } });
 }
 
 /**
@@ -89,6 +92,8 @@ export async function subscriptionView(deps: Deps, db: DbOrTx, clientId: string)
     priceDemo: false,
     due: cl ? await k.dueView(deps, cl) : null,
     consentNeeded: !c,
+    // k7c2: the owner terminated the contract – the app shows that (one end date), not "Lemondva"
+    ...(cl?.terminated && cl.terminated.kind !== 'ugyfel_kerte' ? { terminatedUntil: cl.terminated.effectiveOn ?? null } : {}),
   };
 }
 
@@ -96,7 +101,7 @@ async function subscriptionViewLegacy(deps: Deps, db: DbOrTx, clientId: string):
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   const m = deps.cfg.simplepay.mode === 'disabled' ? 'live' : deps.cfg.simplepay.mode;
   const today = todayBudapest(deps.now());
-  if (!sub) return { status: 'incomplete', mode: m, priceHuf: deps.cfg.planPriceHuf, cancelAtPeriodEnd: false, failedAttempts: 0, nextPaidPeriodStart: today };
+  if (!sub) return { status: 'incomplete', mode: m, priceHuf: await (await import('./dijak.js')).monthlyPriceHuf(deps), cancelAtPeriodEnd: false, failedAttempts: 0, nextPaidPeriodStart: today };
   let card: SubscriptionView['card'];
   if (sub.cardRegistrationId) {
     const [reg] = await db.select().from(cardRegistrations).where(eq(cardRegistrations.id, sub.cardRegistrationId)).limit(1);
@@ -108,7 +113,7 @@ async function subscriptionViewLegacy(deps: Deps, db: DbOrTx, clientId: string):
   return {
     status: sub.status,
     mode: sub.mode,
-    priceHuf: deps.cfg.planPriceHuf,
+    priceHuf: await (await import('./dijak.js')).monthlyPriceHuf(deps),
     ...(sub.currentPeriodEnd ? { currentPeriodEnd: sub.currentPeriodEnd } : {}),
     ...(sub.nextChargeAt && !sub.cancelAtPeriodEnd && sub.status !== 'canceled' ? { nextChargeAt: sub.nextChargeAt.toISOString() } : {}),
     cancelAtPeriodEnd: sub.cancelAtPeriodEnd,
@@ -543,7 +548,8 @@ export async function registerFailure(deps: Deps, db: DbOrTx, sub: SubRow, code:
       failedAttempts: attempts,
       firstFailedAt: first,
       lastFailureCode: code.slice(0, 60),
-      nextRetryAt: retryIn !== undefined ? new Date(first.getTime() + retryIn * 86_400_000) : null,
+      // k7c2 A6: the retry DAY (Budapest 00:00), so the 06:00 job of that day reaches it: +1 / +3 / +7 never slips
+      nextRetryAt: retryIn !== undefined ? budapestLocalToUtc(addDays(todayBudapest(first), retryIn), '00:00') : null,
       graceUntil: addDays(todayBudapest(first), 14),
       updatedAt: now,
     })
@@ -643,7 +649,21 @@ export async function restoreAfterCancelledDeletion(deps: Deps, db: DbOrTx, clie
 }
 
 /** Home banner: the service is ending (cancelled at period end) or has ended. */
-export async function serviceNotice(deps: Deps, db: DbOrTx, clientId: string): Promise<{ kind: 'megszunik' | 'megszunt'; endsOn: string | null; canResume: boolean } | undefined> {
+export async function serviceNotice(deps: Deps, db: DbOrTx, clientId: string): Promise<{ kind: 'megszunik' | 'megszunt' | 'felmondva'; endsOn: string | null; canResume: boolean; letterDocumentId?: string | null } | undefined> {
+  // k7c2: the owner terminated the contract – one end date (terminated.effectiveOn, until which the service runs), never
+  // "Lemondtad", no "Mégis maradok" (the client cannot undo our termination)
+  const [tc] = await db.select({ terminated: clients.terminated }).from(clients).where(eq(clients.id, clientId)).limit(1);
+  if (tc?.terminated && tc.terminated.kind !== 'ugyfel_kerte') {
+    const { auditLog } = await import('../db/schema.js');
+    const [a] = await db
+      .select({ details: auditLog.details })
+      .from(auditLog)
+      .where(and(eq(auditLog.clientId, clientId), eq(auditLog.action, 'admin.client.terminated')))
+      .orderBy(desc(auditLog.at))
+      .limit(1);
+    const doc = (a?.details as { documentId?: string | null } | null)?.documentId ?? null;
+    return { kind: 'felmondva', endsOn: tc.terminated.effectiveOn ?? null, canResume: false, letterDocumentId: doc };
+  }
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (!sub || sub.status === 'incomplete') return undefined;
   const today = todayBudapest(deps.now());

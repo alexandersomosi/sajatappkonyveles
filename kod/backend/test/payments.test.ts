@@ -158,7 +158,8 @@ describe('monthly charge (dorecurring) and retries', () => {
     let [s] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.id, sub0!.id));
     expect(s!.status).toBe('past_due');
     expect(s!.failedAttempts).toBe(1);
-    expect(s!.nextRetryAt!.toISOString()).toBe('2026-12-18T08:30:00.000Z');
+    // k7c2 A6: the retry DAY at Budapest 00:00, so the 06:00 job of that day reaches it
+    expect(s!.nextRetryAt!.toISOString()).toBe('2026-12-17T23:00:00.000Z');
     expect(s!.graceUntil).toBe('2026-12-31');
     // the unsuccessful payment does not consume the token
     const active = await h.deps.db.select().from(paymentTokens).where(and(eq(paymentTokens.cardRegistrationId, s!.cardRegistrationId!), eq(paymentTokens.status, 'aktiv')));

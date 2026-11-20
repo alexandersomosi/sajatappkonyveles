@@ -349,10 +349,10 @@ describe('F9 – tulaj-konzol', () => {
     expect(det.after.addressCity).toBe('Szeged');
     expect(det.after.phone).toMatch(/^•••\d{3}$/);
     await h.deps.db.update(clients).set({ businessIdentity: { name: 'Fodor Márk e.v.', seat: null, alanyiMentes: 'igen', afaWarning: false, demo: true, savedAt: '2026-11-20' } }).where(eq(clients.id, c.clientId));
-    const nav = await h.json('PATCH', `/admin/console/clients/${c.clientId}/profile`, { token: admin.token, body: { fields: { addressZip: '6720' } } });
+    const nav = await h.json('PATCH', `/admin/console/clients/${c.clientId}/profile`, { token: admin.token, body: { fields: { hqMunicipality: 'Szeged' } } });
     expect(nav.status).toBe(409);
     expect(nav.body.error.code).toBe('nav_override_needed');
-    expect((await h.json('PATCH', `/admin/console/clients/${c.clientId}/profile`, { token: admin.token, body: { fields: { addressZip: '6720' }, confirmNavOverride: true, reason: 'ONYA-ban ellenőriztem' } })).status).toBe(200);
+    expect((await h.json('PATCH', `/admin/console/clients/${c.clientId}/profile`, { token: admin.token, body: { fields: { hqMunicipality: 'Szeged' }, confirmNavOverride: true, reason: 'ONYA-ban ellenőriztem' } })).status).toBe(200);
   });
 
   it('terminate: the 30-day rule of azonnali_dij, rendes = 30 days, effective job; reactivate', async () => {
@@ -421,9 +421,13 @@ describe('F9 – tulaj-konzol', () => {
     const o = await h.json('GET', '/admin/console/overview', { token: admin.token });
     expect(o.status).toBe(200);
     const all = (await h.deps.db.select().from(clients)).filter((c) => !c.isTest);
-    expect(o.body.clients.active).toBe(all.filter((c) => c.lifecycle === 'aktiv' && !c.anonymizedAt).length);
-    expect(o.body.clients.onboarding).toBe(all.filter((c) => c.lifecycle === 'bekotes_alatt').length);
     const subs = await h.deps.db.select().from(subscriptions);
+    // k7c2: the tiles add up – under notice → 'Felmondva / megszűnt'; a suspended subscription or a lock → 'Felfüggesztve / zárolt'
+    const susp = new Set(subs.filter((s) => s.status === 'suspended').map((s) => s.clientId));
+    const tileSusp = (c: (typeof all)[number]) => !c.terminated && c.lifecycle !== 'megszunt' && (c.lifecycle === 'felfuggesztve' || susp.has(c.id) || Boolean(c.serviceLock));
+    expect(o.body.clients.active).toBe(all.filter((c) => c.lifecycle === 'aktiv' && !c.anonymizedAt && !c.terminated && !tileSusp(c)).length);
+    expect(o.body.clients.onboarding).toBe(all.filter((c) => c.lifecycle === 'bekotes_alatt' && !c.terminated).length);
+    expect(o.body.clients.suspended).toBe(all.filter(tileSusp).length);
     expect(o.body.money.overdue.count).toBe(subs.filter((s) => s.status === 'past_due' || s.status === 'suspended').length);
     const ok = (await h.deps.db.select().from(payments)).filter((p) => p.status === 'sikeres' && p.succeededAt && p.succeededAt.toISOString().slice(0, 7) === '2026-11');
     expect(o.body.money.collectedPerMonth.find((m: { month: string }) => m.month === '2026-11').havidijHuf).toBe(ok.filter((p) => p.kind !== 'egyszeri').reduce((s, p) => s + p.amountHuf, 0));

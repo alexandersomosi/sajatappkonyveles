@@ -64,6 +64,11 @@ export async function planAmountHuf(deps: Deps, db: DbOrTx, planCode: string): P
   return r.amountHuf;
 }
 
+/** k7c2: the monthly fee every screen, legal text and report names (= what the scheduler charges for the plan 'havi'). */
+export async function monthlyPriceHuf(deps: Deps): Promise<number> {
+  return planAmountHuf(deps, deps.db, 'havi');
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // charges
 // ---------------------------------------------------------------------------------------------------------------------

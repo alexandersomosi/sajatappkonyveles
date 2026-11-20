@@ -119,7 +119,7 @@ export async function buildGuided(deps: Deps, db: DbOrTx, cl: ClientRow, j?: Jou
     welcome: {
       seen: Boolean(guided?.welcomeSeenAt),
       accountant: ap,
-      priceHuf: deps.cfg.planPriceHuf,
+      priceHuf: await (await import('./dijak.js')).monthlyPriceHuf(deps),
       rows: GUIDED_TEXTS.w3Rows.map((r) => ({ title: fill(r.title, { firstName: fn }), time: r.time })),
     },
     steps,

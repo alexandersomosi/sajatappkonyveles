@@ -102,6 +102,21 @@ export default function Adatok() {
     });
   }, [profil.data]);
 
+  // k7c2: "Folytatom" (no ?lap=) reopens the FIRST page that is not complete yet – the promise "később itt folytathatod"
+  const ugrott = useRef(false);
+  useEffect(() => {
+    const d = profil.data;
+    if (!d || ugrott.current || p.lap || indulo) return;
+    ugrott.current = true;
+    const van = (x: unknown) => !(x == null || x === '');
+    const lap1 = van(d.lastName) && van(d.firstName) && van(d.phone) && Boolean(d.adoazonositoJelMasked) && van(d.address?.zip) && van(d.address?.city) && van(d.address?.line);
+    const lap2 = (van(d.adoszam) || Boolean(d.adoszamPending)) && van(d.hqMunicipality) && van(d.activityText) && van(d.activityAnswer) && van(d.evSince);
+    const lap3 = van(d.taxStatus) && d.hasSeparateBusinessAccount != null;
+    if (o.data?.steps.find((x) => x.step === 'adatok')?.status === 'kesz' || (lap1 && lap2 && lap3)) return;
+    const elso = !lap1 ? 1 : !lap2 ? 2 : 3;
+    if (elso > 1) setLap(elso);
+  }, [profil.data, p.lap, indulo, o.data]);
+
   // Javításkor a mező hibája azonnal eltűnik (nem csak a következő „Tovább”-nál).
   const al = <K extends keyof Urlap>(k: K) => (v: Urlap[K]) => {
     erintett.current.add(k);

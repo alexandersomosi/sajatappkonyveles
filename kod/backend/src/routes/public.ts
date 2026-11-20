@@ -12,7 +12,7 @@ import type { Deps } from '../deps.js';
 import { cardRegistrations, faqItems, feeCharges, simplepayTransactions } from '../db/schema.js';
 import type { Env } from '../http/core.js';
 import { E } from '../lib/errors.js';
-import { fillLegalPublic, legalValuesFromConfig } from '../legal.js';
+import { fillLegalPublic, legalValues } from '../legal.js';
 import { paymentModeOf } from '../config.js';
 import { todayBudapest } from '../lib/dates.js';
 import { decodeBack, spSign, spTime, spVerify, salt } from '../payments/simplepay.js';
@@ -37,10 +37,13 @@ export function publicRoutes(deps: Deps) {
     return c.json({ ok: db === 'ok', version: deps.cfg.version, db }, db === 'ok' ? 200 : 503);
   });
 
-  r.get('/config', (c) => {
+  r.get('/config', async (c) => {
     const cfg = deps.cfg;
+    // k7c2: the price the server really charges (fee_settings 'havidij'), never a drifting env value
+    const { planAmountHuf } = await import('../services/dijak.js');
+    const price = await planAmountHuf(deps, deps.db, 'havi');
     const body: PublicConfig = {
-      brand: { name: brand.name, tagline: brand.tagline, subline: brand.subline, priceHufMonthlyGross: cfg.planPriceHuf },
+      brand: { name: brand.name, tagline: brand.tagline, subline: brand.subline, priceHufMonthlyGross: price },
       appEnv: cfg.appEnv,
       demo: cfg.appEnv === 'demo',
       features: { googleSignIn: cfg.google.clientIds.length > 0, appleSignIn: Boolean(cfg.appleBundleId), totp: true },
@@ -55,11 +58,11 @@ export function publicRoutes(deps: Deps) {
     return c.json({ ...body, paymentProvider: cfg.payment.provider, paymentMode: paymentModeOf(cfg), simplepayEnabled: cfg.payment.provider !== 'disabled' });
   });
 
-  r.get('/legal/:docType', (c) => {
+  r.get('/legal/:docType', async (c) => {
     const t = c.req.param('docType') as LegalDocType;
     if (!(LEGAL_DOC_TYPES as readonly string[]).includes(t) || t === 'adatfeldolgozoi') throw E.notFound();
     const d = deps.legal.current(t);
-    const values = { ...legalValuesFromConfig(deps.cfg, deps.now()), 'dok.verzio': d.version, 'dok.hatalyos': d.effectiveFrom ?? d.version };
+    const values = { ...(await legalValues(deps)), 'dok.verzio': d.version, 'dok.hatalyos': d.effectiveFrom ?? d.version };
     // Short cache: the recurring-payment declaration names a date ("2027. november 18-ig").
     c.header('Cache-Control', 'public, max-age=300');
     return c.json({ docType: t, version: d.version, title: d.title, markdown: fillLegalPublic(d.markdown, values) });

@@ -102,7 +102,7 @@ export function registerBekotesRoutes(r: Hono<Env>, deps: Deps): void {
 
   r.get('/explainers', async (c) => {
     const cl = await client(c);
-    const params = { firstName: await firstName(cl), havidij: `${fmtHuf(deps.cfg.planPriceHuf)} Ft` };
+    const params = { firstName: await firstName(cl), havidij: `${fmtHuf(await (await import('../services/dijak.js')).monthlyPriceHuf(deps))} Ft` };
     const items: Explainer[] = [];
     for (const e of ONBOARDING_EXPLAINERS) {
       const k = `bekotes.magyarazat.${e.key}`;

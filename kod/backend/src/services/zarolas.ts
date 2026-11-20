@@ -34,7 +34,10 @@ export async function lockReasonsOf(deps: Deps, db: DbOrTx, clientId: string): P
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (sub?.status === 'suspended') {
     reasons.push('havidij');
-    amount += await planAmountHuf(deps, db, sub.planCode);
+    // k7c2 B4: the amount "Fizesd ki" really asks (pause fee, own price, discount) – never the plain plan fee
+    const { duePeriod } = await import('./payments.js');
+    const due = await duePeriod(deps, db, clientId);
+    amount += due ? due.amountHuf : await planAmountHuf(deps, db, sub.planCode);
   }
   const cutoff = new Date(deps.now().getTime() - ANNUAL_RULES.lockAfterDays * 86_400_000);
   const annual = await db.select().from(annualClosings).where(and(eq(annualClosings.clientId, clientId), eq(annualClosings.status, 'dijra_var'), lt(annualClosings.submittedAt, cutoff)));

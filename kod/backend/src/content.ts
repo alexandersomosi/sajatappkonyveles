@@ -49,14 +49,21 @@ export function fill(template: string, params: Record<string, string | number | 
     const v = params[k];
     return v === undefined || v === null || v === '' ? all : `${pre}${withArticle(art, String(v))} {${k}}`;
   });
-  return t.replace(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g, (all, k: string, at: number) => {
-    const v = params[k];
-    if (v === undefined || v === null) return all;
-    const sv = String(v);
-    // "A könyvelőd" (no accountant assigned yet) is lower case inside a sentence (11-19 javítás).
-    if (/^A könyvelőd/.test(sv) && at > 0 && !/[.!?:]\s*$/.test(t.slice(0, at))) return `a${sv.slice(1)}`;
-    return sv;
-  });
+  return dateSuffixFix(
+    t.replace(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g, (all, k: string, at: number) => {
+      const v = params[k];
+      if (v === undefined || v === null) return all;
+      const sv = String(v);
+      // "A könyvelőd" (no accountant assigned yet) is lower case inside a sentence (11-19 javítás).
+      if (/^A könyvelőd/.test(sv) && at > 0 && !/[.!?:]\s*$/.test(t.slice(0, at))) return `a${sv.slice(1)}`;
+      return sv;
+    }),
+  );
+}
+
+/** k7c2: a date value with its trailing dot before a suffix ("december 20.-ig") → "december 20-ig". */
+export function dateSuffixFix(s: string): string {
+  return s.replace(/(\d)\.-(ig|tól|től|án|én|jén|ján)(?![\p{L}])/gu, '$1-$2');
 }
 
 export class ContentStore {

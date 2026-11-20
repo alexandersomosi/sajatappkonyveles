@@ -43,7 +43,9 @@ function KartyaLepes() {
   const [hiba, setHiba] = useState<string | null>(null);
   const ar = elo.data?.monthlyHuf ?? cfg.data?.brand.priceHufMonthlyGross ?? brand.priceHufMonthlyGross;
   const acc = o.data?.accountant;
-  const aktiv = elo.data?.status === 'active';
+  // k7c2: a cancelled (or terminated, then reactivated) subscription that still runs to its period end is NOT "él": the
+  // step needs a new consent + card (the first payment covers the month after the paid one – never the same month twice)
+  const aktiv = elo.data?.status === 'active' && !elo.data?.cancelAtPeriodEnd;
   const kikapcsolva = fizetesSzolgaltato(cfg.data) === 'disabled';
 
   // SPEC §27.4.2: a kártya mindkét úton a szerződés után jön (a szerver zárja; régebbi szervernél itt is).

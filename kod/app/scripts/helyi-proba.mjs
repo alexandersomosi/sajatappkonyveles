@@ -67,7 +67,8 @@ try {
 }
 // SPEC §28.11 + §28.K.21: a k6 demó-személyek (Eszter, Bálint, Ádám, Gréta, Norbert, Ilona, Tamás, Csilla), ha a backend
 // már tudja (B1: dist/seed/ot1119.js, dist/seed/k28.js). Csak új, kitalált ügyfeleket ad hozzá.
-for (const [fajl, fv, nev] of [['dist/seed/ot1119.js', 'seedOt1119', 'ot1119'], ['dist/seed/k28.js', 'seedK28', 'k28']]) {
+// k7c2: + the §29 demo additions (Halmi Zsófia, Kerekes Anna; Fodor Márk under notice, certificates, statements)
+for (const [fajl, fv, nev] of [['dist/seed/ot1119.js', 'seedOt1119', 'ot1119'], ['dist/seed/k28.js', 'seedK28', 'k28'], ['dist/seed/k29.js', 'seedK29', 'k29']]) {
   try {
     const m = await imp(fajl);
     const r = await m[fv](deps, { credentialsFile: cred });

@@ -301,7 +301,7 @@ export function accRoutes(deps: Deps) {
         milestones: st.milestones,
       },
       kycStatus: kyc?.status ?? null,
-      subscription: sub ? { status: sub.status, mode: sub.mode, priceHuf: deps.cfg.planPriceHuf, nextChargeAt: sub.nextChargeAt?.toISOString(), cardMask: reg?.status === 'aktiv' ? reg.cardMask : undefined, failedAttempts: sub.failedAttempts } : null,
+      subscription: sub ? { status: sub.status, mode: sub.mode, priceHuf: await (await import('../services/dijak.js')).monthlyPriceHuf(deps), nextChargeAt: sub.nextChargeAt?.toISOString(), cardMask: reg?.status === 'aktiv' ? reg.cardMask : undefined, failedAttempts: sub.failedAttempts } : null,
       nav: await navConnection(cl.id),
       meters: accMeters(comp?.result.meters),
       warnings: comp?.result.warnings ?? [],

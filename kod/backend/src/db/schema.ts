@@ -1016,6 +1016,8 @@ export const subscriptions = pgTable('subscriptions', {
   /** The active card of the Stripe / new demo flow (payment_methods). Null = the legacy SimplePay card_registrations. */
   paymentMethodId: uuid(),
   predebitNotifiedFor: day(),
+  /** k7c2 (0019): the period (start day) the last pre-debit notice was for – an off-session charge needs it (≥ 3 days before). */
+  predebitPeriod: day(),
   suspensionWarnedFor: day(),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
@@ -1796,6 +1798,18 @@ void WORK_KINDS;
 // SPEC §29 (k7) – migrations 0017_k29_enumok.sql + 0018_k29.sql. Additive only. Written by B1 for A, B, D, F, G.
 // =====================================================================================================================
 
+/** k7c2: what a saved-card charge sent to the provider (no secret, no card data – our ids and texts only). */
+export interface SavedChargeParams {
+  customerRef: string | null;
+  paymentMethodRef: string;
+  amountHuf: number;
+  offSession: boolean;
+  returnUrl?: string;
+  description: string;
+  statementSuffix: string;
+  metadata: Record<string, string>;
+}
+
 /** §29.1.2: one row per attempt to move money (provider-neutral: stripe | demo; SimplePay keeps its own tables). */
 export const payments = pgTable(
   'payments',
@@ -1850,6 +1864,10 @@ export const payments = pgTable(
     alertedAt: ts(),
     appliedAt: ts(),
     succeededAt: ts(),
+    /** k7c2 (0019): the exact parameters of a saved-card charge, re-sent byte-identically with the same idempotency key. */
+    chargeParams: jsonb().$type<SavedChargeParams>(),
+    /** k7c2 (0019): the automatic refund of a duplicate failed – the reconcile job retries it. */
+    refundPendingAt: ts(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1859,6 +1877,10 @@ export const payments = pgTable(
     uniqueIndex('payments_one_success_per_period')
       .on(t.subscriptionId, t.periodStart)
       .where(sql`kind in ('elso_havi', 'havi', 'fizesd_ki') and status = 'sikeres'`),
+    // k7c2 (0019): at most ONE successful payment per one-off fee (created only when the live data has no duplicate)
+    uniqueIndex('payments_one_success_per_fee')
+      .on(t.feeChargeId)
+      .where(sql`kind = 'egyszeri' and status = 'sikeres' and fee_charge_id is not null`),
     check('payments_kind_chk', sql`${t.kind} in ('elso_havi', 'havi', 'egyszeri', 'fizesd_ki', 'kartya')`),
     check('payments_status_chk', sql`${t.status} in ('letrehozva', 'feldolgozas', 'hitelesites_kell', 'sikeres', 'sikertelen', 'megszakitva', 'bizonytalan', 'duplikalt')`),
     check('payments_amount_chk', sql`${t.amountHuf} >= 0`),
@@ -1911,6 +1933,8 @@ export const stripeEvents = pgTable('stripe_events', {
   stripeCreatedAt: ts(),
   receivedAt: ts().notNull().defaultNow(),
   processedAt: ts(),
+  /** k7c2 (0019): one delivery works on the event at a time (claimed atomically; a stale claim expires). */
+  claimedAt: ts(),
   attempts: integer().notNull().default(0),
   lastError: text(),
 });

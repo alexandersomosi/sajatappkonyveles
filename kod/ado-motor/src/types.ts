@@ -104,6 +104,11 @@ export interface ApprovedQuarterActual {
   szjaAdvanceHuf: number;
   /** The quarter's átalány revenue at approval; a different recomputed revenue raises a 'konyvelo' warning. */
   revenueHuf?: number;
+  /**
+   * (+) k7c2: the családi járulékkedvezmény the approval contained (0 / absent = none). An allowance approved later never
+   * puts csjk into an approved quarter, so the családi frame of its months stays for the SZJA.
+   */
+  csjkHuf?: number;
 }
 
 export interface YearInput {

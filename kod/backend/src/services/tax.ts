@@ -96,6 +96,8 @@ export async function approvedQuarterActuals(db: DbOrTx, clientId: string, year:
       baseSumHuf: baseSum,
       szjaAdvanceHuf: szja,
       ...(typeof q.revenueHuf === 'number' && Number.isSafeInteger(q.revenueHuf) ? { revenueHuf: q.revenueHuf } : {}),
+      // k7c2: the csjk the approval contained (none when the allowance came later) – the engine keeps it that way
+      csjkHuf: typeof q.csjkHuf === 'number' && Number.isSafeInteger(q.csjkHuf) && q.csjkHuf > 0 ? q.csjkHuf : 0,
     });
   }
   return out.sort((a, b) => a.quarter - b.quarter);

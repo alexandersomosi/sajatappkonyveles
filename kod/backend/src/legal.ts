@@ -136,6 +136,16 @@ export function baseLegalValues(o: LegalValueOpts): Record<string, string> {
   return v;
 }
 
+/**
+ * k7c2: the legal values with the monthly fee the server really charges (fee_settings 'havidij' via planAmountHuf; the
+ * env PLAN_PRICE_HUF is only the fallback) – the ÁSZF, the contract and the card consent never name another price.
+ */
+export async function legalValues(deps: { cfg: Config; db: Db; now: () => Date }): Promise<Record<string, string>> {
+  const { planAmountHuf } = await import('./services/dijak.js');
+  const price = await planAmountHuf(deps as never, deps.db, 'havi');
+  return legalValuesFromConfig({ ...deps.cfg, planPriceHuf: price }, deps.now());
+}
+
 /** The values every filled legal text uses, from the running config. */
 export function legalValuesFromConfig(cfg: Pick<Config, 'appPublicUrl' | 'planPriceHuf' | 'simplepay'>, now: Date): Record<string, string> {
   return baseLegalValues({

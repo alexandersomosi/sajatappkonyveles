@@ -53,7 +53,7 @@ and `SIMPLEPAY_DEMO_SECRET` while SimplePay runs in DEMO.
 | `APPLE_BUNDLE_ID` | empty → hidden | |
 | `SIMPLEPAY_MODE` | `demo` | `sandbox`/`live` need `SIMPLEPAY_MERCHANT_HUF` + `SIMPLEPAY_SECRET_HUF` |
 | `SIMPLEPAY_RECURRING_TIMES`, `SIMPLEPAY_TOKEN_VALID_MONTHS` | 12, 12 | |
-| `PLAN_PRICE_HUF` | 20000 | |
+| `PLAN_PRICE_HUF` | 19999 | only the fallback: the price shown and charged is fee_settings `havidij` (admin → Díjak) |
 | `INVOICE_MODE` | `demo` | `szamlazzhu`/`billingo` providers are not implemented yet → fee invoice row `hiba` + admin alert |
 | `NAV_MODE` | `demo` | `test`/`prod` use the real XML client; prod refuses the placeholder `NAV_SOFTWARE_ID` |
 | `NAV_SOFTWARE_ID`, `NAV_SOFTWARE_VERSION`, `NAV_DEV_NAME`, `NAV_DEV_CONTACT`, `NAV_DEV_TAX_NUMBER`, `NAV_SYNC_HOUR` (5) | | |

@@ -53,6 +53,7 @@ import {
   subscriptions,
   systemState,
   users,
+  type SavedChargeParams,
 } from '../db/schema.js';
 import { audit } from '../audit.js';
 import { sha256Hex } from '../lib/crypto.js';
@@ -61,7 +62,7 @@ import { ApiError, E } from '../lib/errors.js';
 import { log, safeErr } from '../log.js';
 import { notify } from '../notify/notify.js';
 import { fmtHuf } from '../payments/huf.js';
-import { alertAdmins, buyerOf, invoiceKeyFor, processInvoice, queueCorrection, queueFeeInvoice, queueStorno } from '../payments/invoices.js';
+import { alertAdmins, alertMismatchInvoices, buyerOf, invoiceKeyFor, processInvoice, queueCorrection, queueFeeInvoice, queueStorno } from '../payments/invoices.js';
 import { ProviderError, type CardInfo, type ChargeOutcome, type PaymentProvider, type ProviderHostedState, type ProviderPaymentState } from '../payments/provider.js';
 import { safeStripeError } from '../payments/stripe.js';
 import { demoCard, demoSessionRef } from '../payments/demo.js';
@@ -308,12 +309,33 @@ export async function cardConsentView(deps: Deps, cl: ClientRow, purpose: Consen
 }
 
 async function hasCurrentConsent(db: DbOrTx, userId: string): Promise<boolean> {
+  return Boolean(await currentConsentId(db, userId));
+}
+
+/** k7c2 A7: the metadata keys in one fixed order – a jsonb round trip reorders them, a re-send must equal the original. */
+function withCanonicalMeta(p: SavedChargeParams): SavedChargeParams {
+  const metadata = Object.fromEntries(Object.entries(p.metadata).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  return { customerRef: p.customerRef, paymentMethodRef: p.paymentMethodRef, amountHuf: p.amountHuf, offSession: p.offSession, ...(p.returnUrl ? { returnUrl: p.returnUrl } : {}), description: p.description, statementSuffix: p.statementSuffix, metadata };
+}
+
+/** k7c2: the id of the client's current card consent (this version, not withdrawn), newest first – or null. */
+async function currentConsentId(db: DbOrTx, userId: string): Promise<string | null> {
   const [c] = await db
     .select({ id: consents.id })
     .from(consents)
     .where(and(eq(consents.userId, userId), eq(consents.docType, 'kartyas_fizetes'), eq(consents.version, CARD_CONSENT_VERSION), isNull(consents.withdrawnAt)))
+    .orderBy(desc(consents.acceptedAt))
     .limit(1);
-  return Boolean(c);
+  return c?.id ?? null;
+}
+
+/**
+ * k7c2 (round-1 A3): a saved card is charged off-session only under a card consent (payment_methods.consent_id). A DEMO
+ * card moves no money (the seeded DEMO cards have no consent row) – it stays chargeable on a DEMO server only.
+ */
+function chargeableCard(pm: PmRow | null): boolean {
+  if (!pm || pm.status !== 'aktiv' || !pm.stripePaymentMethodId) return false;
+  return Boolean(pm.consentId) || pm.mode === 'demo';
 }
 
 async function recordConsent(deps: Deps, db: DbOrTx, cl: ClientRow, view: CardConsentView, given: { consentVersion?: string; consentSha256?: string }, meta: { ipHmac: string; ua: string }): Promise<string> {
@@ -555,6 +577,9 @@ export async function duePeriod(deps: Deps, db: DbOrTx, clientId: string): Promi
 
 export async function dueView(deps: Deps, cl: ClientRow): Promise<DuePaymentView | null> {
   const db = deps.db;
+  // k7c2 B5 [TULAJ decision pending]: a terminated client is not offered "Fizesd ki" – the money could not be applied
+  // to anything (no service after the notice); the owner settles any debt himself.
+  if (cl.terminated) return null;
   const d = await duePeriod(deps, db, cl.id);
   if (!d) return null;
   const [last] = await db
@@ -597,18 +622,22 @@ export async function startDuePayment(
   const db = deps.db;
   const provName = newProviderName(deps);
   const prov = providerOf(deps, provName);
+  // k7c2 B5: never take a monthly fee from a terminated client (nothing to apply it to) – the owner settles it
+  if (cl.terminated) throw E.conflict('A szerződésed felmondtuk, ezért itt nem kell fizetned. Ha kérdésed van, írj nekünk az Üzenetek fülön.');
   const d = await duePeriod(deps, db, cl.id);
   if (!d) throw E.conflict('Most nincs fizetendő havidíjad.');
   const u = await userOf(db, cl);
   if (!u) throw E.notFound();
   const again = await reopenable(deps, db, cl.id, ['fizesd_ki']);
   if (again && again.provider === provName && again.periodStart === d.periodStart) return hostedResult(deps, again);
-  // consent: required when none for the current version is stored (or when the client sends it, e.g. a new card)
+  // consent: required when none for the current version is stored, when the client sends it (a new card), and – k7c2 –
+  // when there is no saved card (a deleted card needs a new consent before a new card is saved for monthly charges)
   let consentId: string | null = null;
-  if (input.consentVersion || !(await hasCurrentConsent(db, cl.userId))) {
+  const existingConsent = await currentConsentId(db, cl.userId);
+  if (input.consentVersion || !existingConsent || !(await activeCardOf(db, cl.id))) {
     if (!input.consentVersion) throw new ApiError(409, 'consent_required', 'Előbb nézd át a kártyás fizetés engedélyét.');
     consentId = await recordConsent(deps, db, cl, await cardConsentView(deps, cl, 'fizesd_ki'), input, meta);
-  }
+  } else consentId = existingConsent;
   // an older PaymentIntent of this month can never succeed later (cancelled at Stripe)
   await cancelOpenIntents(deps, d.sub.id, d.periodStart);
   return openHosted(deps, prov, {
@@ -659,6 +688,9 @@ export interface SuccessInfo {
   chargeRef: string | null;
   card: CardInfo | null;
   customerRef?: string | null;
+  /** k7c2 B7: what the provider says it took (when known) – must equal our row's amount, in HUF. */
+  amountHuf?: number | null;
+  currency?: string | null;
 }
 
 /** The invoice line of a payment. */
@@ -702,9 +734,9 @@ function isUniqueViolation(e: unknown): boolean {
  * a one-off marks its charge paid and runs its purpose; the card the client used becomes the saved card. A second
  * success for the same subscription month is refunded automatically ('duplikalt').
  */
-export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info: SuccessInfo): Promise<'applied' | 'already' | 'duplicate' | 'missing'> {
+export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info: SuccessInfo): Promise<'applied' | 'already' | 'duplicate' | 'missing' | 'mismatch'> {
   const db = deps.db;
-  let outcome = 'missing' as 'applied' | 'already' | 'duplicate' | 'missing';
+  let outcome = 'missing' as 'applied' | 'already' | 'duplicate' | 'missing' | 'mismatch';
   const after: { invoiceId: string | null; detach: { provider: string; ref: string }[]; charge: typeof feeCharges.$inferSelect | null; clientId: string | null; userId: string | null; terminatedPaid: boolean } = {
     invoiceId: null,
     detach: [],
@@ -722,6 +754,16 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
         return;
       }
       const now = deps.now();
+      // k7c2 B7: money of another amount or currency is never applied as our row (admin alert, once)
+      const wrongAmount = typeof info.amountHuf === 'number' && p.amountHuf > 0 && info.amountHuf !== p.amountHuf;
+      const wrongCurrency = Boolean(info.currency) && String(info.currency).toLowerCase() !== 'huf';
+      if (wrongAmount || wrongCurrency) {
+        await tx.update(payments).set({ failureCode: 'osszeg_elteres', updatedAt: now }).where(eq(payments.id, p.id));
+        await audit(tx, { action: 'payment.amount_mismatch', actorRole: 'system', targetType: 'payment', targetId: p.id, clientId: p.clientId, details: { expectedHuf: p.amountHuf, gotHuf: info.amountHuf ?? null, currency: info.currency ?? null } });
+        after.clientId = p.clientId;
+        outcome = 'mismatch';
+        return;
+      }
       const [cl] = await tx.select().from(clients).where(eq(clients.id, p.clientId)).limit(1);
       if (!cl) return;
       after.clientId = cl.id;
@@ -743,6 +785,17 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
           .where(and(eq(payments.subscriptionId, sub.id), eq(payments.periodStart, p.periodStart), eq(payments.status, 'sikeres'), inArray(payments.kind, ['elso_havi', 'havi', 'fizesd_ki']), ne(payments.id, p.id)))
           .limit(1);
         dup = Boolean(other);
+      }
+      // k7c2 A1/A2/B2/B3/B2b: one fee, at most ONE successful payment. The fee row is locked; a success for a fee that
+      // is no longer open (paid by another attempt, waived, refunded) is a duplicate: refunded, no invoice.
+      if (!dup && p.kind === 'egyszeri' && p.feeChargeId) {
+        const [ch] = await tx.select().from(feeCharges).where(eq(feeCharges.id, p.feeChargeId)).limit(1).for('update');
+        const [other] = await tx
+          .select({ id: payments.id })
+          .from(payments)
+          .where(and(eq(payments.feeChargeId, p.feeChargeId), eq(payments.kind, 'egyszeri'), eq(payments.status, 'sikeres'), ne(payments.id, p.id)))
+          .limit(1);
+        dup = Boolean(other) || Boolean(ch && ch.status !== 'nyitott');
       }
       if (dup) {
         await tx.update(payments).set({ ...cardPatch, status: 'duplikalt', appliedAt: now, succeededAt: now, updatedAt: now }).where(eq(payments.id, p.id));
@@ -768,7 +821,8 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
               status: 'active',
               currentPeriodStart: periodStart,
               currentPeriodEnd: periodEnd,
-              nextChargeAt: budapestLocalToUtc(periodEnd, '09:00'),
+              // k7c2 A8: the day the pre-debit notice names is the day the 06:00 job charges (not the next morning)
+              nextChargeAt: budapestLocalToUtc(periodEnd, '00:00'),
               nextRetryAt: null,
               failedAttempts: 0,
               firstFailedAt: null,
@@ -818,17 +872,24 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
     if (!isUniqueViolation(e)) throw e;
     await run(true);
   }
-  if (outcome === 'duplicate') {
-    try {
-      await refundPayment(deps, { paymentId, amountHuf: -1, reason: 'Dupla fizetés ugyanarra a hónapra', byUserId: null, duplicate: true });
-    } catch (e) {
-      log().error({ err: safeErr(e) }, 'duplicate refund failed – admin alert');
-    }
+  if (outcome === 'mismatch') {
     const [p] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
     if (p && !p.alertedAt) {
       await db.update(payments).set({ alertedAt: deps.now() }).where(eq(payments.id, paymentId));
-      await audit(db, { action: 'payment.duplicate_refunded', actorRole: 'system', targetType: 'payment', targetId: paymentId, clientId: p.clientId, details: { amountHuf: p.amountHuf } });
-      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek', 'dupla').catch(() => undefined);
+      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek', 'osszeg_elteres').catch(() => undefined);
+    }
+    return outcome;
+  }
+  if (outcome === 'duplicate') {
+    const [p0] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
+    const refunded = await refundDuplicate(deps, paymentId, p0?.kind === 'egyszeri' ? 'Dupla fizetés ugyanarra a díjra' : 'Dupla fizetés ugyanarra a hónapra');
+    const [p] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
+    if (p && !p.alertedAt) {
+      await db.update(payments).set({ alertedAt: deps.now() }).where(eq(payments.id, paymentId));
+      await audit(db, { action: refunded ? 'payment.duplicate_refunded' : 'payment.duplicate_refund_failed', actorRole: 'system', targetType: 'payment', targetId: paymentId, clientId: p.clientId, details: { amountHuf: p.amountHuf, kind: p.kind } });
+      // k7c2 A4: the alert says what really happened
+      const variant = !refunded ? 'dupla_nem_ment' : p.kind === 'egyszeri' ? 'dupla_dij' : 'dupla';
+      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek', variant).catch(() => undefined);
     }
     return outcome;
   }
@@ -840,7 +901,11 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
       log().warn({ err: safeErr(e) }, 'old card detach failed');
     }
   }
-  if (after.invoiceId) await processInvoice(deps, after.invoiceId).catch((e) => log().warn({ err: safeErr(e) }, 'fee invoice first try failed'));
+  if (after.invoiceId) {
+    await processInvoice(deps, after.invoiceId).catch((e) => log().warn({ err: safeErr(e) }, 'fee invoice first try failed'));
+    // k7c2 B8: no invoicing route for this payment's mode → the admins are told right away
+    await alertMismatchInvoices(deps, after.invoiceId).catch((e) => log().warn({ err: safeErr(e) }, 'mismatch alert failed'));
+  }
   if (after.charge && after.clientId) {
     const [cl] = await db.select().from(clients).where(eq(clients.id, after.clientId)).limit(1);
     const { runPurposeFor } = await import('./dijak.js');
@@ -849,6 +914,12 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
   if (after.terminatedPaid && after.clientId) {
     await audit(db, { action: 'payment.after_termination', actorRole: 'system', targetType: 'payment', targetId: paymentId, clientId: after.clientId });
     log().warn('payment after termination – admin decides (refund in the console)');
+    // k7c2 B5: the owner is told, so he can refund it in the console
+    const [p] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
+    if (p && !p.alertedAt) {
+      await db.update(payments).set({ alertedAt: deps.now() }).where(eq(payments.id, paymentId));
+      await alertAdmins(deps, 'payment_disputed', after.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek', 'felmondas_utan').catch(() => undefined);
+    }
   }
   if (after.clientId) {
     const { checkCompletion } = await import('./onboarding.js');
@@ -945,9 +1016,17 @@ async function markCancelled(deps: Deps, paymentId: string): Promise<void> {
 /** A hosted session's state (webhook / polling / reconcile) applied to our row. */
 export async function applyHosted(deps: Deps, paymentId: string, h: ProviderHostedState): Promise<void> {
   const [p] = await deps.db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
-  if (!p || FINAL.includes(p.status)) return;
+  // k7c2: money that really arrived is never ignored – a page we closed meanwhile is applied (and refunded as a duplicate)
+  if (!p || (FINAL.includes(p.status) && !(h.paid && h.mode === 'payment' && p.status === 'megszakitva'))) return;
   if (h.paid) {
-    await applyPaymentSucceeded(deps, paymentId, { providerRef: h.paymentRef, setupRef: h.setupRef, chargeRef: h.payment?.chargeRef ?? null, card: h.card, customerRef: h.customerRef });
+    await applyPaymentSucceeded(deps, paymentId, {
+      providerRef: h.paymentRef,
+      setupRef: h.setupRef,
+      chargeRef: h.payment?.chargeRef ?? null,
+      card: h.card,
+      customerRef: h.customerRef,
+      ...(h.payment ? { amountHuf: h.payment.amountHuf, currency: h.payment.currency ?? null } : {}),
+    });
     return;
   }
   if (h.status === 'expired') return markCancelled(deps, paymentId);
@@ -958,7 +1037,7 @@ export async function applyHosted(deps: Deps, paymentId: string, h: ProviderHost
 
 /** A PaymentIntent's state applied to our row (saved-card charges, 3DS return, reconcile). */
 export async function applyIntentState(deps: Deps, paymentId: string, st: ProviderPaymentState): Promise<void> {
-  if (st.status === 'succeeded') await applyPaymentSucceeded(deps, paymentId, { providerRef: st.providerRef, chargeRef: st.chargeRef, card: st.card, customerRef: st.customerRef });
+  if (st.status === 'succeeded') await applyPaymentSucceeded(deps, paymentId, { providerRef: st.providerRef, chargeRef: st.chargeRef, card: st.card, customerRef: st.customerRef, amountHuf: st.amountHuf, currency: st.currency ?? null });
   else if (st.status === 'failed') await applyChargeFailure(deps, paymentId, { kind: 'declined', providerRef: st.providerRef, code: st.failureCode ?? 'card_declined', declineCode: st.declineCode });
   else if (st.status === 'requires_auth') await applyChargeFailure(deps, paymentId, { kind: 'requires_auth', providerRef: st.providerRef, code: 'authentication_required' });
   else if (st.status === 'canceled') await markCancelledAny(deps, paymentId);
@@ -1076,41 +1155,80 @@ export async function chargeSubscriptionK29(deps: Deps, stale: SubRow): Promise<
     return 'charged';
   }
   const pm = sub.paymentMethodId ? await db.select().from(paymentMethods).where(eq(paymentMethods.id, sub.paymentMethodId)).limit(1).then((r) => r[0] ?? null) : null;
-  const card = pm?.status === 'aktiv' ? pm : await activeCardOf(db, cl.id, provName);
+  const candidate = pm?.status === 'aktiv' ? pm : await activeCardOf(db, cl.id, provName);
+  // k7c2 (round-1 A3): only a card saved under the client's card consent is charged off-session
+  const card = chargeableCard(candidate) ? candidate : null;
   if (!card || !card.stripePaymentMethodId) {
-    await registerFailure(deps, db, sub, 'NO_CARD');
+    await registerFailure(deps, db, sub, candidate ? 'NO_CONSENT' : 'NO_CARD');
     const { notifyOnce } = await import('./emlekezteto.js');
     await notifyOnce(deps, `pay:nocard:${sub.id}:${periodStart}`, { userId: cl.userId, kind: 'subscription_renewal_needed', link: '/fiok/elofizetes' });
     const { computeFlags } = await import('./flags.js');
     await computeFlags(deps, db, cl.id);
     return 'failed';
   }
+  // k7c2 B1: "Minden levonás előtt 3 nappal szóltok az összegről és a napról." – no off-session charge without a
+  // pre-debit notice for THIS period sent at least 3 days before. Missing → the charge moves to today + 3, with notice.
+  const noticed = (sub.predebitPeriod === periodStart || sub.predebitNotifiedFor === periodStart) && Boolean(sub.predebitNotifiedFor) && sub.predebitNotifiedFor! <= today;
+  if (!noticed) {
+    const chargeDay = addDays(today, PAYMENT_RULES.predebitDaysBefore);
+    const at = budapestLocalToUtc(chargeDay, '00:00');
+    await db
+      .update(subscriptions)
+      .set({ predebitNotifiedFor: chargeDay, predebitPeriod: periodStart, ...(sub.status === 'past_due' ? { nextRetryAt: at } : { nextChargeAt: at }), updatedAt: now })
+      .where(eq(subscriptions.id, sub.id));
+    const { notifyOnce } = await import('./emlekezteto.js');
+    await notifyOnce(deps, `rem:predebit:${sub.id}:${periodStart}:${chargeDay}`, {
+      userId: cl.userId,
+      kind: 'charge_upcoming',
+      params: { datum: huDayMonth(chargeDay), osszeg: fmtHuf(amountHuf), kartya: cardView(card, now).label, idoszak: periodText(periodStart, periodEnd) },
+      emailBodyKey: 'email.charge_upcoming.body',
+      link: '/fiok/elofizetes',
+    });
+    await audit(db, { action: 'subscription.predebit_moved', actorRole: 'system', targetType: 'subscription', targetId: sub.id, clientId: cl.id, details: { periodStart, chargeDay } });
+    return 'skipped';
+  }
   // an older PaymentIntent of this month that waits for the bank's confirmation can never succeed later
   await cancelOpenIntents(deps, sub.id, periodStart, { onlyAuth: true });
   const idem = `havidij:${sub.id}:${periodStart}:${today}`;
+  const customerRef = prov.name === 'stripe' ? (card.stripeCustomerId ?? (await customerRefOf(deps, db, prov, cl, u.email))) : null;
+  const params: SavedChargeParams = {
+    customerRef,
+    paymentMethodRef: card.stripePaymentMethodId,
+    amountHuf,
+    offSession: true,
+    description: CARD_CONSENT_UI.descriptionMonth.replace('{honap}', dotDate(periodStart).slice(0, 8)),
+    statementSuffix: deps.cfg.payment.stripe?.suffixHavi ?? STRIPE_STATEMENT_SUFFIXES.havi,
+    metadata: { payment_id: '', client_id: cl.id, subscription_id: sub.id, kind: 'havi', period_start: periodStart },
+  };
   const [row] = await db.insert(payments).values({ ...base, amountHuf, status: 'letrehozva', idempotencyKey: idem, paymentMethodId: card.id }).onConflictDoNothing().returning();
   if (!row) return 'skipped';
-  const customerRef = prov.name === 'stripe' ? (card.stripeCustomerId ?? (await customerRefOf(deps, db, prov, cl, u.email))) : null;
+  params.metadata = { ...params.metadata, payment_id: row.id };
+  await db.update(payments).set({ chargeParams: params }).where(eq(payments.id, row.id));
   let outcome: ChargeOutcome;
   try {
     outcome = await prov.chargeSaved({
       paymentId: row.id,
-      customerRef,
-      paymentMethodRef: card.stripePaymentMethodId,
-      amountHuf,
-      offSession: true,
-      description: CARD_CONSENT_UI.descriptionMonth.replace('{honap}', dotDate(periodStart).slice(0, 8)),
-      statementSuffix: deps.cfg.payment.stripe?.suffixHavi ?? STRIPE_STATEMENT_SUFFIXES.havi,
+      ...withCanonicalMeta(params),
       idempotencyKey: idem,
-      metadata: { payment_id: row.id, client_id: cl.id, subscription_id: sub.id, kind: 'havi', period_start: periodStart },
       ...(prov.name === 'demo' ? { demoScenario: demoScenarioOf(u.email) } : {}),
     });
   } catch (e) {
-    // not a card decline: our request was refused (bad request / auth) – stop, tell the admin, never blame the client
+    // not a card decline: our request was refused (bad request / auth / a detached card). k7c2 A5: it still counts as a
+    // failed month (past_due → grace → suspended → lock), the admins are told, and the client is asked for a card.
     const code = e instanceof ProviderError ? e.code : 'error';
     await db.update(payments).set({ status: 'sikertelen', failureCode: `hiba:${code}`.slice(0, 60), appliedAt: deps.now(), updatedAt: deps.now() }).where(eq(payments.id, row.id));
     await audit(db, { action: 'payment.provider_error', actorRole: 'system', targetType: 'payment', targetId: row.id, clientId: cl.id, details: { code } });
     log().error({ err: safeErr(e) }, 'monthly charge refused by the provider – admin alert');
+    const [fresh] = await db.select().from(subscriptions).where(eq(subscriptions.id, sub.id)).limit(1);
+    if (fresh) await registerFailure(deps, db, fresh, `hiba:${code}`);
+    const { notifyOnce } = await import('./emlekezteto.js');
+    await notifyOnce(deps, `pay:providererr:${sub.id}:${periodStart}`, { userId: cl.userId, kind: 'subscription_renewal_needed', link: '/fiok/elofizetes' });
+    if (!row.alertedAt) {
+      await db.update(payments).set({ alertedAt: deps.now() }).where(eq(payments.id, row.id));
+      await alertAdmins(deps, 'payment_disputed', cl.id, { osszeg: fmtHuf(amountHuf), hiba: String(code).slice(0, 60) }, '/admin/fizetesek', 'szolgaltato_hiba').catch(() => undefined);
+    }
+    const { computeFlags } = await import('./flags.js');
+    await computeFlags(deps, db, cl.id);
     return 'failed';
   }
   return applyOutcome(deps, row.id, outcome);
@@ -1163,44 +1281,60 @@ export async function startFeePaymentK29(
   if (i.useSavedCard && card?.stripePaymentMethodId) {
     const today = todayBudapest(deps.now());
     const idem = `${meta.initiated === 'admin' ? 'dij-admin' : 'dij'}:${ch.id}:${today}`;
-    const now = deps.now();
     const [existing] = await db.select().from(payments).where(eq(payments.idempotencyKey, idem)).limit(1);
     if (existing) return feeResultOf(deps, existing, ch.id, card);
+    // k7c2: every earlier attempt at this fee is closed (or found paid) before money moves again
+    await assertNoOtherFeeAttempt(deps, ch.id);
+    const now = deps.now();
     const id = randomUUID();
     const urls = backUrls(deps, { platform: i.platform, returnOrigin: i.returnOrigin, cel: 'dij', paymentId: id, withSessionTemplate: false });
-    await db.insert(payments).values({
-      id,
-      clientId: cl.id,
-      feeChargeId: ch.id,
-      kind: 'egyszeri',
-      provider: prov.name,
-      mode: modeOfProvider(prov),
+    const params: SavedChargeParams = {
+      customerRef: card.stripeCustomerId ?? (prov.name === 'stripe' ? await customerRefOf(deps, db, prov, cl, u.email) : null),
+      paymentMethodRef: card.stripePaymentMethodId,
       amountHuf: ch.amountHuf,
-      status: 'letrehozva',
-      initiated: meta.initiated ?? 'ugyfel',
       offSession: Boolean(meta.offSession),
-      attemptDay: today,
-      idempotencyKey: idem,
-      paymentMethodId: card.id,
-      platform: i.platform,
-      returnOrigin: urls.originKey,
-      cel: 'dij',
-      createdAt: now,
-      updatedAt: now,
-    });
+      ...(meta.offSession ? {} : { returnUrl: urls.success }),
+      description: `Adózz – ${label}`.slice(0, 120),
+      statementSuffix: suffix,
+      metadata: { payment_id: id, client_id: cl.id, kind: 'egyszeri', fee_charge_id: ch.id },
+    };
+    const [inserted] = await db
+      .insert(payments)
+      .values({
+        id,
+        clientId: cl.id,
+        feeChargeId: ch.id,
+        kind: 'egyszeri',
+        provider: prov.name,
+        mode: modeOfProvider(prov),
+        amountHuf: ch.amountHuf,
+        status: 'letrehozva',
+        initiated: meta.initiated ?? 'ugyfel',
+        offSession: Boolean(meta.offSession),
+        attemptDay: today,
+        idempotencyKey: idem,
+        paymentMethodId: card.id,
+        platform: i.platform,
+        returnOrigin: urls.originKey,
+        cel: 'dij',
+        chargeParams: params,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .onConflictDoNothing()
+      .returning({ id: payments.id });
+    if (!inserted) {
+      // a parallel tap of the same day won the insert: its result, never a second charge
+      const [winner] = await db.select().from(payments).where(eq(payments.idempotencyKey, idem)).limit(1);
+      if (winner) return feeResultOf(deps, winner, ch.id, card);
+      throw E.conflict('A fizetés már folyamatban van.');
+    }
     let outcome: ChargeOutcome;
     try {
       outcome = await prov.chargeSaved({
         paymentId: id,
-        customerRef: card.stripeCustomerId ?? (prov.name === 'stripe' ? await customerRefOf(deps, db, prov, cl, u.email) : null),
-        paymentMethodRef: card.stripePaymentMethodId,
-        amountHuf: ch.amountHuf,
-        offSession: Boolean(meta.offSession),
-        returnUrl: urls.success,
-        description: `Adózz – ${label}`.slice(0, 120),
-        statementSuffix: suffix,
+        ...withCanonicalMeta(params),
         idempotencyKey: idem,
-        metadata: { payment_id: id, client_id: cl.id, kind: 'egyszeri', fee_charge_id: ch.id },
         ...(prov.name === 'demo' ? { demoScenario: demoScenarioOf(u.email) } : {}),
       });
     } catch (e) {
@@ -1230,9 +1364,13 @@ export async function startFeePaymentK29(
   }
   if (meta.offSession) throw E.conflict('Az ügyfélnek nincs mentett kártyája.');
   const again = await reopenable(deps, db, cl.id, ['egyszeri'], { feeChargeId: ch.id });
-  if (again && again.provider === provName) {
-    const r = hostedResult(deps, again);
-    return { result: 'atiranyitas', chargeId: ch.id, paymentId: again.id, url: r.url, amountHuf: ch.amountHuf };
+  const reuse = again && again.provider === provName ? again : null;
+  // k7c2 B2/B3: "Másik kártyával" only when no other attempt of this fee can still take money (the open page of THIS
+  // fee is handed back instead of a new one)
+  await assertNoOtherFeeAttempt(deps, ch.id, { keepId: reuse?.id ?? null });
+  if (reuse) {
+    const r = hostedResult(deps, reuse);
+    return { result: 'atiranyitas', chargeId: ch.id, paymentId: reuse.id, url: r.url, amountHuf: ch.amountHuf };
   }
   const hosted = await openHosted(deps, prov, {
     cl,
@@ -1243,7 +1381,9 @@ export async function startFeePaymentK29(
     period: null,
     subscriptionId: null,
     feeChargeId: ch.id,
-    saveCard: !(await activeCardOf(db, cl.id)),
+    // k7c2 (round-1 A3): a one-off fee never saves the card (no setup_future_usage) – a card for the monthly charges
+    // is saved only together with the card consent (first month, card change, Fizesd ki)
+    saveCard: false,
     cel: 'dij',
     platform: i.platform,
     returnOrigin: i.returnOrigin,
@@ -1259,6 +1399,90 @@ export async function startFeePaymentK29(
 function feeResultOf(deps: Deps, p: PaymentRow, chargeId: string, card: PmRow): FeePayResultK29 {
   if (p.status === 'sikeres') return { result: 'sikeres', chargeId, paymentId: p.id, amountHuf: p.amountHuf, cardLabel: cardView(card, deps.now()).label };
   return { result: 'sikertelen', chargeId, paymentId: p.id, amountHuf: p.amountHuf, message: p.status === 'sikertelen' ? `${declineMessage(p.failureCode, p.declineCode)} Ma ezzel a kártyával már nem próbáljuk újra.` : PAYMENT_SCREEN_TEXTS.result.waiting, code: p.failureCode ?? p.status };
+}
+
+/**
+ * k7c2 (round-1 A1/A2, round-2 B2/B3/B2b): before a new attempt at a fee, every earlier attempt of the SAME fee that could
+ * still take money is closed at the provider (hosted page expired, PaymentIntent waiting for the bank cancelled) – or
+ * found paid, which is applied. Throws 409 when the fee got paid meanwhile, or when an attempt is still uncertain /
+ * processing (money may be moving: "addig ne fizesd ki újra" must hold on the server too). `keepId`: the open hosted
+ * page of this fee that is handed back instead of a new one.
+ */
+async function assertNoOtherFeeAttempt(deps: Deps, chargeId: string, o: { keepId?: string | null } = {}): Promise<void> {
+  const db = deps.db;
+  const now = deps.now();
+  const rows = await db
+    .select()
+    .from(payments)
+    .where(and(eq(payments.feeChargeId, chargeId), eq(payments.kind, 'egyszeri'), inArray(payments.status, ['letrehozva', 'hitelesites_kell', 'feldolgozas', 'bizonytalan'])));
+  let busy = false;
+  for (const r of rows) {
+    if (o.keepId && r.id === o.keepId) continue;
+    if (r.status === 'feldolgozas' || r.status === 'bizonytalan') {
+      busy = true;
+      continue;
+    }
+    try {
+      const prov = providerOf(deps, r.provider);
+      if (r.stripeCheckoutSessionId && r.status === 'letrehozva') {
+        // a hosted page of this fee
+        if (r.provider === 'stripe') {
+          await prov.expireHosted(r.stripeCheckoutSessionId);
+          const h = await prov.retrieveHosted(r.stripeCheckoutSessionId);
+          if (h.paid) {
+            await applyHosted(deps, r.id, h);
+            continue;
+          }
+          if (h.status === 'open') {
+            busy = true;
+            continue;
+          }
+        }
+        await markCancelled(deps, r.id);
+      } else if (r.stripePaymentIntentId) {
+        // a saved-card charge waiting for the bank's confirmation: cancelled at Stripe, unless it went through
+        await prov.cancelPending(r.stripePaymentIntentId);
+        const st = await prov.retrievePayment(r.stripePaymentIntentId);
+        if (st.status === 'succeeded' || st.status === 'processing') {
+          await applyIntentState(deps, r.id, { ...st });
+          if (st.status === 'processing') busy = true;
+          continue;
+        }
+        await markCancelledAny(deps, r.id);
+      } else if (r.status === 'hitelesites_kell') {
+        await markCancelledAny(deps, r.id);
+      } else if (r.createdAt.getTime() > now.getTime() - 10 * 60_000) {
+        // a saved-card request still on its way (a parallel tap)
+        busy = true;
+      } else if (r.provider === 'stripe') {
+        // an old attempt without any reference: find it by our id before anything new
+        const st = await prov.findPaymentByOurId(r.id);
+        if (st) {
+          await applyIntentState(deps, r.id, st);
+          if (st.status !== 'canceled' && st.status !== 'failed') busy = true;
+        } else await markCancelledAny(deps, r.id);
+      } else await markCancelledAny(deps, r.id);
+    } catch (e) {
+      log().warn({ err: safeErr(e) }, 'fee attempt settle failed');
+      busy = true;
+    }
+  }
+  const [ch] = await db.select({ status: feeCharges.status }).from(feeCharges).where(eq(feeCharges.id, chargeId)).limit(1);
+  if (ch && ch.status !== 'nyitott') throw E.conflict('Ezt a díjat már kifizetted.');
+  if (busy) throw new ApiError(409, 'fizetes_folyamatban', 'Az előző fizetésed még folyamatban van. Pár perc múlva megnézzük, sikerült-e – addig ne fizesd ki újra.');
+}
+
+/** k7c2 A4: refunds a 'duplikalt' row in full; a failure marks it refund-pending (the reconcile job retries). true = done. */
+async function refundDuplicate(deps: Deps, paymentId: string, reason: string): Promise<boolean> {
+  try {
+    await refundPayment(deps, { paymentId, amountHuf: -1, reason, byUserId: null, duplicate: true });
+    await deps.db.update(payments).set({ refundPendingAt: null }).where(eq(payments.id, paymentId));
+    return true;
+  } catch (e) {
+    log().error({ err: safeErr(e) }, 'duplicate refund failed – admin alert, the reconcile job retries');
+    await deps.db.update(payments).set({ refundPendingAt: deps.now() }).where(and(eq(payments.id, paymentId), isNull(payments.refundPendingAt)));
+    return false;
+  }
 }
 
 function feeSuffix(kind: FeeKind): string {
@@ -1291,31 +1515,67 @@ export async function refundPayment(
   i: { paymentId: string; amountHuf: number; reason: string; byUserId: string | null; duplicate?: boolean },
 ): Promise<{ refundedHuf: number; invoiceAction: 'sztorno' | 'helyesbito' | 'nincs' | 'hiba' }> {
   const db = deps.db;
-  const [p] = await db.select().from(payments).where(eq(payments.id, i.paymentId)).limit(1);
-  if (!p) throw E.notFound();
-  if (p.status !== 'sikeres' && !(i.duplicate && p.status === 'duplikalt')) throw E.conflict('Csak sikeres fizetést lehet visszatéríteni.');
-  const refundable = p.amountHuf - p.refundedHuf;
-  const amount = i.amountHuf === -1 ? refundable : i.amountHuf;
-  if (!Number.isInteger(amount) || amount <= 0 || amount > refundable) throw E.validation({ amountHuf: `Legfeljebb ${fmtHuf(refundable)} Ft téríthető vissza.` });
+  const [p0] = await db.select().from(payments).where(eq(payments.id, i.paymentId)).limit(1);
+  if (!p0) throw E.notFound();
+  // k7c2 A4: a duplicate whose automatic refund failed can be refunded from the console too
+  if (p0.status !== 'sikeres' && p0.status !== 'duplikalt') throw E.conflict('Csak sikeres fizetést lehet visszatéríteni.');
   if (i.reason.trim().length < 5 && !i.duplicate) throw E.validation({ reason: 'Írd le röviden az okát (legalább 5 karakter).' });
-  const n = (p.refunds?.length ?? 0) + 1;
-  const prov = providerOf(deps, p.provider);
-  if (p.provider === 'stripe' && !p.stripePaymentIntentId) throw E.conflict('Ehhez a fizetéshez nincs Stripe-azonosító.');
-  const res = await prov
-    .refund({ providerRef: p.stripePaymentIntentId ?? `demo_${p.id}`, amountHuf: amount, idempotencyKey: `${i.duplicate ? 'refund:dup' : 'refund'}:${p.id}${i.duplicate ? '' : `:${n}`}`, reason: i.reason.slice(0, 200), metadata: { payment_id: p.id, ...(i.byUserId ? { by_user: i.byUserId } : {}) } })
-    .catch((e: unknown) => {
-      log().warn({ err: safeErr(e) }, 'refund failed');
-      throw E.upstream('A visszatérítés most nem sikerült. Próbáld újra pár perc múlva.');
-    });
-  if (res.status === 'failed') throw E.upstream('A Stripe nem fogadta el a visszatérítést.');
+  const prov = providerOf(deps, p0.provider);
+  if (p0.provider === 'stripe' && !p0.stripePaymentIntentId) throw E.conflict('Ehhez a fizetéshez nincs Stripe-azonosító.');
+  // k7c2 A9/B6: the refund is recorded BEFORE Stripe is called (row locked), so the charge.refunded webhook of our own
+  // refund – even when it arrives first – finds nothing new and never tells the client twice or alerts the admin.
   const now = deps.now();
+  let n = 0;
+  let amount = 0;
+  let p = p0;
+  await db.transaction(async (tx) => {
+    const [cur] = await tx.select().from(payments).where(eq(payments.id, i.paymentId)).limit(1).for('update');
+    if (!cur) throw E.notFound();
+    const refundable = cur.amountHuf - cur.refundedHuf;
+    amount = i.amountHuf === -1 ? refundable : i.amountHuf;
+    if (!Number.isInteger(amount) || amount <= 0 || amount > refundable) throw E.validation({ amountHuf: `Legfeljebb ${fmtHuf(refundable)} Ft téríthető vissza.` });
+    n = (cur.refunds?.length ?? 0) + 1;
+    await tx
+      .update(payments)
+      .set({ refundedHuf: cur.refundedHuf + amount, refunds: [...(cur.refunds ?? []), { n, amountHuf: amount, refundRef: null, status: 'folyamatban', reason: i.reason.slice(0, 200), by: i.byUserId, at: now.toISOString() }], updatedAt: now })
+      .where(eq(payments.id, cur.id));
+    p = cur;
+  });
+  const undo = async () => {
+    await db.transaction(async (tx) => {
+      const [cur] = await tx.select().from(payments).where(eq(payments.id, p.id)).limit(1).for('update');
+      if (!cur) return;
+      await tx
+        .update(payments)
+        .set({ refundedHuf: Math.max(0, cur.refundedHuf - amount), refunds: (cur.refunds ?? []).filter((r) => !(r.n === n && r.status === 'folyamatban')), updatedAt: deps.now() })
+        .where(eq(payments.id, cur.id));
+    });
+  };
+  const isDup = Boolean(i.duplicate);
+  let res: { refundRef: string; status: 'succeeded' | 'pending' | 'failed' };
+  try {
+    res = await prov.refund({ providerRef: p.stripePaymentIntentId ?? `demo_${p.id}`, amountHuf: amount, idempotencyKey: `${isDup ? 'refund:dup' : 'refund'}:${p.id}${isDup ? '' : `:${n}`}`, reason: i.reason.slice(0, 200), metadata: { payment_id: p.id, ...(i.byUserId ? { by_user: i.byUserId } : {}) } });
+  } catch (e) {
+    log().warn({ err: safeErr(e) }, 'refund failed');
+    await undo();
+    throw E.upstream('A visszatérítés most nem sikerült. Próbáld újra pár perc múlva.');
+  }
+  if (res.status === 'failed') {
+    await undo();
+    throw E.upstream('A Stripe nem fogadta el a visszatérítést.');
+  }
   const total = p.refundedHuf + amount;
-  await db
-    .update(payments)
-    .set({ refundedHuf: total, refunds: [...(p.refunds ?? []), { n, amountHuf: amount, refundRef: res.refundRef, status: res.status, reason: i.reason.slice(0, 200), by: i.byUserId, at: now.toISOString() }], updatedAt: now })
-    .where(eq(payments.id, p.id));
+  await db.transaction(async (tx) => {
+    const [cur] = await tx.select().from(payments).where(eq(payments.id, p.id)).limit(1).for('update');
+    if (!cur) return;
+    await tx
+      .update(payments)
+      .set({ refunds: (cur.refunds ?? []).map((r) => (r.n === n && r.status === 'folyamatban' ? { ...r, refundRef: res.refundRef, status: res.status } : r)), ...(p.status === 'duplikalt' ? { refundPendingAt: null } : {}), updatedAt: deps.now() })
+      .where(eq(payments.id, cur.id));
+  });
   const invoiceAction = await invoiceActionForRefund(deps, p, amount, total, n, i.reason);
-  if (p.kind === 'egyszeri' && p.feeChargeId && total >= p.amountHuf) {
+  // (a duplicate's refund never touches the fee: the fee stays paid by the other payment)
+  if (p.kind === 'egyszeri' && p.feeChargeId && total >= p.amountHuf && p.status !== 'duplikalt') {
     await db.update(feeCharges).set({ status: 'visszaterites_megtortent', refundNote: i.reason.slice(0, 500) }).where(and(eq(feeCharges.id, p.feeChargeId), inArray(feeCharges.status, ['fizetve', 'visszaterites_kell'])));
   }
   const [cl] = await db.select({ userId: clients.userId }).from(clients).where(eq(clients.id, p.clientId)).limit(1);
@@ -1387,15 +1647,26 @@ export async function handleStripeWebhook(deps: Deps, raw: string, headers: Reco
     return { status: 200, body: { ignored: true } };
   }
   await db.insert(stripeEvents).values({ id: ev.id, type: ev.type, mode: ev.livemode ? 'live' : 'test', stripeCreatedAt: ev.created, receivedAt: deps.now() }).onConflictDoNothing();
-  const [row] = await db.select().from(stripeEvents).where(eq(stripeEvents.id, ev.id)).limit(1);
-  if (row?.processedAt) return { status: 200, body: { received: true, duplicate: true } };
+  // k7c2 A9/B6: one delivery works on an event at a time – claimed atomically (a claim older than 5 minutes is stale)
+  const staleClaim = new Date(deps.now().getTime() - 5 * 60_000);
+  const [claimed] = await db
+    .update(stripeEvents)
+    .set({ claimedAt: deps.now() })
+    .where(and(eq(stripeEvents.id, ev.id), isNull(stripeEvents.processedAt), or(isNull(stripeEvents.claimedAt), lt(stripeEvents.claimedAt, staleClaim))))
+    .returning({ id: stripeEvents.id });
+  if (!claimed) {
+    const [row] = await db.select().from(stripeEvents).where(eq(stripeEvents.id, ev.id)).limit(1);
+    if (row?.processedAt) return { status: 200, body: { received: true, duplicate: true } };
+    // another delivery is processing it right now: Stripe retries this one later (then it is a plain duplicate)
+    return { status: 500, body: { error: 'in_progress' } };
+  }
   try {
     await processStripeEvent(deps, prov, ev.type, ev.objectId, ev.object);
-    await db.update(stripeEvents).set({ processedAt: deps.now(), attempts: sql`${stripeEvents.attempts} + 1`, lastError: null }).where(eq(stripeEvents.id, ev.id));
+    await db.update(stripeEvents).set({ processedAt: deps.now(), claimedAt: null, attempts: sql`${stripeEvents.attempts} + 1`, lastError: null }).where(eq(stripeEvents.id, ev.id));
     await db.insert(systemState).values({ key: 'stripe.last_webhook', value: { at: deps.now().toISOString(), type: ev.type } }).onConflictDoUpdate({ target: systemState.key, set: { value: { at: deps.now().toISOString(), type: ev.type }, updatedAt: deps.now() } });
     return { status: 200, body: { received: true } };
   } catch (e) {
-    await db.update(stripeEvents).set({ attempts: sql`${stripeEvents.attempts} + 1`, lastError: safeStripeError(e).slice(0, 200) }).where(eq(stripeEvents.id, ev.id));
+    await db.update(stripeEvents).set({ claimedAt: null, attempts: sql`${stripeEvents.attempts} + 1`, lastError: safeStripeError(e).slice(0, 200) }).where(eq(stripeEvents.id, ev.id));
     log().error({ err: safeErr(e), type: ev.type }, 'stripe webhook processing failed');
     return { status: 500, body: { error: 'processing_failed' } };
   }
@@ -1439,7 +1710,7 @@ async function processStripeEvent(deps: Deps, prov: PaymentProvider, type: strin
       const p = await rowByRefs(db, { intent: objectId, paymentId: metaPid });
       if (!p) return;
       const st = await prov.retrievePayment(objectId);
-      if (st.status === 'succeeded') await applyPaymentSucceeded(deps, p.id, { providerRef: st.providerRef, chargeRef: st.chargeRef, card: st.card, customerRef: st.customerRef });
+      if (st.status === 'succeeded') await applyPaymentSucceeded(deps, p.id, { providerRef: st.providerRef, chargeRef: st.chargeRef, card: st.card, customerRef: st.customerRef, amountHuf: st.amountHuf, currency: st.currency ?? null });
       return;
     }
     case 'payment_intent.payment_failed': {
@@ -1463,6 +1734,46 @@ async function processStripeEvent(deps: Deps, prov: PaymentProvider, type: strin
       await db.update(payments).set({ disputeStatus: String(obj.status ?? 'needs_response').slice(0, 40), updatedAt: deps.now() }).where(eq(payments.id, p.id));
       await audit(db, { action: 'payment.dispute', actorRole: 'system', targetType: 'payment', targetId: p.id, clientId: p.clientId, details: { status: obj.status ?? null } });
       await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek');
+      return;
+    }
+    // k7c2: a refund that failed later (the money did not go back) – our refunded sum follows Stripe's, the admin acts
+    case 'refund.failed':
+    case 'charge.refund.updated': {
+      if (type === 'charge.refund.updated' && obj.status !== 'failed' && obj.status !== 'canceled') return;
+      const pi = (obj.payment_intent as string | null) ?? null;
+      const p = await rowByRefs(db, { intent: pi });
+      if (!p || !pi) return;
+      const st = await prov.retrievePayment(pi);
+      if (st.refundedHuf >= p.refundedHuf) return;
+      const back = p.refundedHuf - st.refundedHuf;
+      await db
+        .update(payments)
+        .set({ refundedHuf: st.refundedHuf, refunds: (p.refunds ?? []).map((r) => (r.refundRef === objectId ? { ...r, status: 'failed' } : r)), updatedAt: deps.now() })
+        .where(eq(payments.id, p.id));
+      await audit(db, { action: 'payment.refund_failed', actorRole: 'system', targetType: 'payment', targetId: p.id, clientId: p.clientId, details: { amountHuf: back } });
+      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(back) }, '/admin/fizetesek', 'visszaterites_hiba');
+      return;
+    }
+    // k7c2: a lost dispute = the money went back to the client → storno / corrective invoice + admin alert
+    case 'charge.dispute.closed': {
+      const pi = (obj.payment_intent as string | null) ?? null;
+      const p = await rowByRefs(db, { intent: pi });
+      if (!p) return;
+      const status = String(obj.status ?? '').slice(0, 40);
+      await db.update(payments).set({ disputeStatus: status || 'closed', updatedAt: deps.now() }).where(eq(payments.id, p.id));
+      await audit(db, { action: 'payment.dispute_closed', actorRole: 'system', targetType: 'payment', targetId: p.id, clientId: p.clientId, details: { status } });
+      if (status !== 'lost') return;
+      const lostHuf = Math.min(p.amountHuf - p.refundedHuf, typeof obj.amount === 'number' ? Math.round(obj.amount / 100) : p.amountHuf);
+      if (lostHuf > 0 && !(p.refunds ?? []).some((r) => r.refundRef === objectId)) {
+        const n = (p.refunds?.length ?? 0) + 1;
+        const total = p.refundedHuf + lostHuf;
+        await db
+          .update(payments)
+          .set({ refundedHuf: total, refunds: [...(p.refunds ?? []), { n, amountHuf: lostHuf, refundRef: objectId, status: 'dispute_lost', reason: 'Vitatott terhelés (elvesztve)', by: null, at: deps.now().toISOString() }], updatedAt: deps.now() })
+          .where(eq(payments.id, p.id));
+        await invoiceActionForRefund(deps, p, lostHuf, total, n, 'Vitatott terhelés');
+      }
+      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(lostHuf > 0 ? lostHuf : p.amountHuf) }, '/admin/fizetesek', 'vita_elveszett');
       return;
     }
     case 'payment_method.automatically_updated': {
@@ -1522,23 +1833,18 @@ export async function jobPaymentsReconcile(deps: Deps): Promise<Record<string, n
         await applyIntentState(deps, p.id, await prov.retrievePayment(p.stripePaymentIntentId));
         out.applied++;
       } else if (p.status === 'bizonytalan') {
-        if (p.attemptDay === today && p.paymentMethodId) {
-          // same day: the SAME idempotency key → Stripe returns the original result
-          const [pm] = await db.select().from(paymentMethods).where(eq(paymentMethods.id, p.paymentMethodId)).limit(1);
-          if (pm?.stripePaymentMethodId) {
-            const outcome = await prov.chargeSaved({
-              paymentId: p.id,
-              customerRef: pm.stripeCustomerId,
-              paymentMethodRef: pm.stripePaymentMethodId,
-              amountHuf: p.amountHuf,
-              offSession: p.offSession,
-              description: CARD_CONSENT_UI.description,
-              statementSuffix: deps.cfg.payment.stripe?.suffixHavi ?? STRIPE_STATEMENT_SUFFIXES.havi,
-              idempotencyKey: p.idempotencyKey,
-              metadata: { payment_id: p.id, client_id: p.clientId, kind: p.kind, ...(p.subscriptionId ? { subscription_id: p.subscriptionId } : {}), ...(p.periodStart ? { period_start: p.periodStart } : {}) },
-            });
-            await applyOutcome(deps, p.id, outcome);
-            out.retried++;
+        if (p.attemptDay === today && p.chargeParams) {
+          // same day: the SAME idempotency key with the SAME parameters (k7c2 A7: stored at the first send, byte-identical
+          // – another description made Stripe answer StripeIdempotencyError) → Stripe returns the original result
+          const outcome = await prov.chargeSaved({ paymentId: p.id, ...withCanonicalMeta(p.chargeParams), idempotencyKey: p.idempotencyKey });
+          await applyOutcome(deps, p.id, outcome);
+          out.retried++;
+        } else if (p.attemptDay === today) {
+          // an older row without stored parameters: never re-send with guessed ones – search by our id
+          const st = await prov.findPaymentByOurId(p.id);
+          if (st) {
+            await applyIntentState(deps, p.id, st);
+            out.applied++;
           }
         } else {
           // a later day: find it by our id before any new attempt
@@ -1552,6 +1858,19 @@ export async function jobPaymentsReconcile(deps: Deps): Promise<Record<string, n
       out.errors++;
       log().warn({ err: safeErr(e) }, 'reconcile row failed');
     }
+  }
+  // k7c2 A4: duplicates whose automatic refund failed – tried again every run until done (the admin was told)
+  const pending = await db.select().from(payments).where(and(eq(payments.status, 'duplikalt'), sql`${payments.refundPendingAt} is not null`)).limit(PAYMENT_RULES.reconcileBatch);
+  for (const p of pending) {
+    if (p.refundedHuf >= p.amountHuf) {
+      await db.update(payments).set({ refundPendingAt: null }).where(eq(payments.id, p.id));
+      continue;
+    }
+    if (await refundDuplicate(deps, p.id, p.kind === 'egyszeri' ? 'Dupla fizetés ugyanarra a díjra' : 'Dupla fizetés ugyanarra a hónapra')) {
+      out.retried++;
+      await audit(db, { action: 'payment.duplicate_refunded', actorRole: 'system', targetType: 'payment', targetId: p.id, clientId: p.clientId, details: { amountHuf: p.amountHuf, late: true } });
+      await alertAdmins(deps, 'payment_disputed', p.clientId, { osszeg: fmtHuf(p.amountHuf) }, '/admin/fizetesek', p.kind === 'egyszeri' ? 'dupla_dij' : 'dupla').catch(() => undefined);
+    } else out.errors++;
   }
   const [stuck] = await db.select({ n: sql<number>`count(*)::int` }).from(stripeEvents).where(and(isNull(stripeEvents.processedAt), sql`${stripeEvents.attempts} >= ${PAYMENT_RULES.stuckEventAttempts}`));
   out.stuckEvents = Number(stuck?.n ?? 0);
@@ -1578,7 +1897,7 @@ export async function jobPredebit(deps: Deps): Promise<Record<string, number>> {
     if (!cl || cl.terminated) continue;
     const periodStart = s.currentPeriodEnd ?? target;
     const { amountHuf } = await effectiveMonthlyAmount(deps, db, cl.id, periodStart);
-    await db.update(subscriptions).set({ predebitNotifiedFor: target }).where(eq(subscriptions.id, s.id));
+    await db.update(subscriptions).set({ predebitNotifiedFor: target, predebitPeriod: periodStart }).where(eq(subscriptions.id, s.id));
     if (amountHuf === 0) {
       out.free++;
       continue;

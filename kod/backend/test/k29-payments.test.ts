@@ -63,6 +63,15 @@ async function consentOf(token: string, purpose = 'subscribe') {
   return r.body as { version: string; sha256: string; text: string; amountNowHuf: number; period: { start: string; end: string } | null };
 }
 
+/** k7c2: the pre-debit notice goes out 3 days before (the 10:00 job), then the scheduler may charge on the day. */
+async function atChargeDay(day: string) {
+  const d = new Date(`${day}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - 3);
+  h.clock.set(`${d.toISOString().slice(0, 10)}T09:30:00Z`);
+  await jobPredebit(h.deps);
+  h.clock.set(`${day}T09:00:00Z`);
+}
+
 /** consent → start → the fake Stripe page completes → result polling applies it. */
 async function subscribed(email: string, last4 = '4242') {
   const c = await activeClient(email);
@@ -209,7 +218,7 @@ describe('monthly charges by our scheduler', () => {
   it('charges at period end with a per-day idempotency key; one attempt per day; period extended; invoice', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('havi@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     await runBillingJob(h.deps);
     const rows = await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')));
     expect(rows).toHaveLength(1);
@@ -225,7 +234,7 @@ describe('monthly charges by our scheduler', () => {
   it('declined (insufficient funds) → past_due, retries +1/+3/+7, "Nem sikerült levonni" once; Fizesd ki → active', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('elutasit@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     fake.scenarios.push('insufficient');
     await runBillingJob(h.deps);
     const [sub] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, c.clientId));
@@ -267,7 +276,7 @@ describe('monthly charges by our scheduler', () => {
   it('authentication_required → hitelesites_kell → "Erősítsd meg"; no new attempt the same day', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('auth@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     fake.scenarios.push('auth');
     await runBillingJob(h.deps);
     const [p] = await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')));
@@ -289,7 +298,7 @@ describe('monthly charges by our scheduler', () => {
   it('a network error → bizonytalan; the reconcile job re-sends the SAME key the same day and applies the original result', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('bizonytalan@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     fake.scenarios.push('uncertain');
     await runBillingJob(h.deps);
     const [p] = await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')));
@@ -305,7 +314,7 @@ describe('monthly charges by our scheduler', () => {
   it('a second success for the same month is refunded automatically (duplikalt)', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('dupla@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     await runBillingJob(h.deps); // the renewal succeeded …
     const [sub] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, c.clientId));
     // … and an older Fizesd ki page of the same month is paid too (simulated: a row for the same period succeeds)
@@ -336,7 +345,7 @@ describe('monthly charges by our scheduler', () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('ingyenes@demo.kezjegy.test');
     await h.deps.db.insert(clientPriceOverrides).values({ clientId: c.clientId, kind: 'ingyenes_honap', months: 1, fromPeriod: '2026-12-20', reason: 'teszt' });
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     const before = fake.calls.filter((x) => x.op === 'charge').length;
     await runBillingJob(h.deps);
     expect(fake.calls.filter((x) => x.op === 'charge').length).toBe(before);
@@ -345,31 +354,35 @@ describe('monthly charges by our scheduler', () => {
     expect(await h.deps.db.select().from(feeInvoices).where(eq(feeInvoices.paymentId, p!.id))).toHaveLength(0);
     // the next month: paused → 2 999 Ft
     await h.deps.db.insert(subscriptionPauses).values({ clientId: c.clientId, from: '2027-01-01', source: 'admin' });
-    h.clock.set('2027-01-20T09:00:00Z');
+    await atChargeDay('2027-01-20');
     await runBillingJob(h.deps);
     const rows = await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')));
     expect(rows.find((r) => r.periodStart === '2027-01-20')).toMatchObject({ amountHuf: 2_999, status: 'sikeres' });
     const inv = (await h.deps.db.select().from(feeInvoices).where(eq(feeInvoices.clientId, c.clientId))).find((i) => i.amountHuf === 2_999);
-    expect(inv!.line?.megnevezes).toBe('Könyvelési szolgáltatás – rendelkezésre állási díj (2027. január)');
+    expect(inv!.line?.megnevezes).toBe('Könyvelési szolgáltatás – szüneteltetési díj (2027. január)');
     // own price (not during a pause): closes the pause, 15 000 Ft from February
     await h.deps.db.update(subscriptionPauses).set({ to: '2027-01-31' }).where(eq(subscriptionPauses.clientId, c.clientId));
     await h.deps.db.insert(clientPriceOverrides).values({ clientId: c.clientId, kind: 'egyedi_ar', amountHuf: 15_000, fromPeriod: '2027-02-01', reason: 'teszt' });
-    h.clock.set('2027-02-20T09:00:00Z');
+    await atChargeDay('2027-02-20');
     await runBillingJob(h.deps);
     const feb = (await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')))).find((r) => r.periodStart === '2027-02-20');
     expect(feb!.amountHuf).toBe(15_000);
   });
 
-  it('a provider refusal of OUR request (bad request) never blames the client', async () => {
+  it('k7c2 A5: a provider refusal of OUR request (bad request) counts as a failed month (past_due → lock), the admin is alerted, the client is asked for a card', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('hibas-keres@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     fake.scenarios.push('invalid');
     await runBillingJob(h.deps);
     const [sub] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, c.clientId));
-    expect(sub!.failedAttempts).toBe(0);
+    expect(sub).toMatchObject({ status: 'past_due', failedAttempts: 1 });
+    expect(sub!.graceUntil).toBe('2027-01-03');
     const [p] = await h.deps.db.select().from(payments).where(and(eq(payments.clientId, c.clientId), eq(payments.kind, 'havi')));
     expect(p!.failureCode).toMatch(/^hiba:/);
+    expect(p!.alertedAt).not.toBeNull();
+    const asked = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, c.userId), eq(notifications.kind, 'subscription_renewal_needed')));
+    expect(asked.length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -392,7 +405,7 @@ describe('reminders', () => {
   it('suspension warning at grace − 5 days, once; then suspended → lock; payment lifts the lock at once', async () => {
     h.clock.set('2026-11-20T09:00:00Z');
     const c = await subscribed('felfugg@demo.kezjegy.test');
-    h.clock.set('2026-12-20T09:00:00Z');
+    await atChargeDay('2026-12-20');
     fake.scenarios.push('decline', 'decline', 'decline', 'decline');
     await runBillingJob(h.deps); // graceUntil 2027-01-03
     h.clock.set('2026-12-29T09:30:00Z');
@@ -402,6 +415,8 @@ describe('reminders', () => {
     const [w] = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, c.userId), eq(notifications.kind, 'payment_action_needed'), eq(notifications.title, '5 nap múlva szünetel a könyvelésed')));
     expect(w!.body).toContain('január 2-ig');
     h.clock.set('2027-01-03T09:00:00Z');
+    // the fake's scenario queue is global: every retry due this morning (other test clients too) declines
+    fake.scenarios.push(...Array<'decline'>(40).fill('decline'));
     await runBillingJob(h.deps);
     const { computeServiceLock } = await import('../src/services/zarolas.js');
     const lock = await computeServiceLock(h.deps, c.clientId);

@@ -132,8 +132,9 @@ export default function Fiok() {
       <Szakasz ikon="szamlaszam" cim="Szolgáltatás" />
       <Lap>
         <Sor elso ikon="szamlaszam" cim="Előfizetés" al={eloAl} onPress={() => router.push('/fiok/elofizetes')} />
-        {/* S22: a díjszámlák és a határidők a bekötés után jelennek meg (k3_kor2 walkthrough 20). */}
-        {bekotes ? null : <Sor ikon="irat" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />}
+        {/* k7c2: a díjak és számlák sora a bekötés alatt is látszik – aki már fizetett, itt találja a számláját
+            (a fizetés eredménye ide küldi). A határidők a bekötés után jelennek meg (k3_kor2 walkthrough 20). */}
+        <Sor ikon="irat" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />
         <Sor ikon="igazolas" cim="Igazolások" al="Jövedelem- és adóigazolás, KOMA, kivonat" onPress={() => router.push('/igazolas')} />
         <Sor ikon="kivonat" cim="Bevételi kimutatás" al="A bevételeid havonta, PDF-ben" onPress={() => router.push('/kimutatas')} />
         <Sor ikon="kerdezek" cim="Kérések" al="Adatváltozás, kérdés" onPress={() => router.push('/keresek')} />

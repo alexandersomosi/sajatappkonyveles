@@ -47,6 +47,10 @@ copyFileSync(join(KOD, 'app/assets/icon.png'), join(KI, 'kepek', 'jel.png'));
 copyFileSync(join(KOD, 'app/assets/textura/rozetta@2x.png'), join(KI, 'kepek', 'rozetta.png'));
 copyFileSync(join(KOD, 'app/assets/favicon.png'), join(KI, 'favicon.png'));
 copyFileSync(join(ITT, 'stilus.css'), join(KI, 'stilus.css'));
+// E-mail-aláírás logója (tulaj 11-20): https://adozz.hu/email/logo_alairas@2x.png – a Lark aláírás erre hivatkozik, ne vesszen el.
+mkdirSync(join(KI, 'email'), { recursive: true });
+copyFileSync(join(ITT, 'email/logo_alairas@2x.png'), join(KI, 'email', 'logo_alairas@2x.png'));
+copyFileSync(join(ITT, 'email/logo_feher@2x.png'), join(KI, 'email', 'logo_feher@2x.png')); // rendszerlevelek fejléce (dizajn/email/sablon.html)
 
 const ikon = (k) => `<img class="i3" src="kepek/${k}_28.png" width="28" height="28" alt="">`;
 const MIT = [

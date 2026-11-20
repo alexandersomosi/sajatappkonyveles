@@ -72,7 +72,18 @@ Write-Host '6) Díjszámla: Számlázz.hu Számla Agent (amíg nincs: DEMO díjb
 Write-Host '   FIGYELEM: az ÉLES Számla Agent kulcs első számlája elindítja a fizetős csomagot – csak élesítéskor (APP_ENV=production).' -ForegroundColor Yellow
 $ertekek['INVOICE_MODE'] = Read-Host '   Mód: szamlazzhu vagy demo'
 $ertekek['SZAMLAZZHU_ACCOUNT'] = Read-Host '   Fiók: teszt (Tesztüzem) vagy eles (Somosi Kft.)'
-$ertekek['SZAMLAZZHU_AGENT_KEY'] = Read-Secret '   Számla Agent kulcs (nem látszik)'
+# k7c2: a kulcs a FIÓKHOZ tartozik. A teszt fiók kulcsa külön változóba megy (SZAMLAZZHU_TEST_AGENT_KEY), így a szerveren
+# lévő éles kulcs soha nem futhat "teszt" címkével. Fiók megadásakor a kulcsot is ugyanebben a futásban kérjük.
+$fiok = if ($ertekek['SZAMLAZZHU_ACCOUNT']) { $ertekek['SZAMLAZZHU_ACCOUNT'].Trim().ToLower() } else { '' }
+$ertekek['SZAMLAZZHU_ACCOUNT'] = $fiok
+if ($fiok -eq 'teszt') {
+    $tk = Read-Secret '   A TESZT fiók Számla Agent kulcsa (nem látszik; Enter = a gépen tárolt teszt kulcs)'
+    if ($null -eq $tk -or $tk.Trim() -eq '') { $tk = [Environment]::GetEnvironmentVariable('SZAMLAZZHU_TEST_AGENT_KEY', 'User') }
+    $ertekek['SZAMLAZZHU_TEST_AGENT_KEY'] = $tk
+    $tk = $null
+} elseif ($fiok -eq 'eles') {
+    $ertekek['SZAMLAZZHU_AGENT_KEY'] = Read-Secret '   Az ÉLES (Somosi Kft.) Számla Agent kulcsa (nem látszik)'
+}
 
 Write-Host '7) Push értesítés (Expo; kell hozzá EAS projekt + FCM/APNs)'
 $ertekek['PUSH_MODE'] = Read-Host '   Mód: expo (valódi küldés) vagy demo'
@@ -107,6 +118,9 @@ if ((V 'NAV_LOOKUP_TAX_NUMBER') -and ((V 'NAV_LOOKUP_TAX_NUMBER') -notmatch '^\d
 if ((V 'INVOICE_MODE') -and ((V 'INVOICE_MODE') -notin @('demo', 'szamlazzhu'))) { $hibak += 'INVOICE_MODE: szamlazzhu vagy demo' }
 if ((V 'SZAMLAZZHU_ACCOUNT') -and ((V 'SZAMLAZZHU_ACCOUNT') -notin @('teszt', 'eles'))) { $hibak += 'SZAMLAZZHU_ACCOUNT: teszt vagy eles' }
 if ((V 'INVOICE_MODE') -eq 'szamlazzhu' -and -not (V 'SZAMLAZZHU_ACCOUNT')) { $hibak += 'INVOICE_MODE=szamlazzhu mellé a SZAMLAZZHU_ACCOUNT (teszt vagy eles) is kell' }
+if ((V 'SZAMLAZZHU_ACCOUNT') -eq 'teszt' -and -not (V 'SZAMLAZZHU_TEST_AGENT_KEY')) { $hibak += 'A teszt fiókhoz a TESZT Számla Agent kulcs kell (nem adtad meg, és a gépen sincs SZAMLAZZHU_TEST_AGENT_KEY)' }
+if ((V 'SZAMLAZZHU_ACCOUNT') -eq 'eles' -and -not (V 'SZAMLAZZHU_AGENT_KEY')) { $hibak += 'Az éles fiókhoz ugyanebben a futásban add meg az éles Számla Agent kulcsot' }
+if ((V 'INVOICE_MODE') -eq 'szamlazzhu' -and (V 'APP_ENV') -ne 'production' -and (V 'SZAMLAZZHU_ACCOUNT') -ne 'teszt') { $hibak += 'DEMO szerveren a Számlázz.hu csak a teszt fiókkal (Fiók: teszt) kapcsolható be' }
 if ((V 'PUSH_MODE') -and ((V 'PUSH_MODE') -notin @('demo', 'expo'))) { $hibak += 'PUSH_MODE: demo vagy expo' }
 if ((V 'APP_ENV') -and ((V 'APP_ENV') -notin @('demo', 'production'))) { $hibak += 'APP_ENV: demo vagy production' }
 if ((V 'STAFF_TOTP_REQUIRED') -and ((V 'STAFF_TOTP_REQUIRED') -notin @('true', 'false'))) { $hibak += 'STAFF_TOTP_REQUIRED: true vagy false' }
@@ -181,6 +195,11 @@ eles_most=0; grep -qx 'APP_ENV=production' "$uj" && eles_most=1
 # Az ELES Szamlazz.hu fiok (elso szamlaja elinditja a fizetos csomagot) es az ELES Stripe-kulcs csak eles szerverre.
 if grep -qx 'SZAMLAZZHU_ACCOUNT=eles' "$uj" && [ $eles_a_szerveren = 0 ] && [ $eles_most = 0 ]; then
   echo "MEGALLTAM, nem valtoztattam semmit: az eles Szamlazz.hu fiok csak APP_ENV=production mellett allithato be."
+  rm -f "$uj" "$nyuj"; exit 0
+fi
+# k7c2: DEMO szerveren a Szamlazz.hu csak a TESZT fiok kulcsaval (SZAMLAZZHU_TEST_AGENT_KEY, ugyanebben a futasban)
+if grep -qx 'INVOICE_MODE=szamlazzhu' "$uj" && [ $eles_a_szerveren = 0 ] && [ $eles_most = 0 ] && ! grep -q '^SZAMLAZZHU_TEST_AGENT_KEY=.' "$uj"; then
+  echo "MEGALLTAM, nem valtoztattam semmit: DEMO szerveren a Szamlazz.hu csak a TESZT fiok kulcsaval kapcsolhato be (Fiok: teszt)."
   rm -f "$uj" "$nyuj"; exit 0
 fi
 if grep -qE '^STRIPE_SECRET_KEY=(sk|rk)_live_' "$uj" && [ $eles_a_szerveren = 0 ] && [ $eles_most = 0 ]; then

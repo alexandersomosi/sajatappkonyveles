@@ -549,14 +549,14 @@ export const CLOSING_TEXTS = {
   subscriptionClosed: 'Lezártuk a vállalkozásod ügyeit. Az előfizetésed {datum}-ig él, utána nem vonunk le többet.',
 } as const;
 /** "Ezek jönnek utána" rows of the guide (who = '{firstName} intézi' chip). */
-export const CLOSING_AFTER_ROWS: readonly { key: string; text: string; when?: 'kata' | 'atalany' }[] = [
+export const CLOSING_AFTER_ROWS: readonly { key: string; text: string; when?: 'kata' | 'atalany'; who?: 'te' | 'nav' }[] = [
   { key: 'jarulek', text: 'Negyedéves járulékbevallás a megszűnés negyedévéről – a negyedév utáni hónap 12-éig.', when: 'atalany' },
   { key: 'szja', text: 'Az idei SZJA-bevallás az átalányadós lapokkal – jövő május 20-ig, mint minden évben.', when: 'atalany' },
   { key: 'kata', text: 'A kata a vállalkozással együtt megszűnik. A kata-nyilatkozat a megszűnés után 30 napon belül esedékes.', when: 'kata' },
   { key: 'hipa', text: 'Soron kívüli iparűzésiadó-bevallás a megszűnés miatt – a település szabályai szerint.' },
   { key: 'afa', text: 'ÁFA: alanyi mentesként nincs ÁFA-bevallásod. Ha ÁFA-körös voltál, {firstName} megnézi.' },
-  { key: 'szamla', text: 'A megszűnés napja után már nem állíthatsz ki számlát. A bankszámládat és a számlázóprogramodat te zárod le.' },
-  { key: 'kamara', text: 'A kamarát a NAV értesíti, ezzel nincs dolgod.' },
+  { key: 'szamla', text: 'A megszűnés napja után már nem állíthatsz ki számlát. A bankszámládat és a számlázóprogramodat te zárod le.', who: 'te' },
+  { key: 'kamara', text: 'A kamarát a NAV értesíti, ezzel nincs dolgod.', who: 'nav' },
 ];
 export const CLOSING_KEEP_ROWS: readonly string[] = [
   'A kiállított számláid másolatát, a nyugtákat és a bankszámlakivonatokat.',
@@ -687,7 +687,8 @@ export function personaliseClosingGuide(inp: {
     if (st.key === 'utana') {
       for (const r of CLOSING_AFTER_ROWS) {
         if (r.when && inp.regime && r.when !== inp.regime) continue;
-        fields.push({ label: fill(r.text), action: 'ellenorizd', why: `${inp.firstName} intézi` });
+        // k7c2: the chip says who really does it (te / a NAV / the accountant)
+        fields.push({ label: fill(r.text), action: 'ellenorizd', why: r.who === 'te' ? 'Te intézed' : r.who === 'nav' ? 'A NAV intézi' : `${inp.firstName} intézi` });
       }
     }
     if (st.key === 'megorzes') for (const k of [...CLOSING_KEEP_ROWS].reverse()) fields.unshift({ label: k, action: 'ellenorizd' });
@@ -949,8 +950,8 @@ export const CONSOLE_TEXTS = {
   tiles: {
     active: 'Aktív ügyfél',
     onboarding: 'Bekötés alatt',
-    suspended: 'Felfüggesztve',
-    terminated: 'Megszűnt',
+    suspended: 'Felfüggesztve / zárolt',
+    terminated: 'Felmondva / megszűnt',
     mrr: 'Havi ismétlődő bevétel',
     overdue: 'Elmaradt fizetés',
     locked: 'Zárolt ügyfél',
@@ -1165,7 +1166,11 @@ export const CONSOLE_PROFILE_LABELS: Record<ConsoleProfileField, string> = {
 /** Encrypted columns: shown masked, "Mutasd" decrypts (audited). */
 export const CONSOLE_MASKED_FIELDS: readonly ConsoleProfileField[] = ['phone', 'adoazonositoJel'];
 /** Filled from the NAV taxpayer lookup when business_identity_source = 'nav' (override needs confirmNavOverride + reason). */
-export const CONSOLE_NAV_FIELDS: readonly ConsoleProfileField[] = ['adoszam', 'evNyilvantartasiSzam', 'evSince', 'addressZip', 'addressCity', 'addressLine', 'hqMunicipality'];
+/**
+ * k7c2: only what the NAV lookup really fills (the adószám and the székhely település). The home address and "egyéni
+ * vállalkozó mióta" are typed by the client – they are never marked "NAV-ból".
+ */
+export const CONSOLE_NAV_FIELDS: readonly ConsoleProfileField[] = ['adoszam', 'hqMunicipality'];
 
 /** Helper used by the backend and the panel: "Kovács Bence" style full name. */
 export function fullNameHu(lastName: string | null | undefined, firstName: string | null | undefined): string {

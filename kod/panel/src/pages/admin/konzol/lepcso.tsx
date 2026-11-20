@@ -113,6 +113,8 @@ export function MuveletFiok({ def, bezar, kesz }: { def: MuveletDef | null; beza
   const [v, setV] = useState<Record<string, string>>({});
   const [fut, setFut] = useState(false);
   const [hibak, setHibak] = useState<Record<string, string>>({});
+  // k7c2: every refusal of the server (409 / 403 / 422 …) is shown INSIDE the dialog, next to the summary line
+  const [elutasitva, setElutasitva] = useState<string | null>(null);
   const nyitva = Boolean(def);
   const kulcs = def?.cim ?? '';
   const [utolso, setUtolso] = useState('');
@@ -120,12 +122,14 @@ export function MuveletFiok({ def, bezar, kesz }: { def: MuveletDef | null; beza
     setUtolso(kulcs);
     setV(Object.fromEntries((def?.mezok ?? []).filter((m) => m.alap !== undefined).map((m) => [m.kulcs, m.alap!])));
     setHibak({});
+    setElutasitva(null);
   }
   if (!def) return null;
   const indokOk = !def.indok || (v.reason ?? '').trim().length >= CONSOLE_RULES.reasonMin;
   const kuld = async () => {
     setFut(true);
     setHibak({});
+    setElutasitva(null);
     try {
       const r = await futtat(() => def.kuld(v));
       pir.ok(def.siker ? def.siker(r) : CONSOLE_TEXTS.done);
@@ -133,6 +137,7 @@ export function MuveletFiok({ def, bezar, kesz }: { def: MuveletDef | null; beza
       bezar();
     } catch (e) {
       if (e instanceof ApiError && e.fields) setHibak(e.fields);
+      else setElutasitva(e instanceof ApiError && e.message ? e.message : 'Nem sikerült. Próbáld újra.');
       pir.hiba(e);
     } finally {
       setFut(false);
@@ -197,6 +202,11 @@ export function MuveletFiok({ def, bezar, kesz }: { def: MuveletDef | null; beza
           <b>{def.osszegzes(v)}</b>
           {def.visszavonhatatlan ? <div style={{ marginTop: 4 }}>{CONSOLE_TEXTS.irreversible}</div> : null}
         </div>
+        {elutasitva ? (
+          <div className="uzenet-sav hiba" role="alert" style={{ display: 'block' }}>
+            {elutasitva}
+          </div>
+        ) : null}
         <div>
           <button type="button" className="gomb-e" style={def.veszelyes ? { background: 'var(--veszely)' } : undefined} disabled={fut || !indokOk} onClick={() => void kuld()}>
             {CONSOLE_TEXTS.confirm}

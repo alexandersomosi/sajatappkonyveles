@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { taxNumberCheckDigit } from '@kezjegy/nav-kliens';
 import { auditLog, clients, paymentMethods, payments, subscriptions } from '../src/db/schema.js';
 import { runBillingJob } from '../src/services/subscription.js';
+import { jobPredebit } from '../src/services/payments.js';
 import { createStripeProvider } from '../src/payments/stripe.js';
 import { lookupTaxpayer, lookupCacheSize } from '../src/services/adoszam-kereso.js';
 import { createNavFactory } from '../src/nav/client.js';
@@ -83,6 +84,9 @@ describe('DEMO provider (PAYMENT_PROVIDER=demo, the default on APP_ENV=demo)', (
       const st = await h.json('POST', '/client/subscription/start', { token: c.token, body: { platform: 'app', purpose: 'subscribe', consentVersion: cv.body.version, consentSha256: cv.body.sha256 } });
       await h.req('POST', '/payments/demo/fizetes', { raw: `p=${st.body.paymentId}&valasztas=ok`, headers: { 'content-type': 'application/x-www-form-urlencoded' } });
     }
+    // k7c2: the pre-debit notice 3 days before (the 10:00 job), then the charge on the day
+    h.clock.set('2026-12-17T09:30:00Z');
+    await jobPredebit(h.deps);
     h.clock.set('2026-12-20T09:00:00Z');
     await runBillingJob(h.deps);
     const [s1] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, ok.clientId));

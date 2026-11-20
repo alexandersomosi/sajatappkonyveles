@@ -143,19 +143,19 @@ describe('E6 projection with approved quarters (Kata, k6c3)', () => {
   for (const q of no.quarters.slice(0, 3)) approved[q.periodKey] = { tbHuf: q.tbHuf, szochoHuf: q.szochoHuf, szjaHuf: q.szjaAdvanceHuf };
   const approvedQuarters = no.quarters.slice(0, 3).map((q) => ({ quarter: q.quarter, baseSumHuf: q.months.reduce((a, m) => a + m.baseHuf, 0), szjaAdvanceHuf: q.szjaAdvanceHuf, revenueHuf: q.revenueHuf }));
   const input = { profile: { ...base, kedvezmenyek }, revenue, asOf: '2026-11-20', approvedQuarters };
-  it('the year-to-date basis: Q1–Q3 approved 1 197 168, refund 282 030, Jan–Nov tax 1 097 174', () => {
+  it('the year-to-date basis: Q1–Q3 approved 1 197 168, refund 282 030, Jan–Nov tax 1 063 633 (k7c2: the csjk stays in its own month)', () => {
     const r = calculateYear(input);
     const e = earningsByMonth(r, { hipaAnnualHuf: r.hipa!.annualHuf, approved });
     const refund = yearEndSettlement(r, approved).szjaRefundHuf;
     expect(Object.values(approved).reduce((a, x) => a + x.tbHuf + x.szochoHuf + x.szjaHuf, 0)).toBe(1_197_168);
     expect(refund).toBe(282_030);
-    expect(e.filter((m) => m.month <= 11).reduce((a, m) => a + m.szjaHuf + m.tbHuf + m.szochoHuf + m.hipaHuf, 0) - refund).toBe(1_097_174);
+    expect(e.filter((m) => m.month <= 11).reduce((a, m) => a + m.szjaHuf + m.tbHuf + m.szochoHuf + m.hipaHuf, 0) - refund).toBe(1_063_633);
   });
   it('the projection: kb. 1 090 000 Ft tax, kb. 8 190 000 Ft left (not 560 000 / 8 730 000)', () => {
     const p = projectYear(input, { approved });
     expect(p).toMatchObject({ revenueHuf: 9_284_969, hipaHuf: 50_000, refundHuf: 282_030, taxesHuf: 1_091_030 });
     expect(p.netHuf).toBe(9_284_969 - 1_091_030);
-    // without the approved map the engine re-computes Q1–Q3 with the csjk: 532 689 Ft lower – the k6c3 blocker
-    expect(projectYear(input).taxesHuf).toBe(558_341);
+    // k7c2 T1: the engine itself no longer assumes csjk in the approved quarters – the same without the approved map
+    expect(projectYear(input).taxesHuf).toBe(1_091_030);
   });
 });

@@ -168,7 +168,7 @@ describe('the pipeline with the Tesztüzem account (fake Agent)', () => {
   beforeAll(async () => {
     h = await setup({
       now: '2026-11-20T09:00:00Z',
-      env: { ...FAKE_STRIPE_ENV, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_ACCOUNT: 'teszt', SZAMLAZZHU_AGENT_KEY: AGENT },
+      env: { ...FAKE_STRIPE_ENV, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_ACCOUNT: 'teszt', SZAMLAZZHU_TEST_AGENT_KEY: AGENT },
       overrides: { szamlazz: agent, payments: { stripe: new FakeStripe(), demo: createDemoProvider({ apiPublicUrl: 'https://api.test', now: () => new Date() }) } },
     });
   });
@@ -285,10 +285,25 @@ describe('config guards (§29.1.1, §29.2.1, §29.3.4)', () => {
   });
   it('Számlázz.hu: the live account never on DEMO; the test account never in production; the account is required', () => {
     expect(() => loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: AGENT, SZAMLAZZHU_ACCOUNT: 'eles' })).toThrow('Éles Számlázz.hu-fiók nem lehet DEMO szerveren');
-    expect(() => loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: AGENT })).toThrow(ConfigError);
-    expect(loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: AGENT, SZAMLAZZHU_ACCOUNT: 'teszt' }).invoice).toMatchObject({ mode: 'szamlazzhu', szamlazzhuAccount: 'teszt' });
+    expect(() => loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_TEST_AGENT_KEY: AGENT })).toThrow(ConfigError);
+    expect(loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_TEST_AGENT_KEY: AGENT, SZAMLAZZHU_ACCOUNT: 'teszt' }).invoice).toMatchObject({ mode: 'szamlazzhu', szamlazzhuAccount: 'teszt', szamlazzhuKey: AGENT });
     const prod = { ...base, APP_ENV: 'production', STAFF_TOTP_REQUIRED: 'true' };
     expect(() => loadConfig({ ...prod, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: AGENT, SZAMLAZZHU_ACCOUNT: 'teszt' })).toThrow(ConfigError);
+  });
+  it('k7c2: the key follows the ACCOUNT – the LIVE key under the label "teszt" is never used on a DEMO server', () => {
+    const LIVE = 'live-key-of-the-owner-0000000000';
+    // the owner pressed Enter at the key prompt: only SZAMLAZZHU_AGENT_KEY (the live key) is on the server
+    // (SZAMLAZZHU_TEST_AGENT_KEY blanked: the developer PC may have one in its own environment)
+    const c = loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: LIVE, SZAMLAZZHU_TEST_AGENT_KEY: '', SZAMLAZZHU_ACCOUNT: 'teszt' });
+    expect(c.invoice.mode).toBe('demo');
+    expect(c.invoice.szamlazzhuKey).toBe('');
+    // both present: the DEMO server takes ONLY the test variable
+    const d = loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: LIVE, SZAMLAZZHU_TEST_AGENT_KEY: AGENT, SZAMLAZZHU_ACCOUNT: 'teszt' });
+    expect(d.invoice).toMatchObject({ mode: 'szamlazzhu', szamlazzhuKey: AGENT });
+    // INVOICE_MODE=demo never reads either key
+    expect(loadConfig({ ...base, SZAMLAZZHU_AGENT_KEY: LIVE }).invoice.szamlazzhuKey).toBe('');
+    // the live account label on a DEMO server is refused even without a key
+    expect(() => loadConfig({ ...base, INVOICE_MODE: 'szamlazzhu', SZAMLAZZHU_AGENT_KEY: '', SZAMLAZZHU_TEST_AGENT_KEY: '', SZAMLAZZHU_ACCOUNT: 'eles' })).toThrow('Éles Számlázz.hu-fiók nem lehet DEMO szerveren');
   });
   it('public origins: adozz.hu + the kept sslip hosts; app origins with short keys; the no-trial default', () => {
     const c = loadConfig({

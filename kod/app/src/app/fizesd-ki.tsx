@@ -11,7 +11,7 @@ import { ApiHiba } from '@/api/http';
 import { useConfig } from '@/api/hooks';
 import { useElofizetesK29, useEsedekes, useKartyaEngedely } from '@/api/hooks-k29';
 import { datum, datumIg, szam } from '@/lib/format';
-import { fizesdKi, fizetesSzolgaltato, hostedNyit } from '@/lib/fizetes';
+import { fizesdKi, fizetesSzolgaltato, HAVIDIJ_OK, hostedNyit } from '@/lib/fizetes';
 import { hibaUzenet } from '@/lib/hiba';
 import { engedelyGomb, KartyaEngedely } from '@/kepernyok/KartyaEngedely';
 import { szin } from '@/theme/tokens';
@@ -81,11 +81,12 @@ export default function FizesdKi() {
       dokk={<GombE cim={fillPlaceholders(P.fizesdKi.button, { osszeg: szam(d.amountHuf) })} tolt={tolt} onPress={() => void fizet(false)} />}
     >
       {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
-      <Szakasz ikon="szamlaszam" cim={d.title || 'Miért kell?'} />
+      {/* k7c2: the band above already says the amount and the month – here only WHY (the bank's answer), once */}
+      <Szakasz ikon="szamlaszam" cim="Miért kell?" />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <View style={{ paddingLeft: 38 }}>
           <T m={16} lh={1.5}>
-            {d.text}
+            {HAVIDIJ_OK[d.reason] ?? HAVIDIJ_OK.esedekes}
           </T>
           {d.graceUntil ? (
             <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 6 }}>
@@ -101,7 +102,7 @@ export default function FizesdKi() {
             {d.cardLabel ?? 'Nincs mentett kártyád'}
           </T>
           <T m={15} lh={1.45} c={szin.halvany} style={{ marginTop: 2 }}>
-            A fizetés a Stripe biztonságos oldalán történik. Ha a bankod megerősítést kér, ott adod meg.
+            {demo ? 'Próbafizetés: nem valódi kártya, pénz nem mozdul.' : 'A fizetés a Stripe biztonságos oldalán történik. Ha a bankod megerősítést kér, ott adod meg.'}
           </T>
           <GombM cim={P.fizesdKi.otherCard} onPress={() => { setBe(false); setHiba(null); setMasik(true); }} style={{ marginTop: 12 }} />
           <HibaSzoveg szoveg={masik ? null : hiba} />

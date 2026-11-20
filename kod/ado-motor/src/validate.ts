@@ -162,6 +162,8 @@ export function validateYearInput(input: unknown): NormalizedInput {
           if (!isSafeInt(a[key]) || (a[key] as number) < 0 || (a[key] as number) > MAX_ABS_AMOUNT) f[`${k}.${key}`] = 'Nem negatív egész forint kell.';
         if (a['revenueHuf'] !== undefined && a['revenueHuf'] !== null && (!isSafeInt(a['revenueHuf']) || Math.abs(a['revenueHuf'] as number) > MAX_ABS_AMOUNT))
           f[`${k}.revenueHuf`] = 'Egész forint kell.';
+        if (a['csjkHuf'] !== undefined && a['csjkHuf'] !== null && (!isSafeInt(a['csjkHuf']) || (a['csjkHuf'] as number) < 0 || (a['csjkHuf'] as number) > MAX_ABS_AMOUNT))
+          f[`${k}.csjkHuf`] = 'Nem negatív egész forint kell.';
       });
     }
   }

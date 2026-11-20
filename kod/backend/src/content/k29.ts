@@ -48,6 +48,21 @@ export function k29Defaults(): Record<string, string> {
   out['notif.payment_disputed.dupla.body'] = DUPLICATE_TEXTS.body;
   out['notif.payment_disputed.kulso_visszaterites.title'] = 'Visszatérítés a Stripe-ban: {clientName}';
   out['notif.payment_disputed.kulso_visszaterites.body'] = '{osszeg} Ft-ot a Stripe felületén térítettek vissza. A számla-sztornót / helyesbítést elindítottuk.';
+  // k7c2: the admin alert says what really happened
+  out['notif.payment_disputed.dupla_dij.title'] = 'Dupla díjfizetés – visszautaltuk: {clientName}';
+  out['notif.payment_disputed.dupla_dij.body'] = 'Ugyanarra a díjra kétszer jött pénz. A másodikat ({osszeg} Ft) visszautaltuk, számla nem készült róla.';
+  out['notif.payment_disputed.dupla_nem_ment.title'] = 'Dupla fizetés – NEM sikerült visszautalni: {clientName}';
+  out['notif.payment_disputed.dupla_nem_ment.body'] = '{osszeg} Ft ment le kétszer. Az automatikus visszautalás nem sikerült, 15 percenként újrapróbáljuk. Ha sürgős, térítsd vissza kézzel a Fizetések oldalon.';
+  out['notif.payment_disputed.osszeg_elteres.title'] = 'Eltérő összegű fizetés: {clientName}';
+  out['notif.payment_disputed.osszeg_elteres.body'] = 'A Stripe más összeget vagy pénznemet jelzett, mint {osszeg} Ft. Nem könyveltük el – nézd meg a Stripe-ban.';
+  out['notif.payment_disputed.felmondas_utan.title'] = 'Fizetés felmondás után: {clientName}';
+  out['notif.payment_disputed.felmondas_utan.body'] = '{osszeg} Ft jött egy felmondott ügyféltől. A szolgáltatás nem hosszabbodott meg – ha nem jár, térítsd vissza a Fizetések oldalon.';
+  out['notif.payment_disputed.szolgaltato_hiba.title'] = 'Nem sikerült levonni a havidíjat: {clientName}';
+  out['notif.payment_disputed.szolgaltato_hiba.body'] = 'A Stripe visszautasította a kérést ({hiba}), a {osszeg} Ft nem ment le. Az ügyfelet megkértük, adjon meg kártyát; ha nem fizet, a szokásos rend szerint szünetel a könyvelése.';
+  out['notif.payment_disputed.visszaterites_hiba.title'] = 'Nem ment át egy visszatérítés: {clientName}';
+  out['notif.payment_disputed.visszaterites_hiba.body'] = '{osszeg} Ft nem került vissza az ügyfélhez. Nézd meg a Stripe-ban, és ha kell, javítsd a számlát.';
+  out['notif.payment_disputed.vita_elveszett.title'] = 'Elvesztett vita: {clientName}';
+  out['notif.payment_disputed.vita_elveszett.body'] = '{osszeg} Ft a bankján át visszakerült az ügyfélhez. A számla sztornóját / helyesbítését elindítottuk.';
   out['notif.invoice_failed.title'] = INVOICE_FAILED_TEXTS.title;
   out['notif.invoice_failed.body'] = INVOICE_FAILED_TEXTS.body;
   out['k29.chip.vitatott'] = DISPUTE_TEXTS.chip;

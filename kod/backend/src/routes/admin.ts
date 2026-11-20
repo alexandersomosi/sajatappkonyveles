@@ -157,7 +157,7 @@ export function adminRoutes(deps: Deps) {
     return c.json({
       clients: { total: all.length, byLifecycle, newThisMonth },
       funnel: { registered: all.length, onboardingStarted: Number(onb?.n ?? 0), subscribed: subs.filter((s) => s.status !== 'incomplete').length, active: byLifecycle.aktiv ?? 0 },
-      mrrHuf: active * deps.cfg.planPriceHuf,
+      mrrHuf: active * (await (await import('../services/dijak.js')).monthlyPriceHuf(deps)),
       endingSubscriptions: ending,
       revenueByMonth: fin.map((f) => ({ month: f.month, amountHuf: Number(f.amount) })),
       failedPayments: failed,
@@ -405,7 +405,7 @@ export function adminRoutes(deps: Deps) {
         client: { id: x.c.id, name: clientName(x.c) },
         status: x.s.status,
         mode: x.s.mode,
-        priceHuf: deps.cfg.planPriceHuf,
+        priceHuf: await (await import('../services/dijak.js')).monthlyPriceHuf(deps),
         currentPeriodEnd: x.s.currentPeriodEnd,
         nextChargeAt: x.s.cancelAtPeriodEnd || x.s.status === 'canceled' ? null : (x.s.nextChargeAt?.toISOString() ?? null),
         failedAttempts: x.s.failedAttempts,

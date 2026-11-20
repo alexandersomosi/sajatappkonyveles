@@ -3,11 +3,12 @@
 // of the last 20 h, at most 2 pushes per client per Budapest day, quiet hours (notify()), amounts switchable off
 // (push_show_amounts → variant 'rejtett'). A private person's name is never put in any channel ("Magánszemély").
 import { and, desc, eq, gte, inArray, isNull, sql } from 'drizzle-orm';
+import type { KataRiskItem } from '../_shared/api.js';
 import { INVOICE_NOTIFY_RULES, KATA_WARNING_PAYER_KINDS, type InvoiceNotifyState } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
-import { clients, clientTaxProfiles, navInvoices, notifications, revenueItems, revenueReserves, systemState } from '../db/schema.js';
+import { accountants, clients, clientTaxProfiles, navInvoices, notifications, revenueItems, revenueReserves, systemState } from '../db/schema.js';
 import { audit } from '../audit.js';
-import { addDays, budapestLocalToUtc, todayBudapest } from '../lib/dates.js';
+import { addDays, budapestLocalToUtc, huFullDate, huFullDateIg, todayBudapest } from '../lib/dates.js';
 import { notificationSettingsOf, notify } from '../notify/notify.js';
 import { ensureReserves } from './felretesz.js';
 import { fmt } from './kedvezmeny.js';
@@ -80,6 +81,8 @@ export async function notifyNewInvoices(deps: Deps, clientId: string, ids: strin
   const kataBusiness = tp?.regime === 'kata' ? new Set(claimed.filter((c) => KATA_WARNING_PAYER_KINDS.includes(payerKindOf(c))).map((c) => c.id)) : new Set<string>();
   const list = items.filter((i) => !kataBusiness.has(i.navInvoiceId));
   if (list.length) await sendOrFold(deps, cl.userId, list);
+  // k7c2 (SPEC §28.K.11): the business-customer warning really goes out – to the client and (staff wording) the accountant
+  if (kataBusiness.size) await sendKataWarnings(deps, cl, claimed.filter((c) => kataBusiness.has(c.id)), items);
   await audit(db, { action: 'invoice.notified', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { count: list.length, variant: list.length > 1 ? 'tobb' : 'egy' } });
   return list.length;
 }
@@ -144,6 +147,73 @@ export async function rerenderInvoiceNotifications(deps: Deps, o: { emailDomain:
     n++;
   }
   return n;
+}
+
+/**
+ * k7c2 (SPEC §28.K.11): the business-customer risks of a KATA client this year – for the Főoldal card and the red line of
+ * the invoice. Money from a kifizető ends the KATA the day before it arrives; notice within 15 days. `ids` limits it to
+ * these invoices. Empty for an átalány client.
+ */
+export async function kataRisksOf(deps: Deps, cl: typeof clients.$inferSelect, o: { ids?: string[]; limit?: number } = {}): Promise<KataRiskItem[]> {
+  const db = deps.db;
+  const today = todayBudapest(deps.now());
+  const year = Number(today.slice(0, 4));
+  const [tp] = await db.select({ regime: clientTaxProfiles.regime, kataFrom: clientTaxProfiles.kataFrom }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
+  if (tp?.regime !== 'kata') return [];
+  const from = tp.kataFrom && tp.kataFrom > `${year}-01-01` ? tp.kataFrom : `${year}-01-01`;
+  const invs = await db
+    .select()
+    .from(navInvoices)
+    .where(and(eq(navInvoices.clientId, cl.id), gte(navInvoices.issueDate, from), o.ids?.length ? inArray(navInvoices.id, o.ids) : sql`true`))
+    .orderBy(desc(navInvoices.issueDate));
+  const risky = invs.filter((i) => i.operation === 'CREATE' && (KATA_WARNING_PAYER_KINDS as readonly string[]).includes(payerKindOf(i)));
+  if (!risky.length) return [];
+  const revs = await db.select().from(revenueItems).where(and(inArray(revenueItems.navInvoiceId, risky.map((i) => i.id)), isNull(revenueItems.deletedAt)));
+  const { accountantParams } = await import('../notify/notify.js');
+  const ap = await accountantParams(db, cl.accountantId);
+  const fmtHu = (n: number) => new Intl.NumberFormat('hu-HU').format(n);
+  const out: KataRiskItem[] = [];
+  for (const inv of risky.slice(0, o.limit ?? 50)) {
+    const kind = payerKindOf(inv) as KataRiskItem['payerKind'];
+    const rev = revs.find((r) => r.navInvoiceId === inv.id);
+    const arrived = rev && !rev.receivedOnEstimated && rev.receivedOn <= today ? rev.receivedOn : null;
+    const vevo = (inv.customerName ?? '').trim() || 'A vevőd';
+    const osszeg = fmtHu(inv.grossHuf);
+    let title: string;
+    let text: string;
+    let endsOn: string | null = null;
+    let reportBy: string | null = null;
+    if (kind === 'ismeretlen') {
+      title = 'Ellenőrizd a vevőt – vigyázz a katádra';
+      text = `${vevo}, ${osszeg} Ft. Nem tudjuk biztosan, hogy magánszemély-e. Ha cég, a fizetése megszünteti a katádat. Kérdezd meg ${ap.firstNameAcc ?? 'a könyvelődet'}.`;
+    } else if (arrived) {
+      endsOn = addDays(arrived, -1);
+      reportBy = addDays(arrived, 15);
+      title = endsOn < today ? 'Cégtől jött pénz – megszűnt a katád' : 'Cégtől jött pénz – megszűnik a katád';
+      text = `${vevo} kifizette a ${osszeg} Ft-ot (${huFullDate(arrived)}). Emiatt a katád ${huFullDate(endsOn)} napján ${endsOn < today ? 'megszűnt' : 'megszűnik'}, és ${huFullDateIg(reportBy)} be kell jelenteni. ${ap.firstName} segít: írj neki most.`;
+    } else {
+      title = 'Cégnek számláztál – vigyázz a katádra';
+      text = `${vevo}, ${osszeg} Ft. Ha kifizeti, megszűnik a katád (a fizetés előtti nappal). Beszélj ${ap.firstNameWith ?? 'a könyvelőddel'}, mielőtt fizet.`;
+    }
+    out.push({ navInvoiceId: inv.id, invoiceNumber: inv.invoiceNumber, vevo, amountHuf: inv.grossHuf, payerKind: kind, receivedOn: arrived, endsOn, reportBy, title, text });
+  }
+  return out;
+}
+
+/** k7c2 (SPEC §28.K.11): "Cégnek számláztál – vigyázz a katádra" per invoice + the accountant's staff variant. */
+async function sendKataWarnings(deps: Deps, cl: typeof clients.$inferSelect, invs: InvRow[], items: Item[]): Promise<void> {
+  const { notify, accountantParams } = await import('../notify/notify.js');
+  const ap = await accountantParams(deps.db, cl.accountantId);
+  const [acc] = cl.accountantId ? await deps.db.select({ userId: accountants.userId }).from(accountants).where(eq(accountants.id, cl.accountantId)).limit(1) : [];
+  const fmt = (n: number) => new Intl.NumberFormat('hu-HU').format(n);
+  for (const inv of invs) {
+    const it = items.find((i) => i.navInvoiceId === inv.id);
+    const vevo = it?.vevo ?? 'Egy vevőd';
+    const osszeg = fmt(inv.grossHuf);
+    await notify(deps, deps.db, { userId: cl.userId, kind: 'kata_business_invoice', params: { ...ap, vevo, osszeg }, link: `/szamla/${inv.id}` });
+    if (acc?.userId) await notify(deps, deps.db, { userId: acc.userId, kind: 'kata_business_invoice', variant: 'staff', params: { clientName: `${cl.lastName} ${cl.firstName}`.trim(), vevo, osszeg }, link: `/ugyfelek/${cl.id}` });
+  }
+  await audit(deps.db, { action: 'invoice.kata_warning', actorRole: 'system', targetType: 'client', targetId: cl.id, clientId: cl.id, details: { count: invs.length } });
 }
 
 export function payerKindOf(inv: Pick<InvRow, 'customerVatStatus' | 'data' | 'customerTaxNumber'>): 'maganszemely' | 'kifizeto' | 'kulfoldi_kifizeto' | 'ismeretlen' {

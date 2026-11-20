@@ -78,6 +78,10 @@ export const STRIPE_WEBHOOK_EVENTS = [
   'charge.refunded',
   'charge.dispute.created',
   'payment_method.automatically_updated',
+  // k7c2: a refund that fails later, and the end of a dispute (lost = the money went back)
+  'refund.failed',
+  'charge.refund.updated',
+  'charge.dispute.closed',
 ] as const;
 export type StripeWebhookEvent = (typeof STRIPE_WEBHOOK_EVENTS)[number];
 /** statement_descriptor_suffix per charge (the prefix is the account's shortened descriptor, ADOZZ). */
@@ -158,7 +162,7 @@ export const CARD_EXPIRED_CODES = ['expired_card'] as const;
 /** notification charge_upcoming. {datum} "november 25.", {osszeg} "19 999", {kartya} "Visa •••• 4242", {idoszak}. */
 export const PREDEBIT_TEXTS = {
   title: '3 nap múlva levonjuk a havidíjat',
-  body: '{datum}: {osszeg} Ft a kártyádról ({kartya}) a(z) {idoszak} időszakra. Ha nem szeretnéd, mondd le előtte: Fiók → Előfizetés.',
+  body: '{datum}: {osszeg} Ft a kártyádról ({kartya}) a {idoszak} időszakra. Ha nem szeretnéd, mondd le előtte: Fiók → Előfizetés.',
   emailExtra: 'Lemondás után a kifizetett időszak végéig minden marad.',
   /** No active card 3 days before the charge (subscription_renewal_needed, variant 'nincs_kartya'). */
   noCardTitle: 'Adj meg kártyát a következő hónaphoz',
@@ -197,7 +201,7 @@ export const PAYMENT_SCREEN_TEXTS = {
     changeCard: 'Kártya cseréje',
     deleteCard: 'Kártya törlése',
     cancel: 'Lemondom',
-    cancelConfirm: 'Lemondod? A(z) {idoszakVege}-ig minden marad, utána nem vonunk le többet.',
+    cancelConfirm: 'Lemondod? {idoszakVege}-ig minden marad, utána nem vonunk le többet.',
   },
   fees: {
     payLine: '{label}: {osszeg} Ft. A kártyádról vonjuk le ({kartya}).',
@@ -209,7 +213,7 @@ export const PAYMENT_SCREEN_TEXTS = {
   },
   fizesdKi: {
     bandTitle: 'Fizetésre vár: {osszeg} Ft',
-    bandText: 'A(z) {idoszak} havidíja. Fizesd ki, és minden megy tovább.',
+    bandText: 'A {idoszak} havidíja. Fizesd ki, és minden megy tovább.',
     button: 'Fizesd ki ({osszeg} Ft)',
     otherCard: 'Másik kártyával fizetek',
     homeBanner: 'Fizetésre vár: {osszeg} Ft',
@@ -357,6 +361,8 @@ export interface SubscriptionViewK29 extends SubscriptionView {
   due?: DuePaymentView | null;
   /** true when the next card step must show the consent again (version moved or no consent stored). */
   consentNeeded?: boolean;
+  /** k7c2: WE terminated the contract – everything runs until this day (terminated.effectiveOn). */
+  terminatedUntil?: _ISODate | null;
 }
 export type EffectiveAmountSource = 'terv' | 'szunetel' | 'egyedi_ar' | 'kedvezmeny' | 'ingyenes_honap';
 
@@ -484,7 +490,7 @@ export const INVOICE_RULES = {
 /** One invoice line per payment (megnevezes). {tol} {ig} = YYYY.MM.DD., {honap} "2026. december", {ev}, {valtozas}, {tipus}, {megjegyzes}. */
 export const INVOICE_LINE_TEXTS = {
   havidij: 'Könyvelési szolgáltatás – havidíj ({tol}–{ig})',
-  szunetel: 'Könyvelési szolgáltatás – rendelkezésre állási díj ({honap})',
+  szunetel: 'Könyvelési szolgáltatás – szüneteltetési díj ({honap})',
   eves_zaras: 'Éves zárás ({ev}): SZJA- és iparűzésiadó-bevallás',
   valtozas_egyszeru: 'Változás bejelentése helyetted: {valtozas}',
   valtozas_jogallas: 'Jogállás-változás bejelentése helyetted',

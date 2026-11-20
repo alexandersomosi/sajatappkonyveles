@@ -77,6 +77,9 @@ const fmt = (n: number) => `${new Intl.NumberFormat('hu-HU', { useGrouping: 'alw
 const INVOICE_KIND_LABELS_KONZOL: Record<string, string> = { szamla: 'Számla', sztorno: 'Sztornó', helyesbito: 'Helyesbítő' };
 const dt = (d: Date | null | undefined) => (d ? d.toISOString().replace('T', ' ').slice(0, 16) : null);
 const LIFECYCLE_LABELS: Record<string, string> = { bekotes_alatt: 'Bekötés alatt', aktiv: 'Aktív', felfuggesztve: 'Felfüggesztve', megszunt: 'Megszűnt' };
+const TAX_STATUS_HU: Record<string, string> = { fofoglalkozasu: 'Főfoglalkozású', mellekallasu: 'Mellékállású', nyugdijas: 'Nyugdíjas' };
+const HIPA_METHOD_HU: Record<string, string> = { savos: 'Sávos (egyszerűsített)', atalany: 'Átalány', szokasos: 'Szokásos', nincs: 'Nincs' };
+const SUB_STATUS_HU: Record<string, string> = { active: 'Él', past_due: 'Fizetésre vár', suspended: 'Felfüggesztve', canceled: 'Megszűnt', incomplete: 'Még nincs elindítva' };
 
 // ---------------------------------------------------------------------------------------------------------------------
 // access + step-up (§29.9.1)
@@ -213,7 +216,7 @@ async function amountOf(deps: Deps, db: DbOrTx, clientId: string, periodStart: s
   try {
     return (await effectiveMonthlyAmount(deps, db, clientId, periodStart)).amountHuf;
   } catch {
-    return deps.cfg.planPriceHuf;
+    return (await import('./dijak.js')).monthlyPriceHuf(deps);
   }
 }
 
@@ -228,6 +231,9 @@ export async function consoleOverview(deps: Deps): Promise<ConsoleOverview> {
   const reg = await regimeMap(db, year);
   const active = allClients.filter((c) => c.lifecycle === 'aktiv' && !c.anonymizedAt);
   const subs = (await db.select().from(subscriptions)).filter((s) => ids.has(s.clientId));
+  const suspendedSub = new Set(subs.filter((s) => s.status === 'suspended').map((s) => s.clientId));
+  const tileSuspended = allClients.filter((c) => !c.terminated && c.lifecycle !== 'megszunt' && (c.lifecycle === 'felfuggesztve' || suspendedSub.has(c.id) || Boolean(c.serviceLock)));
+  const tileActive = active.filter((c) => !c.terminated && !tileSuspended.includes(c));
   const perMonth = months.map((m) => ({
     month: m,
     uj: allClients.filter((c) => monthOf(c.createdAt) === m).length,
@@ -322,12 +328,14 @@ export async function consoleOverview(deps: Deps): Promise<ConsoleOverview> {
   return {
     generatedAt: now.toISOString(),
     demo: deps.cfg.appEnv === 'demo',
+    // k7c2: the tiles add up – a client under notice counts as "Felmondva / megszűnt", not also as "Aktív"; a suspended
+    // subscription or an automatic lock counts as "Felfüggesztve" even while the lifecycle still says aktív
     clients: {
-      active: active.length,
-      activeAtalany: active.filter((c) => (reg.get(c.id) ?? 'atalany') === 'atalany').length,
-      activeKata: active.filter((c) => reg.get(c.id) === 'kata').length,
-      onboarding: allClients.filter((c) => c.lifecycle === 'bekotes_alatt').length,
-      suspended: allClients.filter((c) => c.lifecycle === 'felfuggesztve').length,
+      active: tileActive.length,
+      activeAtalany: tileActive.filter((c) => (reg.get(c.id) ?? 'atalany') === 'atalany').length,
+      activeKata: tileActive.filter((c) => reg.get(c.id) === 'kata').length,
+      onboarding: allClients.filter((c) => c.lifecycle === 'bekotes_alatt' && !c.terminated).length,
+      suspended: tileSuspended.length,
       terminated: allClients.filter((c) => c.lifecycle === 'megszunt' || c.terminated).length,
       perMonth,
     },
@@ -400,7 +408,8 @@ export async function consoleClients(deps: Deps, q: ConsoleClientQuery): Promise
     });
   }
   // phone (last digits) – only the encrypted column has it
-  if (term && /^\+?[\d\s-]{3,}$/.test(term) && items.length === 0) {
+  // k7c2: the phone hits are ALWAYS merged into the results (not only when nothing else matched)
+  if (term && /^\+?[\d\s-]{3,}$/.test(term)) {
     const digits = term.replace(/\D/g, '').slice(-6);
     const all = await db.select({ id: clients.id, phoneEnc: clients.phoneEnc }).from(clients).where(isNotNull(clients.phoneEnc));
     const hit = new Set(all.filter((x) => {
@@ -410,7 +419,12 @@ export async function consoleClients(deps: Deps, q: ConsoleClientQuery): Promise
         return false;
       }
     }).map((x) => x.id));
-    if (hit.size) return consoleClients(deps, { ...q, q: undefined, cursor: q.cursor }).then((r) => ({ ...r, items: r.items.filter((i) => hit.has(i.id)), total: hit.size }));
+    const have = new Set(items.map((i) => i.id));
+    if ([...hit].some((id) => !have.has(id))) {
+      const extra = await consoleClients(deps, { ...q, q: undefined, cursor: q.cursor });
+      const merged = [...items, ...extra.items.filter((i) => hit.has(i.id) && !have.has(i.id))];
+      return { ...extra, items: merged, total: merged.length };
+    }
   }
   if (q.regime) items = items.filter((i) => i.regime === q.regime);
   if (q.unpaid) items = items.filter((i) => i.unpaidHuf > 0);
@@ -509,7 +523,8 @@ export async function consoleSection(deps: Deps, id: string, key: ConsoleSection
           { key: 'businessIdentity', label: 'Vállalkozás (NAV-ból)', value: cl.businessIdentity ? `${cl.businessIdentity.name}${cl.businessIdentity.demo ? ' (DEMO)' : ''}` : null, nav: Boolean(cl.businessIdentity) },
           { key: 'createdAt', label: 'Regisztrált', value: dt(cl.createdAt) },
         ],
-        tables: [{ title: 'Adóprofil évenként', columns: ['Év', 'Adózás', 'Költséghányad', 'Státusz', 'Iparűzési adó'], rows: profiles.map((p) => ({ cells: [String(p.year), p.regime === 'kata' ? 'Kata' : 'Átalány', `${p.costRatio}%`, p.status, p.hipaMethod] })) }],
+        // k7c2: Hungarian labels instead of the raw codes ("fofoglalkozasu", "savos")
+        tables: [{ title: 'Adóprofil évenként', columns: ['Év', 'Adózás', 'Költséghányad', 'Státusz', 'Iparűzési adó'], rows: profiles.map((p) => ({ cells: [String(p.year), p.regime === 'kata' ? 'Kata' : 'Átalány', `${p.costRatio}%`, TAX_STATUS_HU[p.status] ?? p.status, HIPA_METHOD_HU[p.hipaMethod] ?? p.hipaMethod] })) }],
       };
     }
     case 'hozzajarulasok': {
@@ -715,7 +730,7 @@ export async function consolePreview(deps: Deps, c: C, id: string): Promise<Cons
       key: 'elofizetes',
       title: 'Előfizetés',
       lines: lines([
-        ['Állapot', sv?.status ?? 'nincs', sv?.status === 'active' ? 'ok' : 'warn'],
+        ['Állapot', sv?.status ? (SUB_STATUS_HU[sv.status as string] ?? (sv.status as string)) : 'nincs', sv?.status === 'active' ? 'ok' : 'warn'],
         ['Havidíj', typeof sv?.monthlyHuf === 'number' ? fmt(sv.monthlyHuf as number) : typeof sv?.amountHuf === 'number' ? fmt(sv.amountHuf as number) : null],
         ['Következő levonás', (sv?.nextChargeOn as string | undefined) ?? (sv?.nextChargeAt as string | undefined)?.slice(0, 10) ?? null],
         ['Kártya', ((sv?.cardInfo as { label?: string } | null)?.label as string | undefined) ?? (sv?.cardMask as string | undefined) ?? null],
@@ -724,9 +739,17 @@ export async function consolePreview(deps: Deps, c: C, id: string): Promise<Cons
     {
       key: 'dijak',
       title: 'Díjak',
-      lines: fees
-        ? [...fees.open.map((f) => ({ label: `${f.label} – fizetésre vár`, value: fmt(f.amountHuf), tone: 'warn' as const })), ...fees.paid.slice(0, 5).map((f) => ({ label: `${f.label} – kifizetve`, value: fmt(f.amountHuf), tone: 'ok' as const }))]
-        : [],
+      lines: [
+        ...(fees
+          ? [...fees.open.map((f) => ({ label: `${f.label} – fizetésre vár`, value: fmt(f.amountHuf), tone: 'warn' as const })), ...fees.paid.slice(0, 5).map((f) => ({ label: `${f.label} – kifizetve`, value: fmt(f.amountHuf), tone: 'ok' as const }))]
+          : []),
+        // k7c2: the client's invoices (and stornos) show here too, as in the app's "Díjak és számlák"
+        ...(await (await import('../payments/invoices.js')).invoicesOfClient(db, id)).slice(0, 8).map((inv) => ({
+          label: `${inv.kind === 'sztorno' ? 'Sztornó' : inv.kind === 'helyesbito' ? 'Helyesbítő' : 'Számla'} ${inv.number ?? ''}${inv.demo ? ' (DEMO)' : ''}`.trim(),
+          value: fmt(inv.amountHuf),
+          tone: 'ok' as const,
+        })),
+      ],
     },
   ];
   await audit(db, { action: 'admin.client.preview', actorUserId: auth(c).userId, actorRole: 'admin', targetType: 'client', targetId: id, clientId: id, ipHmac: c.get('ipHmac'), requestId: c.get('requestId') });

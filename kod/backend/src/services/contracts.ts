@@ -3,7 +3,7 @@
 import { eq } from 'drizzle-orm';
 import type { Deps } from '../deps.js';
 import { accountants, clients, consents, users } from '../db/schema.js';
-import { fillLegal, legalValuesFromConfig } from '../legal.js';
+import { fillLegal, legalValues } from '../legal.js';
 import { sha256Hex } from '../lib/crypto.js';
 import type { LegalDocType } from '../_shared/enums.js';
 import { markdownToPdf } from '../lib/pdf.js';
@@ -23,7 +23,7 @@ export async function legalValuesForClient(deps: Deps, clientId: string): Promis
   const vagy = (x: string | null | undefined) => (x && x.trim() ? x.trim() : HIANY);
   const cityLine = [cl.addressZip, cl.addressCity].filter(Boolean).join(' ');
   const v: Record<string, string> = {
-    ...legalValuesFromConfig(deps.cfg, deps.now()),
+    ...(await legalValues(deps)),
     'ugyfel.nev': `${cl.lastName} ${cl.firstName}`.trim(),
     'ugyfel.szuletesi_nev': cl.birthName ?? `${cl.lastName} ${cl.firstName}`.trim(),
     'ugyfel.lakcim': vagy([cityLine, cl.addressLine].filter(Boolean).join(', ')),
@@ -95,7 +95,7 @@ export async function filledLegalText(deps: Deps, docType: LegalDocType, clientI
   const d = deps.legal.current(docType);
   const values = clientId
     ? await legalValuesForClient(deps, clientId)
-    : legalValuesFromConfig(deps.cfg, deps.now());
+    : await legalValues(deps);
   const text = fillLegal(d.markdown, { ...values, 'dok.verzio': d.version, 'dok.hatalyos': d.effectiveFrom ?? d.version });
   return { version: d.version, text, sha256: sha256Hex(text) };
 }

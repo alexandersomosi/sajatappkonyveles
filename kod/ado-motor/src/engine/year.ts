@@ -23,7 +23,7 @@ import { buildExplanation } from './explanation.js';
 import { hipaEstimate } from './hipa.js';
 import { adomentesMeter, afaMeter, atalanyCapMeter, type Projection } from './meters.js';
 
-export const ENGINE_VERSION = '1.3.1';
+export const ENGINE_VERSION = '1.3.2';
 export const DISCLAIMER = 'Becslés. A végleges összeget a könyvelőd hagyja jóvá.';
 
 function dedupeWarnings(ws: EngineWarning[]): EngineWarning[] {
@@ -199,14 +199,18 @@ export function calculateYear(input: YearInput): YearResult {
     });
 
     // Családi járulékkedvezmény (SPEC §28.3.7 c step 5, Tbj. 80. § (2)): month-local, only in-year, only insured.
+    // k7c2: an APPROVED quarter keeps what its approval contained – without csjk there (an allowance approved later),
+    // no csjk is assumed for its months and the családi frame of those months stays for the SZJA (never lost).
     let qCsjk = 0;
+    const apQ = approvedByQ.get(q);
+    const approvedWithoutCsjk = Boolean(apQ) && !covered && !(apQ!.csjkHuf && apQ!.csjkHuf > 0);
     if (plan) {
       const ar = rules.allowances;
       for (const line of months) {
         const m = line.month;
         let csjk = 0;
         let conv = 0;
-        if (plan.csjkInYear && profile.status !== 'nyugdijas' && line.insured && plan.fCs[m]! > 0) {
+        if (plan.csjkInYear && !approvedWithoutCsjk && profile.status !== 'nyugdijas' && line.insured && plan.fCs[m]! > 0) {
           const b3 = Math.max(0, mb.B2[m]! - plan.fSz[m]! - plan.fHz[m]!);
           const rest = Math.max(0, plan.fCs[m]! - b3);
           // A minimum month: only the part of the minimum not above the month's (even tax-free) income; 0 without income.

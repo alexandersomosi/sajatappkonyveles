@@ -501,7 +501,7 @@ export interface ClientHome {
   currentDossier: { month: MonthKey; label: string; items: DocumentListItem[]; totalCount: number };
   nextDeadline: Deadline | null;
   /** Shown as a home banner when the service is ending or ended (cancelled subscription, cancelled deletion). */
-  serviceNotice?: { kind: 'megszunik' | 'megszunt'; endsOn: ISODate | null; canResume: boolean };
+  serviceNotice?: { kind: 'megszunik' | 'megszunt' | 'felmondva'; endsOn: ISODate | null; canResume: boolean; letterDocumentId?: string | null };
   // SPEC §28 (null while restricted or without profile)
   reserve?: ReserveCard | null;
   earnings?: EarningsCard | null;
@@ -514,6 +514,23 @@ export interface ClientHome {
   lock?: ServiceLockView | null;
   pause?: PauseView | null;
   kata?: KataHomeView | null;
+  /** k7c2 (SPEC §28.K.11): a KATA client's invoices to a business customer – the KATA may end (newest first, max 3). */
+  kataRisk?: KataRiskItem[];
+}
+
+/** k7c2 (SPEC §28.K.11): the business-customer warning of one invoice of a KATA client (texts filled by the server). */
+export interface KataRiskItem {
+  navInvoiceId: string;
+  invoiceNumber: string;
+  vevo: string;
+  amountHuf: number;
+  payerKind: 'kifizeto' | 'kulfoldi_kifizeto' | 'ismeretlen';
+  /** The money arrived (received_on ≤ today, not estimated): the KATA ends the day before. */
+  receivedOn: ISODate | null;
+  endsOn: ISODate | null;
+  reportBy: ISODate | null;
+  title: string;
+  text: string;
 }
 
 // ---------- messages / requests ----------

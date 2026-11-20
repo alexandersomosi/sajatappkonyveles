@@ -14,6 +14,14 @@ import { SEMA } from '../config';
 const platform = (): 'app' | 'web' => (Platform.OS === 'web' ? 'web' : 'app');
 
 /** /config gains paymentProvider (§29.14): stripe | demo | simplepay | disabled. An older server = SimplePay. */
+/** k7c2: why the monthly fee is unpaid (DuePaymentView.reason) – one plain sentence for the Főoldal and "Fizesd ki". */
+export const HAVIDIJ_OK: Record<string, string> = {
+  hitelesites: 'A bankod megerősítést kér. Fizesd ki pár lépésben.',
+  elutasitva: 'A bankod nem engedte a levonást. Fizesd ki most, vagy adj meg másik kártyát.',
+  lejart_kartya: 'Lejárt a kártyád. Adj meg újat, és fizesd ki.',
+  esedekes: 'Fizesd ki, és minden megy tovább.',
+};
+
 export function fizetesSzolgaltato(cfg: unknown): string {
   const c = cfg as { paymentProvider?: string } | undefined;
   return c?.paymentProvider ?? (c ? 'simplepay' : 'demo');

@@ -26,6 +26,7 @@ import { useServiceLock } from '@/ui/Zarolas';
 import { beallitasIr, beallitasOlvas } from '@/lib/tarolo';
 import { useGuided } from '@/api/hooks-k29g';
 import { useElofizetesK29 } from '@/api/hooks-k29';
+import { HAVIDIJ_OK } from '@/lib/fizetes';
 import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
 
 /** S25 – egyszeri kártya az első aktív Főoldalon: „Kész a bekötés!” (SPEC §27.4.4). Csak ezen a telefonon jegyzi meg. */
@@ -66,6 +67,27 @@ type LapNev = null | 'hogyan' | 'szamlaszamok' | 'befizettem';
 /** SPEC §29.9.4: the client text of a manual lock (SERVICE_LOCK_REASONS 'kezi'). */
 const KEZI_ZAROLAS = 'Szünetel a könyvelésed. Írj nekünk, ha kérdésed van.';
 
+/** k7c2 (SPEC §28.K.11): a KATA client invoiced a business customer – the KATA may end. */
+function KataKockazat({ items }: { items: NonNullable<ClientHome['kataRisk']> }) {
+  return (
+    <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, backgroundColor: szin.veszelyAlap }}>
+      {items.map((k, i) => (
+        <Pressable key={k.navInvoiceId} accessibilityRole="link" onPress={() => router.push(`/szamla/${k.navInvoiceId}`)} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginTop: i ? 12 : 0 }}>
+          <Ikon3d nev="szamlak" pt={28} />
+          <View style={{ flex: 1 }}>
+            <T m={16} s={700} lh={1.35} c={szin.veszelySzoveg}>
+              {k.title}
+            </T>
+            <T m={15} lh={1.45} c={szin.veszelySzoveg} style={{ marginTop: 2 }}>
+              {k.text}
+            </T>
+          </View>
+        </Pressable>
+      ))}
+    </Lap>
+  );
+}
+
 function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
   const hero = h.hero;
   // The big amount must never break inside the number ("305 04 / 6 Ft" at 320 px with large text, review k3c2).
@@ -84,6 +106,8 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
   }, [hero.state, attunes]);
   const fn = h.accountant.firstName;
   const { lock } = useServiceLock();
+  // k7c2: an unpaid MONTHLY FEE is not "nincs mit fizetned" – the tax part is fine, the fee is not (the red card below)
+  const dijVar = Boolean(useElofizetesK29(h.client.onboardingComplete).data?.due);
   const osszeg = szam(hero.amountHuf ?? 0);
   // k6c2: an estimate carries "kb." → rounded to 1 000; "Eddig" only when the amount really is what gathered so far
   // (the running quarter of a főfoglalkozású already holds the fixed járulék of its months still to come)
@@ -94,14 +118,16 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
       : hero.state === 'nincs_fizetendo'
         ? {
             ikon: 'hataridok',
-            cim: lock ? LOCK_TEXTS.heroTitle : 'Most nincs mit fizetned',
+            cim: lock ? LOCK_TEXTS.heroTitle : dijVar ? 'Adót most nem kell fizetned' : 'Most nincs mit fizetned',
             // k6c2: under the lock banner never "Bence szól…" – the bookkeeping is paused until the fee is paid
             // §29.9.4: a manual lock by the admin ('kezi') is not about an unpaid fee
             mondat: lock
               ? lock.reasons.every((r) => r === 'kezi')
                 ? KEZI_ZAROLAS
                 : fillPlaceholders(LOCK_TEXTS.heroNote, { mit: lock.reasons.filter((r) => r !== 'kezi').map((r) => (LOCK_TEXTS.mit as Record<string, string>)[r] ?? r).join(' és ') })
-              : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
+              : dijVar
+                ? 'A havidíjad viszont még nincs kifizetve – lent látod.'
+                : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
           }
         : hero.state === 'jovahagyva'
           ? { ikon: 'szamlaszam', cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(), mondat: hero.dueDate ? `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.` : null }
@@ -309,6 +335,22 @@ function SzolgaltatasVege({ n, fn }: { n: NonNullable<ClientHome['serviceNotice'
   const meg = n.kind === 'megszunik' && n.endsOn;
   const folytat = useElofizetesFolytat();
   const jelez = useJelzes();
+  // k7c2: WE terminated the contract – one end date (until then everything runs), the letter, no "Mégis maradok"
+  if (n.kind === 'felmondva') {
+    return (
+      <View style={{ borderRadius: 14, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
+          {n.endsOn ? `Felmondtuk a szerződésedet. ${nagybetu(datumIg(n.endsOn))} minden marad, ${fn} addig intézi a könyvelésed.` : 'Felmondtuk a szerződésedet.'}
+        </T>
+        <GombSz
+          cim={n.letterDocumentId ? 'Elolvasom a levelet' : 'Írok nektek'}
+          c={szin.borostyanSzoveg}
+          onPress={() => (n.letterDocumentId ? router.push(`/tetel/${n.letterDocumentId}` as never) : router.push('/uzenetek'))}
+          style={{ paddingBottom: 0 }}
+        />
+      </View>
+    );
+  }
   return (
     <View style={{ borderRadius: 14, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
       <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
@@ -377,15 +419,22 @@ export default function Fooldal() {
     >
       {due ? (
         <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, backgroundColor: szin.veszelyAlap }}>
-          <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          {/* k7c2: what it is (the monthly fee) and why (the bank's answer), in plain words */}
+          <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10 }}>
             <Ikon3d nev="szamlaszam" pt={28} />
-            <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg} style={{ flex: 1 }}>
-              {fillPlaceholders(P29.fizesdKi.homeBanner, { osszeg: szam(due.amountHuf) })}
-            </T>
-            {fizetendo ? <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} /> : null}
+            <View style={{ flex: 1 }}>
+              <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg}>
+                {`A havidíjad (${szam(due.amountHuf)} Ft) nincs kifizetve`}
+              </T>
+              <T m={15} lh={1.45} c={szin.veszelySzoveg} style={{ marginTop: 2 }}>
+                {HAVIDIJ_OK[due.reason] ?? HAVIDIJ_OK.esedekes}
+              </T>
+            </View>
           </Pressable>
+          <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} style={{ marginTop: 10, alignSelf: 'flex-start', marginLeft: 38 }} />
         </Lap>
       ) : null}
+      {h.kataRisk?.length ? <KataKockazat items={h.kataRisk} /> : null}
       {h.twoNumbers ? <KetSzam v={h.twoNumbers} /> : null}
       <AktivalasKartya ugyfel={h.client.id} fn={fn} />
       {h.serviceNotice ? <SzolgaltatasVege n={h.serviceNotice} fn={fn} /> : null}

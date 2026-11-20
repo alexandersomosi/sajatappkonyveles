@@ -305,7 +305,8 @@ function UtSor({ s, elso, fn, utvalt, zartLap }: { s: JourneyStepView; elso: boo
   );
 }
 
-export function UtLista({ j, fn, utvalt }: { j: JourneyView; fn: string; utvalt: () => void }) {
+/** k7c2: `szamNelkul` – while the guided run shows its own "{done} / {total}", the list names no second count. */
+export function UtLista({ j, fn, utvalt, szamNelkul }: { j: JourneyView; fn: string; utvalt: () => void; szamNelkul?: boolean }) {
   const [mutatKesz, setMutatKesz] = useState(false);
   const [zart, setZart] = useState<JourneyStepView | null>(null);
   // Az 1. sor (Vállalkozásod) mindig látszik – a „Módosítom” innen 2 koppintás (S4).
@@ -331,7 +332,7 @@ export function UtLista({ j, fn, utvalt }: { j: JourneyView; fn: string; utvalt:
           >
             <KeszJel pt={26} label="kész" />
             <T m={15.5} s={600} style={{ flex: 1 }}>
-              {fillPlaceholders(JOURNEY_TEXTS.doneCollapsed, { n: String(kesz.length) })}
+              {szamNelkul ? 'A kész lépések' : fillPlaceholders(JOURNEY_TEXTS.doneCollapsed, { n: String(kesz.length) })}
             </T>
             <T m={15} s={600} c={szin.tintakekSzoveg} alahuz>
               {mutatKesz ? JOURNEY_TEXTS.hideDone : JOURNEY_TEXTS.showAll}

@@ -24,6 +24,7 @@ import { VisszahivasAllapot, VisszahivasKartya, visszahivasUt } from '@/ui/Vissz
 import { useGuided } from '@/api/hooks-k29g';
 import { useElofizetesK29 } from '@/api/hooks-k29';
 import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
+import { HAVIDIJ_OK } from '@/lib/fizetes';
 import { szam } from '@/lib/format';
 import { FolytasKartya } from '@/kepernyok/Bevezeto';
 
@@ -211,9 +212,14 @@ export default function Bekotes() {
         <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, marginBottom: 12, backgroundColor: szin.veszelyAlap }}>
           <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Ikon3d nev="szamlaszam" pt={28} />
-            <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg} style={{ flex: 1 }}>
-              {fillPlaceholders(P29.fizesdKi.homeBanner, { osszeg: szam(due.amountHuf) })}
-            </T>
+            <View style={{ flex: 1 }}>
+              <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg}>
+                {`A havidíjad (${szam(due.amountHuf)} Ft) nincs kifizetve`}
+              </T>
+              <T m={15} lh={1.45} c={szin.veszelySzoveg} style={{ marginTop: 2 }}>
+                {HAVIDIJ_OK[due.reason] ?? HAVIDIJ_OK.esedekes}
+              </T>
+            </View>
             <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} />
           </Pressable>
         </Lap>
@@ -239,13 +245,14 @@ export default function Bekotes() {
           {nyitottSegitseg ? <SegitsegAllapot a={nyitottSegitseg} fn={fn} kompakt cb={d.callback ?? null} style={{ marginBottom: 2 }} /> : cbNyitott ? <VisszahivasAllapot cb={cbNyitott} kompakt /> : null}
 
           <View onLayout={(e) => setKartyaY(e.nativeEvent.layout.y)} />
-          {most ? (
+          {/* k7c2: while the guided run is open, its "Folytasd ott" card is THE next step – no second "Most ez jön" */}
+          {most && !folytas ? (
             <>
               {j.waiting ? <VarakozasCsik w={j.waiting} /> : null}
               <MostEzJonKartya s={most} fn={fn} utvalt={utv.modosit} lab={jovahagyando ? <JovahagytamGomb a={jovahagyando} fn={fn} /> : null} />
               {kiemelt ? <KiemeltSor cim={kiemelt.cim} szoveg={kiemelt.szoveg} ikon={kiemelt.ikon} onPress={() => router.push(kiemelt.ut)} /> : null}
             </>
-          ) : j.waiting ? (
+          ) : j.waiting && !folytas ? (
             <VarakozasKartya w={j.waiting} />
           ) : null}
 
@@ -270,7 +277,7 @@ export default function Bekotes() {
             </Lap>
           ))}
 
-          <UtLista j={j} fn={fn} utvalt={utv.modosit} />
+          <UtLista j={j} fn={fn} utvalt={utv.modosit} szamNelkul={!!folytas} />
 
           <View style={{ marginTop: 16 }}>
             <VideoKartya nev="bekotes" cim="Nézd meg, hogyan működik" magas={200} osszecsukva={latta.latta || adatokKesz} latta={latta.jelol} />

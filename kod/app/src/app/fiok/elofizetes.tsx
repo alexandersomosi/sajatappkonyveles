@@ -71,9 +71,11 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
   const havi = e.monthlyHuf ?? e.nextChargeAmountHuf ?? e.priceHuf;
   const fut = e.status === 'active' && !e.cancelAtPeriodEnd;
   const lemondva = e.status === 'active' && e.cancelAtPeriodEnd;
+  // k7c2: WE terminated the contract – one end date (terminated.effectiveOn), never "Lemondtad" / "Mégis maradok"
+  const felmondva = e.terminatedUntil ?? null;
   const kartya = e.cardInfo ?? null;
   const vegeIg = e.currentPeriodEnd ? datumIg(e.currentPeriodEnd) : 'a hónap végéig';
-  const allapot = fut ? 'Él' : lemondva ? 'Lemondva' : e.status === 'canceled' ? 'Megszűnt' : e.status === 'incomplete' ? 'Még nincs elindítva' : e.status === 'past_due' ? 'Fizetésre vár' : 'Szünetel';
+  const allapot = felmondva ? 'Felmondtuk' : fut ? 'Él' : lemondva ? 'Lemondva' : e.status === 'canceled' ? 'Megszűnt' : e.status === 'incomplete' ? 'Még nincs elindítva' : e.status === 'past_due' ? 'Fizetésre vár' : 'Szünetel';
 
   async function igen() {
     if (!kerdes || 'kartya' in kerdes) return;
@@ -122,7 +124,9 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
       <Lap>
         <Sor2 elso cim="Állapot" ertek={allapot} />
         <Sor2 cim={P.account.monthly} ertek={`${szam(havi)} Ft`} al={e.monthlySource === 'szunetel' ? 'szünetelés alatt' : e.monthlySource === 'ingyenes_honap' ? 'ebben a hónapban nem vonunk le' : null} />
-        {lemondva && e.currentPeriodEnd ? (
+        {felmondva ? (
+          <Sor2 cim="Meddig marad" ertek={datumEvvel(felmondva)} al="addig minden szolgáltatás jár, levonás nincs" />
+        ) : lemondva && e.currentPeriodEnd ? (
           <Sor2 cim={P.account.nextCharge} ertek={fillPlaceholders(P.account.canceledUntil, { datum: datumEvvel(e.currentPeriodEnd) })} />
         ) : fut && e.nextChargeAt && kartya ? (
           <Sor2 cim={P.account.nextCharge} ertek={datumEvvel(e.nextChargeAt)} al={`${szam(e.nextChargeAmountHuf ?? havi)} Ft`} />
@@ -169,7 +173,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
           {`${nagybetu(vegeIg)} él az előfizetésed, utána csak új kártyával folytatódik.`}
         </T>
       ) : null}
-      {e.status === 'incomplete' || e.status === 'canceled' ? (
+      {(e.status === 'incomplete' || e.status === 'canceled') && !felmondva ? (
         <Lap style={{ padding: 16 }}>
           <T m={16} lh={1.5}>
             {e.status === 'canceled' ? (e.currentPeriodEnd && e.currentPeriodEnd > ma ? `${nagybetu(vegeIg)} intézzük a könyvelésed, utána leáll.` : 'Az előfizetésed lejárt.') : 'Még nem adtad meg a kártyádat.'}
@@ -182,7 +186,11 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
       {e.status !== 'incomplete' && e.status !== 'canceled' ? (
         <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
           <View style={{ paddingLeft: 38 }}>
-            {lemondva ? (
+            {felmondva ? (
+              <T m={16} lh={1.5}>
+                {`Felmondtuk a szerződésedet. ${nagybetu(datumIg(felmondva))} minden marad, utána nem vonunk le többet. A felmondó levelet a dossziédban találod.`}
+              </T>
+            ) : lemondva ? (
               <>
                 <T m={16} lh={1.5}>
                   {`Lemondtad. ${nagybetu(vegeIg)} minden megy tovább, utána nem vonunk le többet.`}

@@ -12,6 +12,7 @@ import { usePirito } from '../../../ui/Pirito';
 import { I3 } from '../../../ui/Icon3d';
 import { honapEv, szam } from '../../../lib/format';
 import { LepcsoProvider, useLepcsos } from './lepcso';
+import { kellKetlepcsos } from '../../../api/k29';
 
 function Csempe({ ertek, mi, to, ft, ikon }: { ertek: number; mi: string; to: string; ft?: boolean; ikon: Parameters<typeof I3>[0]['n'] }) {
   return (
@@ -156,8 +157,16 @@ function Tartalom() {
         }
       />
       <div className="tartalom">
-        {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
-        {q.isPending || !o ? (
+        {/* k7c2: without the admin's own 2FA – a way to switch it on, and no endless "Töltöm…" */}
+        {q.isError && kellKetlepcsos(q.error) ? (
+          <div className="uzenet-sav figyel" style={{ display: 'block' }}>
+            <b>A konzolhoz kapcsold be a kétlépcsős belépést.</b>{' '}
+            <Link to="/ketlepcsos-beallitas">Bekapcsolom</Link>
+          </div>
+        ) : q.isError ? (
+          <HibaSav hiba={q.error} ujra={() => q.refetch()} />
+        ) : null}
+        {q.isError ? null : q.isPending || !o ? (
           <Toltes />
         ) : (
           <>

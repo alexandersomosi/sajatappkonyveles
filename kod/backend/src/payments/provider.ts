@@ -68,6 +68,8 @@ export interface ProviderPaymentState {
   refundedHuf: number;
   metadata: Record<string, string>;
   customerRef: string | null;
+  /** k7c2 B7: ISO currency of the PaymentIntent ('huf'); absent when unknown (DEMO). */
+  currency?: string | null;
 }
 
 export interface ProviderHostedState {

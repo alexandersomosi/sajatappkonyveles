@@ -348,7 +348,8 @@ describe('belső jegyzetek és névelő (k3 kör 2: tulaj 12 és 6)', () => {
   });
   it('„a(z)” a kitöltött érték szerint', () => {
     expect(kitolt('a(z) {{brand.name}}').szoveg).toBe(`${huNevelo(ALAP_MARKA.name)} ${ALAP_MARKA.name}`);
-    expect(kitolt('A(z) {{ceg.nev}} és a(z) {{ceg.email}}').szoveg).toBe(`A ${ALAP_MARKA.provider.legalName} és a ${ALAP_MARKA.provider.supportEmail}`);
+    // k7c2: the support e-mail is set in brand.json now ("ugyfelszolgalat@…" → "az")
+    expect(kitolt('A(z) {{ceg.nev}} és a(z) {{ceg.email}}').szoveg).toBe(`A ${ALAP_MARKA.provider.legalName} és ${huNevelo(ALAP_MARKA.provider.supportEmail)} ${ALAP_MARKA.provider.supportEmail}`);
     expect(nevelokFeloldasa('a(z) I. negyedév, a(z) II. negyedév, a(z) 5. pont, a(z) 1956-os, a(z) 2026. év, a(z) ügyfél')).toBe(
       'az I. negyedév, a II. negyedév, az 5. pont, az 1956-os, a 2026. év, az ügyfél',
     );

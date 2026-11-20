@@ -102,14 +102,17 @@ export interface StatementData {
 }
 
 /** The monthly table from revenue_items (not deleted), grouped by received_on; átalány counts only counts_for_atalany. */
-export async function statementData(db: DbOrTx, clientId: string, from: string, to: string): Promise<StatementData> {
+export async function statementData(db: DbOrTx, clientId: string, from: string, to: string, asOf?: string): Promise<StatementData> {
   const months = monthsBetween(from, to);
   const years = [...new Set(months.map((m) => Number(m.slice(0, 4))))];
   const regimes = await regimesOf(db, clientId, years);
+  // k7c2: money received after asOf (today) is not counted – an estimated receipt date in the future is not money that
+  // arrived (the same basis as the Főoldal and the tax engine: received_on ≤ today)
+  const last = asOf && asOf < lastDayOfMonth(to) ? asOf : lastDayOfMonth(to);
   const items = await db
     .select()
     .from(revenueItems)
-    .where(and(eq(revenueItems.clientId, clientId), isNull(revenueItems.deletedAt), gte(revenueItems.receivedOn, `${from}-01`), lte(revenueItems.receivedOn, lastDayOfMonth(to))))
+    .where(and(eq(revenueItems.clientId, clientId), isNull(revenueItems.deletedAt), gte(revenueItems.receivedOn, `${from}-01`), lte(revenueItems.receivedOn, last)))
     .orderBy(asc(revenueItems.receivedOn));
   const byMonth = new Map<string, IncomeStatementMonth>(months.map((m) => [m, { month: m, invoices: 0, other: 0, revenueHuf: 0, manualHuf: 0, estimated: false }]));
   for (const it of items) {
@@ -182,7 +185,7 @@ async function yearsWithRevenue(db: DbOrTx, clientId: string, thisYear: number):
 
 export async function incomeStatementMeta(deps: Deps, db: DbOrTx, cl: ClientRow, from?: string, to?: string): Promise<IncomeStatementMeta> {
   const range = await checkRange(deps, db, cl.id, from, to);
-  const d = await statementData(db, cl.id, range.from, range.to);
+  const d = await statementData(db, cl.id, range.from, range.to, todayBudapest(deps.now()));
   const ap = await approvalOf(db, cl.id, d);
   const p = await accountantParams(db, cl.accountantId);
   return {
@@ -404,7 +407,7 @@ export async function accIncomeStatement(deps: Deps, db: DbOrTx, cl: ClientRow, 
 /** "Ellenőriztem, rendben": stores the approval for the CURRENT hash (409 when the client's data moved meanwhile). */
 export async function approveStatement(deps: Deps, cl: ClientRow, b: { from: string; to: string; dataSha256: string }, actor: { userId: string; role: string; firstName: string }): Promise<AccIncomeStatementView> {
   const range = await checkRange(deps, deps.db, cl.id, b.from, b.to);
-  const d = await statementData(deps.db, cl.id, range.from, range.to);
+  const d = await statementData(deps.db, cl.id, range.from, range.to, todayBudapest(deps.now()));
   if (d.hash !== b.dataSha256) throw E.conflict('Közben változtak az adatok. Frissítsd az oldalt, és nézd át újra.');
   const now = deps.now();
   await deps.db

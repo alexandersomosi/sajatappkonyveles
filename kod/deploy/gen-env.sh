@@ -103,7 +103,7 @@ defaults = [
     ("FILE_ENC_KEY_ID", "1"), ("STAFF_TOTP_REQUIRED", "true"),
     ("SMTP_PORT", "587"),
     ("SIMPLEPAY_MODE", "demo"), ("SIMPLEPAY_RECURRING_TIMES", "12"), ("SIMPLEPAY_TOKEN_VALID_MONTHS", "12"),
-    ("PLAN_PRICE_HUF", "20000"), ("INVOICE_MODE", "demo"),
+    ("PLAN_PRICE_HUF", "19999"), ("INVOICE_MODE", "demo"),
     ("NAV_MODE", "demo"), ("NAV_SOFTWARE_ID", "HU00000000KEZJEGY1"), ("NAV_SOFTWARE_VERSION", "1.0.0"), ("NAV_SYNC_HOUR", "5"),
     ("PUSH_MODE", "demo"), ("TRUST_PROXY_HOPS", "1"),
 ]

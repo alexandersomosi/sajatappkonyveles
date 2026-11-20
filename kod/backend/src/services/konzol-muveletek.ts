@@ -502,7 +502,8 @@ export async function terminateClient(deps: Deps, c: C, id: string, b: ConsoleTe
   await cancelSubscriptionK29(deps, { clientId: id, when: immediate ? 'azonnal' : 'datum', ...(immediate ? {} : { date: effectiveOn }), byUserId: actor, reason: `felmondás: ${b.kind}` } as never);
   if (refundPaymentId && refundHuf > 0) await refundPayment(deps, { paymentId: refundPaymentId, amountHuf: refundHuf, reason: 'Időarányos visszatérítés (ÁSZF 8.3.)', byUserId: actor }).catch(() => undefined);
   const openFees = (await deps.db.select().from(feeCharges).where(and(eq(feeCharges.clientId, id), eq(feeCharges.status, 'nyitott')))).map((f) => ({ label: (FEE_KIND_LABELS as Record<string, string>)[f.kind] ?? f.kind, amountHuf: f.amountHuf }));
-  const paidPeriod = sub?.currentPeriodStart && sub.currentPeriodEnd ? `${huLongDate(sub.currentPeriodStart)} – ${huLongDate(sub.currentPeriodEnd)}` : null;
+  // k7c2: the period end is exclusive (= the next period's first day) – the letter names the last paid day
+  const paidPeriod = sub?.currentPeriodStart && sub.currentPeriodEnd ? `${huLongDate(sub.currentPeriodStart)} – ${huLongDate(addDays(sub.currentPeriodEnd, -1))}` : null;
   let documentId: string | null = null;
   try {
     const pdf = await letterPdf(deps, cl, b.kind, { subReason: b.subReason ?? null, when: b.when, effectiveOn, refundHuf, openFees, paidPeriod, annualText: 'ha az idei SZJA-bevallást is mi adjuk be, azt külön megrendelheted.' });

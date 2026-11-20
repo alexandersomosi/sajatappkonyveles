@@ -77,6 +77,7 @@ export function mapPaymentIntent(pi: AnyObj): ProviderPaymentState {
     refundedHuf: charge && typeof charge.amount_refunded === 'number' ? Math.round(charge.amount_refunded / 100) : 0,
     metadata: metaOf(pi.metadata),
     customerRef: idOf(pi.customer),
+    currency: typeof pi.currency === 'string' ? pi.currency : null,
   };
 }
 

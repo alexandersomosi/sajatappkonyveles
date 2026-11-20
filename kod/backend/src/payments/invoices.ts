@@ -375,6 +375,28 @@ async function storeIssued(deps: Deps, row: InvoiceRow, res: SzResult & { demo: 
   }
 }
 
+/**
+ * k7c2 B8 (SPEC §29.2 "admin alert"): a payment whose mode has no invoicing route under the current config gets a
+ * 'hiba mode_mismatch' row that is never retried by itself – the admins are told once per row.
+ */
+export async function alertMismatchInvoices(deps: Deps, onlyId?: string): Promise<number> {
+  const db = deps.db;
+  const rows = await db
+    .select()
+    .from(feeInvoices)
+    .where(and(eq(feeInvoices.status, 'hiba'), eq(feeInvoices.lastErrorCode, 'mode_mismatch'), sql`${feeInvoices.alertedAt} is null`, onlyId ? eq(feeInvoices.id, onlyId) : sql`true`))
+    .limit(50);
+  let n = 0;
+  for (const row of rows) {
+    const [claimed] = await db.update(feeInvoices).set({ alertedAt: deps.now() }).where(and(eq(feeInvoices.id, row.id), sql`${feeInvoices.alertedAt} is null`)).returning({ id: feeInvoices.id });
+    if (!claimed) continue;
+    await audit(db, { action: 'fee_invoice.failed', actorRole: 'system', targetType: 'fee_invoice', targetId: row.id, clientId: row.clientId, details: { code: 'mode_mismatch' } });
+    await alertAdmins(deps, 'invoice_failed', row.clientId, { osszeg: fmtHuf(Math.abs(row.amountHuf)), hiba: 'a számlázó nincs bekötve ehhez a fizetési módhoz' }, '/admin/dijszamlak');
+    n++;
+  }
+  return n;
+}
+
 /** Worker (every minute): rows waiting for a (re)try. */
 export async function jobInvoicesIssue(deps: Deps): Promise<Record<string, number>> {
   const due = await deps.db
@@ -383,8 +405,12 @@ export async function jobInvoicesIssue(deps: Deps): Promise<Record<string, numbe
     .where(and(inArray(feeInvoices.status, ['folyamatban', 'hiba']), lte(feeInvoices.nextRetryAt, deps.now())))
     .orderBy(feeInvoices.createdAt)
     .limit(20);
-  const out = { kiallitva: 0, hiba: 0, folyamatban: 0, skip: 0 };
+  const out = { kiallitva: 0, hiba: 0, folyamatban: 0, skip: 0, riasztas: 0 };
   for (const r of due) out[await processInvoice(deps, r.id)]++;
+  out.riasztas = await alertMismatchInvoices(deps).catch((e: unknown) => {
+    log().warn({ err: safeErr(e) }, 'mismatch invoice alert failed');
+    return 0;
+  });
   return out;
 }
 

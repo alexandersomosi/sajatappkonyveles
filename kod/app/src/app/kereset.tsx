@@ -6,6 +6,7 @@ import { View } from 'react-native';
 import type { EarningsMonthView } from '@/_shared/api';
 import { EARNINGS_TEXTS, fillPlaceholders } from '@/_shared/bekotes';
 import { useKereset, useMe } from '@/api/hooks';
+import { ApiHiba } from '@/api/http';
 import { maiNap, nagybetu, szam } from '@/lib/format';
 import { BELJEBB, NagySzam, OsszegSor, SavFej } from '@/kepernyok/k28';
 import { szin } from '@/theme/tokens';
@@ -38,6 +39,13 @@ function KeresetTartalom() {
     >
       {q.isLoading ? (
         <Betolt />
+      ) : q.error instanceof ApiHiba && q.error.status === 404 && q.error.message ? (
+        // k7c2: a KATA client (or a client without a tax profile) gets the server's plain explanation – not an error
+        <Lap style={{ paddingHorizontal: 16, paddingVertical: 14 }}>
+          <T m={16} lh={1.5}>
+            {q.error.message}
+          </T>
+        </Lap>
       ) : q.error || !v ? (
         <Hiba hiba={q.error} ujra={() => void q.refetch()} />
       ) : (

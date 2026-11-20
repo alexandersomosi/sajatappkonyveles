@@ -5,7 +5,9 @@ import type { ClientFlag } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { appointments, clients, clientTaxProfiles, deadlines, navCredentials, onboardingSteps, requests, subscriptions, taxPaymentItems, taxPeriods } from '../db/schema.js';
-import { daysBetween, todayBudapest } from '../lib/dates.js';
+import { daysBetween, lastDayOfMonth, MONTHS_HU, todayBudapest } from '../lib/dates.js';
+import { nextWorkingDay } from '../lib/munkanap.js';
+import { KATA_RULES_2026 } from '../_shared/enums.js';
 import { deadlinesFor } from '../tax/engine.js';
 import { computeYear, periodLabel, periodTotal } from './tax.js';
 
@@ -73,13 +75,16 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
   // shown as ours (and never as "lejárt"), unless we approved or filed that period ourselves.
   const serviceStart = cl ? todayBudapest(cl.createdAt) : '0000-01-01';
   const profiles = await db
-    .select({ year: clientTaxProfiles.year, status: clientTaxProfiles.status, hipaMethod: clientTaxProfiles.hipaMethod })
+    .select({ year: clientTaxProfiles.year, status: clientTaxProfiles.status, hipaMethod: clientTaxProfiles.hipaMethod, regime: clientTaxProfiles.regime, kataFrom: clientTaxProfiles.kataFrom, kataTo: clientTaxProfiles.kataTo })
     .from(clientTaxProfiles)
     .where(eq(clientTaxProfiles.clientId, clientId));
   const statusOf = (year: number) => profiles.find((x) => x.year === year)?.status;
+  // k7c2: a KATA year has no átalány quarters, no '58 return and no 26SZJA – its own monthly 50 000 Ft instead
+  const kataYear = (year: number) => profiles.find((x) => x.year === year)?.regime === 'kata';
   const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), sql`${taxPeriods.dueDate} between ${from} and ${to}`));
   for (const p of periods) {
     if (p.dueDate < serviceStart && p.calcStatus !== 'jovahagyva' && p.filingStatus !== 'beadva') continue;
+    if (p.kind === 'negyedev' && kataYear(p.year)) continue;
     const total = await periodTotal(db, p);
     const paid = p.paymentStatus === 'befizetve_jelezve' || p.paymentStatus === 'ellenorizve' || (p.calcStatus === 'jovahagyva' && p.paymentStatus === 'nincs_fizetendo');
     const verified = p.paymentStatus === 'befizetve_jelezve' ? false : paid ? true : undefined;
@@ -107,11 +112,29 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       if (d.dueDate < from || d.dueDate > to || d.dueDate < serviceStart) continue;
       const who = acc ? 'te adod be' : 'a könyvelőd adja be';
       if (d.periodKey === String(y)) {
+        if (prof.regime === 'kata') continue; // no 26SZJA for a KATA year (the '26KATA only above the keret)
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
         out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, false, '/hataridok'));
       } else if (d.periodKey === `${y}-HIPA`) {
         out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, false, '/hataridok'));
       }
+    }
+  }
+  // k7c2 (SPEC §28.K.11): the KATA months – 50 000 Ft per started month by the 12th of the next month (next working day).
+  // We do not track the KATA transfers yet, so only the coming ones are listed (never a "lejárt" we cannot know).
+  for (let y = Math.max(fromYear, 2026); y <= toYear; y++) {
+    const prof = profiles.find((x) => x.year === y);
+    if (!prof || prof.regime !== 'kata') continue;
+    for (let m = 1; m <= 12; m++) {
+      const monthStart = `${y}-${String(m).padStart(2, '0')}-01`;
+      const monthEnd = lastDayOfMonth(monthStart.slice(0, 7));
+      if (prof.kataFrom && monthEnd < prof.kataFrom) continue;
+      if (prof.kataTo && monthStart > prof.kataTo) continue;
+      const ny = m === 12 ? y + 1 : y;
+      const nm = m === 12 ? 1 : m + 1;
+      const due = nextWorkingDay(`${ny}-${String(nm).padStart(2, '0')}-${String(KATA_RULES_2026.dueDayOfNextMonth).padStart(2, '0')}`);
+      if (due < from || due > to || due < today || due < serviceStart) continue;
+      out.push(dl(today, `kata:${y}-${String(m).padStart(2, '0')}`, 'befizetes', `Kata – ${MONTHS_HU[m - 1]}: ${new Intl.NumberFormat('hu-HU').format(KATA_RULES_2026.monthlyHuf)} Ft`, due, false, '/', KATA_RULES_2026.monthlyHuf, undefined, false));
     }
   }
   const reqs = await db

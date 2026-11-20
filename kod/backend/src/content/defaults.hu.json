@@ -74,7 +74,7 @@
   "notif.subscription_canceled.admin.title": "Lemondtuk az előfizetésed",
   "notif.subscription_canceled.admin.body": "{periodEndText} minden marad a régiben. Utána nem vonunk le több díjat. Ha kérdésed van, írj nekünk az appban.",
   "notif.fee_invoice_issued.title": "Megérkezett a havidíj: {amount}",
-  "notif.fee_invoice_issued.body": "A díjról szóló bizonylatot a Fiók → Díjszámlák alatt találod.",
+  "notif.fee_invoice_issued.body": "A díjról szóló bizonylatot a Fiók → Díjak és számlák alatt találod.",
   "notif.auth_email_code.title": "Megerősítő kód",
   "notif.auth_email_code.body": "A kódod: {code}",
   "notif.auth_password_reset_code.title": "Jelszó-visszaállító kód",

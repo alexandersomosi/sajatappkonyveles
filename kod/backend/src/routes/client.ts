@@ -616,6 +616,12 @@ export function clientRoutes(deps: Deps) {
       home.currentDossier = { ...home.currentDossier, items: await listItems(deps.db, open.slice(0, 4), { firstName: ap.firstName, staff: false }), totalCount: open.length };
     }
     await augmentHome(deps, cl, home, today);
+    // k7c2 (SPEC §28.K.11): the Főoldal card of a KATA client's business-customer invoices (not while restricted)
+    if (!isRestricted(cl)) {
+      const { kataRisksOf } = await import('../services/szamla-ertesites.js');
+      const risks = await kataRisksOf(deps, cl, { limit: 3 });
+      if (risks.length) home.kataRisk = risks;
+    }
     return c.json(home);
   });
 
@@ -815,7 +821,10 @@ export function clientRoutes(deps: Deps) {
     const [i] = await deps.db.select().from(navInvoices).where(and(eq(navInvoices.id, param(c, 'id')), eq(navInvoices.clientId, cl.id))).limit(1);
     if (!i) throw E.notFound();
     const reserve = (await invoiceReserves(deps, cl, [i.id])).get(i.id);
-    return c.json({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo, invoice: i.data, ...(reserve ? { reserve } : {}) });
+    // k7c2 (SPEC §28.K.11): a KATA client's invoice to a business customer carries the red warning line
+    const { kataRisksOf } = await import('../services/szamla-ertesites.js');
+    const [kataRisk] = await kataRisksOf(deps, cl, { ids: [i.id] });
+    return c.json({ id: i.id, invoiceNumber: i.invoiceNumber, issueDate: i.issueDate, customerName: i.customerName, grossAmountHuf: i.grossHuf, status: i.status, demo: i.demo, invoice: i.data, ...(reserve ? { reserve } : {}), ...(kataRisk ? { kataRisk } : {}) });
   });
 
   // ================= messages, requests =================

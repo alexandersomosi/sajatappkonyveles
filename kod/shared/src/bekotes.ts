@@ -1428,16 +1428,19 @@ export function hunWith(name: string): string {
 }
 
 export function fillPlaceholders(text: string, values: Record<string, string | undefined>): string {
-  return text.replace(/\{([A-Za-z0-9_]+)\}/g, (m, k: string, at: number) => {
-    let v = values[k];
-    // {firstNameWith} without a stored form: built from {firstName} ("Bencével")
-    if (v === undefined && k === 'firstNameWith' && values.firstName !== undefined) v = hunWith(values.firstName);
-    if (v === undefined) return m;
-    // The fallback name of a not-yet-assigned accountant ("A könyvelőd") is lower case inside a sentence (11-19 javítás:
-    // "Felhívunk, és A könyvelőd …").
-    if (/^A könyvelőd/.test(v) && at > 0 && !/[.!?:]\s*$/.test(text.slice(0, at))) return `a${v.slice(1)}`;
-    return v;
-  });
+  return text
+    .replace(/\{([A-Za-z0-9_]+)\}/g, (m, k: string, at: number) => {
+      let v = values[k];
+      // {firstNameWith} without a stored form: built from {firstName} ("Bencével")
+      if (v === undefined && k === 'firstNameWith' && values.firstName !== undefined) v = hunWith(values.firstName);
+      if (v === undefined) return m;
+      // The fallback name of a not-yet-assigned accountant ("A könyvelőd") is lower case inside a sentence (11-19 javítás:
+      // "Felhívunk, és A könyvelőd …").
+      if (/^A könyvelőd/.test(v) && at > 0 && !/[.!?:]\s*$/.test(text.slice(0, at))) return `a${v.slice(1)}`;
+      return v;
+    })
+    // k7c2: a date value with its trailing dot before a suffix ("december 20.-ig") → "december 20-ig"
+    .replace(/(\d)\.-(ig|tól|től|án|én|jén|ján)(?![\p{L}])/gu, '$1-$2');
 }
 
 // =====================================================================================================================
@@ -2443,7 +2446,7 @@ export const CHANGE_TEXTS = {
         'Szünetelés alatt nem dolgozhatsz a vállalkozásodban, és nem állíthatsz ki számlát.',
         'A kezdőnapot nem adhatod meg visszamenőleg, és később nem módosíthatod. Jól gondold meg.',
         'Ha újra kezdenéd, azt is be kell jelentened. Szólj nekünk előtte.',
-        'Szünetelés alatt a havidíj helyett csak a rendelkezésre állási díjat fizeted: havi {pauseFee}.',
+        'Szünetelés alatt a havidíj helyett csak a szüneteltetési díjat fizeted: havi {pauseFee}.',
       ],
       /** [ELLENŐRIZENDŐ] – shown only after B4 confirmed it (SPEC §28.5.1 fact 3). */
       figyeljEllenorizendo: ['Legalább egy hónapig, legfeljebb két évig tarthat.'],
@@ -2460,7 +2463,7 @@ export const CHANGE_TEXTS = {
       mit: 'Ha a szünetelés után újra dolgoznál a vállalkozásodban, ezt be kell jelentened. Az újrakezdés napjától újra fizeted az adót és a járulékot.',
       figyelj: [
         'Számlát csak az újrakezdés napjától állíthatsz ki.',
-        'Az újrakezdéstől újra a havidíj jár a rendelkezésre állási díj helyett.',
+        'Az újrakezdéstől újra a havidíj jár a szüneteltetési díj helyett.',
         'A NAV-os lap pontos feliratait még ellenőrizzük. Ha elakadsz, kérj visszahívást.',
       ],
     },
@@ -2553,12 +2556,12 @@ export const CHANGE_FOLLOWUP_LABELS: Record<string, string> = {
   koltseghanyad_megerosites: 'Költséghányad újra megerősítve',
   hipa_masik_telepules: 'A másik település iparűzési adója átnézve',
   szunetel_szakasz: 'Szünetelés felvéve az adóprofilba ({from} – {to})',
-  szunetel_dij: 'Rendelkezésre állási díj indítva ({from})',
+  szunetel_dij: 'Szüneteltetési díj indítva ({from})',
   folytatas_emlekezteto: 'Újrakezdési emlékeztető beállítva',
   adoprofil_statusz: 'Adóprofil (fő / mellék / nyugdíjas) frissítve ({date})',
   adozasi_mod: 'Adózási mód (átalány / kata) frissítve ({date})',
   szunetel_lezaras: 'Szünetelés lezárva az adóprofilban',
-  szunetel_dij_lezaras: 'Rendelkezésre állási díj lezárva, újra havidíj',
+  szunetel_dij_lezaras: 'Szüneteltetési díj lezárva, újra havidíj',
 };
 /** In-app change form (SPEC §28.5.6; one field group per screen). */
 export const CHANGE_FORM_TEXTS = {
@@ -3169,7 +3172,7 @@ export const EXPLAINERS_28: readonly ExplainerDefault[] = [
   },
   {
     key: 'rendelkezesre_allasi_dij',
-    title: 'Rendelkezésre állási díj',
+    title: 'Szüneteltetési díj',
     what: 'Amíg szünetel a vállalkozásod, a havidíj helyett csak ezt a kisebb díjat fizeted.',
     why: 'Ezért megőrizzük az irataidat, figyeljük a határidőidet, és segítünk újraindulni.',
     where: 'A Fiókban, a „Díjak és számlák” résznél látod. Amikor újrakezded, újra a havidíj jár.',
@@ -3209,7 +3212,7 @@ export const FEE_KIND_LABELS: Record<_FeeKind, string> = {
   eves_zaras: 'Éves zárás',
   valtozas_egyszeru: 'Változás bejelentése helyetted',
   valtozas_jogallas: 'Jogállás-változás bejelentése helyetted',
-  szuneteltetesi_dij: 'Rendelkezésre állási díj',
+  szuneteltetesi_dij: 'Szüneteltetési díj',
   // SPEC §29.5 / §29.7
   igazolas_jovedelem: 'Jövedelemigazolás intézése',
   igazolas_ado: 'Adóigazolás intézése',
@@ -3233,7 +3236,7 @@ export const FEE_TEXTS = {
   inPlanTitle: 'Mi van a havidíjban?',
   inPlan:
     'Minden, amit az app tud: könyvelés, negyedéves adó, kiállított számláid letöltése, határidők, üzenetek. Külön díjas csak az éves zárás és az, ha a változást mi jelentjük be helyetted.',
-  pauseLine: 'Ha szünetel a vállalkozásod, a havidíj helyett csak a kisebb rendelkezésre állási díjat fizeted.',
+  pauseLine: 'Ha szünetel a vállalkozásod, a havidíj helyett csak a kisebb szüneteltetési díjat fizeted.',
   selfFree: 'Ha a változást magad jelented be az útmutatónkkal, az ingyenes.',
   feeLine: '{label}: {dij} Ft {unit}',
   openTitle: 'Fizetésre vár',
@@ -3258,7 +3261,7 @@ export const FEE_TEXTS = {
   choiceSelf: 'Magam jelentem be (ingyenes)',
   choiceTalk: 'Előbb beszéljük meg',
   adminLine: 'Mi változik nálad: {admin}',
-  invoiceLinePause: 'Rendelkezésre állási díj ({honap})',
+  invoiceLinePause: 'Szüneteltetési díj ({honap})',
   /** /admin/dijak (staff wording). */
   admin: {
     title: 'Díjak',
@@ -3540,9 +3543,9 @@ export const LOCK_TEXTS = {
 // ---------- §28.K.6 E – suspension (content szunetel.*) ----------
 export const PAUSE_TEXTS = {
   cardTitle: 'Szünetel a vállalkozásod',
-  cardBody: 'Szünetel a vállalkozásod, ezért {from} havi {dij} Ft rendelkezésre állási díjat fizetsz a {havidij} helyett. Ezért megőrizzük az irataidat, figyeljük a határidőidet, és segítünk újraindulni.',
+  cardBody: 'Szünetel a vállalkozásod, ezért {from} havi {dij} Ft szüneteltetési díjat fizetsz a {havidij} helyett. Ezért megőrizzük az irataidat, figyeljük a határidőidet, és segítünk újraindulni.',
   cardButton: 'Újrakezdeném',
-  feeLine: 'Rendelkezésre állási díj: {dij} Ft / hó',
+  feeLine: 'Szüneteltetési díj: {dij} Ft / hó',
   ended: 'Újra dolgozol: {from} ismét a havidíj jár.',
   /** k6c2: the Idei kereteid card while paused (no invoicing during szüneteltetés). */
   limitsPaused: 'Amíg szünetel a vállalkozásod, nem állíthatsz ki számlát. Ha újrakezded, itt újra látod a kereteidet.',
