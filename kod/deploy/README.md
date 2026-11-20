@@ -3,13 +3,49 @@
 > **2026-11-20: A GARDOKO TÖRÖLVE (a tulaj kérésére, véglegesen).** Az `appok-api-1`, `appok-db-1`, az `appok_pgdata`
 > kötet és a `/srv/appok` adatai lekerültek. **A Gardoko-health ellenőrzés MEGSZŰNT** – a
 > `https://45-94-65-74.sslip.io/api/v1/health` hibája innentől NEM hiba, ne próbáld helyreállítani, és **NE indítsd
-> újra az `appok` compose-t**. Ami maradt és KELL: az `appok-caddy-1` (a közös kapu, az Adózz összes címét ez
-> szolgálja ki) a `/srv/appok/deploy/Caddyfile`, `/srv/appok/deploy/docker-compose.yml` és `/srv/appok/.env`
-> fájlokkal. Ezeket a k7 költözteti át az Adózz alá (az adozz.hu-átállással együtt); addig érintetlenek.
-> Telepítés előtt/után az **Adózz** címeit nézd: api/app/konyvelo …sslip.io → 200.
+> újra az `appok` compose-t**.
+> **2026-11-20 13:44 óta a nyilvános kapu az Adózz saját proxyja: `kezjegy-proxy`** (compose projekt `kezjegy-proxy`,
+> `/srv/kezjegy/proxy/`, 80/443). Az `appok-caddy-1` leállítva (a takarítás lent). Telepítés előtt/után az **Adózz**
+> címeit nézd: `adozz.hu`, `app.`/`konyvelo.`/`api.adozz.hu` és api/app/konyvelo …sslip.io → 200
+> (`ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh allapot'`).
 
 
-## k7 (SPEC §29) – saját proxy, adozz.hu, Stripe, Számlázz.hu – MÉG NEM ÉL (B1 backend, 11-20)
+## k7 – élesítve 2026-11-20 13:38–13:47 (integrátor)
+
+Ahogy ment (a következő k7-es frissítésnél ugyanígy, csak az átállási lépések nélkül):
+```bash
+for u in https://api.45-94-65-74.sslip.io/api/v1/health https://app.45-94-65-74.sslip.io/ https://konyvelo.45-94-65-74.sslip.io/; do curl -s -o /dev/null -w "%{http_code} $u\n" $u; done
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh
+ssh appok-1 'bash -s ment elotte_k7integ_20261120_133820' < kod/deploy/tulaj-fiokok-allapot.sh
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'     # titkosított mentés _regi/db_elotte_up_20261120_134050.dump.gpg; migráció 17 → 19
+ssh appok-1 'bash /srv/kezjegy/deploy/seed-k29.sh'                             # 5 új demó-elem; a lista 21 sor (600)
+ssh appok-1 'bash -s hasonlit elotte_k7integ_20261120_133820 utana_k7integ_20261120_134157' < kod/deploy/tulaj-fiokok-allapot.sh   # VÁLTOZATLAN
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh elokeszit'             # 3 fájl, DNS 5 név = 45.94.65.74, a régi proxy 2 fájlja: _regi/appok_elotte_20261120_134243/
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh tanusitvany'           # 4 tanúsítványfájl átmásolva
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh atall'                 # előtte/utána api/app/konyvelo 200; kiesés néhány mp
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh adozz'                 # 5 név 200/301/404, Let's Encrypt (YE1/YE2), lejár 2027-02-18
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh cimek'                 # nyilvanos.env → adozz.hu; API + worker újra; mindkét címkészlet 200
+```
+- Eredmény: adatlépés `data.k29` `{inserted: 6, confirmed: [eves_zaras, valtozas_egyszeru, valtozas_jogallas, szuneteltetesi_dij], faqNoTrial: 1, openChargesUndemo: 1}`;
+  alex@, tulaj@ VÁLTOZATLAN; david@ 20 irat / 33 számla / 34 bevétel / 9 üzenet / 14 értesítés / 5 negyedév – előtte és utána ugyanaz;
+  bence.kovacs@ 3 élő munkamenete megmaradt (32 → 35 ügyfél a demó-kiegészítéssel). Az éles `index.html` = a helyi build.
+- Kívülről (curl + openssl, ezen a gépen): `adozz.hu` 200 (CSP: script-src 'none'), `www.adozz.hu` 301 → `https://adozz.hu/`,
+  `app.adozz.hu` 200, `konyvelo.adozz.hu` 200, `api.adozz.hu/api/v1/health` 200, `api.adozz.hu/` 404; a három sslip-cím 200
+  (a régi tanúsítványokkal). `POST /auth/refresh` mindkét címkészlet Originjével 401 (rendben, nincs süti), idegen Originnel 403.
+- A szerver továbbra is `PAYMENT_PROVIDER=demo`, `INVOICE_MODE=demo`, `NEW_BUSINESS_CHARGE_POLICY=azonnal` (a `/config` szerint);
+  a Stripe TESZT-et a tulaj kapcsolja be: `stripe_szerverre.ps1`.
+- **443/udp NINCS publikálva** (ugyanúgy, mint az `appok-caddy-1`-nél): a böngészők TCP-n jönnek. HTTP/3-hoz a tulaj dönt (lent, [TULAJ]).
+- **Takarítás (`atallas.sh takarit TAKARIT`, ≥ 60 perc tiszta proxy-napló után)** – a legkevésbé romboló formában: a leállított
+  `appok-caddy-1` konténer és az `appok_edge`/`appok_internal` háló megszűnik (adat nincs bennük); a `/srv/appok` (régi Caddyfile,
+  compose, a Gardoko `.env`-je) a `/srv/kezjegy/_regi/appok_gardoko_<idő>/` alá KÖLTÖZIK (700); az `appok_caddy_data`,
+  `appok_caddy_config` kötet és az `appok/garden-api` kép megmarad – **[TULAJ]** ha nem kellenek:
+  `ssh appok-1 'docker volume rm appok_caddy_data appok_caddy_config; docker image rm appok/garden-api:latest'`.
+  A takarítás után visszaállni a régi proxyra már nem lehet (`visszaall` csak előtte); a kezjegy-proxy fájljai a `/srv/kezjegy/proxy/`-ban.
+- Helyi végigjátszás élesítés előtt (Stripe TESZT + Számlázz.hu Tesztüzem, kitalált adatok): `kod/_qa/k7_integ_eredmeny.txt`,
+  képek `kod/_qa/k7_integ_*.png`, azonosítók `kod/_qa/k7_integ_stripe_futas1.jsonl`.
+
+
+## k7 (SPEC §29) – saját proxy, adozz.hu, Stripe, Számlázz.hu – terv (B1 backend, 11-20); ÉL 13:44 óta, lásd fent
 
 **Új elrendezés a szerveren** (a `feltolt.sh` viszi fel, az `atallas.sh` teszi a helyére):
 ```
@@ -37,7 +73,7 @@ ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh atall'              # ≈
 ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh adozz'              # adozz.hu 200, www → 301, app/konyvelo 200, api health 200, api / 404, Let's Encrypt
 ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh cimek'              # nyilvanos.env (adozz.hu), API + worker újra; mindkét címkészlet health
 # ≥ 1 óra tiszta proxy-napló után (a tulaj 11-20-án jóváhagyta a Gardoko-maradékok végleges törlését):
-ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh takarit TAKARIT'    # appok-caddy-1, appok_edge/_internal, appok_caddy_*, /srv/appok; caddy/ → _regi
+ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh takarit TAKARIT'    # appok-caddy-1 + appok_edge/_internal el; /srv/appok és caddy/ → _regi; a kötetek/kép maradnak (k7 integrátor)
 ```
 Kézi visszaállítás a `takarit` előtt bármikor: `atallas.sh visszaall` (a kezjegy-proxy leáll, az appok-caddy-1 indul).
 Állapot: `atallas.sh allapot`. Napló: `/srv/kezjegy/_regi/proxy_atallas_<idő>_<lépés>.log`. A `pgtest_net`, `pgtest_nm`

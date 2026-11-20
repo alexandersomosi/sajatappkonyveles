@@ -209,11 +209,16 @@ EOF
     docker logs --since 1h kezjegy-proxy 2>&1 | grep '"level":"error"' | tail -5 || true
     sslip_rendben || hiba "nem minden sslip-cím 200 – nem takarítok"
     [ "${2:-}" = TAKARIT ] || hiba "megerősítés kell: atallas.sh takarit TAKARIT"
-    if [ -n "$(docker ps -a --format '{{.Names}}' | grep -x appok-caddy-1)" ]; then docker rm appok-caddy-1 >/dev/null && echo "appok-caddy-1: törölve"; fi
-    for n in appok_edge appok_internal; do docker network inspect "$n" >/dev/null 2>&1 && docker network rm "$n" >/dev/null && echo "háló törölve: $n"; done
-    for v in appok_caddy_data appok_caddy_config; do docker volume inspect "$v" >/dev/null 2>&1 && docker volume rm "$v" >/dev/null && echo "kötet törölve: $v (a tanúsítványok a kezjegy_caddy_data-ban élnek tovább)"; done
-    docker image inspect appok/garden-api:latest >/dev/null 2>&1 && docker image rm appok/garden-api:latest >/dev/null && echo "kép törölve: appok/garden-api:latest"
-    if [ -d /srv/appok ]; then rm -rf /srv/appok 2>/dev/null || sudo -n rm -rf /srv/appok; echo "/srv/appok: törölve (Gardoko, tulaj-jóváhagyás 11-20)"; fi
+    # k7 integrator: the least destructive form – the stopped container and the two networks hold no data and go;
+    # /srv/appok (old Caddyfile, compose, Gardoko .env) is MOVED into _regi (house rule: nothing is deleted); the two
+    # appok_caddy_* volumes and the old Gardoko image stay and are listed – the owner removes them himself if he wants
+    # (docker volume rm appok_caddy_data appok_caddy_config; docker image rm appok/garden-api:latest).
+    if [ -n "$(docker ps -a --format '{{.Names}}' | grep -x appok-caddy-1)" ]; then docker rm appok-caddy-1 >/dev/null && echo "appok-caddy-1: eltávolítva (leállított konténer, adat nem volt benne)"; fi
+    for n in appok_edge appok_internal; do if docker network inspect "$n" >/dev/null 2>&1; then docker network rm "$n" >/dev/null && echo "háló eltávolítva: $n"; fi; done
+    if [ -d /srv/appok ]; then
+      mv /srv/appok "$REGI/appok_gardoko_$TS" && chmod 700 "$REGI/appok_gardoko_$TS" && echo "/srv/appok → $REGI/appok_gardoko_$TS (áthelyezve, 700)"
+    fi
+    echo "Megmaradt (a tulaj törölheti): kötetek $(docker volume ls --format '{{.Name}}' | grep -E '^appok_' | tr '\n' ' ')· kép $(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^appok/' | tr '\n' ' ')"
     if [ -d $K/caddy ]; then mv $K/caddy "$REGI/caddy_elotte_k7_$TS"; echo "$K/caddy → $REGI/caddy_elotte_k7_$TS (a miénk: áthelyezve, nem törölve)"; fi
     if grep -q '/srv/appok' $K/deploy/up.sh; then echo "FIGYELEM: az up.sh még hivatkozik a /srv/appok-ra"; else echo "up.sh: nincs /srv/appok hivatkozás"; fi
     echo "Nem nyúltam: pgtest_net, pgtest_nm hálók és a névtelen kötet (nem része a jóváhagyásnak) – a tulajnak listázva:"

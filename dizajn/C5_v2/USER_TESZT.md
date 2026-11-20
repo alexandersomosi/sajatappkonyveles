@@ -41,3 +41,13 @@ Az Adózz.hu felülete mobilról hihetetlenül letisztult, modern és laikusbar�
 - Üzleti döntés (tulaj): éves zárás külön díja (14 999), változásbejelentés díja (4 999), kártya a bekötés elején / próbaidő nincs, EFO-s alkalmazottak vállalása, 24–48 órás visszahívás (szabály) vs. időpontfoglalás.
 - Dizájn/szöveg, megcsinálható: „Félretettem” gomb egyértelműsítése (csak jelölés, nem von le pénzt); határidőnél NAV-számlaszám + közlemény másolása; kétlépcsős belépésnél a hitelesítő app elmagyarázása + e-mailes kód lehetősége; 55 kimutatás hivatalos/nem hivatalos tisztázása; EFO-szöveg tisztázása; a lépésszámok barátságosabb megfogalmazása.
 - Nem valós gond: a NAV-útmutatók szürke vázlatai csak a mintában vannak; az élő appban valódi (kitakart) NAV-képek vannak.
+
+## Tulaj döntései (11-20)
+
+- **Kártya csak a beszélgetés után.** A beszélgetés Bencével nem kötelező (35: „Beszélnél előbb Bencével?” – „Időpontot kérek” vagy „Nem kell, mehetünk tovább”). A kártyát (34, előfizetés) csak utána kérjük. Próbaidő továbbra sincs. Lépéslisták: 21_udv_b 5 lépés (24_var: 2 / 5), 30/50 bekötés 13 lépés (6. beszélgetés, 7. előfizetés).
+- **Bérszámfejtés felárért, egyedi ajánlattal.** Alkalmazott és alkalmi munkás (EFO) is. A pontos árat Bence mondja meg a beszélgetésen, konkrét összeg nincs kiírva (32, 57, 72, 83: „felár, egyedi ajánlat”).
+- **Kétlépcsős belépés = e-mailes kód.** Nincs hitelesítő app, QR-kód és tartalékkód (14, 82, 87, 87_b, 87_c, 88). A régi tartalékkódos képernyő: _regi/87_ketlepcsos_b_tartalekkod.html.
+- **Gomb: „Megjelölöm, hogy félretettem”** (01, 51), alatta: „Ez csak jelölés: pénzt nem vonunk le, nem utalunk.”
+- **Határidőknél NAV-számlaszám + közlemény, másolással:** új 53_hataridok_b (szja-előleg 10032000-06056353, TB-járulék 10032000-06055802, szocho 10032000-06055912; közlemény: az ügyfél adószáma).
+- **Határidők tartalmi javítása:** az átalányadós EV negyedévente fizet, a negyedévet követő hónap 12-éig. A IV. negyedév határideje 2027. január 12. (nem dec. 12.), „Havi TB-járulék” helyett „TB-járulék és szocho, IV. negyedév”; éves bevallás 2027. május 20. (01, 53, 56).
+- **Egyelőre változatlan (nem döntött róla):** a plusz díjak (éves zárás 14 999 Ft, változás bejelentése 4 999 Ft) és a 24–48 órás visszahívás.
