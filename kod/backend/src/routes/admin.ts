@@ -34,6 +34,7 @@ import { requireAuth } from '../auth/middleware.js';
 import { registerAdminK28Routes } from './acc-k28.js';
 import { registerAdminPaymentsK29 } from './payments-k29.js';
 import { registerAdminConsoleRoutes } from './admin-konzol.js';
+import { registerAdminMarketingRoutes } from './admin-marketing.js';
 import { issueCode } from '../auth/codes.js';
 import { hmacHex } from '../lib/crypto.js';
 import { endRelationship } from '../services/kyc.js';
@@ -103,6 +104,8 @@ export function adminRoutes(deps: Deps) {
   registerAdminPaymentsK29(r, deps);
   // SPEC §29.9 F9: the owner console (/admin/console/**; TOTP + step-up)
   registerAdminConsoleRoutes(r, deps);
+  // SPEC §31.4: the Marketing tab (/admin/marketing, /admin/marketing/koltes)
+  registerAdminMarketingRoutes(r, deps);
 
   /**
    * DEMO only: no mail leaves the server and the Demo-postafiók hides other staff members' sign-in mails, so a newly

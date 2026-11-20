@@ -107,6 +107,11 @@ export async function anonymizeClientCore(deps: Deps, tx: DbOrTx, clientId: stri
     .where(and(eq(paymentMethods.clientId, clientId), eq(paymentMethods.status, 'aktiv')))
     .returning({ id: paymentMethods.id });
   await endRelationship(tx, clientId, now);
+  // SPEC §31: the source details go (only the channel stays for the totals); an ad consent ends, nothing unsent goes out
+  const { anonymizeTouches } = await import('./marketing.js');
+  await anonymizeTouches(tx, userId);
+  const { withdrawConsents } = await import('./hirdetes.js');
+  await withdrawConsents(deps, tx, { userId });
   deps.sessionCache.clear();
   return { sessions: s.length, pushTokens: p.length, notifications: n.length, messages: m.length, callbacks: cb.length, cards: cards.length };
 }

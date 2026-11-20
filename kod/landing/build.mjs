@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-// SPEC §29.3.6 – the adozz.hu landing page: plain static HTML + CSS, no script, no tracking, no cookie.
+// SPEC §29.3.6 – the adozz.hu landing page: static HTML + CSS, no cookie. SPEC §31 (2026-11-20): one own script
+// (js/meres.js, generated below from kod/shared/src/marketing.ts) passes the source to the app links and feeds our own
+// cookie-less statistics server (Umami, /m/…) when meres.json has its website id; the ad code and the cookie banner are
+// in the page only with "hirdetes": true (and then still only run with the server switch on).
 // Prices come from ONE generated file (arak.json, made here from FEE_DEFAULTS of kod/shared – no hand-typed prices);
 // the company data from kod/shared/brand.json. Output: kod/landing/dist/ (what feltolt.sh uploads to /srv/kezjegy/web/landing).
 //   node kod/landing/build.mjs          (Node ≥ 23: reads the shared .ts with type stripping)
@@ -9,12 +12,19 @@ import { fileURLToPath } from 'node:url';
 
 const ITT = dirname(fileURLToPath(import.meta.url));
 const KOD = resolve(ITT, '..');
-const KI = join(ITT, 'dist');
+// LANDING_KI / LANDING_MERES: only for the tests (meres.test.mjs builds the ad variant into a temporary folder)
+const KI = process.env.LANDING_KI ? resolve(process.env.LANDING_KI) : join(ITT, 'dist');
 mkdirSync(join(KI, 'fonts'), { recursive: true });
 mkdirSync(join(KI, 'kepek'), { recursive: true });
 
 const brand = JSON.parse(readFileSync(join(KOD, 'shared/brand.json'), 'utf8'));
 const { FEE_DEFAULTS } = await import(new URL('../shared/src/enums.ts', import.meta.url).href);
+const M = await import(new URL('../shared/src/marketing.ts', import.meta.url).href);
+// SPEC §31: public measurement settings (no secret): the Umami website id, the domains, DNT, the ad build switch
+const MERES = JSON.parse(readFileSync(process.env.LANDING_MERES ? resolve(process.env.LANDING_MERES) : join(ITT, 'meres.json'), 'utf8'));
+if (MERES.umamiWebsiteId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(MERES.umamiWebsiteId)) throw new Error('meres.json: az umamiWebsiteId UUID legyen (vagy üres).');
+const STAT = Boolean(MERES.umamiWebsiteId);
+const HIRDETES = MERES.hirdetes === true;
 
 // ---------- arak.json (generated, never hand-typed) ----------
 const ARAK_SOROK = [
@@ -37,6 +47,38 @@ const ft = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const APP = 'https://app.adozz.hu';
 const havidij = arak.sorok.find((s) => s.kind === 'havidij').osszegHuf;
 const supportHelyorzo = /^\[CÉGADAT/.test(brand.provider.supportEmail ?? '');
+const EV = M.MARKETING_EVENTS;
+/** data-umami-event attributes (counted by the statistics script itself; ignored when it is not on the page). */
+const esemeny = (nev, hely) => ` data-umami-event="${nev}"${hely ? ` data-umami-event-hely="${hely}"` : ''}`;
+
+// ---------- js/meres.js: the template + the shared channel rule (one definition, kod/shared/src/marketing.ts) ----------
+const kozos = [
+  `var SOURCE_ALIASES = ${JSON.stringify(M.SOURCE_ALIASES)};`,
+  `var UTM_KEYS = ${JSON.stringify(M.UTM_KEYS)};`,
+  `var AD_CLICK_ID_PARAMS = ${JSON.stringify(M.AD_CLICK_ID_PARAMS)};`,
+  `var SOURCE_PARAM_REFERRER = ${JSON.stringify(M.SOURCE_PARAM_REFERRER)};`,
+  `var SOURCE_PARAM_LANDING = ${JSON.stringify(M.SOURCE_PARAM_LANDING)};`,
+  `var SOURCE_PARAM_CONSENT = ${JSON.stringify(M.SOURCE_PARAM_CONSENT)};`,
+  // Node strips the TypeScript types to blanks; the function sources are plain JavaScript
+  ...[M.normalizeDomain, M.endsWithDomain, M.domainChannel, M.isOwnDomain, M.channelOf, M.statisticsUrl].map((f) => f.toString().replace(/[ \t]{2,}/g, ' ')),
+].join('\n');
+const cfg = { app: APP, own: [...new Set(['adozz.hu', ...MERES.domains])], stat: STAT, esemenyArak: EV.arak };
+let meresJs = readFileSync(join(ITT, 'meres-sablon.js'), 'utf8')
+  .replace('/*__CFG__*/ {}', JSON.stringify(cfg))
+  .replace('/*__SHARED__*/', kozos)
+  .replace('/*__HIRDETES__*/', HIRDETES ? readFileSync(join(ITT, 'hirdetes-sablon.js'), 'utf8') : '// (ad measurement: not in this build – meres.json "hirdetes": false)');
+if (/__CFG__|__SHARED__|__HIRDETES__/.test(meresJs)) throw new Error('meres.js: a sablon helyőrzője megmaradt.');
+if (!HIRDETES && /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/.test(meresJs)) throw new Error('meres.js: hirdetési kód került a kikapcsolt buildbe.');
+mkdirSync(join(KI, 'js'), { recursive: true });
+writeFileSync(join(KI, 'js', 'meres.js'), meresJs, 'utf8');
+const statTag = STAT
+  ? `<script defer src="/m/script.js" data-website-id="${esc(MERES.umamiWebsiteId)}" data-domains="${esc(MERES.domains.join(','))}" data-before-send="adozzStatSzuro"${MERES.doNotTrack ? ' data-do-not-track="true"' : ''}></script>\n`
+  : '';
+const labSzoveg = HIRDETES
+  ? 'Hirdetési sütit csak akkor használunk, ha elfogadod. A látogatottságot a saját szerverünkön mérjük, süti nélkül.'
+  : STAT
+    ? 'Ez az oldal nem használ sütit. A látogatottságot a saját szerverünkön mérjük, süti nélkül, összesítve.'
+    : 'Ez az oldal nem használ sütit, és nem követ.';
 
 // fonts (Geist from the app) and the few images (3D objects of the approved set, the mark)
 for (const s of [400, 600, 650, 700]) copyFileSync(join(KOD, `app/assets/fonts/Geist-W${s}.ttf`), join(KI, 'fonts', `Geist-W${s}.ttf`));
@@ -77,7 +119,8 @@ const html = `<!doctype html>
 <meta name="description" content="Saját könyvelő átalányadós és katás egyéni vállalkozóknak. Havi ${ft(havidij)} Ft, minden benne van.">
 <link rel="icon" href="favicon.png">
 <link rel="stylesheet" href="stilus.css">
-</head>
+<script defer src="js/meres.js"></script>
+${statTag}</head>
 <body>
 <header class="sav">
   <div class="belso">
@@ -85,8 +128,8 @@ const html = `<!doctype html>
     <h1>${esc(brand.tagline)}</h1>
     <p class="al">Átalányadós és katás egyéni vállalkozóknak. Havi ${ft(havidij)}&nbsp;Ft, minden benne van.</p>
     <div class="gombok">
-      <a class="gomb-e" href="${APP}/regisztracio">Regisztrálok</a>
-      <a class="kapszula-sav" href="${APP}/belepes">Belépés</a>
+      <a class="gomb-e" href="${APP}/regisztracio"${esemeny(EV.regisztralok, 'hos')}>Regisztrálok</a>
+      <a class="kapszula-sav" href="${APP}/belepes"${esemeny(EV.belepes, 'hos')}>Belépés</a>
     </div>
     <p class="kicsi">Az első hónapot a kártyád megadásakor fizeted. Bármikor lemondhatod.</p>
   </div>
@@ -109,7 +152,7 @@ ${LEPESEK.map((l, i) => `        <li><span class="szam">${i + 1}</span><span>${e
       <p class="beljebb halvany">Ha még nincs vállalkozásod, lépésről lépésre segítünk elindítani – vagy intézzük helyetted.</p>
     </div>
   </section>
-  <section class="szak">
+  <section class="szak" id="arak">
     <div class="belso">
       <div class="szak-fej">${ikon('szamolo')}<h2>Mennyibe kerül?</h2></div>
       <table class="arak">
@@ -119,13 +162,15 @@ ${arak.sorok.map((s) => `          <tr><th scope="row">${esc(s.cim)}<span>${esc(
         </tbody>
       </table>
       <p class="beljebb">Minden ár bruttó, 27% ÁFA-val. Bármikor lemondhatod: a kifizetett hónap végéig minden marad.</p>
-      <div class="beljebb"><a class="gomb-e" href="${APP}/regisztracio">Regisztrálok</a></div>
+      <div class="beljebb"><a class="gomb-e" href="${APP}/regisztracio"${esemeny(EV.regisztralok, 'arak')}>Regisztrálok</a></div>
     </div>
   </section>
   <section class="szak">
     <div class="belso">
       <div class="szak-fej">${ikon('kerdezek')}<h2>Ha kérdésed van</h2></div>
-      <p class="beljebb">${supportHelyorzo ? 'Ügyfélszolgálat: az appban, az Üzenetek fülön.' : `Írj nekünk: <a href="mailto:${esc(brand.provider.supportEmail)}">${esc(brand.provider.supportEmail)}</a>`}</p>
+      <p class="beljebb">${supportHelyorzo ? 'Ügyfélszolgálat: az appban, az Üzenetek fülön.' : `Írj nekünk: <a href="mailto:${esc(brand.provider.supportEmail)}"${esemeny(EV.email)}>${esc(brand.provider.supportEmail)}</a>`}</p>
+      <p class="beljebb">Inkább beszélnél valakivel? Regisztrálj, és kérj visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.</p>
+      <div class="beljebb"><a class="kapszula" href="${APP}/regisztracio?cel=visszahivas"${esemeny(EV.visszahivas, 'kerdes')}>Visszahívást kérek</a></div>
     </div>
   </section>
 </main>
@@ -133,12 +178,13 @@ ${arak.sorok.map((s) => `          <tr><th scope="row">${esc(s.cim)}<span>${esc(
   <div class="belso">
     <p><b>${esc(brand.provider.legalName)}</b> · ${esc(brand.provider.seat)}</p>
     <p>Adószám: <span class="nw">${esc(brand.provider.taxNumber)}</span> · Cégjegyzékszám: <span class="nw">${esc(brand.provider.registryNumber)}</span></p>
-    <p><a href="${APP}/jogi/aszf">ÁSZF</a> · <a href="${APP}/jogi/adatkezeles">Adatkezelés</a></p>
-    <p class="halvany">Ez az oldal nem használ sütit, és nem követ.</p>
+    <p><a href="${APP}/jogi/aszf">ÁSZF</a> · <a href="${APP}/jogi/adatkezeles">Adatkezelés</a> · <a href="${APP}/jogi/suti">Sütik</a></p>
+    <p class="halvany">${esc(labSzoveg)}</p>
+    <p><button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>${HIRDETES ? ' <button type="button" class="szoveg-gomb" id="suti-beallitasok" hidden>Süti-beállítások</button>' : ''}</p>
   </div>
 </footer>
 </body>
 </html>
 `;
 writeFileSync(join(KI, 'index.html'), html, 'utf8');
-console.log(`landing -> ${KI} (havidíj ${havidij} Ft, ${arak.sorok.length} ár)`);
+console.log(`landing -> ${KI} (havidíj ${havidij} Ft, ${arak.sorok.length} ár; statisztika: ${STAT ? 'be' : 'ki'}, hirdetési kód: ${HIRDETES ? 'BENT' : 'nincs'})`);

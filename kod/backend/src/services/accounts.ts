@@ -8,6 +8,7 @@ import { accountants, clients, onboardingSteps, referralCodes, signupAttribution
 import { randomBase32 } from '../lib/crypto.js';
 import { createSession, signAccess, type ClientKind } from '../auth/tokens.js';
 import { audit } from '../audit.js';
+import { recordRegistrationTouch, type TouchInput } from './marketing.js';
 
 export interface NewClientInput {
   email: string;
@@ -18,8 +19,10 @@ export interface NewClientInput {
   googleSub?: string;
   appleSub?: string;
   referralCode?: string;
-  utm?: { source?: string; medium?: string; campaign?: string; content?: string };
+  utm?: { source?: string; medium?: string; campaign?: string; content?: string; term?: string };
   landing?: 'web' | 'android' | 'ios';
+  /** SPEC §31.3: the full source of the sign-up (marketing_touches); the utm above also fills signup_attribution. */
+  touch?: TouchInput;
 }
 
 /** Least-loaded active accountant under capacity (FUNKCIOK 30); null if none. */
@@ -106,7 +109,7 @@ export async function createClientAccount(deps: Deps, db: DbOrTx, i: NewClientIn
     }
   }
   const attribution: Record<string, string> = {};
-  for (const [k, v] of Object.entries(i.utm ?? {})) if (v) attribution[`utm_${k}`] = String(v).slice(0, 100);
+  for (const [k, v] of Object.entries(i.utm ?? {})) if (v && k !== 'term') attribution[`utm_${k}`] = String(v).slice(0, 100);
 
   const accountantId = await pickAccountant(db, { requireTotp: deps.cfg.staffTotpRequired });
   const [cl] = await db
@@ -143,6 +146,8 @@ export async function createClientAccount(deps: Deps, db: DbOrTx, i: NewClientIn
     utmContent: i.utm?.content?.slice(0, 100) ?? null,
     landing: i.landing ?? null,
   });
+  // SPEC §31.3: one source row per sign-up (channel, utm incl. term, referring domain, landing path; ads only when on)
+  await recordRegistrationTouch(deps, db, { userId, clientId, input: { ...(i.touch ?? {}), utm: i.touch?.utm ?? i.utm, platform: i.touch?.platform ?? i.landing } });
   await audit(db, { action: 'user.created', actorUserId: userId, actorRole: 'client', targetType: 'user', targetId: userId, clientId, details: { method: i.googleSub ? 'google' : i.appleSub ? 'apple' : 'password', referral: Boolean(referralCodeId) } });
   return { userId, clientId };
 }

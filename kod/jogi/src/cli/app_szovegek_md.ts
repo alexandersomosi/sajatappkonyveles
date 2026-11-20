@@ -23,6 +23,10 @@ const CSOPORTOK: Record<string, string> = {
   adatok_letoltese: 'Adataim letöltése',
   fiok_torles: 'Fiók törlése',
   regisztracio: 'Regisztráció',
+  fiok: 'Fiók – hirdetési hozzájárulás (csak bekapcsolt hirdetési mérésnél)',
+  suti_ablak: 'Süti-ablak (csak bekapcsolt hirdetési mérésnél)',
+  meres: 'A weboldal látogatottságának mérése (lábléc)',
+  lablec: 'Lábléc és linkek',
 };
 
 export async function appSzovegekMarkdown(dir: string = CSOMAG_GYOKER): Promise<string> {

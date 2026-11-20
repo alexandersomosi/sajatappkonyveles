@@ -59,6 +59,15 @@ export const useMe = () => useQuery({ queryKey: K.me, queryFn: () => get<Me>('/m
 export const useHome = () => useQuery({ queryKey: K.home, queryFn: () => get<ClientHome>('/client/home') });
 export const useOnboarding = () => useQuery({ queryKey: K.onboarding, queryFn: () => get<OnboardingState>('/client/onboarding') });
 export const useProfil = () => useQuery({ queryKey: K.profil, queryFn: () => get<ClientProfile>('/client/profile') });
+/** SPEC §31.6: the account's ad-measurement consent (enabled = false while the measurement is switched off: nothing to show). */
+export interface HirdetesiHozzajarulas {
+  enabled: boolean;
+  given: boolean;
+  meta: boolean;
+  google: boolean;
+  since: string | null;
+}
+export const useHirdetesiHozzajarulas = () => useQuery({ queryKey: ['hirdetesi-hozzajarulas'], queryFn: () => get<HirdetesiHozzajarulas>('/me/hirdetesi-hozzajarulas'), staleTime: 600_000, retry: false });
 export const useKyc = () => useQuery({ queryKey: K.kyc, queryFn: () => get<{ status: string; reviewNote?: string }>('/client/kyc') });
 export const useIdoszak = (id?: string) =>
   useQuery({ queryKey: K.idoszak(id ?? ''), queryFn: () => get<TaxPeriodDetail>(`/client/tax-periods/${encodeURIComponent(id ?? '')}`), enabled: !!id });
@@ -214,6 +223,7 @@ export const useVisszahivasKer = () =>
   useValtoztat((v: CallbackCreateInput) => post<CallbackView>('/client/callbacks', v), [K.visszahivas, K.onboarding, K.profil]);
 export const useVisszahivasModosit = () =>
   useValtoztat((v: { id: string } & CallbackUpdateInput) => patch<CallbackView>(`/client/callbacks/${v.id}`, { ...v, id: undefined }), [K.visszahivas, K.onboarding]);
+export const useHirdetesVisszavon = () => useValtoztat(() => post<{ withdrawn: number }>('/me/hirdetesi-hozzajarulas/visszavonas', {}), [['hirdetesi-hozzajarulas']]);
 export const useVisszahivasLemond = () => useValtoztat((id: string) => post<CallbackView>(`/client/callbacks/${id}/cancel`, {}), [K.visszahivas, K.onboarding]);
 
 // ---------- SPEC §27: „Intézzük helyetted” (assist), kamarai regisztráció ----------

@@ -18,6 +18,7 @@ import { Szojegy } from '@/ui/Szojegy';
 import { T } from '@/ui/T';
 import { TeljesCtx } from '@/ui/teljes';
 import { hibaUzenet } from '@/lib/hiba';
+import { forrasAdat, forrasTovabb, webKereses } from '@/lib/forras';
 
 export default function Belepes() {
   const { belep, alkalmaz } = useAuth();
@@ -144,8 +145,9 @@ export default function Belepes() {
                 <View style={{ flex: 1, height: 1, backgroundColor: '#C2CBD9' }} />
               </View>
               <View style={{ gap: 10 }}>
-                {google ? <GoogleGomb siker={alkalmaz} hiba={setHiba} webClientId={cfg.data?.googleClientIds.web} /> : null}
-                {apple ? <AppleGomb siker={alkalmaz} hiba={setHiba} /> : null}
+                {/* SPEC §31.3: a belépés lapján is új fiók keletkezhet (Google/Apple) – a forrás vele megy */}
+                {google ? <GoogleGomb siker={alkalmaz} hiba={setHiba} webClientId={cfg.data?.googleClientIds.web} forras={Platform.OS === 'web' ? forrasAdat(webKereses()) : undefined} /> : null}
+                {apple ? <AppleGomb siker={alkalmaz} hiba={setHiba} forras={Platform.OS === 'web' ? forrasAdat(webKereses()) : undefined} /> : null}
               </View>
             </>
           ) : null}
@@ -161,7 +163,7 @@ export default function Belepes() {
                 Pár perc, és bekötünk.
               </T>
             </View>
-            <GombM cim="Regisztrálok" magas={46} onPress={() => router.push('/regisztracio')} />
+            <GombM cim="Regisztrálok" magas={46} onPress={() => router.push(`/regisztracio${Platform.OS === 'web' ? forrasTovabb(webKereses()) : ''}` as '/regisztracio')} />
           </Lap>
         </View>
         </TeljesCtx.Provider>

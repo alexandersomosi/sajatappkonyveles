@@ -17,6 +17,7 @@ import { utGyorsan } from '@/ui/Ut';
 import { ApiHiba } from '@/api/http';
 import { useMe, useVisszahivasKer, useVisszahivasLemond, useVisszahivasModosit, useVisszahivasok } from '@/api/hooks';
 import { hibaUzenet } from '@/lib/hiba';
+import { forrasAdat, webKereses } from '@/lib/forras';
 import { forma, szin } from '@/theme/tokens';
 import { GombE, GombSz, HibaSzoveg, Lap, Pipa, Szakasz, Valaszto } from '@/ui/alap';
 import { Ikon3d } from '@/ui/kepek';
@@ -104,7 +105,10 @@ export default function Visszahivas() {
         setSzerkeszt(false);
         return;
       }
-      await ker.mutateAsync({ ...(norm ? { phone: norm, savePhoneToProfile: mentsd } : {}), topic: tema, window: sav, note: megj.trim() || undefined, source: forras });
+      // SPEC §31.3: ha kampánylinkről jött ide (weben), a kérés a saját forrását viszi; különben a regisztrációét örökli
+      const f = Platform.OS === 'web' ? forrasAdat(webKereses()) : {};
+      const marketing = f.utm || f.forras ? { utm: f.utm, hivatkozo: f.forras?.hivatkozo, erkezes: f.forras?.erkezes } : undefined;
+      await ker.mutateAsync({ ...(norm ? { phone: norm, savePhoneToProfile: mentsd } : {}), topic: tema, window: sav, note: megj.trim() || undefined, source: forras, ...(marketing ? { marketing } : {}) });
       jelez({ szoveg: 'Megkaptuk. Kollégánk 24–48 órán belül hív.', kesz: true });
       vissza('/');
     } catch (err) {

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# >>> KIKAPCSOLVA 11-20, helyette restic (restic-mentes.sh a szerveren, közvetlenül a Storage Boxra; README.md
+# >>> „Külső mentés: restic a Storage Boxon”). A Feladatütemező „Adozz mentes kulso” feladata Disabled (nem törölve);
+# >>> a már kint lévő hetzner-tar:kezjegy/mentesek/ fájlok maradnak.
 # [TULAJ – csak a jóváhagyásod után futtasd] Külső (off-site) másolat a Kézjegy mentéseiről a Hetzner Storage
 # Boxra, a tulaj gépén keresztül (Git Bash). A szervernek így nem kell saját kulcs a Storage Boxhoz.
 #   bash C:/Users/UpgradePC/konyvelo_app/kod/deploy/mentes-kulso.sh

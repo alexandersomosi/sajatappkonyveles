@@ -2066,17 +2066,26 @@ export const RESERVE_PANEL_TEXTS = {
 
 // ---------- §28.2 new-invoice notification (content notif.invoice_new[.<variant>].title|body) ----------
 export const NOTIFY_INVOICE_TEXTS = {
-  alap: { title: 'Új kiállított számlád: {osszeg} Ft', body: '{vevo}. Tegyél félre kb. {felre} Ft-ot.' },
-  kuszob: { title: 'Új kiállított számlád: {osszeg} Ft', body: '{vevo}. Tegyél félre kb. {felre} Ft-ot. Elfogyott az adómentes részed.' },
-  adomentes: { title: 'Új kiállított számlád: {osszeg} Ft', body: '{vevo}. Ebből most nem kell félretenned.' },
-  tobb: { title: '{n} új kiállított számlád: összesen {osszeg} Ft', body: 'Tegyél félre kb. {felre} Ft-ot. Megnézem, melyik mennyi.' },
+  // k7b (SZOVEG_JAVITAS_LEVELEK 19, 29–32): "Vevő:" before the buyer's name, no button label inside the text
+  alap: { title: 'Új kiállított számlád: {osszeg} Ft', body: 'Vevő: {vevo}. Tegyél félre kb. {felre} Ft-ot.' },
+  kuszob: { title: 'Új kiállított számlád: {osszeg} Ft', body: 'Vevő: {vevo}. Tegyél félre kb. {felre} Ft-ot. Elfogyott az adómentes részed.' },
+  adomentes: { title: 'Új kiállított számlád: {osszeg} Ft', body: 'Vevő: {vevo}. Ebből most nem kell félretenned.' },
+  tobb: { title: '{n} új kiállított számlád: összesen {osszeg} Ft', body: 'Tegyél félre kb. {felre} Ft-ot. Az appban látod, melyik után mennyit.' },
   tobb_adomentes: { title: '{n} új kiállított számlád: összesen {osszeg} Ft', body: 'Ezekből most nem kell félretenned.' },
   /** Push only, when the client switched amounts off. */
   rejtett: { title: 'Új kiállított számlád érkezett', titleTobb: '{n} új kiállított számlád érkezett', body: 'Nézd meg, mennyit tegyél félre.' },
   /** {vevo} for a private person or an empty name. A private person's name is never put in a push. */
   privatePerson: 'Magánszemély',
-  /** E-mail (off by default): subject = the title, body = the in-app body + this line. */
-  emailFooter: 'Az összes számlád és a félreteendő összeg az alkalmazásban: {appUrl}/felretesz',
+  /** E-mail (off by default): subject = the title, body = `email[variant]` + this line (k7b: the same line in all five). */
+  emailFooter: 'Az összes számládat és a félreteendő összeget az appban látod: {appUrl}/felretesz',
+  /** k7b: the e-mail bodies (a mail has room for a full sentence; the push stays short). */
+  email: {
+    alap: 'Vevő: {vevo}. Ebből tegyél félre kb. {felre} Ft-ot adóra.',
+    kuszob: 'Vevő: {vevo}. Ezzel elfogyott az adómentes részed, ezért ebből már tegyél félre kb. {felre} Ft-ot.',
+    adomentes: 'Vevő: {vevo}. Ebből most nem kell félretenned.',
+    tobb: 'Ezekből tegyél félre kb. {felre} Ft-ot adóra.',
+    tobb_adomentes: 'Ezekből most nem kell félretenned.',
+  },
 } as const;
 /** Fiók → Értesítések additions (SPEC §28.2.3, §28.K.4). */
 export const NOTIFY_SETTINGS_TEXTS = {
@@ -2319,10 +2328,10 @@ export const ALLOWANCE_QUESTION_TEXTS = {
 export const ALLOWANCE_NOTIFICATION_TEXTS = {
   allowance_submitted: { title: '{clientName} kitöltötte a kedvezmény-kérdőívet', body: 'Nézd át: {n} kedvezmény vár döntésre.' },
   allowance_decided: {
-    jovahagyva: { title: 'Jóváhagyta a kedvezményedet: {label}', body: 'Már az adóelőlegedben számolunk vele.' },
-    reszben: { title: '{firstName} átnézte a kedvezményeidet', body: 'Nézd meg, mi jár.' },
+    jovahagyva: { title: '{firstName} jóváhagyta: {label}', body: 'Már az adóelőlegedben számolunk vele.' },
+    reszben: { title: '{firstName} átnézte a kedvezményeidet', body: 'Van, ami jár, és van, ami most nem. Nézd meg, melyik.' },
     kerdes: { title: '{firstName} kérdezett a kedvezményedről', body: 'Válaszolj neki az Üzenetekben.' },
-    elutasitva: { title: '{firstName} átnézte a kedvezményeidet', body: 'Egy kedvezmény most nem jár. Megnézem, miért.' },
+    elutasitva: { title: '{firstName} átnézte a kedvezményeidet', body: 'Egy kedvezmény most nem jár. Az appban megnézheted, miért.' },
   },
   allowance_check: {
     ev_eleje: { title: 'Új év: nézd át a kedvezményeidet', body: 'Változott valami a családodban? Kb. 1 perc.' },
@@ -3486,7 +3495,7 @@ export const REMINDER_TEXTS = {
     ma: { title: 'Ma van a befizetés napja: {osszeg} Ft', body: 'Utald el ma. Ha már elutaltad, koppints az „Elutaltam” gombra.' },
     lejart: { title: 'Lejárt a befizetés: {osszeg} Ft', body: 'Tegnap volt a határidő. Utald el minél előbb. Ha már elutaltad, jelezd az appban.' },
     kata: { title: 'Utald el a katát: 50 000 Ft', body: 'A {honap} havi kata határideje: {hatarido}.' },
-    kata_ma: { title: 'Ma van a kata határideje', body: 'Utald el ma az 50 000 Ft-ot a {honap} hónapra.' },
+    kata_ma: { title: 'Ma van a kata határideje', body: 'Utald el ma az 50 000 Ft-ot ({honap} havi kata). Az utalási adatokat az appban látod.' },
     hipa: { title: 'Közeleg az iparűzési adóelőleg: {osszeg} Ft', body: 'Határidő: {hatarido}. A számlaszámot az appban találod.' },
   },
   upload_reminder: {
@@ -3524,7 +3533,7 @@ export const REMINDER_TEXTS = {
 export const LOCK_TEXTS = {
   /** {mit} per reason. */
   mit: { havidij: 'havidíj', eves_zaras: 'éves zárás díja' },
-  banner: 'Szünetel a könyvelésed, mert nincs kifizetve a {mit} ({osszeg} Ft). Fizess, és {firstName} folytatja.',
+  banner: 'Szünetel a könyvelésed, mert nincs kifizetve a {mit} ({osszeg} Ft). Amint rendezed, {firstName} folytatja a munkát.',
   bannerButton: 'Fizetek',
   bannerLink: 'Írok az ügyfélszolgálatnak',
   deadlineNotice: 'Közeleg egy határidő: {date}. Amíg a díj nincs rendezve, ezt nem tudjuk intézni helyetted.',
@@ -3798,7 +3807,7 @@ export const K28_NOTIFICATION_TEXTS = {
   },
   service_locked: {
     title: 'Szünetel a könyvelésed',
-    body: 'Nincs kifizetve a {mit}. Fizess, és {firstName} folytatja.',
+    body: 'Még nincs kifizetve a {mit}. Amint rendezed, {firstName} folytatja a munkát.',
     hatarido: { title: 'Közeleg egy határidő: {date}', body: 'Amíg a díj nincs rendezve, ezt nem tudjuk intézni helyetted.' },
   },
   service_unlocked: { title: 'Újra minden működik', body: 'Köszönjük a fizetést. {firstName} folytatja a munkát.' },
@@ -3818,8 +3827,8 @@ export const K28_NOTIFICATION_TEXTS = {
     nem_vallaljuk: { title: 'Most nem tudunk segíteni', body: 'Nézd meg, mit írt {firstName}.' },
   },
   subscription_paused: {
-    kezdet: { title: 'Szünetel a vállalkozásod', body: '{from} a havidíj helyett havi {dij} Ft-ot fizetsz.' },
-    vege: { title: 'Újra dolgozol', body: '{from} ismét a havidíj jár.' },
+    kezdet: { title: 'Szünetel a vállalkozásod', body: 'A szünet idejére {from} a havidíj helyett csak havi {dij} Ft-ot fizetsz.' },
+    vege: { title: 'Újraindult a vállalkozásod', body: 'A szünet véget ért: {from} újra a rendes havidíjat fizeted.' },
   },
   /** Staff kinds (in-app badge + digest; staff wording). */
   checkin_change: { title: 'Havi változás: {clientName}', body: '{items}' },
@@ -3827,7 +3836,7 @@ export const K28_NOTIFICATION_TEXTS = {
   client_locked: { title: 'Zárolva: {clientName}', body: 'Elmaradt díj: {mit}, {osszeg} Ft.' },
   employer_reported: { title: 'Alkalmazott vagy EFO: {clientName}', body: 'Dönts: egyedi ajánlat, más számfejt, vagy nem vállaljuk.' },
   onboarding_task: {
-    adoszam: { title: 'Adószám hiányzik: {clientName}', body: 'Töltsd ki az ONYA-ból, amint él a meghatalmazás.' },
+    adoszam: { title: 'Adószám hiányzik: {clientName}', body: 'Amint él a meghatalmazás, nézd meg az adószámát az ONYA-ban, és írd be az adatlapjára.' },
     adozasi_mod: { title: 'Adózási mód kérdéses: {clientName}', body: 'Az ügyfél nem tudja, kata vagy átalány. Nézd meg a NAV-nál.' },
   },
 } as const;

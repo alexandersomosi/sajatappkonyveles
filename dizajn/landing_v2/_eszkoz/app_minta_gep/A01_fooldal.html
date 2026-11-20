@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="hu"><!-- MÁSOLAT: landing_v2/_eszkoz/app_minta_gep.py készítette a C5_v2/asztali/A01_fooldal.html-ből. -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adózz – Főoldal (gép)</title>
+<link rel="stylesheet" href="../../../C5_v2/v2.css">
+<link rel="stylesheet" href="../../../C5_v2/asztali/v2_asztali.css">
+<style>.szil{display:inline-grid;place-items:center;flex:none;border-radius:50%;background:#fff;color:#5B6BEF;box-shadow:0 0 0 2px rgba(255,255,255,.7)}.szil svg{width:62%;height:62%;fill:currentColor;margin-top:8%}.sav-konyvelo .szil,.atnezte .szil,.lista-fej .szil{background:#E6EBFF;box-shadow:none}body.asztali{min-height:0}.oldalsav{min-height:0;height:100vh}.feltolto.sav.kijelolt{border-style:solid;border-color:#1428DB;background:#F5F7FF}.uj-cimke{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:99px;background:#1428DB;color:#fff;font-size:12px;font-weight:700;vertical-align:2px}</style></head>
+<body class="asztali">
+<script src="../../../C5_v2/v2.js"></script>
+<aside class="oldalsav">
+  <span class="logo" data-meret="34" data-hatter="feher"></span>
+  <nav class="menu" aria-label="Menü">
+    <a class="on" aria-current="page" href="A01_fooldal.html"><svg><use href="#i-fooldal"/></svg>Főoldal</a>
+    <a href="A60_dosszie.html"><svg><use href="#i-dosszie"/></svg>Dosszié</a>
+    <a href="A60_dosszie.html"><svg><use href="#i-kamera"/></svg>Fotózás</a>
+    <a href="A70_uzenetek.html"><svg><use href="#i-uzenet"/></svg>Üzenetek<span class="pont"></span></a>
+    <a href="A80_fiok.html"><svg><use href="#i-fiok"/></svg>Fiók</a>
+  </nav>
+  <div class="sav-konyvelo">
+    <div class="ki"><span class="szil" style="width:40px;height:40px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span><div><b>A könyvelőd</b><span>itt írhatsz neki</span></div></div>
+    <button class="gomb-kis masod"><svg><use href="#i-telefon"/></svg>Visszahívást kérek</button>
+  </div>
+</aside>
+
+<div class="tartalom">
+  <header class="hos">
+    <div class="sor1">
+      <div class="ki"><span class="szil" style="width:34px;height:34px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span><span><b>A könyvelőd</b> átnézi a számláidat</span></div>
+      <span class="demo">DEMO</span>
+    </div>
+    <svg class="hos-rajz"><use href="#i-szamologep"/></svg>
+    <h1>Most kb. <em>250&nbsp;000&nbsp;Ft</em> legyen félretéve az&nbsp;adóra.</h1>
+    <p>Az idei számláid után eddig kb. 16&nbsp;170&nbsp;000&nbsp;Ft jött be. Ebből 317&nbsp;000&nbsp;Ft-ot már befizettél.</p>
+  </header>
+
+  <main class="racs">
+    <!-- Félretenni: széles kártya, balra a negyedévek, jobbra a fő gomb -->
+    <section class="k szeles">
+      <div class="tile t-sarga"><svg><use href="#i-tarca"/></svg></div>
+      <div class="tart">
+        <h2>Félretenni</h2>
+        <div class="ket-hasab">
+          <div>
+            <div class="tet"><div class="c">III. negyedév</div><div class="osszeg">96&nbsp;000<small>Ft</small></div><div class="a">Július–szeptember számlái után</div></div>
+            <div class="tet"><div class="c">IV. negyedév, eddig</div><div class="osszeg">154&nbsp;000<small>Ft</small></div><div class="a">Október és november számlái</div></div>
+          </div>
+          <div class="kozep">
+            <button class="gomb">Megjelölöm, hogy félretettem</button>
+            <p class="megj">Ez csak jelölés: pénzt nem vonunk le, nem utalunk.</p>
+            <a class="link" href="#">Számlánként megnézem<svg><use href="#i-chev"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Idei kereteid -->
+    <section class="k">
+      <div class="tile t-kek"><svg><use href="#i-irat-toll"/></svg></div>
+      <div class="tart oszlopos">
+        <h2>Idei kereteid</h2>
+        <div class="nagy">Még 3&nbsp;685&nbsp;000&nbsp;Ft</div>
+        <p>ennyit számlázhatsz még áfa nélkül, az alanyi áfamentesség keretén belül.</p>
+        <div class="alulra">
+          <div class="csik" role="img" aria-label="20 millióból 16,3 millió"><i style="width:81.6%"></i></div>
+          <div class="csik-alatt"><span>eddig <b>16&nbsp;315&nbsp;000&nbsp;Ft</b></span><span>keret <b>20&nbsp;000&nbsp;000&nbsp;Ft</b></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mennyit kerestem? -->
+    <section class="k">
+      <div class="tile t-zold"><svg><use href="#i-oszlopok"/></svg></div>
+      <div class="tart">
+        <h2>Mennyit kerestem?</h2>
+        <div class="nagy">16&nbsp;170&nbsp;000&nbsp;Ft</div>
+        <p>bevételed volt idén eddig. Adó és járulék után kb. 14&nbsp;527&nbsp;000&nbsp;Ft maradt neked. Ha így folytatod, év végéig kb. <b>19&nbsp;400&nbsp;000&nbsp;Ft</b> lesz a bevételed.</p>
+      </div>
+    </section>
+
+    <!-- Határidők -->
+    <section class="k hat">
+      <div class="tile t-narancs"><svg><use href="#i-naptar-sz"/></svg></div>
+      <div class="tart">
+        <h2>Határidők</h2>
+        <a class="hsor" href="A53_hataridok.html"><div class="l"><div class="c">Szja-előleg, IV. negyedév</div></div><span class="d">jan. 12.</span><svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="hsor" href="A53_hataridok.html"><div class="l"><div class="c">TB-járulék és szocho, IV. negyedév</div></div><span class="d">jan. 12.</span><svg class="chev"><use href="#i-chev"/></svg></a>
+      </div>
+    </section>
+
+    <!-- Ha elakadsz -->
+    <section class="k seg">
+      <div class="buborek-ikon"><svg><use href="#i-buborek"/></svg></div>
+      <div class="tart">
+        <div class="fejsor"><h2>Ha elakadsz</h2><button class="gomb-kis masod"><svg><use href="#i-telefon"/></svg>Visszahívás</button></div>
+        <p>Munkanapokon 9 és 17 óra között hívunk vissza.</p>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

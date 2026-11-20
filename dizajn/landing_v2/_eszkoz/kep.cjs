@@ -133,13 +133,14 @@ function figyel(page, naplo) {
         mozog: document.documentElement.classList.contains('mozog'),
         szinpad: !!document.querySelector('.szinpad-mod'),
         aktivUtolso: [...document.querySelectorAll('.bemutato .blepes')].findIndex(e => e.classList.contains('aktiv')),
+        lepesSzam: document.querySelectorAll('.bemutato .blepes').length,
       };
     }, p.gorget);
     const gond = [...naplo];
     if (eredmeny.max > p.w) gond.push(`vízszintesen kilóg: ${eredmeny.max}px`);
     if (!eredmeny.mozog) gond.push('nem indult el a mozgás');
     if (!eredmeny.szinpad) gond.push('nincs ragadós bemutató');
-    if (eredmeny.aktivUtolso !== 6) gond.push('végiggörgetés után nem az utolsó lépés aktív: ' + eredmeny.aktivUtolso);
+    if (eredmeny.aktivUtolso !== eredmeny.lepesSzam - 1) gond.push('végiggörgetés után nem az utolsó lépés aktív: ' + eredmeny.aktivUtolso);
     console.log(`mozgás-próba ${p.w}x${p.h} (ragadós bemutató)` + (gond.length ? '\n  ' + gond.join('\n  ') : '  OK'));
     if (gond.length) hiba++;
     await page.close();

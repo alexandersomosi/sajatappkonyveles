@@ -137,6 +137,10 @@ export default function Attekintes() {
                 <div className="lap">
                   <div className="lap-fej">
                     <h2>Bekötési tölcsér</h2>
+                    {/* SPEC §31.4: by source, from the visit to paying */}
+                    <Link className="gomb-sz jobbra" to="/admin/marketing">
+                      Forrásonként
+                    </Link>
                   </div>
                   <div className="belso" style={{ paddingTop: 0 }}>
                     {lepcsok.map((l, i) => (

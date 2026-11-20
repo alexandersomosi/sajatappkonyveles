@@ -57,6 +57,12 @@ if [ "$NO_WEB" = 0 ]; then
   [ -s "$KOD/panel/dist/index.html" ] || { echo "panel/dist missing: cd kod/panel && npm run build"; exit 1; }
   # never ship the MINTA (mock) builds
   if grep -rqs "MINTA_SZERVER\|mock_role" "$KOD/app/dist" "$KOD/panel/dist"; then echo "mock code found in dist - stopping"; exit 1; fi
+  # SPEC §31 / K8 lesson 11-20: the landing folder is replaced as a whole – it must bring its script and the e-mail logos
+  if [ -s "$KOD/landing/dist/index.html" ]; then
+    for f in js/meres.js email/logo_feher@2x.png email/logo_alairas@2x.png; do
+      [ -s "$KOD/landing/dist/$f" ] || { echo "landing/dist/$f missing: node kod/landing/build.mjs"; exit 1; }
+    done
+  fi
 fi
 
 STAGE=$(mktemp -d)
@@ -144,6 +150,6 @@ rmdir "$U/kezjegy/caddy" "$U/kezjegy/web" "$U/kezjegy" "$U" 2>/dev/null || true
 chmod +x deploy/*.sh 2>/dev/null || true
 echo "unpacked on appok-1 at $TS"
 REMOTE
-echo "FELTÖLTVE, DE MÉG NEM ÉL: a web/app, web/panel mappa csere csak az up.sh után látszik (a kezjegy-web a régi"
+echo "FELTÖLTVE, DE MÉG NEM ÉL: a web/app, web/panel, web/landing mappa csere csak az up.sh után látszik (a kezjegy-web a régi"
 echo "mappát tartja csatolva, és az API/worker is a régi kódot futtatja). Élesítés (előtte pg_dump, Gardoko health):"
 echo "  ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'"

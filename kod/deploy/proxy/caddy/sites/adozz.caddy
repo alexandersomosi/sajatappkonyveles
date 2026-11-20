@@ -34,9 +34,65 @@
 	header Content-Security-Policy "default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
 }
 
-# The landing page adozz.hu: plain HTML + CSS, no script, no tracking, no cookie.
+# The landing page adozz.hu: HTML + CSS + ONE own script (js/meres.js) and our own statistics script (/m/script.js) –
+# SPEC §31 (2026-11-20): script-src 'self' only, connect-src 'self' (via default-src). No cookie, no third party.
 (kezjegy_csp_landing) {
-	header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+}
+
+# SPEC §31.6 – PREPARED, NOT USED: the landing CSP for the day ad measurement is switched on (kod/MARKETING.md, step
+# "CSP"). Then the adozz.hu block below imports this snippet instead of kezjegy_csp_landing. Allowed, but nothing loads
+# them before the visitor's "Elfogadom" (the banner in js/meres.js loads the Meta / Google scripts only after it).
+(kezjegy_csp_landing_hirdetes) {
+	header Content-Security-Policy "default-src 'self'; img-src 'self' data: https://www.facebook.com https://www.googletagmanager.com https://www.googleadservices.com https://www.google.com https://www.google.hu https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com; style-src 'self'; font-src 'self'; script-src 'self' https://connect.facebook.net https://www.googletagmanager.com https://www.googleadservices.com https://www.google.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://www.googletagmanager.com https://www.googleadservices.com https://www.google.com https://googleads.g.doubleclick.net https://ad.doubleclick.net https://pagead2.googlesyndication.com; frame-src https://www.googletagmanager.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'"
+}
+
+# SPEC §31.1 – our own statistics server (Umami 3.5.0, container kezjegy-umami, never public): only the tracker script and
+# the collect call pass, under the neutral path /m/; everything else under /m/ (login, UI, API) is 404. No cookie in or
+# out. The client address goes in a header of our own (Umami: CLIENT_IP_HEADER) – set here from the connection, so a
+# visitor cannot forge it; Umami uses it for the session hash and the local country/city lookup and never stores it.
+(kezjegy_statisztika) {
+	@kj_stat_js {
+		path /m/script.js
+		method GET HEAD
+	}
+	handle @kj_stat_js {
+		rewrite * /script.js
+		reverse_proxy kezjegy-umami:3000 {
+			header_up -Cookie
+			header_up X-Kj-Client-Ip {remote_host}
+			header_down -Set-Cookie
+		}
+	}
+	@kj_stat_send {
+		path /m/api/send
+		method POST
+	}
+	handle @kj_stat_send {
+		request_body {
+			max_size 16KB
+		}
+		rewrite * /api/send
+		reverse_proxy kezjegy-umami:3000 {
+			header_up -Cookie
+			header_up X-Kj-Client-Ip {remote_host}
+			header_down -Set-Cookie
+		}
+	}
+	# named matchers only: Caddy keeps named handles in this order (a bare path matcher would sort before them)
+	@kj_stat_tobbi path /m /m/*
+	handle @kj_stat_tobbi {
+		respond "Not found" 404
+	}
+	# SPEC §31.6: the two public ends of the (switched-off) ad measurement – same origin for the landing script.
+	# Switched off the API answers { ads: false } and 404; the landing build has no code that calls them.
+	@kj_hirdetes path /api/v1/public/marketing-config /api/v1/public/hozzajarulas
+	handle @kj_hirdetes {
+		request_body {
+			max_size 4KB
+		}
+		reverse_proxy kezjegy-api:8080
+	}
 }
 
 (kezjegy_api) {
@@ -71,7 +127,10 @@ adozz.hu {
 	encode zstd gzip
 	import kezjegy_fejlecek
 	import kezjegy_csp_landing
-	reverse_proxy kezjegy-web:8082
+	import kezjegy_statisztika
+	handle {
+		reverse_proxy kezjegy-web:8082
+	}
 }
 
 www.adozz.hu {

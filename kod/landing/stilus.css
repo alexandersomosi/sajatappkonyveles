@@ -84,3 +84,19 @@ img { display: block; }
   .lista li:nth-child(-n + 2) { border-top: 0; }
 }
 .nw { white-space: nowrap; }
+
+/* ---------- SPEC §31: „Visszahívást kérek”, a lábléc gombjai, a (csak hirdetési buildben látszó) süti-ablak ---------- */
+.kapszula { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1.5px solid var(--kek); color: var(--kek-szoveg); font-weight: 600; font-size: 16px; text-decoration: none; }
+.kapszula:focus-visible, .szoveg-gomb:focus-visible, .hj-gomb:focus-visible, .hj-szoveg-gomb:focus-visible { outline: 3px solid #FFD25C; outline-offset: 2px; }
+.szoveg-gomb { background: none; border: 0; padding: 4px 0; font: inherit; font-size: 14px; color: var(--kek-szoveg); text-decoration: underline; cursor: pointer; }
+.szoveg-gomb + .szoveg-gomb { margin-left: 14px; }
+.hj-ablak { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 10; max-width: 560px; margin: 0 auto; background: #fff; color: var(--tinta); border-radius: 16px; box-shadow: 0 8px 30px rgba(16, 21, 43, 0.25); padding: 18px 18px 16px; font-size: 15px; }
+.hj-ablak h2 { font-size: 18px; font-weight: 650; margin-bottom: 6px; }
+.hj-ablak .hj-linkek { margin-top: 8px; font-size: 14px; }
+.hj-gombok { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; align-items: center; }
+/* „Elfogadom” és „Elutasítom” egyforma: azonos méret, szín és hangsúly */
+.hj-gomb { min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1.5px solid var(--kek); background: #fff; color: var(--kek-szoveg); font: inherit; font-weight: 650; font-size: 16px; cursor: pointer; }
+.hj-szoveg-gomb { background: none; border: 0; font: inherit; font-size: 15px; color: var(--kek-szoveg); text-decoration: underline; cursor: pointer; padding: 6px 4px; }
+.hj-beallitasok { margin-top: 12px; border-top: 1px solid var(--hajszal); padding-top: 12px; }
+.hj-doboz { display: block; margin-bottom: 8px; }
+.hj-beallitasok .hj-gomb { margin-top: 4px; }

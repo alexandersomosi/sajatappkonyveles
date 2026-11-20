@@ -17,6 +17,7 @@ import { publicRoutes } from './routes/public.js';
 import { paymentsPublicK29Routes } from './routes/payments-k29.js';
 import { teamRoutes } from './routes/team.js';
 import { naptarRoutes } from './routes/public-naptar.js';
+import { publicMarketingRoutes } from './routes/public-marketing.js';
 
 // Multipart upload routes – the only ones that may send up to 60 MB (Caddy mirrors this, kezjegy.caddy).
 export const UPLOAD_PATH = /^\/api\/v1\/(client\/(kyc|attachments|documents(\/[^/]+\/versions)?|business-registration\/filed)|acc\/(attachments|clients\/[^/]+\/documents|documents\/[^/]+\/versions)|team\/attachments)\/?$/;
@@ -32,6 +33,8 @@ export function bodyLimitFor(path: string): number {
   // SPEC §29.1.8: Stripe events are small; 256 KB is plenty
   if (path === '/api/v1/webhooks/stripe') return 256 * KB;
   if (path === '/api/v1/auth/refresh') return 8 * KB;
+  // SPEC §31.6: the banner decision is a few booleans
+  if (path === '/api/v1/public/hozzajarulas') return 4 * KB;
   return 1024 * KB;
 }
 
@@ -69,6 +72,8 @@ export function createApp(deps: Deps) {
   api.route('/', publicRoutes(deps));
   // SPEC §29.1 (B1): Stripe back URL, DEMO pay page, Stripe webhook
   api.route('/', paymentsPublicK29Routes(deps));
+  // SPEC §31.6: /public/marketing-config, /public/hozzajarulas (ads switched off: { ads: false } / 404)
+  api.route('/', publicMarketingRoutes(deps));
   api.route('/auth', authRoutes(deps));
   api.route('/me', meRoutes(deps));
   api.route('/client', clientRoutes(deps));

@@ -2,7 +2,7 @@ TERVEZET – jogász ellenőrzi. Nem végleges, nem jogi tanács.
 
 # Rövid jogi szövegek az appban
 
-Verzió: 2026-11-20. Ez a fájl az app_szovegek.json-ból készül (npm run app-szovegek). Ne szerkeszd kézzel: a JSON-t írd át, és futtasd újra. A félkövér rész a szöveg kulcsa, az app ezzel hivatkozik rá.
+Verzió: 2026-11-21. Ez a fájl az app_szovegek.json-ból készül (npm run app-szovegek). Ne szerkeszd kézzel: a JSON-t írd át, és futtasd újra. A félkövér rész a szöveg kulcsa, az app ezzel hivatkozik rá.
 
 ## Ár
 
@@ -211,6 +211,64 @@ Verzió: 2026-11-20. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 ## Regisztráció
 
 **regisztracio.aszf_link** – A regisztrációval még nem fizetsz semmit. A szerződést a következő lépésekben olvashatod el.
+
+**regisztracio.hirdetes_hozzajarulas** – Hozzájárulok, hogy a regisztrációmról és az első fizetésemről a Meta és a Google jelzést kapjon a hirdetéseik méréséhez. Az e-mail-címemet kódolva kapják meg, adóadatot nem. Nem kötelező, és a Fiók oldalon bármikor visszavonhatom.
+
+## Fiók – hirdetési hozzájárulás (csak bekapcsolt hirdetési mérésnél)
+
+**fiok.hirdetes_cim** – Hirdetések mérése (Meta, Google)
+
+**fiok.hirdetes_leiras** – Ha bekapcsolod, a regisztrációdról és az első fizetésedről a Meta és a Google jelzést kap a hirdetéseik méréséhez. Az e-mail-címedet kódolva kapják meg; adóadatot, könyvelési adatot soha nem küldünk. Bármikor kikapcsolhatod.
+
+**fiok.hirdetes_kikapcsolva** – Kikapcsoltad. Ettől kezdve nem küldünk rólad jelzést a Metának és a Google-nek.
+
+## Süti-ablak (csak bekapcsolt hirdetési mérésnél)
+
+**suti_ablak.cim** – Sütik és hirdetésmérés
+
+**suti_ablak.szoveg** – Szeretnénk tudni, melyik Facebook-, Instagram- vagy Google-hirdetésünk hoz új ügyfeleket. Ehhez a Meta és a Google sütiket tenne a böngésződbe, és adatot kapna a látogatásodról (például hogy melyik hirdetésből jöttél). Ha utána regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kapnak, az e-mail-címedet kódolva; adóadatot soha. Az adat az Egyesült Államokba is kerülhet. Csak akkor, ha elfogadod. Ha elutasítod, az oldal ugyanúgy működik, és ugyanúgy regisztrálhatsz. A döntésedet bármikor megváltoztathatod az oldal alján, a „Süti-beállítások” linkkel, regisztráció után az appban, a Fiók oldalon.
+
+**suti_ablak.link_suti** – Süti-tájékoztató
+
+**suti_ablak.link_adatkezeles** – Adatkezelési tájékoztató
+
+**suti_ablak.elfogadom** – Elfogadom
+
+**suti_ablak.elutasitom** – Elutasítom
+
+**suti_ablak.beallitasok** – Beállítások
+
+**suti_ablak.beallitasok_cim** – Süti-beállítások
+
+**suti_ablak.beallitasok_bevezeto** – Itt partnerenként dönthetsz. Alapból minden ki van kapcsolva; csak az lesz bekapcsolva, amit te bekapcsolsz.
+
+**suti_ablak.szukseges** – Feltétlenül szükséges: a döntésedet egy sütiben jegyezzük meg, hogy ne kérdezzünk minden oldalon újra. Ez mindig be van kapcsolva.
+
+**suti_ablak.statisztika** – Látogatottság mérése: saját szerverünkön, süti nélkül, összesített statisztikához. Senki más nem kapja meg.
+
+**suti_ablak.meta** – Meta (Facebook, Instagram): a hirdetéseink mérése. A Meta sütiket tesz a böngésződbe, és megkapja, melyik oldalt nézted meg, és melyik hirdetésből jöttél; ha regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kap, az e-mail-címedet kódolva. Az adat az Egyesült Államokba is kerülhet.
+
+**suti_ablak.google** – Google: a hirdetéseink mérése. A Google sütiket tesz a böngésződbe, és megkapja, melyik oldalt nézted meg, és melyik hirdetésből jöttél; ha regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kap, az e-mail-címedet kódolva. Az adat az Egyesült Államokba is kerülhet.
+
+**suti_ablak.mentes** – Kiválasztottak mentése
+
+**suti_ablak.mentve** – Elmentettük a döntésedet.
+
+**suti_ablak.lablec_link** – Süti-beállítások
+
+## A weboldal látogatottságának mérése (lábléc)
+
+**meres.lablec** – Ez az oldal nem használ sütit. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.
+
+**meres.ne_merjetek** – Ne mérjétek a látogatásomat
+
+**meres.ne_merjetek_kesz** – Rendben: ezen a böngészőn nem mérjük a látogatásaidat.
+
+**meres.ujra_merheto** – Újra mérhetitek
+
+## Lábléc és linkek
+
+**lablec.suti** – Süti-tájékoztató
 
 ## Gyakori kérdések (GYIK)
 

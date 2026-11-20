@@ -31,6 +31,7 @@ const AdminDijszamlak = lazy(() => import('./pages/admin/Dijszamlak'));
 const AdminKonyvelok = lazy(() => import('./pages/admin/Konyvelok'));
 const AdminCsapat = lazy(() => import('./pages/admin/Csapat'));
 const AdminForrasok = lazy(() => import('./pages/admin/Forrasok'));
+const AdminMarketing = lazy(() => import('./pages/admin/Marketing'));
 const AdminSzovegek = lazy(() => import('./pages/admin/Szovegek'));
 const AdminNaplo = lazy(() => import('./pages/admin/Naplo'));
 const AdminDemoPosta = lazy(() => import('./pages/admin/DemoPosta'));
@@ -146,6 +147,8 @@ export function App() {
                 <Route path="/admin/dijszamlak" element={<Csak szerep={AD}><AdminDijszamlak /></Csak>} />
                 <Route path="/admin/konyvelok" element={<Csak szerep={AD}><AdminKonyvelok /></Csak>} />
                 <Route path="/admin/csapat" element={<Csak szerep={AD}><AdminCsapat /></Csak>} />
+                {/* SPEC §31.4: the Marketing tab (admin only; the API answers 404 to everybody else) */}
+                <Route path="/admin/marketing" element={<Csak szerep={AD}><AdminMarketing /></Csak>} />
                 <Route path="/admin/forrasok" element={<Csak szerep={AD}><AdminForrasok /></Csak>} />
                 <Route path="/admin/szovegek" element={<Csak szerep={AD}><AdminSzovegek /></Csak>} />
                 <Route path="/admin/naplo" element={<Csak szerep={AD}><AdminNaplo /></Csak>} />

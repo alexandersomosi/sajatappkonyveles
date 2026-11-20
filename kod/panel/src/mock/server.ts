@@ -1027,6 +1027,79 @@ on('GET', '/admin/attribution', () => {
     ],
   };
 });
+// SPEC §31.4: the Marketing tab in the MINTA build (fictional numbers, like every answer of this mock)
+const mockSpend: { id: string; day: string; platform: 'meta' | 'google' | 'egyeb'; campaign: string | null; amountHuf: number; note: string | null; createdAt: string; revokedAt: string | null }[] = [];
+on('GET', '/admin/marketing', ({ q }) => {
+  requireAdmin();
+  const nap = Number(q.get('nap') ?? 30);
+  const from = q.get('tol') ?? new Date(Date.parse(`${TODAY}T00:00:00Z`) - (nap - 1) * 86_400_000).toISOString().slice(0, 10);
+  const to = q.get('ig') ?? TODAY;
+  const ch = (channel: string, label: string, visitors: number, registered: number, dataDone: number, contractAccepted: number, paying: number) => ({ channel, label, visitors, registered, dataDone, contractAccepted, paying });
+  const byChannel = [
+    ch('youtube', 'YouTube', 412, 18, 12, 9, 6),
+    ch('google', 'Google', 160, 6, 4, 3, 2),
+    ch('facebook', 'Facebook', 74, 3, 2, 1, 1),
+    ch('instagram', 'Instagram', 51, 2, 1, 0, 0),
+    ch('tiktok', 'TikTok', 38, 1, 0, 0, 0),
+    ch('kozvetlen', 'Közvetlen', 120, 5, 4, 3, 2),
+    ch('egyeb', 'Egyéb', 22, 0, 0, 0, 0),
+  ];
+  const sum = (k: 'visitors' | 'registered' | 'dataDone' | 'contractAccepted' | 'paying') => byChannel.reduce((a, r) => a + r[k], 0);
+  const live = mockSpend.filter((s) => !s.revokedAt && s.day >= from && s.day <= to);
+  const spendOf = (p: string) => live.filter((s) => s.platform === p).reduce((a, s) => a + s.amountHuf, 0);
+  const adsRow = (platform: 'meta' | 'google' | 'egyeb', label: string, registered: number, paying: number) => {
+    const spendHuf = spendOf(platform);
+    return { platform, label, spendHuf, registered, paying, costPerRegistrationHuf: spendHuf && registered && platform !== 'egyeb' ? Math.round(spendHuf / registered) : null, costPerPayingHuf: spendHuf && paying && platform !== 'egyeb' ? Math.round(spendHuf / paying) : null };
+  };
+  return {
+    range: { days: q.get('tol') ? 0 : nap, from, to },
+    demo: true,
+    stats: { available: true, configured: true, reason: null },
+    visitors: { visitors: sum('visitors'), visits: 1012, pageviews: 1488 },
+    channels: byChannel.map((r) => ({ key: r.channel, label: r.label, n: r.visitors })),
+    devices: [{ key: 'Telefon', label: 'Telefon', n: 611 }, { key: 'Gép', label: 'Gép', n: 236 }, { key: 'Tablet', label: 'Tablet', n: 30 }],
+    countries: [{ key: 'HU', label: 'Magyarország', n: 842 }, { key: 'AT', label: 'Ausztria', n: 19 }, { key: 'DE', label: 'Németország', n: 16 }],
+    cities: [{ key: 'Budapest', label: 'Budapest', n: 388 }, { key: 'Debrecen', label: 'Debrecen', n: 64 }, { key: 'Szeged', label: 'Szeged', n: 51 }, { key: 'Pécs', label: 'Pécs', n: 40 }],
+    events: [{ key: 'arak-lathato', label: 'Görgetett az árakig', n: 402 }, { key: 'regisztralok', label: 'Regisztrálok gomb', n: 96 }, { key: 'belepes', label: 'Belépés gomb', n: 41 }, { key: 'visszahivas', label: 'Visszahívást kérek gomb', n: 12 }, { key: 'email-iras', label: 'E-mail-cím (levelet írna)', n: 5 }],
+    campaigns: [
+      { source: 'youtube', medium: 'video', campaign: 'atalanyado-2027-roviden', channel: 'youtube', visitors: 230, registered: 11, paying: 4, mrrHuf: 4 * HAVIDIJ },
+      { source: 'youtube', medium: 'video', campaign: 'kata-vagy-atalanyado', channel: 'youtube', visitors: 121, registered: 5, paying: 2, mrrHuf: 2 * HAVIDIJ },
+      { source: 'facebook', medium: 'social', campaign: 'oszi-poszt', channel: 'facebook', visitors: 40, registered: 2, paying: 1, mrrHuf: HAVIDIJ },
+    ],
+    funnel: { total: { visitors: sum('visitors'), registered: sum('registered'), dataDone: sum('dataDone'), contractAccepted: sum('contractAccepted'), paying: sum('paying') }, byChannel },
+    money: {
+      rows: [
+        { channel: 'youtube', label: 'YouTube', payingNow: 6, mrrHuf: 6 * HAVIDIJ, everPaid: 7 },
+        { channel: 'google', label: 'Google', payingNow: 2, mrrHuf: 2 * HAVIDIJ, everPaid: 2 },
+        { channel: 'facebook', label: 'Facebook', payingNow: 1, mrrHuf: HAVIDIJ, everPaid: 1 },
+        { channel: 'instagram', label: 'Instagram', payingNow: 0, mrrHuf: 0, everPaid: 0 },
+        { channel: 'tiktok', label: 'TikTok', payingNow: 0, mrrHuf: 0, everPaid: 0 },
+        { channel: 'kozvetlen', label: 'Közvetlen', payingNow: 2, mrrHuf: 2 * HAVIDIJ, everPaid: 3 },
+        { channel: 'egyeb', label: 'Egyéb', payingNow: 0, mrrHuf: 0, everPaid: 0 },
+      ],
+      mrrHuf: 11 * HAVIDIJ,
+      payingNow: 11,
+      dashboardMrrHuf: 11 * HAVIDIJ,
+      note: 'Ugyanannyi, mint az Áttekintés havi bevétele.',
+    },
+    callbacks: { total: 4, rows: [{ key: 'youtube', label: 'YouTube', n: 3 }, { key: 'kozvetlen', label: 'Közvetlen', n: 1 }] },
+    ads: { enabled: false, meta: false, google: false, spendHuf: live.reduce((a, s) => a + s.amountHuf, 0), rows: [adsRow('meta', 'Meta (Facebook, Instagram)', 5, 1), adsRow('google', 'Google', 6, 2), adsRow('egyeb', 'Egyéb', 0, 0)], spend: mockSpend.filter((s) => s.day >= from && s.day <= to), queued: 0, sent: 0, failed: 0 },
+    landingUrl: 'https://adozz.hu',
+  };
+});
+on('POST', '/admin/marketing/koltes', ({ body }) => {
+  requireAdmin();
+  const row = { id: uid('ks'), day: String(body.day), platform: body.platform as 'meta' | 'google' | 'egyeb', campaign: (body.campaign as string) ?? null, amountHuf: Number(body.amountHuf), note: (body.note as string) ?? null, createdAt: nowIso(), revokedAt: null as string | null };
+  mockSpend.unshift(row);
+  return { id: row.id };
+});
+on('POST', '/admin/marketing/koltes/:id/visszavonas', ({ p }) => {
+  requireAdmin();
+  const r = mockSpend.find((x) => x.id === p.id);
+  if (!r || r.revokedAt) throw new MockError(404, 'not_found', 'Nem találjuk.');
+  r.revokedAt = nowIso();
+  return { ok: true };
+});
 on('GET', '/admin/content-texts', () => {
   requireAdmin();
   return { items: content };

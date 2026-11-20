@@ -335,6 +335,19 @@ export function jobDefs(deps: Deps): JobDef[] {
     ...jobDefsK29f(), // SPEC §29.9.5 F9: termination_effective 06:10 (+ calendar feed revoke)
     ...jobDefsK29(), // SPEC §29.13 (B1): predebit 10:00, suspension_warning 10:05, payments_reconcile /15 min, invoices_issue /min
     ...jobDefsK28(), // SPEC §28 / §28.K: allowances yearly/monthly, check-in, reminders, annual closing, service lock
+    // SPEC §31.6: server-side ad conversions, every 5 minutes – registered only while ADS_TRACKING_ENABLED=true
+    ...(deps.cfg.ads.enabled
+      ? [
+          {
+            name: 'ad_conversions',
+            slot: (now: Date) => {
+              const p = budapestParts(now);
+              return `${p.date}T${String(p.hour).padStart(2, '0')}:${String(Math.floor(p.minute / 5) * 5).padStart(2, '0')}`;
+            },
+            run: async (d: Deps) => (await import('./services/hirdetes.js')).jobAdConversions(d),
+          },
+        ]
+      : []),
     { name: 'gdpr', slot: at(3, 30), run: (d) => runGdprJob(d) },
     {
       name: 'gdpr_export',

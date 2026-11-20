@@ -1,0 +1,7 @@
+{
+  "_megjegyzes": "SPEC §31 – a nyitóoldal mérésének NYILVÁNOS beállításai (titok nincs benne). umamiWebsiteId: a deploy/umami-beallit.sh írja ki; amíg üres, az oldalra nem kerül statisztikai szkript (a meres.js akkor is átadja a forrást a Regisztrálok linknek). hirdetes: a Meta/Google kód és a süti-ablak csak true esetén kerül az oldalba – és akkor is csak bekapcsolt szerveroldali kapcsolóval (ADS_TRACKING_ENABLED) fut. Bekapcsolás: kod/MARKETING.md.",
+  "umamiWebsiteId": "",
+  "domains": ["adozz.hu"],
+  "doNotTrack": true,
+  "hirdetes": false
+}

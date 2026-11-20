@@ -1,4 +1,5 @@
-// Regisztráció (FUNKCIOK 1, 31): név, e-mail, jelszó (erősséggel), ajánlókód (?ref=), UTM a webes címből; ÁSZF-link.
+// Regisztráció (FUNKCIOK 1, 31): név, e-mail, jelszó (erősséggel), ajánlókód (?ref=), a forrás a webes címből
+// (utm_*, hivatkozo, erkezes, forras, cel – SPEC §31.3; a Google- és Apple-gomb is elküldi); ÁSZF-, adatkezelési és süti-link.
 import { useMemo, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -17,17 +18,7 @@ import { hibaUzenet } from '@/lib/hiba';
 import { nemTor, szam } from '@/lib/format';
 import { JOURNEY_TEXTS } from '@/_shared/bekotes';
 import { regEmailBeallit } from '@/lib/atadas';
-
-function utm(): { source?: string; medium?: string; campaign?: string; content?: string } | undefined {
-  if (Platform.OS !== 'web' || typeof location === 'undefined') return undefined;
-  try {
-    const q = new URLSearchParams(location.search);
-    const u = { source: q.get('utm_source') ?? undefined, medium: q.get('utm_medium') ?? undefined, campaign: q.get('utm_campaign') ?? undefined, content: q.get('utm_content') ?? undefined };
-    return Object.values(u).some(Boolean) ? u : undefined;
-  } catch {
-    return undefined;
-  }
-}
+import { forrasAdat, webKereses } from '@/lib/forras';
 
 export default function Regisztracio() {
   const { regisztral, alkalmaz } = useAuth();
@@ -47,7 +38,8 @@ export default function Regisztracio() {
   const [hiba, setHiba] = useState<string | null>(null);
   const [tolt, setTolt] = useState(false);
   const ero = useMemo(() => jelszoEro(jelszo), [jelszo]);
-  const utmAdat = useMemo(utm, []);
+  // SPEC §31.3: a weben a landing linkjéből; a natív appban nincs (közvetlen)
+  const forras = useMemo(() => (Platform.OS === 'web' ? forrasAdat(webKereses()) : {}), []);
 
   async function kuld() {
     const h = {
@@ -62,9 +54,10 @@ export default function Regisztracio() {
     setHiba(null);
     try {
       // k7b (S16): the answer is the same whether or not the address has an account – both go to "nézd meg a postafiókodat"
-      const r = await regisztral({ email: email.trim(), password: jelszo, firstName: ker.trim(), lastName: vez.trim(), referralCode: kod || undefined, utm: utmAdat });
+      const r = await regisztral({ email: email.trim(), password: jelszo, firstName: ker.trim(), lastName: vez.trim(), referralCode: kod || undefined, ...forras });
       regEmailBeallit(r.email || email.trim());
-      router.replace('/postafiok');
+      // ?cel=visszahivas (Visszahívást kérek a nyitóoldalon): a kód után a visszahívás lapja nyílik
+      router.replace(forras.entry?.cel === 'visszahivas' ? '/postafiok?cel=visszahivas' : '/postafiok');
     } catch (e) {
       if (e instanceof ApiHiba && e.fields) setHibak({ email: e.fields.email ?? null, jelszo: e.fields.password ?? null });
       setHiba(hibaUzenet(e, 'Nem sikerült a regisztráció. Próbáld újra.', { jelolt: ['email', 'password'] }));
@@ -110,14 +103,15 @@ ${(cfg.data as { newBusinessChargePolicy?: string } | undefined)?.newBusinessCha
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 16 }}>
           <GombSz cim="Szerződési feltételek" m={14.5} onPress={() => router.push('/jogi/aszf')} />
           <GombSz cim="Adatkezelés" m={14.5} onPress={() => router.push('/jogi/adatkezeles')} />
+          <GombSz cim="Sütik" m={14.5} onPress={() => router.push('/jogi/suti')} />
         </View>
         <HibaSzoveg szoveg={hiba} style={{ marginBottom: 6 }} />
         <GombE cim="Regisztrálok" onPress={kuld} tolt={tolt} style={{ marginTop: 8 }} />
       </Lap>
       {google || apple ? (
         <View style={{ gap: 10, marginTop: 14 }}>
-          {google ? <GoogleGomb siker={async (r) => { await alkalmaz(r); router.replace('/'); }} hiba={setHiba} referralCode={kod || undefined} webClientId={cfg.data?.googleClientIds.web} /> : null}
-          {apple ? <AppleGomb siker={async (r) => { await alkalmaz(r); router.replace('/'); }} hiba={setHiba} referralCode={kod || undefined} /> : null}
+          {google ? <GoogleGomb siker={async (r) => { await alkalmaz(r); router.replace(r.isNewUser && forras.entry?.cel === 'visszahivas' ? '/visszahivas' : '/'); }} hiba={setHiba} referralCode={kod || undefined} forras={forras} webClientId={cfg.data?.googleClientIds.web} /> : null}
+          {apple ? <AppleGomb siker={async (r) => { await alkalmaz(r); router.replace(r.isNewUser && forras.entry?.cel === 'visszahivas' ? '/visszahivas' : '/'); }} hiba={setHiba} referralCode={kod || undefined} forras={forras} /> : null}
         </View>
       ) : null}
     </AuthKeret>

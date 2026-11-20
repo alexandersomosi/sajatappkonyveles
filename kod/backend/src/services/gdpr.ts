@@ -169,6 +169,8 @@ export async function buildExport(deps: Deps, exportId: string): Promise<void> {
     entries.push(json('ertesitesek.json', await db.select({ tipus: notifications.kind, cim: notifications.title, szoveg: notifications.body, ido: notifications.createdAt }).from(notifications).where(eq(notifications.userId, u.id))));
     entries.push(json('belepesek.json', await db.select({ eszkoz: sessions.clientKind, bongeszo: sessions.userAgent, letrehozva: sessions.createdAt, utoljara: sessions.lastUsedAt }).from(sessions).where(eq(sessions.userId, u.id))));
     entries.push(json('forras.json', await db.select().from(signupAttribution).where(eq(signupAttribution.userId, u.id))));
+    // SPEC §31.3: the sources of the sign-up and of the callback requests
+    entries.push(json('forras_reszletek.json', await (await import('./marketing.js')).touchesOfUser(db, u.id)));
     const [cl] = await db.select().from(clients).where(eq(clients.userId, u.id)).limit(1);
     const fileIds = new Set<string>();
     if (cl) {

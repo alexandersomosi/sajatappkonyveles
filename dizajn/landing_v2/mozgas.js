@@ -4,11 +4,14 @@
    - html.js: a JS fut;
    - html.mozog: mozgás engedélyezve (prefers-reduced-motion: reduce esetén NEM kerül ki: nincs animáció és nincs automatikus váltás);
    - mobilmenü: menüpontra koppintva, Escape-re és a menün kívül koppintva bezárul (csökkentett mozgásnál is);
-   - hős: a telefon képernyői folyamatosan, maguktól váltakoznak (Főoldal → Dosszié → Üzenetek → Fotózás → Határidők), vezérlő nélkül.
-     Megáll, amíg egér van rajta vagy fókuszban van (koppintás is fókuszba teszi), ha a fül rejtett, és ha a hős nem látszik;
+   - hős (3. kör, tulaj 11-20 23:38): a telefon NEM vált magától. A képernyőn látható alsó menü 4 pontja (Főoldal, Dosszié, Fotózás,
+     Üzenetek) fölött 4 átlátszó <button> van; koppintásra/kattintásra (billentyűzettel Enter/Szóköz) a telefon ÉS a mögötte álló
+     böngészőablak is arra a nézetre vált (finom áttűnés; csökkentett mozgásnál azonnal). Betöltéskor egyszeri koppintás-jel a menün,
+     „Próbáld ki” felirat; az első kattintás után mindkettő eltűnik. JS nélkül a Főoldal áll, a gombok nem látszanak;
    - #mit-kapsz: ragadós bemutató gépen és telefonon is. Egyetlen telefon áll, görgetésre lépésenként vált benne a képernyő,
-     mellette (gépen) vagy alatta (telefonon) a lépés szövege; 7 részes haladásjelző. Csökkentett mozgásnál ugyanez, átúszás és
-     animáció nélkül (a rétegek a végállapotukban).
+     mellette (gépen) vagy alatta (telefonon) a lépés szövege; lépésenként egy részes haladásjelző. Az utolsó lépés („Gépen is
+     ugyanez”): a telefon kisebb lesz és félrehúzódik, mögötte beúszik a böngészőablak a gépes nézettel. Csökkentett mozgásnál
+     ugyanez, átúszás és animáció nélkül (a rétegek a végállapotukban).
    Csak transform/opacity mozog (CSS); a telefonon belüli számokat requestAnimationFrame lépteti. */
 (function () {
   'use strict';
@@ -21,7 +24,7 @@
     mobilmenu();
     if (!csendes) html.classList.add('mozog');
     bemutato();
-    if (!csendes) hos();
+    hos();   // a menü csökkentett mozgásnál is működik (ott azonnal, áttűnés nélkül vált)
   }
 
   function tomb(lista) { return Array.prototype.slice.call(lista); }
@@ -69,51 +72,40 @@
     tomb(k.querySelectorAll('[data-szamlal]')).forEach(szamlal);
   }
 
-  /* ---------- hős: folyamatosan, maguktól váltakozó képernyők, vezérlő nélkül ---------- */
+  /* ---------- hős: a telefon menüje (4 gomb a képen látható menüpontok fölött) váltja a képernyőt,
+     a mögötte álló böngészőablak ugyanarra a nézetre vált. Magától nem vált. ---------- */
   function hos() {
-    var fig = d.querySelector('[data-valto]');
-    if (!fig) return;
-    var kepek = tomb(fig.querySelectorAll('.valto > img'));
-    var n = kepek.length;
-    if (n < 2) return;
-    var IDO = 4000;
-    var i = 0, ora = null, maradek = IDO, t0 = 0;
-    var ok = { eger: false, fokusz: false, rejtve: d.hidden, kint: false };
-
-    function all() { return ok.eger || ok.fokusz || ok.rejtve || ok.kint; }
-    function mutat(k) {
-      var regi = kepek[i];
-      regi.classList.remove('aktiv'); regi.classList.add('ki');
-      setTimeout(function () { regi.classList.remove('ki'); }, 450);
-      kepek[k].classList.remove('ki'); kepek[k].classList.add('aktiv');
-      i = k;
+    var k = d.querySelector('[data-hos]');
+    if (!k) return;
+    var gombok = tomb(k.querySelectorAll('.hos-menu button'));
+    // minden .valto (telefon, böngésző) képei, sorrendben: Főoldal, Dosszié, Fotózás (gépen: papír beküldése), Üzenetek
+    var sorok = tomb(k.querySelectorAll('.valto')).map(function (v) {
+      return tomb(v.children).filter(function (el) { return el.tagName === 'IMG'; });
+    });
+    if (!gombok.length) return;
+    var akt = 0;
+    function mutat(i) {
+      if (i === akt) return;
+      sorok.forEach(function (kepek) {
+        if (!kepek[i] || !kepek[akt]) return;
+        kepek[akt].classList.remove('aktiv');
+        kepek[i].classList.add('aktiv');
+      });
+      gombok.forEach(function (g, j) { g.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+      akt = i;
     }
-    function utemez() {
-      clearTimeout(ora); ora = null;
-      if (!all()) { t0 = Date.now(); ora = setTimeout(kovetkezo, maradek); }
-    }
-    function kovetkezo() {
-      ora = null; maradek = IDO;
-      mutat((i + 1) % n);
-      utemez();
-    }
-    function allit(kulcs, ertek) {
-      if (ok[kulcs] === ertek) return;
-      if (ora) { clearTimeout(ora); ora = null; maradek = Math.max(800, maradek - (Date.now() - t0)); }
-      ok[kulcs] = ertek;
-      utemez();
-    }
-
-    fig.addEventListener('mouseenter', function () { allit('eger', true); });
-    fig.addEventListener('mouseleave', function () { allit('eger', false); });
-    fig.addEventListener('focusin', function () { allit('fokusz', true); });
-    fig.addEventListener('focusout', function () { allit('fokusz', false); });
-    d.addEventListener('visibilitychange', function () { allit('rejtve', d.hidden); });
-    if (vanIO) new IntersectionObserver(function (es) { allit('kint', !es[0].isIntersecting); }, { threshold: 0.25 }).observe(fig);
-
-    // a következő képek előtöltése, hogy a váltás ne villanjon
-    kepek.forEach(function (img) { img.loading = 'eager'; });
-    utemez();
+    gombok.forEach(function (g, j) {
+      g.addEventListener('click', function () { k.classList.add('kiprobalta'); mutat(j); });
+    });
+    // a többi képernyő előtöltése, hogy az első koppintás se villanjon
+    sorok.forEach(function (kepek) { kepek.forEach(function (img) { img.loading = 'eager'; }); });
+    // egyszeri koppintás-jel a menün, amikor a hős először látszik (csak mozgással; a CSS rejti, ha már kipróbálta)
+    if (csendes) return;
+    if (!vanIO) { k.classList.add('kopp'); return; }
+    var io = new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting) { k.classList.add('kopp'); io.disconnect(); }
+    }, { threshold: 0.6 });
+    io.observe(k.querySelector('.kompo-tel') || k);
   }
 
   /* ---------- #mit-kapsz: ragadós bemutató (gépen és telefonon) ---------- */
@@ -133,17 +125,26 @@
     var halado = d.createElement('div'); halado.className = 'halado';
     var szovegek = d.createElement('div'); szovegek.className = 'szinpad-szovegek';
     var lapok = [], cimek = [], toltok = [];
-    lepesek.forEach(function (l) {
+    // zárólépés („Gépen is ugyanez”): a lépés böngészőablaka a telefon MÖGÉ kerül; amikor ez a lépés aktív, a színpad .gep-mod
+    var gepLepes = -1, bongeszo = null;
+    lepesek.forEach(function (l, j) {
       var lap = l.querySelector('.kepernyo').cloneNode(true);
       tomb(lap.querySelectorAll('img')).forEach(function (img) { img.alt = ''; });
       tarto.appendChild(lap); lapok.push(lap);
+      var b0 = l.querySelector('.bongeszo');
+      if (b0 && !bongeszo) {
+        bongeszo = b0.cloneNode(true); bongeszo.classList.add('szinpad-bongeszo'); gepLepes = j;
+        tomb(bongeszo.querySelectorAll('img')).forEach(function (img) { img.alt = ''; });
+      }
       var sz = l.querySelector('.blepes-szoveg').cloneNode(true);
       szovegek.appendChild(sz); cimek.push(sz);
       var s = d.createElement('span'), t = d.createElement('i');
       s.appendChild(t); halado.appendChild(s); toltok.push(t);
     });
     tomb(szinpad.querySelectorAll('[id]')).forEach(function (el) { el.removeAttribute('id'); });
-    tel.appendChild(tarto); kepTarto.appendChild(tel);
+    tel.appendChild(tarto);
+    if (bongeszo) kepTarto.appendChild(bongeszo);
+    kepTarto.appendChild(tel);
     szinpad.appendChild(kepTarto); szinpad.appendChild(halado); szinpad.appendChild(szovegek);
     b.insertBefore(szinpad, b.firstChild);
     b.classList.add('szinpad-mod');
@@ -153,6 +154,7 @@
       [lepesek, lapok, cimek].forEach(function (sor) {
         sor.forEach(function (el, j) { el.classList.toggle('aktiv', j === k); });
       });
+      szinpad.classList.toggle('gep-mod', k === gepLepes);
     }
     function aktival(k, indit) {
       if (k !== aktiv) {

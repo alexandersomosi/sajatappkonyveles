@@ -13,11 +13,11 @@
   },
   {
     "docType": "adatkezeles",
-    "version": "2026-11-20",
+    "version": "2026-11-21",
     "title": "Adatkezelési tájékoztató",
     "file": "adatkezeles.md",
     "requiresReconsent": false,
-    "effectiveFrom": "2026-11-20",
+    "effectiveFrom": "2026-11-21",
     "audience": "ugyfel",
     "showInApp": true,
     "pdf": true,
@@ -116,15 +116,27 @@
   },
   {
     "docType": "app_szovegek",
-    "version": "2026-11-20",
+    "version": "2026-11-21",
     "title": "Rövid jogi szövegek az appban",
     "file": "app_szovegek.md",
     "data": "app_szovegek.json",
     "requiresReconsent": false,
-    "effectiveFrom": "2026-11-20",
+    "effectiveFrom": "2026-11-21",
     "audience": "belso",
     "showInApp": false,
     "pdf": false,
+    "draft": true
+  },
+  {
+    "docType": "suti",
+    "version": "2026-11-21",
+    "title": "Süti-tájékoztató",
+    "file": "suti.md",
+    "requiresReconsent": false,
+    "effectiveFrom": "2026-11-21",
+    "audience": "ugyfel",
+    "showInApp": true,
+    "pdf": true,
     "draft": true
   }
 ]

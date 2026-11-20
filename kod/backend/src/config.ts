@@ -1,6 +1,7 @@
 // Environment → typed, frozen config (SPEC §13). Read once at start. Missing keys stop the
 // process with a clear message; integrations without keys run their DEMO adapter only when
 // APP_ENV=demo, and are "disabled" (503 not_configured) when APP_ENV=production (SPEC §13.1).
+import { isAbsolute } from 'node:path';
 import brand from './_shared/brand.json' with { type: 'json' };
 
 export type AppEnv = 'demo' | 'production';
@@ -91,6 +92,37 @@ export interface Config {
   assist: { evEnabled: boolean; evValidUntil: string; ujegykeJogcim: '9' | '60' };
   /** SPEC §27.11 S6: per-client storage quota (bytes) before / after activation; refuse uploads when the file disk has less free space than minFreeDiskBytes (or, when set, less than minFreeDiskPct %). */
   quota: { beforeActivationBytes: number; afterActivationBytes: number; minFreeDiskPct: number; minFreeDiskBytes: number };
+  /** SPEC §31.1: the own statistics server (Umami) the Marketing tab reads server-side; null = not configured. */
+  umami: UmamiCfg | null;
+  /** SPEC §31.6: ad measurement (Meta Pixel + Conversions API, Google tag + Data Manager API) – OFF unless switched on. */
+  ads: AdsCfg;
+}
+
+export interface UmamiCfg {
+  /** Internal address of the Umami container (never public), e.g. http://kezjegy-umami:3000 */
+  url: string;
+  websiteId: string;
+  user: string;
+  password: string;
+}
+
+export interface AdsCfg {
+  /** True only with ADS_TRACKING_ENABLED=true AND at least one provider configured; otherwise nothing runs or loads. */
+  enabled: boolean;
+  /** The version of the cookie notice the banner shows (a new version asks again). */
+  noticeVersion: string;
+  /** Send the hashed phone number too (default no: e-mail only) [TULAJ]. */
+  sendPhone: boolean;
+  meta: { pixelId: string; capiToken: string; testEventCode: string; graphVersion: string } | null;
+  google: {
+    tagId: string;
+    customerId: string;
+    loginCustomerId: string;
+    conversionRegistration: string;
+    conversionPayment: string;
+    serviceAccountFile: string;
+    validateOnly: boolean;
+  } | null;
 }
 
 export class ConfigError extends Error {}
@@ -400,6 +432,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     callbackCallerId: str(env, 'CALLBACK_CALLER_ID'),
     mediaBaseUrl: `${url(env, 'APP_PUBLIC_URL', 'https://app.45-94-65-74.sslip.io')}/media/`,
     assist: assistCfg(env),
+    umami: umamiCfg(env),
+    ads: adsCfg(env),
     quota: {
       beforeActivationBytes: int(env, 'QUOTA_BEFORE_ACTIVATION_MB', 300, 10, 100_000) * 1024 * 1024,
       afterActivationBytes: int(env, 'QUOTA_AFTER_ACTIVATION_MB', 4096, 50, 1_000_000) * 1024 * 1024,
@@ -423,6 +457,74 @@ function assistCfg(env: NodeJS.ProcessEnv): Config['assist'] {
   return { evEnabled: ['true', '1', 'igen'].includes(en), evValidUntil: until, ujegykeJogcim: jc };
 }
 
+/** SPEC §31.1: UMAMI_API_URL + UMAMI_WEBSITE_ID + UMAMI_API_USER + UMAMI_API_PASSWORD – all four or none. */
+function umamiCfg(env: NodeJS.ProcessEnv): UmamiCfg | null {
+  const v = { url: str(env, 'UMAMI_API_URL').replace(/\/+$/, ''), websiteId: str(env, 'UMAMI_WEBSITE_ID'), user: str(env, 'UMAMI_API_USER'), password: str(env, 'UMAMI_API_PASSWORD') };
+  const filled = Object.values(v).filter(Boolean).length;
+  if (filled === 0) return null;
+  // half-done set-up (umami-beallit.sh not run yet): the tab shows "a látogatottsági adat még nincs beállítva"
+  if (filled !== 4) return null;
+  try {
+    const u = new URL(v.url);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') throw new Error('protocol');
+  } catch {
+    throw new ConfigError('UMAMI_API_URL: érvénytelen cím (pl. http://kezjegy-umami:3000).');
+  }
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v.websiteId)) throw new ConfigError('UMAMI_WEBSITE_ID: UUID kell.');
+  return v;
+}
+
+/**
+ * SPEC §31.6: ADS_TRACKING_ENABLED (default false). Switched off → no provider config at all (nothing can load or send),
+ * whatever keys are in the file. Switched on → each provider only with its keys; with no provider configured it stays off.
+ */
+function adsCfg(env: NodeJS.ProcessEnv): AdsCfg {
+  const noticeVersion = str(env, 'ADS_NOTICE_VERSION', '1');
+  if (!/^[0-9A-Za-z.-]{1,20}$/.test(noticeVersion)) throw new ConfigError('ADS_NOTICE_VERSION: rövid verziójel (pl. 2026-11-21).');
+  const off: AdsCfg = { enabled: false, noticeVersion, sendPhone: false, meta: null, google: null };
+  if (!bool(env, 'ADS_TRACKING_ENABLED', false)) return off;
+  let meta: AdsCfg['meta'] = null;
+  const pixelId = str(env, 'META_PIXEL_ID');
+  if (pixelId) {
+    if (!/^\d{6,20}$/.test(pixelId)) throw new ConfigError('META_PIXEL_ID: csak számjegyek (az Events Managerben a pixel/adatkészlet azonosítója).');
+    const capiToken = str(env, 'META_CAPI_TOKEN');
+    if (capiToken && !/^[A-Za-z0-9_-]{20,512}$/.test(capiToken)) throw new ConfigError('META_CAPI_TOKEN: érvénytelen formátum.');
+    const graphVersion = str(env, 'META_GRAPH_VERSION', 'v27.0');
+    if (!/^v\d{1,3}\.\d$/.test(graphVersion)) throw new ConfigError('META_GRAPH_VERSION: pl. v27.0.');
+    const testEventCode = str(env, 'META_TEST_EVENT_CODE');
+    if (testEventCode && !/^[A-Za-z0-9]{3,40}$/.test(testEventCode)) throw new ConfigError('META_TEST_EVENT_CODE: betűk és számok.');
+    meta = { pixelId, capiToken, testEventCode, graphVersion };
+  }
+  let google: AdsCfg['google'] = null;
+  const tagId = str(env, 'GOOGLE_TAG_ID');
+  if (tagId) {
+    if (!/^AW-\d{6,15}$/.test(tagId)) throw new ConfigError('GOOGLE_TAG_ID: AW-123456789 alakú Google Ads-címke kell.');
+    const digits = (k: string) => {
+      const v = str(env, k).replace(/-/g, '');
+      if (v && !/^\d{10}$/.test(v)) throw new ConfigError(`${k}: 10 számjegy (123-456-7890).`);
+      return v;
+    };
+    const conv = (k: string) => {
+      const v = str(env, k);
+      if (v && !/^\d{1,20}$/.test(v)) throw new ConfigError(`${k}: a konverziós művelet számazonosítója.`);
+      return v;
+    };
+    const saFile = str(env, 'GOOGLE_SERVICE_ACCOUNT_FILE');
+    if (saFile && !isAbsolute(saFile)) throw new ConfigError('GOOGLE_SERVICE_ACCOUNT_FILE: abszolút útvonal a konténerben (pl. /run/hirdetes/google.json).');
+    google = {
+      tagId,
+      customerId: digits('GOOGLE_ADS_CUSTOMER_ID'),
+      loginCustomerId: digits('GOOGLE_ADS_LOGIN_CUSTOMER_ID'),
+      conversionRegistration: conv('GOOGLE_CONVERSION_REGISTRATION'),
+      conversionPayment: conv('GOOGLE_CONVERSION_PAYMENT'),
+      serviceAccountFile: saFile,
+      validateOnly: bool(env, 'GOOGLE_DM_VALIDATE_ONLY', false),
+    };
+  }
+  if (!meta && !google) return off;
+  return { enabled: true, noticeVersion, sendPhone: bool(env, 'ADS_SEND_PHONE', false), meta, google };
+}
+
 /** Modes for /health and /admin/system (never secrets). */
 export function integrationModes(c: Config) {
   return {
@@ -435,6 +537,9 @@ export function integrationModes(c: Config) {
     payment: c.payment.provider,
     stripe: c.payment.stripe?.mode ?? 'off',
     szamlazzhuAccount: c.invoice.szamlazzhuAccount ?? '-',
+    // SPEC §31 (names only, never a key)
+    umami: c.umami ? 'be' : 'ki',
+    ads: c.ads.enabled ? [c.ads.meta ? 'meta' : '', c.ads.google ? 'google' : ''].filter(Boolean).join('+') : 'ki',
   };
 }
 

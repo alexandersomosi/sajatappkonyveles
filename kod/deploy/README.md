@@ -8,7 +8,38 @@
 > `/srv/kezjegy/proxy/`, 80/443). Az `appok-caddy-1` leállítva (a takarítás lent). Telepítés előtt/után az **Adózz**
 > címeit nézd: `adozz.hu`, `app.`/`konyvelo.`/`api.adozz.hu` és api/app/konyvelo …sslip.io → 200
 > (`ssh appok-1 'bash /srv/kezjegy/deploy/proxy/atallas.sh allapot'`).
+> **2026-11-21 00:04 óta a KÜLSŐ MENTÉS közvetlenül a szerverről megy a Hetzner Storage Boxra** (restic, óránként
+> a 35. percben, `restic-mentes.sh`; a tulaj döntése 11-20) – lásd lent: „Külső mentés: restic a Storage Boxon”.
+> A tulaj gépén át futó „Adozz mentes kulso” feladat KIKAPCSOLVA (Disabled, nem törölve).
 
+
+## Marketing (SPEC §31) – telepítési terv, MÉG NEM ÉL (építő, 2026-11-21)
+Új: saját statisztika-szerver (Umami 3.5.0 + saját Postgres), a Marketing fül, a források mentése, a nyitóoldal szkriptje, a
+kikapcsolt hirdetési mérés. Tulaj-leírás: `kod/MARKETING.md`. Migráció: **0020** (`legal_doc_type += 'suti'`, csak enum) és
+**0021** (4 új tábla + a `marketing_touches` feltöltése a `signup_attribution`-ből; meglévő sort nem módosít). A régi fájlok:
+`deploy/_regi/*_elotte_marketing_1121.*`.
+1. **Előtte:** `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_marketing_<ts>`; kézi, titkosított mentés
+   `backups/pg_dump_elotte_marketing_<ts>.dump.gpg` (`pg_restore -l` próbával) – a k7b mintájára.
+2. **Build a gépen:** `cd kod/app && npm run export:web`; `cd kod/panel && npm run build`; `node kod/landing/build.mjs`
+   (a `meres.json` `umamiWebsiteId`-je még üres → statisztikai szkript nélkül, de a `js/meres.js` már átadja a forrást).
+3. `bash kod/deploy/feltolt.sh` (megáll, ha a landingból hiányzik a `js/meres.js` vagy az e-mail-logó) → `ssh appok-1 'bash
+   /srv/kezjegy/deploy/up.sh'`. Az up.sh: `gen-env.sh` (új: `.env.umami`, `.env.umami-db`; a `.env` módosítása előtt
+   `_regi/env_<idő>`), a landing ellenőrzése, a saját titkosított mentése, a migrációk (0020, 0021), a `kezjegy-umami` és
+   `kezjegy-umami-db` indítása (a kép a pontos digesttel húzódik le), a `kezjegy-web` újralétrehozása (új: a landing index és az
+   e-mail-logó próbája), a proxy (`atallas.sh frissit`: érvényesíti az új `adozz.caddy`-t – CSP `script-src 'self'`, `/m/*`
+   útvonalak, a két nyilvános hirdetési végpont).
+4. **Utána:** `hasonlit … utana_marketing_<ts>` (a fiókszámok és a tulaj fiókjai változatlanok), mind a 8 cím 200/301,
+   `curl -sI https://adozz.hu/` (új CSP), `https://adozz.hu/js/meres.js` 200, `https://adozz.hu/m/api/x` 404,
+   `https://adozz.hu/api/v1/public/marketing-config` → `{"ads":false}`, `docker inspect kezjegy-umami` → healthy.
+5. **Egyszer:** `ssh appok-1 'bash /srv/kezjegy/deploy/umami-beallit.sh'` → kiírja a nyilvános website id-t (az API-t
+   újraindítja). Ezt a `kod/landing/meres.json` `umamiWebsiteId` mezőjébe → `node kod/landing/build.mjs` → `feltolt.sh --web-only`
+   → **`up.sh`** (csak így látszik a landing új mappája). Ellenőrzés: `https://adozz.hu/m/script.js` 200, a nyitóoldal betöltése után a
+   Marketing fülön megjelenik egy látogató (a te látogatásod).
+6. **A restic konfig-mentésébe** (szerveren: `restic-mentes.sh`) vedd fel a `.env.umami`, `.env.umami-db`, `.umami_beallitas`
+   fájlt és a `hirdetes/` mappát (a mostani lista: `.env`, `.env.db`, `.backup_pass`, `deploy/`, `proxy/`).
+Visszaállás: a `_regi/db_elotte_up_<idő>.dump.gpg` (a 0021 csak új táblákat hoz, a régi kód nem olvassa őket); a landing régi
+mappája `_regi/web_landing_<idő>`; a proxy-konfig `atallas.sh` szerint; az Umami két konténere `docker compose stop
+kezjegy-umami kezjegy-umami-db` (a kötet marad).
 
 ## k7b – a hiányzó levelek + S16 regisztráció, élesítve 2026-11-20 20:19–20:23
 Ugyanúgy, mint a k7c2: `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_k7b_20261120_201900` → kézi, titkosított mentés
@@ -251,10 +282,11 @@ compose hozza létre; ne futtass `docker compose down`-t a kezjegy projekten (a 
   `backups/db_<idő>.dump.gpg`; naponta egyszer (a 03 órás futáskor) a titkosított `data/files` tar-ja is. A végén
   beírja a mentés idejét (admin → Rendszer: „mentés kora”). Nem töröl (házirend): a legutóbbi 48 mentés és 7
   fájl-pillanatkép marad kéznél, a régebbiek a `backups/regi/` alá kerülnek.
-- **Külső másolat óránként:** a tulaj gépén a Feladatütemező „Adozz mentes kulso” feladata (minden óra 20.
-  percében, rejtett ablakban: `mentes-kulso-rejtett.vbs` → `mentes-kulso.sh`) minden új fájlt átmásol a Hetzner
-  Storage Boxra (`hetzner-tar:kezjegy/mentesek/`), SHA-256-tal ellenőrizve. Ha a gép ki van kapcsolva, a következő
-  futás pótolja. Napló: `_munka/mentes_kulso.log`.
+- **Külső másolat: 2026-11-21 óta restic, KÖZVETLENÜL a szerverről** (lent: „Külső mentés: restic a Storage
+  Boxon”). A korábbi út – a tulaj gépén a Feladatütemező „Adozz mentes kulso” feladata (`mentes-kulso-rejtett.vbs`
+  → `mentes-kulso.sh`, óránként :20, `hetzner-tar:kezjegy/mentesek/`) – **11-20 éjjel KIKAPCSOLVA** (Disabled, nem
+  törölve; a már kint lévő `kezjegy/mentesek/` fájlok maradnak). Visszakapcsolás csak ha kell:
+  `Enable-ScheduledTask -TaskName "Adozz mentes kulso"` (PowerShell).
 - `restore-proba.sh` – visszaállítási próba: a legutóbbi mentést egy eldobható, hálózat nélküli Postgres
   konténerbe tölti, és sorszámokat hasonlít az éleshez. Az éles adatbázishoz nem nyúl.
 - Valódi visszaállítás (katasztrófa után):
@@ -267,6 +299,78 @@ compose hozza létre; ne futtass `docker compose down`-t a kezjegy projekten (a 
 - **[TULAJ]** A `.env` kulcsai (`FILE_ENC_KEY`, `APP_DATA_KEY`, `NAV_CRED_KEY`) és a `.backup_pass` nélkül a
   fájlok és a mentések nem olvashatók: legyen róluk offline másolat (pl. jelszókezelő). Kiolvasás:
   `ssh appok-1 'cat /srv/kezjegy/.env /srv/kezjegy/.backup_pass'` – csak a saját gépeden, ne másold máshová.
+
+## Külső mentés: restic a Storage Boxon (2026-11-21 00:04 óta)
+
+A tulaj döntése (11-20 éjjel): „csak új dolgokat tegye fel a Hetzner szerverre, direktbe, ne a gépemen keresztül”.
+
+- **Mi fut, hol:** a szerver (deploy felhasználó) cronja, a helyi `backup.sh` (:05) mellett:
+  ```
+  35 * * * * /bin/bash /srv/kezjegy/deploy/restic-mentes.sh >> /srv/kezjegy/backups/restic.log 2>&1
+  ```
+  `restic-mentes.sh` (flock: két futás nem megy egymásra) → **`sftp:storagebox:kezjegy/restic`** (Hetzner Storage
+  Box u696276, port 23; a szerveren `~/.ssh/config` „storagebox”, kulcs `~/.ssh/id_ed25519_storagebox`, a Storage
+  Box `.ssh/authorized_keys`-ébe hozzáfűzve; előtte-másolat: `.ssh/authorized_keys.elotte_20261120_235837`).
+  restic 0.18.1 (apt, `apt-mark hold`). Titkosított (AES-256), tömörített, deduplikált – csak a változás megy ki.
+- **Óránként ezek a pillanatképek (címkék):** `db` = `pg_dump -Fp` a kezjegy-db-ből stdinen (`/kezjegy.sql`);
+  `umami` = ha fut a `kezjegy-umami-db`, annak a dumpja (`/umami.sql`); `files` = `/srv/kezjegy/data/files`;
+  `config` = `.env`, `.env.db`, `nyilvanos.env`, `.backup_pass`, `deploy/`, `proxy/`; `app` = `src/` + `web/`
+  (a futó kód és a webes felületek médiával). A `files`/`config`/`app` csak változáskor kap új pillanatképet.
+  Hibás pg_dump vagy megszakadt feltöltés esetén nem készül pillanatkép (nincs félkész állapot).
+- **NINCS forget/prune** (házirend: semmit nem törlünk; a tulaj nem engedélyezett ritkítást). Az adatbázis-dump
+  óránként ~0,4 MB-tal növeli a tárolót (a PG 17 dumpok eleje/vége véletlen `\restrict` kulcsot kap, ezért a kis
+  dump alig deduplikálódik) → ~9 MB/nap, ~3,3 GB/év a jelenlegi méretnél.
+- **Jelszó:** `/srv/kezjegy/.restic_pass` (600). Másolata a tulaj gépén: `konyvelo_app/_privat/restic_jelszo.txt`
+  (a **2. sor** a jelszó; legyen offline is). **Enélkül a külső mentés nem állítható vissza.** Ezzel az egy
+  jelszóval minden visszajön: a `config` pillanatképben ott a `.env` (FILE_ENC_KEY, APP_DATA_KEY, NAV_CRED_KEY)
+  és a `.backup_pass` is.
+- **Napló / állapot:** `backups/restic.log` (időpont, pillanatkép-azonosítók, hozzáadott méret, titok nélkül),
+  `backups/restic_allapot.json` (`eredmeny`, `utolso_sikeres_mentes`, `utolso_siker_cimkenkent`, `hiba`).
+  Gyors nézet: `ssh appok-1 'tail -7 /srv/kezjegy/backups/restic.log; cat /srv/kezjegy/backups/restic_allapot.json'`
+- **Ellenőrzés / próba** (a szerveren):
+  ```bash
+  export RESTIC_REPOSITORY=sftp:storagebox:kezjegy/restic RESTIC_PASSWORD_FILE=/srv/kezjegy/.restic_pass
+  restic snapshots; restic check            # havonta egyszer: restic check --read-data
+  ```
+  Próbavisszaállítás 2026-11-21 00:09 (db 7701cffa → ideiglenes, hálózat nélküli `postgres:17-alpine`, `--rm`):
+  80/80 tábla, 78 egyezik, eltérés csak az élő azóta írt soraiban (audit_log 925→926, sessions 329→330);
+  files: 1 fájl bájtra egyezik + a teljes pillanatkép (467 fájl) `diff -r` egyezik; config: `.env`, `.env.db`,
+  `.backup_pass` ellenőrzőösszeg egyezik.
+
+### Visszaállítás lépései vész esetén (új szerveren is)
+
+1. Új Ubuntu-szerver Dockerrel, `deploy` felhasználó a `docker` csoportban (mint fent, „Első telepítés”);
+   `sudo apt-get install restic` (0.18.x), `sudo mkdir -p /srv/kezjegy && sudo chown deploy: /srv/kezjegy`.
+2. Kapcsolat a Storage Boxhoz: új kulcs (`ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519_storagebox`), a
+   `~/.ssh/config` „storagebox” blokkja (HostName u696276.your-storagebox.de, User u696276, Port 23, IdentityFile,
+   IdentitiesOnly yes), a nyilvános kulcs HOZZÁFŰZÉSE a Storage Box `.ssh/authorized_keys`-éhez a tulaj gépéről
+   (`hetzner-tar`; előtte másolat róla). Host-kulcs ujjlenyomat (ED25519):
+   `SHA256:XqONwb1S0zuj5A1CDxpOSuD2hnAArV1A3wKY7Z3sdgM` – csak ha egyezik, akkor fogadd el.
+3. Jelszó: a `_privat/restic_jelszo.txt` **2. sora** → `/srv/kezjegy/.restic_pass` (`umask 077`, 600). Utána:
+   ```bash
+   export RESTIC_REPOSITORY=sftp:storagebox:kezjegy/restic RESTIC_PASSWORD_FILE=/srv/kezjegy/.restic_pass
+   restic snapshots                                   # a legutóbbi db / files / config / app
+   restic restore latest --tag config --target /      # .env, .env.db, nyilvanos.env, .backup_pass, deploy/, proxy/
+   restic restore latest --tag app    --target /      # src/, web/
+   restic restore latest --tag files  --target /      # data/files
+   ```
+   (Régebbi állapot: `restic snapshots --tag db`, és `latest` helyett a pillanatkép azonosítója.)
+4. Csak az adatbázist indítsd, és ÜRES adatbázisba töltsd be a dumpot:
+   ```bash
+   cd /srv/kezjegy/deploy && docker compose --env-file /srv/kezjegy/.env -f docker-compose.yml up -d kezjegy-db
+   # várj, amíg healthy: docker inspect -f '{{.State.Health.Status}}' kezjegy-db
+   docker exec kezjegy-db psql -U kezjegy -d kezjegy -c "CREATE ROLE kezjegy_app LOGIN"   # a jelszót a db-roles.sh adja
+   restic dump latest --tag db /kezjegy.sql | docker exec -i kezjegy-db psql -X -q -v ON_ERROR_STOP=1 -U kezjegy -d kezjegy >/dev/null
+   ```
+5. `bash /srv/kezjegy/deploy/up.sh` (kép építése a `src/`-ből, migrációk, `db-roles.sh`, API + worker + web), majd
+   a proxy: `docker compose -p kezjegy-proxy -f /srv/kezjegy/proxy/docker-compose.yml up -d`; DNS: `adozz.hu` és
+   aldomainjei → az új szerver IP-je (a Caddy magától kér új tanúsítványt).
+6. Umami (ha volt): `restic dump latest --tag umami /umami.sql | docker exec -i kezjegy-umami-db psql -X -v
+   ON_ERROR_STOP=1 -U <umami-felhasználó> -d <umami-adatbázis>` – szintén üres adatbázisba.
+7. Cron vissza (deploy): a `backup.sh` (:05) és a `restic-mentes.sh` (:35) sora (fent).
+
+Ugyanazon a szerveren, ha csak az adatbázis romlott el: elsőként a helyi `backups/db_*.dump.gpg` (fent); a restic
+dump csak üres adatbázisba tölthető – a meglévő `kezjegy_pgdata` kötetet NE töröld, hanem tedd félre (tulaj dönt).
 
 ## Kulcsok később
 

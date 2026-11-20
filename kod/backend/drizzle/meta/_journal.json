@@ -141,6 +141,20 @@
       "when": 1795282800000,
       "tag": "0019_k7c2",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1795369200000,
+      "tag": "0020_marketing_enumok",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795369260000,
+      "tag": "0021_marketing",
+      "breakpoints": true
     }
   ]
 }

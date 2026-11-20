@@ -3,7 +3,7 @@
 import { View } from 'react-native';
 import { router } from 'expo-router';
 import { ApiHiba } from '@/api/http';
-import { useExportKer, useExportok, useProfil } from '@/api/hooks';
+import { useExportKer, useExportok, useHirdetesiHozzajarulas, useHirdetesVisszavon, useProfil } from '@/api/hooks';
 import { letoltMegnyit } from '@/lib/fajlok';
 import { datumEvvel, mikorIdovel } from '@/lib/format';
 import { szin } from '@/theme/tokens';
@@ -87,7 +87,41 @@ export default function Adataim() {
           style={{ marginTop: exportok.length ? 10 : 0 }}
         />
       </Lap>
+      <HirdetesiMeres />
       <GombSz cim="Adatkezelési tájékoztató" onPress={() => router.push('/jogi/adatkezeles')} style={{ marginTop: 10, marginLeft: 4 }} />
+      <GombSz cim="Süti-tájékoztató" onPress={() => router.push('/jogi/suti')} style={{ marginTop: 4, marginLeft: 4 }} />
     </Kepernyo>
+  );
+}
+
+/** SPEC §31.6: only when ad measurement is switched on AND this account agreed on the landing page – then it can be withdrawn here. */
+function HirdetesiMeres() {
+  const q = useHirdetesiHozzajarulas();
+  const vissza = useHirdetesVisszavon();
+  const jelez = useJelzes();
+  const h = q.data;
+  if (!h?.enabled || !h.given) return null;
+  const kinek = [h.meta ? 'a Metának (Facebook, Instagram)' : '', h.google ? 'a Google-nek' : ''].filter(Boolean).join(' és ');
+  return (
+    <Lap style={{ padding: 18, marginTop: 14 }}>
+      <T m={16} s={650}>
+        Hirdetési mérés
+      </T>
+      <T m={14.5} c={szin.halvany} lh={1.45} style={{ marginTop: 6 }}>
+        {`Hozzájárultál, hogy a regisztrációdat és az első fizetésedet jelezzük ${kinek}, álnevesített (hash-elt) e-mail-címmel. Adóadatot soha nem küldünk. Bármikor visszavonhatod.`}
+      </T>
+      <GombM
+        cim="Visszavonom"
+        onPress={async () => {
+          try {
+            await vissza.mutateAsync(undefined);
+            jelez({ szoveg: 'Visszavontad. Mostantól nem küldünk semmit.', kesz: true });
+          } catch (e) {
+            jelez(hibaUzenet(e, 'Nem sikerült.'));
+          }
+        }}
+        style={{ marginTop: 12 }}
+      />
+    </Lap>
   );
 }

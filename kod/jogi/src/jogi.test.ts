@@ -151,6 +151,8 @@ describe('a jogi mappa tartalma', () => {
   it('az index minden SPEC-beli dokumentumtípust tartalmaz, egyszer', async () => {
     const index = await betoltIndex();
     expect(index.map((e) => e.docType).sort()).toEqual([...LEGAL_DOC_TYPES].sort());
+    // marketing (11-20): a süti-tájékoztató új docType (kod/shared LEGAL_DOC_TYPES, DB: 0020_marketing_enumok.sql)
+    expect(LEGAL_DOC_TYPES).toContain('suti');
   });
   it('minden Markdown-fájl TERVEZET-tel indul, a szűk készletet és csak ismert helyőrzőt használ, a márkanév nincs beégetve', async () => {
     for (const f of await osszesMarkdown()) {
@@ -476,11 +478,18 @@ describe('SPEC §26 – tartalmi szabályok', () => {
       expect(e.effectiveFrom, t).toBe('2026-11-19');
     }
     // SPEC §29.16 (k7, 11-20): Stripe, Számlázz.hu e-számla, nincs díjmentes időszak, kártyás engedély
-    for (const t of ['aszf', 'adatkezeles', 'megbizasi_szerzodes', 'app_szovegek', 'kartyas_fizetes']) {
+    for (const t of ['aszf', 'megbizasi_szerzodes', 'kartyas_fizetes']) {
       const e = index.find((x) => x.docType === t)!;
       expect(e.version, t).toBe('2026-11-20');
       expect(e.effectiveFrom, t).toBe('2026-11-20');
     }
+    // marketing (11-21): weboldal-statisztika, forrásadat, hirdetési mérés (kikapcsolva), új süti-tájékoztató
+    for (const t of ['adatkezeles', 'app_szovegek', 'suti']) {
+      const e = index.find((x) => x.docType === t)!;
+      expect(e.version, t).toBe('2026-11-21');
+      expect(e.effectiveFrom, t).toBe('2026-11-21');
+    }
+    expect((await readFile(join(CSOMAG_GYOKER, '_regi', 'marketing_elott_20261120', 'adatkezeles.md'), 'utf8')).length).toBeGreaterThan(1000);
     expect((await readFile(join(CSOMAG_GYOKER, '_regi', 'k29_elott_20261120', 'aszf.md'), 'utf8')).length).toBeGreaterThan(1000);
     // a SimplePay-nyilatkozatok nem változtak
     for (const t of ['simplepay_adattovabbitas', 'simplepay_ismetlodo']) expect(index.find((x) => x.docType === t)!.version, t).toBe('2026-11-18');
@@ -541,5 +550,36 @@ describe('SPEC §26 – tartalmi szabályok', () => {
     expect(megh).toContain('„VÉGLEGESÍTVE / Jóváhagyásra vár”');
     const feldolg = await olvas('adatfeldolgozoi.md');
     expect(feldolg).toContain('7.2/B. **Intézzük helyetted.**');
+  });
+  it('marketing (11-20) – statisztika, forrásadat, hirdetési mérés kikapcsolva, süti-tájékoztató', async () => {
+    const adat = (await kitoltottDokumentum('adatkezeles')).markdown;
+    expect(adat).toContain('## 2.17. Weboldalunk látogatottsága (statisztika)');
+    expect(adat).toContain('## 2.18. Hirdetéseink mérése (Meta és Google) – most nincs bekapcsolva');
+    expect(adat).toContain('**Most nincs bekapcsolva.**');
+    expect(adat).toContain('Az IP-címedet nem tároljuk.');
+    expect(adat).toContain('**A tiltakozás jogodra külön is felhívjuk a figyelmedet.**');
+    // a régi, valótlanná váló állítások nincsenek benne; „anonim” helyett „álnevesített”
+    expect(adat).not.toContain('nincs követő süti');
+    expect(adat).not.toMatch(/(?<!nem )\banonim\b/);
+    expect(adat).not.toMatch(/névtelen/);
+    expect(adat).toContain('nem anonim, hanem álnevesített');
+    const suti = (await kitoltottDokumentum('suti')).markdown;
+    expect(suti).toContain('# Süti-tájékoztató');
+    for (const k of ['__Host-kj_rt', 'kj_rt', 'kj_bio', 'kj_elokeszit_', 'kj_video_', 'kj_aktiv_kartya_', 'kj_reg_varakozo', 'umami.disabled', 'kj_hozzajarulas', '_fbp', '_fbc', '_gcl_au', '_gcl_aw']) {
+      expect(suti, k).toContain(k);
+    }
+    expect(suti).toContain('**Ez a rész most nem érvényes.**');
+    expect(suti).toContain('„Elfogadom” és „Elutasítom”');
+    // az ügyfél nem látja a belső jegyzeteket; a forrásban megmaradnak
+    expect(suti).not.toMatch(/\[(JOGI|TULAJ|ELLENŐRIZNI)/);
+    expect(await readFile(join(CSOMAG_GYOKER, 'suti.md'), 'utf8')).toContain('[JOGI: M1');
+    // a süti-ablak szövegei: két egyenrangú gomb, a hirdetési hozzájárulás négyzete alapból üres (az app nem pipálja be)
+    const a = await appSzovegek();
+    expect(a.szovegek['suti_ablak.elfogadom']).toBe('Elfogadom');
+    expect(a.szovegek['suti_ablak.elutasitom']).toBe('Elutasítom');
+    expect(a.szovegek['suti_ablak.beallitasok']).toBe('Beállítások');
+    expect(a.szovegek['regisztracio.hirdetes_hozzajarulas']).toMatch(/^Hozzájárulok/);
+    expect(a.szovegek['meres.lablec']).toMatch(/nem használ sütit/);
+    expect(a.szovegek['meres.lablec']).not.toMatch(/nem követ/);
   });
 });

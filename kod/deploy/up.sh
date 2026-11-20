@@ -3,13 +3,24 @@
 #   bash /srv/kezjegy/deploy/up.sh
 # Order (QA kör 3): env files → image → database → migrations as the owner (kezjegy-migrate, one-shot) →
 # least-privilege role + grants (db-roles.sh) → API + worker as kezjegy_app (SKIP_MIGRATIONS=1) → web, Caddy.
+# SPEC §31.1: the statistics server (kezjegy-umami + its own kezjegy-umami-db) starts with the rest; its database is
+# dumped (encrypted) before every deploy too, because Umami migrates its own schema at start. The first set-up of
+# Umami (admin password, website, read user) is deploy/umami-beallit.sh – once, by hand.
 set -euo pipefail
 cd /srv/kezjegy/deploy
 DC=(docker compose --env-file /srv/kezjegy/.env -f docker-compose.yml)
 
 bash /srv/kezjegy/deploy/gen-env.sh
 mkdir -p /srv/kezjegy/data/files /srv/kezjegy/backups /srv/kezjegy/_regi /srv/kezjegy/web/app /srv/kezjegy/web/panel /srv/kezjegy/web/landing
+# SPEC §31 / K8 lesson (11-20): the landing must bring its own script and the e-mail logos (the mails link them)
+if [ -s /srv/kezjegy/web/landing/index.html ]; then
+  for f in js/meres.js email/logo_feher@2x.png email/logo_alairas@2x.png; do
+    [ -s "/srv/kezjegy/web/landing/$f" ] || { echo "HIBA: a /srv/kezjegy/web/landing/$f hiányzik – a landing buildje hiányos (node kod/landing/build.mjs, majd feltolt.sh)"; exit 1; }
+  done
+fi
 chmod 700 /srv/kezjegy/data /srv/kezjegy/data/files /srv/kezjegy/backups
+# SPEC §31.6: the folder of the Google ad key (hirdetes_kulcsok.ps1 puts it there; empty while ad measurement is off)
+mkdir -p /srv/kezjegy/hirdetes && chmod 700 /srv/kezjegy/hirdetes
 
 # SPEC §29.3.3: /srv/kezjegy/nyilvanos.env holds PUBLIC values only (it is loaded after .env, the later file wins).
 # Any other key there is refused (key names are printed, never values).
@@ -48,6 +59,16 @@ if docker exec kezjegy-db psql -U kezjegy -d kezjegy -Atc "select to_regclass('p
   [ "$(stat -c %s "$ELOTTE")" -gt 1000 ] || { echo "HIBA: a frissítés előtti mentés üres: $ELOTTE"; exit 1; }
   echo "mentés a frissítés előtt (titkosítva): $ELOTTE ($(stat -c %s "$ELOTTE") bájt)"
 fi
+# SPEC §31.1: the statistics database too, before Umami's own migrations (only when it already runs; same encryption)
+if docker ps --format '{{.Names}}' | grep -qx kezjegy-umami-db; then
+  UELOTTE="/srv/kezjegy/_regi/umami_elotte_up_$(date +%Y%m%d_%H%M%S).dump.gpg"
+  ( umask 077
+    docker exec kezjegy-umami-db pg_dump -U umami -d umami -Fc \
+      | gpg --batch --yes --quiet --pinentry-mode loopback --passphrase-file /srv/kezjegy/.backup_pass \
+            --symmetric --cipher-algo AES256 -o "$UELOTTE.part"
+    mv "$UELOTTE.part" "$UELOTTE" )
+  echo "statisztika-mentés a frissítés előtt (titkosítva): $UELOTTE ($(stat -c %s "$UELOTTE") bájt)"
+fi
 "${DC[@]}" --profile migrate run --rm -T kezjegy-migrate
 # Least-privilege role and grants (needs the migrated schema; the API connects with this role).
 bash /srv/kezjegy/deploy/db-roles.sh
@@ -63,6 +84,12 @@ if [ "$before" != "$after" ]; then "${DC[@]}" up -d --force-recreate kezjegy-api
 kint=$(sha256sum /srv/kezjegy/web/app/index.html | cut -d' ' -f1)
 bent=$(docker exec kezjegy-web sha256sum /srv/app/index.html 2>/dev/null | cut -d' ' -f1 || true)
 if [ "$kint" = "$bent" ]; then echo "kezjegy-web: az új app-build él"; else echo "FIGYELEM: a kezjegy-web nem a /srv/kezjegy/web/app mappát szolgálja ki"; fi
+# the same proof for the landing (K8 lesson 11-20: a swapped landing folder stayed unseen) and its e-mail logo
+if [ -s /srv/kezjegy/web/landing/index.html ]; then
+  lk=$(sha256sum /srv/kezjegy/web/landing/index.html | cut -d' ' -f1)
+  lb=$(docker exec kezjegy-web sha256sum /srv/landing/index.html 2>/dev/null | cut -d' ' -f1 || true)
+  if [ "$lk" = "$lb" ] && docker exec kezjegy-web test -s /srv/landing/email/logo_feher@2x.png; then echo "kezjegy-web: az új landing él (e-mail-logóval)"; else echo "FIGYELEM: a kezjegy-web nem az új landingot szolgálja ki, vagy hiányzik az e-mail-logó"; fi
+fi
 # SPEC §29.3.2: the Adózz proxy (own compose project kezjegy-proxy in /srv/kezjegy/proxy, never recreated here). After the
 # switch every deploy validates the uploaded proxy config, swaps its files and reloads it (atallas.sh frissit). Before the
 # switch the old shared Caddy container is reloaded instead (by container name; no path into the old project).

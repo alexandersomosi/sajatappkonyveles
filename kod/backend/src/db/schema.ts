@@ -2028,3 +2028,140 @@ export const calendarFeeds = pgTable('calendar_feeds', {
   lastFetchedAt: ts(),
   fetchCount: integer().notNull().default(0),
 });
+
+// ---------- §31 marketing (0021_marketing.sql) ----------
+/**
+ * SPEC §31.3: where a registration or a callback request came from – one row per event, written once. The click ids and
+ * the consent link are filled ONLY with ADS_TRACKING_ENABLED and a granted ad consent (§31.6); otherwise null.
+ */
+export const marketingTouches = pgTable(
+  'marketing_touches',
+  {
+    id: id(),
+    kind: text().$type<'regisztracio' | 'visszahivas'>().notNull(),
+    userId: uuid()
+      .notNull()
+      .references(() => users.id),
+    clientId: uuid().references(() => clients.id),
+    callbackRequestId: uuid(),
+    /** SPEC §31.2 channelOf(): youtube | google | facebook | instagram | tiktok | kozvetlen | egyeb */
+    channel: text().notNull(),
+    utmSource: text(),
+    utmMedium: text(),
+    utmCampaign: text(),
+    utmContent: text(),
+    utmTerm: text(),
+    referrerDomain: text(),
+    landingPath: text(),
+    platform: text().$type<'web' | 'android' | 'ios'>(),
+    /** SPEC §28.K.8 entry: ?forras=… (e.g. kalkulator) and ?cel=visszahivas */
+    entrySource: text(),
+    entryGoal: text(),
+    /** A callback row whose source was copied from the registration (the request itself came without one). */
+    inherited: boolean().notNull().default(false),
+    clickIds: jsonb().$type<Partial<Record<'gclid' | 'gbraid' | 'wbraid' | 'fbclid', string>>>(),
+    consentId: uuid(),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('marketing_touches_user_kind_idx').on(t.userId, t.kind),
+    index('marketing_touches_created_idx').on(t.createdAt),
+    check('marketing_touches_kind_chk', sql`${t.kind} in ('regisztracio', 'visszahivas')`),
+    check('marketing_touches_channel_chk', sql`${t.channel} in ('youtube', 'google', 'facebook', 'instagram', 'tiktok', 'kozvetlen', 'egyeb')`),
+  ],
+);
+
+/**
+ * SPEC §31.6: the ad-measurement consents given on the landing banner ("Elfogadom" or the per-partner settings). The id is
+ * the decision id the banner keeps; it is linked to the account at sign-up. Only granted decisions are stored; a
+ * withdrawal sets withdrawn_at (the row stays as the record of consent). Unused while ADS_TRACKING_ENABLED=false.
+ */
+export const marketingConsents = pgTable(
+  'marketing_consents',
+  {
+    id: id(),
+    userId: uuid().references(() => users.id),
+    meta: boolean().notNull().default(false),
+    google: boolean().notNull().default(false),
+    /** Google ad_personalization (separate choice, default off). */
+    personalization: boolean().notNull().default(false),
+    noticeVersion: text().notNull(),
+    source: text().$type<'landing' | 'app'>().notNull(),
+    ipHmac: text(),
+    userAgent: text(),
+    createdAt: createdAt(),
+    linkedAt: ts(),
+    withdrawnAt: ts(),
+  },
+  (t) => [index('marketing_consents_user_idx').on(t.userId), check('marketing_consents_source_chk', sql`${t.source} in ('landing', 'app')`)],
+);
+
+/** What the server-side conversion adapters send (whitelist, SPEC §31.6): never tax data, never a name or an address. */
+export interface AdConversionPayload {
+  /** SHA-256 hex of the normalised e-mail (Meta: trim + lower case; Google: + the gmail dot / plus rule). */
+  emailSha256: string;
+  /** Google's own e-mail normalisation differs for gmail.com addresses. */
+  emailSha256Google: string;
+  /** SHA-256 hex of the phone (Meta: digits with country code; Google: E.164 with +), only when the owner allows it. */
+  phoneSha256?: string | null;
+  phoneSha256Google?: string | null;
+  valueHuf?: number | null;
+  clickIds?: Partial<Record<'gclid' | 'gbraid' | 'wbraid' | 'fbclid', string>> | null;
+  /** fbc made from the fbclid at its first sight (fb.1.<ms>.<fbclid>). */
+  fbc?: string | null;
+  /** Meta website events require these two [TULAJ/JOGI]: the sign-up page address and the browser's User-Agent. */
+  eventSourceUrl?: string | null;
+  clientUserAgent?: string | null;
+  /** Google ad_personalization of the consent. */
+  personalization?: boolean;
+}
+
+/** SPEC §31.6: the outbox of server-side conversion events (rows only with ads on + a granted consent). */
+export const adConversionEvents = pgTable(
+  'ad_conversion_events',
+  {
+    id: id(),
+    provider: text().$type<'meta' | 'google'>().notNull(),
+    event: text().$type<'regisztracio' | 'fizetes'>().notNull(),
+    /** Stable per provider: reg_<userId> / fiz_<paymentId> (dedup with the browser event and retries). */
+    eventId: text().notNull(),
+    userId: uuid().notNull(),
+    consentId: uuid().notNull(),
+    eventTime: ts().notNull(),
+    payload: jsonb().$type<AdConversionPayload>().notNull(),
+    status: text().$type<'var' | 'elkuldve' | 'hiba' | 'elvetve'>().notNull().default('var'),
+    attempts: integer().notNull().default(0),
+    lastError: text(),
+    sentAt: ts(),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    uniqueIndex('ad_conversion_events_provider_event_uq').on(t.provider, t.eventId),
+    index('ad_conversion_events_status_idx').on(t.status),
+    check('ad_conversion_events_provider_chk', sql`${t.provider} in ('meta', 'google')`),
+    check('ad_conversion_events_event_chk', sql`${t.event} in ('regisztracio', 'fizetes')`),
+    check('ad_conversion_events_status_chk', sql`${t.status} in ('var', 'elkuldve', 'hiba', 'elvetve')`),
+  ],
+);
+
+/** SPEC §31.5: ad spend typed in by the owner on the Marketing tab (no ad-account key needed). Revoked rows stay. */
+export const adSpend = pgTable(
+  'ad_spend',
+  {
+    id: id(),
+    day: day().notNull(),
+    platform: text().$type<'meta' | 'google' | 'egyeb'>().notNull(),
+    campaign: text(),
+    amountHuf: integer().notNull(),
+    note: text(),
+    createdBy: uuid(),
+    createdAt: createdAt(),
+    revokedAt: ts(),
+    revokedBy: uuid(),
+  },
+  (t) => [
+    index('ad_spend_day_idx').on(t.day),
+    check('ad_spend_platform_chk', sql`${t.platform} in ('meta', 'google', 'egyeb')`),
+    check('ad_spend_amount_chk', sql`${t.amountHuf} > 0 and ${t.amountHuf} <= 100000000`),
+  ],
+);

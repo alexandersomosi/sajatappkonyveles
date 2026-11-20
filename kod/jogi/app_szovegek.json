@@ -1,11 +1,12 @@
 {
   "_meta": {
     "allapot": "TERVEZET – jogász ellenőrzi. Nem végleges, nem jogi tanács.",
-    "leiras": "Rövid jogi szövegek az appba és a panelbe (ár, megújulás, lemondás, kártyatörlés, fizetési eredmény, azonosítás, fióktörlés, új vállalkozás, „Intézzük helyetted”), a 13 GYIK-kérdés, és a „tartalom” blokkban a SPEC §26–§27 tartalomkulcsai közül azok, amelyeket a jogásznak látnia kell (visszahívás, ügyfél-értesítések). Ez a forrás; az app_szovegek.md ebből készül: npm run app-szovegek.",
+    "leiras": "Rövid jogi szövegek az appba és a panelbe (ár, megújulás, lemondás, kártyatörlés, fizetési eredmény, azonosítás, fióktörlés, új vállalkozás, „Intézzük helyetted”, süti-ablak és a weboldal látogatottság-mérése), a 13 GYIK-kérdés, és a „tartalom” blokkban a SPEC §26–§27 tartalomkulcsai közül azok, amelyeket a jogásznak látnia kell (visszahívás, ügyfél-értesítések). Ez a forrás; az app_szovegek.md ebből készül: npm run app-szovegek.",
     "helyorzok": "{{...}} – a listát lásd README.md és src/helyorzok.ts. A tegező, rövid mondatok szándékosak. A „tartalom” blokk a backend tartalomszövegeinek formáját követi: {egy kapcsos zárójel} = futásidejű érték, a backend tölti ki.",
     "tartalom": "A „tartalom” kulcsai pontosan a SPEC §26.8.1 / §26.11 tartalomkulcsai (content_texts). A backend ezeket alapértéknek veheti (a jogászé az utolsó szó); a kod/backend/src/content/defaults.hu.json ugyanezen kulcsainak egyezniük kell vele. Eltérés a SPEC §26.11 szövegétől: lásd tartalom_elteresek.",
     "tartalom_elteresek": "notif.callback_received.body: „vagy a kártyaadataidat, és nem lépünk be helyetted” (egyezzen a visszahivas.csalas szöveggel, SPEC §27.3.7). notif.registration_checked.title: „Rendben van a bejelentésed” helyett „Átnéztük a bejelentésedet” (az átnézésünk nem hatósági ellenőrzés, ÁSZF 4/A.3.). notif.assist_ev_filed.title: „Bejelentettük a vállalkozásodat!” helyett „{firstName} beküldte a bejelentésedet!” (a bejelentést a könyvelő küldi be meghatalmazottként, nem a cég – ÁSZF 4/C.6.). notif.registration_done.body: a SPEC §27.8 alapszövege; a kamarai határidőt a kamara_reminder viszi. notif.assist_mh_reminder: az alap kulcs = az „elso” változat (ha a szerver változat nélkül küldi).",
-    "verzio": "2026-11-20",
+    "verzio": "2026-11-21",
+    "marketing": "Marketing, 2026-11-21: a süti-ablak (suti_ablak.*) és a Fiók kapcsolója (fiok.hirdetes_*) CSAK akkor jelenik meg, ha a hirdetési mérés be van kapcsolva (ADS_TRACKING_ENABLED=true és van META_PIXEL_ID vagy GOOGLE_TAG_ID); kikapcsolva sehol nem látszik. A weboldalon adott „Elfogadom” a 7 napon belüli regisztrációkor a fiókhoz kötődik (adatkezeles.md 2.18.). TARTALÉK, most nem használt: a regisztracio.hirdetes_hozzajarulas (külön, ALAPBÓL ÜRES jelölőnégyzet a regisztrációnál, nélküle is lehet regisztrálni) csak akkor kell, ha a jogász (UGYVED_KERDESEK_marketing.md M8) az appban külön hozzájárulást kér. A suti_ablak.statisztika csak akkor, ha a jogász szerint a látogatottság-méréshez is hozzájárulás kell (UMAMI_CONSENT_REQUIRED=true). Az „Elfogadom” és az „Elutasítom” egyforma gomb (méret, szín, hangsúly), egyiken sincs előre fókusz. A meres.* a weboldal láblécébe kerül (a „Ne mérjétek” kapcsoló a helyi tár umami.disabled kulcsát állítja), a lablec.suti a Süti-tájékoztató linkjének felirata (weboldal, regisztráció, Fiók). Jogi háttér: adatkezeles.md 2.11., 2.14., 2.17., 2.18., suti.md, UGYVED_KERDESEK_marketing.md.",
     "gyik_elozo": "SPEC §27.7.3: a változott GYIK-elemeknél (legutóbb 11-20: a havidíj kezdete, SPEC §29.4.2) az elozo_kerdes / elozo_valasz a pontos régi szöveg ({{helyőrzőkkel}}, ahogy itt állt). A backend adatlépése mindkettőt ugyanúgy kitölti (fillLegal), és csak akkor írja át az élő faq_items sort, ha a kérdése ÉS a válasza még szó szerint a régi; az admin által szerkesztett sorhoz nem nyúl. Új kérdés (elozo_kerdes nélkül): ha még nincs ilyen kérdés, felveszi.",
     "helyettunk": "A helyettunk.* szövegek a kod/shared ASSIST_TEXTS megfelelő szövegeinek jogásznak szóló másolatai ({firstName} = {{konyvelo.keresztnev}}, {accountantName} = {{konyvelo.nev}}). Az app és a szerver a shared szövegeket mutatja; az npm run ellenoriz figyelmeztet, ha eltérnek. Ha a jogász módosít, a SPEC §24-be kell jelezni, és a shared szövegét is át kell írni."
   },
@@ -112,7 +113,32 @@
     "helyettunk.visszavonhatatlan": "A beküldött bejelentést nem lehet visszavonni és módosítani, csak változásbejelentéssel javítani. A vállalkozásod a beküldés napján indul. A beküldésig bármikor lemondhatod a kérést.",
     "helyettunk.ingyenes": "Ezért nem fizetsz külön.",
     "helyettunk.ervenyes": "A vállalkozás bejelentését 2026. december 31-ig tudjuk így intézni: 2027-től a nyilvántartást a kamara vezeti.",
-    "regisztracio.aszf_link": "A regisztrációval még nem fizetsz semmit. A szerződést a következő lépésekben olvashatod el."
+    "regisztracio.aszf_link": "A regisztrációval még nem fizetsz semmit. A szerződést a következő lépésekben olvashatod el.",
+    "regisztracio.hirdetes_hozzajarulas": "Hozzájárulok, hogy a regisztrációmról és az első fizetésemről a Meta és a Google jelzést kapjon a hirdetéseik méréséhez. Az e-mail-címemet kódolva kapják meg, adóadatot nem. Nem kötelező, és a Fiók oldalon bármikor visszavonhatom.",
+    "fiok.hirdetes_cim": "Hirdetések mérése (Meta, Google)",
+    "fiok.hirdetes_leiras": "Ha bekapcsolod, a regisztrációdról és az első fizetésedről a Meta és a Google jelzést kap a hirdetéseik méréséhez. Az e-mail-címedet kódolva kapják meg; adóadatot, könyvelési adatot soha nem küldünk. Bármikor kikapcsolhatod.",
+    "fiok.hirdetes_kikapcsolva": "Kikapcsoltad. Ettől kezdve nem küldünk rólad jelzést a Metának és a Google-nek.",
+    "suti_ablak.cim": "Sütik és hirdetésmérés",
+    "suti_ablak.szoveg": "Szeretnénk tudni, melyik Facebook-, Instagram- vagy Google-hirdetésünk hoz új ügyfeleket. Ehhez a Meta és a Google sütiket tenne a böngésződbe, és adatot kapna a látogatásodról (például hogy melyik hirdetésből jöttél). Ha utána regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kapnak, az e-mail-címedet kódolva; adóadatot soha. Az adat az Egyesült Államokba is kerülhet. Csak akkor, ha elfogadod. Ha elutasítod, az oldal ugyanúgy működik, és ugyanúgy regisztrálhatsz. A döntésedet bármikor megváltoztathatod az oldal alján, a „Süti-beállítások” linkkel, regisztráció után az appban, a Fiók oldalon.",
+    "suti_ablak.link_suti": "Süti-tájékoztató",
+    "suti_ablak.link_adatkezeles": "Adatkezelési tájékoztató",
+    "suti_ablak.elfogadom": "Elfogadom",
+    "suti_ablak.elutasitom": "Elutasítom",
+    "suti_ablak.beallitasok": "Beállítások",
+    "suti_ablak.beallitasok_cim": "Süti-beállítások",
+    "suti_ablak.beallitasok_bevezeto": "Itt partnerenként dönthetsz. Alapból minden ki van kapcsolva; csak az lesz bekapcsolva, amit te bekapcsolsz.",
+    "suti_ablak.szukseges": "Feltétlenül szükséges: a döntésedet egy sütiben jegyezzük meg, hogy ne kérdezzünk minden oldalon újra. Ez mindig be van kapcsolva.",
+    "suti_ablak.statisztika": "Látogatottság mérése: saját szerverünkön, süti nélkül, összesített statisztikához. Senki más nem kapja meg.",
+    "suti_ablak.meta": "Meta (Facebook, Instagram): a hirdetéseink mérése. A Meta sütiket tesz a böngésződbe, és megkapja, melyik oldalt nézted meg, és melyik hirdetésből jöttél; ha regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kap, az e-mail-címedet kódolva. Az adat az Egyesült Államokba is kerülhet.",
+    "suti_ablak.google": "Google: a hirdetéseink mérése. A Google sütiket tesz a böngésződbe, és megkapja, melyik oldalt nézted meg, és melyik hirdetésből jöttél; ha regisztrálsz, a regisztrációdról és az első fizetésedről is jelzést kap, az e-mail-címedet kódolva. Az adat az Egyesült Államokba is kerülhet.",
+    "suti_ablak.mentes": "Kiválasztottak mentése",
+    "suti_ablak.mentve": "Elmentettük a döntésedet.",
+    "suti_ablak.lablec_link": "Süti-beállítások",
+    "meres.lablec": "Ez az oldal nem használ sütit. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.",
+    "meres.ne_merjetek": "Ne mérjétek a látogatásomat",
+    "meres.ne_merjetek_kesz": "Rendben: ezen a böngészőn nem mérjük a látogatásaidat.",
+    "meres.ujra_merheto": "Újra mérhetitek",
+    "lablec.suti": "Süti-tájékoztató"
   },
   "gyik": [
     {

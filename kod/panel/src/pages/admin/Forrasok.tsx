@@ -1,5 +1,6 @@
 // FUNKCIOK 31: where clients came from (UTM + referral codes) and referral code management.
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import { Fejlec, Fiok, HibaSav, Toltes, Ures } from '../../ui/kozos';
@@ -39,7 +40,11 @@ export default function Forrasok() {
       <Fejlec
         felcim="Tulajdonos"
         cim="Honnan jöttek az ügyfelek"
-        mellek="A hirdetések UTM-paraméterei és az ajánlókódok szerint. Jutalom az ajánlásért még nincs – erről te döntesz."
+        mellek={
+          <>
+            A hirdetések UTM-paraméterei és az ajánlókódok szerint. Jutalom az ajánlásért még nincs – erről te döntesz. Látogatók, tölcsér és pénz forrásonként: <Link to="/admin/marketing" style={{ color: 'inherit' }}>Marketing</Link>.
+          </>
+        }
         jobb={
           <button className="gomb-sav szoveg" onClick={() => setUj(true)}>
             Új ajánlókód

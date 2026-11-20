@@ -348,5 +348,18 @@ export function meRoutes(deps: Deps) {
     return c.body(null, 204);
   });
 
+  // ---------- SPEC §31.6: the ad-measurement consent of the account (only meaningful with ADS_TRACKING_ENABLED=true) ----------
+  r.get('/hirdetesi-hozzajarulas', async (c) => {
+    const { consentOfUser } = await import('../services/hirdetes.js');
+    const row = await consentOfUser(deps, deps.db, auth(c).userId);
+    return c.json({ enabled: deps.cfg.ads.enabled, given: Boolean(row), meta: Boolean(row?.meta), google: Boolean(row?.google), since: row ? row.createdAt.toISOString() : null });
+  });
+  r.post('/hirdetesi-hozzajarulas/visszavonas', async (c) => {
+    const { withdrawConsents } = await import('../services/hirdetes.js');
+    const n = await withdrawConsents(deps, deps.db, { userId: auth(c).userId });
+    if (n) await auditC(c, deps.db, 'consent.ads_withdrawn', { targetType: 'user', targetId: auth(c).userId, details: { n } });
+    return c.json({ withdrawn: n });
+  });
+
   return r;
 }

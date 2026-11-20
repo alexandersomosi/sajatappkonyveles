@@ -70,3 +70,26 @@ Mérce: `dizajn/C5_v2/` (89 jóváhagyott képernyő, HTML+PNG), közös alap: `
 - A jogi app_szovegek.json régi szövegei (a kód felülírja) → egységesíteni.
 - Régi egyszeri szkriptek (app/scripts/_helyi_j*.mjs, _qa/*_harness.mjs) a régi regisztrációt használják; https-proba.sh / bongeszo-proba.mjs SimplePay-része elavult.
 - Szövegjavítás: 54-ből 51 bent; a 14., 17., 19. tétel levele nem készült.
+
+## Átvétel a marketing-munkából (SPEC §31, 11-21) – a landing_v2 élesítésekor (k8)
+A mostani nyitóoldal (`kod/landing/build.mjs`) már így készül; az új landingnak (dizajn/landing_v2) ugyanez kell, különben a
+forrás és a statisztika elvész, vagy a lábléc valótlant állít:
+- **Szkriptek a `<head>`-ben, ebben a sorrendben:** `<script defer src="js/meres.js"></script>`, majd – csak ha a `kod/landing/meres.json`
+  `umamiWebsiteId`-je ki van töltve – `<script defer src="/m/script.js" data-website-id="…" data-domains="adozz.hu" data-before-send="adozzStatSzuro" data-do-not-track="true"></script>`.
+  A `js/meres.js`-t ne kézzel írd: a `build.mjs` állítja elő (`meres-sablon.js` + a közös csatornaszabály); a v2 buildje hívja ugyanazt
+  a generálást, vagy másolja a `kod/landing/dist/js/meres.js`-t. Inline szkript nem lehet (CSP).
+- **Események:** `data-umami-event="regisztralok"` (+ `data-umami-event-hely="hos|arak|zaro|fejlec|lab"`) minden Regisztrálok-linken,
+  `belepes` a Belépésen, `email-iras` a mailto-n, `visszahivas` a Visszahívást kérek linken (`https://app.adozz.hu/regisztracio?cel=visszahivas`).
+  Az árak szakasz azonosítója **`id="arak"`** (a v2 index.html 372. sorában már megvan) – erre figyel a „görgetett az árakig”.
+- **Linkek:** minden app-link `https://app.adozz.hu/…` alakú legyen (a `meres.js` ezekhez fűzi az `utm_*`, `hivatkozo`, `erkezes`
+  paramétert); a `/jogi/` linkek tisztán maradnak.
+- **Lábléc:** a Jogi menübe „Süti-tájékoztató” → `https://app.adozz.hu/jogi/suti`. A „nincs követő süti” / „nem követ” mondat helyett
+  (v2 359. és 575. sor) a statisztika bekapcsolása után: „Ez az oldal nem használ sütit. A látogatottságot a saját szerverünkön mérjük,
+  süti nélkül, összesítve.” Hirdetési build esetén: „Hirdetési sütit csak akkor használunk, ha elfogadod. A látogatottságot a saját
+  szerverünkön mérjük, süti nélkül.” Kell a látogató kikapcsoló gombja: `<button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>`
+  (a `meres.js` teszi láthatóvá), hirdetési buildben mellé `id="suti-beallitasok"` („Süti-beállítások”).
+- **Süti-ablak:** csak a `meres.js` rendereli (hirdetési buildben, a szerver kapcsolójával); a v2 adja hozzá a `.hj-ablak`, `.hj-gomb`,
+  `.hj-szoveg-gomb`, `.hj-beallitasok`, `.hj-doboz` stílust a saját arculatában – az „Elfogadom” és az „Elutasítom” egyforma maradjon.
+- **CSP:** a proxy `kezjegy_csp_landing`-je már `script-src 'self'` (a v2 `mozgas.js`-e is fut vele). Hirdetéskor `kezjegy_csp_landing_hirdetes`.
+- **Telepítés:** a landing mappája egészben cserélődik: legyen benne az `email/` (két logó) és a `js/meres.js` – a `feltolt.sh` most megáll
+  nélkülük, az `up.sh` pedig ellenőrzi és újralétrehozza a `kezjegy-web`-et. A teszt: `node --test kod/landing/meres.test.mjs`.

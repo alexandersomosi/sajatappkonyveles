@@ -46,15 +46,29 @@ for nev, (f, dokk, szeletek) in LISTA.items():
     out.save(os.path.join(CEL, nev + '.webp'), 'WEBP', quality=86, method=6)
     print(nev, out.size)
 
-# Gépes böngészőképek a hős váltakozó képéhez: mind 1440x914 (mint A01), a többi a tetejéről vágva.
+# RÉGI (2. kör): gépes böngészőképek közvetlenül a C5_v2/asztali PNG-kből, 1440x914 – bennük még kitalált név van, az oldalon nem szerepelnek.
+# Csak --gep-regi kapcsolóval készülnek újra (a meglévő app_asztali*.webp fájlokat nem írjuk felül véletlenül).
 GEP = {
     'app_asztali': 'A01_fooldal.png',
     'app_asztali_dosszie': 'A60_dosszie.png',
     'app_asztali_uzenetek': 'A70_uzenetek.png',
     'app_asztali_hataridok': 'A53_hataridok.png',
 }
-for nev, f in (GEP.items() if '--gep' in __import__('sys').argv else []):
+for nev, f in (GEP.items() if '--gep-regi' in __import__('sys').argv else []):
     a = Image.open(os.path.join(FORRAS, 'asztali', f)).convert('RGB')
     a = a.crop((0, 0, 1440, 914))
     a.save(os.path.join(CEL, nev + '.webp'), 'WEBP', quality=86, method=6)
+    print(nev, a.size)
+
+# 3. kör (11-20 éjjel): a hős böngészőablaka és a bemutató zárólépése. Forrás: a név és ígéret nélküli másolatok képei
+# (_eszkoz/app_minta_gep.py -> app_minta_gep_kep.cjs: 1280x800 @1,25 = 1600x1000). --gep kapcsolóval.
+GEP2 = {
+    'app_gep_fooldal': 'A01_fooldal.png',
+    'app_gep_dosszie': 'A60_dosszie.png',
+    'app_gep_feltoltes': 'A64_feltoltes.png',
+    'app_gep_uzenetek': 'A70_uzenetek.png',
+}
+for nev, f in (GEP2.items() if '--gep' in __import__('sys').argv else []):
+    a = Image.open(os.path.join(os.path.dirname(__file__), 'app_minta_gep', f)).convert('RGB')
+    a.save(os.path.join(CEL, nev + '.webp'), 'WEBP', quality=82, method=6)
     print(nev, a.size)

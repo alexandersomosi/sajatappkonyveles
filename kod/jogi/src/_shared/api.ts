@@ -192,6 +192,20 @@ export interface RegisterInput {
   /** SPEC §28.K.8: where the visitor came from (`?forras=kalkulator`) and whether he asked for a callback (`?cel=visszahivas`). */
   entry?: { forras?: string; cel?: 'visszahivas' };
 }
+/**
+ * k7b (SPEC §27.11 S16): POST /auth/register answers 202 with this – the same for a new and an existing address, and
+ * without a session. The 6-digit code from the mail opens the session: POST /auth/register/verify (RegisterVerifyInput)
+ * → AuthResult; a new code: POST /auth/register/resend { email } → 202 RegisterPending.
+ */
+export interface RegisterPending {
+  status: 'check_email';
+  email: string;
+}
+export interface RegisterVerifyInput {
+  email: string;
+  code: string;
+  platform: 'web' | 'android' | 'ios';
+}
 export interface LoginInput {
   email: string;
   password: string;

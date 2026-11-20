@@ -18,6 +18,8 @@ import { base32Decode, newRecoveryCodes, newTotpSecret, otpauthUrl, verifyTotp }
 import { isPlausibleEmail, normalizeEmail } from '../lib/validators.js';
 import { sendCodeEmail, sendTemplateMail } from '../notify/notify.js';
 import { createClientAccount, issueAuth, type IssuedAuth } from '../services/accounts.js';
+import { queueAdConversion } from '../services/hirdetes.js';
+import type { TouchInput } from '../services/marketing.js';
 import { cancelDeletion } from '../services/gdpr.js';
 import brand from '../_shared/brand.json' with { type: 'json' };
 import { hash as argonHash, verify as argonVerify, Algorithm } from '@node-rs/argon2';
@@ -40,7 +42,15 @@ const email = z
 const name = z.string({ error: 'Kötelező.' }).trim().min(1, { error: 'Kötelező.' }).max(60, { error: 'Legfeljebb 60 karakter.' });
 const clientKind = z.enum(['native', 'web', 'panel']).default('web');
 const utm = z
-  .object({ source: z.string().max(100).optional(), medium: z.string().max(100).optional(), campaign: z.string().max(100).optional(), content: z.string().max(100).optional() })
+  .object({ source: z.string().max(100).optional(), medium: z.string().max(100).optional(), campaign: z.string().max(100).optional(), content: z.string().max(100).optional(), term: z.string().max(100).optional() })
+  .optional();
+/** SPEC §31.3: the referring domain and the landing path the landing passed on (?hivatkozo=…&erkezes=…). */
+const forras = z.object({ hivatkozo: z.string().max(253).optional(), erkezes: z.string().max(200).optional() }).optional();
+/** SPEC §28.K.8: ?forras=kalkulator / ?cel=visszahivas (an unknown value is dropped, never an error). */
+const entry = z.object({ forras: z.string().max(40).optional(), cel: z.string().max(40).optional() }).optional();
+/** SPEC §31.6: the landing's ad-consent decision id and the click ids – used ONLY with ADS_TRACKING_ENABLED=true. */
+const hirdetes = z
+  .object({ hid: z.string().uuid().optional(), gclid: z.string().max(500).optional(), gbraid: z.string().max(500).optional(), wbraid: z.string().max(500).optional(), fbclid: z.string().max(500).optional() })
   .optional();
 const referral = z.string().trim().max(20).regex(/^[A-Za-z0-9]*$/, { error: 'Csak betű és szám lehet.' }).optional();
 
@@ -162,6 +172,9 @@ export function authRoutes(deps: Deps) {
         lastName: name,
         referralCode: referral,
         utm,
+        forras,
+        entry,
+        hirdetes,
         platform: z.enum(['web', 'android', 'ios']).default('web'),
       }),
     );
@@ -193,6 +206,7 @@ export function authRoutes(deps: Deps) {
           referralCode: b.referralCode,
           utm: b.utm,
           landing: b.platform,
+          touch: { utm: b.utm, source: b.forras, entry: b.entry, ad: b.hirdetes, platform: b.platform },
         }),
       ));
     } catch (err) {
@@ -218,6 +232,8 @@ export function authRoutes(deps: Deps) {
           .where(and(eq(onboardingSteps.clientId, cl.id), eq(onboardingSteps.step, 'fiok')));
       // signed in: the session's user; the sign-up code step has no session yet – the account itself
       await auditC(c, tx, 'auth.email_verified', { ...(c.get('auth') ? {} : { actorUserId: userId, actorRole: 'client' }), targetType: 'user', targetId: userId, clientId: cl?.id ?? null });
+      // SPEC §31.6: the "regisztrált" conversion – nothing unless ads are on AND the account has a granted consent
+      if (cl) await queueAdConversion(deps, tx, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
     });
     deps.sessionCache.clear();
   }
@@ -444,7 +460,13 @@ export function authRoutes(deps: Deps) {
   }
 
   // ---------- Google / Apple ----------
-  async function social(c: C, p: Provider, token: string, kind: ClientKind, extra: { referralCode?: string; utm?: Record<string, string | undefined>; fullName?: { givenName?: string; familyName?: string } }) {
+  async function social(
+    c: C,
+    p: Provider,
+    token: string,
+    kind: ClientKind,
+    extra: { referralCode?: string; utm?: Record<string, string | undefined>; touch?: TouchInput; fullName?: { givenName?: string; familyName?: string } },
+  ) {
     if (p === 'google' && deps.cfg.google.clientIds.length === 0) throw E.notConfigured('A Google-belépés még nincs bekapcsolva.');
     if (p === 'apple' && !deps.cfg.appleBundleId) throw E.notConfigured('Az Apple-belépés még nincs bekapcsolva.');
     limit(`social-ip:${c.get('ipHmac')}`, 30, 15 * 60_000);
@@ -490,14 +512,17 @@ export function authRoutes(deps: Deps) {
         referralCode: extra.referralCode,
         utm: extra.utm,
         landing: kind === 'native' ? (p === 'apple' ? 'ios' : 'android') : 'web',
+        touch: { ...extra.touch, utm: extra.utm, platform: kind === 'native' ? (p === 'apple' ? 'ios' : 'android') : 'web' },
       }),
     );
+    // SPEC §31.6: a Google / Apple sign-up is confirmed at once – the "regisztrált" conversion (only ads on + consent)
+    await queueAdConversion(deps, deps.db, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
     return finishLogin(c, userId, kind, { method: p, isNewUser: true });
   }
 
   r.post('/google', async (c) => {
-    const b = await readJson(c, z.object({ idToken: z.string().min(10).max(5000), clientKind, referralCode: referral, utm }));
-    return social(c, 'google', b.idToken, b.clientKind, { referralCode: b.referralCode, utm: b.utm });
+    const b = await readJson(c, z.object({ idToken: z.string().min(10).max(5000), clientKind, referralCode: referral, utm, forras, entry, hirdetes }));
+    return social(c, 'google', b.idToken, b.clientKind, { referralCode: b.referralCode, utm: b.utm, touch: { source: b.forras, entry: b.entry, ad: b.hirdetes } });
   });
 
   r.post('/apple', async (c) => {
@@ -508,10 +533,16 @@ export function authRoutes(deps: Deps) {
         fullName: z.object({ givenName: z.string().max(60).optional().nullable(), familyName: z.string().max(60).optional().nullable() }).optional().nullable(),
         clientKind,
         referralCode: referral,
+        utm,
+        forras,
+        entry,
+        hirdetes,
       }),
     );
     return social(c, 'apple', b.identityToken, b.clientKind, {
       referralCode: b.referralCode,
+      utm: b.utm,
+      touch: { source: b.forras, entry: b.entry, ad: b.hirdetes },
       fullName: b.fullName ? { givenName: b.fullName.givenName ?? undefined, familyName: b.fullName.familyName ?? undefined } : undefined,
     });
   });

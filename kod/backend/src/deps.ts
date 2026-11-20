@@ -19,6 +19,7 @@ import type { PaymentProvider } from './payments/provider.js';
 import { createStripeProvider } from './payments/stripe.js';
 import { createDemoProvider } from './payments/demo.js';
 import { createSzamlazzClient, type SzamlazzClient } from './payments/szamlazzhu.js';
+import { createUmamiClient, type UmamiClient } from './services/umami.js';
 
 export interface Deps {
   cfg: Config;
@@ -44,6 +45,8 @@ export interface Deps {
   sessionCache: SessionCache;
   dispatcher: { kick(): void; flush(): Promise<void> };
   fetch: typeof fetch;
+  /** SPEC §31.1: the own statistics server (internal address); null = not configured (the tab shows only DB numbers). */
+  umami: UmamiClient | null;
 }
 
 export type DepsOverrides = Partial<Omit<Deps, 'cfg' | 'db'>> & { dispatchInline?: boolean };
@@ -81,6 +84,7 @@ export function buildDeps(cfg: Config, db: Db, o: DepsOverrides = {}): Deps {
     sessionCache: o.sessionCache ?? new SessionCache(now),
     dispatcher,
     fetch: f,
+    umami: o.umami !== undefined ? o.umami : cfg.umami ? createUmamiClient(cfg.umami, f, now) : null,
   };
   return deps;
 }

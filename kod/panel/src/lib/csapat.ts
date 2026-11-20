@@ -191,6 +191,8 @@ export type MenuKulcs =
   | 'admin_konyvelok'
   | 'admin_csapat'
   | 'admin_forrasok'
+  // SPEC §31.4: the Marketing tab
+  | 'admin_marketing'
   | 'admin_szovegek'
   | 'admin_naplo'
   | 'admin_demo'
@@ -241,6 +243,8 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'szamolo' },
   admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'fiok', karakter: true },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
+  // SPEC §31.4: visits, funnel, money and campaigns by source (the referral codes stay on Honnan jöttek)
+  admin_marketing: { to: '/admin/marketing', felirat: 'Marketing', ikon: 'kerdezek' },
   admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'fiok' },
   admin_szovegek: { to: '/admin/szovegek', felirat: 'GYIK és szövegek', ikon: 'uzenetek' },
   admin_naplo: { to: '/admin/naplo', felirat: 'Napló', ikon: 'nyugta' },
@@ -293,6 +297,7 @@ export function menuCsoportok(o: {
       el('admin_dijak'),
       el('admin_konyvelok'),
       el('admin_csapat'),
+      el('admin_marketing'),
       el('admin_forrasok'),
       el('admin_szovegek'),
       el('admin_naplo'),

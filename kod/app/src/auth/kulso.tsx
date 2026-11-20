@@ -9,6 +9,7 @@ import { ApiHiba, post } from '../api/http';
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '../config';
 import { T } from '../ui/T';
 import { hibaUzenet } from '@/lib/hiba';
+import type { ForrasAdat } from '@/lib/forras';
 
 const clientKind = Platform.OS === 'web' ? 'web' : 'native';
 
@@ -44,14 +45,15 @@ type Siker = (r: AuthResult) => Promise<void> | void;
 type Hiba = (uzenet: string) => void;
 
 /** Weben a Google Identity Services saját gombja (a Google előírása); natívan a natív Google-belépés. */
-export function GoogleGomb({ siker, hiba, webClientId, referralCode }: { siker: Siker; hiba: Hiba; webClientId?: string; referralCode?: string }) {
+/** SPEC §31.3: an új fiók forrása (utm, hivatkozó, belépő oldal, cél; a hirdetési rész csak bekapcsolt mérésnél számít). */
+export function GoogleGomb({ siker, hiba, webClientId, referralCode, forras }: { siker: Siker; hiba: Hiba; webClientId?: string; referralCode?: string; forras?: ForrasAdat }) {
   const id = webClientId || GOOGLE_WEB_CLIENT_ID;
   const doboz = useRef<React.ComponentRef<typeof View>>(null);
   const [tolt, setTolt] = useState(false);
 
   const kuld = async (idToken: string) => {
     try {
-      const r = await post<AuthResult>('/auth/google', { idToken, clientKind, referralCode }, { auth: false });
+      const r = await post<AuthResult>('/auth/google', { idToken, clientKind, referralCode, ...(forras ?? {}) }, { auth: false });
       await siker(r);
     } catch (e) {
       hiba(hibaUzenet(e, 'Nem sikerült a Google-belépés.'));
@@ -105,7 +107,7 @@ export function GoogleGomb({ siker, hiba, webClientId, referralCode }: { siker: 
 }
 
 /** Apple-belépés csak iOS-en, az Apple saját gombjával. */
-export function AppleGomb({ siker, hiba, referralCode }: { siker: Siker; hiba: Hiba; referralCode?: string }) {
+export function AppleGomb({ siker, hiba, referralCode, forras }: { siker: Siker; hiba: Hiba; referralCode?: string; forras?: ForrasAdat }) {
   const [van, setVan] = useState(false);
   useEffect(() => {
     if (Platform.OS === 'ios') AppleAuthentication.isAvailableAsync().then(setVan).catch(() => setVan(false));
@@ -123,7 +125,7 @@ export function AppleGomb({ siker, hiba, referralCode }: { siker: Siker; hiba: H
           if (!c.identityToken) throw new Error('nincs token');
           const r = await post<AuthResult>(
             '/auth/apple',
-            { identityToken: c.identityToken, fullName: c.fullName ? { givenName: c.fullName.givenName ?? '', familyName: c.fullName.familyName ?? '' } : undefined, clientKind, referralCode },
+            { identityToken: c.identityToken, fullName: c.fullName ? { givenName: c.fullName.givenName ?? '', familyName: c.fullName.familyName ?? '' } : undefined, clientKind, referralCode, ...(forras ?? {}) },
             { auth: false },
           );
           await siker(r);

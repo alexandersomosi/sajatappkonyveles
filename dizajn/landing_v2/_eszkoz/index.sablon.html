@@ -62,17 +62,38 @@
       <p class="hos-ar"><b>19&nbsp;999&nbsp;Ft/hó</b> bruttó · éves zárás 14&nbsp;999&nbsp;Ft/év · <a href="#arak">a többi díj</a></p>
       <p class="hos-mikro">Regisztrálni kártya nélkül tudsz. Hűségidő nincs.</p>
     </div>
+    <!-- 3. kör (tulaj, 11-20 23:38): a telefon NEM vált magától; a képernyőjén lévő alsó menü 4 pontja (Főoldal, Dosszié, Fotózás,
+         Üzenetek) valódi, átlátszó <button>, a képen látható ikonok fölött (a helyük százalékban: _eszkoz/app_minta/hatarok.json, .nav).
+         Mögötte a gépes (böngészős) nézet, ugyanarra a képernyőre vált (gépen a Fotózás = papír beküldése, a fájlt a gépről választod ki).
+         JS nélkül: a Főoldal áll (telefon + gép), a gombok és a „Próbáld ki” felirat nem látszik. Csökkentett mozgásnál a váltás azonnali. -->
     <div class="hos-kep">
-      <figure class="hos-telefon" data-valto tabindex="0" aria-label="Az Adózz.hu app képernyői telefonon: Főoldal, Dosszié, Üzenetek, Fotózás és Határidők. A képek bemutató adatokkal készültek.">
-        <div class="telefon">
+      <figure class="kompo kompo-hos" data-hos aria-label="Az Adózz.hu app telefonon és gépen, böngészőben. A képek bemutató adatokkal készültek.">
+        <div class="bongeszo">
+          <div class="bongeszo-sav" aria-hidden="true"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
           <div class="valto">
-            <img class="aktiv" src="kepek/app_fooldal.webp" width="780" height="1688" alt="Az Adózz.hu app főoldala telefonon: mennyit tegyél félre adóra, határidők">
-            <img src="kepek/app_dosszie.webp" width="780" height="1688" loading="lazy" fetchpriority="low" alt="">
-            <img src="kepek/app_uzenetek.webp" width="780" height="1688" loading="lazy" fetchpriority="low" alt="">
-            <img src="kepek/app_fotozas.webp" width="780" height="1688" loading="lazy" fetchpriority="low" alt="">
-            <img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" fetchpriority="low" alt="">
+            <img class="aktiv" src="kepek/app_gep_fooldal.webp" width="1600" height="1000" alt="Ugyanez gépen, böngészőben: a főoldal, oldalt a menüvel">
+            <img src="kepek/app_gep_dosszie.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: a novemberi dosszié, a beküldött iratok listája">
+            <img src="kepek/app_gep_feltoltes.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: papír beküldése, a fájlt a gépedről választod ki">
+            <img src="kepek/app_gep_uzenetek.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: üzenetek a könyvelődnek és igazoláskérés">
           </div>
         </div>
+        <div class="kompo-tel">
+          <div class="telefon">
+            <div class="valto">
+              <img class="aktiv" src="kepek/app_fooldal.webp" width="780" height="1688" alt="Az app főoldala telefonon: most kb. 250 000 Ft legyen félretéve az adóra">
+              <img src="kepek/app_dosszie.webp" width="780" height="1688" fetchpriority="low" alt="A novemberi dosszié telefonon: a könyvelőd átnézte az iratokat, 5 irat rendben">
+              <img src="kepek/app_fotozas.webp" width="780" height="1688" fetchpriority="low" alt="Fotózás az appban: a papírt lefotózod, vagy a galériából, fájlból választod ki">
+              <img src="kepek/app_uzenetek.webp" width="780" height="1688" fetchpriority="low" alt="Üzenetek az appban: igazolást kérsz egy gombnyomással, vagy írsz a könyvelődnek">
+              <div class="hos-menu" role="group" aria-label="Próbáld ki az app menüjét">
+                <button type="button" class="m0" aria-label="Főoldal" aria-pressed="true"></button>
+                <button type="button" class="m1" aria-label="Dosszié" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
+                <button type="button" class="m2" aria-label="Fotózás" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
+                <button type="button" class="m3" aria-label="Üzenetek" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="hos-tipp"><span>Próbáld ki: <span class="szo-erintes">koppints</span><span class="szo-eger">kattints</span> a menüre</span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h11m-4-4.5L15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
       </figure>
     </div>
   </div>
@@ -157,6 +178,7 @@
      JS-sel (gépen és telefonon is): a mozgas.js a lépések képernyőiből EGY ragadós telefont épít (.szinpad), és görgetésre lépésenként vált.
        Gépen: balra a lépések szövege görög (az aktív kiemelt), jobbra áll a telefon, alatta 7 részes haladásjelző.
        Telefonon: a telefon fent áll, alatta a haladásjelző és az aktív lépés címe + szövege cserélődik.
+       Zárólépés (3. kör): „Gépen is ugyanez” – a telefon félrehúzódik, mögötte beúszik a böngészőablak a gépes nézettel.
        Az eredeti szövegek és képleírások a helyükön maradnak (képernyőolvasónak), a színpad aria-hidden.
      Csökkentett mozgásnál ugyanez, csak animáció nélkül: a képernyő és a szöveg átúszás nélkül vált, a rétegek a végállapotukban.
      Képernyőnként legfeljebb két réteg. Az értesítés tömör, a státuszsor alatt áll, és csak a fejléc felső sorát takarja.
@@ -332,10 +354,37 @@
           </div>
         </li>
 
+        <!-- GÉPEN IS (zárólépés, 3. kör): a 2. kör „Az appot gépen, böngészőből is megnyithatod…” mondata ebbe olvadt.
+             JS nélkül: szöveg + böngészőablak, előtte a telefon (mindkettőn a Főoldal). JS-sel a ragadós telefon jobbra lent
+             félrehúzódik és kisebb lesz, mögötte beúszik a böngészőablak (.szinpad.gep-mod). -->
+        <li class="blepes blepes-gep">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke">Gépen is</p>
+            <h3>Gépen is ugyanez</h3>
+            <p>Böngészőből is megnyitod, ugyanazzal a belépéssel. Ugyanazt látod, mint a telefonodon, és a papírokat a gépedről is feltöltheted.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="kompo kompo-zaro">
+              <div class="bongeszo">
+                <div class="bongeszo-sav" aria-hidden="true"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
+                <div class="valto">
+                  <img class="aktiv" src="kepek/app_gep_fooldal.webp" width="1600" height="1000" loading="lazy" alt="Az app főoldala gépen, böngészőben: ugyanaz, mint a telefonon, oldalt a menüvel">
+                </div>
+              </div>
+              <div class="kompo-tel">
+                <div class="telefon">
+                  <div class="kepernyo">
+                    <img src="kepek/app_fooldal.webp" width="780" height="1688" loading="lazy" alt="Ugyanez a főoldal telefonon">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
       </ol>
     </div>
 
-    <p class="bemutato-veg">Az appot gépen, böngészőből is megnyithatod, ugyanazzal a belépéssel.</p>
     <p class="bemutato-jegy">Az app képei bemutató adatokkal készültek.</p>
   </div>
 </section>

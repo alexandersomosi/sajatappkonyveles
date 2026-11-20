@@ -1,6 +1,7 @@
 // Every API call the panel makes, in one place (SPEC §12). If the backend differs, fix it here.
 import { api, upload, downloadVia } from './client';
 import type { AuthResult, Me, NotificationItem, PublicConfig, SessionInfo } from '../_shared/api';
+import type { MarketingSummary } from '../_shared/marketing';
 import type {
   AccAppointments,
   AccClientDetail,
@@ -236,6 +237,11 @@ export const adminCreateReferralCode = (body: { code: string; campaign?: string;
 export const adminPatchReferralCode = (id: string, body: Partial<{ active: boolean; campaign: string; note: string }>) =>
   api.patch<ReferralCodeRow>(`/admin/referral-codes/${e(id)}`, body);
 export const adminAttribution = (o: { from?: string; to?: string }) => api.get<{ rows: AttributionRow[] }>(`/admin/attribution${q(o)}`);
+// SPEC §31.4: the Marketing tab (admin only)
+export const adminMarketing = (o: { nap?: string; tol?: string; ig?: string }) => api.get<MarketingSummary>(`/admin/marketing${q(o)}`);
+export const adminMarketingSpendAdd = (body: { day: string; platform: 'meta' | 'google' | 'egyeb'; campaign?: string; amountHuf: number; note?: string }) =>
+  api.post<{ id: string }>('/admin/marketing/koltes', body);
+export const adminMarketingSpendRevoke = (id: string) => api.post<{ ok: true }>(`/admin/marketing/koltes/${e(id)}/visszavonas`);
 export const adminContentTexts = () => api.get<{ items: ContentText[] }>('/admin/content-texts');
 export const adminPutContentText = (key: string, body: string) => api.put<ContentText>(`/admin/content-texts/${e(key)}`, { body });
 export const adminFaq = () => api.get<{ items: FaqItem[] }>('/admin/faq');

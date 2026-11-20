@@ -51,6 +51,8 @@ import {
   revalidateConsent,
 } from '../services/assist.js';
 import { cancelByClient, callbackView, clientCallbacks, createCallback, noteLooksSecret, updateByClient } from '../services/callbacks.js';
+import { recordCallbackTouch } from '../services/marketing.js';
+import { log, safeErr } from '../log.js';
 import { addVersion, createDocument } from '../services/documents.js';
 import { buildGuide } from '../services/guides.js';
 import { accountantTaxIdForClient, afterProfileSubmitted, assertStepOpen, checkCompletion, journeyOf, notifyAccountantReview, onboardingState, pathOf, setStep, steps, stepStatus } from '../services/onboarding.js';
@@ -436,7 +438,24 @@ export function registerBekotesRoutes(r: Hono<Env>, deps: Deps): void {
     note: z.string().trim().max(CALLBACK_RULES.noteMaxChars, { error: `Legfeljebb ${CALLBACK_RULES.noteMaxChars} karakter.` }).optional(),
     source: z.enum(CALLBACK_SOURCES).refine((s) => s !== 'csapat' && s !== 'regi_idopont', { error: 'Hibás forrás.' }),
     savePhoneToProfile: z.boolean().optional(),
+    /** SPEC §31.3: where this request came from (a link with utm_* / hivatkozo); without it the registration's source counts. */
+    marketing: z
+      .object({
+        utm: z.object({ source: z.string().max(100).optional(), medium: z.string().max(100).optional(), campaign: z.string().max(100).optional(), content: z.string().max(100).optional(), term: z.string().max(100).optional() }).optional(),
+        hivatkozo: z.string().max(253).optional(),
+        erkezes: z.string().max(200).optional(),
+      })
+      .optional(),
   });
+
+  /** SPEC §31.3: the source row of a client's callback request – never blocks the request itself. */
+  async function noteCallbackSource(userId: string, clientId: string, callbackId: string, m: { utm?: Record<string, string | undefined>; hivatkozo?: string; erkezes?: string } | undefined) {
+    try {
+      await recordCallbackTouch(deps, deps.db, { userId, clientId, callbackId, input: m ? { utm: m.utm, source: { hivatkozo: m.hivatkozo, erkezes: m.erkezes } } : undefined });
+    } catch (e) {
+      log().warn({ err: safeErr(e) }, 'callback source not recorded');
+    }
+  }
 
   /** 11-19 javítás: a password / code / adóazonosító jel never reaches the team's list (400 on the note field). */
   async function refuseSecretNote(note: string | null | undefined) {
@@ -448,16 +467,18 @@ export function registerBekotesRoutes(r: Hono<Env>, deps: Deps): void {
 
   r.post('/callbacks', async (c) => {
     const cl = await client(c);
-    const b = await readJson(c, callbackBody);
+    const { marketing, ...b } = await readJson(c, callbackBody);
     await refuseSecretNote(b.note);
     const assistKind = CALLBACK_ASSIST_TOPIC[b.topic];
     if (assistKind) {
       const res = await deps.db.transaction((tx) => requestAssist(deps, tx, { cl, kind: assistKind, source: b.source, phone: b.phone, window: b.window, note: b.note, savePhoneToProfile: b.savePhoneToProfile, by: by(c) }));
       const cb = res.callbackId ? await openCallbackRow(cl, res.callbackId) : null;
       if (!cb) throw E.internal();
+      await noteCallbackSource(cl.userId, cl.id, cb.id, marketing);
       return c.json(await callbackView(deps, deps.db, cb), 201);
     }
     const row = await deps.db.transaction((tx) => createCallback(deps, tx, { cl, ...b, createdByRole: 'client', createdByUserId: auth(c).userId }));
+    await noteCallbackSource(cl.userId, cl.id, row.id, marketing);
     return c.json(await callbackView(deps, deps.db, row), 201);
   });
 

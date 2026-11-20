@@ -135,9 +135,9 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .mobilmenu-lap a { padding: 12px 14px; border-radius: 8px; color: var(--sotet); text-decoration: none; font-weight: 500; }
 .mobilmenu-lap a:hover { background: var(--papir); }
 
-/* ---------- hős: fehér alap, balra szöveg, jobbra egyetlen telefon ---------- */
-.hos { padding: 56px 0 72px; background: #fff; }
-.hos-racs { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; align-items: center; }
+/* ---------- hős: fehér alap, balra szöveg, jobbra a telefon, mögötte a gépes (böngészős) nézet ---------- */
+.hos { padding: 56px 0 72px; background: #fff; overflow-x: clip; }
+.hos-racs { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px; align-items: center; }
 .hos-szoveg { max-width: 620px; }
 .hos-elo { font-size: 15px; font-weight: 500; color: var(--halvany); margin-bottom: 20px; }
 .hos h1 { font-size: 56px; line-height: 1.04; letter-spacing: -0.025em; }
@@ -146,7 +146,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .hos-ar { margin-top: 24px; font-size: 15px; color: var(--halvany); font-variant-numeric: tabular-nums; }
 .hos-ar b { color: var(--sotet); }
 .hos-mikro { margin-top: 4px; font-size: 15px; color: var(--halvany); }
-.hos-kep { display: flex; justify-content: center; }
+.hos-kep { min-width: 0; }
 
 /* ================= TELEFON (minden telefon ugyanaz) =================
    kepek/telefon_keret.svg: 434x888 egység, kijelző x22 y22 390x844, sarok r44. --w a keret külső szélessége, --k a kijelzőé. */
@@ -173,20 +173,66 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 }
 .szakasz-sotet .telefon::before { box-shadow: 0 40px 80px -20px rgba(0, 0, 0, .6); }
 
-/* hős-telefon: árnyék + talpárnyék, semmi más */
-.hos-telefon { position: relative; isolation: isolate; width: fit-content; margin: 0; border-radius: 16px; }
-.hos-telefon .telefon { --w: 312px; }
-.hos-telefon::after { content: ""; position: absolute; z-index: -2; left: 15%; right: 15%; bottom: -16px; height: 24px; background: radial-gradient(closest-side, rgba(16, 21, 43, .28), rgba(16, 21, 43, 0)); }
-.hos-telefon:focus-visible { outline-offset: 8px; }
+/* ================= KOMPOZÍCIÓ: böngészőablak hátul, telefon elöl (hős és a bemutató zárólépése) =================
+   A .kompo konténer (container-type), a méretek a szélességéhez igazodnak (cqw), így minden méretben ugyanúgy áll össze.
+   --bw: a böngészőablak szélessége; --tw: a telefon külső szélessége; --tx: a telefon távolsága a jobb széltől; --ty: a telefon teteje.
+   A telefon a folyamban van (ő adja a magasságot), a böngészőablak abszolút, mögötte. Árnyék: a telefoné erősebb (elöl van). */
+.kompo { --bw: 100cqw; --tw: 42cqw; --tx: 8cqw; --ty: 9cqw; position: relative; width: 100%; margin: 0; container-type: inline-size; }
+.kompo-tel { position: relative; z-index: 1; width: fit-content; margin: var(--ty) var(--tx) 0 auto; }
+.kompo-tel .telefon { --w: var(--tw); }
+.kompo-tel::after { content: ""; position: absolute; z-index: -1; left: 15%; right: 15%; top: calc(var(--tw) * 2.046 - 8px); height: 24px; background: radial-gradient(closest-side, rgba(16, 21, 43, .28), rgba(16, 21, 43, 0)); }
 
-/* váltakozó képek (hős): egymásra rakva, az .aktiv látszik. JS nélkül az első kép áll. */
-.valto > img { display: block; width: 100%; height: auto; }
+/* böngészőablak: saját rajz (sáv három ponttal és címsorral), fehér, 1 px keret + puha árnyék; belül a gépes app 1600x1000-es képe */
+.bongeszo {
+  position: absolute; z-index: 0; left: 0; top: 0; width: var(--bw);
+  container-type: inline-size; overflow: hidden; background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(16, 21, 43, .09), 0 30px 60px -32px rgba(16, 21, 43, .42), 0 12px 28px -18px rgba(16, 21, 43, .22);
+}
+.bongeszo-sav { position: relative; display: flex; align-items: center; gap: 1.1cqw; height: 5.4cqw; padding: 0 2.2cqw; background: #F1F3F8; border-bottom: 1px solid #E3E6EE; }
+.bongeszo-sav i { width: 1.25cqw; height: 1.25cqw; border-radius: 50%; background: #D3D8E3; }
+.bongeszo-sav span { position: absolute; left: 50%; top: 50%; width: 38cqw; margin-left: -19cqw; height: 3.3cqw; margin-top: -1.65cqw; border-radius: 99px; background: #fff; box-shadow: 0 0 0 1px #E3E6EE; display: grid; place-items: center; font-size: 1.75cqw; line-height: 1; font-weight: 500; color: #5F687D; letter-spacing: 0; }
+.bongeszo > .valto { position: relative; overflow: hidden; aspect-ratio: 1600 / 1000; background: #F3F5FB; }
+
+/* váltakozó képek (hős telefon + böngésző): egymásra rakva, az .aktiv látszik. JS nélkül az első kép áll.
+   Váltáskor az új a régi FÖLÉ úszik be (0,25 s), a régi teljesen látszik, amíg az új be nem ért, és csak utána tűnik el (nincs szellemkép). */
+.valto > img { display: block; width: 100%; height: auto; position: relative; }
 .valto > img:not(:first-child) { position: absolute; left: 0; top: 0; }
 .valto > img:not(.aktiv) { opacity: 0; visibility: hidden; }
-.mozog .valto > img { transition: opacity .4s var(--mozgas), transform .4s var(--mozgas), visibility 0s linear .4s; }
-.mozog .valto > img.aktiv { transition: opacity .4s var(--mozgas), transform .4s var(--mozgas), visibility 0s; }
-.mozog .valto > img:not(.aktiv) { transform: translateX(16px); }
-.mozog .valto > img.ki { transform: translateX(-16px); }
+.valto > img.aktiv { z-index: 1; }
+.mozog .valto > img { transition: opacity 0s .26s, visibility 0s .26s; }
+.mozog .valto > img.aktiv { transition: opacity .25s var(--mozgas), visibility 0s; }
+
+/* a hős telefonjának menüje: 4 átlátszó gomb pontosan a képen látható alsó menüpontok fölött.
+   Mérés (app_minta/hatarok.json, 390x844-es nézet): .nav y 759–844, vízszintes belső margó 6 px, 5 egyforma gomb (75,6 px).
+   Százalékban: bal = 1,538% + i × 19,385%, szélesség 19,385%, teteje 89,929%, magassága 10,071% (a Fiók gombja nem kell). */
+.hos-menu { display: none; position: absolute; z-index: 3; left: 0; right: 0; top: 89.929%; bottom: 0; }
+.js .hos-menu { display: block; }
+.hos-menu button {
+  position: absolute; top: 0; bottom: 0; width: 19.385%; margin: 0; padding: 0;
+  border: 0; border-radius: calc(var(--k) * .04); background: transparent; color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none;
+}
+.hos-menu .m0 { left: 1.538%; } .hos-menu .m1 { left: 20.923%; } .hos-menu .m2 { left: 40.308%; } .hos-menu .m3 { left: 59.692%; }
+.hos-menu button:focus-visible { outline: 2px solid var(--kek); outline-offset: -3px; }
+@media (hover: hover) { .hos-menu button:hover { background: rgba(20, 40, 219, .05); } .hos-menu button[aria-pressed="true"]:hover { background: transparent; cursor: default; } }
+/* egyszeri koppintás-jel a betöltéskor (Dosszié, Fotózás, Üzenetek egymás után); az első kattintás után, és mozgás nélkül nincs */
+.hos-kopp { display: none; position: absolute; left: 50%; top: 31%; width: 62%; aspect-ratio: 1; margin: -31% 0 0 -31%; border-radius: 50%; background: rgba(20, 40, 219, .2); box-shadow: 0 0 0 .2em rgba(255, 255, 255, .85); opacity: 0; pointer-events: none; }
+.mozog .kompo-hos .hos-kopp { display: block; }
+.mozog .kompo-hos.kopp .hos-kopp { animation: aKoppint .8s var(--kd, .5s) ease-out both; }
+.hos-menu .m2 .hos-kopp { --kd: 1.05s; } .hos-menu .m3 .hos-kopp { --kd: 1.6s; }
+.kompo-hos.kiprobalta .hos-kopp { display: none; }
+/* „Próbáld ki” felirat: gépen a telefon bal oldalán, a menü magasságában, nyíllal a menüre; telefonon a telefon alatt */
+.hos-tipp { display: none; }
+.js .hos-tipp {
+  display: flex; align-items: center; gap: 8px; position: absolute; z-index: 2; right: calc(var(--tx) + var(--tw) + 18px); bottom: calc(var(--tw) * .149 - 11px);
+  white-space: nowrap; font-size: 14px; line-height: 22px; font-weight: 500; color: var(--halvany);
+}
+.hos-tipp svg { width: 18px; height: 18px; flex: none; color: var(--kek); }
+.szo-eger { display: none; }   /* egérrel „kattints”, érintéssel „koppints” */
+@media (hover: hover) and (pointer: fine) { .szo-eger { display: inline; } .szo-erintes { display: none; } }
+.mozog .hos-tipp { transition: opacity .4s var(--mozgas); }
+.kompo-hos.kiprobalta .hos-tipp { opacity: 0; }
 
 /* ---------- bizalmi sor: fehér, vonalakkal, ikon nélkül ---------- */
 .bizalom { border-top: 1px solid var(--vonal); border-bottom: 1px solid var(--vonal); }
@@ -231,8 +277,11 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .blepes-cimke { margin-bottom: 12px; font-size: 14px; font-weight: 500; color: var(--cim-halvany-s); }
 .blepes h3, .szinpad-szovegek h3 { font-size: 22px; line-height: 1.25; letter-spacing: -0.012em; margin-bottom: 12px; }
 .blepes-szoveg p:not(.blepes-cimke) { font-size: 16px; line-height: 1.6; color: var(--sotet-szoveg); max-width: 34em; }
-.bemutato-veg { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--sotet-vonal); font-size: 16px; color: var(--sotet-szoveg); }
-.bemutato-jegy { margin-top: 6px; font-size: 13px; color: var(--cim-halvany-s); }
+.bemutato-jegy { margin-top: 32px; font-size: 13px; color: var(--cim-halvany-s); }
+/* zárólépés JS nélkül: szöveg + kompozíció (böngészőablak hátul, telefon elöl), a sötét sávhoz igazított árnyékkal */
+.blepes-kep .kompo-zaro { max-width: 600px; }
+.kompo-zaro .kompo-tel .telefon { --w: var(--tw); }
+.szakasz-sotet .bongeszo { box-shadow: 0 0 0 1px rgba(255, 255, 255, .10), 0 40px 80px -24px rgba(0, 0, 0, .65); }
 
 /* ---------- ragadós bemutató (JS-sel, gépen és telefonon is) ----------
    A mozgas.js a .bemutato-ra teszi a .szinpad-mod osztályt, és a lépések képernyőiből egyetlen telefont épít (.szinpad, aria-hidden).
@@ -249,6 +298,15 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .halado > span { position: relative; flex: 1; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, .16); }
 .halado > span > i { position: absolute; inset: 0; background: var(--sarga); transform-origin: left center; transform: scaleX(0); }
 .szinpad-szovegek { display: none; }
+/* zárólépés („Gépen is ugyanez”, .szinpad.gep-mod): a telefon kisebb lesz és jobbra lent félrehúzódik (transform),
+   mögötte beúszik a böngészőablak a gépes Főoldallal (opacity + transform). --bw: a böngészőablak szélessége (lásd a töréspontoknál). */
+.szinpad-kep { position: relative; }
+.szinpad .telefon { position: relative; z-index: 1; transform-origin: 50% 100%; }
+.szinpad-bongeszo { left: 50%; margin-left: calc(var(--bw) / -2); opacity: 0; transform: translateY(5%) scale(.96); pointer-events: none; }
+.szinpad.gep-mod .szinpad-bongeszo { opacity: 1; transform: none; }
+.mozog .szinpad .telefon { transition: transform .6s var(--mozgas); }
+.mozog .szinpad-bongeszo { transition: opacity .25s var(--mozgas), transform .4s var(--mozgas); }
+.mozog .szinpad.gep-mod .szinpad-bongeszo { transition: opacity .45s var(--mozgas) .12s, transform .6s var(--mozgas) .12s; }
 
 /* gépen: balra a lépések szövege görög (az aktív kiemelt), jobbra a telefon ragad, függőlegesen középen */
 @media (min-width: 981px) {
@@ -264,7 +322,9 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
     grid-column: 2; grid-row: 1; align-self: start; position: sticky;
     top: max(calc(var(--fej) + 20px), calc(50vh + var(--fej) / 2 - (var(--szw) * 2.046 + 27px) / 2));
   }
-  .szinpad-kep { display: flex; justify-content: center; }
+  .szinpad-kep { display: flex; justify-content: center; width: 100%; container-type: inline-size; --bw: min(92cqw, 640px, calc(var(--szw) * 2.2)); }
+  .szinpad-bongeszo { top: calc(var(--szw) * 2.046 * .15); }
+  .szinpad.gep-mod .telefon { transform: translateX(calc(var(--bw) / 2 - var(--w) * .3 + 3cqw)) scale(.6); }
   .szinpad .halado { width: calc(var(--szw) * .72); margin-top: 24px; }
 }
 
@@ -286,6 +346,9 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .szinpad-mod { --szw: min(252px, calc((100svh - var(--fej) - 310px) / 2.046)); }
   @supports (width: 1cqh) { .szinpad-kep .telefon { --w: min(var(--szmax, 252px), calc(100cqh / 2.046)); } }
   .szinpad .halado { flex: none; width: 100%; max-width: 560px; margin: 24px 0 14px; }
+  .szinpad-kep { --bw: min(100cqw, 560px, 130cqh); }
+  .szinpad-bongeszo { top: 4cqh; }
+  .szinpad.gep-mod .telefon { transform: translate(calc(var(--bw) / 2 - var(--w) * .35), calc(50cqh - var(--w) * 1.023)) scale(.7); }
   .szinpad-szovegek { display: grid; flex: none; width: 100%; max-width: 560px; }
   /* egymás utáni váltás: a régi szöveg gyorsan eltűnik, és csak utána úszik be az új (nem csúsznak egymásra) */
   .szinpad-szovegek > .blepes-szoveg { grid-area: 1 / 1; position: static; padding: 0; opacity: 0; transform: translateY(10px); transition: opacity .12s linear, transform .12s linear; }
@@ -548,7 +611,8 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .fejlec-sor { gap: 32px; }
   .menu { gap: 20px; }
   .hos h1 { font-size: 48px; }
-  .hos-telefon .telefon { --w: 290px; }
+  .hos-racs { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
+  .kompo-hos { --tw: 46cqw; --tx: 5cqw; --ty: 10cqw; }
   .lablec-racs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .lablec-marka { grid-column: 1 / -1; }
   .szinpad-mod, .blepes { column-gap: 48px; }
@@ -561,7 +625,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .hos { padding: 48px 0 72px; }
   .hos-racs { grid-template-columns: minmax(0, 1fr); gap: 56px; }
   .hos-szoveg { max-width: 640px; }
-  .hos-telefon .telefon { --w: 300px; }
+  .kompo-hos { max-width: 600px; margin: 0 auto; }
 
   .bizalom-racs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bizalom-racs li:nth-child(odd) { border-left: 0; padding-left: 0; }
@@ -603,7 +667,10 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .hos-ar { margin-top: 16px; font-size: 14px; }
   .hos-mikro { font-size: 14px; }
   .hos-racs { gap: 40px; }
-  .hos-telefon .telefon { --w: 276px; }
+  /* telefonon a telefon a fő: nagyobb és középen, a böngészőablak mögötte fent és két oldalt látszik; a felirat a telefon alatt */
+  .kompo-hos { --tw: 72cqw; --tx: 14cqw; --ty: 13cqw; }
+  .js .hos-tipp { position: static; justify-content: center; margin-top: 20px; }
+  .hos-tipp svg { transform: rotate(-90deg); }
 
   .bizalom-racs { grid-template-columns: minmax(0, 1fr); }
   .bizalom-racs li, .bizalom-racs li:nth-child(n) { padding: 18px 0; border-left: 0; }
@@ -624,7 +691,6 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .blepes-szoveg { position: static; padding-top: 0; }
   .blepes-kep .telefon { --w: 267px; }      /* kijelző 240 px */
   .blepes h3 { font-size: 20px; }
-  .bemutato-veg { margin-top: 24px; font-size: 15px; }
 
   .konyvelo-fej { margin-bottom: 48px; }
   .feladat-cim { font-size: 18px; }
@@ -667,7 +733,6 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 
 @media (max-width: 380px) {
   .blepes-kep .telefon { --w: 250px; }
-  .hos-telefon .telefon { --w: 260px; }
 }
 
 /* egér nélküli eszközön nincs hover-hatás */

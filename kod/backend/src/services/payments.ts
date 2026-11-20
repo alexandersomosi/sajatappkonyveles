@@ -842,6 +842,9 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
         if (p.kind === 'elso_havi') {
           const { setStep } = await import('./onboarding.js');
           await setStep(deps, tx, cl.id, 'elofizetes', 'kesz');
+          // SPEC §31.6: the "fizetett" conversion – nothing unless ads are on AND the account has a granted consent
+          const { queueAdConversion } = await import('./hirdetes.js');
+          await queueAdConversion(deps, tx, { event: 'fizetes', userId: cl.userId, ref: p.id, valueHuf: p.amountHuf });
         }
       }
       if (p.kind === 'kartya' && sub && newPmId) {

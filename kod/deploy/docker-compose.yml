@@ -92,6 +92,8 @@ services:
       SKIP_MIGRATIONS: "1"
     volumes:
       - ../data/files:/data/files
+      # SPEC §31.6: the Google service-account key of the (switched-off) ad measurement; empty folder while it is off
+      - ../hirdetes:/run/hirdetes:ro
     read_only: true
     tmpfs:
       - /tmp
@@ -125,6 +127,7 @@ services:
       FONT_DIR: /app/fonts
     volumes:
       - ../data/files:/data/files
+      - ../hirdetes:/run/hirdetes:ro
     read_only: true
     tmpfs:
       - /tmp
@@ -168,13 +171,82 @@ services:
     pids_limit: 64    # SPEC §27.11 S15
     logging: *logging
 
+  # ---------- SPEC §31.1: our own statistics server (Umami, MIT licence, no cookie) ----------
+  # The official image pinned to the exact release and digest (ghcr.io/umami-software/umami 3.5.0, index digest checked
+  # 2026-11-21 on ghcr.io). Its OWN Postgres (never kezjegy-db: Umami runs its Prisma migrations at every start).
+  # Not public: the proxy passes only /m/script.js and POST /m/api/send (proxy/caddy/sites/adozz.caddy); the API reads the
+  # aggregates over kezjegy_edge with the read user of umami-beallit.sh. Secrets: /srv/kezjegy/.env.umami(-db) (gen-env.sh).
+  # Not read_only: the start script rewrites its own tracker file (update-tracker); no capability, no new privileges.
+  kezjegy-umami:
+    image: ghcr.io/umami-software/umami:3.5.0@sha256:b64f40400d77bcadd39cf5c62a1e368c99524ca442024f96e1133355a19a5dbc
+    container_name: kezjegy-umami
+    restart: unless-stopped
+    init: true
+    env_file:
+      - path: ../.env.umami
+        required: true
+    environment:
+      DISABLE_TELEMETRY: "1"
+      DISABLE_UPDATES: "1"
+      PRIVATE_MODE: "1"
+      # the client address comes ONLY from the header the proxy sets from the connection (adozz.caddy)
+      CLIENT_IP_HEADER: X-Kj-Client-Ip
+      TZ: UTC
+    networks: [kezjegy_edge, kezjegy_umami]
+    depends_on:
+      kezjegy-umami-db:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:3000/api/heartbeat >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 60s
+    mem_limit: 512m
+    pids_limit: 128
+    logging: *logging
+
+  kezjegy-umami-db:
+    image: postgres:17-alpine
+    container_name: kezjegy-umami-db
+    restart: unless-stopped
+    env_file:
+      - path: ../.env.umami-db
+        required: true
+    environment:
+      POSTGRES_USER: umami
+      POSTGRES_DB: umami
+      TZ: UTC
+    volumes:
+      - kezjegy_umami_pgdata:/var/lib/postgresql/data
+    networks: [kezjegy_umami]
+    shm_size: 64mb
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    mem_limit: 512m
+    logging: *logging
+
 networks:
   kezjegy_edge:
     name: kezjegy_edge
   kezjegy_internal:
     name: kezjegy_internal
     internal: true
+  # SPEC §31.1: the statistics database has no internet and no neighbour except kezjegy-umami
+  kezjegy_umami:
+    name: kezjegy_umami
+    internal: true
 
 volumes:
   kezjegy_pgdata:
     name: kezjegy_pgdata
+  kezjegy_umami_pgdata:
+    name: kezjegy_umami_pgdata

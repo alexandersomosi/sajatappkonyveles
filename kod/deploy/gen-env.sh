@@ -8,6 +8,10 @@
 #   .env.db  → ONLY kezjegy-db and the one-shot kezjegy-migrate: POSTGRES_PASSWORD, MIGRATION_DATABASE_URL (owner),
 #              KEZJEGY_APP_DB_PASSWORD. A superuser credential never reaches the API or the worker.
 # An older .env that still holds those keys is copied to _regi/ first, then the keys move to .env.db.
+# SPEC §31 (2026-11-20): before ANY change of an existing .env / .env.db the old file is copied to _regi/env_<time>
+# (_regi/envdb_<time>); and the statistics server gets its own two files (never shared with the API):
+#   .env.umami     → ONLY kezjegy-umami: DATABASE_URL (its own Postgres), APP_SECRET
+#   .env.umami-db  → ONLY kezjegy-umami-db: POSTGRES_PASSWORD
 set -euo pipefail
 umask 077
 ENV=/srv/kezjegy/.env
@@ -18,6 +22,7 @@ mkdir -p _regi
 python3 - "$ENV" "$ENVDB" <<'PY'
 import base64, os, secrets, shutil, sys, time
 path, dbpath = sys.argv[1], sys.argv[2]
+before = {p: (open(p).read() if os.path.exists(p) else None) for p in (path, dbpath)}
 OWNER_KEYS = ("POSTGRES_PASSWORD", "MIGRATION_DATABASE_URL", "KEZJEGY_APP_DB_PASSWORD")
 
 def read(p):
@@ -113,6 +118,12 @@ for k, v in list(generated.items()) + defaults:
         env[k] = v
         added.append(k)
 
+# SPEC §31: never change an existing file without a copy of the old one first (values are never printed)
+ts = time.strftime("%Y%m%d_%H%M%S")
+for p, new, tag in ((path, lines, "env"), (dbpath, dblines, "envdb")):
+    old = before[p]
+    if old is not None and old != "\n".join(new) + "\n":
+        shutil.copy2(p, f"/srv/kezjegy/_regi/{tag}_{ts}")
 write(path, lines)
 write(dbpath, dblines)
 msg = []
@@ -121,6 +132,27 @@ if added: msg.append("added " + ", ".join(added))
 print("env: " + ("; ".join(msg) if msg else "nothing to change"))
 PY
 chmod 600 "$ENV" "$ENVDB"
+
+# SPEC §31.1: the statistics server's secrets (own files; created once, never changed afterwards, never printed)
+if [ ! -s /srv/kezjegy/.env.umami-db ] || [ ! -s /srv/kezjegy/.env.umami ]; then
+  if [ -s /srv/kezjegy/.env.umami-db ] || [ -s /srv/kezjegy/.env.umami ]; then
+    echo "HIBA: csak az egyik Umami-env fájl van meg (.env.umami / .env.umami-db) – kézzel kell rendbe tenni, nem írok felül semmit."; exit 1
+  fi
+  python3 - <<'PY'
+import os, secrets
+pw = secrets.token_hex(24)
+def write(p, lines):
+    fd = os.open(p, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w") as f:
+        f.write("\n".join(lines) + "\n")
+write("/srv/kezjegy/.env.umami-db", ["# SPEC §31.1 – ONLY kezjegy-umami-db (the statistics database). chmod 600. Never print or copy.", f"POSTGRES_PASSWORD={pw}"])
+write("/srv/kezjegy/.env.umami", ["# SPEC §31.1 – ONLY kezjegy-umami. chmod 600. Never print or copy. Changing APP_SECRET logs everybody out of Umami.",
+                                  f"DATABASE_URL=postgresql://umami:{pw}@kezjegy-umami-db:5432/umami",
+                                  f"APP_SECRET={secrets.token_hex(32)}"])
+print("umami env: created (.env.umami, .env.umami-db)")
+PY
+fi
+chmod 600 /srv/kezjegy/.env.umami /srv/kezjegy/.env.umami-db
 
 # passphrase for the gpg-encrypted nightly DB dumps (backup.sh)
 if [ ! -s /srv/kezjegy/.backup_pass ]; then

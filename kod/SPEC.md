@@ -320,7 +320,7 @@ Rule when created from a NAV invoice: `received_on` = `issue_date` for `CASH|CAR
 
 ### 5.11 Referral and attribution
 **referral_codes** — `id`, `code text unique` (A–Z0–9, 6–12), `owner_client_id null`, `campaign text null`, `note`, `active bool`, `created_by`.
-**signup_attribution** — `user_id pk`, `referral_code_id null`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `landing ('web','android','ios')`, `first_seen_at`.
+**signup_attribution** — `user_id pk`, `referral_code_id null`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `landing ('web','android','ios')`, `first_seen_at`. (§31.3: the full source of every sign-up and callback request is in **marketing_touches**; this table stays as it was.)
 
 ### 5.12 Content
 **content_texts** — `key text pk` (e.g. `notif.tax_approved.title`, `email.password_reset.body`, `ui.home.letter_default`), `body text`, `placeholders text[]`, `updated_by`, `updated_at`, `version int`. Defaults shipped in `backend/src/content/defaults.hu.json`; DB rows override.
@@ -4509,7 +4509,7 @@ Automatic HTTPS (Let's Encrypt) for all hosts. HSTS `max-age=31536000` (no `incl
 
 #### 29.3.6 Landing page `adozz.hu` (B3; `kod/landing/`)
 
-Plain static page (HTML + CSS, Geist from `kod/app` assets, no script, no tracking, no cookie, no AI wording), C look (blue band, 10 px `#D3DAFC` separators), mobile first (390 / 320 px) and desktop:
+Plain static page (HTML + CSS, Geist from `kod/app` assets, no cookie, no AI wording; **§31 supersedes "no script, no tracking": one own script `js/meres.js` and the cookie-less own statistics `/m/script.js`, CSP `script-src 'self'`**), C look (blue band, 10 px `#D3DAFC` separators), mobile first (390 / 320 px) and desktop:
 - Band: brand name, `brand.tagline` "Saját könyvelő, aki név szerint ismer.", line "Átalányadós és katás egyéni vállalkozóknak. Havi 19 999 Ft, minden benne van." Buttons "Regisztrálok" → `https://app.adozz.hu/regisztracio`, capsule "Belépés" → `https://app.adozz.hu/belepes`.
 - Section "Mit kapsz?": saját könyvelő név szerint; kiszámolja és beadja az adódat; a kiállított számláid maguktól bejönnek (NAV Online Számla); emlékeztetők a határidőkre; mennyit tegyél félre; üzenet a könyvelődnek az appban.
 - Section "Így indulsz": 1. Regisztrálsz és válaszolsz pár kérdésre. 2. Aláírod a szerződést és engedélyt adsz a NAV-nál. 3. Megadod a kártyádat – az első hónapot ekkor fizeted. 4. A könyvelőd bekapcsolja a könyvelést.
@@ -4962,3 +4962,91 @@ Mails still go out in the old frame (`notify/mailer.ts` `htmlOf`); the new templ
 - **Live 2026-11-20 20:19–20:23** (no migration, 20; `data.k7b` ran; live DEMO probe of the new sign-up passed – deploy/README k7b).
 - **Tests:** `backend/test/k7b-levelek.test.ts`, `auth.test.ts` (S16: register+login probe, too-many answers, stranger lock-out),
   `panel/src/pages/acc/ugyfel/hipa.test.tsx`. Probes: `deploy/https-proba.sh` and `deploy/bongeszo-proba.mjs` follow the new sign-up.
+
+---
+
+## 31. Marketing – own statistics, sources, the Marketing tab, prepared ad measurement (owner order 2026-11-20 23:15)
+
+Owner: "Csináld meg, frissíts mindent, és adatkezelési és süti tájékoztatót is csinálj. Egy új fül lesz az én dashboardomban?"
+Owner guide: `kod/MARKETING.md`. Legal texts (drafts for the lawyer): `kod/jogi/adatkezeles.md`, `kod/jogi/suti.md` (the legal builder).
+
+### 31.1 Own statistics (Umami)
+- `kezjegy-umami` = `ghcr.io/umami-software/umami:3.5.0@sha256:b64f40400d77bcadd39cf5c62a1e368c99524ca442024f96e1133355a19a5dbc`
+  (MIT), own Postgres `kezjegy-umami-db` (volume `kezjegy_umami_pgdata`, network `kezjegy_umami` internal); never `kezjegy-db`.
+  Env: `DISABLE_TELEMETRY`, `DISABLE_UPDATES`, `PRIVATE_MODE`, `CLIENT_IP_HEADER=X-Kj-Client-Ip` (set by the proxy from the
+  connection). Secrets: `/srv/kezjegy/.env.umami` (`DATABASE_URL`, `APP_SECRET`) and `.env.umami-db` (`POSTGRES_PASSWORD`),
+  created by `gen-env.sh`, 600, only these two containers.
+- Public paths on adozz.hu only: `GET /m/script.js` → `/script.js`, `POST /m/api/send` → `/api/send` (16 KB, no cookie in or
+  out); any other `/m/*` = 404. The Umami UI is not public.
+- `deploy/umami-beallit.sh` (once): replaces the factory admin password, creates the read user `kezjegy-pult` (role user) and
+  the website `adozz.hu`, writes `UMAMI_API_URL/WEBSITE_ID/API_USER/API_PASSWORD` to `.env` (backup `_regi/env_<ts>` first),
+  prints the public website id only. `up.sh` dumps the Umami DB (encrypted) before each deploy; `backup.sh` daily at 03:xx.
+- The API reads aggregates only (`services/umami.ts`: login, `/stats`, `/metrics?type=tag|device|country|city|event|utmCampaign`,
+  `timezone=Europe/Budapest`), 6 s timeout, 5 min cache. Umami unreachable → every visit number is `null` ("nem érhető el"),
+  never a guess.
+
+### 31.2 One channel rule
+`kod/shared/src/marketing.ts` `channelOf({utmSource, referrerDomain})`: utm_source first (aliases yt/fb/ig/…, or a platform
+domain; anything else = `egyeb`); else the referring domain (youtube.com/youtu.be, google.*, facebook.com/l.facebook.com/…,
+instagram.com, tiktok.com); none or our own site (`adozz.hu` and subdomains) = `kozvetlen`; other site = `egyeb`. The landing
+script is generated from these functions (build.mjs), so the page, the app, the backend and the panel group identically.
+`campaignSlug()` = lower case, no accents, `-`.
+
+### 31.3 Sources (additive migration 0021_marketing.sql)
+- `marketing_touches` (`kind regisztracio|visszahivas`, `user_id`, `client_id`, `callback_request_id`, `channel`,
+  `utm_source…utm_term`, `referrer_domain`, `landing_path`, `platform`, `entry_source`, `entry_goal`, `inherited`, `click_ids jsonb`,
+  `consent_id`, `created_at`). One `regisztracio` row per sign-up (password, Google, Apple; `createClientAccount`); one
+  `visszahivas` row per client callback request (its own source when the request carries `marketing`, else copied from the
+  registration, `inherited = true`). The migration back-fills one row per existing `signup_attribution` (channel from utm_source).
+- Body fields (all optional, old clients unaffected): `utm{…, term}`, `forras{hivatkozo, erkezes}`, `entry{forras, cel}`,
+  `hirdetes{hid, gclid, gbraid, wbraid, fbclid}` on `/auth/register`, `/auth/google`, `/auth/apple`; `marketing{utm, hivatkozo,
+  erkezes}` on `POST /client/callbacks`. `click_ids` and `consent_id` are stored ONLY with ads on and a granted, unlinked,
+  current-version, at most 7-day-old landing decision (`hid`).
+- Landing → app: `js/meres.js` appends `utm_*`, `hivatkozo` (referring domain; our own site dropped), `erkezes` (path) to every
+  app link except `/jogi/*`; nothing is stored on the device. App: `lib/forras.ts` reads them (web) and sends them; `belepes` →
+  `regisztracio` keeps them; `?cel=visszahivas` → after the code (or a new Google/Apple account) the callback sheet opens.
+- GDPR: export `forras_reszletek.json`; erasure / anonymisation keeps only `channel` (+ kind, time); ad consents are withdrawn.
+
+### 31.4 The Marketing tab (admin only)
+`GET /admin/marketing?nap=1|7|30|90` or `?tol=&ig=` (at most 366 days) → `MarketingSummary` (shared/src/marketing.ts): visits,
+channels, devices (Telefon / Gép / Tablet), countries, cities, page events (Umami); funnel total + per channel (registered =
+confirmed e-mail; data done; contract accepted; ever paid; cohort = sign-up day); money now per channel (per-subscription
+`effectiveMonthlyAmount`, as the console counts; `dashboardMrrHuf` + a note when it differs from /admin/dashboard); campaigns
+(utm groups + Umami campaign visits); callbacks per channel; ads (state, typed-in spend, cost per registration / paying,
+outbox counts). `is_test` clients excluded. `POST /admin/marketing/koltes`, `POST /admin/marketing/koltes/:id/visszavonas`
+(revoke, never delete; table `ad_spend`). Panel `/admin/marketing` (menu "Marketing" before "Honnan jöttek"), tabs: Látogatók és
+tölcsér · Kampányok és linkek (link builder: `campaignLink()` on `landingUrl`) · Pénz forrásonként · Hirdetések. Links:
+Áttekintés funnel → Marketing, Honnan jöttek → Marketing, Marketing → Előfizetések / Visszahívások / Ajánlókódok.
+
+### 31.5 Landing (kod/landing)
+`meres.json` (public: `umamiWebsiteId`, `domains`, `doNotTrack`, `hirdetes`). `<script defer src="js/meres.js">` always; the
+Umami tag only with a website id (`data-before-send="adozzStatSzuro"`: utm_* only, the referrer cut to its origin; the channel
+→ `window.umamiConfig.tag`). Events: `data-umami-event` regisztralok / belepes / visszahivas / email-iras; `#arak` seen once →
+`arak-lathato`. Footer: Sütik link; the sentence follows the build ("nem követ" only without statistics); the visitor's off
+switch (`localStorage umami.disabled`, written only on click). CSP `script-src 'self'` (proxy `kezjegy_csp_landing`). New CTA
+"Visszahívást kérek" → `/regisztracio?cel=visszahivas`, with the one allowed time sentence. Test: `landing/meres.test.mjs`.
+
+### 31.6 Ad measurement – prepared, OFF
+- Config: `ADS_TRACKING_ENABLED` (default false; true without any provider = off), `ADS_NOTICE_VERSION`, `ADS_SEND_PHONE`,
+  `META_PIXEL_ID`, `META_CAPI_TOKEN`, `META_TEST_EVENT_CODE`, `META_GRAPH_VERSION` (v27.0), `GOOGLE_TAG_ID` (AW-),
+  `GOOGLE_ADS_CUSTOMER_ID`, `GOOGLE_ADS_LOGIN_CUSTOMER_ID`, `GOOGLE_CONVERSION_REGISTRATION`, `GOOGLE_CONVERSION_PAYMENT`,
+  `GOOGLE_SERVICE_ACCOUNT_FILE` (`/run/hirdetes/google.json`, bind mount `../hirdetes`), `GOOGLE_DM_VALIDATE_ONLY`. Off →
+  `cfg.ads.meta / google = null` whatever keys are in the file.
+- Public: `GET /public/marketing-config` (`{ads:false}` / the public ids), `POST /public/hozzajarulas` (404 when off; stores granted
+  decisions only, in `marketing_consents`; `previous` withdraws). Account: `GET /me/hirdetesi-hozzajarulas`, `POST …/visszavonas`.
+- Outbox `ad_conversion_events` (unique provider + event_id `reg_<userId>` / `fiz_<paymentId>`), written in the fiók-kész
+  transaction and the first-payment (`elso_havi`) transaction, only with ads on + a consent; worker job `ad_conversions` every
+  5 minutes (registered only when on) checks the consent again and drops withdrawn / too old rows. Payload whitelist: hashed
+  e-mail (Meta and Google normalisation), hashed phone only with `ADS_SEND_PHONE`, value, click ids, fbc, the event source URL,
+  the sign-up User-Agent [TULAJ/JOGI]; never tax data, a name or an address. Meta Conversions API (token in the body, never in
+  the URL), Google Data Manager API (service-account JWT, `events:ingest`, consent `adUserData` granted, `adPersonalization` per
+  choice).
+- Landing ad build (`hirdetes: true`): banner ("Elfogadom" / "Elutasítom" equal, "Beállítások" per partner, all off by default),
+  choice cookie `kj_hozzajarulas` (180 days, jogi/suti.md), the Meta / Google scripts only after acceptance (basic consent mode); the links then carry
+  `hid` + click ids. CSP snippet `kezjegy_csp_landing_hirdetes` prepared in adozz.caddy (not imported). Owner script
+  `konyvelo_app/hirdetes_kulcsok.ps1` (never run by a builder).
+
+### 31.7 Legal doc type `suti`
+`LEGAL_DOC_TYPES` + `'suti'` (enum value in `0020_marketing_enumok.sql`), title "Süti-tájékoztató"; never in `consentsNeeded`.
+Until `jogi/index.json` lists `suti.md`, `/legal/suti` serves the marked placeholder. Links: app registration ("Sütik"),
+Fiók → Adataim ("Süti-tájékoztató"), landing footer ("Sütik").

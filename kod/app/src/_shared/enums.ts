@@ -234,6 +234,8 @@ export const LEGAL_DOC_TYPES = [
   'app_szovegek',
   // SPEC §29.1.3 (DB: ADD VALUE in 0017_k29_enumok.sql): the card consent of the Stripe flow.
   'kartyas_fizetes',
+  // SPEC §31.7 (DB: ADD VALUE in 0020_marketing_enumok.sql): the cookie notice (jogi/suti.md); information only, nobody accepts it.
+  'suti',
 ] as const;
 export type LegalDocType = (typeof LEGAL_DOC_TYPES)[number];
 

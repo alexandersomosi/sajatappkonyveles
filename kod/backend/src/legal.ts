@@ -34,6 +34,8 @@ const TITLES: Record<LegalDocType, string> = {
   app_szovegek: 'Szövegek az appban',
   // SPEC §29.1.3 (jogi/kartyas_fizetes.md, B3)
   kartyas_fizetes: 'Kártyás fizetés – engedély',
+  // SPEC §31.7 (jogi/suti.md): sütik és hasonló technológiák
+  suti: 'Süti-tájékoztató',
 };
 
 /** The documents a client must accept in the `szerzodes` onboarding step. */

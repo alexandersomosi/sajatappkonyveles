@@ -186,10 +186,14 @@ export interface RegisterInput {
   firstName: string;
   lastName: string;
   referralCode?: string;
-  utm?: { source?: string; medium?: string; campaign?: string; content?: string };
+  utm?: { source?: string; medium?: string; campaign?: string; content?: string; term?: string };
   platform: 'web' | 'android' | 'ios';
   /** SPEC §28.K.8: where the visitor came from (`?forras=kalkulator`) and whether he asked for a callback (`?cel=visszahivas`). */
   entry?: { forras?: string; cel?: 'visszahivas' };
+  /** SPEC §31.3: the referring domain and the landing path the landing passed on (`?hivatkozo=…&erkezes=…`). */
+  forras?: { hivatkozo?: string; erkezes?: string };
+  /** SPEC §31.6: the landing's ad-consent decision id + click ids – the server uses them ONLY with ad measurement on. */
+  hirdetes?: { hid?: string; gclid?: string; gbraid?: string; wbraid?: string; fbclid?: string };
 }
 /**
  * k7b (SPEC §27.11 S16): POST /auth/register answers 202 with this – the same for a new and an existing address, and
@@ -1025,6 +1029,8 @@ export interface CallbackCreateInput {
   source: CallbackSource;
   /** Also store this number in the profile (default false). */
   savePhoneToProfile?: boolean;
+  /** SPEC §31.3: where this request came from (a campaign link on the web); omitted = the registration's source. */
+  marketing?: { utm?: { source?: string; medium?: string; campaign?: string; content?: string; term?: string }; hivatkozo?: string; erkezes?: string };
 }
 export interface CallbackUpdateInput {
   phone?: string;

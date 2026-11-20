@@ -1,7 +1,7 @@
 // A „Mit kapsz” ragadós bemutató ellenőrző képei: node _eszkoz/bemutato_kep.cjs <kimeneti előtag> <szélesség> <magasság> <dpr> [csendes]
 // Mozgással (vagy „csendes” = prefers-reduced-motion) végiggörget a szakaszon, és képernyőképet készít:
-//   _00 = a szakasz eleje (a színpad épp beér), _01…_07 = lépésenként (a rétegek végállapotában, 3,4 s várakozás után),
-//   _01a…_07a = ugyanott 0,6 s-nál (mozgás közben), _08 = a szakasz vége (a színpad elenged).
+//   _00 = a szakasz eleje (a színpad épp beér), _01…_08 = lépésenként (a rétegek végállapotában, 2,8 s várakozás után;
+//   3. kör: _08 = a „Gépen is ugyanez” zárólépés), _01a…_08a = ugyanott 0,6 s-nál (mozgás közben), _vege = a szakasz vége (a színpad elenged).
 // Közben méri: aktív lépés, a telefon és a szöveg helye (a szöveg a képernyőn belül és a telefon alatt/mellett van-e),
 // vízszintes kilógás, JS-hiba. Kimenet: JSON a konzolra; hiba esetén kilépési kód 1.
 const path = require('path'), fs = require('fs');
@@ -44,7 +44,7 @@ const varj = ms => new Promise(r => setTimeout(r, ms));
     celok.push({ nev: String(i + 1).padStart(2, '0') + 'a', y, var: 600, kozben: true });
     celok.push({ nev: String(i + 1).padStart(2, '0'), y, var: 2800 });
   }
-  celok.push({ nev: '08', y: geo.bTop + geo.bH - +H * 0.7, var: 800 });
+  celok.push({ nev: 'vege', y: geo.bTop + geo.bH - +H * 0.7, var: 800 });
   const meres = [];
   let rossz = 0;
   for (const c of celok) {
@@ -67,17 +67,24 @@ const varj = ms => new Promise(r => setTimeout(r, ms));
         akt, tel: r(tel), szoveg: szLathato ? r(sz) : null, fej: Math.round(fej), vh, vw,
         kilog: document.documentElement.scrollWidth > vw,
         fut: !!document.querySelector('.szinpad-tarto .kepernyo.aktiv.fut'),
+        gepMod: !!document.querySelector('.szinpad.gep-mod'),
+        bongeszo: (() => { const g = document.querySelector('.szinpad-bongeszo'); if (!g) return null; const q = g.getBoundingClientRect(); return [Math.round(q.left), Math.round(q.top), Math.round(q.right), Math.round(q.bottom), getComputedStyle(g).opacity]; })(),
         toltes: [...document.querySelectorAll('.halado i')].map(i => i.style.transform.replace(/scaleX\(|\)/g, '')).join(' '),
         szovegCim: sz ? sz.querySelector('h3').textContent : null,
       };
     });
     const gond = [];
     if (m.kilog) gond.push('vízszintes kilógás');
-    if (m.szoveg && /^0[1-7]/.test(c.nev)) {
+    if (m.szoveg && /^(?!00)\d\d/.test(c.nev)) {
       if (m.szoveg[3] > m.vh + 1) gond.push('a szöveg kilóg alul');
       if (m.tel && m.szoveg[1] < m.tel[3] - 1) gond.push('a szöveg a telefon alá csúszik');
     }
-    if (m.tel && /^0[1-7]$/.test(c.nev) && (m.tel[1] < m.fej - 1)) gond.push('a telefon a fejléc alá csúszik');
+    if (m.tel && /^(?!00)\d\d$/.test(c.nev) && (m.tel[1] < m.fej - 1)) gond.push('a telefon a fejléc alá csúszik');
+    if (m.bongeszo && m.gepMod && /^(?!00)\d\d$/.test(c.nev)) {
+      if (m.bongeszo[1] < m.fej - 1) gond.push('a böngészőablak a fejléc alá csúszik');
+      if (m.szoveg && m.szoveg[1] < m.bongeszo[3] - 1 && m.szoveg[0] < m.bongeszo[2]) gond.push('a szöveg a böngészőablak alá csúszik');
+      if (m.bongeszo[0] < -1 || m.bongeszo[2] > m.vw + 1) gond.push('a böngészőablak kilóg oldalt');
+    }
     if (gond.length) rossz++;
     meres.push({ kep: c.nev, ...m, gond });
   }

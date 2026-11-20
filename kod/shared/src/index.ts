@@ -7,3 +7,5 @@ export type * from './api';
 export * from './k29';
 export * from './k29f';
 export * from './k29g';
+// SPEC §31 (marketing): the source rules shared by the landing, the app, the backend and the panel.
+export * from './marketing';
