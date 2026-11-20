@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Bevételi kimutatás</title>
+<link rel="stylesheet" href="v2.css">
+<style>
+.tb{display:grid;grid-template-columns:1fr 56px 112px;gap:6px;padding:8px 0;font-size:15px;border-top:1px solid var(--vonal);white-space:nowrap}
+.tb span:nth-child(2){text-align:right;color:var(--szurke)} .tb span:nth-child(3){text-align:right;font-weight:650}
+.tb.fej-s{border-top:0;font-size:13.5px;font-weight:650;color:var(--szurke)}
+.tb.ossz{border-top:1.5px solid var(--keret);font-weight:750;font-size:16px;padding-top:12px} .tb.ossz span:nth-child(3){font-weight:800}
+</style>
+</head>
+<body>
+<script src="v2.js"></script>
+<header class="fej kis">
+  <div class="allapot"></div>
+  <div class="vissza-sor"><button class="vissza" aria-label="Vissza"><svg><use href="#i-vissza"/></svg></button><span class="logo jobb" data-meret="20"></span></div>
+  <h1>Bevételi kimutatás</h1>
+  <p>A bevételeid havonta, PDF-ben. Bank, lízing, albérlet szokta kérni.</p>
+</header>
+<main class="lap dokkal navval">
+  <div class="szakasz-cim">Melyik időszak?</div>
+  <section class="k blokk">
+    <div class="szegmens" style="margin-bottom:0"><span class="be">Idei (2026)</span><span>2025</span><span>Más időszak</span></div>
+  </section>
+  <div class="szakasz-cim">Ez lesz benne</div>
+  <p class="megj" style="margin-top:-2px">Átalányadózó egyéni vállalkozó</p>
+  <section class="k blokk">
+    <div class="tb fej-s"><span>Hónap</span><span>Számla</span><span>Bevétel</span></div>
+    <div class="tb"><span>Január</span><span>2</span><span>1&nbsp;380&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Február</span><span>2</span><span>1&nbsp;420&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Március</span><span>3</span><span>1&nbsp;510&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Április</span><span>2</span><span>1&nbsp;450&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Május</span><span>3</span><span>1&nbsp;600&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Június</span><span>1</span><span>1&nbsp;592&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Július</span><span>1</span><span>1&nbsp;760&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Augusztus</span><span>1</span><span>1&nbsp;510&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Szeptember</span><span>2</span><span>1&nbsp;690&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>Október</span><span>1</span><span>1&nbsp;840&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb"><span>November*</span><span>1</span><span>418&nbsp;000&nbsp;Ft</span></div>
+    <div class="tb ossz"><span>Összesen</span><span></span><span>16&nbsp;170&nbsp;000&nbsp;Ft</span></div>
+    <p class="megj" style="margin:6px 0 0">* Becslés: a hónap még nem zárult le.</p>
+  </section>
+  <div class="szakasz-cim">Ellenőrzés</div>
+  <section class="k">
+    <div class="tile t-zold"><svg><use href="#i-pajzs"/></svg></div>
+    <div class="tart">
+      <p style="margin-top:0">A könyvelőd még nem ellenőrizte ezt a változatot.</p>
+      <button class="gomb-masod">Kérem, hogy Bence ellenőrizze</button>
+      <button class="gomb-masod"><svg><use href="#i-dosszie"/></svg>Mentés a dossziéba</button>
+    </div>
+  </section>
+  <div class="doboz info"><svg><use href="#i-info"/></svg><span>Nem hivatalos NAV-igazolás. A számláid és az általad megadott egyéb bevételek alapján készül.</span></div>
+  <a class="link" href="#" style="margin:0 6px">Hivatalos jövedelemigazolást kérek<svg class="chev"><use href="#i-chev"/></svg></a>
+</main>
+<div class="dokk navfelett"><button class="gomb"><svg><use href="#i-letolt"/></svg>Idei kimutatás letöltése</button></div>
+<nav class="nav dokk-alatt" data-aktiv="fooldal"></nav>
+</body>
+</html>

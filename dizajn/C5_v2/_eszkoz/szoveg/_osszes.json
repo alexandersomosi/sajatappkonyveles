@@ -1,0 +1,3196 @@
+[
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "Bence ,",
+    "javitott": "Bence,",
+    "ok": "A vessző előtt nem állhat szóköz.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Kovács Bence , a könyvelőd",
+    "pontos": true
+   },
+   {
+    "sor": 16,
+    "eredeti": "számlázhatsz",
+    "javitott": "értékben számlázhatsz",
+    "ok": "A felirat az előző sorban lévő összegre utal („Még 3 685 000 Ft”), így ragozatlanul vagy kiegészítés nélkül nyelvtanilag hiányos.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "számlázhatsz ÁFA nélkül. Ennyi fér még az alanyi ÁFA-mentességbe.",
+    "pontos": true
+   },
+   {
+    "sor": 20,
+    "eredeti": "bevételed jött be",
+    "javitott": "bevételed volt",
+    "ok": "A „bevételed jött be” kifejezés zavaró szóismétlés (tautológia); a „bevételed volt” természetesebb.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "bevételed jött be idén eddig. Adó és járulék után kb. 14 527 000 Ft maradt neked. Ha így folytatod, év végéig kb. 19 400 000 Ft lesz a bevételed.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "01_fooldal",
+  "usage": {
+   "prompt_tokens": 1088,
+   "completion_tokens": 3087,
+   "total_tokens": 4175,
+   "cost": 0.01239225,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.01239225,
+    "upstream_inference_prompt_cost": 0.000816,
+    "upstream_inference_completions_cost": 0.01157625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2876,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 13,
+    "eredeti": "bekötünk.",
+    "javitott": "kész is vagy.",
+    "ok": "A „bekötünk” kifejezést közművekre vagy technikai integrációkra használjuk, emberekre nem szokás mondani. Természetesebb és barátságosabb a „Pár perc, és kész is vagy.” vagy „Pár perc, és kezdhetünk.” megfogalmazás.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Pár perc, és bekötünk.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "10_belepes",
+  "usage": {
+   "prompt_tokens": 735,
+   "completion_tokens": 1032,
+   "total_tokens": 1767,
+   "cost": 0.00442125,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00442125,
+    "upstream_inference_prompt_cost": 0.00055125,
+    "upstream_inference_completions_cost": 0.00387
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 889,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "11_regisztracio",
+  "usage": {
+   "prompt_tokens": 868,
+   "completion_tokens": 680,
+   "total_tokens": 1548,
+   "cost": 0.003201,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.003201,
+    "upstream_inference_prompt_cost": 0.000651,
+    "upstream_inference_completions_cost": 0.00255
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 673,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "12_jelszo_elfelejtve",
+  "usage": {
+   "prompt_tokens": 694,
+   "completion_tokens": 872,
+   "total_tokens": 1566,
+   "cost": 0.0037905,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0037905,
+    "upstream_inference_prompt_cost": 0.0005205,
+    "upstream_inference_completions_cost": 0.00327
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 865,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 8,
+    "eredeti": "levélszemét mappát",
+    "javitott": "levélszemétmappát",
+    "ok": "Összetett szó, a szótagszámlálási szabály alapján egybeírandó.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Nem jött meg? Nézd meg a levélszemét mappát is.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "13_jelszo_uj",
+  "usage": {
+   "prompt_tokens": 739,
+   "completion_tokens": 1981,
+   "total_tokens": 2720,
+   "cost": 0.007983,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.007983,
+    "upstream_inference_prompt_cost": 0.00055425,
+    "upstream_inference_completions_cost": 0.00742875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1882,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 6,
+    "eredeti": "tartalék kód",
+    "javitott": "tartalékkód",
+    "ok": "A tartalékkód összetett szó, ezért egybeírandó.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Nincs nálam a telefonom: tartalék kód",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "14_ketlepcsos_belepes",
+  "usage": {
+   "prompt_tokens": 689,
+   "completion_tokens": 965,
+   "total_tokens": 1654,
+   "cost": 0.0041355,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0041355,
+    "upstream_inference_prompt_cost": 0.00051675,
+    "upstream_inference_completions_cost": 0.00361875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 909,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "az e-mail-címed.",
+    "javitott": "az e-mail-címed!",
+    "ok": "Felszólító mondat („Erősítsd meg az e-mail-címed!”), ezért a végére felkiáltójel illik pont helyett.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "az e-mail-címed.",
+    "pontos": true
+   },
+   {
+    "sor": 4,
+    "eredeti": "6 jegyű",
+    "javitott": "6-jegyű",
+    "ok": "Ha a szóösszetétel előtagja számjegy, kötőjellel kapcsoljuk az utótaghoz (vagy betűvel kiírva: hatjegyű).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Küldtünk egy 6 jegyű kódot ide: szabo.peter@pelda.hu",
+    "pontos": true
+   },
+   {
+    "sor": 7,
+    "eredeti": "levélszemét mappát",
+    "javitott": "levélszemét- (vagy spam-) mappát",
+    "ok": "Összetett szó, különírva helytelen; ráadásul a legtöbb levelezőben „Spam” néven szerepel, így érdemes azt is említeni.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Nem jött meg? Nézd meg a levélszemét mappát is. 42 másodperc múlva újat kérhetsz.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "15_email_megerosites",
+  "usage": {
+   "prompt_tokens": 739,
+   "completion_tokens": 1377,
+   "total_tokens": 2116,
+   "cost": 0.005718,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.005718,
+    "upstream_inference_prompt_cost": 0.00055425,
+    "upstream_inference_completions_cost": 0.00516375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1052,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "16_nem_talalhato",
+  "usage": {
+   "prompt_tokens": 665,
+   "completion_tokens": 337,
+   "total_tokens": 1002,
+   "cost": 0.0017625,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0017625,
+    "upstream_inference_prompt_cost": 0.00049875,
+    "upstream_inference_completions_cost": 0.00126375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 330,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "lépéseidet",
+    "javitott": "adataidat",
+    "ok": "A „lépések betöltése” idegen, nem természetes szóhasználat (angol tükörfordítás), magyarul inkább az adatokat vagy az eddigi folyamatot töltjük be.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Betöltjük a lépéseidet",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "20_bevezeto",
+  "usage": {
+   "prompt_tokens": 663,
+   "completion_tokens": 1622,
+   "total_tokens": 2285,
+   "cost": 0.00657975,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00657975,
+    "upstream_inference_prompt_cost": 0.00049725,
+    "upstream_inference_completions_cost": 0.0060825
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1540,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 1,
+    "eredeti": "Szia Péter!",
+    "javitott": "Szia, Péter!",
+    "ok": "A köszönés és a megszólított név közé vessző szükséges.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Szia Péter!",
+    "pontos": true
+   },
+   {
+    "sor": 6,
+    "eredeti": "az appban írsz",
+    "javitott": "az appban tudsz írni",
+    "ok": "Funkcióleíró listaelemként a sima kijelentő jelen idő kissé rideg és idegenes hatású, természetesebb a lehetőség kifejezése.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "A könyvelődnek az appban írsz",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "21_udv",
+  "usage": {
+   "prompt_tokens": 729,
+   "completion_tokens": 1298,
+   "total_tokens": 2027,
+   "cost": 0.00541425,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00541425,
+    "upstream_inference_prompt_cost": 0.00054675,
+    "upstream_inference_completions_cost": 0.0048675
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1109,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 5,
+    "eredeti": "engedély a NAV-nál",
+    "javitott": "meghatalmazás a NAV-nál",
+    "ok": "A NAV felületén hivatalosan és a szakmai nyelvben is meghatalmazást adunk a könyvelőnek, nem engedélyt.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Szerződés és engedély a NAV-nál",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "21_udv_b",
+  "usage": {
+   "prompt_tokens": 780,
+   "completion_tokens": 999,
+   "total_tokens": 1779,
+   "cost": 0.00433125,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00433125,
+    "upstream_inference_prompt_cost": 0.000585,
+    "upstream_inference_completions_cost": 0.00374625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 919,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "22_ut",
+  "usage": {
+   "prompt_tokens": 687,
+   "completion_tokens": 328,
+   "total_tokens": 1015,
+   "cost": 0.00174525,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00174525,
+    "upstream_inference_prompt_cost": 0.00051525,
+    "upstream_inference_completions_cost": 0.00123
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 321,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "22_ut_b",
+  "usage": {
+   "prompt_tokens": 723,
+   "completion_tokens": 423,
+   "total_tokens": 1146,
+   "cost": 0.0021285,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0021285,
+    "upstream_inference_prompt_cost": 0.00054225,
+    "upstream_inference_completions_cost": 0.00158625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 416,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "23_adoszam",
+  "usage": {
+   "prompt_tokens": 806,
+   "completion_tokens": 517,
+   "total_tokens": 1323,
+   "cost": 0.00254325,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00254325,
+    "upstream_inference_prompt_cost": 0.0006045,
+    "upstream_inference_completions_cost": 0.00193875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 510,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "23_adoszam_b",
+  "usage": {
+   "prompt_tokens": 669,
+   "completion_tokens": 307,
+   "total_tokens": 976,
+   "cost": 0.001653,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001653,
+    "upstream_inference_prompt_cost": 0.00050175,
+    "upstream_inference_completions_cost": 0.00115125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 300,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "most jóváhagyja",
+    "javitott": "most hagyja jóvá",
+    "ok": "A hangsúlyos „most” időhatározó után az igekötő elválik az igétől, így természetesebb a szórend.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "A NAV most jóváhagyja a meghatalmazást",
+    "pontos": true
+   },
+   {
+    "sor": 8,
+    "eredeti": "A kártyád megadása",
+    "javitott": "bankkártya megadása",
+    "ok": "Kettőspont után nem indokolt a nagy kezdőbetű és a felesleges névelő; gombfeliraton a pontosabb „bankkártya megadása” természetesebb.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Tovább: A kártyád megadása",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "24_var",
+  "usage": {
+   "prompt_tokens": 699,
+   "completion_tokens": 1295,
+   "total_tokens": 1994,
+   "cost": 0.0053805,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0053805,
+    "upstream_inference_prompt_cost": 0.00052425,
+    "upstream_inference_completions_cost": 0.00485625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1074,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "25_kesz",
+  "usage": {
+   "prompt_tokens": 745,
+   "completion_tokens": 974,
+   "total_tokens": 1719,
+   "cost": 0.00421125,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00421125,
+    "upstream_inference_prompt_cost": 0.00055875,
+    "upstream_inference_completions_cost": 0.0036525
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 967,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "Bence ,",
+    "javitott": "Bence,",
+    "ok": "Felesleges szóköz a vessző előtt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Kovács Bence , a könyvelőd",
+    "pontos": true
+   },
+   {
+    "sor": 33,
+    "eredeti": "bemutató videót",
+    "javitott": "bemutatóvideót",
+    "ok": "Összetett szóként egybeírandó (hasonlóan az oktatóvideó, reklámvideó szavakhoz).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Nézd meg a bemutató videót (1:47)",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "30_bekotes",
+  "usage": {
+   "prompt_tokens": 1059,
+   "completion_tokens": 1111,
+   "total_tokens": 2170,
+   "cost": 0.0049605,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0049605,
+    "upstream_inference_prompt_cost": 0.00079425,
+    "upstream_inference_completions_cost": 0.00416625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 942,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "1. lap a 3-ból",
+    "javitott": "1. lépés a 3-ból",
+    "ok": "Mobilappban egy többoldalas űrlap szakaszait nem lapnak, hanem lépésnek (vagy oldalnak) szoktuk nevezni.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "1. lap a 3-ból. Ezekkel az adatokkal jelentkezünk a NAV-nál.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "31_bekotes_adatok",
+  "usage": {
+   "prompt_tokens": 839,
+   "completion_tokens": 872,
+   "total_tokens": 1711,
+   "cost": 0.00389925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00389925,
+    "upstream_inference_prompt_cost": 0.00062925,
+    "upstream_inference_completions_cost": 0.00327
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 757,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "32_bekotes_alkalmazottak",
+  "usage": {
+   "prompt_tokens": 808,
+   "completion_tokens": 384,
+   "total_tokens": 1192,
+   "cost": 0.002046,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.002046,
+    "upstream_inference_prompt_cost": 0.000606,
+    "upstream_inference_completions_cost": 0.00144
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 377,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "azonosítasz",
+    "javitott": "azonosítod magad",
+    "ok": "Az 'azonosít' tárgyas ige; itt a felhasználó önmagát azonosítja, ezért visszaható alak szükséges.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Melyik igazolvánnyal azonosítasz?",
+    "pontos": true
+   },
+   {
+    "sor": 8,
+    "eredeti": "Kártya formátumú",
+    "javitott": "Kártyaformátumú",
+    "ok": "Összetett melléknévként egybeírandó.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Kártya formátumú jogosítvány",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "33_bekotes_azonositas",
+  "usage": {
+   "prompt_tokens": 1323,
+   "completion_tokens": 1219,
+   "total_tokens": 2542,
+   "cost": 0.0055635,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0055635,
+    "upstream_inference_prompt_cost": 0.00099225,
+    "upstream_inference_completions_cost": 0.00457125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1037,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "34_bekotes_elofizetes",
+  "usage": {
+   "prompt_tokens": 988,
+   "completion_tokens": 1028,
+   "total_tokens": 2016,
+   "cost": 0.004596,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.004596,
+    "upstream_inference_prompt_cost": 0.000741,
+    "upstream_inference_completions_cost": 0.003855
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1020,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "35_bekotes_idopont",
+  "usage": {
+   "prompt_tokens": 772,
+   "completion_tokens": 632,
+   "total_tokens": 1404,
+   "cost": 0.002949,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.002949,
+    "upstream_inference_prompt_cost": 0.000579,
+    "upstream_inference_completions_cost": 0.00237
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 625,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 12,
+    "eredeti": "Általános Szerződési Feltételeket",
+    "javitott": "általános szerződési feltételeket",
+    "ok": "A szerződések, szabályzatok megnevezése a magyar helyesírás szerint köznév, folyó szövegben kisbetűvel írandó (a csupa nagy kezdőbetű angol hatást tükröz).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Elolvastam és elfogadom az Általános Szerződési Feltételeket, a kiemelt feltételekkel együtt.",
+    "pontos": true
+   },
+   {
+    "sor": 14,
+    "eredeti": "Milyen adatodat",
+    "javitott": "Milyen adataidat",
+    "ok": "Személyes adatok összefoglaló említésekor a többes számú alak a természetes magyar nyelvhasználat.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Milyen adatodat, miért és meddig tároljuk, és mit kérhetsz.",
+    "pontos": true
+   },
+   {
+    "sor": 17,
+    "eredeti": "Adatkezelési tájékoztatót",
+    "javitott": "adatkezelési tájékoztatót",
+    "ok": "Folyó szövegben, mondat belsejében kis kezdőbetűvel írandó.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Elolvastam az Adatkezelési tájékoztatót.",
+    "pontos": true
+   },
+   {
+    "sor": 22,
+    "eredeti": "Megbízási szerződést",
+    "javitott": "megbízási szerződést",
+    "ok": "Mondat belsejében kis kezdőbetűvel írandó köznév (a 23. sorban is helyesen kisbetűvel szerepel).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Elfogadom a Megbízási szerződést.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "36_bekotes_szerzodes",
+  "usage": {
+   "prompt_tokens": 1065,
+   "completion_tokens": 1952,
+   "total_tokens": 3017,
+   "cost": 0.00811875,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00811875,
+    "upstream_inference_prompt_cost": 0.00079875,
+    "upstream_inference_completions_cost": 0.00732
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1535,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "40_meghatalmazas",
+  "usage": {
+   "prompt_tokens": 887,
+   "completion_tokens": 608,
+   "total_tokens": 1495,
+   "cost": 0.00294525,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00294525,
+    "upstream_inference_prompt_cost": 0.00066525,
+    "upstream_inference_completions_cost": 0.00228
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 601,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "40_meghatalmazas_b",
+  "usage": {
+   "prompt_tokens": 894,
+   "completion_tokens": 795,
+   "total_tokens": 1689,
+   "cost": 0.00365175,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00365175,
+    "upstream_inference_prompt_cost": 0.0006705,
+    "upstream_inference_completions_cost": 0.00298125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 788,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "41_meghatalmazas_jovahagyas",
+  "usage": {
+   "prompt_tokens": 935,
+   "completion_tokens": 925,
+   "total_tokens": 1860,
+   "cost": 0.00417,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00417,
+    "upstream_inference_prompt_cost": 0.00070125,
+    "upstream_inference_completions_cost": 0.00346875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 918,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 11,
+    "eredeti": "Mutasd mind",
+    "javitott": "Mutasd mindet",
+    "ok": "Tárgyrag hiánya: az angol „Show all” tükörfordítása, magyarul „Mutasd mindet” vagy „Összes mutatása”.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Mutasd mind",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "42_vallalkozas",
+  "usage": {
+   "prompt_tokens": 958,
+   "completion_tokens": 932,
+   "total_tokens": 1890,
+   "cost": 0.0042135,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0042135,
+    "upstream_inference_prompt_cost": 0.0007185,
+    "upstream_inference_completions_cost": 0.003495
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 858,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 13,
+    "eredeti": "Mutasd mind",
+    "javitott": "Mutasd mindet",
+    "ok": "A tárgyas ragozású igéhez a névmás tárgyragos alakja illik ('mindet' vagy 'az összeset').",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Mutasd mind",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "42_vallalkozas_b",
+  "usage": {
+   "prompt_tokens": 933,
+   "completion_tokens": 735,
+   "total_tokens": 1668,
+   "cost": 0.003456,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.003456,
+    "upstream_inference_prompt_cost": 0.00069975,
+    "upstream_inference_completions_cost": 0.00275625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 665,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "43_vallalkozas_adatlap",
+  "usage": {
+   "prompt_tokens": 829,
+   "completion_tokens": 1129,
+   "total_tokens": 1958,
+   "cost": 0.0048555,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0048555,
+    "upstream_inference_prompt_cost": 0.00062175,
+    "upstream_inference_completions_cost": 0.00423375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1122,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "43_vallalkozas_adatlap_b",
+  "usage": {
+   "prompt_tokens": 1022,
+   "completion_tokens": 1352,
+   "total_tokens": 2374,
+   "cost": 0.0058365,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0058365,
+    "upstream_inference_prompt_cost": 0.0007665,
+    "upstream_inference_completions_cost": 0.00507
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1344,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 22,
+    "eredeti": "Előre dátumot nem lehet megadni.",
+    "javitott": "Későbbi dátumot nem lehet megadni.",
+    "ok": "Az „előre dátumot” fordulat nem természetes magyar kifejezés; a bejelentésnél jövőbeli (későbbi) kezdőnap nem választható.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "A beküldés napja, várhatóan 2026. november 23. Előre dátumot nem lehet megadni.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "44_vallalkozas_engedely",
+  "usage": {
+   "prompt_tokens": 1129,
+   "completion_tokens": 1515,
+   "total_tokens": 2644,
+   "cost": 0.006528,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.006528,
+    "upstream_inference_prompt_cost": 0.00084675,
+    "upstream_inference_completions_cost": 0.00568125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1416,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 17,
+    "eredeti": "DÁP alkalmazással",
+    "javitott": "DÁP-alkalmazással",
+    "ok": "A csupa nagybetűs mozaikszókhoz kötőjellel kapcsoljuk az összetételi utótagot.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Interneten, a DÁP alkalmazással",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "45_vallalkozas_feltoltes",
+  "usage": {
+   "prompt_tokens": 1082,
+   "completion_tokens": 1291,
+   "total_tokens": 2373,
+   "cost": 0.00565275,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00565275,
+    "upstream_inference_prompt_cost": 0.0008115,
+    "upstream_inference_completions_cost": 0.00484125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1183,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "kamarai tagsággal",
+    "javitott": "regisztrációval",
+    "ok": "A kötelező kamarai nyilvántartásba vétel nem tagság (a tagság önkéntes), ráadásul a képernyő többi részén is regisztráció szerepel.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "A törvény kéri minden új vállalkozótól. Kell hozzá az adószámod. A kamarai tagsággal évi 5 000 Ft kamarai hozzájárulás jár: ezt a kamara kéri, nem mi.",
+    "pontos": true
+   },
+   {
+    "sor": 11,
+    "eredeti": "Főoldalra",
+    "javitott": "főoldalra",
+    "ok": "Köznévként kis kezdőbetűvel írandó.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Vissza a Főoldalra",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "46_vallalkozas_kamara",
+  "usage": {
+   "prompt_tokens": 831,
+   "completion_tokens": 1568,
+   "total_tokens": 2399,
+   "cost": 0.00650325,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00650325,
+    "upstream_inference_prompt_cost": 0.00062325,
+    "upstream_inference_completions_cost": 0.00588
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1430,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 6,
+    "eredeti": "ÁFÁ-t",
+    "javitott": "áfát",
+    "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó (áfát). A csupa nagybetűs mozaikszók toldalékolásakor sem nyújtjuk az utolsó magánhangzót (nem „ÁFÁ-t”, legfeljebb „ÁFA-t” lehetne).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Itt választod ki, hogy nem kell ÁFÁ-t felszámolnod.",
+    "pontos": true
+   },
+   {
+    "sor": 9,
+    "eredeti": "ÁFÁ-t",
+    "javitott": "áfát",
+    "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó; a csupa nagybetűs „ÁFÁ-t” forma helyesírási hiba.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Így nem kell ÁFÁ-t felszámolnod, amíg az éves bevételed 20 millió forint alatt marad (2026).",
+    "pontos": true
+   },
+   {
+    "sor": 11,
+    "eredeti": "Hagyd",
+    "javitott": "Hagyd üresen",
+    "ok": "Önmagában a „Hagyd” csonka és magyartalan; a mező kitöltésére vonatkozó instrukcióként (mint a „Jelöld be”) a „Hagyd üresen” vagy „Hagyd ki” a pontos kifejezés.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Hagyd",
+    "pontos": true
+   },
+   {
+    "sor": 12,
+    "eredeti": "ÁFA-fizetőknek",
+    "javitott": "áfafizetőknek",
+    "ok": "Kisbetűvel írandó összetételként, összhangban a 10. sor „áfafizetési” írásmódjával.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Hagyd üresen. Ez csak az ÁFA-fizetőknek kell.",
+    "pontos": true
+   },
+   {
+    "sor": 19,
+    "eredeti": "ÁFÁ-t",
+    "javitott": "áfát",
+    "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó; a csupa nagybetűs „ÁFÁ-t” forma helyesírási hiba.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Az alanyi ÁFA-mentességet most, a bejelentéssel együtt kell választanod: ha kimarad, idén ÁFÁ-t kell felszámolnod. Ez a legfontosabb pipa.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "47_vallalkozas_utmutato",
+  "usage": {
+   "prompt_tokens": 1069,
+   "completion_tokens": 3914,
+   "total_tokens": 4983,
+   "cost": 0.01547925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.01547925,
+    "upstream_inference_prompt_cost": 0.00080175,
+    "upstream_inference_completions_cost": 0.0146775
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 3347,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "Kovács Bence , a könyvelőd",
+    "javitott": "Kovács Bence, a könyvelőd",
+    "ok": "Felesleges szóköz a vessző előtt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Kovács Bence , a könyvelőd",
+    "pontos": true
+   },
+   {
+    "sor": 14,
+    "eredeti": "bemutató videót",
+    "javitott": "bemutatóvideót",
+    "ok": "A „bemutatóvideó” a „bemutatófilm” mintájára egybeírandó összetett szó.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Nézd meg a bemutató videót (1:47)",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "50_fooldal_indulas",
+  "usage": {
+   "prompt_tokens": 859,
+   "completion_tokens": 1008,
+   "total_tokens": 1867,
+   "cost": 0.00442425,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00442425,
+    "upstream_inference_prompt_cost": 0.00064425,
+    "upstream_inference_completions_cost": 0.00378
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 883,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "Ft ,",
+    "javitott": "Ft,",
+    "ok": "A vessző előtt felesleges szóköz van.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Az idei számláid után most összesen kb. 250 000 Ft , hónapok szerint.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "51_felretesz",
+  "usage": {
+   "prompt_tokens": 1268,
+   "completion_tokens": 876,
+   "total_tokens": 2144,
+   "cost": 0.004236,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.004236,
+    "upstream_inference_prompt_cost": 0.000951,
+    "upstream_inference_completions_cost": 0.003285
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 798,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "A(z)",
+    "javitott": "A",
+    "ok": "A 2026 („kettőezer-huszonhat”) mássalhangzóval kezdődik, a zárójeles névelő gépiessé és igénytelenné teszi a mondatot.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "A(z) 2026. 10. 01.–10. 31. havidíja. Fizesd ki, és minden megy tovább.",
+    "pontos": true
+   },
+   {
+    "sor": 5,
+    "eredeti": "kézzel kell kifizetned",
+    "javitott": "neked kell kifizetned",
+    "ok": "Digitális bankkártyás fizetésnél a „kézzel kifizetni” a „pay manually” pontatlan, magyartalan tükörfordítása.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "A havi alapdíj 19 999 Ft. A legutóbbi levonás nem sikerült, ezért most kézzel kell kifizetned.",
+    "pontos": true
+   },
+   {
+    "sor": 9,
+    "eredeti": "ott adod meg",
+    "javitott": "ott tudod megadni",
+    "ok": "Feltételes mellékmondat után a jelen idejű kijelentés („ott adod meg”) idegenül hangzik; a „tudod megadni” sokkal természetesebb.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "A fizetés a Stripe biztonságos oldalán történik. Ha a bankod megerősítést kér, ott adod meg.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "52_fizesd_ki",
+  "usage": {
+   "prompt_tokens": 861,
+   "completion_tokens": 2250,
+   "total_tokens": 3111,
+   "cost": 0.00908325,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00908325,
+    "upstream_inference_prompt_cost": 0.00064575,
+    "upstream_inference_completions_cost": 0.0084375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1926,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 5,
+    "eredeti": "Feliratkozom a naptáramban",
+    "javitott": "Hozzáadom a naptáramhoz",
+    "ok": "A „feliratkozom a naptáramban” magyartalan tükörfordítás (angol „subscribe in calendar” után), és a határozórag is helytelen. Magyarul a naptárhoz hozzáadunk eseményeket/naptárt, vagy naptárra iratkozunk fel.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Feliratkozom a naptáramban",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "53_hataridok",
+  "usage": {
+   "prompt_tokens": 788,
+   "completion_tokens": 1204,
+   "total_tokens": 1992,
+   "cost": 0.005106,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.005106,
+    "upstream_inference_prompt_cost": 0.000591,
+    "upstream_inference_completions_cost": 0.004515
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1080,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 5,
+    "eredeti": "SZJA-t",
+    "javitott": "szja-t",
+    "ok": "Az adónemek mozaikszavait (szja, áfa, szocho) kisbetűvel írjuk.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "maradt neked. Ennyi marad a bevételedből, miután levontuk az SZJA-t, a TB-járulékot, a szochót és az iparűzési adót. A költségeidet (anyag, telefon, autó) ebből fizeted – ezeket nem látjuk.",
+    "pontos": true
+   },
+   {
+    "sor": 35,
+    "eredeti": "bevételből,",
+    "javitott": "bevételből",
+    "ok": "A mondatrészek közé nem szükséges vessző.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Ha így folytatod: kb. 19 400 000 Ft bevételből, kb. 1 980 000 Ft adóval.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "54_kereset",
+  "usage": {
+   "prompt_tokens": 1180,
+   "completion_tokens": 1167,
+   "total_tokens": 2347,
+   "cost": 0.00526125,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00526125,
+    "upstream_inference_prompt_cost": 0.000885,
+    "upstream_inference_completions_cost": 0.00437625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1002,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "55_kimutatas",
+  "usage": {
+   "prompt_tokens": 1069,
+   "completion_tokens": 450,
+   "total_tokens": 1519,
+   "cost": 0.00248925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00248925,
+    "upstream_inference_prompt_cost": 0.00080175,
+    "upstream_inference_completions_cost": 0.0016875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 443,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 15,
+    "eredeti": "szólt, ha kérdése van.",
+    "javitott": "szól, ha kérdése van.",
+    "ok": "Igeidő-egyeztetési hiba: a múlt idejű „szólt” helyett a feltételes mellékmondathoz jelen idő illik.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Megnézte az októberi számláidat, szólt, ha kérdése van.",
+    "pontos": true
+   },
+   {
+    "sor": 20,
+    "eredeti": "Mikről",
+    "javitott": "Miről",
+    "ok": "A többes számú „Mikről” kissé magyartalan és szokatlan, a választási opciók beállításakor a „Miről kérsz értesítést?” a természetes megfogalmazás.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Mikről kérsz értesítést?",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "56_ertesitesek",
+  "usage": {
+   "prompt_tokens": 869,
+   "completion_tokens": 2011,
+   "total_tokens": 2880,
+   "cost": 0.008193,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.008193,
+    "upstream_inference_prompt_cost": 0.00065175,
+    "upstream_inference_completions_cost": 0.00754125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1786,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "Kezdtél munkaviszonyt?",
+    "javitott": "Lett munkaviszonyod?",
+    "ok": "A magyarban a munkaviszonyt nem „kezdik”, hanem létesítik; közvetlen hangnemben a „lett munkaviszonyod” a legtermészetesebb megfogalmazás.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Kezdtél munkaviszonyt?",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "57_valtozott",
+  "usage": {
+   "prompt_tokens": 834,
+   "completion_tokens": 1309,
+   "total_tokens": 2143,
+   "cost": 0.00553425,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00553425,
+    "upstream_inference_prompt_cost": 0.0006255,
+    "upstream_inference_completions_cost": 0.00490875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1217,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 33,
+    "eredeti": "Szja-előleg bevallás",
+    "javitott": "Szja-előleg-bevallás",
+    "ok": "Helyesírási hiba: a már kötőjellel írt összetételhez az utótag szintén kötőjellel kapcsolódik.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Szja-előleg bevallás, III. negyedév",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "60_dosszie",
+  "usage": {
+   "prompt_tokens": 1066,
+   "completion_tokens": 1764,
+   "total_tokens": 2830,
+   "cost": 0.0074145,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0074145,
+    "upstream_inference_prompt_cost": 0.0007995,
+    "upstream_inference_completions_cost": 0.006615
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1647,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "61_dosszie_honap",
+  "usage": {
+   "prompt_tokens": 854,
+   "completion_tokens": 646,
+   "total_tokens": 1500,
+   "cost": 0.003063,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.003063,
+    "upstream_inference_prompt_cost": 0.0006405,
+    "upstream_inference_completions_cost": 0.0024225
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 639,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "Ft -ot",
+    "javitott": "Ft-ot",
+    "ok": "A toldalékot szóköz nélkül, közvetlenül a kötőjellel kapcsoljuk a rövidítéshez.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "418 000 Ft-os számla – ebből kb. 29 000 Ft -ot tegyél félre.",
+    "pontos": true
+   },
+   {
+    "sor": 12,
+    "eredeti": "ÁFA mentes",
+    "javitott": "ÁFA-mentes",
+    "ok": "A csupa nagybetűs betűszóhoz kötőjellel kapcsolódik az összetételi utótag.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "ÁFA mentes (alanyi adómentes)",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "62_szamla",
+  "usage": {
+   "prompt_tokens": 962,
+   "completion_tokens": 1254,
+   "total_tokens": 2216,
+   "cost": 0.005424,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.005424,
+    "upstream_inference_prompt_cost": 0.0007215,
+    "upstream_inference_completions_cost": 0.0047025
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1072,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "63_tetel",
+  "usage": {
+   "prompt_tokens": 857,
+   "completion_tokens": 1606,
+   "total_tokens": 2463,
+   "cost": 0.00666525,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00666525,
+    "upstream_inference_prompt_cost": 0.00064275,
+    "upstream_inference_completions_cost": 0.0060225
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1599,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "Még nincs oldal Tedd",
+    "javitott": "Még nincs oldal. Tedd",
+    "ok": "Két külön mondat torlódik össze írásjel nélkül.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Még nincs oldal Tedd az iratot sötét alapra, és fotózd le.",
+    "pontos": true
+   },
+   {
+    "sor": 4,
+    "eredeti": "auto",
+    "javitott": "automata",
+    "ok": "Magyar felületen az „automata” forma a helyes és természetes az idegen „auto” helyett.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Vaku: auto",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "64_fotozas",
+  "usage": {
+   "prompt_tokens": 655,
+   "completion_tokens": 723,
+   "total_tokens": 1378,
+   "cost": 0.0032025,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0032025,
+    "upstream_inference_prompt_cost": 0.00049125,
+    "upstream_inference_completions_cost": 0.00271125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 611,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "levél, vagy",
+    "javitott": "levél vagy",
+    "ok": "Egyszerű felsorolásban az utolsó tagot bevezető „vagy” kötőszó elé nem teszünk vesszőt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Papíron van: nyugta, levél, vagy kézzel írt számla, amit nem jelentettél a NAV-nak. Több oldalt is lefotózhatsz.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "65_feltoltes",
+  "usage": {
+   "prompt_tokens": 841,
+   "completion_tokens": 964,
+   "total_tokens": 1805,
+   "cost": 0.00424575,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00424575,
+    "upstream_inference_prompt_cost": 0.00063075,
+    "upstream_inference_completions_cost": 0.003615
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 893,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "Kész igazolást itt letöltheted.",
+    "javitott": "A kész igazolást itt töltheted le.",
+    "ok": "A határozott ragozású ige (\"letöltheted\") határozott névelőt kíván (\"A kész igazolást\"), és az „itt” hangsúlyos határozószó után az igekötő elválik (\"töltheted le\").",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Kész igazolást itt letöltheted.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "66_igazolasok",
+  "usage": {
+   "prompt_tokens": 789,
+   "completion_tokens": 874,
+   "total_tokens": 1663,
+   "cost": 0.00386925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00386925,
+    "upstream_inference_prompt_cost": 0.00059175,
+    "upstream_inference_completions_cost": 0.0032775
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 728,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "csak ebben a fájlban hiteles",
+    "javitott": "csak digitális formában hiteles",
+    "ok": "Az elektronikus igazolás maga a fájl, így nem „a fájlban” hiteles, hanem digitális formában (vagy eredeti fájlként).",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Az elektronikus igazolás csak ebben a fájlban hiteles. Így küldd tovább, ne nyomtatott másolatként.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "67_igazolas",
+  "usage": {
+   "prompt_tokens": 833,
+   "completion_tokens": 1177,
+   "total_tokens": 2010,
+   "cost": 0.0050385,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0050385,
+    "upstream_inference_prompt_cost": 0.00062475,
+    "upstream_inference_completions_cost": 0.00441375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1060,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 10,
+    "eredeti": "áll rólad",
+    "javitott": "szerepel rólad",
+    "ok": "Nyilvántartásban az adatok szerepelnek, nem „állnak”; így természetesebb és pontosabb a megfogalmazás.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Kivonat arról, ami a nyilvántartásban áll rólad, például a tevékenységeid és a székhelyed.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "68_igazolas_uj",
+  "usage": {
+   "prompt_tokens": 861,
+   "completion_tokens": 1567,
+   "total_tokens": 2428,
+   "cost": 0.006522,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.006522,
+    "upstream_inference_prompt_cost": 0.00064575,
+    "upstream_inference_completions_cost": 0.00587625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1493,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "68_igazolas_uj_b",
+  "usage": {
+   "prompt_tokens": 730,
+   "completion_tokens": 744,
+   "total_tokens": 1474,
+   "cost": 0.0033375,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0033375,
+    "upstream_inference_prompt_cost": 0.0005475,
+    "upstream_inference_completions_cost": 0.00279
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 732,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "70_uzenetek",
+  "usage": {
+   "prompt_tokens": 983,
+   "completion_tokens": 1407,
+   "total_tokens": 2390,
+   "cost": 0.0060135,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0060135,
+    "upstream_inference_prompt_cost": 0.00073725,
+    "upstream_inference_completions_cost": 0.00527625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1399,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 8,
+    "eredeti": "A bekötés általában",
+    "javitott": "NAV-bekötés",
+    "ok": "Az „A bekötés általában” értelmetlen témamegjelölés (valószínűleg elgépelés vagy elrontott automatikus javítás, pl. a NAV Online Számla bekötése helyett).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "A bekötés általában NAV-meghatalmazás Igazolványok Előfizetés, fizetés Adó, befizetés Számlák, iratok Változás a vállalkozásomban Valami más",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "71_visszahivas",
+  "usage": {
+   "prompt_tokens": 1058,
+   "completion_tokens": 2753,
+   "total_tokens": 3811,
+   "cost": 0.01111725,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.01111725,
+    "upstream_inference_prompt_cost": 0.0007935,
+    "upstream_inference_completions_cost": 0.01032375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2661,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "71_visszahivas_b",
+  "usage": {
+   "prompt_tokens": 813,
+   "completion_tokens": 638,
+   "total_tokens": 1451,
+   "cost": 0.00300225,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00300225,
+    "upstream_inference_prompt_cost": 0.00060975,
+    "upstream_inference_completions_cost": 0.0023925
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 631,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "72_gyik",
+  "usage": {
+   "prompt_tokens": 933,
+   "completion_tokens": 832,
+   "total_tokens": 1765,
+   "cost": 0.00381975,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00381975,
+    "upstream_inference_prompt_cost": 0.00069975,
+    "upstream_inference_completions_cost": 0.00312
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 825,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "Ezen a számon hívjunk",
+    "javitott": "Ezen a számon hívjunk?",
+    "ok": "A 29. sor mintájára („Mikor hívjunk?”) ez is eldöntendő kérdésként funkcionál a megadott telefonszám felett, így kérdőjel szükséges a végére.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Ezen a számon hívjunk",
+    "pontos": true
+   },
+   {
+    "sor": 25,
+    "eredeti": "Megkapod az adószámodat.",
+    "javitott": "Kiállítja az adószámodat.",
+    "ok": "A folyamatlépések fejlécében mindig a cselekvő szerepel (Csapatunk -> Felhívunk, Kovács Bence -> Beküldi stb.). A „NAV” fejléc alatt az E/2-es „Megkapod” helyett a NAV cselekvése (E/3) a logikus és következetes.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Megkapod az adószámodat.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "73_helyettunk",
+  "usage": {
+   "prompt_tokens": 1254,
+   "completion_tokens": 3323,
+   "total_tokens": 4577,
+   "cost": 0.01340175,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.01340175,
+    "upstream_inference_prompt_cost": 0.0009405,
+    "upstream_inference_completions_cost": 0.01246125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 3049,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "74_keresek",
+  "usage": {
+   "prompt_tokens": 810,
+   "completion_tokens": 597,
+   "total_tokens": 1407,
+   "cost": 0.00284625,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00284625,
+    "upstream_inference_prompt_cost": 0.0006075,
+    "upstream_inference_completions_cost": 0.00223875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 590,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "Bank, hitel, albérlet, ösztöndíj szokta kérni.",
+    "javitott": "Hitelhez, albérlethez, ösztöndíjhoz kérik.",
+    "ok": "A hitel, albérlet és ösztöndíj nem cselekvő alanyok, nem ők kérik az igazolást, hanem ezek intézéséhez kérik (összhangban a 6. és 8. sor párhuzamos szerkezetével).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "A NAV igazolja, mennyi volt a jövedelmed egy évben. Bank, hitel, albérlet, ösztöndíj szokta kérni.",
+    "pontos": true
+   },
+   {
+    "sor": 14,
+    "eredeti": "nem fér egy üzenetbe",
+    "javitott": "nem fér bele egy üzenetbe",
+    "ok": "A kifejezés magyarosan igekötővel használatos ('nem fér bele').",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Bármi, ami nem fér egy üzenetbe.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "75_keres_uj",
+  "usage": {
+   "prompt_tokens": 887,
+   "completion_tokens": 2247,
+   "total_tokens": 3134,
+   "cost": 0.0090915,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0090915,
+    "upstream_inference_prompt_cost": 0.00066525,
+    "upstream_inference_completions_cost": 0.00842625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2054,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "75_keres_uj_b",
+  "usage": {
+   "prompt_tokens": 825,
+   "completion_tokens": 670,
+   "total_tokens": 1495,
+   "cost": 0.00313125,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00313125,
+    "upstream_inference_prompt_cost": 0.00061875,
+    "upstream_inference_completions_cost": 0.0025125
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 663,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 1,
+    "eredeti": "Általános Szerződési Feltételek",
+    "javitott": "Általános szerződési feltételek",
+    "ok": "A magyar helyesírás szerint a címekben csak az első szót kezdjük nagybetűvel (az angol típusú csupa nagy kezdőbetűs írásmód helyett).",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Általános Szerződési Feltételek",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "76_jogi",
+  "usage": {
+   "prompt_tokens": 1023,
+   "completion_tokens": 1172,
+   "total_tokens": 2195,
+   "cost": 0.00516225,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00516225,
+    "upstream_inference_prompt_cost": 0.00076725,
+    "upstream_inference_completions_cost": 0.004395
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1044,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 34,
+    "eredeti": "letöltésük",
+    "javitott": "letöltése",
+    "ok": "Nyelvtani egyeztetési hiba: az egyes számú mellékmondatra („Amit rólad tárolunk”) egyes számú birtokos személyjellel kell utalni.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Amit rólad tárolunk, és a letöltésük",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "80_fiok",
+  "usage": {
+   "prompt_tokens": 1193,
+   "completion_tokens": 1552,
+   "total_tokens": 2745,
+   "cost": 0.00671475,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00671475,
+    "upstream_inference_prompt_cost": 0.00089475,
+    "upstream_inference_completions_cost": 0.00582
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1437,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 17,
+    "eredeti": "holnap",
+    "javitott": "Holnap",
+    "ok": "Mondatkezdő nagybetű hiányzik.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "holnap 14:20-ig tölthető le",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "81_adataim",
+  "usage": {
+   "prompt_tokens": 920,
+   "completion_tokens": 1055,
+   "total_tokens": 1975,
+   "cost": 0.00464625,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00464625,
+    "upstream_inference_prompt_cost": 0.00069,
+    "upstream_inference_completions_cost": 0.00395625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 974,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "egymagában",
+    "javitott": "önmagában",
+    "ok": "Élettelen dologra, fogalomra (itt: jelszóra) az 'önmagában' a természetes kifejezés, az 'egymagában' inkább személyekre használatos.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Nincs bekapcsolva. Ajánljuk: így a jelszavad egymagában nem elég.",
+    "pontos": true
+   },
+   {
+    "sor": 13,
+    "eredeti": "(ez)",
+    "javitott": "(ez az eszköz)",
+    "ok": "Az angol '(this)' közvetlen fordítása magyartalanul és hiányosan hangzik, teljes kifejezéssel sokkal természetesebb.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Adózz app, Android (ez)",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "82_biztonsag",
+  "usage": {
+   "prompt_tokens": 846,
+   "completion_tokens": 1312,
+   "total_tokens": 2158,
+   "cost": 0.0055545,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0055545,
+    "upstream_inference_prompt_cost": 0.0006345,
+    "upstream_inference_completions_cost": 0.00492
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1108,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "83_dijak",
+  "usage": {
+   "prompt_tokens": 1094,
+   "completion_tokens": 1294,
+   "total_tokens": 2388,
+   "cost": 0.005673,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.005673,
+    "upstream_inference_prompt_cost": 0.0008205,
+    "upstream_inference_completions_cost": 0.0048525
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1287,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "84_dijszamlak",
+  "usage": {
+   "prompt_tokens": 840,
+   "completion_tokens": 704,
+   "total_tokens": 1544,
+   "cost": 0.00327,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00327,
+    "upstream_inference_prompt_cost": 0.00063,
+    "upstream_inference_completions_cost": 0.00264
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 697,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 4,
+    "eredeti": "Él",
+    "javitott": "Aktív",
+    "ok": "Előfizetés státuszára magyarul az „Aktív” a természetes kifejezés, az „Él” tükörfordításnak hat.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Állapot Él",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "85_elofizetes",
+  "usage": {
+   "prompt_tokens": 939,
+   "completion_tokens": 1055,
+   "total_tokens": 1994,
+   "cost": 0.0046605,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.0046605,
+    "upstream_inference_prompt_cost": 0.00070425,
+    "upstream_inference_completions_cost": 0.00395625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 986,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 39,
+    "eredeti": "Ha még hiányzik egy hónap iratai közül.",
+    "javitott": "Ha még hiányzik valami egy hónap iratai közül.",
+    "ok": "Hiányzik a mondat alanya, így a kifejezés csonka és befejezetlen.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Ha még hiányzik egy hónap iratai közül.",
+    "pontos": true
+   },
+   {
+    "sor": 52,
+    "eredeti": "Most hív kollégánk",
+    "javitott": "Most hív a kollégánk",
+    "ok": "Határozott névelő nélkül idegenül, magyartalanul hangzik.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Most hív kollégánk",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "86_ertesitesi_beallitasok",
+  "usage": {
+   "prompt_tokens": 1543,
+   "completion_tokens": 2718,
+   "total_tokens": 4261,
+   "cost": 0.01134975,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.01134975,
+    "upstream_inference_prompt_cost": 0.00115725,
+    "upstream_inference_completions_cost": 0.0101925
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2522,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 11,
+    "eredeti": "jelszavadat is megkérjük",
+    "javitott": "jelszavadat is elkérjük",
+    "ok": "Adatot, jelszót nem megkérünk, hanem elkérünk vagy bekérünk (megkérni személyt szoktunk).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Biztonsági okból a mostani jelszavadat is megkérjük, ha több mint 10 perce léptél be.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "87_ketlepcsos",
+  "usage": {
+   "prompt_tokens": 797,
+   "completion_tokens": 1720,
+   "total_tokens": 2517,
+   "cost": 0.00704775,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00704775,
+    "upstream_inference_prompt_cost": 0.00059775,
+    "upstream_inference_completions_cost": 0.00645
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1638,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 3,
+    "eredeti": "tartalék kódot",
+    "javitott": "tartalékkódot",
+    "ok": "A tartalékkód összetett szó, egybeírandó (a tartalékkulcs, tartalékalkatrész mintájára).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Mentsd el ezt a 10 tartalék kódot",
+    "pontos": true
+   },
+   {
+    "sor": 10,
+    "eredeti": "Mind kimásolom",
+    "javitott": "Mindet kimásolom",
+    "ok": "Tárgyas ragozású ige mellett a névmás tárgyragos alakja helyes („mindet”).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Mind kimásolom",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "87_ketlepcsos_b",
+  "usage": {
+   "prompt_tokens": 798,
+   "completion_tokens": 1085,
+   "total_tokens": 1883,
+   "cost": 0.00466725,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00466725,
+    "upstream_inference_prompt_cost": 0.0005985,
+    "upstream_inference_completions_cost": 0.00406875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 893,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 6,
+    "eredeti": "6 jegyű",
+    "javitott": "6-jegyű",
+    "ok": "A „hatjegyű” egybeírt összetétel, ezért számjeggyel írva kötőjellel kapcsolódik: „6-jegyű”.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "6 jegyű kód",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "87_ketlepcsos_c",
+  "usage": {
+   "prompt_tokens": 718,
+   "completion_tokens": 1282,
+   "total_tokens": 2000,
+   "cost": 0.005346,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.005346,
+    "upstream_inference_prompt_cost": 0.0005385,
+    "upstream_inference_completions_cost": 0.0048075
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1204,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "mész",
+    "javitott": "elmész",
+    "ok": "A fiók vagy szolgáltatás elhagyására a befejezett szemléletű, igekötős „elmész” a természetes kifejezés.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Sajnáljuk, hogy mész. Előtte érdemes letöltened az adataidat.",
+    "pontos": true
+   },
+   {
+    "sor": 5,
+    "eredeti": "Stripe-nél",
+    "javitott": "Stripe-nál",
+    "ok": "A Stripe kiejtése [sztrájp], mély hangrendű, ezért a toldalék helyesen: Stripe-nál.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Az előfizetésed megszűnik, a kártyádat a Stripe-nél is töröljük. Többet nem vonunk le.",
+    "pontos": true
+   },
+   {
+    "sor": 6,
+    "eredeti": "meggondolhatod",
+    "javitott": "meggondolhatod magad",
+    "ok": "A döntés megváltoztatását a visszaható „meggondolja magát” kifejezéssel fejezzük ki magyarul.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "30 napig meggondolhatod: ha addig belépsz, visszavonhatod.",
+    "pontos": true
+   },
+   {
+    "sor": 7,
+    "eredeti": "a törvény nem kötelez megőrizni",
+    "javitott": "a törvény szerint nem kötelező megőrizni",
+    "ok": "A „kötelez megőrizni” magyartalan szerkezet; helyesen „nem kötelező megőrizni” vagy „a törvény nem kötelez a megőrzésére”.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "30 nap után mindent törlünk, amit a törvény nem kötelez megőrizni.",
+    "pontos": true
+   },
+   {
+    "sor": 14,
+    "eredeti": "6 jegyű",
+    "javitott": "6-jegyű",
+    "ok": "Számmal írt összetett melléknevekben a számot kötőjellel kapcsoljuk az alapszóhoz (AkH. 119.).",
+    "sulyossag": "hiba",
+    "sor_szoveg": "6 jegyű kód",
+    "pontos": true
+   },
+   {
+    "sor": 15,
+    "eredeti": "Miért mész?",
+    "javitott": "Miért mész el?",
+    "ok": "A távozás megkérdezésekor az igekötős „elmész” a természetes magyar megfogalmazás.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Miért mész? (nem kötelező)",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "88_fiok_torlese",
+  "usage": {
+   "prompt_tokens": 936,
+   "completion_tokens": 2704,
+   "total_tokens": 3640,
+   "cost": 0.010842,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.010842,
+    "upstream_inference_prompt_cost": 0.000702,
+    "upstream_inference_completions_cost": 0.01014
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2119,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "89_elofizetes_eredmeny",
+  "usage": {
+   "prompt_tokens": 728,
+   "completion_tokens": 368,
+   "total_tokens": 1096,
+   "cost": 0.001926,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001926,
+    "upstream_inference_prompt_cost": 0.000546,
+    "upstream_inference_completions_cost": 0.00138
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 361,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "89_elofizetes_eredmeny_b",
+  "usage": {
+   "prompt_tokens": 694,
+   "completion_tokens": 578,
+   "total_tokens": 1272,
+   "cost": 0.002688,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.002688,
+    "upstream_inference_prompt_cost": 0.0005205,
+    "upstream_inference_completions_cost": 0.0021675
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 571,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 17,
+    "eredeti": "munkaviszonyt kezdesz vagy befejezel",
+    "javitott": "munkaviszonyt létesítesz vagy szüntetsz meg",
+    "ok": "A 'munkaviszonyt befejezel' nem természetes magyar szóhasználat; a munkaviszonyt létesíteni vagy megszüntetni szoktuk.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Például munkaviszonyt kezdesz vagy befejezel. Ezt a könyvelőd intézi.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "90_valtozas",
+  "usage": {
+   "prompt_tokens": 980,
+   "completion_tokens": 2313,
+   "total_tokens": 3293,
+   "cost": 0.00940875,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00940875,
+    "upstream_inference_prompt_cost": 0.000735,
+    "upstream_inference_completions_cost": 0.00867375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 2182,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 17,
+    "eredeti": "mielőtt engedélyezel",
+    "javitott": "mielőtt engedélyezed",
+    "ok": "A műveletre utalva határozott ragozás szükséges az alanyi helyett.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Jelöld be mindkét nyilatkozatot, mielőtt engedélyezel.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "91_valtozas_engedely",
+  "usage": {
+   "prompt_tokens": 911,
+   "completion_tokens": 1658,
+   "total_tokens": 2569,
+   "cost": 0.00690075,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00690075,
+    "upstream_inference_prompt_cost": 0.00068325,
+    "upstream_inference_completions_cost": 0.0062175
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1590,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "NAV-nál .",
+    "javitott": "NAV-nál.",
+    "ok": "Felesleges szóköz az írásjel (pont) előtt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Ha költözöl, az új címet be kell jelentened a NAV-nál .",
+    "pontos": true
+   },
+   {
+    "sor": 6,
+    "eredeti": "Ft ,",
+    "javitott": "Ft,",
+    "ok": "Felesleges szóköz az írásjel (vessző) előtt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Díja: 4 999 Ft , előre fizetve.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "92_valtozas_fajta",
+  "usage": {
+   "prompt_tokens": 999,
+   "completion_tokens": 958,
+   "total_tokens": 1957,
+   "cost": 0.00434175,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00434175,
+    "upstream_inference_prompt_cost": 0.00074925,
+    "upstream_inference_completions_cost": 0.0035925
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 805,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 5,
+    "eredeti": "Így megy",
+    "javitott": "Így működik",
+    "ok": "Az „Így megy” ebben a környezetben idegennek hat (az angol „How it works” tükörfordítása); természetesebb magyarul az „Így működik” vagy „Így zajlik”.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Így megy",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "93_valtozas_kerem",
+  "usage": {
+   "prompt_tokens": 934,
+   "completion_tokens": 1213,
+   "total_tokens": 2147,
+   "cost": 0.00524925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00524925,
+    "upstream_inference_prompt_cost": 0.0007005,
+    "upstream_inference_completions_cost": 0.00454875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1092,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "93_valtozas_kerem_b",
+  "usage": {
+   "prompt_tokens": 731,
+   "completion_tokens": 357,
+   "total_tokens": 1088,
+   "cost": 0.001887,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001887,
+    "upstream_inference_prompt_cost": 0.00054825,
+    "upstream_inference_completions_cost": 0.00133875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 350,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 11,
+    "eredeti": "Válaszd",
+    "javitott": "Válaszd ki",
+    "ok": "A legördülő menüknél a befejezett szemléletű „Válaszd ki” a természetes és bevett felületi felirat, ahogy a 6. sorban is szerepel.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Válaszd",
+    "pontos": true
+   },
+   {
+    "sor": 17,
+    "eredeti": "Válaszd",
+    "javitott": "Válaszd ki",
+    "ok": "A legördülő menüknél a befejezett szemléletű „Válaszd ki” a természetes és bevett felületi felirat, ahogy a 6. sorban is szerepel.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Válaszd",
+    "pontos": true
+   },
+   {
+    "sor": 24,
+    "eredeti": "előre fizetve",
+    "javitott": "előre fizetendő",
+    "ok": "Az „előre fizetve” múlt idejű/befejezett állapotot sugall (angol „prepaid” tükörfordítása). Fizetési feltételként az „előre fizetendő” vagy az „előrefizetéssel” a helyes magyar kifejezés.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Intézzük helyetted: 4 999 Ft, előre fizetve.",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "94_valtozas_utmutato",
+  "usage": {
+   "prompt_tokens": 953,
+   "completion_tokens": 1958,
+   "total_tokens": 2911,
+   "cost": 0.00805725,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00805725,
+    "upstream_inference_prompt_cost": 0.00071475,
+    "upstream_inference_completions_cost": 0.0073425
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1600,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "95_eves_zaras",
+  "usage": {
+   "prompt_tokens": 814,
+   "completion_tokens": 573,
+   "total_tokens": 1387,
+   "cost": 0.00275925,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00275925,
+    "upstream_inference_prompt_cost": 0.0006105,
+    "upstream_inference_completions_cost": 0.00214875
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 566,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "95_eves_zaras_b",
+  "usage": {
+   "prompt_tokens": 729,
+   "completion_tokens": 612,
+   "total_tokens": 1341,
+   "cost": 0.00284175,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00284175,
+    "upstream_inference_prompt_cost": 0.00054675,
+    "upstream_inference_completions_cost": 0.002295
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 605,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 7,
+    "eredeti": "Ingatlant vagy autót adtam el",
+    "javitott": "Ingatlan vagy autó eladása",
+    "ok": "A felsorolás többi pontja főnévi megnevezés (pl. „ingatlan kiadása”), így az egyes szám első személyű igei forma kilóg a listából.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Ingatlant vagy autót adtam el",
+    "pontos": true
+   },
+   {
+    "sor": 9,
+    "eredeti": "Külföldről",
+    "javitott": "Külföldi jövedelem",
+    "ok": "Önmagában a „Külföldről” határozószóként nem illeszkedik a jövedelemtípusok (főnevek) felsorolásába.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Külföldről",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "96_eves_kerdoiv",
+  "usage": {
+   "prompt_tokens": 753,
+   "completion_tokens": 1544,
+   "total_tokens": 2297,
+   "cost": 0.00635475,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00635475,
+    "upstream_inference_prompt_cost": 0.00056475,
+    "upstream_inference_completions_cost": 0.00579
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1314,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [
+   {
+    "sor": 2,
+    "eredeti": "fizetsz",
+    "javitott": "fizettél",
+    "ok": "Az „idén eddig” időhatározó lezárult/eddig eltelt időszakra utal, így jelen idő helyett múlt idő indokolt.",
+    "sulyossag": "hiba",
+    "sor_szoveg": "Idén eddig kb. 126 000 Ft-tal kevesebb adót fizetsz.",
+    "pontos": true
+   },
+   {
+    "sor": 14,
+    "eredeti": "Kérdése van",
+    "javitott": "Kérdés érkezett",
+    "ok": "Státuszként a „Kérdése van” magázásnak tűnhet (mintha a felhasználónak lenne kérdése), a tegező appban a személytelen vagy tegező forma egyértelműbb.",
+    "sulyossag": "javasolt",
+    "sor_szoveg": "Kérdése van",
+    "pontos": true
+   }
+  ],
+  "kepernyo": "97_kedvezmenyek",
+  "usage": {
+   "prompt_tokens": 986,
+   "completion_tokens": 1983,
+   "total_tokens": 2969,
+   "cost": 0.00817575,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.00817575,
+    "upstream_inference_prompt_cost": 0.0007395,
+    "upstream_inference_completions_cost": 0.00743625
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 1761,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ },
+ {
+  "javaslatok": [],
+  "kepernyo": "98_kedvezmeny_kerdoiv",
+  "usage": {
+   "prompt_tokens": 711,
+   "completion_tokens": 257,
+   "total_tokens": 968,
+   "cost": 0.001497,
+   "is_byok": false,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "cache_write_tokens": 0,
+    "audio_tokens": 0,
+    "video_tokens": 0
+   },
+   "cost_details": {
+    "upstream_inference_cost": 0.001497,
+    "upstream_inference_prompt_cost": 0.00053325,
+    "upstream_inference_completions_cost": 0.00096375
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 250,
+    "image_tokens": 0,
+    "audio_tokens": 0
+   }
+  }
+ }
+]

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – Fiók törlése</title>
+<link rel="stylesheet" href="v2.css">
+</head>
+<body>
+<script src="v2.js"></script>
+<header class="fej kis"><div class="allapot"></div><div class="vissza-sor"><button class="vissza" aria-label="Vissza"><svg><use href="#i-vissza"/></svg></button><span class="logo jobb" data-meret="20"></span></div><h1>Fiók törlése</h1><p>Sajnáljuk, hogy elmész. Előtte érdemes letöltened az adataidat.</p></header>
+<main class="lap">
+  <section class="k blokk">
+    <h2>Mi történik?</h2>
+    <div class="lepes" style="padding-top:12px"><span class="p"><svg><use href="#i-kilep"/></svg></span><div class="l"><div class="c" style="font-weight:500">Azonnal kilépsz mindenhonnan, és nem tudsz belépni.</div></div></div>
+    <div class="lepes"><span class="p"><svg><use href="#i-kartya"/></svg></span><div class="l"><div class="c" style="font-weight:500">Az előfizetésed megszűnik, a kártyádat a Stripe-nál is töröljük. Többet nem vonunk le.</div></div></div>
+    <div class="lepes"><span class="p"><svg><use href="#i-ora"/></svg></span><div class="l"><div class="c" style="font-weight:500">30 napig meggondolhatod magad: ha addig belépsz, visszavonhatod.</div></div></div>
+    <div class="lepes"><span class="p"><svg><use href="#i-kuka"/></svg></span><div class="l"><div class="c" style="font-weight:500">30 nap után mindent törlünk, amit a törvény szerint nem kötelező megőrizni.</div></div></div>
+    <div class="doboz info"><svg><use href="#i-info"/></svg><span>Amit a törvény szerint meg kell őriznünk (például az azonosítást 8 évig, az adóiratokat az elévülésig), azt zárolva tároljuk, és utána töröljük.</span></div>
+    <button class="gomb-masod" style="margin-top:14px"><svg><use href="#i-letolt"/></svg>Előbb letöltöm az adataimat</button>
+  </section>
+
+  <section class="k blokk">
+    <div class="jelolo be" style="padding-top:0"><span class="n"><svg><use href="#i-pipa"/></svg></span><span>Értem, és törölni szeretném a fiókom.</span></div>
+    <label class="mezo-cim">Jelszó</label>
+    <div class="mezo fokusz"><svg><use href="#i-lakat"/></svg>••••••••••</div>
+    <label class="mezo-cim">Vagy kód a hitelesítő appból</label>
+    <div class="mezo ures">6 jegyű kód</div>
+    <label class="mezo-cim">Miért mész el? (nem kötelező)</label>
+    <div class="mezo magas ures">Írd ide, ha szeretnéd…</div>
+    <button class="gomb-veszely" style="margin-top:16px;background:var(--piros);color:#fff;border-color:var(--piros)">Törlöm a fiókom</button>
+    <button class="gomb-masod">Mégsem</button>
+  </section>
+</main>
+<nav class="nav" data-aktiv="fiok"></nav>
+</body>
+</html>

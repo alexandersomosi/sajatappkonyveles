@@ -1,0 +1,52 @@
+1. Igazolványok
+2. A pénzmosás elleni törvény miatt minden könyvelőnek azonosítania kell az ügyfeleit. Ezért kérjük az okmányaid fotóját és néhány adatot.
+3. Melyik igazolvánnyal azonosítasz?
+4. Személyi igazolvány
+5. Két oldal
+6. Útlevél
+7. Az adatoldal
+8. Kártya formátumú jogosítvány
+9. Két oldal
+10. Éles legyen, minden sarok látsszon, ne tükröződjön.
+11. Személyi igazolvány, eleje
+12. A fényképes oldal
+13. Lefotózom
+14. Tedd sötét asztalra, a kártya töltse ki a keretet.
+15. Fájlból választom
+16. Személyi igazolvány, hátoldala
+17. Az aláírásos oldal
+18. Lefotózom
+19. Tedd sötét asztalra, a kártya töltse ki a keretet.
+20. Fájlból választom
+21. Lakcímkártya, a lakcímes oldal
+22. Csak a lakcímes oldalát fotózd le; a másik oldalát nem kérjük.
+23. Lefotózom
+24. Tedd sötét asztalra, a kártya töltse ki a keretet.
+25. Fájlból választom
+26. Az adataid
+27. Ahogy az igazolványodban szerepel.
+28. Családi és utónév
+29. Szabó Péter
+30. Születési neved (ha más)
+31. Anyukád születési neve
+32. Írd be anyukád születési nevét.
+33. Születési hely
+34. Születési idő
+35. ÉÉÉÉ-HH-NN
+36. Állampolgárság
+37. magyar
+38. Lakcím
+39. 1052 Budapest, Példa utca 12.
+40. Az igazolvány száma
+41. Érvényes eddig
+42. ÉÉÉÉ-HH-NN
+43. Nyilatkozatok
+44. A saját nevemben járok el, a vállalkozás tényleges tulajdonosa én vagyok.
+45. Kiemelt közszereplő vagy (vagy annak közeli hozzátartozója)?
+46. Például miniszter, parlamenti képviselő, bíró, nagykövet, állami cég vezetője – az elmúlt egy évben.
+47. Nem
+48. Igen
+49. Az adataim valósak.
+50. Ha bármelyik adatom megváltozik, 5 munkanapon belül szólok.
+51. Titkosítva tároljuk, csak Bence látja.
+52. Elküldöm

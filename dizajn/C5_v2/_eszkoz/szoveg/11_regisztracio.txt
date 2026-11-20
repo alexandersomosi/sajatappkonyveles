@@ -1,0 +1,18 @@
+1. Kezdjük az ismerkedéssel.
+2. Egyéni vállalkozóknak, havi 19 999 Ft. Bármikor lemondhatod. Még nincs vállalkozásod? Segítünk elindítani.
+3. Vezetéknév
+4. Szabó
+5. Keresztnév
+6. Péter
+7. E-mail-cím
+8. szabo.peter@pelda.hu
+9. Ide küldjük a megerősítő kódot.
+10. Jelszó
+11. ••••••••••••
+12. Közepes
+13. Ajánlókód (ha kaptál)
+14. Például KOV2026
+15. A regisztrációval elfogadod, hogy a fiókodat kezeljük. A szerződést és az adatkezelési tájékoztatót a következő lépésekben olvashatod el és fogadhatod el.
+16. Szerződési feltételek Adatkezelés
+17. Regisztráció Google-fiókkal
+18. Regisztrálok

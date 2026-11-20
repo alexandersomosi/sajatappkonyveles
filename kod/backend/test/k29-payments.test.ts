@@ -169,6 +169,9 @@ describe('first month: consent → Stripe Checkout → active', () => {
     const cv = await consentOf(c.token, 'card_update');
     expect(cv.amountNowHuf).toBe(0);
     expect(cv.text).not.toContain('az első hónapért');
+    // k7 integrator: no dangling "utána" once the "most … az első hónapért" line is gone
+    expect(cv.text).toContain('– havonta egyszer, a kifizetett hónap végén');
+    expect(cv.text).not.toContain('– utána havonta');
     const r = await h.json('POST', '/client/subscription/start', { token: c.token, body: { platform: 'app', purpose: 'card_update', consentVersion: cv.version, consentSha256: cv.sha256 } });
     expect(r.status).toBe(200);
     expect(r.body).toMatchObject({ mode: 'setup', provider: 'stripe' });
@@ -243,6 +246,10 @@ describe('monthly charges by our scheduler', () => {
     await runBillingJob(h.deps);
     expect(await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, c.userId), eq(notifications.kind, 'payment_action_needed')))).toHaveLength(1);
     c.token = await relogin(c.email);
+    // k7 integrator: the consent of a due month speaks of the unpaid month, not of "the first month"
+    const fcv = await consentOf(c.token, 'fizesd_ki');
+    expect(fcv.text).toContain('most 19 999 Ft-ot a fizetésre váró hónapért (2026.12.20.–2027.01.19.)');
+    expect(fcv.text).not.toContain('az első hónapért');
     // Fizesd ki: hosted payment of the due month; the card authenticated becomes the saved card
     const pay = await h.json('POST', '/client/payments/due/pay', { token: c.token, body: { platform: 'web' } });
     expect(pay.status).toBe(200);

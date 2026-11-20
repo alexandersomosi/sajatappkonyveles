@@ -1,0 +1,11 @@
+1. Fizetésre vár: 19 999 Ft
+2. A(z) 2026. 10. 01.–10. 31. havidíja. Fizesd ki, és minden megy tovább.
+3. DEMO FIZETÉS – nem valódi kártya, nem vonunk le pénzt.
+4. Miért kell?
+5. A havi alapdíj 19 999 Ft. A legutóbbi levonás nem sikerült, ezért most kézzel kell kifizetned.
+6. Ha 2026. november 27-ig sem sikerül, a könyvelésed szünetel. Kifizetés után rögtön megy tovább.
+7. Kártya
+8. DEMO •••• 4242
+9. A fizetés a Stripe biztonságos oldalán történik. Ha a bankod megerősítést kér, ott adod meg.
+10. Másik kártyával fizetek
+11. Fizesd ki (19 999 Ft)

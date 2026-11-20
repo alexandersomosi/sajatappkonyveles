@@ -1,0 +1,47 @@
+1. DEMO
+2. Szabó Péter
+3. szabo.peter@pelda.hu
+4. Kovács Bence, a könyvelőd
+5. Okleveles könyvelő, nyilvántartási szám: 000000 (demo)
+6. Üzenet neki
+7. Kérj visszahívást
+8. Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.
+9. Adózás
+10. Adókedvezményeid
+11. Még nem töltötted ki.
+12. Mennyi marad a bevételedből
+13. Mennyi marad a bevételedből az adók után
+14. Változás bejelentése
+15. Költözés, új tevékenység, szüneteltetés
+16. Szolgáltatás
+17. Előfizetés
+18. Él, következő levonás 2026. 12. 05.
+19. Díjak és számlák
+20. Mi van a havidíjban, külön díjak, számláid
+21. Igazolások
+22. Jövedelem- és adóigazolás, KOMA, kivonat
+23. Bevételi kimutatás
+24. A bevételeid havonta, PDF-ben
+25. Kérések
+26. Adatváltozás, kérdés
+27. Határidők
+28. Beállítások
+29. Értesítések
+30. 2 új
+31. Biztonság
+32. Jelszó, kétlépcsős belépés, ujjlenyomat vagy arc
+33. Adataim
+34. Amit rólad tárolunk, és a letöltésük
+35. Ajánld ismerősnek
+36. Ha ismersz egyéni vállalkozót, akinek jól jönne egy könyvelő.
+37. A te ajánlókódod
+38. SZP-4821
+39. Megosztom
+40. Segítség
+41. Visszahívást kérek
+42. Kollégánk 24–48 órán belül visszahív.
+43. Gyakori kérdések
+44. Szerződés és adatkezelés
+45. Kilépés
+46. Fiók törlése
+47. Adózz 1.0.0 (demo)

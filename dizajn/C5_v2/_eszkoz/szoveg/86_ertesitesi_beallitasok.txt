@@ -1,0 +1,72 @@
+1. Értesítések
+2. Az appban minden értesítést látsz. Itt azt állítod be, mikor szóljunk telefonon vagy e-mailben.
+3. Csendes idő
+4. Éjjel ne szóljon a telefon
+5. 20:00 és 8:00 között nem küldünk telefonos értesítést. Az appban ilyenkor is megjelenik.
+6. Ettől 20:00
+7. Eddig 8:00
+8. Adó és befizetés
+9. Megvan a fizetendő összeg
+10. Amikor a könyvelőd kiszámolta és jóváhagyta.
+11. Telefon E-mail
+12. Közeleg a befizetés
+13. Határidő előtt szólunk.
+14. Telefon E-mail
+15. Közel vagy egy határhoz
+16. Például az ÁFA-mentesség 80%-ánál.
+17. Telefon E-mail
+18. Számlák
+19. Új kiállított számla
+20. Amikor letöltöttük a NAV rendszeréből, és megmutatjuk, mennyit tegyél félre.
+21. Telefon E-mail
+22. Összeg és vevő a telefonos értesítésben
+23. Ha kikapcsolod, a zárolt képernyőn csak annyi látszik: új kiállított számlád érkezett.
+24. Könyvelőd
+25. A könyvelőd kér valamit
+26. Például egy kivonatot.
+27. Telefon E-mail
+28. Új üzenet
+29. Amikor a könyvelőd válaszol.
+30. Telefon E-mail
+31. Feldolgozta az iratokat
+32. Naponta legfeljebb egyszer.
+33. Telefon E-mail
+34. Emlékeztetők
+35. Havi kérdések
+36. Havonta egyszer: változott valami?
+37. Telefon E-mail
+38. Számlák feltöltése
+39. Ha még hiányzik egy hónap iratai közül.
+40. Telefon E-mail
+41. Éves zárás
+42. A kérdőív és a bevallások határideje előtt.
+43. Telefon E-mail
+44. Kedvezmények
+45. Átnézte a válaszaidat
+46. Amikor a könyvelőd átnézte a válaszaidat.
+47. Telefon E-mail
+48. Kedvezmény-ellenőrzés
+49. Év elején, és ha egy kedvezmény véget ér.
+50. Telefon E-mail
+51. Visszahívás
+52. Most hív kollégánk
+53. Amikor éppen hívunk. Ez csendes időben is szól.
+54. Telefon E-mail
+55. Kerestünk, de nem értünk el
+56. Ha nem tudtad felvenni.
+57. Telefon E-mail
+58. Javítsd ki a telefonszámodat
+59. Ha a megadott számon nem értünk el.
+60. Telefon E-mail
+61. Intézzük helyetted
+62. Beszéltünk – így haladunk
+63. A hívás után, amikor elindítjuk.
+64. Telefon E-mail
+65. Hagyd jóvá a meghatalmazást
+66. Amikor a könyvelőd beküldte, és jóvá kell hagynod.
+67. Telefon E-mail
+68. Bejelentettük
+69. Amikor elment a NAV-hoz.
+70. Telefon E-mail
+71. A belépési kódokat, a jelszóval kapcsolatos leveleket és a fizetési értesítéseket mindig elküldjük.
+72. Mentés

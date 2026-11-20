@@ -267,7 +267,7 @@ function Terhelesek() {
   return (
     <>
       <div className="szakasz">
-        Egyszeri díjak <span className="megj">Visszatérítés a SimplePay kereskedői felületén – itt csak megjelölöd.</span>
+        Egyszeri díjak <span className="megj">Visszatérítés a Konzolban, az ügyfél kártyáján (Stripe) – a sztornószámla magától készül.</span>
       </div>
       <div className="szegmens" role="tablist" aria-label="Szűrés" style={{ marginBottom: 12 }}>
         {(

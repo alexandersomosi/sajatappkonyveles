@@ -1,0 +1,82 @@
+{
+ "javaslatok": [
+  {
+   "sor": 2,
+   "eredeti": "mész",
+   "javitott": "elmész",
+   "ok": "A fiók vagy szolgáltatás elhagyására a befejezett szemléletű, igekötős „elmész” a természetes kifejezés.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Sajnáljuk, hogy mész. Előtte érdemes letöltened az adataidat.",
+   "pontos": true
+  },
+  {
+   "sor": 5,
+   "eredeti": "Stripe-nél",
+   "javitott": "Stripe-nál",
+   "ok": "A Stripe kiejtése [sztrájp], mély hangrendű, ezért a toldalék helyesen: Stripe-nál.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Az előfizetésed megszűnik, a kártyádat a Stripe-nél is töröljük. Többet nem vonunk le.",
+   "pontos": true
+  },
+  {
+   "sor": 6,
+   "eredeti": "meggondolhatod",
+   "javitott": "meggondolhatod magad",
+   "ok": "A döntés megváltoztatását a visszaható „meggondolja magát” kifejezéssel fejezzük ki magyarul.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "30 napig meggondolhatod: ha addig belépsz, visszavonhatod.",
+   "pontos": true
+  },
+  {
+   "sor": 7,
+   "eredeti": "a törvény nem kötelez megőrizni",
+   "javitott": "a törvény szerint nem kötelező megőrizni",
+   "ok": "A „kötelez megőrizni” magyartalan szerkezet; helyesen „nem kötelező megőrizni” vagy „a törvény nem kötelez a megőrzésére”.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "30 nap után mindent törlünk, amit a törvény nem kötelez megőrizni.",
+   "pontos": true
+  },
+  {
+   "sor": 14,
+   "eredeti": "6 jegyű",
+   "javitott": "6-jegyű",
+   "ok": "Számmal írt összetett melléknevekben a számot kötőjellel kapcsoljuk az alapszóhoz (AkH. 119.).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "6 jegyű kód",
+   "pontos": true
+  },
+  {
+   "sor": 15,
+   "eredeti": "Miért mész?",
+   "javitott": "Miért mész el?",
+   "ok": "A távozás megkérdezésekor az igekötős „elmész” a természetes magyar megfogalmazás.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Miért mész? (nem kötelező)",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "88_fiok_torlese",
+ "usage": {
+  "prompt_tokens": 936,
+  "completion_tokens": 2704,
+  "total_tokens": 3640,
+  "cost": 0.010842,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.010842,
+   "upstream_inference_prompt_cost": 0.000702,
+   "upstream_inference_completions_cost": 0.01014
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 2119,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

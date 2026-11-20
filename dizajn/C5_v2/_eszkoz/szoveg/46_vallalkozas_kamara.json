@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 4,
+   "eredeti": "kamarai tagsággal",
+   "javitott": "regisztrációval",
+   "ok": "A kötelező kamarai nyilvántartásba vétel nem tagság (a tagság önkéntes), ráadásul a képernyő többi részén is regisztráció szerepel.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "A törvény kéri minden új vállalkozótól. Kell hozzá az adószámod. A kamarai tagsággal évi 5 000 Ft kamarai hozzájárulás jár: ezt a kamara kéri, nem mi.",
+   "pontos": true
+  },
+  {
+   "sor": 11,
+   "eredeti": "Főoldalra",
+   "javitott": "főoldalra",
+   "ok": "Köznévként kis kezdőbetűvel írandó.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Vissza a Főoldalra",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "46_vallalkozas_kamara",
+ "usage": {
+  "prompt_tokens": 831,
+  "completion_tokens": 1568,
+  "total_tokens": 2399,
+  "cost": 0.00650325,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00650325,
+   "upstream_inference_prompt_cost": 0.00062325,
+   "upstream_inference_completions_cost": 0.00588
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1430,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,19 @@
+1. SZ-2026-0019
+2. Napfény Étterem Kft. · DEMO, nem valódi számla
+3. Mennyit tegyél félre?
+4. 418 000 Ft-os számla – ebből kb. 29 000 Ft -ot tegyél félre.
+5. SZJA, TB-járulék, szocho
+6. A számla
+7. Összeg 418 000 Ft
+8. Kelt 2026. nov. 12.
+9. Teljesítés 2026. nov. 12.
+10. Fizetési határidő 2026. nov. 20.
+11. Fizetés módja átutalás
+12. ÁFA mentes (alanyi adómentes)
+13. Vevő adószáma 12345678-2-42
+14. Bevétel napja 2026. nov. 17.
+15. Tételek
+16. Rendezvény-catering, 1 alkalom 298 000
+17. Ebédmenü, 40 adag 120 000
+18. Az átalányadózásban a bevétel akkor számít, amikor a pénz megérkezett. Ezt a könyvelőd a bankszámlakivonatod alapján nézi meg.
+19. Kérdezek róla

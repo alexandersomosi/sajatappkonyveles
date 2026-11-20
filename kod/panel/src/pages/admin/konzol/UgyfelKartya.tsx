@@ -313,7 +313,14 @@ function SzakaszNezet({ h, s, muvelet }: { h: ConsoleClientHeader; s: ConsoleSec
                     <tr key={r.id ?? ri}>
                       {r.cells.map((c, i) => (
                         <td key={i} className={i === 0 ? 'elso nt' : undefined} style={{ maxWidth: 360, overflowWrap: 'anywhere' }}>
-                          {c ?? <span className="halvany">–</span>}
+                          {/* k7 integrator: a stored file ("/files/<id>") is a PDF button, not a raw path */}
+                          {c && /^\/files\/[0-9a-f-]{36}$/.test(c) ? (
+                            <button type="button" className="gomb-sz" onClick={() => void downloadFile(c.slice(7), `${r.cells[0] ?? 'irat'}.pdf`)}>
+                              PDF
+                            </button>
+                          ) : (
+                            (c ?? <span className="halvany">–</span>)
+                          )}
                           {i === 0 && r.chip ? <span className={`cimke ${r.chip === 'Admin' ? 'info' : 'hiba'}`} style={{ marginLeft: 6 }}>{r.chip}</span> : null}
                         </td>
                       ))}

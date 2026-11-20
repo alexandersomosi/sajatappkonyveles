@@ -1,0 +1,130 @@
+{
+ "benyomas": "Első ránézésre nagyon letisztult, modern és emberi a felület, nem az a tipikus száraz, ijesztő könyvelős dolog. Tetszik, hogy kiírják a havi 19 999 Ft-os árat és hogy bármikor lemondható, ez megnyugtat. Viszont a hitelesítő appos kétlépcsős belépésnél rendesen megijedtem, mert ilyet még sosem használtam, és félek, hogy emiatt kizárom magam este munka után.",
+ "kepernyok": [
+  {
+   "kepernyo": "10_belepes",
+   "gondolatok": "Világos, egyértelmű belépő oldal, a Google fiókos belépésnek külön örülök mobilon, mert utálok pötyögni.",
+   "gondok": [],
+   "tetszik": [
+    "A szlogen: 'A saját könyvelőd, a zsebedben'",
+    "Belépés Google-fiókkal lehetőség",
+    "Alul egyből ott van a 'Regisztrálok' gomb"
+   ]
+  },
+  {
+   "kepernyo": "11_regisztracio",
+   "gondolatok": "Nagyon jó, hogy nem kérnek el rögtön adószámot meg ezer adatot, csak a nevemet és az e-mailemet. Az 'Ajánlókód' láttán kicsit elbizonytalanodtam, hogy vajon lemaradtam-e valami akcióról a Facebookon.",
+   "gondok": [
+    {
+     "mi": "A szövegben ott van a 'havi 19 999 Ft', de nincs egyértelműen leírva, hogy most a regisztrációval már azonnal fizetnem kell-e, vagy van-e ingyenes próbaidőszak.",
+     "sulyossag": "zavar",
+     "javaslat": "Írják oda tisztán, hogy 'Csak akkor fizetsz, ha élesíted' vagy hogy van-e ingyenes próba."
+    }
+   ],
+   "tetszik": [
+    "Egyértelmű jelszóerősség-jelző",
+    "Rövid, nem kér rögtön céges adatokat",
+    "Bármikor lemondható infó"
+   ]
+  },
+  {
+   "kepernyo": "15_email_megerosites",
+   "gondolatok": "Egyszerű, pont olyan, mint bármelyik normális appban. Jó látni a visszaszámlálót és a spam mappára figyelmeztetést.",
+   "gondok": [],
+   "tetszik": [
+    "Számkockás beíró mező",
+    "Figyelmeztetés a Spam mappára",
+    "Visszaszámláló az új kód kéréséhez"
+   ]
+  },
+  {
+   "kepernyo": "12_jelszo_elfelejtve",
+   "gondolatok": "Rövid és célratörő képernyő, ha véletlenül elfelejteném a jelszót, nem kell pánikolni.",
+   "gondok": [],
+   "tetszik": [
+    "Egyetlen mező, egy nagy sárga gomb, nincs túlbonyolítva"
+   ]
+  },
+  {
+   "kepernyo": "13_jelszo_uj",
+   "gondolatok": "Szuper, hogy a kódot és az új jelszót egyszerre kéri be, nem kell három külön oldalon átkattintgatnom.",
+   "gondok": [
+    {
+     "mi": "Nincs 'Jelszó megerősítése' mező, és ha mellégépelek telefonon sietve, elmenthetek egy rossz jelszót.",
+     "sulyossag": "apro",
+     "javaslat": "Vagy legyen egy 'Jelszó újra' mező, vagy alapból legyen látható a jelszó beíráskor."
+    }
+   ],
+   "tetszik": [
+    "Egy oldalon elintézhető a kód és az új jelszó",
+    "Kiírja, hogy 15 percig érvényes"
+   ]
+  },
+  {
+   "kepernyo": "14_ketlepcsos_belepes",
+   "gondolatok": "Itt teljesen leizzadtam: 'Nyisd meg a hitelesítő appodat'. Nekem nincs ilyen a telefonomon, fogalmam sincs, mi az a Google Authenticator vagy hasonló!",
+   "gondok": [
+    {
+     "mi": "A 'hitelesítő appodat' kifejezés egy laikusnak semmit nem mond, és a 'Nincs nálam a telefonom: tartalékkód' szöveg vicces, mikor épp a telefonomon használom az appot.",
+     "sulyossag": "elakadok",
+     "javaslat": "Kérjen inkább SMS-kódot vagy e-mailes kódot, az mindenkinek megy, vagy magyarázza el, hogyan kell ezt beállítani."
+    }
+   ],
+   "tetszik": [
+    "A nagy számkockák könnyen nyomkodhatók"
+   ]
+  },
+  {
+   "kepernyo": "16_nem_talalhato",
+   "gondolatok": "Egy mobilappban furcsa egy sima webes 404-es hibaoldal, de legalább van gomb visszamenni.",
+   "gondok": [
+    {
+     "mi": "'Lehet, hogy elírás van a címben' – egy mobilappban nem írok be semmilyen címet vagy URL-t, ezt furcsa olvasni egy alkalmazásban.",
+     "sulyossag": "apro",
+     "javaslat": "Inkább olyasmi szöveg kéne: 'Valami hiba történt a betöltéskor'."
+    }
+   ],
+   "tetszik": [
+    "Van egyértelmű 'Vissza a főoldalra' gomb"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Információ arról, hogy van-e ingyenes próbaidőszak, mielőtt kérik a 19 999 Ft-ot.",
+  "Magyarázat az SMS alapú megerősítésről a 'hitelesítő app' helyett."
+ ],
+ "maradnek": "talán – A felület nagyon tetszik és egyszerűnek tűnik, de ha a belépéshez kötelező valami bonyolult hitelesítő appot letöltenem és beállítanom, annál a lépésnél lehet, hogy feladom.",
+ "folyamat": "1_belepes",
+ "fajlok": [
+  "10_belepes.png",
+  "11_regisztracio.png",
+  "15_email_megerosites.png",
+  "12_jelszo_elfelejtve.png",
+  "13_jelszo_uj.png",
+  "14_ketlepcsos_belepes.png",
+  "16_nem_talalhato.png"
+ ],
+ "usage": {
+  "prompt_tokens": 8562,
+  "completion_tokens": 1597,
+  "total_tokens": 10159,
+  "cost": 0.01241025,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01241025,
+   "upstream_inference_prompt_cost": 0.0064215,
+   "upstream_inference_completions_cost": 0.00598875
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

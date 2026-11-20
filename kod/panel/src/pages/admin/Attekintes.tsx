@@ -123,7 +123,7 @@ export default function Attekintes() {
                 <div className="lap">
                   <div className="lap-fej">
                     <h2>Díjbevétel havonta</h2>
-                    <span className="megj">sikeres SimplePay-terhelések, bruttó</span>
+                    <span className="megj">sikeres kártyás terhelések, bruttó, visszatérítés nélkül</span>
                   </div>
                   <Oszlopok
                     adatok={d.revenueByMonth.map((m) => ({

@@ -1,0 +1,153 @@
+{
+ "egyseg": [
+  {
+   "tema": "Igazolástípusok megnevezése",
+   "valtozatok": [
+    "Adóigazolás (nincs tartozásod) / Köztartozásmentes adatbázis (KOMA)",
+    "Nullás igazolás / Köztartozásmentességi igazolás"
+   ],
+   "kepernyok": [
+    "66_igazolasok",
+    "68_igazolas_uj",
+    "70_uzenetek",
+    "75_keres_uj",
+    "80_fiok"
+   ],
+   "javaslat": "Legyen mindenhol az 'Adóigazolás' és a 'Köztartozásmentes adatbázis (KOMA)', zárójelben a köznyelvi névvel (nullás igazolás), mert a hivatalos ügyintézésben ez a pontos megnevezés."
+  },
+  {
+   "tema": "Fizetés gomb nyelvtani alakja (E/1 vs. E/2)",
+   "valtozatok": [
+    "Fizesd ki (19 999 Ft)",
+    "Fizetek (4 999 Ft)"
+   ],
+   "kepernyok": [
+    "52_fizesd_ki",
+    "83_dijak"
+   ],
+   "javaslat": "Legyen mindenhol E/1 alakban ('Fizetek'), mivel az app összes többi akciógombja egyes szám első személyű ('Belépek', 'Elküldöm', 'Feltöltöm')."
+  },
+  {
+   "tema": "SZJA / Szja írásmódja",
+   "valtozatok": [
+    "SZJA",
+    "Szja"
+   ],
+   "kepernyok": [
+    "01_fooldal",
+    "53_hataridok",
+    "54_kereset",
+    "56_ertesitesek",
+    "60_dosszie",
+    "62_szamla",
+    "95_eves_zaras",
+    "97_kedvezmenyek"
+   ],
+   "javaslat": "Legyen egységesen 'SZJA' (vagy csupa kisbetűs 'szja'), mert betűszóként csupa nagybetűvel írandó összetételekben is (SZJA-előleg, SZJA-bevallás)."
+  },
+  {
+   "tema": "ÁFA írásmódja és kötőjelezése",
+   "valtozatok": [
+    "ÁFA-mentes / ÁFA-mentesség",
+    "ÁFA mentes",
+    "Áfamentesség / áfafizetési"
+   ],
+   "kepernyok": [
+    "01_fooldal",
+    "43_vallalkozas_adatlap_b",
+    "44_vallalkozas_engedely",
+    "45_vallalkozas_feltoltes",
+    "47_vallalkozas_utmutato",
+    "62_szamla",
+    "86_ertesitesi_beallitasok"
+   ],
+   "javaslat": "Legyen egységesen 'ÁFA-mentes' és 'ÁFA-mentesség': a csupa nagybetűs betűszóhoz kötőjellel kapcsolódik a melléknévképző (nem különírva, mint a 62-es képernyőn)."
+  },
+  {
+   "tema": "Visszahívás kérése gombok és hivatkozások szövegezése",
+   "valtozatok": [
+    "Visszahívás",
+    "Kérj visszahívást",
+    "Visszahívást kérek",
+    "Kérem a visszahívást"
+   ],
+   "kepernyok": [
+    "01_fooldal",
+    "30_bekotes",
+    "35_bekotes_idopont",
+    "70_uzenetek",
+    "71_visszahivas",
+    "72_gyik",
+    "73_helyettunk",
+    "80_fiok"
+   ],
+   "javaslat": "Gombfeliratként az app konvenciójához igazodva legyen egységesen 'Visszahívást kérek' (vagy 'Kérem a visszahívást'), a menüpont/kártya címe pedig 'Visszahívás'."
+  },
+  {
+   "tema": "Fiók vs. profil elnevezés",
+   "valtozatok": [
+    "fiók / Fiók",
+    "profilomba"
+   ],
+   "kepernyok": [
+    "11_regisztracio",
+    "34_bekotes_elofizetes",
+    "73_helyettunk",
+    "76_jogi",
+    "80_fiok",
+    "88_fiok_torlese"
+   ],
+   "javaslat": "A 73_helyettunk képernyőn is a 'fiókomban' szó szerepeljen ('Mentsd el a fiókomba is'), mert a menüpont neve 'Fiók', a 'profil' sehol máshol nem fordul elő."
+  },
+  {
+   "tema": "Főoldal kezdőbetűje szövegkörnyezetben",
+   "valtozatok": [
+    "főoldalra",
+    "Főoldalra",
+    "Főoldalon"
+   ],
+   "kepernyok": [
+    "16_nem_talalhato",
+    "46_vallalkozas_kamara",
+    "70_uzenetek"
+   ],
+   "javaslat": "Legyen mondat közben mindenhol kisbetűs ('főoldalra', 'főoldalon'), mivel köznévről és felületről van szó, nem tulajdonnévről."
+  },
+  {
+   "tema": "Havidíj helyesírása",
+   "valtozatok": [
+    "Havi díj",
+    "Havidíj"
+   ],
+   "kepernyok": [
+    "34_bekotes_elofizetes",
+    "83_dijak",
+    "85_elofizetes"
+   ],
+   "javaslat": "Legyen mindenhol egybeírva: 'Havidíj', az AkH. és a szótárak szerint ez az egybeírt alak az elterjedt és helyes."
+  }
+ ],
+ "usage": {
+  "prompt_tokens": 21353,
+  "completion_tokens": 7473,
+  "total_tokens": 28826,
+  "cost": 0.0440385,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0440385,
+   "upstream_inference_prompt_cost": 0.01601475,
+   "upstream_inference_completions_cost": 0.02802375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 5849,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

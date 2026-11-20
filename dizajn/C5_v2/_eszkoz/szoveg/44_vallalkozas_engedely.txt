@@ -1,0 +1,28 @@
+1. Nézd át, mit jelentünk be
+2. Ezekkel az adatokkal küldi be Bence a bejelentésedet. Ha valamit javítanál, koppints a „Módosítom” gombra.
+3. Rólad (a NAV tölti ki)
+4. Név, születési adatok, anyja neve: a NAV tölti ki a nyilvántartásból. Te csak átnézed.
+5. Székhely
+6. Módosítom
+7. A lakcímed: 1052 Budapest, Példa utca 12.
+8. A székhely címe nyilvános lesz: bárki megnézheti a nyilvántartásban.
+9. Telephely, fióktelep
+10. Módosítom
+11. Nincs
+12. Tevékenységek
+13. Módosítom
+14. Rendezvényszervezés (fő)
+15. Munkavégzés jellege
+16. Módosítom
+17. Ez lesz a fő munkám
+18. Adózás
+19. Módosítom
+20. Átalányadózás: igen · Alanyi ÁFA-mentesség: igen · Kata: nem · Pénzforgalmi elszámolás: nem · Közösségi adószám: nem
+21. Kezdés napja
+22. A beküldés napja, várhatóan 2026. november 23. Előre dátumot nem lehet megadni.
+23. A te nyilatkozatod
+24. Rám nem vonatkozik egyik kizáró ok sem, és nincs másik élő egyéni vállalkozásom.
+25. Mik a kizáró okok?
+26. Az adatokat én adtam meg és ellenőriztem. Kérem, hogy Kovács Bence ezekkel az adatokkal, meghatalmazottként küldje be a vállalkozásom bejelentését. Tudom, hogy beküldés után nem lehet visszavonni, és a vállalkozásom a beküldés napján indul.
+27. Engedélyezem a bejelentést
+28. A gomb a két pipa után működik.

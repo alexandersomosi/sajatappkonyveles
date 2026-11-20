@@ -1,0 +1,18 @@
+1. Utolsó lépés: a kártyád
+2. Havi 19 999 Ft. Az első hónapot most fizeted, utána havonta egyszer vonjuk le. Bármikor lemondhatod.
+3. Mit kapsz ezért?
+4. Saját könyvelő, aki név szerint ismer.
+5. Kiszámolja, mennyi adót és járulékot kell fizetned, és beadja a bevallásaidat.
+6. A kiállított számláidat a NAV rendszeréből mi töltjük le, neked csak a nyugtákat és a kivonatot kell feltöltened.
+7. Szólunk a határidők előtt, és megmondjuk, hová utalj.
+8. Az appban bármikor kérdezhetsz a könyvelődtől, és igazolást is kérhetsz.
+9. Kártyás fizetés – engedély
+10. Havi díj 19 999 Ft
+11. Fizetés módja Bankkártya, Stripe
+12. Levonás havonta egyszer
+13. Minden levonás előtt 3 nappal szólunk. A kártyádat bármikor törölheted a Fiók oldalon.
+14. Elolvastam, és engedélyezem a havi levonást.
+15. A fizetés a Stripe biztonságos oldalán történik. A kártyád számát mi nem látjuk.
+16. Elakadtál?
+17. Visszahívás
+18. Tovább a kártyához (19 999 Ft)

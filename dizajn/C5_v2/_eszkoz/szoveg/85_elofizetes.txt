@@ -1,0 +1,19 @@
+1. DEMO
+2. Előfizetés
+3. Havi 19 999 Ft, bruttó. Bármikor lemondhatod.
+4. Állapot Él
+5. Havidíj 19 999 Ft
+6. Következő levonás 2026. 12. 05.
+7. 19 999 Ft
+8. Kártya Visa •••• 4242
+9. lejár 08/28
+10. Kártya cseréje
+11. Kártya törlése
+12. Ha mennél
+13. Bármikor lemondhatod. A kifizetett hónap végéig a könyvelőd mindent intéz, utána nem vonunk le többet. A már beadott bevallások és a dossziéd letölthetők maradnak.
+14. Lemondom
+15. Kártya cseréje
+16. Most nem vonunk le semmit: a Stripe csak elmenti az új kártyát. A következő levonás már erről megy.
+17. Elolvastam és engedélyezem, hogy a következő havidíjakat az új kártyámról vonjátok le.
+18. Kártya mentése
+19. A kártyaadatokat a Stripe kezeli, mi nem látjuk őket.

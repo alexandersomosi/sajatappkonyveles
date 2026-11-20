@@ -1,0 +1,73 @@
+{
+ "javaslatok": [
+  {
+   "sor": 6,
+   "eredeti": "ÁFÁ-t",
+   "javitott": "áfát",
+   "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó (áfát). A csupa nagybetűs mozaikszók toldalékolásakor sem nyújtjuk az utolsó magánhangzót (nem „ÁFÁ-t”, legfeljebb „ÁFA-t” lehetne).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Itt választod ki, hogy nem kell ÁFÁ-t felszámolnod.",
+   "pontos": true
+  },
+  {
+   "sor": 9,
+   "eredeti": "ÁFÁ-t",
+   "javitott": "áfát",
+   "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó; a csupa nagybetűs „ÁFÁ-t” forma helyesírási hiba.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Így nem kell ÁFÁ-t felszámolnod, amíg az éves bevételed 20 millió forint alatt marad (2026).",
+   "pontos": true
+  },
+  {
+   "sor": 11,
+   "eredeti": "Hagyd",
+   "javitott": "Hagyd üresen",
+   "ok": "Önmagában a „Hagyd” csonka és magyartalan; a mező kitöltésére vonatkozó instrukcióként (mint a „Jelöld be”) a „Hagyd üresen” vagy „Hagyd ki” a pontos kifejezés.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Hagyd",
+   "pontos": true
+  },
+  {
+   "sor": 12,
+   "eredeti": "ÁFA-fizetőknek",
+   "javitott": "áfafizetőknek",
+   "ok": "Kisbetűvel írandó összetételként, összhangban a 10. sor „áfafizetési” írásmódjával.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Hagyd üresen. Ez csak az ÁFA-fizetőknek kell.",
+   "pontos": true
+  },
+  {
+   "sor": 19,
+   "eredeti": "ÁFÁ-t",
+   "javitott": "áfát",
+   "ok": "Az áfa köznevesült mozaikszóként kisbetűvel írandó; a csupa nagybetűs „ÁFÁ-t” forma helyesírási hiba.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Az alanyi ÁFA-mentességet most, a bejelentéssel együtt kell választanod: ha kimarad, idén ÁFÁ-t kell felszámolnod. Ez a legfontosabb pipa.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "47_vallalkozas_utmutato",
+ "usage": {
+  "prompt_tokens": 1069,
+  "completion_tokens": 3914,
+  "total_tokens": 4983,
+  "cost": 0.01547925,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01547925,
+   "upstream_inference_prompt_cost": 0.00080175,
+   "upstream_inference_completions_cost": 0.0146775
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 3347,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,175 @@
+{
+ "benyomas": "Pont ezt kerestem: végre nem nekem kell matekoznom, hanem az arcomba mondja, hogy 250 ezret tegyek félre adóra, így nem ér meglepetés. Kicsit sietősre vettem a figurát a két meló között, de a felület tiszta, emberi nyelven van megfogalmazva és megnyugtató, hogy ott van Bence a háttérben. Az viszont azonnal megakasztott és megrémített, hogy a NAV határidőknél december 12. szerepel a megszokott 15. helyett, és hogy a 'Félretettem' gomb pontosan hova teszi a pénzt.",
+ "kepernyok": [
+  {
+   "kepernyo": "01_fooldal",
+   "gondolatok": "A hatalmas 'Most kb. 250 000 Ft legyen félretéve az adóra' felirat zseniális, azonnal tudom, mi a dolgom. A sárga 'Félretettem' gombnál viszont megtorpantam: ha rányomok, levonja a kártyámról, vagy csak kipipálja nekem fejben? Az ÁFA-keret sávja szuper, de a határidőknél a 'dec. 12.' gyanús, nem mindig 12-e a járulék és 15-e az szja?",
+   "gondok": [
+    {
+     "mi": "A 'Félretettem' gomb működése bizonytalan, nem tudom, fizetést indít-e vagy csak egy pipa.",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen egyértelműbb a felirat, pl. 'Megjelölöm: félretettem a számlámon' vagy 'Átvezettem az adószámlámra'."
+    },
+    {
+     "mi": "A 'Határidők' kártyán mindkét tételnél 'dec. 12.' szerepel, miközben az szja-előleg tudtommal negyedévet követő hó 15.",
+     "sulyossag": "zavar",
+     "javaslat": "Pontos, valós adózási határidők és bankszámlaszámok feltüntetése a részleteknél."
+    }
+   ],
+   "tetszik": [
+    "A 250 ezer forintos kiemelt adófigyelmeztetés a tetején",
+    "Kovács Bence neve és arca ott van közvetlenül, érzem a személyes felelőst",
+    "A hátralévő alanyi adómentes keret vizuális csíkja"
+   ]
+  },
+  {
+   "kepernyo": "51_felretesz",
+   "gondolatok": "Nagyon tetszik, hogy tételesen látom az éttermes és a rendezvényházas számláimat. A Gyöngyvirágos számlánál a 'még nem fizették ki' jelzés óriási segítség, mert tényleg csak a befolyt pénz után kell adóznom. Viszont alul a 'Becslés. A befizetendőt negyedévente Kovács Bence hagyja jóvá.' mondat kicsit elbizonytalanít, hogy akkor a 250 ezer most fix vagy csak tipp.",
+   "gondok": [
+    {
+     "mi": "A 'Becslés' szó miatt félek, hogy a 250 ezer felett még beüthet egy extra tétel.",
+     "sulyossag": "apro",
+     "javaslat": "Írja ki világosan: 'Ha nem érkezik új bevételed, garantáltan nem lesz több ennél'."
+    }
+   ],
+   "tetszik": [
+    "A vevőim szerinti bontás a valós számlaszámokkal",
+    "Külön jelzi, hogy mi van kifizetve és mi várható később",
+    "Egyértelmű zöld címke a már lezárt időszakoknál"
+   ]
+  },
+  {
+   "kepernyo": "52_fizesd_ki",
+   "gondolatok": "Elsőre megijedtem, hogy a NAV-nak tartozom 19 999 Ft-tal, de aztán látom, hogy az app havidíja nem ment át. Jó, hogy nem tiltanak le azonnal, hanem van határidő (nov. 27.), de rendezvényszervezés közben egy sima Apple Pay gomb sokkal kényelmesebb lenne, mint újra kártyázni.",
+   "gondok": [
+    {
+     "mi": "Hirtelen azt hittem, valami elfelejtett adótétel, a cím ('Fizetésre vár') nem mondja rögtön, kinek megy.",
+     "sulyossag": "apro",
+     "javaslat": "A fejléc legyen egyből 'Elmaradt könyvelési havidíj: 19 999 Ft'."
+    }
+   ],
+   "tetszik": [
+    "Korrekt figyelmeztetés a szüneteltetés előtt",
+    "Egy gombos azonnali újrafizetés lehetősége"
+   ]
+  },
+  {
+   "kepernyo": "53_hataridok",
+   "gondolatok": "A 'Hozzáadom a naptáramhoz' gomb életmentő, mert folyton elúszom a határidőkkel. A napok visszaszámlálása ('Még 22 nap') szuper laikusbarát, nem kell a naptárt pörgetnem fejben.",
+   "gondok": [
+    {
+     "mi": "A határidőre kattintva nem látom egyből, hová (milyen NAV számlaszámra) és milyen közleménnyel kell utalnom.",
+     "sulyossag": "zavar",
+     "javaslat": "A sorra bökve dobja fel a NAV-os számlaszám másolását és a pontos adóazonosítómat."
+    }
+   ],
+   "tetszik": [
+    "A naptár-szinkronizáció funkció",
+    "Napok számlálása ('Még 22 nap')",
+    "Letisztult, nem szorongató kinézet"
+   ]
+  },
+  {
+   "kepernyo": "54_kereset",
+   "gondolatok": "Ez a képernyő a kedvencem: végre valaki tisztán leírja, hogy mennyi a tiszta pénz, ami zsebre tehető (14 527 000 Ft). A magyarázat a levont járulékokról teljesen közérthető, nem szakzsargon. A költségekre vonatkozó figyelmeztetés ('a költségeidet... ebből fizeted') kifejezetten korrekt.",
+   "gondok": [
+    {
+     "mi": "Nem tudom gyorsan elmenteni vagy elküldeni ezt a havi tiszta bevételi listát.",
+     "sulyossag": "apro",
+     "javaslat": "Egy gyors 'Megosztás' vagy PDF gomb ide is elférne."
+    }
+   ],
+   "tetszik": [
+    "Feketén-fehéren leírja a tiszta profitot",
+    "A havi bontásban azonnal látszik a bevétel és a levont adó aránya",
+    "Év végi reális előrejelzés"
+   ]
+  },
+  {
+   "kepernyo": "55_kimutatas",
+   "gondolatok": "Jó látni, hogy ha hitelt vagy lízinget akarok felvenni az autómra a rendezvényekhez, innen kikérhetem. Viszont a 'Nem hivatalos NAV-igazolás' figyelmeztetés miatt bizonytalan vagyok, hogy a bank ezt egyáltalán elfogadja-e, vagy feleslegesen nyomogatom.",
+   "gondok": [
+    {
+     "mi": "Megzavar a kettősség: az oldal tetején azt írja 'Bank, lízing, albérlet szokta kérni', alul meg azt, hogy 'Nem hivatalos NAV-igazolás'. Akkor most elfogadják vagy sem?",
+     "sulyossag": "elakadok",
+     "javaslat": "Tisztázni: 'Gyors tájékoztatásra jó a banknak, de ha hivatalos kell, Bence kikéri a NAV-tól egy kattintással'."
+    }
+   ],
+   "tetszik": [
+    "Egy gombbal kérhetem Bence hivatalos ellenőrzését",
+    "Szép havi számla- és bevétel-összesítő táblázat"
+   ]
+  },
+  {
+   "kepernyo": "56_ertesitesek",
+   "gondolatok": "Megnyugtató lista: látom, hogy Bence tényleg dolgozik a dolgaimon és nem tűnt el hetekre. Különösen tetszik a 'Bence látta a kivonatodon: a III. negyedéves szja-előleg rendben megérkezett' üzenet, ez leveszi rólam a NAV-para súlyát.",
+   "gondok": [
+    {
+     "mi": "A 'Bence kér valamit' értesítésnél nincs azonnali feltöltés gomb, be kell mennem a dossziéba.",
+     "sulyossag": "apro",
+     "javaslat": "Közvetlen 'Feltöltöm most' gomb az értesítés kártyájára."
+    }
+   ],
+   "tetszik": [
+    "Visszaigazolja, hogy a NAV-hoz beért a pénzem",
+    "Emberi hangvételű értesítések ('Bence kér valamit')",
+    "Áttekinthető állapotok"
+   ]
+  },
+  {
+   "kepernyo": "57_valtozott",
+   "gondolatok": "Ez baromi jó megoldás: nem nekem kell kitalálnom a jogszabályi változásokat, hanem rákérdez. A kérdések normális magyar nyelven vannak feltéve (pl. 'babát vártok', 'új helyen is dolgozol'). Egy koppintás a 'Nem változott semmi' és mehetek a dolgomra.",
+   "gondok": [
+    {
+     "mi": "Csak 'Igen' gombok vannak a sorok mellett, a 'Nem' nincs ott egyenként, ami első ránézésre fura volt.",
+     "sulyossag": "apro",
+     "javaslat": "Egyértelműbbé tenni, hogy ezek lenyitható kapcsolók, vagy hagyni így, de kiemelni az alsó sárga gombot."
+    }
+   ],
+   "tetszik": [
+    "Hétköznapi szavakkal feltett kérdések zéró könyvelői bikkfanyelv nélkül",
+    "A lenti nagy sárga 'Nem változott semmi' gomb gyorsasága",
+    "1 perces kitöltési idő"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Közvetlen NAV utalási adatok (bankszámlaszám, közlemény) a határidőknél, hogy ne kelljen papírokat keresgélnem fizetéskor.",
+  "Apple Pay / Google Pay lehetőség az app havidíjának gyors rendezéséhez."
+ ],
+ "maradnek": "Igen, egyértelműen maradnék és fizetném a havi 20 ezret, mert végre nem rettegek a negyedéves adóktól, és Bence jelenléte a visszajelzésekben óriási biztonságérzetet ad a korábbi lusta könyvelőmhöz képest.",
+ "folyamat": "5_fooldal_penz",
+ "fajlok": [
+  "01_fooldal.png",
+  "51_felretesz.png",
+  "52_fizesd_ki.png",
+  "53_hataridok.png",
+  "54_kereset.png",
+  "55_kimutatas.png",
+  "56_ertesitesek.png",
+  "57_valtozott.png"
+ ],
+ "usage": {
+  "prompt_tokens": 9521,
+  "completion_tokens": 2905,
+  "total_tokens": 12426,
+  "cost": 0.0180345,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0180345,
+   "upstream_inference_prompt_cost": 0.00714075,
+   "upstream_inference_completions_cost": 0.01089375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

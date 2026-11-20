@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 4,
+   "eredeti": "Bank, hitel, albérlet, ösztöndíj szokta kérni.",
+   "javitott": "Hitelhez, albérlethez, ösztöndíjhoz kérik.",
+   "ok": "A hitel, albérlet és ösztöndíj nem cselekvő alanyok, nem ők kérik az igazolást, hanem ezek intézéséhez kérik (összhangban a 6. és 8. sor párhuzamos szerkezetével).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "A NAV igazolja, mennyi volt a jövedelmed egy évben. Bank, hitel, albérlet, ösztöndíj szokta kérni.",
+   "pontos": true
+  },
+  {
+   "sor": 14,
+   "eredeti": "nem fér egy üzenetbe",
+   "javitott": "nem fér bele egy üzenetbe",
+   "ok": "A kifejezés magyarosan igekötővel használatos ('nem fér bele').",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Bármi, ami nem fér egy üzenetbe.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "75_keres_uj",
+ "usage": {
+  "prompt_tokens": 887,
+  "completion_tokens": 2247,
+  "total_tokens": 3134,
+  "cost": 0.0090915,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0090915,
+   "upstream_inference_prompt_cost": 0.00066525,
+   "upstream_inference_completions_cost": 0.00842625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 2054,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

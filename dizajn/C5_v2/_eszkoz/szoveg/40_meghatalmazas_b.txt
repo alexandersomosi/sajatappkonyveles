@@ -1,0 +1,22 @@
+1. Így add meg a NAV-meghatalmazást
+2. 5/7 lépés
+3. A meghatalmazott adatai
+4. Írd be a könyvelőd adatait. A másolás gombbal átveheted őket.
+5. Név
+6. Írd be: Kovács Bence (demo)
+7. Másolom
+8. Adóazonosító jel
+9. Írd be: 8000000000 (demo)
+10. Másolom
+11. A képviselet jogcíme
+12. Válaszd ki: 9 – könyvelő
+13. Válaszd ki
+14. Nyilvántartási szám
+15. Írd be: 12345678 (demo)
+16. Másolom
+17. Rajzolt vázlat – a valódi képernyő kicsit eltérhet
+18. Nem boldogulsz vele?
+19. Bence beküldi a NAV-nak, te csak jóváhagyod. Felhívunk, és megbeszéljük.
+20. Ezt kérem
+21. Mutasd egyben
+22. Megvan, tovább

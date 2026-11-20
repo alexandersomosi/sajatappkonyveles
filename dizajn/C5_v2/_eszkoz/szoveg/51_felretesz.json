@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 2,
+   "eredeti": "Ft ,",
+   "javitott": "Ft,",
+   "ok": "A vessző előtt felesleges szóköz van.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Az idei számláid után most összesen kb. 250 000 Ft , hónapok szerint.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "51_felretesz",
+ "usage": {
+  "prompt_tokens": 1268,
+  "completion_tokens": 876,
+  "total_tokens": 2144,
+  "cost": 0.004236,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.004236,
+   "upstream_inference_prompt_cost": 0.000951,
+   "upstream_inference_completions_cost": 0.003285
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 798,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,19 @@
+1. Nézd át, mit jelentünk be
+2. Ezekkel az adatokkal küldi be Kovács Bence a változást.
+3. Új székhely
+4. Módosítom
+5. Cím 1136 Budapest, Minta utca 8.
+6. Emelet, ajtó 2. emelet 5.
+7. A költözés napja
+8. Módosítom
+9. Mikortól 2026. december 1.
+10. Jogcím
+11. Módosítom
+12. A lakás bérlemény
+13. Ez a lakcímed is igen
+14. Nyilatkozatok
+15. Kijelentem, hogy az adatok igazak, és a változás 2026. december 1. napjától érvényes.
+16. Megbízom Kovács Bence könyvelőt, hogy ezt a változást a nevemben, meghatalmazottként bejelentse a NAV-nál, pontosan ezekkel az adatokkal.
+17. Jelöld be mindkét nyilatkozatot, mielőtt engedélyezel.
+18. Engedélyezem a bejelentést
+19. A gomb a két pipa után működik.

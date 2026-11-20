@@ -1,0 +1,15 @@
+1. Később folytatom
+2. 0 / 5 lépés kész
+3. Add meg az adószámodat
+4. Ebből kikeressük a vállalkozásod adatait, neked csak rá kell bólintanod.
+5. Adószám
+6. 12345678-1-23
+7. Most nem tudom
+8. Ez a te vállalkozásod?
+9. DEMO
+10. Név Szabó Péter e.v.
+11. Székhely 1052 Budapest, Példa utca 12.
+12. Adószám 12345678-1-23
+13. DEMO – kitalált adatok.
+14. Nem, ez nem az enyém
+15. Igen, ez az enyém

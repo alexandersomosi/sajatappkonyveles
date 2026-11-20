@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 39,
+   "eredeti": "Ha még hiányzik egy hónap iratai közül.",
+   "javitott": "Ha még hiányzik valami egy hónap iratai közül.",
+   "ok": "Hiányzik a mondat alanya, így a kifejezés csonka és befejezetlen.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Ha még hiányzik egy hónap iratai közül.",
+   "pontos": true
+  },
+  {
+   "sor": 52,
+   "eredeti": "Most hív kollégánk",
+   "javitott": "Most hív a kollégánk",
+   "ok": "Határozott névelő nélkül idegenül, magyartalanul hangzik.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Most hív kollégánk",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "86_ertesitesi_beallitasok",
+ "usage": {
+  "prompt_tokens": 1543,
+  "completion_tokens": 2718,
+  "total_tokens": 4261,
+  "cost": 0.01134975,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01134975,
+   "upstream_inference_prompt_cost": 0.00115725,
+   "upstream_inference_completions_cost": 0.0101925
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 2522,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

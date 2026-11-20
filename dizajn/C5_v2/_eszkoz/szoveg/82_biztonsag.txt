@@ -1,0 +1,19 @@
+1. Biztonság
+2. Kétlépcsős belépés
+3. Nincs bekapcsolva. Ajánljuk: így a jelszavad egymagában nem elég.
+4. Megnyitás ujjlenyomattal vagy arccal
+5. 5 perc háttérben töltött idő után újra kéri.
+6. Jelszócsere
+7. Mostani jelszó
+8. ••••••••••
+9. Új jelszó
+10. Legalább 10 karakter.
+11. Megváltoztatom
+12. Hol vagy belépve
+13. Adózz app, Android (ez)
+14. Utoljára: most
+15. Chrome, Windows
+16. Utoljára: tegnap 18:42
+17. Kiléptetem
+18. Kilépés mindenhol
+19. Ha elveszett a telefonod, innen (vagy egy másik eszközről) mindenhonnan kiléptetheted magad.

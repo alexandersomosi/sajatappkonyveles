@@ -323,8 +323,15 @@ describe('F9 – tulaj-konzol', () => {
     const [a] = await h.deps.db.select().from(auditLog).where(and(eq(auditLog.clientId, c.clientId), eq(auditLog.action, 'admin.lock.zarolva')));
     expect((a!.details as { reason: string }).reason).toBe('Visszaélés gyanúja');
     expect((a!.details as { after: { mode: string } }).after.mode).toBe('zarolva');
-    // the step-up expires after 10 minutes (a new sign-in of the same session family is a new session anyway)
+    // k7 integrator: a refresh rotates the session id (child row, same family) – the step-up of the sign-in still counts
     const { adminStepUps } = await import('../src/db/schema.js');
+    const { sessions } = await import('../src/db/schema.js');
+    const [su] = await h.deps.db.select().from(adminStepUps);
+    const [cur] = await h.deps.db.select().from(sessions).where(eq(sessions.id, su!.sessionId));
+    const [elod] = await h.deps.db.insert(sessions).values({ ...cur!, id: undefined as never, refreshHash: `${cur!.refreshHash}-elod`, rotatedAt: h.clock.now() }).returning();
+    await h.deps.db.update(adminStepUps).set({ sessionId: elod!.id }).where(eq(adminStepUps.sessionId, su!.sessionId));
+    expect((await h.json('GET', '/admin/console/step-up', { token: admin.token })).body.valid).toBe(true);
+    // the step-up expires after 10 minutes (a new sign-in of the same session family is a new session anyway)
     await h.deps.db.update(adminStepUps).set({ verifiedAt: new Date(h.clock.now().getTime() - 11 * 60_000) });
     expect((await h.json('DELETE', `/admin/console/clients/${c.clientId}/lock`, { token: admin.token, body: { reason: 'Rendben van' } })).body.error.code).toBe('step_up_required');
   });

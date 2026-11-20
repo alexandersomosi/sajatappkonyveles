@@ -13,10 +13,11 @@ services:
     image: caddy:2-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20faefb9f61126836f0
     container_name: kezjegy-proxy
     restart: unless-stopped
+    # Same exposure as the old appok-caddy-1: 80/tcp + 443/tcp only. 443/udp (HTTP/3) stays unpublished until the
+    # owner decides about it (README "[TULAJ] 443/udp megnyitása") – browsers fall back to TCP, as they did before.
     ports:
       - "80:80"
       - "443:443"
-      - "443:443/udp"
     volumes:
       # The whole config FOLDER (Caddyfile + sites/): "atallas.sh frissit" swaps the files inside it, never the folder,
       # so a reload always sees the new files (a bind mount follows the folder it was started with).

@@ -285,7 +285,10 @@ export async function cardConsentView(deps: Deps, cl: ClientRow, purpose: Consen
     .replace(/\{havidij\}/g, fmtHuf(monthly))
     .replace(/\{szunetdij\}/g, fmtHuf(pauseHuf));
   // a card change without money: no "most … Ft-ot az első hónapért" line
-  if (amountNow === 0) text = text.split('\n').filter((l) => !/az első hónapért/.test(l)).join('\n');
+  // (k7 integrator: the monthly line then starts without "utána" – there is no "most" line before it any more)
+  if (amountNow === 0) text = text.split('\n').filter((l) => !/az első hónapért/.test(l)).map((l) => l.replace(/^– utána havonta egyszer, /, '– havonta egyszer, ')).join('\n');
+  // (k7 integrator) "Fizesd ki" / a card change with a due month pays an UNPAID month, not the first one
+  else if (due && (purpose === 'fizesd_ki' || purpose === 'card_update')) text = text.replace('az első hónapért', 'a fizetésre váró hónapért');
   const provider = deps.cfg.payment.provider;
   return {
     version: CARD_CONSENT_VERSION,

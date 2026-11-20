@@ -1,0 +1,5 @@
+1. Új jelszót kérsz?
+2. Írd be az e-mail-címedet. Küldünk rá egy 6 jegyű kódot, azzal megadhatod az új jelszavad.
+3. E-mail-cím
+4. szabo.peter@pelda.hu
+5. Kérem a kódot

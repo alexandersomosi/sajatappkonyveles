@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 8,
+   "eredeti": "A bekötés általában",
+   "javitott": "NAV-bekötés",
+   "ok": "Az „A bekötés általában” értelmetlen témamegjelölés (valószínűleg elgépelés vagy elrontott automatikus javítás, pl. a NAV Online Számla bekötése helyett).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "A bekötés általában NAV-meghatalmazás Igazolványok Előfizetés, fizetés Adó, befizetés Számlák, iratok Változás a vállalkozásomban Valami más",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "71_visszahivas",
+ "usage": {
+  "prompt_tokens": 1058,
+  "completion_tokens": 2753,
+  "total_tokens": 3811,
+  "cost": 0.01111725,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01111725,
+   "upstream_inference_prompt_cost": 0.0007935,
+   "upstream_inference_completions_cost": 0.01032375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 2661,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

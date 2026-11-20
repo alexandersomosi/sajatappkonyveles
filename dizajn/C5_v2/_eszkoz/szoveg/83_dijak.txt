@@ -1,0 +1,35 @@
+1. Díjak és számlák
+2. Minden, amit az app tud: könyvelés, negyedéves adó, számláid letöltése, határidők, üzenetek.
+3. Fizetésre vár
+4. Székhelyváltozás bejelentése
+5. A fizetés után Kovács Bence nekilát.
+6. 4 999 Ft
+7. A díjaink
+8. Ha a változást magad jelented be az útmutatónkkal, az ingyenes.
+9. Havidíj
+10. 19 999 Ft / hó
+11. Éves zárás
+12. 14 999 Ft / év
+13. Változás bejelentése helyetted
+14. 4 999 Ft / alkalom
+15. Rendelkezésre állási díj
+16. 2 999 Ft / hó
+17. Ha szünetel a vállalkozásod, a havidíj helyett csak ezt fizeted.
+18. Kifizetve
+19. Havidíj, november
+20. Kifizetve 2026. 11. 05.
+21. 19 999 Ft
+22. Havidíj, október
+23. Kifizetve 2026. 10. 05.
+24. 19 999 Ft
+25. Díjszámlák
+26. A számlát a Számlázz.hu e-mailben is elküldi.
+27. DEMO-2026-0011
+28. 2026. 11. 05.
+29. 19 999 Ft
+30. PDF
+31. DEMO-2026-0010
+32. 2026. 10. 05.
+33. 19 999 Ft
+34. PDF
+35. Fizetek (4 999 Ft)

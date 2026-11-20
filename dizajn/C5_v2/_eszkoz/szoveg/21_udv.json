@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 1,
+   "eredeti": "Szia Péter!",
+   "javitott": "Szia, Péter!",
+   "ok": "A köszönés és a megszólított név közé vessző szükséges.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Szia Péter!",
+   "pontos": true
+  },
+  {
+   "sor": 6,
+   "eredeti": "az appban írsz",
+   "javitott": "az appban tudsz írni",
+   "ok": "Funkcióleíró listaelemként a sima kijelentő jelen idő kissé rideg és idegenes hatású, természetesebb a lehetőség kifejezése.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "A könyvelődnek az appban írsz",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "21_udv",
+ "usage": {
+  "prompt_tokens": 729,
+  "completion_tokens": 1298,
+  "total_tokens": 2027,
+  "cost": 0.00541425,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00541425,
+   "upstream_inference_prompt_cost": 0.00054675,
+   "upstream_inference_completions_cost": 0.0048675
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1109,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

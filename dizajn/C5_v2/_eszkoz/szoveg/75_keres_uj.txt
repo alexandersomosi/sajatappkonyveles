@@ -1,0 +1,14 @@
+1. Mit kérsz?
+2. Bence intézi a NAV-nál, és szól, ha kész.
+3. Jövedelemigazolás
+4. A NAV igazolja, mennyi volt a jövedelmed egy évben. Bank, hitel, albérlet, ösztöndíj szokta kérni.
+5. Nullás igazolás
+6. A NAV igazolja, hogy nincs adótartozásod. Pályázathoz, hitelhez kérik.
+7. Köztartozásmentességi igazolás
+8. Hasonló a nulláshoz, de minden köztartozásra kiterjed. Állami támogatáshoz, közbeszerzéshez kérik.
+9. Megváltozott egy adatom
+10. Új lakcím, telefonszám, bankszámla, név. Bence a NAV-nál is átvezeti.
+11. Változik, mivel foglalkozom
+12. Új tevékenység vagy befejezel egyet. Ettől változhat a költséghányadod is.
+13. Kérdésem van
+14. Bármi, ami nem fér egy üzenetbe.

@@ -1,0 +1,12 @@
+1. Kétlépcsős belépés
+2. Belépéskor a jelszó mellé egy 6 jegyű kód is kell a telefonod hitelesítő appjából.
+3. Add hozzá a hitelesítő appodhoz
+4. Például Google Authenticator vagy Microsoft Authenticator.
+5. Megnyitom a hitelesítő appban
+6. Vagy írd be kézzel ezt a kulcsot:
+7. JBSW Y3DP EHPK 3PXP
+8. Kimásolom
+9. Írd be a kódot, amit az app mutat
+10. 6 jegyű kód
+11. Biztonsági okból a mostani jelszavadat is megkérjük, ha több mint 10 perce léptél be.
+12. Bekapcsolom

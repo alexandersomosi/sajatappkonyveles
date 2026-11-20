@@ -1,0 +1,28 @@
+1. Töltsd fel a NAV-os értesítést
+2. A bejelentés végén, a Bejelentéseim, kérelmeim között, a „Megtekintés” gombbal tudod letölteni.
+3. A NAV-os értesítés (PDF)
+4. A bejelentés után a NAV értesítést ad arról, hogy nyilvántartásba vett. Ezen az adószámod is rajta van.
+5. Ebből látjuk, hogy minden jól ment: átalányadó, ÁFA-mentesség, tevékenységek. Ha valami hiányzik, időben szólunk.
+6. Az értesítés
+7. nav_ertesites.pdf
+8. PDF, 184 KB
+9. Másikat
+10. PDF kiválasztása
+11. Inkább lefotózom
+12. Mikor küldted be?
+13. 2026-11-20
+14. Alapból a mai nap. Az elmúlt 60 napból bármelyik megadható.
+15. Hogyan küldted be?
+16. Interneten, Ügyfélkapu+-szal
+17. Interneten, a DÁP alkalmazással
+18. Személyesen, NAV-ügyfélszolgálaton
+19. Az adószámod
+20. Írd be, ha rajta van az értesítésen: így hamarabb indulhatunk. Ha még nincs, hagyd üresen.
+21. Adószám (az értesítésen találod)
+22. 12345678-1-23
+23. Hol találom?
+24. Nyilvántartási szám (ha rajta van)
+25. Elakadtál?
+26. Visszahívás
+27. Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.
+28. Feltöltöm

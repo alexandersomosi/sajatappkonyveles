@@ -22,8 +22,13 @@ export default function BevezetoVar() {
   const v = g.data;
   const fn = v.welcome.accountant?.firstName ?? 'A könyvelőd';
   const s = v.steps.find((x) => x.key === p.lepes) ?? null;
-  const w = v.waiting;
-  const ki = w ? (w.actor === 'nav' ? 'a NAV' : w.actor === 'csapat' ? 'csapatunk' : fn) : s?.actorLabel === 'NAV' ? 'a NAV' : s?.actorLabel === 'Csapatunk' ? 'csapatunk' : (s?.actorLabel ?? fn);
+  const pend = v.pending.find((x) => x.key === p.lepes) ?? null;
+  // the journey has ONE waiting card (the first wait); it belongs to this step only when its title is the step's wait
+  // (k7 integrator: after the ID upload the screen showed the callback card of the meghatalmazás)
+  const w = s && (s.waitText || pend) && v.waiting?.title !== s.waitText ? null : v.waiting;
+  const szereplo = pend?.actorLabel ?? s?.actorLabel;
+  const ki = w ? (w.actor === 'nav' ? 'a NAV' : w.actor === 'csapat' ? 'csapatunk' : fn) : szereplo === 'NAV' ? 'a NAV' : szereplo === 'Csapatunk' ? 'csapatunk' : (szereplo ?? fn);
+  const ido = w ? w.timeText : (pend?.timeText ?? s?.timeText);
   const kov = kovetkezoLepes(v);
   const cel = kov ? lepesCel(kov) : null;
   return (
@@ -45,9 +50,9 @@ export default function BevezetoVar() {
             </T>
           ) : null}
           {/* the waiting card's own time (the step's "kb. 5 perc" is the client's part, not the wait) */}
-          {(w ? w.timeText : s?.timeText) ? (
+          {ido ? (
             <T m={15} lh={1.4} c={szin.halvany} style={{ marginTop: 6 }}>
-              {w ? w.timeText : s?.timeText}
+              {ido}
             </T>
           ) : null}
           {kov ? (

@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 6,
+   "eredeti": "tartalék kód",
+   "javitott": "tartalékkód",
+   "ok": "A tartalékkód összetett szó, ezért egybeírandó.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Nincs nálam a telefonom: tartalék kód",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "14_ketlepcsos_belepes",
+ "usage": {
+  "prompt_tokens": 689,
+  "completion_tokens": 965,
+  "total_tokens": 1654,
+  "cost": 0.0041355,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0041355,
+   "upstream_inference_prompt_cost": 0.00051675,
+   "upstream_inference_completions_cost": 0.00361875
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 909,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

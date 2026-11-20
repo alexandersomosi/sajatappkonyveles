@@ -68,7 +68,13 @@ export default function FizesdKi() {
       </Kepernyo>
     );
   }
-  const idoszak = `${datum(d.period.start)}–${datum(d.period.end)}`;
+  // period.end is exclusive (the next period's first day): the band shows the last paid day, like the card below it
+  const utolsoNap = (iso: string) => {
+    const t = new Date(`${iso}T12:00:00Z`);
+    t.setUTCDate(t.getUTCDate() - 1);
+    return t.toISOString().slice(0, 10);
+  };
+  const idoszak = `${datum(d.period.start)}–${datum(utolsoNap(d.period.end))}`;
   return (
     <Kepernyo
       fejlec={<Sav cim={fillPlaceholders(P.fizesdKi.bandTitle, { osszeg: szam(d.amountHuf) })} szoveg={fillPlaceholders(P.fizesdKi.bandText, { idoszak })} />}

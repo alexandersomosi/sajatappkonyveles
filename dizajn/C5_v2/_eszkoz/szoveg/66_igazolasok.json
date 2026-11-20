@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 3,
+   "eredeti": "Kész igazolást itt letöltheted.",
+   "javitott": "A kész igazolást itt töltheted le.",
+   "ok": "A határozott ragozású ige (\"letöltheted\") határozott névelőt kíván (\"A kész igazolást\"), és az „itt” hangsúlyos határozószó után az igekötő elválik (\"töltheted le\").",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Kész igazolást itt letöltheted.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "66_igazolasok",
+ "usage": {
+  "prompt_tokens": 789,
+  "completion_tokens": 874,
+  "total_tokens": 1663,
+  "cost": 0.00386925,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00386925,
+   "upstream_inference_prompt_cost": 0.00059175,
+   "upstream_inference_completions_cost": 0.0032775
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 728,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

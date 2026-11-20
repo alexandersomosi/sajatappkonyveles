@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 5,
+   "eredeti": "SZJA-t",
+   "javitott": "szja-t",
+   "ok": "Az adónemek mozaikszavait (szja, áfa, szocho) kisbetűvel írjuk.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "maradt neked. Ennyi marad a bevételedből, miután levontuk az SZJA-t, a TB-járulékot, a szochót és az iparűzési adót. A költségeidet (anyag, telefon, autó) ebből fizeted – ezeket nem látjuk.",
+   "pontos": true
+  },
+  {
+   "sor": 35,
+   "eredeti": "bevételből,",
+   "javitott": "bevételből",
+   "ok": "A mondatrészek közé nem szükséges vessző.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Ha így folytatod: kb. 19 400 000 Ft bevételből, kb. 1 980 000 Ft adóval.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "54_kereset",
+ "usage": {
+  "prompt_tokens": 1180,
+  "completion_tokens": 1167,
+  "total_tokens": 2347,
+  "cost": 0.00526125,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00526125,
+   "upstream_inference_prompt_cost": 0.000885,
+   "upstream_inference_completions_cost": 0.00437625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1002,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

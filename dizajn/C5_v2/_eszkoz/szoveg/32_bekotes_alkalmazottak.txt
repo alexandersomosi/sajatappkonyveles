@@ -1,0 +1,11 @@
+1. Vállalkozásod
+2. Egy kérdés, mielőtt továbbmegyünk.
+3. Van alkalmazottad vagy egyszerűsített foglalkoztatottad (EFO)?
+4. Nincs
+5. Van alkalmazottam
+6. Van EFO-s foglalkoztatottam
+7. Mindkettő
+8. Lesz hamarosan
+9. Bérszámfejtést most nem vállalunk. Bence megnézi a helyzetedet, és megírja, mit tudunk ajánlani: lehet, hogy egyedi ajánlatot küld, vagy azt javasolja, hogy a béreket más számfejtse, és mi a vállalkozásod többi részét intézzük.
+10. Előbb Bence megnézi, mit tudunk vállalni az alkalmazottaid miatt.
+11. Tovább

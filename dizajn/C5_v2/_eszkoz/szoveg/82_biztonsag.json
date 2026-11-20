@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 3,
+   "eredeti": "egymagában",
+   "javitott": "önmagában",
+   "ok": "Élettelen dologra, fogalomra (itt: jelszóra) az 'önmagában' a természetes kifejezés, az 'egymagában' inkább személyekre használatos.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Nincs bekapcsolva. Ajánljuk: így a jelszavad egymagában nem elég.",
+   "pontos": true
+  },
+  {
+   "sor": 13,
+   "eredeti": "(ez)",
+   "javitott": "(ez az eszköz)",
+   "ok": "Az angol '(this)' közvetlen fordítása magyartalanul és hiányosan hangzik, teljes kifejezéssel sokkal természetesebb.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Adózz app, Android (ez)",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "82_biztonsag",
+ "usage": {
+  "prompt_tokens": 846,
+  "completion_tokens": 1312,
+  "total_tokens": 2158,
+  "cost": 0.0055545,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0055545,
+   "upstream_inference_prompt_cost": 0.0006345,
+   "upstream_inference_completions_cost": 0.00492
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1108,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

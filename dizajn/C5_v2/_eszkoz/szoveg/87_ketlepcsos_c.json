@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 6,
+   "eredeti": "6 jegyű",
+   "javitott": "6-jegyű",
+   "ok": "A „hatjegyű” egybeírt összetétel, ezért számjeggyel írva kötőjellel kapcsolódik: „6-jegyű”.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "6 jegyű kód",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "87_ketlepcsos_c",
+ "usage": {
+  "prompt_tokens": 718,
+  "completion_tokens": 1282,
+  "total_tokens": 2000,
+  "cost": 0.005346,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.005346,
+   "upstream_inference_prompt_cost": 0.0005385,
+   "upstream_inference_completions_cost": 0.0048075
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1204,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,178 @@
+{
+ "benyomas": "Nagyon tetszik a letisztult stílus és az, hogy látom, ki a könyvelőm, de ez a regisztrációs folyamat nekem kissé kaotikus és ijesztően sok lépésből áll. Rendezvényszervezőként rohanok, este szeretném gyorsan lezavarni a dolgot, de itt rögtön 12 lépéssel és bizonytalan EFO-s kérdésekkel szembesülök. Jó, hogy van segítség, de a 24-48 órás visszahívás lassú, miközben azt éreztetik, hogy már szerződök valamire, amit még nem is látok tisztán.",
+ "kepernyok": [
+  {
+   "kepernyo": "50_fooldal_indulas",
+   "gondolatok": "A 2/12 lépés láttán rögtön elfog a fáradtság, azt hittem, ez gyorsabb lesz. Jó látni Bence arcát, de a 'Közben mi dolgozunk' szövegnél fogalmam sincs, milyen tevékenység bejelöléséről beszélnek, hiszen nekem már van vállalkozásom január óta.",
+   "gondok": [
+    {
+     "mi": "A 24–48 órás visszahívási idő nekem túl lassú, ha épp most este szeretném elintézni a bekötést.",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen egyértelmű azonnali chat, vagy legalább pontosabb idősáv a visszahíváshoz."
+    },
+    {
+     "mi": "A 'Megírjuk, melyik tevékenységet jelöld be a NAV-nál' rész megijeszt, mert már létező vállalkozó vagyok, be vannak jelentve a tevékenységeim.",
+     "sulyossag": "zavar",
+     "javaslat": "Vegye figyelembe a rendszer, hogy már működő vállalkozó vagyok, ne indítási szövegeket mutasson."
+    }
+   ],
+   "tetszik": [
+    "Látszik a könyvelőm (Kovács Bence) fotója és neve.",
+    "Ki van írva, hogy kb. 3 perc a szerződés."
+   ]
+  },
+  {
+   "kepernyo": "30_bekotes",
+   "gondolatok": "A 'Még 10 dolog kell tőled' címtől lever a víz, ez egy végtelen bürokráciának tűnik. Jó a lista átláthatósága, de fura a sorrend: előbb szerződjek és fizessek, mielőtt egyáltalán átbeszéltük volna az adataimat vagy a számlázásomat?",
+   "gondok": [
+    {
+     "mi": "A 'Még 10 dolog kell tőled' kifejezés kifejezetten riasztó egy elfoglalt embernek.",
+     "sulyossag": "zavar",
+     "javaslat": "Inkább így fogalmazzanak: 'Pár gyors adat, és Bence átveszi a munkát'."
+    },
+    {
+     "mi": "A számlák bekötése csak a 7. lépés, a fizetés pedig előtte van.",
+     "sulyossag": "apro",
+     "javaslat": "Előbb lássam, hogy a számlázóm összeköthető-e gond nélkül, és csak utána vonjanak le pénzt."
+    }
+   ],
+   "tetszik": [
+    "Minden lépésnél jelzi, hogy kb. hány percet vesz igénybe.",
+    "Világos, hogy mi az én dolgom, és mi Bencéé."
+   ]
+  },
+  {
+   "kepernyo": "31_bekotes_adatok",
+   "gondolatok": "Ez végre egyértelmű és tiszta űrlap, nincsenek felesleges sallangok. Tetszik, hogy a telefonszámom és nevem már be van írva, így gyorsabban haladok.",
+   "gondok": [
+    {
+     "mi": "Az adóazonosító jelemet fejből sosem tudom, elő kell keresnem a kártyát a pénztárcámból.",
+     "sulyossag": "apro",
+     "javaslat": "Jó lenne ide is egy kamerás fotózási opció az adókártyához, mint a személyinél."
+    }
+   ],
+   "tetszik": [
+    "Megnyugtató a mondat: 'Amit beírtál, elmentjük: később itt folytathatod.'",
+    "Tiszta, jól olvasható mezők."
+   ]
+  },
+  {
+   "kepernyo": "32_bekotes_alkalmazottak",
+   "gondolatok": "Itt teljesen leblokkoltam! Rendezvényeken szoktam alkalmi segítséget kérni (EFO), de az alsó doboz azt írja: 'Bérszámfejtést most nem vállalunk'. Most akkor kidobnak a rendszerből, vagy többet kell fizetnem, vagy mi lesz?",
+   "gondok": [
+    {
+     "mi": "Az EFO-t bejelölve rögtön kapom a hibaüzenet-jellegű szöveget, hogy nem csinálnak bérszámfejtést, és Bence talán egyedi ajánlatot ad. Emiatt elbizonytalanodom, hogy alkalmas-e nekem ez a szolgáltatás.",
+     "sulyossag": "elakadok",
+     "javaslat": "Írják le világosan: az alkalmi munkavállaló (EFO) bejelentését vállalják-e havi pár ezerért, vagy azonnal keressek külsős bérszámfejtőt, mert így nem merem megnyomni a Továbbot."
+    }
+   ],
+   "tetszik": [
+    "Őszintén leírják a korlátokat, nem utólag derül ki."
+   ]
+  },
+  {
+   "kepernyo": "33_bekotes_azonositas",
+   "gondolatok": "Te jó ég, mennyi mindent kell fotózni és gépelni egyszerre! Ha lefotózom mindkét oldalt, miért kell még kézzel is begépelnem az összes adatot, mint anyám neve meg érvényesség? Ez telefonon, sietve nagyon sok.",
+   "gondok": [
+    {
+     "mi": "Dupla munka: ha lefotózom az igazolványokat, ne kelljen még kézzel is bepötyögnöm az okmányszámot, lejárati időt, anyja nevét.",
+     "sulyossag": "zavar",
+     "javaslat": "Olvassa be az app a fotókból az adatokat automatikusan, nekem csak ellenőriznem kelljen."
+    },
+    {
+     "mi": "A 'Kiemelt közszereplő' jogi szöveg mindig megijeszt, túl hivatalos.",
+     "sulyossag": "apro",
+     "javaslat": "Maradjon a sima Nem pipa alapértelmezett, egyszerűsített magyarázattal."
+    }
+   ],
+   "tetszik": [
+    "Egyértelmű útmutatás a fotózáshoz ('Tedd sötét asztalra...').",
+    "Külön kiemeli, hogy a lakcímkártyának csak a lakcímes oldala kell."
+   ]
+  },
+  {
+   "kepernyo": "34_bekotes_elofizetes",
+   "gondolatok": "Ez a képernyő végre korrekt és profi. Átlátható, hogy mit kapok a 19 999 Ft-ért, és a Stripe logó megnyugtat, hogy nem valami sufnituning cég kezeli a kártyaadataimat.",
+   "gondok": [
+    {
+     "mi": "Még nem beszéltem a könyvelővel, és még az EFO-s kérdésem sincs tisztázva, de már kérik a bankkártyámat.",
+     "sulyossag": "zavar",
+     "javaslat": "Az első levonás csak akkor történjen meg, ha Bence átnézte a dolgaimat és tényleg elvállalta a fiókomat."
+    }
+   ],
+   "tetszik": [
+    "'Minden levonás előtt 3 nappal szólunk' – ez hatalmas plusz pont, utálom a meglepetés levonásokat.",
+    "Világos pontok a havidíj tartalmáról."
+   ]
+  },
+  {
+   "kepernyo": "35_bekotes_idopont",
+   "gondolatok": "Azt hittem a feladat alapján, hogy naptárból választhatok időpontot, de ez csak egy sima visszahíváskérő oldal. Munkanapokon 9 és 17 óra között hívnak valamikor 2 napon belül... épp akkor szoktam a legelfoglaltabb lenni rendezvényeken.",
+   "gondok": [
+    {
+     "mi": "Nem tudok konkrét idősávot vagy időpontot választani, csak egy 24-48 órás ablakot kapok napközben.",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen egy naptár, ahol kiválaszthatom, hogy pl. kedden 15:30-kor hívjanak, amikor nincs megbeszélésem."
+    }
+   ],
+   "tetszik": [
+    "Van megjegyzés rovat, ahova beírhatom a kérdésemet.",
+    "Automatán ott a telefonszámom."
+   ]
+  },
+  {
+   "kepernyo": "36_bekotes_szerzodes",
+   "gondolatok": "Kifejezetten tetszik a sárga figyelmeztető doboz! Végre valaki emberi nyelven összefoglalja a lényeget: nincs 14 napos elállás, de bármikor lemondhatom. Így nem kell a 40 oldalas jogi maszlagot végignyálaznom.",
+   "gondok": [
+    {
+     "mi": "A 'Rendben, tovább' gomb szürke és inaktív, amíg nincs minden bepipálva, de hirtelen nem látszik, hova kell még görgetni.",
+     "sulyossag": "apro",
+     "javaslat": "Egyértelműbb vizuális jelzés a gomb felett, ha még hiányzik egy pipa."
+    }
+   ],
+   "tetszik": [
+    "Az 'Erre külön figyelj' kiemelés nagyon korrekt és bizalomépítő.",
+    "Egy gombbal letölthető PDF-ben is a Megbízási szerződés."
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Konkrét időpontválasztó naptár a visszahíváshoz (nem csak tág 24-48 órás ígéret).",
+  "Tiszta, megnyugtató válasz az EFO-ra (alkalmi munkásokra): most akkor könyvelik őket külön díjért, vagy nekem kell másik szakembert vadásznom?"
+ ],
+ "maradnek": "Talán: a szerződés és a fizetés nagyon korrekt és szimpatikus, de megvárom a visszahívást az EFO-s kérdésem miatt, mielőtt megadnám a bankkártyámat.",
+ "folyamat": "3_bekotes",
+ "fajlok": [
+  "50_fooldal_indulas.png",
+  "30_bekotes.png",
+  "31_bekotes_adatok.png",
+  "32_bekotes_alkalmazottak.png",
+  "33_bekotes_azonositas.png",
+  "34_bekotes_elofizetes.png",
+  "35_bekotes_idopont.png",
+  "36_bekotes_szerzodes.png"
+ ],
+ "usage": {
+  "prompt_tokens": 9591,
+  "completion_tokens": 2844,
+  "total_tokens": 12435,
+  "cost": 0.01785825,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01785825,
+   "upstream_inference_prompt_cost": 0.00719325,
+   "upstream_inference_completions_cost": 0.010665
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,146 @@
+{
+ "benyomas": "Nagyon tiszta, modern és megnyugtató a felület, nem vág fejbe rögtön érthetetlen adós szövegekkel. Kifejezetten tetszik, hogy név szerint ott van egy hús-vér ember, Kovács Bence, így nem érzem magam magamra hagyva egy robottal. Az viszont kicsit ijesztő, hogy ilyen korán kéri a bankkártyámat, miközben még azt sem láttam, hogyan működik belülről a rendszer.",
+ "kepernyok": [
+  {
+   "kepernyo": "20_bevezeto",
+   "gondolatok": "Gyors betöltő képernyő, jó látni, hogy nem vész el semmi, ha félbehagyom két rendezvény között.",
+   "gondok": [],
+   "tetszik": [
+    "Rövid, világos mondat: 'ott folytatod, ahol abbahagytad'"
+   ]
+  },
+  {
+   "kepernyo": "21_udv",
+   "gondolatok": "Végre emberi nyelven mondja el valaki, miért jó ez nekem. Az, hogy 'A kiállított számláid maguktól bejönnek a NAV-ból' és 'Megmondjuk, mennyit tegyél félre az adóra', pont az, ami nekem kell a tavalyi meglepetés adófizetésem után.",
+   "gondok": [],
+   "tetszik": [
+    "Közérthető ígéretek",
+    "Barátságos hangnem",
+    "Egyértelmű 'Tovább' gomb"
+   ]
+  },
+  {
+   "kepernyo": "21_udv_b",
+   "gondolatok": "Jó, hogy leírja a lépéseket időtartammal, így tudom, mire számítsak a villamoson ülve. Az viszont megakaszt, hogy a 3. lépésnél már a bankkártyámat kéri, még mielőtt a könyvelő egyáltalán rátekintett volna a dolgaimra.",
+   "gondok": [
+    {
+     "mi": "Azonnal fizetnem kell 19 999 Ft-ot, még mielőtt láttam volna az app igazi működését.",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen pár nap próbaidőszak, vagy csak akkor terhelje, ha Bence tényleg átvette a könyvelésemet."
+    }
+   ],
+   "tetszik": [
+    "Időbecslések lépésenként (pl. kb. 5 perc)",
+    "Kovács Bence neve szerepel",
+    "Átlátható árazás, nincs apróbetűs trükközés"
+   ]
+  },
+  {
+   "kepernyo": "22_ut",
+   "gondolatok": "Teljesen egyértelmű kérdés, január óta van adószámom, úgyhogy nekem az 'Igen, van' a nyerő.",
+   "gondok": [],
+   "tetszik": [
+    "Nem bonyolítják túl a választást",
+    "Ott van a 'Később folytatom' mentőöv"
+   ]
+  },
+  {
+   "kepernyo": "22_ut_b",
+   "gondolatok": "Ha most indítanám, ez szuper segítség lenne, főleg hogy Bence felhív és bejelenti helyettem. Nekem mondjuk ez már nem kell, de jó tudni, hogy ilyen készségesek.",
+   "gondok": [],
+   "tetszik": [
+    "Választhatok, hogy magam csinálom vagy intézik helyettem telefonon"
+   ]
+  },
+  {
+   "kepernyo": "23_adoszam",
+   "gondolatok": "Beírom az adószámot és egyből kidobja a nevemet meg a címemet, ez profi és kényelmes. A 'DEMO' feliratok kicsit bezavarnak a képen, de értem a lényegét.",
+   "gondok": [
+    {
+     "mi": "Ha nem fejből tudom az adószámomat, keresgélnem kell a papírjaimban vagy számláimban.",
+     "sulyossag": "apro",
+     "javaslat": "Jó, hogy ott a 'Most nem tudom' gomb, de egy tipp (pl. 'Megtalálod a korábbi számláidon') segítene."
+    }
+   ],
+   "tetszik": [
+    "Automatikusan kikeresi az adatokat a NAV-ból, nem kell mindent kézzel gépelnem"
+   ]
+  },
+  {
+   "kepernyo": "23_adoszam_b",
+   "gondolatok": "Megerősíti a vállalkozásom nevét. Kicsit feleslegesnek érzem külön képernyőn, hiszen az előbb már leokéztam a címmel együtt, de legalább nem viszi félre a dolgot.",
+   "gondok": [
+    {
+     "mi": "Külön képernyő csak a név megerősítésére, miközben az előzőn már ott volt.",
+     "sulyossag": "apro",
+     "javaslat": "Összevonható az előző képernyővel, hogy gyorsabban haladjak."
+    }
+   ],
+   "tetszik": [
+    "Egyszerű 'Rendben' jóváhagyás"
+   ]
+  },
+  {
+   "kepernyo": "24_var",
+   "gondolatok": "Megnyugtató, hogy jelzi, most a NAV-ra várunk és nekem nincs dolgom. De a gomb felirata ('Tovább: a kártyád megadása') megint arra emlékeztet, hogy fizetnem kell, miközben még a meghatalmazás sincs kész.",
+   "gondok": [
+    {
+     "mi": "Fizetnem kell úgy, hogy a jóváhagyás 'a NAV-tól függ', tehát még nem is működik élesben.",
+     "sulyossag": "zavar",
+     "javaslat": "Kártyaadatot csak a jóváhagyás után kérjen el, vagy írja ki nagy betűkkel, hogy most 0 Ft-ot terhelünk."
+    }
+   ],
+   "tetszik": [
+    "Világos státusz: 'Most nincs teendőd'"
+   ]
+  },
+  {
+   "kepernyo": "25_kesz",
+   "gondolatok": "Klassz összefoglaló, látom, hogy én végeztem, és most Bencén a sor. Ettől elmúlik az aggodalmam, úgy érzem, jó kezekben van az adminisztráció.",
+   "gondok": [],
+   "tetszik": [
+    "'Kész vagy a te részeddel!' felirat nagyon felszabadító",
+    "Lépések sorrendje látható"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Egy egyértelmű megerősítés a kártyamegadásnál arról, hogy van-e pénzvisszafizetési garancia vagy próbahét, ha nem tetszik Bence munkája."
+ ],
+ "maradnek": "talán – Nagyon profi és pontosan az én problémáimat oldja meg, de a 20 ezer forint azonnali kártyás levonása előtt szívesen beszélnék legalább két mondatot Bencével.",
+ "folyamat": "2_bevezeto",
+ "fajlok": [
+  "20_bevezeto.png",
+  "21_udv.png",
+  "21_udv_b.png",
+  "22_ut.png",
+  "22_ut_b.png",
+  "23_adoszam.png",
+  "23_adoszam_b.png",
+  "24_var.png",
+  "25_kesz.png"
+ ],
+ "usage": {
+  "prompt_tokens": 10660,
+  "completion_tokens": 1646,
+  "total_tokens": 12306,
+  "cost": 0.0141675,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0141675,
+   "upstream_inference_prompt_cost": 0.007995,
+   "upstream_inference_completions_cost": 0.0061725
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

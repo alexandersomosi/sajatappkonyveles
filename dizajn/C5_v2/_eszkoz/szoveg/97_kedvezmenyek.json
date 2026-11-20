@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 2,
+   "eredeti": "fizetsz",
+   "javitott": "fizettél",
+   "ok": "Az „idén eddig” időhatározó lezárult/eddig eltelt időszakra utal, így jelen idő helyett múlt idő indokolt.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Idén eddig kb. 126 000 Ft-tal kevesebb adót fizetsz.",
+   "pontos": true
+  },
+  {
+   "sor": 14,
+   "eredeti": "Kérdése van",
+   "javitott": "Kérdés érkezett",
+   "ok": "Státuszként a „Kérdése van” magázásnak tűnhet (mintha a felhasználónak lenne kérdése), a tegező appban a személytelen vagy tegező forma egyértelműbb.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Kérdése van",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "97_kedvezmenyek",
+ "usage": {
+  "prompt_tokens": 986,
+  "completion_tokens": 1983,
+  "total_tokens": 2969,
+  "cost": 0.00817575,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00817575,
+   "upstream_inference_prompt_cost": 0.0007395,
+   "upstream_inference_completions_cost": 0.00743625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1761,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

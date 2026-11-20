@@ -131,6 +131,20 @@ export function adminRoutes(deps: Deps) {
       .where(and(eq(simplepayTransactions.status, 'FINISHED'), eq(clients.isTest, false), gte(simplepayTransactions.finishedAt, new Date(`${Number(today.slice(0, 4)) - 1}-${today.slice(5, 7)}-01T00:00:00Z`))))
       .groupBy(sql`1`)
       .orderBy(sql`1`);
+    // k7 integrator: the §29 payments (Stripe / DEMO provider) count too – successful money rows (no card change),
+    // minus what was refunded; the old SimplePay rows above stay for the history
+    const since = `${Number(today.slice(0, 4)) - 1}-${today.slice(5, 7)}-01T00:00:00Z`;
+    const res29 = await deps.db.execute(sql`select to_char(p.succeeded_at at time zone 'Europe/Budapest', 'YYYY-MM') as month, sum(p.amount_huf - coalesce(p.refunded_huf, 0))::bigint as amount
+        from payments p join clients cl on cl.id = p.client_id
+        where p.status = 'sikeres' and p.kind <> 'kartya' and p.succeeded_at is not null and cl.is_test = false and p.succeeded_at >= ${since}::timestamptz
+        group by 1 order by 1`);
+    const fin29 = (res29 as unknown as { rows: { month: string; amount: number | string }[] }).rows;
+    for (const r of fin29) {
+      const m = fin.find((f) => f.month === r.month);
+      if (m) m.amount = Number(m.amount) + Number(r.amount);
+      else fin.push({ month: r.month, amount: Number(r.amount) });
+    }
+    fin.sort((a, b) => a.month.localeCompare(b.month));
     const failed = subs.filter((s) => s.status === 'past_due' || s.status === 'suspended').length;
     const accs = await deps.db.select().from(accountants).orderBy(asc(accountants.displayName));
     const accRows = [];

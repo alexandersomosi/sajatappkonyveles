@@ -1,0 +1,19 @@
+1. Változott valami október óta?
+2. Pár igen–nem kérdés, kb. 1 perc. Ha semmi nem változott, egy koppintás.
+3. Kezdtél munkaviszonyt?
+4. Igen
+5. Nyugdíjas lettél?
+6. Igen
+7. Költözik a vállalkozásod, vagy új helyen is dolgozol?
+8. Igen
+9. Új munkába kezdesz, vagy más lesz a fő munkád?
+10. Igen
+11. Született gyermeked, babát vártok, vagy házasodtál?
+12. Igen
+13. Lett alkalmazottad vagy egyszerűsített foglalkoztatottad (EFO)?
+14. Igen
+15. Szünetet tartanál a vállalkozásodban?
+16. Igen
+17. Más is változott?
+18. Igen
+19. Nem változott semmi

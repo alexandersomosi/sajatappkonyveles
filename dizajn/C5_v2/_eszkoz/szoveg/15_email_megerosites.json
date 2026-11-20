@@ -1,0 +1,55 @@
+{
+ "javaslatok": [
+  {
+   "sor": 3,
+   "eredeti": "az e-mail-címed.",
+   "javitott": "az e-mail-címed!",
+   "ok": "Felszólító mondat („Erősítsd meg az e-mail-címed!”), ezért a végére felkiáltójel illik pont helyett.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "az e-mail-címed.",
+   "pontos": true
+  },
+  {
+   "sor": 4,
+   "eredeti": "6 jegyű",
+   "javitott": "6-jegyű",
+   "ok": "Ha a szóösszetétel előtagja számjegy, kötőjellel kapcsoljuk az utótaghoz (vagy betűvel kiírva: hatjegyű).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Küldtünk egy 6 jegyű kódot ide: szabo.peter@pelda.hu",
+   "pontos": true
+  },
+  {
+   "sor": 7,
+   "eredeti": "levélszemét mappát",
+   "javitott": "levélszemét- (vagy spam-) mappát",
+   "ok": "Összetett szó, különírva helytelen; ráadásul a legtöbb levelezőben „Spam” néven szerepel, így érdemes azt is említeni.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Nem jött meg? Nézd meg a levélszemét mappát is. 42 másodperc múlva újat kérhetsz.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "15_email_megerosites",
+ "usage": {
+  "prompt_tokens": 739,
+  "completion_tokens": 1377,
+  "total_tokens": 2116,
+  "cost": 0.005718,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.005718,
+   "upstream_inference_prompt_cost": 0.00055425,
+   "upstream_inference_completions_cost": 0.00516375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1052,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

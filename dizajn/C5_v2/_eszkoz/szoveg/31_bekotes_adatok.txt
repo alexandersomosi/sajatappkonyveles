@@ -1,0 +1,22 @@
+1. Adataid – Rólad
+2. 1. lap a 3-ból. Ezekkel az adatokkal jelentkezünk a NAV-nál.
+3. Vezetéknév
+4. Szabó
+5. Keresztnév
+6. Péter
+7. Telefonszám
+8. +36 20 123 4567
+9. Adóazonosító jel
+10. 10 számjegy
+11. 10 számjegy, az adóigazolványodon találod.
+12. Lakcím
+13. Hol találom?
+14. Irányítószám
+15. Budapest
+16. Település
+17. Példa utca 12.
+18. Utca, házszám
+19. Amit beírtál, elmentjük: később itt folytathatod.
+20. Elakadtál?
+21. Visszahívás
+22. Tovább

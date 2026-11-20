@@ -1,0 +1,7 @@
+1. DEMO
+2. Nem sikerült a fizetés
+3. A bankod nem engedte a fizetést
+4. Nem vontunk le semmit. Próbáld újra, vagy add meg egy másik kártyádat.
+5. Másik kártyával
+6. A Fiók oldalra
+7. Próbáld újra

@@ -1,0 +1,196 @@
+{
+ "benyomas": "Nagyon korrekt és transzparens ez a rész, nem érzem azt a tipikus lehúzós 'úgy eldugjuk a lemondást, hogy sose találd meg' trükközést. A díjak egyértelműek, és kifejezetten megnyugtató, hogy a lemondás és a fióktörlés lépései világosan le vannak írva, nincs mellébeszélés. Az értesítési lista viszont rettenetesen hosszú, kicsit megijesztett ez a rengeteg kapcsoló.",
+ "kepernyok": [
+  {
+   "kepernyo": "80_fiok",
+   "gondolatok": "Minden egy helyen van, jól átlátható a menü. Külön jó pont, hogy Bence még itt is a fejlécben van közvetlen üzenetgombbal, és nem rejtették el a 'Fiók törlése' gombot sem a lap alján.",
+   "gondok": [
+    {
+     "mi": "A menü nagyon hosszúra nyúlik, sokat kell görgetni a lényeges beállításokig.",
+     "sulyossag": "apro",
+     "javaslat": "Kicsit összevonhatóbb kategóriák vagy kompaktabb listaelemek."
+    }
+   ],
+   "tetszik": [
+    "Látszik a könyvelőm elérhetősége rögtön felül",
+    "Korrekt, piros 'Fiók törlése' gomb az alján, nincs eldugva"
+   ]
+  },
+  {
+   "kepernyo": "81_adataim",
+   "gondolatok": "Szuper, hogy egyben látom az összes hivatalos cégadatomat, lakcímemet és a költséghányadomat. A ZIP-fájlos adatletöltés kifejezetten profi és biztonságérzetet ad.",
+   "gondok": [
+    {
+     "mi": "A 'Vállalkozó 2021. március óta' szöveg zavar, hiszen én csak idén januárban indultam (bár tudom, ez csak mintaadat).",
+     "sulyossag": "apro",
+     "javaslat": "Valós indulási dátum mutatása."
+    }
+   ],
+   "tetszik": [
+    "40% költséghányad mellett ott a megnyugtató 'könyvelőd megerősítette' felirat",
+    "Egy gombbal letölthetem az összes adatomat ZIP-ben"
+   ]
+  },
+  {
+   "kepernyo": "82_biztonsag",
+   "gondolatok": "Tetszik a biometrikus belépés opció, én is arcazonosítást használok legszívesebben. Az is szuper, hogy látom, hol vagyok belépve, és távolról ki tudom léptetni a gépeket.",
+   "gondok": [],
+   "tetszik": [
+    "Belépett eszközök listája és egygombos távoli kiléptetés",
+    "Egyszerű jelszócsere felület"
+   ]
+  },
+  {
+   "kepernyo": "83_dijak",
+   "gondolatok": "Végre feketén-fehéren látom az árakat: a havidíjat, az éves zárást meg a szüneteltetést. Meglep a fenti 'Székhelyváltozás bejelentése 4 999 Ft' tétel, de legalább kiírja, hogy ha magam csinálom, az ingyenes.",
+   "gondok": [
+    {
+     "mi": "Hirtelen megijedtem a 4 999 Ft-os fizetnivalótól, mert nem emlékeztem, hogy kértem székhelyváltoztatást.",
+     "sulyossag": "zavar",
+     "javaslat": "Világosabban jelezni, hogy ez egy korábbi, általam indított kérés miatt jelent meg."
+    }
+   ],
+   "tetszik": [
+    "Egyértelmű külön díjtáblázat (mi ingyenes magamnak, mi pénzes vele)",
+    "Szüneteltetésre a csökkentett rendelkezésre állási díj (2 999 Ft) nagyon méltányos"
+   ]
+  },
+  {
+   "kepernyo": "84_dijszamlak",
+   "gondolatok": "Egyszerű számlalista letöltési gombokkal. Jó tudni, hogy a Számlázz.hu küldi e-mailben is, így nem kell vadásznom rá.",
+   "gondok": [],
+   "tetszik": [
+    "Egy koppintással letölthető számlák",
+    "Tiszta, letisztult lista"
+   ]
+  },
+  {
+   "kepernyo": "85_elofizetes",
+   "gondolatok": "Itt van minden lényeges kártyaadat és lemondási lehetőség. A 'Ha mennél' szöveg kifejezetten emberi és korrekt: nem fenyegetőznek, a kifizetett hónap végéig dolgozik a könyvelő, és az irataim is megmaradnak.",
+   "gondok": [],
+   "tetszik": [
+    "Korrekt tájékoztatás a lemondásról, semmi sunnyogás",
+    "A kártyakezelés biztonságát kiemelik (Stripe)"
+   ]
+  },
+  {
+   "kepernyo": "86_ertesitesi_beallitasok",
+   "gondolatok": "Atyaég, ez a lista végtelenül hosszú! Jó, hogy van 'Csendes idő' éjszakára, de ennyi mindent végigkapcsolgatni túl sok este egy fárasztó meló után.",
+   "gondok": [
+    {
+     "mi": "Túl részletes és hosszú a lista, elveszek a rengeteg különféle értesítési típus között.",
+     "sulyossag": "zavar",
+     "javaslat": "Fő kategóriák (pl. Sürgős adóügyek, Könyvelő üzenetei, Általános infók) összefogása, és alapértelmezett intelligens beállítás."
+    }
+   ],
+   "tetszik": [
+    "Éjjel ne szóljon a telefon (csendes idő) opció",
+    "Külön választható, hogy telefonra (push) vagy e-mailre jöjjön"
+   ]
+  },
+  {
+   "kepernyo": "87_ketlepcsos",
+   "gondolatok": "Világos útmutató az authenticator beállításhoz. Jó, hogy rákattinthatok közvetlenül az app megnyitására vagy kimásolhatom a kulcsot.",
+   "gondok": [
+    {
+     "mi": "Nem mindenkinek van hitelesítő appja, egy sima SMS-es kódolvasás egyszerűbb lenne egy laikusnak.",
+     "sulyossag": "apro",
+     "javaslat": "SMS-es hitelesítés felajánlása alternatívaként."
+    }
+   ],
+   "tetszik": [
+    "Kimásolom gomb a kódhoz",
+    "Közvetlen link a hitelesítő apphoz"
+   ]
+  },
+  {
+   "kepernyo": "87_ketlepcsos_b",
+   "gondolatok": "Nagyon praktikus a 10 tartalékkód vészhelyzetre, ha elveszítem a telefont. A 'Mindet kimásolom' gomb pont az, amire szükségem van.",
+   "gondok": [],
+   "tetszik": [
+    "Tartalékkódok világos magyarázata",
+    "Egy gombbal vágólapra tehető az összes"
+   ]
+  },
+  {
+   "kepernyo": "87_ketlepcsos_c",
+   "gondolatok": "Ha már be van kapcsolva, egyértelmű, hogy hogyan kapcsolhatom ki. Kéri a kódot és a jelszót is, ez biztonságosnak tűnik.",
+   "gondok": [],
+   "tetszik": [
+    "Egyértelmű állapotjelzés és kikapcsolási lehetőség"
+   ]
+  },
+  {
+   "kepernyo": "88_fiok_torlese",
+   "gondolatok": "Nagyon korrekt felület. Pontosan leírja, mi marad meg a törvény miatt (pl. 8 évig adóiratok) és mi törlődik, plusz ad 30 nap türelmi időt meggondolni magam. Külön tetszik, hogy felajánlja az adatok letöltését a törlés előtt.",
+   "gondok": [],
+   "tetszik": [
+    "30 napos türelmi idő és visszavonhatóság",
+    "'Előbb letöltöm az adataimat' gomb a törlés előtt",
+    "Korrekt jogi magyarázat a kötelező megőrzésről"
+   ]
+  },
+  {
+   "kepernyo": "89_elofizetes_eredmeny",
+   "gondolatok": "Tiszta, megnyugtató visszaigazolás a sikeres fizetésről. Látom a levont összeget és a következő terhelés dátumát is.",
+   "gondok": [],
+   "tetszik": [
+    "Egyértelmű zöld pipa és megerősítés",
+    "Közli a következő levonási dátumot"
+   ]
+  },
+  {
+   "kepernyo": "89_elofizetes_eredmeny_b",
+   "gondolatok": "Világos hibaüzenet, nem ijeszt rám feleslegesen: egyértelműen leírja, hogy 'Nem vontunk le semmit', és felajánlja a másik kártyát vagy az újrapróbálkozást.",
+   "gondok": [],
+   "tetszik": [
+    "Megnyugtató 'Nem vontunk le semmit' mondat",
+    "Azonnali opció új kártya megadására"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Kétlépcsős belépésnél SMS alapú opció azoknak, akiknek nincs Authenticator appjuk.",
+  "Az értesítéseknél hiányzik egy 'Minden fontosat kérek' / 'Csak a pénzügyekről kérek' egyszerűsített gyorskapcsoló a rengeteg almenü helyett."
+ ],
+ "maradnek": "Igen, mert ez a rész kifejezetten tisztességes és korrekt; nincsenek elrejtve a költségek, sem a lemondási/törlési opciók, ami óriási bizalmat ébreszt bennem.",
+ "folyamat": "8_fiok",
+ "fajlok": [
+  "80_fiok.png",
+  "81_adataim.png",
+  "82_biztonsag.png",
+  "83_dijak.png",
+  "84_dijszamlak.png",
+  "85_elofizetes.png",
+  "86_ertesitesi_beallitasok.png",
+  "87_ketlepcsos.png",
+  "87_ketlepcsos_b.png",
+  "87_ketlepcsos_c.png",
+  "88_fiok_torlese.png",
+  "89_elofizetes_eredmeny.png",
+  "89_elofizetes_eredmeny_b.png"
+ ],
+ "usage": {
+  "prompt_tokens": 15089,
+  "completion_tokens": 2692,
+  "total_tokens": 17781,
+  "cost": 0.02141175,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.02141175,
+   "upstream_inference_prompt_cost": 0.01131675,
+   "upstream_inference_completions_cost": 0.010095
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -27,6 +27,7 @@ import {
   type ConsoleSectionView,
   type TerminationKind,
 } from '../_shared/k29f.js';
+import { INVOICE_STATUS_LABELS_K29, PAYMENT_KIND_LABELS, PAYMENT_STATUS_LABELS_K29 } from '../_shared/k29.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import {
@@ -71,7 +72,9 @@ import { feesView } from './dijak.js';
 import { serviceLockView } from './zarolas.js';
 import { subscriptionView } from './subscription.js';
 
-const fmt = (n: number) => `${new Intl.NumberFormat('hu-HU').format(n).replace(/ /g, ' ')} Ft`;
+// k7 integrator: 'always' groups 4-digit amounts too (4 999 Ft, like the app) – hu-HU alone writes 4999
+const fmt = (n: number) => `${new Intl.NumberFormat('hu-HU', { useGrouping: 'always' } as Intl.NumberFormatOptions).format(n).replace(/ /g, ' ')} Ft`;
+const INVOICE_KIND_LABELS_KONZOL: Record<string, string> = { szamla: 'Számla', sztorno: 'Sztornó', helyesbito: 'Helyesbítő' };
 const dt = (d: Date | null | undefined) => (d ? d.toISOString().replace('T', ' ').slice(0, 16) : null);
 const LIFECYCLE_LABELS: Record<string, string> = { bekotes_alatt: 'Bekötés alatt', aktiv: 'Aktív', felfuggesztve: 'Felfüggesztve', megszunt: 'Megszűnt' };
 
@@ -143,18 +146,36 @@ async function checkTotpOrRecovery(deps: Deps, u: typeof users.$inferSelect, cod
 }
 
 /** Every console write: 403 step_up_required unless this session verified a code within the last 10 minutes. */
+/**
+ * The latest step-up of THIS sign-in: every refresh rotates the session id (a child row of the same family), so the
+ * step-up is looked up across the session family (k7 integrator: a page reload in the panel lost the step-up at once).
+ */
+async function latestStepUp(deps: Deps, sessionId: string, userId: string): Promise<{ verifiedAt: Date } | null> {
+  const [cur] = await deps.db.select({ familyId: sessions.familyId }).from(sessions).where(eq(sessions.id, sessionId)).limit(1);
+  const [s] = cur
+    ? await deps.db
+        .select({ verifiedAt: adminStepUps.verifiedAt })
+        .from(adminStepUps)
+        .innerJoin(sessions, eq(sessions.id, adminStepUps.sessionId))
+        .where(and(eq(sessions.familyId, cur.familyId), eq(adminStepUps.userId, userId)))
+        .orderBy(desc(adminStepUps.verifiedAt))
+        .limit(1)
+    : await deps.db.select({ verifiedAt: adminStepUps.verifiedAt }).from(adminStepUps).where(and(eq(adminStepUps.sessionId, sessionId), eq(adminStepUps.userId, userId))).limit(1);
+  return s ?? null;
+}
+
 export async function requireStepUp(deps: Deps, c: C): Promise<void> {
   assertConsoleMfa(c);
   const a = auth(c);
-  const [s] = await deps.db.select().from(adminStepUps).where(eq(adminStepUps.sessionId, a.sessionId)).limit(1);
-  const fresh = s && s.userId === a.userId && s.verifiedAt.getTime() >= deps.now().getTime() - CONSOLE_RULES.stepUpMinutes * 60_000;
+  const s = await latestStepUp(deps, a.sessionId, a.userId);
+  const fresh = s && s.verifiedAt.getTime() >= deps.now().getTime() - CONSOLE_RULES.stepUpMinutes * 60_000;
   if (!fresh) throw new ApiError(403, 'step_up_required', 'Add meg a kétlépcsős kódodat a módosításhoz.');
 }
 
 export async function stepUpState(deps: Deps, c: C): Promise<{ valid: boolean; validUntil: string | null }> {
   const a = auth(c);
-  const [s] = await deps.db.select().from(adminStepUps).where(eq(adminStepUps.sessionId, a.sessionId)).limit(1);
-  if (!s || s.userId !== a.userId) return { valid: false, validUntil: null };
+  const s = await latestStepUp(deps, a.sessionId, a.userId);
+  if (!s) return { valid: false, validUntil: null };
   const until = new Date(s.verifiedAt.getTime() + CONSOLE_RULES.stepUpMinutes * 60_000);
   return { valid: until > deps.now(), validUntil: until.toISOString() };
 }
@@ -544,7 +565,7 @@ export async function consoleSection(deps: Deps, id: string, key: ConsoleSection
             columns: ['Idő', 'Fajta', 'Összeg', 'Állapot', 'Kártya', 'Visszautalva', 'Szolgáltató'],
             rows: rows.map((p) => ({
               id: p.id,
-              cells: [dt(p.createdAt), p.kind, fmt(p.amountHuf), p.status, p.cardLast4 ? `${p.cardBrand ?? ''} •••• ${p.cardLast4}` : null, p.refundedHuf ? fmt(p.refundedHuf) : null, `${p.provider}/${p.mode}`],
+              cells: [dt(p.createdAt), PAYMENT_KIND_LABELS[p.kind as keyof typeof PAYMENT_KIND_LABELS] ?? p.kind, fmt(p.amountHuf), PAYMENT_STATUS_LABELS_K29[p.status as keyof typeof PAYMENT_STATUS_LABELS_K29] ?? p.status, p.cardLast4 ? `${p.cardBrand ?? ''} •••• ${p.cardLast4}` : null, p.refundedHuf ? fmt(p.refundedHuf) : null, `${p.provider}/${p.mode}`],
               chip: p.disputeStatus ? 'Vitatott terhelés' : null,
               actions: p.status === 'sikeres' && p.amountHuf - p.refundedHuf > 0 ? ['visszaterites'] : [],
             })),
@@ -561,7 +582,7 @@ export async function consoleSection(deps: Deps, id: string, key: ConsoleSection
           {
             title: 'Díjszámlák',
             columns: ['Szám', 'Kelt', 'Összeg', 'Fajta', 'Állapot', 'Fiók', 'PDF'],
-            rows: rows.map((f) => ({ id: f.id, cells: [f.number, f.issuedOn, fmt(f.amountHuf), f.kind, f.status, f.providerAccount ?? f.provider, f.pdfFileId ? `/files/${f.pdfFileId}` : null], actions: f.status === 'hiba' ? ['szamla_ujra'] : [] })),
+            rows: rows.map((f) => ({ id: f.id, cells: [f.number, f.issuedOn, fmt(f.amountHuf), INVOICE_KIND_LABELS_KONZOL[f.kind] ?? f.kind, INVOICE_STATUS_LABELS_K29[f.status as keyof typeof INVOICE_STATUS_LABELS_K29] ?? f.status, f.providerAccount ?? f.provider, f.pdfFileId ? `/files/${f.pdfFileId}` : null], actions: f.status === 'hiba' ? ['szamla_ujra'] : [] })),
           },
         ],
       };

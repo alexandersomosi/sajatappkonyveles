@@ -1,0 +1,27 @@
+{
+ "javaslatok": [],
+ "kepernyo": "93_valtozas_kerem_b",
+ "usage": {
+  "prompt_tokens": 731,
+  "completion_tokens": 357,
+  "total_tokens": 1088,
+  "cost": 0.001887,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.001887,
+   "upstream_inference_prompt_cost": 0.00054825,
+   "upstream_inference_completions_cost": 0.00133875
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 350,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

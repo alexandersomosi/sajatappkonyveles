@@ -1,0 +1,29 @@
+1. Így jelented be a költözést
+2. Kb. 10 perc, ingyenes. Te küldöd be a saját belépéseddel.
+3. Az új székhely címe
+4. Írd be az új címet mezőnként. A dátum a költözés napja.
+5. Ország
+6. Válaszd ki: Magyarország
+7. Irányítószám
+8. Írd be
+9. Település
+10. Budapest
+11. Válaszd
+12. Közterület neve
+13. Minta
+14. Írd be
+15. Közterület jellege
+16. utca
+17. Válaszd
+18. Házszám
+19. Írd be
+20. Változás napja
+21. 2026. december 1. · ettől a naptól érvényes az új cím
+22. Az új székhely címe nyilvános lesz.
+23. Nem boldogulsz vele?
+24. Intézzük helyetted: 4 999 Ft, előre fizetve.
+25. Intézzük helyetted
+26. Elakadtál?
+27. Visszahívás
+28. Kollégánk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.
+29. Megvan, tovább

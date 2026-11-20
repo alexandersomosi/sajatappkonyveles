@@ -1,0 +1,55 @@
+{
+ "javaslatok": [
+  {
+   "sor": 2,
+   "eredeti": "A(z)",
+   "javitott": "A",
+   "ok": "A 2026 („kettőezer-huszonhat”) mássalhangzóval kezdődik, a zárójeles névelő gépiessé és igénytelenné teszi a mondatot.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "A(z) 2026. 10. 01.–10. 31. havidíja. Fizesd ki, és minden megy tovább.",
+   "pontos": true
+  },
+  {
+   "sor": 5,
+   "eredeti": "kézzel kell kifizetned",
+   "javitott": "neked kell kifizetned",
+   "ok": "Digitális bankkártyás fizetésnél a „kézzel kifizetni” a „pay manually” pontatlan, magyartalan tükörfordítása.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "A havi alapdíj 19 999 Ft. A legutóbbi levonás nem sikerült, ezért most kézzel kell kifizetned.",
+   "pontos": true
+  },
+  {
+   "sor": 9,
+   "eredeti": "ott adod meg",
+   "javitott": "ott tudod megadni",
+   "ok": "Feltételes mellékmondat után a jelen idejű kijelentés („ott adod meg”) idegenül hangzik; a „tudod megadni” sokkal természetesebb.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "A fizetés a Stripe biztonságos oldalán történik. Ha a bankod megerősítést kér, ott adod meg.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "52_fizesd_ki",
+ "usage": {
+  "prompt_tokens": 861,
+  "completion_tokens": 2250,
+  "total_tokens": 3111,
+  "cost": 0.00908325,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00908325,
+   "upstream_inference_prompt_cost": 0.00064575,
+   "upstream_inference_completions_cost": 0.0084375
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1926,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

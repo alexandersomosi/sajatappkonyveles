@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 4,
+   "eredeti": "most jóváhagyja",
+   "javitott": "most hagyja jóvá",
+   "ok": "A hangsúlyos „most” időhatározó után az igekötő elválik az igétől, így természetesebb a szórend.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "A NAV most jóváhagyja a meghatalmazást",
+   "pontos": true
+  },
+  {
+   "sor": 8,
+   "eredeti": "A kártyád megadása",
+   "javitott": "bankkártya megadása",
+   "ok": "Kettőspont után nem indokolt a nagy kezdőbetű és a felesleges névelő; gombfeliraton a pontosabb „bankkártya megadása” természetesebb.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Tovább: A kártyád megadása",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "24_var",
+ "usage": {
+  "prompt_tokens": 699,
+  "completion_tokens": 1295,
+  "total_tokens": 1994,
+  "cost": 0.0053805,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0053805,
+   "upstream_inference_prompt_cost": 0.00052425,
+   "upstream_inference_completions_cost": 0.00485625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1074,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

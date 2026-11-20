@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 2,
+   "eredeti": "Bence ,",
+   "javitott": "Bence,",
+   "ok": "Felesleges szóköz a vessző előtt.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Kovács Bence , a könyvelőd",
+   "pontos": true
+  },
+  {
+   "sor": 33,
+   "eredeti": "bemutató videót",
+   "javitott": "bemutatóvideót",
+   "ok": "Összetett szóként egybeírandó (hasonlóan az oktatóvideó, reklámvideó szavakhoz).",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Nézd meg a bemutató videót (1:47)",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "30_bekotes",
+ "usage": {
+  "prompt_tokens": 1059,
+  "completion_tokens": 1111,
+  "total_tokens": 2170,
+  "cost": 0.0049605,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0049605,
+   "upstream_inference_prompt_cost": 0.00079425,
+   "upstream_inference_completions_cost": 0.00416625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 942,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

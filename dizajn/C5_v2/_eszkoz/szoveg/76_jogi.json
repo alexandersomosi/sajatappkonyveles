@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 1,
+   "eredeti": "Általános Szerződési Feltételek",
+   "javitott": "Általános szerződési feltételek",
+   "ok": "A magyar helyesírás szerint a címekben csak az első szót kezdjük nagybetűvel (az angol típusú csupa nagy kezdőbetűs írásmód helyett).",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "Általános Szerződési Feltételek",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "76_jogi",
+ "usage": {
+  "prompt_tokens": 1023,
+  "completion_tokens": 1172,
+  "total_tokens": 2195,
+  "cost": 0.00516225,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00516225,
+   "upstream_inference_prompt_cost": 0.00076725,
+   "upstream_inference_completions_cost": 0.004395
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1044,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

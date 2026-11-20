@@ -1,0 +1,206 @@
+{
+ "benyomas": "Hatalmas megkönnyebbülés látni, hogy nem nekem kell egyedül kibogarásznom a NAV-os űrlapokat, hanem Bence elintézi helyettem, vagy legalább pontról pontra fogja a kezem. Nagyon tetszik a biztonsági figyelmeztetés, hogy nem kérik el a jelszavamat, ez azonnal bizalmat ébreszt bennem, mert a NAV-os belépésemmel óvatos vagyok. Két rendezvény közötti rohanásban pont ilyen egyértelmű, 'kattints ide, másold be' típusú segítségre vágyom.",
+ "kepernyok": [
+  {
+   "kepernyo": "40_meghatalmazas",
+   "gondolatok": "Egyértelmű a választás: gondolkodás nélkül a sárga 'Megcsináljuk helyetted' gombra nyomnék, eszem ágában sincs magamtól ONYA-zni. Nagyon tetszik a kiemelt lakat és a szöveg, hogy nem kérik a jelszavam, ettől azonnal megnyugszom.",
+   "gondok": [
+    {
+     "mi": "A visszahívásnál a '24–48 órán belül' nekem túl lassúnak tűnik, ha épp benne vagyok a folyamatban és elakadok.",
+     "sulyossag": "apro",
+     "javaslat": "Jó lenne egy sima chat opció is, ahol gyorsabban elérhető Bence, vagy legalább annyi, hogy sürgős esetben mikor csörögnek rám."
+    }
+   ],
+   "tetszik": [
+    "Soha nem kérjük el az Ügyfélkapu jelszavadat kiemelés",
+    "Tisztán leírja az időt: 'a te részed kb. 3 perc'"
+   ]
+  },
+  {
+   "kepernyo": "40_meghatalmazas_b",
+   "gondolatok": "A másolás gombok szuperek, nem kell megjegyeznem az adóazonosítót meg a nyilvántartási számot a telefonon ugrálva az ablakok közt. Viszont a rajzolt vázlat a képernyő közepén teljesen üres csíkokból áll, nem segít felismerni az igazi NAV-os felületet.",
+   "gondok": [
+    {
+     "mi": "A 'Rajzolt vázlat' doboz üres szürke csíkokat mutat, ebből nem látom, hova kell majd kattintanom a valóságban.",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen benne egy valódi képernyőkép a NAV felületéről, bekarikázva a mezőt."
+    }
+   ],
+   "tetszik": [
+    "Egygombos 'Másolom' funkció az adatok mellett",
+    "Nem boldogulsz vele? mentőöv a képernyő alján"
+   ]
+  },
+  {
+   "kepernyo": "41_meghatalmazas_jovahagyas",
+   "gondolatok": "Nagyon jó, hogy kiírja a pontos határidőt: 'November 22-ig hagyd jóvá (még 3 nap)'. A sárga figyelmeztetés is hasznos, hogy csak akkor nyomjam meg, ha tényleg Kovács Bence neve szerepel rajta.",
+   "gondok": [
+    {
+     "mi": "Itt is csak üres csíkok vannak a mintaképen ahelyett, hogy megmutatná a Jóváhagyás gomb pontos helyét az ONYA-ban.",
+     "sulyossag": "apro",
+     "javaslat": "Egy valós screenshot az ONYA jóváhagyó gombjáról sokat segítene."
+    }
+   ],
+   "tetszik": [
+    "Pontos határidő visszaszámlálása napokban",
+    "Figyelmeztetés a könyvelő nevének ellenőrzésére"
+   ]
+  },
+  {
+   "kepernyo": "42_vallalkozas",
+   "gondolatok": "Ha most indulnék, ez az oldal aranyat érne: egyértelmű kérdőív és felajánlja, hogy teljesen megcsinálják helyettem. A 'Készítsd elő (0/8)' lista jó, mert legalább tudom, mit kell előkotornom a fiókból.",
+   "gondok": [
+    {
+     "mi": "A 8 előkészítendő dologból csak 3-4 látszik a kártyán, kattintani kell a 'Mutasd mindet'-re.",
+     "sulyossag": "apro",
+     "javaslat": "Férjen ki mind a 8 röviden felsorolva, ne kelljen pluszban nyomkodni."
+    }
+   ],
+   "tetszik": [
+    "Az 'Intézzük helyetted' lehetőség telefonos segítséggel",
+    "Előkészítendő iratok listája számlálóval"
+   ]
+  },
+  {
+   "kepernyo": "42_vallalkozas_b",
+   "gondolatok": "Jó érzés látni a zöld pipát, hogy 'Kész a személyre szabott útmutatód', nem érzem elveszve magam. Tetszik, hogy világosan leírja: 'A vállalkozásod azon a napon indul, amikor beküldöd a bejelentést.'",
+   "gondok": [
+    {
+     "mi": "A 'Készítsd elő (3/8)' állapot kicsit zavaró itt, ha a kérdőív már kész van – mi maradt még hátra a 8-ból?",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen világos, hogy az útmutató olvasásához kell-e a maradék 5 dolog, vagy csak a bejelentés beküldéséhez."
+    }
+   ],
+   "tetszik": [
+    "Egyértelmű 'Megnyitom az útmutatót' főgomb",
+    "Rugalmasság: 'Módosítom a válaszaimat' link"
+   ]
+  },
+  {
+   "kepernyo": "43_vallalkozas_adatlap",
+   "gondolatok": "Kicsit megijedek a 'kizáró okok' kifejezéstől, de szerencsére ott a kék link alatta, hogy megnézhessem. A bevételi kategóriák viszont egyszerűek, pont nekem való, hogy nem fillérre pontosan kérdezik, hanem sávokban.",
+   "gondok": [
+    {
+     "mi": "A 'kizáró okok' hivataloskodó kifejezés hirtelen bizonytalanságot szül bennem, nem tudom kapásból, mi az.",
+     "sulyossag": "zavar",
+     "javaslat": "Egy mondatos példa a rubrika alá, pl. 'nem vagy eltiltva, nincs köztartozásod'."
+    }
+   ],
+   "tetszik": [
+    "Egyszerű bevételi sávok (pl. Évi 12 millió forint alatt)",
+    "Világos lépésszámláló felül: 1/5 lap"
+   ]
+  },
+  {
+   "kepernyo": "43_vallalkozas_adatlap_b",
+   "gondolatok": "A számológép doboz zseniális: azonnal kiszámolja nekem az évközi arányos ÁFA- és átalányadó-keretet forintra pontosan, amitől eddig a legjobban féltem. Az összefoglaló blokk az alján szuper átlátható, látom az összes eddigi válaszomat.",
+   "gondok": [],
+   "tetszik": [
+    "Időarányos keretek automatikus kiszámolása (pl. 2 301 370 Ft ÁFA-mentes)",
+    "Átlátható összefoglaló a lap alján módosítási lehetőséggel"
+   ]
+  },
+  {
+   "kepernyo": "44_vallalkozas_engedely",
+   "gondolatok": "Nagyon tetszik, hogy Bence küldi be, én csak engedélyezem a végén. A sárga figyelmeztetés a székhely nyilvánosságáról ('bárki megnézheti') kicsit meglep, jó, hogy felhívják rá a figyelmet a saját lakásom miatt.",
+   "gondok": [
+    {
+     "mi": "Az adózás sornál túl sok a szakkifejezés ömlesztve: 'Kata: nem · Pénzforgalmi elszámolás: nem · Közösségi adószám: nem'.",
+     "sulyossag": "apro",
+     "javaslat": "Csak a lényeget emelje ki emberi nyelven: Átalányadózó, alanyi áfamentes."
+    }
+   ],
+   "tetszik": [
+    "Figyelmeztetés a székhely nyilvánosságáról",
+    "Két jóváhagyó pipa védi a véletlen beküldést"
+   ]
+  },
+  {
+   "kepernyo": "45_vallalkozas_feltoltes",
+   "gondolatok": "Szuper, hogy van 'Inkább lefotózom' opció, mert mobilról sokkal könnyebb fotózni, mint letöltött PDF-ekkel bűvészkedni. Az adószám mezőnél megnyugtató a magyarázat: 'Ha még nincs, hagyd üresen'.",
+   "gondok": [
+    {
+     "mi": "A 'Hogyan küldted be?' kérdésnél hirtelen nem tudnám kapásból, hogy Ügyfélkapu+ vagy DÁP volt-e, ha Bence intézte.",
+     "sulyossag": "zavar",
+     "javaslat": "Ha Bence intézte a meghatalmazással, ezt a mezőt töltse ki előre az app."
+    }
+   ],
+   "tetszik": [
+    "Inkább lefotózom gomb mobilos használathoz",
+    "Egyértelmű útmutatás, hogy hol találom a fájlt a NAV-ban"
+   ]
+  },
+  {
+   "kepernyo": "46_vallalkozas_kamara",
+   "gondolatok": "Erről a kamarai 5000 Ft-ról már hallottam régebben, de jó, hogy az app rögtön szól róla, így nem ér meglepetésként vagy bírságként. A gomb azonnal átvisz a felületükre, így nem kell keresgélnem.",
+   "gondok": [
+    {
+     "mi": "Kicsit zavar, hogy ide át kell mennem egy másik weboldalra és magamnak kell kitölteni, bárcsak ezt is beadná Bence.",
+     "sulyossag": "apro",
+     "javaslat": "Legalább annyi segítség legyen itt is, mint az ONYA-nál (másolható adatok)."
+    }
+   ],
+   "tetszik": [
+    "Őszintén kiírja az 5000 Ft-os kötelező díjat és a határidőt (5 munkanap)",
+    "Közvetlen gomb a kamara oldalára"
+   ]
+  },
+  {
+   "kepernyo": "47_vallalkozas_utmutato",
+   "gondolatok": "Ez a képernyő a kedvencem: zölddel és pirossal konkrétan megmondja, mit jelöljek be és mit ne ('Jelöld be' / 'Ne jelöld'). A sárga figyelmeztetés a végén ('ha kimarad, idén nem számlázhatsz ÁFA nélkül') tökéletesen rávilágít arra, mi a tét.",
+   "gondok": [
+    {
+     "mi": "A 8/14 lépés elég hosszúnak tűnik egy rendezvényszervezőnek rohanás közben.",
+     "sulyossag": "apro",
+     "javaslat": "Jó, hogy ott a 'Nem boldogulsz vele? Bence bejelenti helyetted' mentőöv, ha elfogyna a türelmem."
+    }
+   ],
+   "tetszik": [
+    "Zöld és piros jelölőcímkék ('Jelöld be', 'Ne jelöld', 'Hagyd üresen')",
+    "Világos magyarázat, miért ez a legfontosabb pipa"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Valódi, felismerhető képernyőképek a NAV felületéről a sematikus rajzolt szürke csíkok helyett.",
+  "Közvetlen chat-lehetőség azonnali segítségkéréshez a 24-48 órás visszahívás helyett."
+ ],
+ "maradnek": "igen, teljesen meggyőzött, mert pont leveszi a vállamról a NAV-os adminisztráció terhét és végre nem kell rettegnem az elrontott pipáktól vagy a határidőktől.",
+ "folyamat": "4_nav_vallalkozas",
+ "fajlok": [
+  "40_meghatalmazas.png",
+  "40_meghatalmazas_b.png",
+  "41_meghatalmazas_jovahagyas.png",
+  "42_vallalkozas.png",
+  "42_vallalkozas_b.png",
+  "43_vallalkozas_adatlap.png",
+  "43_vallalkozas_adatlap_b.png",
+  "44_vallalkozas_engedely.png",
+  "45_vallalkozas_feltoltes.png",
+  "46_vallalkozas_kamara.png",
+  "47_vallalkozas_utmutato.png"
+ ],
+ "usage": {
+  "prompt_tokens": 12919,
+  "completion_tokens": 3264,
+  "total_tokens": 16183,
+  "cost": 0.02192925,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.02192925,
+   "upstream_inference_prompt_cost": 0.00968925,
+   "upstream_inference_completions_cost": 0.01224
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

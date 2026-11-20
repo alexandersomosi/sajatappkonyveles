@@ -1,0 +1,159 @@
+{
+ "benyomas": "A költözés és a kedvezmények intézése kifejezetten logikusnak tűnik, jó látni forintosítva, hogy mit spóroltam meg idén. Viszont nagyon arcon csapott, hogy a havi 20 ezer forintos előfizetésen felül még külön 15 ezret kérnek az éves zárásért és 5 ezret egy székhelyváltoztatásért. Ettől egy pillanat alatt lehúzásszagú lett az egész, pedig addig tök profinak tűnt.",
+ "kepernyok": [
+  {
+   "kepernyo": "90_valtozas",
+   "gondolatok": "Szuper, hogy egy helyen látok minden opciót a szüneteltetéstől a költözésig. Az is jó, hogy felül rögtön látom a folyamatban lévő ügyet, így nem kell keresgélnem.",
+   "gondok": [],
+   "tetszik": [
+    "Tisztán látható menüpontok",
+    "Időbecslés a műveleteknél (kb. 10 perc)"
+   ]
+  },
+  {
+   "kepernyo": "91_valtozas_engedely",
+   "gondolatok": "Világos az összesítő kártya, jó, hogy egyenként lehet módosítani, ha valamit elgépeltem. A két pipa kicsit szigorú, de értem, hogy a NAV felé védjük magunkat.",
+   "gondok": [],
+   "tetszik": [
+    "Áttekinthető adatok",
+    "Egyértelmű 'Módosítom' gombok"
+   ]
+  },
+  {
+   "kepernyo": "92_valtozas_fajta",
+   "gondolatok": "Hoppá, mi az, hogy 'Díja: 4 999 Ft, előre fizetve'? Azt hittem, a havi 20 ezer forintos díjam pont arról szól, hogy Kovács Bence intézi az ilyen NAV-os bejelentéseket.",
+   "gondok": [
+    {
+     "mi": "Külön 5 000 Ft-os díj székhelyváltoztatásért havi 20 ezres előfizetés mellett",
+     "sulyossag": "zavar",
+     "javaslat": "Legyen benne a havi díjban az alapvető ügyintézés, vagy előre legyen nagyon világos, miért kell még pluszban fizetni"
+    }
+   ],
+   "tetszik": [
+    "Korrekt, hogy ott van az ingyenes önálló lehetőség is",
+    "'Mire figyelj?' pontok nagyon hasznosak"
+   ]
+  },
+  {
+   "kepernyo": "93_valtozas_kerem",
+   "gondolatok": "A 6 lépéses folyamatleírás nagyon korrekt és megnyugtató. Külön tetszik a biztonsági figyelmeztetés alul az Ügyfélkapuról.",
+   "gondok": [],
+   "tetszik": [
+    "Teljesen tiszta folyamatábra",
+    "Bizalomkeltő szöveg a jelszavak védelméről"
+   ]
+  },
+  {
+   "kepernyo": "93_valtozas_kerem_b",
+   "gondolatok": "Egyszerű címbeíró űrlap, semmi túlbonyolítás. Mobilról simán kitölthető két perc alatt.",
+   "gondok": [],
+   "tetszik": [
+    "Letisztult mezők",
+    "Haladási sáv (2/5)"
+   ]
+  },
+  {
+   "kepernyo": "94_valtozas_utmutato",
+   "gondolatok": "Jófej dolog, hogy lépésről lépésre megmutatják, mit hova írjak az állami felületen, ha nem akarok fizetni. Kicsit mondjuk macerásnak tűnik ide-oda kattintgatni mobilon a NAV felülete és az app között.",
+   "gondok": [
+    {
+     "mi": "Mobil képernyőn párhuzamosan csinálni a NAV-os bejelentést az útmutató alapján elég körülményes",
+     "sulyossag": "apro",
+     "javaslat": "Egy gyors link vagy másolható szövegblokkok a kitöltendő adatokhoz"
+    }
+   ],
+   "tetszik": [
+    "Nem erőltetik rám a fizetős opciót, segítik az ingyenest is"
+   ]
+  },
+  {
+   "kepernyo": "95_eves_zaras",
+   "gondolatok": "Na ne már! 'Éves zárás díja: 14 999 Ft'? Kifizetek 240 ezer forintot egy évben havonta, és az év végi kötelező adóbevallásért még lehúznak még egy tizenötezressel?!",
+   "gondok": [
+    {
+     "mi": "Külön 14 999 Ft-os díj az éves zárásra a havi előfizetésen felül",
+     "sulyossag": "elakadok",
+     "javaslat": "Az éves bevallás és zárás legyen az alapcsomag része havi 20 000 Ft-ért, ne kérjenek érte 13. havi díjat"
+    }
+   ],
+   "tetszik": [
+    "Határidők tisztán fel vannak sorolva"
+   ]
+  },
+  {
+   "kepernyo": "95_eves_zaras_b",
+   "gondolatok": "Rendben van, legalább tudom, mikor kell visszanéznem januárban. Rövid és egyértelmű állapotjelzés.",
+   "gondok": [],
+   "tetszik": [
+    "Nem enged feleslegesen kattintgatni, megmondja a dátumot"
+   ]
+  },
+  {
+   "kepernyo": "96_eves_kerdoiv",
+   "gondolatok": "Ezt a kérdést tök jól feltették, és az alatta lévő mondat ('A munkabéredet és a nyugdíjadat a NAV már ismeri') azonnal eloszlatja a félelmemet, hogy nekem kell-e papírokat vadásznom.",
+   "gondok": [],
+   "tetszik": [
+    "Emberi nyelvű magyarázat a NAV-adatokról",
+    "Egyszerű rádiógombok"
+   ]
+  },
+  {
+   "kepernyo": "97_kedvezmenyek",
+   "gondolatok": "Ez a képernyő zseniális! Végre feketén-fehéren látom, hogy '126 000 Ft-tal kevesebb adót fizettél'. Ez azonnal kézzelfoghatóvá teszi a hasznot.",
+   "gondok": [],
+   "tetszik": [
+    "Összegszerű megtakarítás azonnal látszik",
+    "Világos lista a szükséges iratokról (mit tartsak meg)"
+   ]
+  },
+  {
+   "kepernyo": "98_kedvezmeny_kerdoiv",
+   "gondolatok": "Gyors, egyszerű kérdés, és megnyugtató a kis kék doboz, hogy nem kell TAJ-számokkal meg papírokkal bajlódnom most.",
+   "gondok": [],
+   "tetszik": [
+    "'Neveket, TAJ-számot nem kérünk' megjegyzés azonnal leveszi a stresszt"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Nem látom előre sehol leírva a regisztrációkor vagy a fiókban, hogy a havi 19 999 Ft-os díjon felül milyen rejtett költségek (éves zárás 15k, székhelyátírás 5k) jönnek még elő."
+ ],
+ "maradnek": "Talán, de nagyon elgondolkodnék rajta: az app kezelhetősége és a kedvezmények kimutatása szuper, de havi 20 000 Ft mellett méltatlannak érzem a plusz 15 000 Ft-os éves zárási díjat.",
+ "folyamat": "9_valtozas_eves",
+ "fajlok": [
+  "90_valtozas.png",
+  "91_valtozas_engedely.png",
+  "92_valtozas_fajta.png",
+  "93_valtozas_kerem.png",
+  "93_valtozas_kerem_b.png",
+  "94_valtozas_utmutato.png",
+  "95_eves_zaras.png",
+  "95_eves_zaras_b.png",
+  "96_eves_kerdoiv.png",
+  "97_kedvezmenyek.png",
+  "98_kedvezmeny_kerdoiv.png"
+ ],
+ "usage": {
+  "prompt_tokens": 12942,
+  "completion_tokens": 1822,
+  "total_tokens": 14764,
+  "cost": 0.016539,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.016539,
+   "upstream_inference_prompt_cost": 0.0097065,
+   "upstream_inference_completions_cost": 0.0068325
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

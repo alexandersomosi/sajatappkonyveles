@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 17,
+   "eredeti": "DÁP alkalmazással",
+   "javitott": "DÁP-alkalmazással",
+   "ok": "A csupa nagybetűs mozaikszókhoz kötőjellel kapcsoljuk az összetételi utótagot.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Interneten, a DÁP alkalmazással",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "45_vallalkozas_feltoltes",
+ "usage": {
+  "prompt_tokens": 1082,
+  "completion_tokens": 1291,
+  "total_tokens": 2373,
+  "cost": 0.00565275,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.00565275,
+   "upstream_inference_prompt_cost": 0.0008115,
+   "upstream_inference_completions_cost": 0.00484125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1183,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

@@ -1,0 +1,164 @@
+{
+ "benyomas": "Nagyon megnyugtató, hogy közvetlen kapcsolatban vagyok Bencével egy sima chatfelületen, és nem kell e-mailekkel meg hívásokkal vadásznom rá este. Az igazolások igénylése pofonegyszerűnek tűnik, végre értem is, melyik mire való. Az viszont kicsit zavar, hogy a telefonos visszahívásnál 24-48 órát írnak, és lehet, hogy nem is a Bence hív.",
+ "kepernyok": [
+  {
+   "kepernyo": "70_uzenetek",
+   "gondolatok": "Ez teljesen olyan, mint a Messenger, azonnal átlátom. Szuper, hogy a chat tetején rögtön ott vannak a gombok a fontos igazolásokhoz és a visszahíváshoz.",
+   "gondok": [
+    {
+     "mi": "A képernyő tetejét nagyon elfoglalják a kérő gombok, így maga a chat beszélgetés eléggé össze van nyomva.",
+     "sulyossag": "apro",
+     "javaslat": "Legyenek ezek a gyorsgombok összecsukhatók vagy egy külön menüben elérhetők, hogy több üzenet látsszon."
+    }
+   ],
+   "tetszik": [
+    "Közvetlen chat a könyvelővel",
+    "Javasolt kérdések buborékok a gépelés felett",
+    "Látom, hogy 'látta' a feltöltött kivonatomat"
+   ]
+  },
+  {
+   "kepernyo": "71_visszahivas",
+   "gondolatok": "Jó, hogy be lehet jelölni a témát és idősávot választani, így nem egy rendezvény közepén csörögnek rám. De az, hogy 'Nem feltétlenül Bence hív', kicsit furcsa, mikor havi 20 ezret pont a saját könyvelőért fizetek.",
+   "gondok": [
+    {
+     "mi": "A '24–48 órán belül visszahív' nekem túl lassú, ha épp sürgős kérdésem lenne adózásról.",
+     "sulyossag": "zavar",
+     "javaslat": "Jó lenne egy opció sürgős esetre, vagy legalább egy szűkebb időpontfoglaló naptár."
+    }
+   ],
+   "tetszik": [
+    "Választható napszak (Délelőtt / Délután)",
+    "Világos figyelmeztetés, hogy jelszót soha nem kérnek el telefonon"
+   ]
+  },
+  {
+   "kepernyo": "71_visszahivas_b",
+   "gondolatok": "Tök jó ez az összefoglaló kártya, egyértelmű, hogy mi rögzült és mit írtam megjegyzésbe. Bármikor le tudom mondani vagy módosítani, ha mégse érek rá.",
+   "gondok": [],
+   "tetszik": [
+    "Tiszta státuszjelzés ('Folyamatban')",
+    "Van 'Módosítom' és 'Mégsem kérem' gomb"
+   ]
+  },
+  {
+   "kepernyo": "72_gyik",
+   "gondolatok": "Végre emberi nyelven megfogalmazott kérdések, a 'Mi történik, ha a könyvelő hibázik?' rögtön megütötte a szemem, mert ettől rettegek a legjobban. Az alsó blokk is jó, ha mégse találnám a választ.",
+   "gondok": [
+    {
+     "mi": "Nincs felül keresőmező, végig kell görgetnem az összes kérdést, ha konkrét dolog érdekel.",
+     "sulyossag": "apro",
+     "javaslat": "Egy gyorskereső sáv a tetejére."
+    }
+   ],
+   "tetszik": [
+    "Őszinte kérdések (felelősség, lemondás, ár)",
+    "Közvetlen gombok alul kérdésküldéshez vagy visszahíváshoz"
+   ]
+  },
+  {
+   "kepernyo": "73_helyettunk",
+   "gondolatok": "Ez a lépésről lépésre lista zseniális, pontosan látom, mit csinál a könyvelő és hol kell nekem jóváhagynom az ONYA-ban. Nagyon megnyugtató a zöld lakat szövege, hogy nem kérik el az Ügyfélkapu jelszavam.",
+   "gondok": [
+    {
+     "mi": "Mivel már január óta vállalkozó vagyok, nekem ez a bejelentési folyamat nem releváns, de ha új tevékenységet veszek fel, nem egyértelmű, hogy ez arra is vonatkozik-e.",
+     "sulyossag": "apro",
+     "javaslat": "Jelezze a cím, hogy ez induló vállalkozás bejelentésére vagy meglévő módosítására is szól-e."
+    }
+   ],
+   "tetszik": [
+    "Perc pontossággal jelölt lépések (kb. 3 perc)",
+    "Hangsúlyozzák, hogy 'Ezért nem fizetsz külön'",
+    "Biztonsági garancia az Ügyfélkapu adatok védelmére"
+   ]
+  },
+  {
+   "kepernyo": "74_keresek",
+   "gondolatok": "Szuper ez a felület! Külön látom, mit kér tőlem Bence határidővel (bankkivonat), és mit kértem én tőle. Pont erre van szükségem, hogy ne felejtsek el semmit két munka között.",
+   "gondok": [
+    {
+     "mi": "A lista alatti 'Kész, elküldtem' és 'Visszavonom' különálló gombok furcsán lebegnek, nem teljesen tiszta, melyik kártyára vonatkoznak hirtelen ránézésre.",
+     "sulyossag": "zavar",
+     "javaslat": "Ezek a műveleti gombok legyenek közvetlenül a megfelelő kártyán belül."
+    }
+   ],
+   "tetszik": [
+    "Világos kettébontás: 'BENCE KÉRI' és 'AMIT TE KÉRTÉL'",
+    "Egyértelmű címkék ('Nyitott', 'Kész', 'Folyamatban')",
+    "Nagy, jól látható '+ Új kérés' gomb"
+   ]
+  },
+  {
+   "kepernyo": "75_keres_uj",
+   "gondolatok": "Itt végre leírják magyarul, melyik igazolás micsoda és mire való! Nem kell adózási szakértőnek lennem, tudom, mit kell kattintani lakáshitelhez.",
+   "gondok": [],
+   "tetszik": [
+    "Érthető magyarázatok minden menüpont alatt ('Hitelhez, albérlethez...')",
+    "Tevékenységváltozás és sima kérdés opció is elérhető"
+   ]
+  },
+  {
+   "kepernyo": "75_keres_uj_b",
+   "gondolatok": "Pár koppintás az egész igénylés, semmi felesleges mező. Nagyon jó infó a láblécben, hogy a NAV 6 nap alatt adja ki és automatikusan bekerül a dossziémba.",
+   "gondok": [
+    {
+     "mi": "A '2025' van kiválasztva, de alatta ott a figyelmeztetés, hogy az idei évről csak jövő tavasz után adnak ki; kicsit megzavar, miért engedi rányomni, ha még nem lehet.",
+     "sulyossag": "zavar",
+     "javaslat": "Ha még nem adható ki az aktuális évre, legyen inaktív vagy szürke a gomb, ne kelljen találgatni."
+    }
+   ],
+   "tetszik": [
+    "Angol nyelvű kérési lehetőség",
+    "Pontos tájékoztatás az átfutási időről (6 nap)"
+   ]
+  },
+  {
+   "kepernyo": "76_jogi",
+   "gondolatok": "Első ÁSZF az életemben, amit tényleg el lehet olvasni anélkül, hogy megfájdulna a fejem! A 'Röviden – a legfontosabbak egy helyen' pontokba szedve pontosan megválaszolja az aggodalmaimat.",
+   "gondok": [],
+   "tetszik": [
+    "Lényegretörő, emberi nyelvű összefoglaló a tetején",
+    "Tiszta szabályok a lemondásról és az adófizetésről"
+   ]
+  }
+ ],
+ "hianyzik": [
+  "Egy közvetlen telefonszám vagy azonnali chat/hívás vészhelyzet esetére, ha a NAV épp ellenőrzést jelez vagy 24 órán belüli a határidő."
+ ],
+ "maradnek": "igen, teljesen leveszi a vállamról a bürokráciát, és a chat meg az egygombos igazoláskérés fényévekkel jobb, mint az eddigi nehézkes ismerős könyvelőm.",
+ "folyamat": "7_uzenetek",
+ "fajlok": [
+  "70_uzenetek.png",
+  "71_visszahivas.png",
+  "71_visszahivas_b.png",
+  "72_gyik.png",
+  "73_helyettunk.png",
+  "74_keresek.png",
+  "75_keres_uj.png",
+  "75_keres_uj_b.png",
+  "76_jogi.png"
+ ],
+ "usage": {
+  "prompt_tokens": 10734,
+  "completion_tokens": 2319,
+  "total_tokens": 13053,
+  "cost": 0.01674675,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.01674675,
+   "upstream_inference_prompt_cost": 0.0080505,
+   "upstream_inference_completions_cost": 0.00869625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

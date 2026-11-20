@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 22,
+   "eredeti": "Előre dátumot nem lehet megadni.",
+   "javitott": "Későbbi dátumot nem lehet megadni.",
+   "ok": "Az „előre dátumot” fordulat nem természetes magyar kifejezés; a bejelentésnél jövőbeli (későbbi) kezdőnap nem választható.",
+   "sulyossag": "javasolt",
+   "sor_szoveg": "A beküldés napja, várhatóan 2026. november 23. Előre dátumot nem lehet megadni.",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "44_vallalkozas_engedely",
+ "usage": {
+  "prompt_tokens": 1129,
+  "completion_tokens": 1515,
+  "total_tokens": 2644,
+  "cost": 0.006528,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.006528,
+   "upstream_inference_prompt_cost": 0.00084675,
+   "upstream_inference_completions_cost": 0.00568125
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1416,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

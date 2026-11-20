@@ -22,6 +22,9 @@ import { useLatta, VideoKartya } from '@/ui/Video';
 import { JovahagytamGomb } from '@/ui/Helyettunk';
 import { VisszahivasAllapot, VisszahivasKartya, visszahivasUt } from '@/ui/Visszahivas';
 import { useGuided } from '@/api/hooks-k29g';
+import { useElofizetesK29 } from '@/api/hooks-k29';
+import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
+import { szam } from '@/lib/format';
 import { FolytasKartya } from '@/kepernyok/Bevezeto';
 
 /** S2 – „Van már egyéni vállalkozásod?” két válasszal (a „Még nincs” után a „Hogyan jelentsük be?” lap jön, S3). */
@@ -119,6 +122,12 @@ export default function Bekotes() {
   // SPEC §29.10.1: after "Később folytatom" the checklist opens with "Folytasd ott, ahol abbahagytad" on top
   const gv = useGuided();
   const folytas = gv.data && gv.data.inOnboarding && (gv.data.paused || gv.data.show) && gv.data.currentKey ? gv.data : null;
+  // k7 integrator: onboarding can outlast the paid first month (NAV / meghatalmazás waits) – an unpaid month (bank check,
+  // decline, expired card) needs the same red "Fizesd ki" line here as on the active Főoldal (SPEC §29.1.5)
+  const elo = useElofizetesK29();
+  // when the month is already locked, the lock band of every tab screen says it (with its own "Fizetek") – no second line
+  const zarolvaHavidij = (me.data?.client?.serviceLock?.reasons ?? []).some((r) => (r as string) === 'havidij');
+  const due = zarolvaHavidij ? null : (elo.data?.due ?? null);
   // „Mi kell még?” (zárolt funkció lap) → /bekotes?kovetkezo=1: a „Most ez jön” kártyához görgetünk (SPEC §26.5.3).
   const { kovetkezo } = useLocalSearchParams<{ kovetkezo?: string }>();
   const gorgeto = useRef<ScrollViewInstance>(null);
@@ -198,6 +207,17 @@ export default function Bekotes() {
       }
       tartalomStilus={{ paddingTop: 14 }}
     >
+      {due ? (
+        <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, marginBottom: 12, backgroundColor: szin.veszelyAlap }}>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+            <Ikon3d nev="szamlaszam" pt={28} />
+            <T m={16.5} s={700} lh={1.35} c={szin.veszelySzoveg} style={{ flex: 1 }}>
+              {fillPlaceholders(P29.fizesdKi.homeBanner, { osszeg: szam(due.amountHuf) })}
+            </T>
+            <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} />
+          </Pressable>
+        </Lap>
+      ) : null}
       {folytas ? <FolytasKartya v={folytas} elso /> : null}
       {nincs ? (
         <>

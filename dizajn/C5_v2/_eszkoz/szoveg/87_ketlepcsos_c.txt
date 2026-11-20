@@ -1,0 +1,8 @@
+1. Kétlépcsős belépés
+2. Be van kapcsolva: belépéskor a jelszó mellé a hitelesítő app kódja is kell.
+3. Be van kapcsolva
+4. Kikapcsolni a hitelesítő app kódjával (és a jelszavaddal) tudod.
+5. Kód az appból
+6. 6 jegyű kód
+7. Jelszó
+8. Kikapcsolom

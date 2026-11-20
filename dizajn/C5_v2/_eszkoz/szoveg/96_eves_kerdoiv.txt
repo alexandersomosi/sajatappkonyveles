@@ -1,0 +1,12 @@
+1. Éves zárás 2026
+2. Volt idén más jövedelmed is a vállalkozásodon kívül?
+3. A bevallásban minden jövedelmed szerepel. A munkabéredet és a nyugdíjadat a NAV már ismeri.
+4. Munkabér
+5. Nyugdíj
+6. Lakás vagy más ingatlan kiadása
+7. Ingatlant vagy autót adtam el
+8. Értékpapír, megtakarítás
+9. Külföldről
+10. Más
+11. Nem volt
+12. Tovább

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>Adózz – v2 elemtár (aloldal-sablon)</title>
+<link rel="stylesheet" href="v2.css">
+</head>
+<body>
+<script src="v2.js"></script>
+<!-- ALOLDAL-SABLON: kis kék fejléc vissza-gombbal, kártyák, űrlap, lista, lépések, címkék, dobozok, fix alsó gombsáv. -->
+<header class="fej kis">
+  <div class="allapot"></div>
+  <div class="vissza-sor"><button class="vissza" aria-label="Vissza"><svg><use href="#i-vissza"/></svg></button><span class="logo jobb" data-meret="20"></span></div>
+  <h1>Elemtár</h1>
+  <p>Minden v2-képernyő ezekből az elemekből épül.</p>
+</header>
+<main class="lap dokkal">
+  <div class="szakasz-cim">Lista-kártya</div>
+  <section class="k blokk tomor">
+    <div class="lsor"><div class="tile kicsi t-kek"><svg><use href="#i-fiok"/></svg></div><div class="l"><div class="c">Adataim</div><div class="a">Név, cím, adószám</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+    <div class="lsor"><div class="tile kicsi t-zold"><svg><use href="#i-pajzs"/></svg></div><div class="l"><div class="c">Biztonság</div><div class="a">Jelszó, kétlépcsős belépés</div></div><span class="cimke c-ok"><svg><use href="#i-pipa"/></svg>Bekapcsolva</span></div>
+    <div class="lsor"><div class="tile kicsi t-lila"><svg><use href="#i-kartya"/></svg></div><div class="l"><div class="c">Előfizetés</div><div class="a">Havi díj, következő terhelés</div></div><span class="jobb">19&nbsp;999&nbsp;Ft</span></div>
+  </section>
+
+  <div class="szakasz-cim">Űrlap</div>
+  <section class="k blokk">
+    <label class="mezo-cim">E-mail-cím</label>
+    <div class="mezo fokusz"><svg><use href="#i-level"/></svg>pelda@email.hu</div>
+    <label class="mezo-cim">Adószám</label>
+    <div class="mezo hibas">1234567</div>
+    <div class="mezo-hiba">Az adószám 8 számjegy.</div>
+    <label class="mezo-cim">Megjegyzés</label>
+    <div class="mezo magas ures">Írd ide, ha valamit tudnunk kell…</div>
+    <div class="mezo-sug">Nem kötelező.</div>
+    <div class="valaszto be"><div class="l"><div class="c">Egyéni vállalkozó</div><div class="a">Átalányadózás</div></div><span class="kor"></span></div>
+    <div class="valaszto"><div class="l"><div class="c">Még nincs vállalkozásom</div><div class="a">Segítünk elindítani</div></div><span class="kor"></span></div>
+    <div class="jelolo be"><span class="n"><svg><use href="#i-pipa"/></svg></span><span>Elolvastam és elfogadom a szerződést.</span></div>
+    <div class="hsor"><div class="l"><div class="c">E-mail-értesítés</div><div class="a">Határidő előtt 3 nappal</div></div><span class="kapcsolo be"></span></div>
+    <div class="kod"><span>4</span><span>8</span><span class="fokusz"></span><span></span><span></span><span></span></div>
+  </section>
+
+  <div class="szakasz-cim">Lépések, címkék, dobozok</div>
+  <section class="k blokk">
+    <div class="szegmens"><span class="be">Idei</span><span>Tavalyi</span></div>
+    <div class="lepes kesz"><span class="p"><svg><use href="#i-pipa"/></svg></span><div class="l"><div class="c">Regisztráció</div></div></div>
+    <div class="lepes most"><span class="p">2</span><div class="l"><div class="c">Szerződés</div><div class="a">Olvasd el és fogadd el. Kb. 3 perc.</div></div></div>
+    <div class="lepes"><span class="p">3</span><div class="l"><div class="c">Meghatalmazás a NAV-nál</div></div></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px"><span class="cimke c-ok">Rendben</span><span class="cimke c-var">Folyamatban</span><span class="cimke c-hiba">Lejárt</span><span class="cimke c-info">Új</span><span class="cimke c-szurke">Tervezet</span></div>
+    <div class="doboz tipp"><svg><use href="#i-info"/></svg><span>Tipp: a számlát elég lefotóznod, a többit mi intézzük.</span></div>
+    <div class="doboz figyelem"><svg><use href="#i-figyelem"/></svg><span>Még 2 számla hiányzik októberből.</span></div>
+    <div class="feltolto" style="margin-top:12px"><div class="tile t-kek"><svg><use href="#i-feltolt"/></svg></div><div class="c">Fájl feltöltése</div><div class="a">PDF, JPG vagy PNG, max. 10 MB</div></div>
+    <button class="gomb-masod"><svg><use href="#i-google"/></svg>Belépés Google-fiókkal</button>
+    <button class="gomb-veszely">Fiók törlése</button>
+  </section>
+  <section class="k blokk"><div class="ures-allapot"><div class="tile nagy t-kek"><svg><use href="#i-dosszie"/></svg></div><h2>Még üres a dossziéd</h2><p>Fotózd le az első számládat, és itt jelenik meg.</p><button class="gomb">Fotózom</button></div></section>
+</main>
+<div class="dokk"><button class="gomb">Mentés<svg><use href="#i-chev"/></svg></button><div class="dokk-megj">Bármikor módosíthatod.</div></div>
+</body>
+</html>

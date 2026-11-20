@@ -1,0 +1,18 @@
+1. Fiók törlése
+2. Sajnáljuk, hogy mész. Előtte érdemes letöltened az adataidat.
+3. Mi történik?
+4. Azonnal kilépsz mindenhonnan, és nem tudsz belépni.
+5. Az előfizetésed megszűnik, a kártyádat a Stripe-nél is töröljük. Többet nem vonunk le.
+6. 30 napig meggondolhatod: ha addig belépsz, visszavonhatod.
+7. 30 nap után mindent törlünk, amit a törvény nem kötelez megőrizni.
+8. Amit a törvény szerint meg kell őriznünk (például az azonosítást 8 évig, az adóiratokat az elévülésig), azt zárolva tároljuk, és utána töröljük.
+9. Előbb letöltöm az adataimat
+10. Értem, és törölni szeretném a fiókom.
+11. Jelszó
+12. ••••••••••
+13. Vagy kód a hitelesítő appból
+14. 6 jegyű kód
+15. Miért mész? (nem kötelező)
+16. Írd ide, ha szeretnéd…
+17. Törlöm a fiókom
+18. Mégsem

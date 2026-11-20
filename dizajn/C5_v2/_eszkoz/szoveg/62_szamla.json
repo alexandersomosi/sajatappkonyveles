@@ -1,0 +1,46 @@
+{
+ "javaslatok": [
+  {
+   "sor": 4,
+   "eredeti": "Ft -ot",
+   "javitott": "Ft-ot",
+   "ok": "A toldalékot szóköz nélkül, közvetlenül a kötőjellel kapcsoljuk a rövidítéshez.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "418 000 Ft-os számla – ebből kb. 29 000 Ft -ot tegyél félre.",
+   "pontos": true
+  },
+  {
+   "sor": 12,
+   "eredeti": "ÁFA mentes",
+   "javitott": "ÁFA-mentes",
+   "ok": "A csupa nagybetűs betűszóhoz kötőjellel kapcsolódik az összetételi utótag.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "ÁFA mentes (alanyi adómentes)",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "62_szamla",
+ "usage": {
+  "prompt_tokens": 962,
+  "completion_tokens": 1254,
+  "total_tokens": 2216,
+  "cost": 0.005424,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.005424,
+   "upstream_inference_prompt_cost": 0.0007215,
+   "upstream_inference_completions_cost": 0.0047025
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1072,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}

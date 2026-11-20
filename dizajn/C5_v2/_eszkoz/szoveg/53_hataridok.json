@@ -1,0 +1,37 @@
+{
+ "javaslatok": [
+  {
+   "sor": 5,
+   "eredeti": "Feliratkozom a naptáramban",
+   "javitott": "Hozzáadom a naptáramhoz",
+   "ok": "A „feliratkozom a naptáramban” magyartalan tükörfordítás (angol „subscribe in calendar” után), és a határozórag is helytelen. Magyarul a naptárhoz hozzáadunk eseményeket/naptárt, vagy naptárra iratkozunk fel.",
+   "sulyossag": "hiba",
+   "sor_szoveg": "Feliratkozom a naptáramban",
+   "pontos": true
+  }
+ ],
+ "kepernyo": "53_hataridok",
+ "usage": {
+  "prompt_tokens": 788,
+  "completion_tokens": 1204,
+  "total_tokens": 1992,
+  "cost": 0.005106,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.005106,
+   "upstream_inference_prompt_cost": 0.000591,
+   "upstream_inference_completions_cost": 0.004515
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 1080,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ }
+}
