@@ -127,3 +127,35 @@ describe('year-end settlement: the client refund is the overpaid SZJA only', () 
     expect(p.refundHuf).toBe(0);
   });
 });
+
+// k6c3 (2026-11-20): an allowance (anyák + családi 2/2 with in-year csjk) approved after Q1–Q3 were approved and paid
+// without it. The projection keeps the approved quarters as approved (no hypothetical Q1–Q3 csjk of 532 689 Ft); only
+// the overpaid SZJA comes back. Hand calculation: Q1–Q3 approved 1 197 168 + Q4 with the projected income (csjk
+// 59 718 in all three months → TB 0) szocho 125 892 + HIPA 50 000 − SZJA refund 282 030 = 1 091 030.
+describe('E6 projection with approved quarters (Kata, k6c3)', () => {
+  const mm = (m: number) => String(m).padStart(2, '0');
+  const rev: [number, number][] = [[1, 610_000], [2, 540_000], [3, 720_000], [4, 880_000], [5, 760_000], [6, 940_000], [7, 820_000], [8, 650_000], [9, 1_020_000], [10, 900_000], [11, 402_000]];
+  const revenue = rev.map(([m, a]) => ({ receivedOn: `2026-${mm(m)}-10`, deliveryDate: `2026-${mm(m)}-10`, amountHuf: a, countsForAtalany: true, countsForAfaLimit: true }));
+  const base = { year: 2026, costRatio: 45 as const, status: 'fofoglalkozasu' as const, guaranteedMinimum: false, hipa: { method: 'savos' as const, ratePct: 2 } };
+  const kedvezmenyek = { birthMonth: '1990-05', anyak: { jogcim: 'ket' as const, months: ALL }, csaladi: { months: ALL.map((month) => ({ month, eltartott: 2, children: [{}, {}] })), csjkInYear: true } };
+  const no = calculateYear({ profile: base, revenue, asOf: '2026-11-20' });
+  const approved: Record<string, { tbHuf: number; szochoHuf: number; szjaHuf: number }> = {};
+  for (const q of no.quarters.slice(0, 3)) approved[q.periodKey] = { tbHuf: q.tbHuf, szochoHuf: q.szochoHuf, szjaHuf: q.szjaAdvanceHuf };
+  const approvedQuarters = no.quarters.slice(0, 3).map((q) => ({ quarter: q.quarter, baseSumHuf: q.months.reduce((a, m) => a + m.baseHuf, 0), szjaAdvanceHuf: q.szjaAdvanceHuf, revenueHuf: q.revenueHuf }));
+  const input = { profile: { ...base, kedvezmenyek }, revenue, asOf: '2026-11-20', approvedQuarters };
+  it('the year-to-date basis: Q1–Q3 approved 1 197 168, refund 282 030, Jan–Nov tax 1 097 174', () => {
+    const r = calculateYear(input);
+    const e = earningsByMonth(r, { hipaAnnualHuf: r.hipa!.annualHuf, approved });
+    const refund = yearEndSettlement(r, approved).szjaRefundHuf;
+    expect(Object.values(approved).reduce((a, x) => a + x.tbHuf + x.szochoHuf + x.szjaHuf, 0)).toBe(1_197_168);
+    expect(refund).toBe(282_030);
+    expect(e.filter((m) => m.month <= 11).reduce((a, m) => a + m.szjaHuf + m.tbHuf + m.szochoHuf + m.hipaHuf, 0) - refund).toBe(1_097_174);
+  });
+  it('the projection: kb. 1 090 000 Ft tax, kb. 8 190 000 Ft left (not 560 000 / 8 730 000)', () => {
+    const p = projectYear(input, { approved });
+    expect(p).toMatchObject({ revenueHuf: 9_284_969, hipaHuf: 50_000, refundHuf: 282_030, taxesHuf: 1_091_030 });
+    expect(p.netHuf).toBe(9_284_969 - 1_091_030);
+    // without the approved map the engine re-computes Q1–Q3 with the csjk: 532 689 Ft lower – the k6c3 blocker
+    expect(projectYear(input).taxesHuf).toBe(558_341);
+  });
+});

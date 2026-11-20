@@ -291,13 +291,37 @@ function withKedv(input: YearInput, k: AllowancesInput | undefined, asOf?: strin
   return { ...input, ...(asOf ? { asOf } : {}), profile: { ...rest, ...(k ? { kedvezmenyek: k } : {}) } as TaxProfileInput };
 }
 
-/** SZJA + TB saved by `k` against no allowance, for the year's revenue known so far (asOf = year end, or `asOf`). */
-export function savedBy(input: YearInput, k: AllowancesInput | undefined, asOf?: string): number {
+/** periodKey → what an approved quarter really carries: only its csjk matters here (k6c3). */
+export type ApprovedCsjk = Record<string, { csjkHuf: number }>;
+
+/**
+ * SZJA + TB saved by `k` against no allowance, for the year's revenue known so far (asOf = year end, or `asOf`).
+ * k6c3 – the same basis as "Mennyit kerestem?" and the Félretenni card:
+ *  - SZJA: the year's SZJA without − with the allowances (the cumulative of the last quarter): what the quarterly
+ *    advances overpaid comes back in the annual return, so a late approval still saves the whole year's SZJA;
+ *  - TB (családi járulékkedvezmény): an approved quarter counts at its APPROVED amount, i.e. only the csjk that approval
+ *    really included (0 when the allowance came later); an open quarter counts the engine's difference.
+ */
+export function savedBy(input: YearInput, k: AllowancesInput | undefined, asOf?: string, approved?: ApprovedCsjk): number {
   if (!k) return 0;
   try {
-    const a = sums(withKedv(input, undefined, asOf));
-    const b = sums(withKedv(input, k, asOf));
-    return Math.max(0, a.szja + a.tb - (b.szja + b.tb));
+    const a = calculateYear(withKedv(input, undefined, asOf));
+    const b = calculateYear(withKedv(input, k, asOf));
+    const cum = (r: typeof a) => {
+      const last = r.quarters.at(-1);
+      return last?.szjaCumulativeHuf ?? r.quarters.reduce((x, q) => x + q.szjaAdvanceHuf, 0);
+    };
+    let tb = 0;
+    for (const qb of b.quarters) {
+      const ap = approved?.[qb.periodKey];
+      if (ap) {
+        if (k.csaladi) tb += ap.csjkHuf;
+        continue;
+      }
+      const qa = a.quarters.find((x) => x.periodKey === qb.periodKey);
+      tb += (qa?.tbHuf ?? qb.tbHuf) - qb.tbHuf;
+    }
+    return Math.max(0, cum(a) - cum(b) + tb);
   } catch {
     return 0;
   }
@@ -326,15 +350,21 @@ export interface MarginalEffect {
  * k6c2: the per-kind effect is MARGINAL in the 29/H order, so the rows never double count overlapping allowances (a
  * mother's SZJA exemption leaves no base for the családi kedvezmény). Σ shareHuf = round1000(saved by all of them).
  */
-export function marginalSavings(input: YearInput, decs: AllowanceDecisionLike[], birthMonth: string | null, asOf?: string): { total: number; byKind: Map<AllowanceKind, MarginalEffect> } {
+export function marginalSavings(
+  input: YearInput,
+  decs: AllowanceDecisionLike[],
+  birthMonth: string | null,
+  asOf?: string,
+  approved?: ApprovedCsjk,
+): { total: number; byKind: Map<AllowanceKind, MarginalEffect> } {
   const byKind = new Map<AllowanceKind, MarginalEffect>();
   const sorted = decs.filter((d) => d.kind !== 'csed_gyed' && ALLOWANCE_ORDER.includes(d.kind)).sort((a, b) => ALLOWANCE_ORDER.indexOf(a.kind) - ALLOWANCE_ORDER.indexOf(b.kind));
   const acc: AllowanceDecisionLike[] = [];
   let prev = 0;
   for (const d of sorted) {
     acc.push(d);
-    const cum = Math.max(prev, savedBy(input, toEngineInput(acc, birthMonth), asOf));
-    const alone = savedBy(input, toEngineInput([d], birthMonth), asOf);
+    const cum = Math.max(prev, savedBy(input, toEngineInput(acc, birthMonth), asOf, approved));
+    const alone = savedBy(input, toEngineInput([d], birthMonth), asOf, approved);
     byKind.set(d.kind, { shareHuf: round1000(cum) - round1000(prev), rawHuf: cum - prev, aloneHuf: alone });
     prev = cum;
   }
@@ -420,6 +450,8 @@ export interface AllowanceCtx {
   input: YearInput | null;
   firstName: string;
   regime: 'atalany' | 'kata';
+  /** k6c3: the approved quarters (approvedQuarterParts) – their csjk counts as approved, never recomputed. */
+  approved?: ApprovedCsjk;
 }
 
 export async function allowanceState(deps: Deps, db: DbOrTx, cl: ClientRow, year: number, ctx: AllowanceCtx): Promise<AllowanceState> {
@@ -430,7 +462,7 @@ export async function allowanceState(deps: Deps, db: DbOrTx, cl: ClientRow, year
   const ytdAsOf = today < `${year}-12-31` ? today : undefined;
   const approved = rows.filter((r) => r.status === 'jovahagyva');
   // k6c2: each row is its MARGINAL share (29/H order) on the same "idén eddig" basis as the band, so the rows add up to it
-  const marg = ctx.input && approved.length ? marginalSavings(ctx.input, approved.map((r) => ({ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear })), birth, ytdAsOf) : null;
+  const marg = ctx.input && approved.length ? marginalSavings(ctx.input, approved.map((r) => ({ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear })), birth, ytdAsOf, ctx.approved) : null;
   const motherExempt = approved.some((r) => (r.kind === 'anyak' || r.kind === 'anya30') && r.inYear);
   const items: AllowanceItemView[] = [];
   for (const r of rows) {
@@ -446,8 +478,8 @@ export async function allowanceState(deps: Deps, db: DbOrTx, cl: ClientRow, year
     submittedAt: ans?.submittedAt?.toISOString() ?? null,
     items,
     pendingCount: rows.filter((r) => ALLOWANCE_PENDING_STATUSES.includes(r.status)).length,
-    savedYtdHuf: allK && ctx.input ? round1000(marg ? marg.total : savedBy(ctx.input, allK, ytdAsOf)) : null,
-    savedYearHuf: allK && ctx.input ? round1000(savedBy(ctx.input, allK)) : null,
+    savedYtdHuf: allK && ctx.input ? round1000(marg ? marg.total : savedBy(ctx.input, allK, ytdAsOf, ctx.approved)) : null,
+    savedYearHuf: allK && ctx.input ? round1000(savedBy(ctx.input, allK, undefined, ctx.approved)) : null,
     documentsToKeep: documentsToKeep(ans?.answers ?? null, rows.map((r) => r.kind)),
     canEdit: ctx.regime !== 'kata' && !cl.serviceLock,
     ...(ctx.regime === 'kata' ? { notForRegime: true } : {}),
@@ -455,10 +487,11 @@ export async function allowanceState(deps: Deps, db: DbOrTx, cl: ClientRow, year
 }
 
 /** K12 preview: what the answers would save this year (never stored). */
-export function clientPreview(input: YearInput | null, answers: AllowanceAnswers, year: number, status: TaxStatus): AllowanceClientPreview {
+export function clientPreview(input: YearInput | null, answers: AllowanceAnswers, year: number, status: TaxStatus, approved?: ApprovedCsjk): AllowanceClientPreview {
   const props = proposeAllowances(answers, year, status);
   // k6c2: marginal shares in the 29/H order (the rows add up); a kind whose base another one already uses is "covered"
-  const marg = input ? marginalSavings(input, props.map((p) => ({ kind: p.kind, months: p.months, params: p.params, inYear: true })), answers.birthMonth) : null;
+  // k6c3: the quarters already approved keep their approved csjk
+  const marg = input ? marginalSavings(input, props.map((p) => ({ kind: p.kind, months: p.months, params: p.params, inYear: true })), answers.birthMonth, undefined, approved) : null;
   const motherExempt = props.some((p) => p.kind === 'anyak' || p.kind === 'anya30');
   return {
     items: props.map((p) => {
@@ -599,7 +632,15 @@ export async function decide(deps: Deps, db: DbOrTx, cl: ClientRow, year: number
 }
 
 /** The accountant's panel view (§28.3.6). */
-export async function accAllowanceView(deps: Deps, db: DbOrTx, cl: ClientRow, year: number, legacy: { kind: string; note?: string }[], input: YearInput | null): Promise<AccAllowanceView> {
+export async function accAllowanceView(
+  deps: Deps,
+  db: DbOrTx,
+  cl: ClientRow,
+  year: number,
+  legacy: { kind: string; note?: string }[],
+  input: YearInput | null,
+  approvedQ?: ApprovedCsjk,
+): Promise<AccAllowanceView> {
   const ans = await answersRow(db, cl.id, year);
   const rows = (await allowanceRows(db, cl.id, year)).sort((a, b) => ALLOWANCE_KINDS.indexOf(a.kind) - ALLOWANCE_KINDS.indexOf(b.kind));
   const fn = (await accountantUserOf(db, cl))?.firstName ?? 'A könyvelőd';
@@ -607,7 +648,7 @@ export async function accAllowanceView(deps: Deps, db: DbOrTx, cl: ClientRow, ye
   const approved = rows.filter((r) => r.status === 'jovahagyva');
   const today = todayBudapest(deps.now());
   // k6c2: the same marginal "idén eddig" shares the client sees
-  const marg = input && approved.length ? marginalSavings(input, approved.map((r) => ({ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear })), birth, today < `${year}-12-31` ? today : undefined) : null;
+  const marg = input && approved.length ? marginalSavings(input, approved.map((r) => ({ kind: r.kind, months: r.months, params: r.params, inYear: r.inYear })), birth, today < `${year}-12-31` ? today : undefined, approvedQ) : null;
   const motherExempt = approved.some((r) => (r.kind === 'anyak' || r.kind === 'anya30') && r.inYear);
   const items: AccAllowanceItem[] = [];
   for (const r of rows) {

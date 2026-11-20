@@ -88,13 +88,15 @@ describe('R1–R9', () => {
   it('R8 estimated receipt: no next quarter in December → same; on 03-20 → max(Q1, Q2-shifted)', () => {
     const dec = reserveSeries(prof('mellekallasu'), [...monthsOf(1_000_000, 10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]), item('2026-12-15', 120_000, true)]);
     expect(dec.lines.at(-1)).toMatchObject({ rawHuf: 30_690, estimated: true });
-    // főfogl., 1 000 000 every month; an estimated 3 000 000 on 03-20: in Q1 it is partly tax-free, shifted to April it
-    // costs more (the minimum of Q1 is already paid) – the larger one wins.
-    const base = monthsOf(1_000_000, 10, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    // főfogl., 1 000 000 every month of Q1; an estimated 3 000 000 on 03-20: in Q1 it is partly tax-free, shifted to
+    // April it costs more (the minimum of Q1 is already paid) – the larger one wins. It arrives last in the app, but
+    // the order is the receipt date (k6c3), so it sits after the three Q1 items.
+    const base = monthsOf(1_000_000, 10, [1, 2, 3]);
     const est = { ...item('2026-03-20', 3_000_000, true), arrivalKey: '2026-12-31T23:00:00Z|zz' }; // arrives last
     const s = reserveSeries(prof('fofoglalkozasu'), [...base, est]);
     const asQ1 = L('fofoglalkozasu', [...base, { ...est, estimated: false }]) - L('fofoglalkozasu', base);
     const asQ2 = L('fofoglalkozasu', [...base, { ...est, receivedOn: '2026-04-01', deliveryDate: '2026-04-01' }]) - L('fofoglalkozasu', base);
+    expect(s.lines.at(-1)!.id).toBe(est.id);
     expect(s.lines.at(-1)!.rawHuf).toBe(Math.max(asQ1, asQ2));
   });
 
@@ -164,5 +166,40 @@ describe('R9b főfogl. under the minimum + anyák (2) + családi 2/2 csjk év k�
   it('a real storno (negative item) is still sztorno with a negative reserve', () => {
     const st = reserveSeries(prof('mellekallasu'), [...monthsOf(1_000_000, 10, all), item('2026-12-15', -120_000)]);
     expect(st.lines.at(-1)).toMatchObject({ zone: 'sztorno', reserveHuf: -30_000 });
+  });
+});
+
+
+// k6c3 (2026-11-20): the order is the receipt date, not the arrival in the app. Réka (80 %, garantált bérminimum) – her
+// invoices came from NAV first, the monthly cash-register totals of January–October were typed in later. By date she
+// passes the adómentes rész in July; her September and November invoices are past it (SZJA only, the quarter's base is
+// still the minimum): 84 000 × 20 % × 15 % = 2 520 → kb. 3 000; 145 000 → 4 350 → kb. 5 000; July 1 760 000 crosses it:
+// (9 370 000 + 1 760 000) × 20 % − 1 936 800 = 289 200 × 15 % = 43 380 → kb. 44 000.
+describe('R11 order = received_on, then arrival (Réka, 80 %, garantált)', () => {
+  const reka = prof('fofoglalkozasu', { costRatio: 80, guaranteedMinimum: true });
+  const kezi: [number, number][] = [[1, 1_480_000], [2, 1_420_000], [3, 1_454_000], [4, 1_620_000], [5, 1_590_000], [6, 1_592_000], [7, 1_760_000], [8, 1_510_000], [9, 1_606_000], [10, 1_840_000]];
+  const at = (d: string, amountHuf: number, created: string, id: string, estimated = false): ReserveItemInput => ({
+    id, arrivalKey: `${created}|${id}`, receivedOn: d, deliveryDate: d, amountHuf, countsForAtalany: true, countsForAfaLimit: true, ...(estimated ? { estimated: true } : {}),
+  });
+  const nav = [
+    at('2026-03-12', 96_000, '2026-01-02T05:00:00Z', 'nav1'),
+    at('2026-06-15', 118_000, '2026-01-02T05:00:01Z', 'nav2'),
+    at('2026-09-20', 84_000, '2026-01-02T05:00:02Z', 'nav3', true),
+    at('2026-11-21', 145_000, '2026-01-02T05:00:03Z', 'nav4', true),
+  ];
+  const typed = kezi.map(([m, a]) => at(`2026-${mm(m)}-${String(new Date(2026, m, 0).getDate()).padStart(2, '0')}`, a, '2026-11-01T09:00:00Z', `k${mm(m)}`));
+  const s = reserveSeries(reka, [...nav, ...typed]);
+  const byId = new Map(s.lines.map((l) => [l.id, l]));
+  it('the lines follow the receipt date', () => {
+    expect(s.lines.map((l) => l.id)).toEqual(['k01', 'k02', 'nav1', 'k03', 'k04', 'k05', 'nav2', 'k06', 'k07', 'k08', 'nav3', 'k09', 'k10', 'nav4']);
+  });
+  it('July crosses the adómentes rész (43 380 → 44 000); September and November are SZJA only', () => {
+    expect(byId.get('k07')).toMatchObject({ rawHuf: 43_380, reserveHuf: 44_000, crossesTaxFree: true, zone: 'csak_szja' });
+    expect(byId.get('nav3')).toMatchObject({ rawHuf: 2_520, reserveHuf: 3_000, zone: 'csak_szja', crossesTaxFree: false });
+    expect(byId.get('nav4')).toMatchObject({ rawHuf: 4_350, reserveHuf: 5_000, zone: 'csak_szja' });
+    for (const id of ['k01', 'k02', 'nav1', 'k03', 'k04', 'k05', 'nav2', 'k06']) expect(byId.get(id)).toMatchObject({ reserveHuf: 0, zone: 'adomentes' });
+  });
+  it('telescoping holds', () => {
+    expect(s.lines.reduce((a, l) => a + l.rawHuf, 0) + s.baseHuf).toBe(s.totalHuf);
   });
 });

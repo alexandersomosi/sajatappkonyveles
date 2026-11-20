@@ -1,7 +1,8 @@
 // SPEC §28.1 – "Ennyit tegyél félre" and §28.4 – "Mennyit kerestem?". Pure functions on top of calculateYear.
 //
 // Reserve of an invoice = how much it adds to the year's SZJA + TB (after csjk) + szocho: L(items ≤ i) − L(items < i),
-// items in arrival order. Telescoping: Σ raw + L(∅) = L(all). The fixed minimum L(∅) and HIPA are never put on an
+// items in the order of the money's arrival (received_on), then arrival in the app (k6c3: a month entered by hand later
+// must not push an earlier-dated invoice out of the adómentes rész it really fell into). Telescoping: Σ raw + L(∅) = L(all). The fixed minimum L(∅) and HIPA are never put on an
 // invoice (home-card lines). Positive reserves round UP to 1 000 Ft, storno reserves towards zero.
 
 import { rulesForYear } from '../rules/index.js';
@@ -22,13 +23,13 @@ export type ReserveZone = 'adomentes' | 'nem_novel' | 'csak_szja' | 'teljes' | '
 
 export interface ReserveItemInput extends RevenueItemInput {
   id: string;
-  /** Sortable arrival key: ISO created_at + id. */
+  /** Sortable arrival key: ISO created_at + id (tie-break within the same received_on day). */
   arrivalKey: string;
 }
 
 export interface ReserveLine {
   id: string;
-  /** 1-based arrival position in the year. */
+  /** 1-based position in the year: by received_on, then arrival (k6c3). */
   seq: number;
   rawHuf: number;
   reserveHuf: number;
@@ -116,7 +117,8 @@ function zoneOf(raw: number, d: { szja: number; tb: number; szocho: number }, in
 
 /**
  * SPEC §28.1.3. `items`: the year's revenue items (receivedOn in `profile.year`; others are ignored); the order of
- * `lines` = arrival order. n + 1 (+ one per estimated item) cheap engine runs on per-month buckets.
+ * `lines` = received_on, then arrival key, then id (k6c3, SPEC §28.1.2 rule 2). n + 1 (+ one per estimated item) cheap
+ * engine runs on per-month buckets.
  */
 export function reserveSeries(profile: TaxProfileInput, items: ReserveItemInput[], opts: { approvedQuarters?: ApprovedQuarterActual[] } = {}): ReserveSeries {
   const year = profile.year;
@@ -128,7 +130,9 @@ export function reserveSeries(profile: TaxProfileInput, items: ReserveItemInput[
   const sorted = items
     .filter((i) => i.receivedOn >= yearStart && i.receivedOn <= yearEnd)
     .slice()
-    .sort((a, b) => (a.arrivalKey < b.arrivalKey ? -1 : a.arrivalKey > b.arrivalKey ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    .sort((a, b) =>
+      a.receivedOn < b.receivedOn ? -1 : a.receivedOn > b.receivedOn ? 1 : a.arrivalKey < b.arrivalKey ? -1 : a.arrivalKey > b.arrivalKey ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0,
+    );
 
   const buckets = new Array<number>(13).fill(0);
   const empty = runBuckets(profile, buckets, aq);
@@ -369,6 +373,9 @@ export function yearEndSettlement(year: YearResult, approved?: Record<string, { 
   return { szjaRefundHuf, csjkYearEndHuf, totalHuf: szjaRefundHuf };
 }
 
+/** periodKey → the approved parts of an approved quarter (TB after csjk, szocho, SZJA advance). */
+export type ApprovedQuarterParts = Record<string, { tbHuf: number; szochoHuf: number; szjaHuf: number }>;
+
 export interface YearProjection {
   reliable: boolean;
   revenueHuf: number;
@@ -383,8 +390,11 @@ export interface YearProjection {
 /**
  * SPEC §28.4.3. The meters' linear projection of the revenue; the rest is spread over the remaining active days (one
  * synthetic item per month on the 15th, or asOf + 1 in the current month) and the whole year is computed once.
+ * k6c3: `approved` (the same map earningsByMonth takes) keeps an approved quarter at its approved TB / szocho / SZJA –
+ * an allowance approved later is not assumed to have lowered the quarters already approved and paid; only the overpaid
+ * SZJA comes back (refund = approved + open advances − the year's SZJA), exactly as on the year-to-date figures.
  */
-export function projectYear(input: YearInput): YearProjection {
+export function projectYear(input: YearInput, opts: { approved?: ApprovedQuarterParts } = {}): YearProjection {
   const r = calculateYear(input);
   const y = input.profile.year;
   const rules = rulesForYear(y);
@@ -419,9 +429,14 @@ export function projectYear(input: YearInput): YearProjection {
     .map((d, k) => ({ receivedOn: d.date, deliveryDate: d.date, amountHuf: shares[k]!, countsForAtalany: true, countsForAfaLimit: true }))
     .filter((i) => i.amountHuf !== 0);
   const full = calculateYear({ ...input, revenue: [...actual, ...synthetic], asOf: yearEnd });
-  const l = lOf(full);
+  const ap = opts.approved ?? {};
+  let total = 0;
+  for (const q of full.quarters) {
+    const a = ap[q.periodKey];
+    total += a ? a.tbHuf + a.szochoHuf + a.szjaHuf : q.tbHuf + q.szochoHuf + q.szjaAdvanceHuf;
+  }
   const hipa = full.hipa?.annualHuf ?? 0;
-  const refund = yearEndSettlement(full).totalHuf;
-  const taxes = l.total + hipa - refund;
+  const refund = yearEndSettlement(full, ap).totalHuf;
+  const taxes = total + hipa - refund;
   return { reliable, revenueHuf: projected, taxesHuf: taxes, hipaHuf: hipa, netHuf: projected - taxes, refundHuf: refund };
 }

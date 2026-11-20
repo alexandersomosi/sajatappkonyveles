@@ -28,6 +28,7 @@ export {
   type ReserveSeries,
   type EarningsMonthEngine,
   type YearProjection,
+  type ApprovedQuarterParts,
 } from './engine/reserve.js';
 export { csaladiFrameHuf, fiatal25Months } from './engine/allowances.js';
 export type { AllowanceRules } from './rules/types.js';

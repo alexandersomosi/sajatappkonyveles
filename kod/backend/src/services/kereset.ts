@@ -36,10 +36,42 @@ export interface EarningsBasisData {
   /** The last month that counts as "so far" (12 for a past year). */
   lastMonth: number;
   basisOf: Record<string, EarningsBasis>;
+  /** The approved quarters' parts (k6c3: the projection and the allowance effects use the same). */
+  approved: ApprovedParts;
   /** Comes back in the annual return: the overpaid SZJA advances only (k6c2), for the year so far. */
   refundHuf: number;
   /** k6c2: an unused családi kedvezmény the accountant settles in the annual return (said without an amount). */
   csaladiUnused: boolean;
+}
+
+/**
+ * periodKey → the approved parts of an approved quarter: TB (after csjk), szocho, SZJA advance (overrides applied) and
+ * the csjk that approval included (0 when the allowance came later).
+ */
+export type ApprovedParts = Record<string, { tbHuf: number; szochoHuf: number; szjaHuf: number; csjkHuf: number }>;
+
+/**
+ * k6c3: the approved quarters of a client-year – the one basis of "Mennyit kerestem?", its projection, the Félretenni
+ * card and the allowance effects ("idén eddig kb. … Ft-tal kevesebb adó"). An allowance approved later never assumes
+ * that the quarters already approved were recomputed with it; only the overpaid SZJA comes back.
+ */
+export async function approvedQuarterParts(db: DbOrTx, clientId: string, year: number): Promise<{ approved: ApprovedParts; basisOf: Record<string, EarningsBasis> }> {
+  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev'))).orderBy(asc(taxPeriods.dueDate));
+  const approved: ApprovedParts = {};
+  const basisOf: Record<string, EarningsBasis> = {};
+  for (const p of periods) {
+    basisOf[p.periodKey] = 'becsles';
+    if (p.calcStatus !== 'jovahagyva' || !p.approvedCalculationId) continue;
+    const [calc] = await db.select().from(taxCalculations).where(eq(taxCalculations.id, p.approvedCalculationId)).limit(1);
+    const q = (calc?.result as CalcResultJson | undefined)?.quarter;
+    if (!q) continue;
+    const ov = calc?.overrides ?? null;
+    approved[p.periodKey] = { tbHuf: ov?.tbHuf ?? q.tbHuf, szochoHuf: ov?.szochoHuf ?? q.szochoHuf, szjaHuf: ov?.szjaAdvanceHuf ?? q.szjaAdvanceHuf, csjkHuf: q.csjkHuf ?? 0 };
+    const items = await activeItems(db, p.id);
+    const paid = items.length > 0 && items.every((i) => i.markedPaidAt || i.verifiedAt);
+    basisOf[p.periodKey] = paid ? 'befizetve' : 'jovahagyva';
+  }
+  return { approved, basisOf };
 }
 
 /** The common basis of "Mennyit kerestem?" and the home Félretenni card. Null without a profile / rules. */
@@ -50,34 +82,20 @@ export async function earningsBasis(db: DbOrTx, cl: ClientRow, year: number, tod
   if (!input) return null;
   const result = calculateYear(input);
   // approved / paid quarters
-  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev'))).orderBy(asc(taxPeriods.dueDate));
-  const approved: Record<string, { tbHuf: number; szochoHuf: number; szjaHuf: number }> = {};
-  const basisOf: Record<string, EarningsBasis> = {};
-  for (const p of periods) {
-    basisOf[p.periodKey] = 'becsles';
-    if (p.calcStatus !== 'jovahagyva' || !p.approvedCalculationId) continue;
-    const [calc] = await db.select().from(taxCalculations).where(eq(taxCalculations.id, p.approvedCalculationId)).limit(1);
-    const q = (calc?.result as CalcResultJson | undefined)?.quarter;
-    if (!q) continue;
-    const ov = calc?.overrides ?? null;
-    approved[p.periodKey] = { tbHuf: ov?.tbHuf ?? q.tbHuf, szochoHuf: ov?.szochoHuf ?? q.szochoHuf, szjaHuf: ov?.szjaAdvanceHuf ?? q.szjaAdvanceHuf };
-    const items = await activeItems(db, p.id);
-    const paid = items.length > 0 && items.every((i) => i.markedPaidAt || i.verifiedAt);
-    basisOf[p.periodKey] = paid ? 'befizetve' : 'jovahagyva';
-  }
+  const { approved, basisOf } = await approvedQuarterParts(db, cl.id, year);
   const hipaAnnual = result.hipa && result.hipa.method === 'savos' ? (result.hipa.annualHuf ?? 0) : 0;
   const months = earningsByMonth(result, { hipaAnnualHuf: hipaAnnual, approved });
   const lastMonth = year < curYear ? 12 : Number(today.slice(5, 7));
   const refundHuf = yearEndSettlement(result, approved).szjaRefundHuf;
   const csaladiUnused = (result.allowances?.csaladiUnusedHuf ?? 0) > 0;
-  return { input, result, months, lastMonth, basisOf, refundHuf, csaladiUnused };
+  return { input, result, months, lastMonth, basisOf, approved, refundHuf, csaladiUnused };
 }
 
 export async function earnings(deps: Deps, db: DbOrTx, cl: ClientRow, year: number, today: string): Promise<EarningsData | null> {
   const curYear = Number(today.slice(0, 4));
   const b = await earningsBasis(db, cl, year, today);
   if (!b) return null;
-  const { input, months, lastMonth, basisOf, refundHuf, csaladiUnused } = b;
+  const { input, months, lastMonth, basisOf, approved, refundHuf, csaladiUnused } = b;
   const params = await accountantParams(db, cl.accountantId);
   const noteText = await deps.content.get('kereset.no_revenue_note');
   const views: EarningsMonthView[] = [];
@@ -109,7 +127,8 @@ export async function earnings(deps: Deps, db: DbOrTx, cl: ClientRow, year: numb
   const paused = year === curYear && Boolean(await pauseOn(db, cl.id, today));
   if (paused) projection = { reliable: false, revenueHuf: null, taxesHuf: null, netHuf: null, text: await deps.content.get('kereset.projection_paused') };
   else if (year === curYear) {
-    const pr = projectYear(input);
+    // k6c3: the approved quarters stay as approved (the same basis as the year-to-date figures above)
+    const pr = projectYear(input, { approved });
     projection = pr.reliable
       ? {
           reliable: true,

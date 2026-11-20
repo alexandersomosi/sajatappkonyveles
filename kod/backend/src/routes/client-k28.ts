@@ -17,7 +17,7 @@ import { accountantParams } from '../notify/notify.js';
 import { clientOfUser, type ClientRow } from '../services/people.js';
 import { isRestricted } from '../services/access.js';
 import { reserveCard, reserveList, reservesForInvoices, setReserveMark } from '../services/felretesz.js';
-import { earnings, earningsBasis, kb1000 } from '../services/kereset.js';
+import { approvedQuarterParts, earnings, earningsBasis, kb1000 } from '../services/kereset.js';
 import { allowanceState, allowancesHint, answersRow, clientPreview, fmt, saveAnswers, setGate } from '../services/kedvezmeny.js';
 import type { DbOrTx } from '../db/client.js';
 import { engineInput } from '../services/tax.js';
@@ -128,7 +128,8 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   async function stateOf(cl: ClientRow, year: number) {
     const tp = await profileOf(cl, year);
     const input = tp ? await engineInput(deps.db, cl.id, year, `${year}-12-31`) : null;
-    return allowanceState(deps, deps.db, cl, year, { input, firstName: await firstName(cl), regime: tp?.regime ?? 'atalany' });
+    const { approved } = await approvedQuarterParts(deps.db, cl.id, year);
+    return allowanceState(deps, deps.db, cl, year, { input, firstName: await firstName(cl), regime: tp?.regime ?? 'atalany', approved });
   }
   r.get('/allowances', async (c) => {
     const cl = await client(c);
@@ -155,7 +156,8 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
     const b = await readJson(c, z.strictObject({ year: z.number().int().min(2024).max(2100), answers: allowanceAnswersSchema }));
     const tp = await profileOf(cl, b.year);
     const input = tp ? await engineInput(deps.db, cl.id, b.year, `${b.year}-12-31`) : null;
-    return c.json(clientPreview(input, b.answers as AllowanceAnswers, b.year, tp?.status ?? 'fofoglalkozasu'));
+    const { approved } = await approvedQuarterParts(deps.db, cl.id, b.year);
+    return c.json(clientPreview(input, b.answers as AllowanceAnswers, b.year, tp?.status ?? 'fofoglalkozasu', approved));
   });
 
   // ================= §28.5 change guides + assisted changes =================

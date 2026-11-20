@@ -22,7 +22,7 @@ import { accountantPublic, type ClientRow } from '../services/people.js';
 import { clientForStaff, staffActor, staffRefs, type StaffActor } from '../services/team.js';
 import { createDocument } from '../services/documents.js';
 import { reserveCard, reserveList } from '../services/felretesz.js';
-import { earnings } from '../services/kereset.js';
+import { approvedQuarterParts, earnings } from '../services/kereset.js';
 import { accAllowanceView, answersRow, decide, pendingAllowances, staffPreview } from '../services/kedvezmeny.js';
 import { engineInput } from '../services/tax.js';
 import { decideCheckinItem, teamCheckinItems } from '../services/havi-ellenorzes.js';
@@ -91,7 +91,8 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
   async function accView(cl: ClientRow, year: number) {
     const [tp] = await deps.db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
     const input = tp ? await engineInput(deps.db, cl.id, year, `${year}-12-31`) : null;
-    return accAllowanceView(deps, deps.db, cl, year, (tp?.allowances ?? []).map((a) => ({ kind: a.kind, ...(a.note ? { note: a.note } : {}) })), input);
+    const { approved } = await approvedQuarterParts(deps.db, cl.id, year);
+    return accAllowanceView(deps, deps.db, cl, year, (tp?.allowances ?? []).map((a) => ({ kind: a.kind, ...(a.note ? { note: a.note } : {}) })), input, approved);
   }
   r.get('/clients/:id/allowances', async (c) => {
     const { cl } = await staffClient(deps, c);
