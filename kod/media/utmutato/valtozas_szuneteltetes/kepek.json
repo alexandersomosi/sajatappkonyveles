@@ -1,6 +1,6 @@
 {
  "kind": "valtozas_szuneteltetes",
- "generatedAt": "2026-11-19T21:22:51.380Z",
+ "generatedAt": "2026-11-20T07:12:50.429Z",
  "sourceVersion": "2026-11-19.ot",
  "items": [
   {
@@ -56,10 +56,10 @@
    "file": "11_szunetel_inditas.png",
    "file2x": "11_szunetel_inditas@2x.png",
    "width": 1080,
-   "height": 998,
+   "height": 1008,
    "kind": "kepernyokep",
-   "caption": "Ezen a lapon görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod.",
-   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. A szüneteltetés bejelentése ezen a lapon, lejjebb indul.",
+   "caption": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul.",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod., Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.",
    "source": {
     "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
     "url": null,
@@ -67,7 +67,19 @@
    },
    "part": 1,
    "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
-   "markers": []
+   "markers": [
+    {
+     "n": 2,
+     "style": "ures",
+     "label": "Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.",
+     "box": [
+      0.0638,
+      0.7579,
+      0.2923,
+      0.8192
+     ]
+    }
+   ]
   },
   {
    "stepKey": "valtozas_megtekintes",

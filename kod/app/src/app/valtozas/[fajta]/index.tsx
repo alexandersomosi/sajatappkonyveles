@@ -39,7 +39,7 @@ export default function ValtozasInfo() {
   const dij = fk ? FEE_DEFAULTS[fk] : null;
   const pauseDij = FEE_DEFAULTS.szuneteltetesi_dij;
   // k6c2: the pause fee with its amount (no surprise fee), DEMO while unconfirmed
-  const sz = (s: string) => fillPlaceholders(s, { firstName: fn, pauseFee: `${szam(pauseDij.amountHuf)}${pauseDij.confirmed ? '' : ' (DEMO)'}` });
+  const sz = (s: string) => fillPlaceholders(s, { firstName: fn, pauseFee: `${szam(pauseDij.amountHuf)} Ft${pauseDij.confirmed ? '' : ' (DEMO)'}` });
   const { lock } = useServiceLock();
   // [ELLENŐRIZENDŐ] mondat csak akkor, ha a tény igazolt (SPEC §28.5.1)
   const ellenorzott = CHANGE_FACTS.find((f) => f.key === 'szunetel_hossz')?.verified;

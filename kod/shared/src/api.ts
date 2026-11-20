@@ -1531,6 +1531,9 @@ export interface ReserveCard {
   heroNote?: string | null;
   /** k6c2: the sub-line of the "Az idei számláid után" row (e.g. rounding up per invoice). */
   invoicesSub?: string | null;
+  /** k6c2: when the approved quarters differ from today's calculation (e.g. an allowance approved later), the part of A
+   *  the per-invoice list cannot show – so the rows add up to the "eddig" amount. */
+  extraRow?: { label: string; sub: string; huf: number } | null;
 }
 export interface ReserveListItem {
   revenueItemId: string;

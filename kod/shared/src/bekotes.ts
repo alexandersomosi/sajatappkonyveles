@@ -2004,8 +2004,11 @@ export const RESERVE_TEXTS = {
     heroFix: 'Fent a kék sávban a(z) {negyedev} becslése van, a {honapok} fix járulékkal együtt; itt csak az eddigi hónapok.',
     heroHipa: 'Itt az iparűzési adó is benne van (kb. {hipa} Ft), fent nincs.',
     heroLezart: 'Fent a kék sávban a lezárt {negyedev} összege van: itt a „Lezárt negyedévek” sorban szerepel.',
+    heroNincs: 'Fent az áll, hogy most nincs mit befizetned: ez az összeg a következő negyedéves befizetésig gyűlik.',
     /** k6c2: the invoice row = Σ of the per-invoice amounts on /felretesz (each rounded up). */
     rowSzamlakSub: 'számlánként felfelé kerekítve',
+    rowElteres: 'A lezárt negyedévek jóváhagyott összegéből',
+    rowElteresSub: 'a mostani számításnál több (például egy később jóváhagyott kedvezmény miatt)',
     detailZero: 'Ami eddig összegyűlt, az a lezárt negyedévekre esik, és azt már befizetted, vagy most kell befizetned.',
     rowSzamlak: 'Az idei számláid után',
     rowFix: 'Havi fix járulék eddig',
@@ -2440,7 +2443,7 @@ export const CHANGE_TEXTS = {
         'Szünetelés alatt nem dolgozhatsz a vállalkozásodban, és nem állíthatsz ki számlát.',
         'A kezdőnapot nem adhatod meg visszamenőleg, és később nem módosíthatod. Jól gondold meg.',
         'Ha újra kezdenéd, azt is be kell jelentened. Szólj nekünk előtte.',
-        'Szünetelés alatt a havidíj helyett csak a rendelkezésre állási díjat fizeted: havi {pauseFee} Ft.',
+        'Szünetelés alatt a havidíj helyett csak a rendelkezésre állási díjat fizeted: havi {pauseFee}.',
       ],
       /** [ELLENŐRIZENDŐ] – shown only after B4 confirmed it (SPEC §28.5.1 fact 3). */
       figyeljEllenorizendo: ['Legalább egy hónapig, legfeljebb két évig tarthat.'],
@@ -3506,8 +3509,9 @@ export const LOCK_TEXTS = {
   supportSender: 'Ügyfélszolgálat',
   /** k6c2: the messages header while locked (the banner link opens this thread). */
   supportLine: 'Ügyfélszolgálat: a díjról is itt írhatsz nekünk.',
-  /** k6c2: the Főoldal blue band while locked – never only "Most nincs mit fizetned". */
-  heroNote: 'Adót most nem kell fizetned. A könyvelésed viszont szünetel, amíg a {mit} nincs kifizetve.',
+  /** k6c2: the Főoldal blue band while locked – never "Most nincs mit fizetned" right above the unpaid-fee banner. */
+  heroTitle: 'Adót most nem kell fizetned',
+  heroNote: 'A könyvelésed viszont szünetel, amíg a {mit} nincs kifizetve.',
   /** Panel (staff wording). */
   panelChip: 'Zárolva: díj elmaradt ({since} óta, {osszeg} Ft)',
   panelDisabled: 'Zárolva: a díj nincs kifizetve. A fizetés után újra működik.',

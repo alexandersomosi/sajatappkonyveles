@@ -1,6 +1,6 @@
 {
  "kind": "valtozas_folytatas",
- "generatedAt": "2026-11-19T21:22:51.398Z",
+ "generatedAt": "2026-11-20T07:12:50.534Z",
  "sourceVersion": "2026-11-19.ot",
  "items": [
   {
@@ -50,24 +50,6 @@
      ]
     }
    ]
-  },
-  {
-   "stepKey": "folytatas_inditas",
-   "file": "11_szunetel_inditas.png",
-   "file2x": "11_szunetel_inditas@2x.png",
-   "width": 1080,
-   "height": 998,
-   "kind": "kepernyokep",
-   "caption": "Ezen a lapon görgess lejjebb: a szüneteltetés befejezését a lap alján indítod.",
-   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. A szüneteltetés befejezése ezen a lapon, lejjebb indul.",
-   "source": {
-    "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
-    "url": null,
-    "date": "2026-11-19"
-   },
-   "part": 1,
-   "sourceShort": "NAV-képernyő · Forrás: saját képernyőkép, 2026. november 19. A személyes adatok elmosva.",
-   "markers": []
   },
   {
    "stepKey": "valtozas_megtekintes",

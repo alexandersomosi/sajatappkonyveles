@@ -16,6 +16,7 @@ import brand from '../../_shared/brand.json';
 const MINTA: Record<string, string> = {
   firstName: 'Bence',
   firstNameWith: 'Bencével',
+  honapok: 'decemberi',
   firstNameFrom: 'Bencétől',
   firstNameOnto: 'Bencére',
   firstNameAcc: 'Bencét',
@@ -362,8 +363,10 @@ const RESZ: Record<string, string> = { title: 'cím', body: 'szöveg', subject: 
 const APPSZOVEG: Record<string, string> = {
   'ui.home.letter_default': 'Főoldal: a könyvelő levele (végleges összeg)',
   'ui.home.letter_becsles': 'Főoldal: a könyvelő levele (becslés)',
+  'ui.home.letter_becsles_fix': 'Főoldal: a könyvelő levele (becslés, a hátralévő hónapok fix járulékával)',
   'ui.home.letter_signed_role': 'Főoldal: a szerep az aláírás alatt',
   'ui.hero.becsles_note': 'Főoldal: megjegyzés a becsült összeg alatt',
+  'ui.hero.becsles_note_fix': 'Főoldal: megjegyzés a becsült összeg alatt, ha benne van a hátralévő hónapok fix járuléka',
   'ui.hero.veglegesites_note': 'Főoldal: megjegyzés, amíg a lezárult negyedév véglegesítésre vár',
   'ui.home.letter_veglegesites': 'Főoldal: a könyvelő levele (lezárult negyedév, véglegesítés előtt)',
   'ui.request.monthly_statement.title': 'Havi kivonatkérés – cím',

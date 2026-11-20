@@ -26,7 +26,7 @@ import subprocess
 import sys
 import unicodedata
 
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -80,11 +80,13 @@ LEPESEK = [
     # k6c: the searched activity (his own) is blurred too
     (10, 'valtozas_ovtj_kereso', '06_ovtj_kereso.jpg', [(120, 366, 744, 414), (128, 522, 423, 559)], (92, 140, 790, 624),
      'A tevékenység keresése', 'Írj be egy szót vagy a kódot, és válaszd ki a sort.',
-     [(1, (126, 518, 428, 560), 'borostyan', 'Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.', 'jobb'),
+     [(1, (126, 518, 428, 560), 'borostyan', 'Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából.', 'jobb'),
       (2, (122, 568, 276, 612), 'borostyan', 'Adatváltozás ideje: ettől a naptól végzed.', 'jobb')]),
     (11, 'szunetel_inditas', '03_uj_bejelentes_meglevo_ev.jpg', [(428, 174, 770, 502)], (92, 62, 790, 620),
-     'Új bejelentés, kérelem benyújtása', 'A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).',
-     [(1, None, 'tinta', 'Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).')]),
+     'Új bejelentés, kérelem benyújtása', 'A szüneteltetés bejelentése ezen a lapon, lejjebb indul.',
+     [(1, None, 'tinta', 'Görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod.'),
+      # k6c2: this card's button is the adatváltozás – crossed out (dashed = "ne ezt"), so nobody starts the wrong form
+      (2, (124, 568, 284, 602), 'ures', 'Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.', 'jobb')]),
     # k6c: his tax choices (munkavégzés jellege, átalány, alanyi mentesség, közösségi adószám, árfolyam) are blurred too
     (12, 'valtozas_megtekintes', '12_megtekintes_3.jpg', [(395, 82, 758, 108), (114, 190, 749, 212), (114, 254, 749, 277), (114, 317, 749, 340), (114, 380, 749, 403), (114, 444, 749, 474)], (92, 120, 790, 560),
      'Bejelentéseim, kérelmeim – Megtekintés', 'A beküldött bejelentésed: töltsd le a NAV értesítését.',
@@ -194,12 +196,27 @@ def szemelyes_halmaz(szavak: list, rs: list) -> set:
     return {w[0] for w in szavak if len(w[0]) >= 3 and any(benne(w, r) for r in rs) and w[0] not in kint}
 
 
+# k6c2 (2. kör): elmosott terület → üres beviteli mező (a kereső maga nem személyes adat, csak a beírt keresés)
+URES_MEZO = {'valtozas_ovtj_kereso': [((126, 520, 425, 561), (128, 528, 423, 552))]}
+# k6c2 (2. kör): kiszürkített gomb (nem ezt kell megnyomni ezen a lépésen)
+SZURKIT = {'szunetel_inditas': [(126, 569, 283, 601)]}
+
+
 def mos_es_ment(l) -> tuple[Image.Image, list]:
     nn, slug, fajl, teruletek, *_ = l
     kep = Image.open(os.path.join(NYERS, fajl)).convert('RGB')
     rs = [FEJLEC_NEV] + list(teruletek)
     for r in rs:
         mos(kep, r)
+    # k6c2 (2. kör): az elmosott kereső helyére üres beviteli mező – látszódjon, hová kell írni
+    for r, doboz in URES_MEZO.get(slug, []):
+        d = ImageDraw.Draw(kep)
+        d.rectangle(r, fill=(255, 255, 255))
+        d.rectangle(doboz, fill=(255, 255, 255), outline=(190, 190, 190), width=1)
+    # k6c2 (2. kör): a nem ide való gomb kiszürkítve (a szüneteltetés lépésén az adatváltozás gombja)
+    for r in SZURKIT.get(slug, []):
+        resz = ImageOps.grayscale(kep.crop(r)).convert('RGB')
+        kep.paste(Image.blend(resz, Image.new('RGB', resz.size, (255, 255, 255)), 0.62), (r[0], r[1]))
     os.makedirs(ELMOSOTT, exist_ok=True)
     ut = os.path.join(ELMOSOTT, f'{nn:02d}_{slug}.png')
     if os.path.exists(ut):

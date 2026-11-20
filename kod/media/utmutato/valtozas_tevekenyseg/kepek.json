@@ -1,6 +1,6 @@
 {
  "kind": "valtozas_tevekenyseg",
- "generatedAt": "2026-11-19T21:22:51.368Z",
+ "generatedAt": "2026-11-20T07:12:50.389Z",
  "sourceVersion": "2026-11-19.ot",
  "items": [
   {
@@ -234,7 +234,7 @@
    "height": 935,
    "kind": "kepernyokep",
    "caption": "Írj be egy szót vagy a kódot, és válaszd ki a sort.",
-   "alt": "Képernyőkép: A tevékenység keresése. A személyes adatok elmosva. Kiemelve – Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából., Adatváltozás ideje: ettől a naptól végzed.",
+   "alt": "Képernyőkép: A tevékenység keresése. A személyes adatok elmosva. Kiemelve – Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából., Adatváltozás ideje: ettől a naptól végzed.",
    "source": {
     "title": "Saját képernyőkép a NAV Vállalkozói Ügysegédből (adatváltozás-űrlap, nem beküldve)",
     "url": null,
@@ -246,7 +246,7 @@
     {
      "n": 1,
      "style": "borostyan",
-     "label": "Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.",
+     "label": "Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából.",
      "box": [
       0.0666,
       0.6166,

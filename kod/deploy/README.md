@@ -394,3 +394,16 @@ Előtte (11-19 22:41) a darabszámok: alex@ és tulaj@ bekotes_alatt, minden 0; 
 14 értesítés / 5 negyedév / 1 adóprofil; bence.kovacs@ active, 23 ügyfél; összesen 26 felhasználó, 23 ügyfél, 14 migráció; tárolt szövegben
 „Kézjegy”: 0. Helyi végigjátszás: `APP_PORT=8871 PANEL_PORT=8872 node kod/_qa/k6_integ_harness.mjs` + `node kod/_qa/k6_integ_proba.mjs`
 → `kod/_qa/k6_integ_*.png`, `k6_integ_eredmeny.txt` (50/50 rendben).
+
+## k6 + k6c + k6c2 – élesítve 2026-11-20 08:28–08:34
+Az integrátor (11-19 22:41) és a k6c kör élesítése a `feltolt.sh`-nál megállt; ez a kör vitte ki mindet egyben (a 2. javító
+kör k6c2 javításaival). A Gardoko 11-20 óta törölve: a 502 várt, helyette az Adózz három címe 200 előtte és utána.
+Sorrend: api/app/konyvelo health 200 → `fiok-szamok.sh` + `tulaj-fiokok-allapot.sh ment elotte_k6c2_20261120_082850` →
+`feltolt.sh` → `up.sh` (titkosított mentés `_regi/db_elotte_up_20261120_083151.dump.gpg`, migráció 0014–0016: 14 → 17,
+csak bővít; worker: data.ot1119, data.k28, data.k6c) → `seed-ot1119.sh` (4 új) + `seed-k28.sh` (5 új kitalált ügyfél) →
+`utmutato-kepek.mjs` + `media_kicsinyit.py` + `videok-json.mjs` → `feltolt.sh --media` (78 új, 2 cserélt) →
+`hasonlit elotte_k6c2_20261120_082850 utana_k6c2_20261120_083340`: VÁLTOZATLAN. david@: 20 irat / 33 számla / 34 bevétel /
+9 üzenet / 14 értesítés / 5 negyedév – előtte és utána ugyanaz; bence.kovacs@ 3 élő munkamenete megmaradt (23 → 32 ügyfél).
+Az éles `index.html` = a helyi build; a két új útmutató-kép sha256-ja egyezik; `/client/reserve` token nélkül 401.
+Helyi próba: `APP_PORT=8891 PANEL_PORT=8892 node kod/_qa/k6_integ_harness.mjs` + `APP=http://127.0.0.1:8891 node kod/_qa/k6c2j_javito_proba.mjs`
+→ `kod/_qa/k6c2j_*.png`, `k6c2j_eredmeny.txt`.

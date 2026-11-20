@@ -286,7 +286,7 @@ describe('K3 – allowances', () => {
     expect(ok.status).toBe(200);
     expect(ok.body.items.find((i: { kind: string }) => i.kind === 'anyak').status).toBe('jovahagyva');
     const st = await h.json('GET', '/client/allowances?year=2026', { token: c.token });
-    expect(st.body.items.find((i: { kind: string }) => i.kind === 'anyak').statusText).toMatch(/^Jár · január–december · idén kb\. [\d ]+ Ft-tal kevesebb adó$/);
+    expect(st.body.items.find((i: { kind: string }) => i.kind === 'anyak').statusText).toMatch(/^Jár · január–december · idén eddig kb\. [\d ]+ Ft-tal kevesebb adó$/);
     expect(st.body.savedYearHuf).toBeGreaterThan(0);
     const ask = await h.json('POST', `/acc/clients/${c.clientId}/allowances/csaladi/decision`, { token: bence.token, body: { year: 2026, status: 'kerdes', clientText: 'A párod is egyéni vállalkozó?' } });
     expect(ask.status).toBe(200);

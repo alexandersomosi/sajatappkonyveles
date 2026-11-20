@@ -133,9 +133,10 @@ export async function reserveCtx(db: DbOrTx, clientId: string, year: number): Pr
 /** k6c2: the "Miért ennyi?" sheet: only the non-zero parts (exact, no "kb."), a signed total, the bullets that apply. */
 async function miertOf(deps: Deps, r: ReserveLineData, ctx: ReserveCtx): Promise<NonNullable<InvoiceReserveView['miert']>> {
   const rows: string[] = [];
-  if (r.szjaHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szja', { szja: fmt(r.szjaHuf) }));
-  if (r.tbHuf !== 0) rows.push(await deps.content.render('felretesz.miert.tb', { tb: fmt(r.tbHuf) }));
-  if (r.szochoHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szocho', { szocho: fmt(r.szochoHuf) }));
+  const f = (n: number) => fmt(n).replace(/^-/, '−');
+  if (r.szjaHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szja', { szja: f(r.szjaHuf) }));
+  if (r.tbHuf !== 0) rows.push(await deps.content.render('felretesz.miert.tb', { tb: f(r.tbHuf) }));
+  if (r.szochoHuf !== 0) rows.push(await deps.content.render('felretesz.miert.szocho', { szocho: f(r.szochoHuf) }));
   const total =
     r.reserveHuf > 0
       ? await deps.content.render('felretesz.miert.osszesen', { felre: fmt(r.reserveHuf) })
@@ -301,10 +302,14 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
       notes.push(await deps.content.render('felretesz.kartya.hero_fix', { negyedev: hero.periodLabel ?? '', honapok: honapokAdj(fut) }));
     else if ((hero.state === 'jovahagyva' || (hero.state === 'becsles' && hero.periodKey !== `${year}-Q${qOfMonth}`)) && hero.periodLabel)
       notes.push(await deps.content.render('felretesz.kartya.hero_lezart', { negyedev: hero.periodLabel }));
+    else if (hero.state === 'nincs_fizetendo' && !zero) notes.push(await deps.content.get('felretesz.kartya.hero_nincs'));
     const hipaInKeep = Math.max(0, hipaHuf - hipaInB);
     if (!zero && hipaInKeep >= 500 && hero.state !== 'nincs_fizetendo') notes.push(await deps.content.render('felretesz.kartya.hero_hipa', { hipa: fmt(kb1000(hipaInKeep)) }));
   }
   const heroNote = notes.length ? notes.join(' ') : null;
+  // k6c2: the rows add up to A: what the approved quarters hold above today's calculation gets its own row
+  const residual = A - listedHuf - fixedHuf - hipaHuf;
+  const extraRow = residual >= RESERVE_ROUND_HUF ? { label: await deps.content.get('felretesz.kartya.row_elteres'), sub: await deps.content.get('felretesz.kartya.row_elteres_sub'), huf: kb1000(residual) } : null;
   const refundHuf = basis.refundHuf;
   return {
     year,
@@ -312,6 +317,7 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
     accruedHuf: A,
     invoicesHuf: listedHuf,
     invoicesSub: listedHuf > 0 && listedHuf !== kb1000(invoicesPart) ? await deps.content.get('felretesz.kartya.row_szamlak_sub') : null,
+    extraRow,
     fixedHuf,
     fixedMonthlyHuf,
     hipaHuf: kb1000(hipaHuf),

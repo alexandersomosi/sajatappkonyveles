@@ -88,7 +88,7 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
       : hero.state === 'nincs_fizetendo'
         ? {
             ikon: 'hataridok',
-            cim: 'Most nincs mit fizetned',
+            cim: lock ? LOCK_TEXTS.heroTitle : 'Most nincs mit fizetned',
             // k6c2: under the lock banner never "Bence szól…" – the bookkeeping is paused until the fee is paid
             mondat: lock ? fillPlaceholders(LOCK_TEXTS.heroNote, { mit: lock.reasons.map((r) => LOCK_TEXTS.mit[r] ?? r).join(' és ') }) : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
           }

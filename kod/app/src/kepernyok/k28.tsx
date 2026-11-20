@@ -132,6 +132,7 @@ export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
           ) : null}
           <View style={{ marginTop: 6 }}>
             <OsszegSor elso cim={RESERVE_TEXTS.kartya.rowSzamlak} al={c.invoicesSub ?? null} huf={c.invoicesHuf} kb={c.invoicesHuf > 0} />
+            {c.extraRow ? <OsszegSor cim={c.extraRow.label} al={c.extraRow.sub} huf={c.extraRow.huf} kb /> : null}
             {c.fixedMonthlyHuf > 0 ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowFix} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowFixSub, { fixedMonthly: szam(c.fixedMonthlyHuf) })} huf={c.fixedHuf} /> : null}
             {c.hipaAnnualHuf != null ? <OsszegSor cim={RESERVE_TEXTS.kartya.rowHipa} al={fillPlaceholders(RESERVE_TEXTS.kartya.rowHipaSub, { hipaAnnual: szam(c.hipaAnnualHuf) })} huf={c.hipaHuf} kb={c.hipaHuf > 0} /> : null}
             <OsszegSor cim={RESERVE_TEXTS.kartya.rowLezart} al={RESERVE_TEXTS.kartya.rowLezartSub} huf={c.dueOrPaidHuf} />
@@ -222,7 +223,7 @@ export function KeresetKartya({ e }: { e: EarningsCard }) {
 /** Szakasz egy mondattal és egy kapszulával jobbra (havi ellenőrzés, éves zárás, kedvezmény-tipp, szünetelés). */
 function TeendoSzakasz({ ikon, cim, szoveg, gomb, onPress, masik }: { ikon: Parameters<typeof Ikon3d>[0]['nev']; cim: string; szoveg: string; gomb: string; onPress: () => void; masik?: { cim: string; onPress: () => void } }) {
   // 320 px: a long title next to the capsule broke inside the word ("vállalkozás / od") – the capsule goes under the text
-  const keskeny = useWindowDimensions().width < 360 && cim.length > 16;
+  const keskeny = useWindowDimensions().width < 360 && cim.length > 10;
   return (
     <>
       <Szakasz ikon={ikon} cim={cim} jobbra={keskeny ? undefined : <GombM cim={gomb} onPress={onPress} />} />

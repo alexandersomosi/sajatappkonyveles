@@ -771,7 +771,7 @@
    "valtozat": null,
    "kepernyo": "A tevékenység keresése",
    "felirat": "Írj be egy szót vagy a kódot, és válaszd ki a sort.",
-   "alt": "Képernyőkép: A tevékenység keresése. A személyes adatok elmosva. Kiemelve – Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából., Adatváltozás ideje: ettől a naptól végzed.",
+   "alt": "Képernyőkép: A tevékenység keresése. A személyes adatok elmosva. Kiemelve – Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából., Adatváltozás ideje: ettől a naptól végzed.",
    "tipus": "valodi",
    "forras": {
     "id": "sajat_2026-11-19",
@@ -803,7 +803,7 @@
       560
      ],
      "stilus": "borostyan",
-     "cimke": "Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.",
+     "cimke": "Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából.",
      "szam_hely": "jobb"
     },
     {
@@ -832,7 +832,7 @@
      {
       "n": 1,
       "stilus": "borostyan",
-      "cimke": "Írj be egy szót vagy az ÖVTJ-kódot a keresőbe, és válaszd ki a sort a listából.",
+      "cimke": "Ez a kereső: írj ide egy szót vagy az ÖVTJ-kódot, és válaszd ki a sort a listából.",
       "doboz": [
        0.0666,
        0.6166,
@@ -869,8 +869,8 @@
    "resz": 1,
    "valtozat": null,
    "kepernyo": "Új bejelentés, kérelem benyújtása",
-   "felirat": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul (a képen már nem látszik).",
-   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik).",
+   "felirat": "A szüneteltetés bejelentése ezen a lapon, lejjebb indul.",
+   "alt": "Képernyőkép: Új bejelentés, kérelem benyújtása. A személyes adatok elmosva. Kiemelve – Görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod., Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.",
    "tipus": "valodi",
    "forras": {
     "id": "sajat_2026-11-19",
@@ -897,19 +897,47 @@
      "n": 1,
      "doboz": null,
      "stilus": "tinta",
-     "cimke": "Görgess lejjebb a szüneteltetésről szóló részhez, és indítsd el onnan a bejelentést (a képen már nem látszik)."
+     "cimke": "Görgess lejjebb: a szüneteltetés bejelentését a lap alján indítod."
+    },
+    {
+     "n": 2,
+     "doboz": [
+      124,
+      568,
+      284,
+      602
+     ],
+     "stilus": "ures",
+     "cimke": "Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.",
+     "szam_hely": "jobb"
     }
    ],
    "kimenet": {
     "fajl": "11_szunetel_inditas.png",
     "fajl_2x": "11_szunetel_inditas@2x.png",
     "szel": 1080,
-    "mag": 998,
+    "mag": 1008,
     "szel_2x": 2160,
-    "mag_2x": 1995,
+    "mag_2x": 2017,
     "forras_hasznalt": "alap",
     "tipus": "valodi",
-    "jelolesek_kimeneten": []
+    "jelolesek_kimeneten": [
+     {
+      "n": 2,
+      "stilus": "ures",
+      "cimke": "Ez az adatváltozás gombja (kiszürkítve): most ne ezt nyomd meg.",
+      "doboz": [
+       0.0638,
+       0.7579,
+       0.2923,
+       0.8192
+      ],
+      "korong": [
+       0.333,
+       0.7807
+      ]
+     }
+    ]
    }
   },
   {
@@ -1331,5 +1359,5 @@
   "t101e_blokk": "ONYA T101E űrlap – rajzolt vázlat",
   "t101e_bekuldes": "ONYA T101E beküldés – rajzolt vázlat"
  },
- "jelolve": "2026-11-19T21:31:10"
+ "jelolve": "2026-11-20T08:10:13"
 }
