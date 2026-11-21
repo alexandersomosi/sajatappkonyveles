@@ -161,7 +161,7 @@ Részletek: `kod/deploy/README.md` „Landing élesítése”.
   aria-label kiegészült: a képek az app új, bevezetés alatt álló kinézetével készültek, gépen az app ma még telefonos
   elrendezésben nyílik meg.
 - **Ha a k8 kész (v2 kinézet + gépes nézet élesben):** a `kod/landing/oldal.sablon.html` `.bemutato-jegy`-ét és a hős
-  aria-labeljét vissza „Az app képei bemutató adatokkal készültek.”-re (a teszt a mostani mondatot keresi – azt is igazítani).
+  aria-labeljét vissza „Az app képei bemutató adatokkal készültek.”-re (a teszt a mostani mondatot keresi – azt is igazítani). **KÉSZ 11-21 15:51** (landing-csere.sh, TS=20261121_155059).
 - **Ha az átutalás (HIANYLISTA 1.10) él:** a 3 „bankkártyával” visszaállítható „kártyával vagy átutalással”-ra (a teszt is).
 
 ### Ami a landingnál nyitva maradt
@@ -183,3 +183,36 @@ Részletek: `kod/deploy/README.md` „Landing élesítése”.
    látogató.
 - **11-21 11:40 – telt színek (tulaj 11:30, „ezek a részek se átlátszóak legyenek”):** Árak telt kék #1428DB (fehér árkártya, sárga felső csík), „Miben más” Adózz-oszlop/cellák telt kék, „Ki könyvel” telt zöld #167A45; más halvány nagy doboz nem maradt (mérve). Helyben kész (build + 7/7 teszt, csak a `stilus.css` változott; mentés `kod/landing/_regi/elotte_telt_szinek_20261121_1131/`), **KINT 11-21 13:35**: a `deploy/landing-csere.sh` futtatását a gép engedélykezelője megállította – tulaj-jóváhagyás után kitenni, utána élő ellenőrzés + `elo_telt_*` képek.
 - **11-21 13:10 – telefonon görgetésenként egy lépés + mozgó nyíl (tulaj, „minden görgetés egy lépés legyen … mozgó nyíl, írás nem kell”):** a „Mit kapsz” ragadós bemutató érintőképernyőn (≤ 980 px, hover: none + pointer: coarse) CSS scroll-snappal lép (lépésenként egy színpadnyi, scroll-snap-stop: always; `html.beakad` csak a szakasz teteje és a lista vége KÖZÖTT, a szélein szabad; horgony-linkre/fókuszra rövid időre ki), mellette jobbra pattogó sárga chevron (az utolsó lépésnél eltűnik); gépen és egérrel változatlan. Helyben kész (`stilus.css` + `mozgas.js`, build + 7/7 teszt, próba 31/31, videó `dizajn/landing_v2_proba4/_proba_kepek/gorgetes_lepes_telefon.mp4`; mentés `kod/landing/_regi/elotte_gorgetes_lepes_20261121_1240/`), **KINT 11-21 13:35** – a fenti telt színekkel együtt, tulaj-jóváhagyás után `deploy/landing-csere.sh`; utána valódi iPhone-on (Safari) és Androidon kipróbálni.
+
+## k8 – ÁLLAPOT 2026-11-21 16:00 (integrátor): KÉSZ ÉS ÉL A DEMO-N
+Részletek: `kod/SPEC.md` §34, `kod/deploy/README.md` „k8” szakasz, `_munka/k8/B_jegyzet.md`, `kod/shared/v2/README.md`. Élő képek:
+`kod/_qa/eles_k8_1121/`. Mentések: `backups/pg_dump_elotte_k8_20261121_152819.dump.gpg` + `_regi/db_elotte_up_20261121_153427.dump.gpg`.
+
+**KÉSZ (él a DEMO szerveren):**
+- v2 dizájn az appban (telefon + app.adozz.hu), a panelen és a konzolban: Fluent Emoji Flat tartalmi ikonok semleges csempén
+  (KOZEPRE-javítással), Material vezérlők, sárga főgomb, színes alsó menü kék csíkkal, felirat-logó, nincs halvány pasztell doboz.
+- Gépes nézet (≥ 1024 px): bal menü, kék hős kártya, 2 oszlopos rács (a cím és a kártyája együtt), kétpaneles üzenetek, osztott
+  belépő; a fő gomb gépen a tartalomoszlop alján lebeg; „Fotózás” marad (gépen fájlfeltöltés + behúzás).
+- Fotózás telefonon: Galéria · exponáló · „Fájl, PDF”. Mozgás az appban (13 elem, csökkentett mozgásnál nincs); a panelben nincs.
+- Átutalás díjbekérővel (8 nap), egyedi havi rendelésszám (`ADZ-<ügyfélszám>-ÉÉÉÉ-HH`), emlékeztető az 1./4./8. napon, konzol
+  fizetett / vár / késik, „Beérkezett, rögzítem” (step-up), „Felfüggesztem” megerősítéssel; Autokassza-lekérdezés kódja (élőben nem
+  próbált). Kapcsoló: DEMO-n BE, élesben KI (ÁSZF). Késés: a könyvelés NEM áll le (kapcsoló `kesesLeallit` KI).
+- A kártyát/fizetést csak a visszahívás-ajánlat után kérjük (vezetett lépés + nyitott visszahívás alatt zárva).
+- Saját díjszámla-levél (Számlázz `sendEmail=false`), új egységes levélsablon minden rendszerlevélre, az „Adózz.hu” mindenhol teljes link;
+  a JL 14–21 levelek.
+- k7b-maradékok: időígéretek ki (app, panel, backend, shared, jogi + az élő GYIK 3 sora), dupla kártyatörlés-levél, próbaszkriptek.
+- A három ellenőrzés (helyesség, app-látvány, panel-látvány) és a fizetési út próbájának fontos hibái javítva (SPEC §34.2 „Review fixes”).
+- Landing: a bemutató alatti jegy újra „Az app képei bemutató adatokkal készültek.” (a gépes nézet él); a 3× „bankkártyával” MARAD.
+
+**MARADT (és miért):**
+- E-mailes kétlépcsős belépés az ügyfeleknek (termékdöntés 11-20): nem készült el – a belépési folyamat és az app 2FA-képernyői is
+  változnak, a tulaj fiókjai miatt külön, óvatos kör kell (k9). Addig a hitelesítő appos 2FA marad.
+- Új APK (v2 a telefonon natívan): a tulaj indítja EAS-szel (lépések: `kod/deploy/README.md` k8).
+- Tulaj-döntések: késésnél leálljon-e a könyvelés; közlemény-formátum (havi vs. állandó – az Autokassza fix közleményes párosítása
+  nem ellenőrzött); bármely nyitott visszahívás (a meghatalmazásé is) zárja a fizetést – maradjon így?; a panel új kinézetének
+  végleges jóváhagyása (P6); favicon / app-ikon.
+- Tulaj-teendők: Erste + Autokassza a Számlázz.hu-ban (és ott az automatikus számla-kiküldés KI); Lark: `ertesites@` alias; ÁSZF
+  (átutalás, díjbekérő, 8 nap, késés); a konzol DEMO-próbájához TOTP a saját admin fiókon.
+- Kisebb, nem kész: konzol ügyféllistán „fizetési mód / késik” szűrő; A53/A62 kétpaneles gépes nézet; webkamerás fotó gépen;
+  egymásba ágyazott gombok a bekötés- és határidősorokban (akadálymentesség); az ügyfélkártyán az e-mail-címek szó közepén törhetnek.
+- Könyvelői hiányok (KONYVELO_LEFEDETTSEG) és Dávid-függő pontok: k9.

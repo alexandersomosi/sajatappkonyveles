@@ -153,7 +153,9 @@ test('new design (11-21): own files only, motion script and e-mail logos in the 
   // only what is true today: card payment only (ÁSZF 6.2), the company's management can open documents (logged)
   assert.doesNotMatch(html, /átutalással|csak a könyvelőd látja/);
   assert.equal((html.match(/bankkártyával\./g) || []).length, 3);
-  assert.match(html, /Gépen az app ma még telefonos elrendezésben nyílik meg\./);
+  // k8 (11-21): the new look and the desktop layout are live – the note says only that the pictures use sample data
+  assert.match(html, /<p class="bemutato-jegy">Az app képei bemutató adatokkal készültek\.<\/p>/);
+  assert.doesNotMatch(html, /telefonos elrendezésben|bevezetés alatt álló kinézet/);
   // 11-21 text fixes (owner): no liability sentence anywhere on the page (text, FAQ, alt texts, meta), and no phone number yet
   assert.doesNotMatch(html, /\bfelel(?!őtlen)|felelős|felelünk|megtérít|kártérít|garant|helytáll/i);
   assert.match(html, /A szerződést a <span class="nowrap">Somosi Kft\.-vel<\/span> kötöd, a könyvelőd a mi megbízásunkból dolgozik neked\./);

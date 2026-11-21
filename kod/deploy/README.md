@@ -14,6 +14,54 @@
 
 
 
+## k8 – v2 kinézet, gépes nézet, átutalás díjbekérővel, új levélsablon (SPEC §34) – ÉLESÍTVE a DEMO-ra 2026-11-21 15:31–15:59
+
+Ahogy ment:
+```bash
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh                                    # 41 felhasználó / 38 ügyfél / migráció 27
+ssh appok-1 'bash -s ment elotte_k8_20261121_152819' < kod/deploy/tulaj-fiokok-allapot.sh
+# kézi, titkosított mentés: backups/pg_dump_elotte_k8_20261121_152819.dump.gpg (498 130 bájt; pg_restore -l: 593 sor)
+cd kod/app && npm run export:web; cd kod/panel && npm run build                       # tesztek előtte: lent
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'           # _regi/db_elotte_up_20261121_153427; migráció 27 → 29
+ssh appok-1 'bash -s hasonlit elotte_k8_20261121_152819 utana_k8_20261121_153528' < kod/deploy/tulaj-fiokok-allapot.sh   # VÁLTOZATLAN
+bash kod/deploy/feltolt.sh --web-only && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh' # panel: a „Késik” csempe sávja (_regi/db_elotte_up_20261121_154950)
+bash kod/deploy/feltolt.sh --web-only && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh' # app: a gépes Dosszié üres bal oszlopa (_regi/db_elotte_up_20261121_155812)
+# landing: a bemutató alatti jegy és a hős aria-labelje vissza „Az app képei bemutató adatokkal készültek.”-re (a gépes nézet él)
+node kod/landing/build.mjs && node --test kod/landing/meres.test.mjs                  # 7/7
+# …a landing-csere.sh fejében lévő csomagolás → ssh appok-1 "bash -s" < kod/deploy/landing-csere.sh   (TS=20261121_155059)
+```
+- **Migrációk:** `0027_k8_enumok.sql` (értesítés-fajták `transfer_request`, `transfer_reminder`), `0028_k8.sql`
+  (`clients.customer_no` szekvenciával 10001-től – az egyetlen írás meglévő sorba: 40 ügyfél 10001–10040; `subscriptions.billing_method`;
+  új `transfer_requests` tábla; `demo_outbox.body_html`; `users.mfa_email_enabled_at` – még nem használt). Csak hozzáadó.
+- **Adatlépések (worker, egyszer):** `data.k8` `{clients: 2, transfers: 3}` (két kitalált, belépés nélküli átutalós ügyfél: Utaló Péter
+  fizetett, Átutaló Ágnes késik); `data.k8_szoveg` `{faq: 3, content: 0, faqKept: 0}` (3 GYIK-válasz időígéret nélkül, csak ahol az élő
+  sor még szó szerint a régi szöveg volt).
+- **Kapcsolók (`system_state['kapcsolok.fizetes']`, sor nincs → a kód alapértéke):** `atutalas` = **BE a DEMO-n** (APP_ENV=demo),
+  **élesben KI**, amíg az ügyvéd az ÁSZF-be fel nem veszi az átutalást (és vele a díjbekérőt, a 8 napos határidőt, a késés kezelését);
+  `kesesLeallit` = KI (nyitott tulaj-döntés); `kozlemeny` = `havi`. Bekapcsolás: konzol → Rendszer → „Átutalásos fizetés” (step-up),
+  vagy `insert into system_state(key, value) values ('kapcsolok.fizetes', '{"atutalas": true}') on conflict (key) do update set value = system_state.value || excluded.value;`
+  A `.env` nem változott (a kapcsolók az adatbázisban vannak).
+- **Új jobok:** `transfer_issue` (06:30), `transfer_reconcile` (munkanapokon 2 óránként; a hibás díjbekérőt is újrapróbálja),
+  `transfer_reminders` (09:30; a lemondott / megszűnt ügyfél nyitott díjbekérőjét visszavonja), `guided_continue` (11:00).
+- **Utána (élőben):** mind a 8 cím 200/301; API/worker/proxy napló 0 figyelmeztetés/hiba; mind a 20 demo belépés 200; alex@ és tulaj@
+  VÁLTOZATLAN; a Google-os tesztfiók aktív, 7 élő munkamenet, nem változott; `backup.sh` 15:05, restic 15:35 OK (a cron-sorok és a két
+  szkript hash-e változatlan); `/config` → `fizetes.atutalas: true`. Élő DEMO-próba új, kitalált ügyféllel (`k8.atutalas.<idő>@demo.kezjegy.test`,
+  `utm_source=qa_k8` → `is_test`; nem töröltük): regisztráció → kód a DEMO-postafiókból → adatok + szerződés → „Átutalással fizetek” →
+  díjbekérő `ADZ-10044-2026-11` / `DEMO-D-2026-000004`, határidő +8 nap, a levél az új sablonnal a DEMO-postafiókban (HTML-kép:
+  `kod/_qa/eles_k8_1121/level_dijbekero_*.png`). Három félbehagyott próba-regisztráció (`k8.atutalas.2026112114{40,41,43}@…`) is maradt
+  (`is_test`, nem töröltük). Képek: `kod/_qa/eles_k8_1121/` (app telefon + gép, panel könyvelő + tulaj, a konzol mock-képei `panel_mock/`).
+- **A konzol a DEMO admin fiókkal nem nyílik meg** (`mfa_setup_required`: a konzolhoz TOTP kell, a demo adminnak nincs). Ha a tulaj a
+  DEMO-n ki akarja próbálni: panel → Beállítások → kétlépcsős belépés bekapcsolása a saját admin fiókján.
+- **Visszaállás:** `_regi/db_elotte_up_20261121_153427.dump.gpg` (a 0027/0028 csak hozzáad; a régi kód az új oszlopokat/táblát nem
+  olvassa); a k8 előtti webes buildek `_regi/web_{app,panel,landing}_20261121_153148`, a k8 előtti forrás `_regi/src_20261121_153148`; a landing a szövegcsere előtt `_regi/landing_elotte_20261121_155059`.
+- **Új APK kell** a v2 kinézethez a telefonon (és a k7b óta a regisztrációhoz is). **[TULAJ] EAS-szel, a saját Expo-fiókoddal** (mi
+  nem indítjuk): 1) `npm i -g eas-cli` és `eas login`; 2) `cd kod/app`, a `app.config.ts`-ben `version` 1.0.8, `android.versionCode` 9;
+  3) `npx eas build:configure` (létrehozza az `eas.json`-t; profil: `preview`, `"android": {"buildType": "apk"}`, `"env": {"EXPO_PUBLIC_API_URL":
+  "https://api.adozz.hu/api/v1"}`); 4) `npm run shared && npx eas build -p android --profile preview`; 5) a kész APK linkjét a telefonon
+  megnyitva telepíted (a régi fölé, ha ugyanaz a kulcs – az EAS saját kulcsa más, mint a helyi debug-kulcs, ezért az első EAS-APK előtt a
+  régit le kell törölni a telefonról). A helyi út (`apk/build-apk.sh`, debug-kulcs) továbbra is megvan.
+
+
 ## Éves ciklus + KATA javító kör (SPEC §32.C) – ÉLESÍTVE a DEMO-ra 2026-11-21 04:56–05:11 (F0 + F1a + F2/F3 + javítások együtt)
 
 Ahogy ment:

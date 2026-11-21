@@ -55,6 +55,7 @@ Demo "today" for all expected numbers in this file: **2026-11-17** (`kod/shared/
 30. k7b – the missing e-mails and the wording review
 31. Marketing (own statistics, sources, Marketing tab, prepared ad measurement)
 32. Éves ciklus és KATA – F0 + F1a (hotfixes H1–H8 + 12-12 working day; KATA months, payment sheet, reminders, keret, free months, 2027 variants switched off, annual-closing fee switch). The supervision plan (TERV_FELUGYELET) takes §33.
+34. k8 – v2 design (app, desktop layout, panel, console), motion, bank transfer with díjbekérő, own e-mail template for every mail, the callback offer before the payment, the review fixes (deployed to DEMO 2026-11-21 15:31–15:59)
 
 ---
 
@@ -75,11 +76,11 @@ Scope = `C:/Users/UpgradePC/konyvelo_app/FUNKCIOK.md` points 1–35. "Később" 
 ## 2. Non-negotiable owner decisions
 
 1. Login: e-mail + password (reset by **e-mail code**), Google sign-in, Apple sign-in **on iOS only**, biometric unlock (client-side), optional TOTP 2FA.
-2. Payment: **SimplePay recurring card payment**, 19 999 Ft/month, in the browser outside the app stores (real-world human service – Apple App Review Guideline 3.1.3(e), Google Play payments policy exemption for services consumed outside the app; §25).
+2. Payment: **SimplePay recurring card payment**, 19 999 Ft/month, in the browser outside the app stores (real-world human service – Apple App Review Guideline 3.1.3(e), Google Play payments policy exemption for services consumed outside the app; §25). **Since k7/k8 (§29, §34):** Stripe card (automatic monthly charge) **or bank transfer** with a monthly díjbekérő (8 days to pay, Számlázz.hu Autokassza). The transfer is a switch: `system_state['kapcsolok.fizetes'].atutalas` – DEMO default ON, production default OFF until the lawyer adds the transfer to the ÁSZF.
 3. **No video call by default.** Identification = upload of ID card + address card photos + declarations. An **optional** appointment / phone-call booking exists, switched **off** by default per accountant (`accountants.appointments_enabled = false`).
 4. The accountant files to NAV himself. The app never calls any NAV write operation (`manageInvoice`, `manageAnnulment`, `tokenExchange` are forbidden in code).
-5. Design = **Kézjegy C2** (`dizajn/C2_modern/app_v2/` PNG + HTML + `tokens.css` + `TERV.md`). Typeface **Geist** only. Brand-blue header band (`#1428DB`, owner decision 2026-11-18 17:50; final tokens and contrast ratios: `dizajn/PALETTA.md`, overrides the colours of `tokens.css`) with the big number, tinted ground `#E4E8F3` with white sheets, the accountant's short monthly letter with handwritten signature.
-6. **No thin vector/line icons anywhere** (app AND panel; no lucide/heroicons/material icons/icon fonts). Every pictorial icon is one of the 16 realistic 3D PNGs in `dizajn/C2_modern/assets/ikon3d/` (§17.2). **No pastel circles behind quick actions** (the TERV round-4 coloured circles are overruled). Pure typographic glyphs set in Geist text (‹ › × ✓ →) are allowed for back/close/chevron/check-in-text.
+5. **Superseded by k8 (owner 11-20/21, §34):** the design is **v2** (`dizajn/C5_v2/` phone samples, `dizajn/C5_v2/asztali/` desktop samples; shared base `kod/shared/v2`): white cards on #F3F5FB, blue gradient header, yellow #FFC93C primary button (one per screen), coloured bottom bar, the word-mark logo, desktop layout from 1024 pt. The C2 text below is history. Design = **Kézjegy C2** (`dizajn/C2_modern/app_v2/` PNG + HTML + `tokens.css` + `TERV.md`). Typeface **Geist** only. Brand-blue header band (`#1428DB`, owner decision 2026-11-18 17:50; final tokens and contrast ratios: `dizajn/PALETTA.md`, overrides the colours of `tokens.css`) with the big number, tinted ground `#E4E8F3` with white sheets, the accountant's short monthly letter with handwritten signature.
+6. **Superseded by k8 (§34):** content icons are **Microsoft Fluent Emoji Flat** (MIT) on a neutral #F1F3F9 tile (34 px icon in a 42 px tile), controls are **Material** icons (Apache-2.0) – one set for app and panel (`kod/shared/v2/ikon`). No 3D PNG is referenced any more. The rule below is history. **No thin vector/line icons anywhere** (app AND panel; no lucide/heroicons/material icons/icon fonts). Every pictorial icon is one of the 16 realistic 3D PNGs in `dizajn/C2_modern/assets/ikon3d/` (§17.2). **No pastel circles behind quick actions** (the TERV round-4 coloured circles are overruled). Pure typographic glyphs set in Geist text (‹ › × ✓ →) are allowed for back/close/chevron/check-in-text.
 7. The accountant is shown as the drawn character `assets/avatar/karakter_1_lapos@2x.png/@3x.png` (never a generated photo).
 8. Empty states / onboarding visuals: `assets/illusztraciok/*` (front-view realistic objects). Header texture: the guilloche rosette as in the approved PNGs (`app_v2/guilloche_rozetta.svg`), paper texture for the letter `assets/textura/papirszal_halk_csempe.png`; `assets/textura/guilloche_halk_csempe.png` is the allowed alternative for wide panel headers.
 9. Every external integration is real code against official docs, switchable by env, with a clearly labelled DEMO mode when keys are missing. **Never fake success silently in production mode** (§13.1).
@@ -168,6 +169,7 @@ kod/
 - **Enum values** for domain states are Hungarian ASCII snake_case (e.g. `konyvelo_latta`); table/column/field names are English. The full lists are in `kod/shared/src/enums.ts`; DTO types in `kod/shared/src/api.ts` (typechecked). In this file's tables `\|` inside code means a literal `|` (union / alternatives).
 - **UI copy**: Hungarian, tegeződés, short plain sentences, no jargon without explanation ("szocho" always with "szociális hozzájárulási adó" once). Numbers in copy are illustrative only.
 - **Accessibility**: text contrast ≥ 4.5:1 (tokens already comply), touch targets ≥ 44 pt, dynamic type respected up to 130 %, reduced motion respected.
+- **k8 (§34):** text colours from `kod/shared/v2/tokenek.ts` (the decorative #8A93A8 is never text – 3,08:1 – only field borders, WCAG 1.4.11); focus ring on the web: 2 px #1428DB outline with a 2 px white ring between (visible on the blue header too); desktop layout ≥ 1024 pt (wider menu ≥ 1360), `?szelesseg=390` always gives the phone layout; motion only in the client app, only transform/opacity, 0,2–0,4 s, native driver, off with reduced motion; no large pale pastel box (white card or solid colour; a 4 px solid left bar marks a notice).
 
 ---
 
@@ -5345,3 +5347,84 @@ The fixes of the four reviews (tax rules, code / security, UI) on top of §32 an
 - **Open (not built):** the „Kata megszűnése” action; the early recording of a mid-year KATA end's declaration; the general
   e-mail fallback for web clients (HIANYLISTA 1.9); the demo seed of the new fields; the [DÁVID] answers
   (`_munka/DAVID_KERDESEK_OSSZEFESULT_2026-11-21.md`).
+
+## 34. k8 – v2 design, desktop layout, bank transfer, own e-mail template (2026-11-21; deployed to DEMO 15:31–15:59)
+
+Sources: `_munka/K8_TERV.md` (owner decisions 11-20/21), `_munka/K8_VEGREHAJTAS.md` (plan), `_munka/k8/B_jegyzet.md`
+(backend hand-over: endpoints, DTOs, switches, Számlázz.hu notes), `kod/shared/v2/README.md` (design base, frozen exports,
+the D notes). Migrations **0027** (enum values) and **0028** (additive only; the one write into existing rows is the new
+`clients.customer_no`, numbered from 10001 in `created_at` order).
+
+### 34.1 Design (v2) and the desktop layout
+- One base for both surfaces: `kod/shared/v2` (tokens, Geist, Fluent Emoji Flat content icons with the KOZEPRE centring
+  table, Material control icons, the word-mark logo, RN and web components `Ikon`, `VezerloIkon`, `Csempe`, `Kartya`,
+  `Logo`). Copied into the consumers by `node ../shared/v2/scripts/sync-v2.mjs <dir> --rn|--web` (app `npm run shared`,
+  panel `npm run sync`). The old 3D icon names keep working through `IKON3D_UJ` / `TARGYKEP_UJ`.
+- App: every screen v2 (white cards, blue gradient header, yellow primary button – one per screen, coloured bottom bar with
+  the blue top bar on the active tab, „Fotózás” stays). Phone Fotózás: Galéria · exponáló · „Fájl, PDF”.
+- **Desktop (web, ≥ 1024 pt; ≥ 1360 wider menu):** left menu with the logo and the accountant card, blue hero card, two
+  column card grid (`ui/asztali/Racs` – a section title and its card stay one cell, a lone card takes the full width),
+  two-panel messages, split sign-in page. The screen's primary button floats at the bottom of the content column (never
+  only at the end of a long page). In form cards (sign-in, dialogs) the primary button is full width. The root tree does
+  not change on resize (no remount). `?szelesseg=390` forces the phone layout.
+- **Motion (app only):** 13 items (card fade-in, amount count-up, bars, press 0,97, check pop, confetti, photo flash + fly,
+  skeleton, tab hop, badge pop, hover lift, drop zone) – transform/opacity, native driver, no new native dependency; all
+  off with reduced motion (system, browser).
+- **Panel + console:** the same base; menu as `<nav>` with groups and `aria-current`; no motion. Tables are tighter between
+  1280 and 1400 px; the annual overview shows „Mi hiányzik” right after the client.
+- Accessibility kept: focus ring 2 px #1428DB + 2 px white ring (visible on blue), labels on every control, AA contrast
+  (`tokenek.ts` pairs are tested), `#8A93A8` only as a border.
+
+### 34.2 Bank transfer with a monthly díjbekérő
+- **Switch** `system_state['kapcsolok.fizetes']` (JSON, merged with `value ||`): `atutalas` (DEMO default **ON**, production
+  default **OFF** until the lawyer adds the transfer, the díjbekérő, the 8 days and the late handling to the ÁSZF);
+  `kesesLeallit` (default **OFF** – open owner decision: the accounting does not stop by itself; ON = lock reason
+  `atutalas_kesik` 8 days after the due day, only for a MONTHLY díjbekérő); `kozlemeny` (`havi` = the díjbekérő's order
+  number, default; `allando` = `ADZ-<ügyfélszám>`). Set in the console → Rendszer (step-up, audit) or by SQL:
+  `insert into system_state(key, value) values ('kapcsolok.fizetes', '{"atutalas": true}') on conflict (key) do update set value = system_state.value || excluded.value;`
+- Order number `ADZ-<ügyfélszám>-<ÉÉÉÉ>-<HH>` (unique per month – the Számlázz.hu „Rendelésszám ismétlődés tiltása” is ON),
+  a re-issue gets `-2`, `-3`. Due day = issue day + 8. Reminders on day 1, 4 and 8 after the due day (each once). The first
+  month starts on the day the money arrives. The money (Autokassza query or the console's „Beérkezett, rögzítem” with
+  step-up and reason) goes through the same success path as a card payment; the fee invoice refers to the díjbekérő
+  (`dijbekeroSzamlaszam`), `sendEmail=false`, our own mail with the PDF.
+- Routes: `GET /client/billing`, `POST /client/billing/transfer {purpose: subscribe|switch}`; console
+  `/admin/console/transfers…`, `/admin/console/switches/fizetes` (TOTP; writes with step-up); `GET /admin/demo-outbox/:id/html`
+  (signed 5-minute link to the HTML image, DEMO only). `/config` → `fizetes.atutalas`.
+- **Review fixes (integrator, 11-21):** a `switch` without a running subscription is a `subscribe` and passes the same gates
+  (step lock, open callback, employer gate); a transfer subscription is never charged by card (`duePeriod` null, admin
+  retry 409, `chargeDue` false); a card payment withdraws the open monthly díjbekérő of that month; a duplicate transfer is
+  never „refunded” through a provider (admin alert, manual refund from the bank; console refund of a transfer → 409);
+  choosing the transfer expires an open first-month card checkout; a cancellation / termination / anonymisation withdraws
+  the díjbekérő of a month the client does not get (and the reminder job withdraws them as a safety net); a díjbekérő
+  whose document failed is shown as „Készül…” (`ClientBillingView.preparing`) and is tried again on the next tap and at
+  every reconcile run (not only at 06:30); the reconcile takes never-checked rows first; the lock text knows
+  `atutalas_kesik`; an unlock without a payment never says „Köszönjük a fizetést” (variant `service_unlocked.feloldva`);
+  the console's „Felfüggesztem” asks first and the row shows „Felfüggesztve”; the console list rows carry `clientLocked`.
+  Regression tests: `backend/test/k8-javitas.test.ts`.
+- **Card only after the callback offer:** the guided run has the step `visszahivas_ajanlat` before the payment; an open
+  callback waits the payment step (card and transfer). The welcome list shows „Visszahívás a csapatunktól (nem kötelező)”.
+
+### 34.3 E-mails
+- Every system mail's HTML part comes from `backend/src/notify/sablon.ts` (= `dizajn/email/sablon.html`); the text part and
+  the subjects are unchanged. „Adózz.hu” is always one explicit link (never inside another link). Notice boxes are white
+  with a 4 px left bar. New mails: welcome, subscription started, account locked (own footer line, sent in the background),
+  „Folytasd” (only for sign-ups after the job's first run), fee waived, account disabled / enabled, the díjbekérő and its
+  reminders, the fee invoice (also for card payments – button „Megnézem a számláimat”). DEMO invoices are called
+  „BEMUTATÓ DÍJSZÁMLA – NEM VALÓDI SZÁMLA” (the word díjbekérő belongs to the transfer).
+
+### 34.4 Texts
+- No time promise anywhere except the one allowed sentence („A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17
+  óra között.”); legal deadlines stay. Guarded by `backend/test/k8-szovegek.test.ts` (content defaults, shared texts, the
+  WHOLE jogi file) and `app/tests/k8-v2.test.ts` (app source). Live rows: the worker step `data.k8_szoveg` replaces FAQ
+  answers (jogi `gyik[].k8_elozo_valasz`) and content overrides that still hold the old text word for word (11-21: 3 FAQ rows).
+
+### 34.5 Open (owner / k9)
+- E-mail two-step login for clients (K8_TERV decision; B7) – only the column `users.mfa_email_enabled_at` exists; the app
+  still shows the authenticator-app 2FA.
+- Owner decisions: stop the accounting on a late transfer (`kesesLeallit`); memo format (`havi` vs `allando` – the
+  Autokassza matching of a fixed memo is unverified); any open callback (also the meghatalmazás one) waits the payment.
+- Owner tasks: Erste + Autokassza in Számlázz.hu, its automatic invoice e-mail OFF; Lark alias `ertesites@` →
+  `ugyfelszolgalat@`; ÁSZF (transfer); TOTP for the demo admin if the console should be tried on the DEMO server.
+- Not built: a „fizetési mód / késik” filter on the console client list (the Fizetések → Átutalás view covers it); the
+  webcam photo on desktop; two-panel A53/A62 desktop pages; nested buttons in the onboarding / deadline rows (a11y).
+- Native: the v2 look needs a new APK (`deploy/README.md`, k8 section).

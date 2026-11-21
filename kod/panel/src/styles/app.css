@@ -800,4 +800,6 @@ input[type=checkbox].kapcsolo:checked::after { left: 21px; }
 }
 .tabla td .al, .tabla td .halvany.kicsi { overflow-wrap: anywhere; }
 .lap:has(> .tabla), .tabla-gorgo { scrollbar-width: thin; }
-.atutalas-csempek button { overflow: hidden; }
+.atutalas-csempe.kesik { border-left: 0; padding-left: 16px; box-shadow: inset 4px 0 0 var(--veszely), inset 0 0 0 1.5px var(--keret); }
+.atutalas-csempe.kesik:hover { box-shadow: inset 4px 0 0 var(--veszely), inset 0 0 0 1.5px var(--tintakek); }
+.atutalas-csempe.kesik.on { box-shadow: inset 4px 0 0 var(--veszely), inset 0 0 0 2px var(--tintakek); }

@@ -345,6 +345,7 @@ Helyesbítések az ügynökök anyagához:
 - **Miért fontos:** induláskor mindenki a webet használja, és a kivonatokat, PDF-eket a legtöbben gépről töltik fel.
 - **Kié:** fejlesztés.
 - **Tervezve:** igen (K8_TERV.md:31-32, :53).
+- **ÁLLAPOT 11-21 16:00 (k8):** KÉSZ és él: app.adozz.hu 1024 px felett bal menüvel, kártyaráccsal, kétpaneles üzenetekkel, osztott belépővel. Hiányzik még: a Határidők és a Számla kétpaneles gépes nézete, webkamerás fotó gépen.
 - **Bizonyíték:** dizajn/C5_v2/asztali/; mem. :169-175.
 
 ### 2.17 Könyvelői törzsadatok: meghatalmazás terjedelme, ÖVTJ-kódok

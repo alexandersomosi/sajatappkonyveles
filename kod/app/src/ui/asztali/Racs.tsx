@@ -114,6 +114,9 @@ Racs.Szeles = Szeles;
 export function KetOszlop({ bal, jobb, aranyBal = 1, aranyJobb = 1 }: { bal: ReactNode; jobb: ReactNode; aranyBal?: number; aranyJobb?: number }) {
   const asztali = useAsztali();
   if (!asztali) return <>{kartyasit(<>{bal}{jobb}</>)}</>;
+  // k8 integrátor: ha az egyik oldal üres (pl. a Dossziéban nincs átnézés és kérés), a másik a teljes szélességet kapja
+  if (!kibont(bal).length) return <>{kartyasit(jobb)}</>;
+  if (!kibont(jobb).length) return <>{kartyasit(bal)}</>;
   return (
     <View style={{ flexDirection: 'row', gap: KOZ, alignItems: 'flex-start' }}>
       <View style={{ flex: aranyBal, minWidth: 0 }}>{kartyasit(bal)}</View>
