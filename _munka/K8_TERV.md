@@ -146,3 +146,39 @@ A mostani nyitóoldal (`kod/landing`) így fut élesben (DEMO szerver, statiszti
 
 ## Ikonok középre igazítása (11-21, tulaj észrevétele)
 - Néhány Fluent-ikon rajza nincs a 32x32-es mező közepén (getBBox-mérés): igazolvany (5 egységgel lejjebb), kamera (4,5), emberek (~3), cimke (~2), irat-toll (vízszintesen ~2). A landing_v2_proba4 epit.cjs-ében KOZEPRE térképpel javítva (viewBox eltolás). Az appban (v2-dizájn, k8) és a végleges landingon is így kell: egy közös KOZEPRE-táblázat a v2 ikon-építőben. Mérőszkript: scratchpad/ikon_bbox.cjs.
+
+## Landing élesítése – KÉSZ (2026-11-21 10:48)
+Az új értékesítő oldal (dizajn/landing_v2_proba4 → kod/landing) ÉL a https://adozz.hu/ címen. Csak a landing ment ki
+(`kod/deploy/landing-csere.sh`); az app, a panel, az API, a worker, az adatbázisok, az Umami és a proxy érintetlen. Mentés a
+szerveren: `/srv/kezjegy/_regi/landing_elotte_20261121_104810` (az előző élő mappa másolata) és `_regi/web_landing_20261121_104810`.
+Részletek: `kod/deploy/README.md` „Landing élesítése”.
+- **Élesítés előtti javítások:** a nyilvános `stilus.css` / `js/mozgas.js` megjegyzések nélkül (belső jegyzetek, tulaj-idézetek
+  és egy „AI-sablon” megjegyzés volt bennük); a `LICENC_telefon_keret.txt` nem megy ki; a `vendor/LICENCEK.md` tisztítva; a build
+  a dist minden szöveges fájlját ellenőrzi.
+- **Őszinteségi szövegjavítások (a tulajnak jelezve):** „kártyával vagy átutalással” → „bankkártyával” (3 helyen; átutalás még
+  nincs); „A könyvelési irataidat csak a könyvelőd látja.” → „…a könyvelőd kezeli. Rajta kívül csak a cégünk vezetése férhet
+  hozzájuk, naplózva.” (2 helyen; a tulajdonosi konzol megnyitja az iratot); a bemutató alatti kis szürke jegy + a hős
+  aria-label kiegészült: a képek az app új, bevezetés alatt álló kinézetével készültek, gépen az app ma még telefonos
+  elrendezésben nyílik meg.
+- **Ha a k8 kész (v2 kinézet + gépes nézet élesben):** a `kod/landing/oldal.sablon.html` `.bemutato-jegy`-ét és a hős
+  aria-labeljét vissza „Az app képei bemutató adatokkal készültek.”-re (a teszt a mostani mondatot keresi – azt is igazítani).
+- **Ha az átutalás (HIANYLISTA 1.10) él:** a 3 „bankkártyával” visszaállítható „kártyával vagy átutalással”-ra (a teszt is).
+
+### Ami a landingnál nyitva maradt
+1. **Adatkezelési tájékoztató vs. konzol** (HIANYLISTA (d)): a tájékoztató szerint a vezetés nem látja az iratokat, a konzol
+   (naplózva) megnyitja – az oldal most a valóságot írja, a tájékoztatót a jogásznak/tulajnak kell igazítania (vagy a konzolt szűkíteni).
+2. **Bérszámfejtés:** az oldal „felárért vállaljuk” (tulaj 11-20), az app bevezetője és az ÁSZF 3.1 szerint nem vállaljuk
+   (HIANYLISTA 1.11) – az app szövegét vagy az oldalt egyeztetni.
+3. **ÁSZF vs. oldal:** „nem KATA-s”, 4.1 (éves SZJA a havidíjban); az éves zárás díja a rendszerben KI, az oldal 14 999 Ft/év-et ír
+   (HIANYLISTA 1.1, jogász + tulaj).
+4. **2027-01-01 előtt** frissíteni kell az oldalt: `ASSIST_EV_VALID_UNTIL=2026-12-31` – a „helyetted” bejelentések (4 999 / 7 999 /
+   7 999 Ft) és a GYIK „2026 végéig kérheted…” mondata elavul (a build ezt nem veszi észre).
+5. **utm_* szűretlen** (közös `kod/shared/src/marketing.ts` statisticsUrl + a landing `meres-sablon.js`): e-mail- vagy telefonszám-
+   mintás érték eldobása – közös kód, az appot és a backendet is érinti.
+6. **Oldalsúly** ~1,1–1,2 MB első betöltésre (a hős rejtett képei azonnal jönnek) – a jóváhagyott `mozgas.js`-t érintené, tulajdöntés.
+7. Apróságok: a lábléc alsó sora 1440-en nem pontosan középen; `kod/deploy/web.Caddyfile` :8082 elavult megjegyzése („no
+   script”); impresszum tárhelyszolgáltató [ELLENŐRIZNI] a jogi szövegekben; GPC nincs figyelembe véve (csak DNT); „Ne mérjétek”
+   gomb ~27 px magas; felesleges, de ártalmatlan fájlok (Geist ttf, 3× OFL).
+8. Az Umamiban 2 próbalátogatás van `elesites_proba` kampánnyal (11-21 10:48–10:50, 390 és 1440) – a Marketing fülön ez nem valódi
+   látogató.
+- **11-21 11:40 – telt színek (tulaj 11:30, „ezek a részek se átlátszóak legyenek”):** Árak telt kék #1428DB (fehér árkártya, sárga felső csík), „Miben más” Adózz-oszlop/cellák telt kék, „Ki könyvel” telt zöld #167A45; más halvány nagy doboz nem maradt (mérve). Helyben kész (build + 7/7 teszt, csak a `stilus.css` változott; mentés `kod/landing/_regi/elotte_telt_szinek_20261121_1131/`), **MÉG NINCS KINT**: a `deploy/landing-csere.sh` futtatását a gép engedélykezelője megállította – tulaj-jóváhagyás után kitenni, utána élő ellenőrzés + `elo_telt_*` képek.

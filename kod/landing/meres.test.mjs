@@ -10,7 +10,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -19,6 +19,9 @@ import { fileURLToPath } from 'node:url';
 const ITT = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(join(ITT, '../panel/package.json'));
 const { JSDOM } = require('jsdom');
+// acorn (from kod/app) only checks that removing the comments of mozgas.js left every token as it was
+const acorn = createRequire(join(ITT, '../app/package.json'))('acorn');
+const { cssMegjegyzesNelkul, jsMegjegyzesNelkul } = await import('./megjegyzes.mjs');
 
 function epit(env = {}) {
   execFileSync(process.execPath, [join(ITT, 'build.mjs')], { env: { ...process.env, ...env }, stdio: 'pipe' });
@@ -125,7 +128,32 @@ test('app links carry utm_*, the referring domain and the landing path; legal li
 test('new design (11-21): own files only, motion script and e-mail logos in the build, every app link and button wired, prices from arak.json', async () => {
   // the two own scripts, nothing inline, nothing from another server (CSP default-src 'self'; script-src 'self'; style-src 'self')
   assert.match(html, /<script defer src="js\/mozgas\.js"><\/script>/);
-  assert.equal(readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8'), readFileSync(join(ITT, 'mozgas.js'), 'utf8'));
+  // 11-21 (going live): the design's motion script without its comments (working notes), every token unchanged
+  const mozgasForras = readFileSync(join(ITT, 'mozgas.js'), 'utf8');
+  const mozgasKi = readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8');
+  assert.equal(mozgasKi, jsMegjegyzesNelkul(mozgasForras));
+  const tokenek = (src, megj) => [...acorn.tokenizer(src, { ecmaVersion: 'latest', onComment: megj })].map((t) => `${t.type.label}|${t.value ?? ''}`);
+  const megjegyzesek = [];
+  assert.deepEqual(tokenek(mozgasKi, megjegyzesek), tokenek(mozgasForras));
+  assert.equal(megjegyzesek.length, 0, 'mozgas.js: megjegyzés maradt');
+  // the stylesheet: the design's CSS without its comments (nothing else changed)
+  const cssKi = readFileSync(join(DIST, 'stilus.css'), 'utf8');
+  const cssForras = readFileSync(join(ITT, 'stilus.css'), 'utf8');
+  assert.doesNotMatch(cssKi, /\/\*|\*\//);
+  const lapos = (s) => s.replace(/\s+/g, '');
+  assert.equal(lapos(cssKi), lapos(cssForras.replace(/\/\*[\s\S]*?\*\//g, '')));
+  assert.equal(cssKi, cssMegjegyzesNelkul(cssForras));
+  // no public file carries an AI mention or a working note; the phone frame's origin note is not published
+  const fajlok = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? fajlok(join(d, f)) : [join(d, f)]));
+  for (const f of fajlok(DIST).filter((f) => /\.(html|css|js|md|txt|svg)$/.test(f))) {
+    const sz = readFileSync(f, 'utf8');
+    assert.doesNotMatch(sz, /\bAI\b|mesterséges intelligencia|\bMI-vel\b|\btulaj(?!don)|_eszkoz|C5_v2|epit\.cjs|Kovács Bence/i, f);
+  }
+  assert.ok(!existsSync(join(DIST, 'kepek', 'LICENC_telefon_keret.txt')));
+  // only what is true today: card payment only (ÁSZF 6.2), the company's management can open documents (logged)
+  assert.doesNotMatch(html, /átutalással|csak a könyvelőd látja/);
+  assert.equal((html.match(/bankkártyával\./g) || []).length, 3);
+  assert.match(html, /Gépen az app ma még telefonos elrendezésben nyílik meg\./);
   assert.doesNotMatch(readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8'), /fetch\(|XMLHttpRequest|sendBeacon|localStorage|document\.cookie/);
   assert.doesNotMatch(html, /\sstyle=|<style|\son[a-z]+=/i);
   assert.doesNotMatch(html, /\s(src|srcset)="[^"]*(https?:)?\/\//i);

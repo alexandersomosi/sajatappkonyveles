@@ -1069,6 +1069,56 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .panel-meleg .gyik-lista summary:hover { color: #10152B; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .panel-meleg .gyik-lista details p { color: #2A3247; }
 
+/* ================= 4h (11-21): telt „Mennyibe kerül?”, „Miben más” és „Ki könyvel neked?” =================
+   A tulaj (11:30, telefonról): „Ezek a részek se átlátszóak legyenek.” A halványkék árpanel, a táblázat halványkék Adózz-cellái
+   és a halványszürke „Ki könyvel” panel helyett telt szín (ugyanaz a paletta, mint a bizalmi sávnál és a „Kinek szól”-nál).
+   - Árak: telt márkakék #1428DB panel, fehér cím, leírás #D6DEFF (6,7:1), fehér aláhúzott ÁSZF-link; a fehér árkártya marad,
+     a felső csíkja kék helyett sárga (a kék panelen a kék csík nem látszana); a „Külön díjak” fehér/#D6DEFF, vonalai halvány fehérek.
+   - Miben más: az Adózz-oszlop (gépen) és az „Adózz: …” cellák (telefonon) telt kék #1428DB, fehér szöveggel (8,9:1).
+   - Ki könyvel: telt zöld #167A45 (fehér 5,4:1, leírás #EAF5EE 4,8:1). Nem mélykék: a kék már a bizalmi sávé, az áraké, a
+     táblázaté és a záróé, a sötét bemutató után egy újabb kék tömb egyhangú lenne; a zöld a „Neked szól” dobozától messze van
+     (köztük a sárga „Így indul” és a sötét bemutató).
+   Az ikoncsempék fehérek maradnak, mint az appban. */
+
+/* árak: telt márkakék panel */
+.panel-kek-h { --panel: #1428DB; --panel-vonal: rgba(255, 255, 255, .26); --csempe: #fff; background: #1428DB; color: #D6DEFF; }
+.panel-kek-h .resz-fej h2 { color: #fff; }
+.panel-kek-h .resz-fej .bevezeto, .panel-kek-h .resz-fej p { color: #D6DEFF; }
+.panel-kek-h .resz-fej a { color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.panel-kek-h .resz-fej a:hover { color: #fff; text-decoration-thickness: 2px; }
+.panel-kek-h .resz-fej :focus-visible, .panel-kek-h .ar-kulon :focus-visible { outline-color: #fff; }
+/* a fehér árkártya a kék panelen: saját sötét szöveg (ne örökölje a panel világos színét), fehér keret, sárga felső csík */
+.panel-kek-h .arkartya { color: var(--szoveg); border-color: #fff; }
+.panel-kek-h .arkartya::before { background: var(--sarga); }
+/* külön díjak a kék panelen */
+.panel-kek-h .ar-kulon h3 { color: #fff; }
+.panel-kek-h .ar-kulon-bev, .panel-kek-h .ar-kulon-meg { color: #D6DEFF; }
+.panel-kek-h .dij dt { color: #fff; }
+.panel-kek-h .dij dt span { color: #D6DEFF; }
+.panel-kek-h .dij dd { color: #fff; }
+.panel-kek-h .dij dd small { color: #D6DEFF; }
+.panel-kek-h .dij dd.dij-egyedi { color: #fff; }
+.panel-kek-h .dij .cimke { background: #fff; color: var(--szoveg); }
+
+/* miben más: telt kék Adózz-oszlop, fehér szöveg */
+.tabla .oszlop-adozz { background: #1428DB; }
+.tabla td.oszlop-adozz { color: #fff; border-bottom-color: rgba(255, 255, 255, .22); }
+.tabla thead th.oszlop-adozz { border-bottom-color: rgba(255, 255, 255, .4); }
+
+/* ki könyvel neked: telt zöld panel */
+.panel-szurke { --panel: #167A45; --panel-vonal: rgba(255, 255, 255, .28); --csempe: #fff; background: #167A45; color: #fff; }
+.panel-szurke h2, .panel-szurke h3 { color: #fff; }
+.panel-szurke .bevezeto, .panel-szurke .resz-meg { color: #EAF5EE; }
+.panel-szurke .feladatok dt { color: #fff; }
+.panel-szurke .feladatok dd { color: #fff; }
+.panel-szurke a { color: #fff; }
+.panel-szurke :focus-visible { outline-color: #fff; }
+
+@media (max-width: 760px) {
+  .tabla td.oszlop-adozz { background: #1428DB; color: #fff; }
+  .tabla td.oszlop-adozz::before { color: #fff; }
+}
+
 /* ================= ÉLŐ OLDAL (kod/landing, 11-21): a mérés elemei a jóváhagyott dizájnban =================
    SPEC §31 – az eddigi élő oldalról átvéve, a dizájn színeivel:
    - „Visszahívást kérek” (a kék záró panelen, a visszahívás mondata alatt): körvonalas gomb, a fő (sárga) gomb mellett másodlagos;

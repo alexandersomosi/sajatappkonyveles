@@ -11,14 +11,19 @@
 // kod/jogi/app_szovegek.json (the lawyer's copy). The ad code and the banner are in the page only with "hirdetes": true
 // (and then still only run with the server switch on).
 // js/mozgas.js: the design's motion (mobile menu, the clickable hero phone, the sticky demo), unchanged; no tracking.
+// 2026-11-21 (going live): the public stilus.css and js/mozgas.js are the sources WITHOUT their comments (megjegyzes.mjs –
+// the design's comments are working notes), LICENC_*.txt of kepek/ stays out, and every text file of the output is checked
+// for AI mentions and internal notes (not only index.html).
 // Prices come from ONE generated file (arak.json, made here from FEE_DEFAULTS of kod/shared – no hand-typed prices);
 // the company data from kod/shared/brand.json. Output: kod/landing/dist/ (what feltolt.sh uploads to /srv/kezjegy/web/landing).
 // Caching: the server answers every landing file with "Cache-Control: no-cache" (deploy/web.Caddyfile, kezjegy_statikus),
 // so the file names are not hashed – a new deploy is seen at the next load.
 //   node kod/landing/build.mjs          (Node ≥ 23: reads the shared .ts with type stripping)
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
+import { cssMegjegyzesNelkul, jsMegjegyzesNelkul } from './megjegyzes.mjs';
 
 const ITT = dirname(fileURLToPath(import.meta.url));
 const KOD = resolve(ITT, '..');
@@ -107,10 +112,12 @@ let meresJs = readFileSync(join(ITT, 'meres-sablon.js'), 'utf8')
 if (/__CFG__|__SHARED__|__HIRDETES__/.test(meresJs)) throw new Error('meres.js: a sablon helyőrzője megmaradt.');
 if (!HIRDETES && /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/.test(meresJs)) throw new Error('meres.js: hirdetési kód került a kikapcsolt buildbe.');
 writeFileSync(join(KI, 'js', 'meres.js'), meresJs, 'utf8');
-// the design's motion script, unchanged (no tracking, no storage, no request)
+// the design's motion script, unchanged except its comments (no tracking, no storage, no request)
 const mozgasJs = readFileSync(join(ITT, 'mozgas.js'), 'utf8');
 if (/fetch\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage|document\.cookie|eval\(|new Function/.test(mozgasJs)) throw new Error('mozgas.js: hálózati kérés, tárolás vagy eval nem lehet benne.');
-writeFileSync(join(KI, 'js', 'mozgas.js'), mozgasJs, 'utf8');
+const mozgasKi = jsMegjegyzesNelkul(mozgasJs);
+new vm.Script(mozgasKi, { filename: 'mozgas.js' }); // compiles only (never runs): a syntax error stops the build
+writeFileSync(join(KI, 'js', 'mozgas.js'), mozgasKi, 'utf8');
 // the footer line: with the statistics the lawyer's text (meres.lablec); without them only the cookie fact. In the ad
 // build meres.js replaces it only when the server answers { ads: true }.
 const labSzoveg = STAT ? kell('meres.lablec') : 'Ez az oldal nem használ sütit.';
@@ -118,14 +125,14 @@ const labSzoveg = STAT ? kell('meres.lablec') : 'Ez az oldal nem használ sütit
 const adatSutiMondat = HIRDETES ? 'Nem adjuk el az adataidat, és nem mutatunk hirdetést.' : 'Nem adjuk el az adataidat, nem mutatunk hirdetést, és nincs követő süti.';
 
 // ---------- files: images, fonts, licences, the stylesheet, the e-mail logos ----------
-const mappaMasol = (nev) => {
-  for (const f of readdirSync(join(ITT, nev))) if (statSync(join(ITT, nev, f)).isFile()) copyFileSync(join(ITT, nev, f), join(KI, nev, f));
+const mappaMasol = (nev, kihagy = null) => {
+  for (const f of readdirSync(join(ITT, nev))) if (statSync(join(ITT, nev, f)).isFile() && !(kihagy && kihagy.test(f))) copyFileSync(join(ITT, nev, f), join(KI, nev, f));
 };
-mappaMasol('kepek'); // the approved design's images (app screens with demo data, phone frame, logos, favicon)
+mappaMasol('kepek', /^LICENC_/); // the approved design's images (app screens with demo data, phone frame, logos, favicon); the phone frame's origin note (own drawing) stays in the source
 mappaMasol('fontok'); // Geist (OFL-1.1), subset woff + full ttf
 mappaMasol('vendor'); // licences of the open-source parts (LICENCEK.md)
 copyFileSync(join(ITT, 'kepek', 'favicon.png'), join(KI, 'favicon.png')); // the old address /favicon.png keeps working
-copyFileSync(join(ITT, 'stilus.css'), join(KI, 'stilus.css'));
+writeFileSync(join(KI, 'stilus.css'), cssMegjegyzesNelkul(readFileSync(join(ITT, 'stilus.css'), 'utf8')), 'utf8');
 // E-mail-aláírás logója (tulaj 11-20): https://adozz.hu/email/logo_alairas@2x.png – a Lark aláírás erre hivatkozik, ne vesszen el.
 copyFileSync(join(ITT, 'email/logo_alairas@2x.png'), join(KI, 'email', 'logo_alairas@2x.png'));
 copyFileSync(join(ITT, 'email/logo_feher@2x.png'), join(KI, 'email', 'logo_feher@2x.png')); // rendszerlevelek fejléce (dizajn/email/sablon.html)
@@ -213,4 +220,21 @@ for (const h of hivatkozasok) if (!existsSync(join(KI, h))) hibak.push(`hiányz�
 if (hibak.length) throw new Error('landing: ' + hibak.join('; '));
 
 writeFileSync(join(KI, 'index.html'), html, 'utf8');
+
+// ---------- every public text file: no AI mention, no working note (the build above wrote all of them) ----------
+const BELSO = [
+  [/\bAI\b|mesterséges intelligencia|\bMI-vel\b/i, 'AI-említés'],
+  [/\btulaj(?!don)/i, 'belső jegyzet (tulaj)'],
+  [/_eszkoz|C5_v2|epit\.cjs|scratchpad|Kovács Bence|_munka\//, 'belső út vagy demónév'],
+];
+const fajlok = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? fajlok(join(d, f)) : [join(d, f)]));
+for (const f of fajlok(KI)) {
+  const rel = relative(KI, f).split('\\').join('/');
+  if (/^kepek\/LICENC_/.test(rel)) hibak.push(`régi fájl maradt a kimenetben: ${rel} (költöztesd a _regi-be)`);
+  if (!/\.(html|css|js|md|txt|json|svg)$/i.test(f)) continue;
+  const sz = readFileSync(f, 'utf8');
+  for (const [re, mi] of BELSO) if (re.test(sz)) hibak.push(`${mi}: ${rel} („${sz.match(re)[0]}”)`);
+  if (/\.(css|js)$/.test(f) && rel !== 'js/meres.js' && /\/\*/.test(sz)) hibak.push(`megjegyzés maradt: ${rel}`);
+}
+if (hibak.length) throw new Error('landing (kimenet): ' + hibak.join('; '));
 console.log(`landing -> ${KI} (havidíj ${havidij} Ft, ${arak.sorok.length} ár; statisztika: ${STAT ? 'be' : 'ki'}, hirdetési kód: ${HIRDETES ? 'BENT' : 'nincs'}; ${hivatkozasok.size} helyi fájl ellenőrizve)`);

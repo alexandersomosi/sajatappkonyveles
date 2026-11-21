@@ -95,6 +95,23 @@ ssh appok-1 'bash -s hasonlit elotte_evjav_20261121_045652 utana_evjav_20261121_
   Határidők-listája („Kata – november: 50 000 Ft”, december 14.), a fizetési lap (`/fizetes/<id>`), a panel Adó füle.
 
 
+## Landing élesítése – az új értékesítő oldal (adozz.hu), 2026-11-21 10:48 (CSAK a landing)
+A tulaj jóváhagyta („Jó lesz így a weboldal, kiteheted”). A `feltolt.sh --web-only` + `up.sh` út **nem** ment, mert az az app és
+a panel mappáját is cseréli, az `up.sh` pedig API-image-et épít, adatbázist ment és migrál. Helyette: `deploy/landing-csere.sh`
+(a fejében a gépi lépések) – a csomag hash-listával megy fel, a szerveren az élő mappa másolata
+`_regi/landing_elotte_20261121_104810`, a régi mappa `_regi/web_landing_20261121_104810`, a csomag
+`_regi/landing_feltoltes_20261121_104810.tar.gz`; utána csak `docker compose … up -d --no-deps --force-recreate kezjegy-web`.
+- **Ellenőrizve:** a konténer `index.html`-je = a diszken lévő (`c12f2fa4…`); `/`, `/stilus.css`, `/js/mozgas.js`, `/js/meres.js`,
+  `/m/script.js`, `/email/logo_feher@2x.png`, `/email/logo_alairas@2x.png` 200 (a két logó bájtra a régi); a régi
+  `kepek/LICENC_telefon_keret.txt` 404; CSP változatlan (`script-src 'self'`), süti nincs; `app.adozz.hu`, `konyvelo.adozz.hu`,
+  `/api/v1/health` 200, `marketing-config` `{"ads":false}`. Fejetlen Chrome 390 és 1440 (normál User-Agent): konzol-, JS- és
+  CSP-hiba 0, idegen kérés 0, vízszintes kilógás 0; a hős telefonmenüje és a ragadós bemutató (8 lépés, gépes zárás) működik;
+  9/9 app-link viszi az `utm_*`-ot, a `hivatkozo`-t és az `erkezes`-t. Az Umami (csak olvasó felhasználóval, a konténeren belül)
+  2 látogatást mutat `elesites_proba` kampánnyal, a 4 eseménnyel. A `backup.sh` és a `restic-mentes.sh` hash-e és cron-sora
+  változatlan, a restic 10:35-ös futása OK.
+- **Visszaállás:** `mv web/landing _regi/landing_hibas_<idő> && cp -a _regi/landing_elotte_20261121_104810 web/landing`, majd a
+  `kezjegy-web` újralétrehozása (ugyanaz a compose-sor).
+
 ## Marketing (SPEC §31) – ÉLESÍTVE 2026-11-21 01:19–01:36 (javító + telepítő)
 
 Ahogy ment (a lépések lent, a „telepítési terv” szerint):
