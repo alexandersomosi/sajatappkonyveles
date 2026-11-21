@@ -918,3 +918,131 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   #biztonsag .resz-fej { display: contents; }
   #biztonsag .figyelmeztetes { order: 2; margin-top: 0; }
 }
+
+/* ================= 4b PRÓBA (11-21): ikonok, színek, kiemelések =================
+   A tulaj: „Nem rossz, de még valami ikonok kellenének, meg színek, kiemelések, nem?”
+   - Ikon: az app saját családja (Fluent Emoji Flat, MIT; C5_v2/v2.js EMOJI, a sablonban <!--ikon:nev-->), mindig ugyanabban a
+     semleges csempében, mint az appban (#F1F3F9; színes panelen fehér). Két méret: 44 px (fejek, lépések, bizalmi sáv) és 32 px (sorok).
+   - Szín: kék #1428DB, sárga #FFC93C, sötét #10152B; kiegészítő csak a „Kinek szól” két hasábja (halvány zöld / halvány piros).
+   - Panelek: halványkék, halvány meleg sárgás, halványszürke váltakozik (mind nagyon visszafogott, a szöveg AA felett).
+   - A nagy címekben legfeljebb egy kulcsszó sárga kiemelőcsíkkal (mint a logó alatti sárga ív).
+   A hős és a sötét ragadós bemutató változatlan (ott csak a lépéscímke elé került egy kis ikon). */
+:root { --csempe: #F1F3F9; }
+
+/* panel-árnyalatok */
+.panel-kek-h { --panel: #F1F5FE; --panel-vonal: #D8E1F6; }
+.panel-meleg { --panel: #FFF8E8; --panel-vonal: #EEDFBC; }
+.panel-szurke { --panel: #F4F5F8; --panel-vonal: #DFE2EA; }
+.panel { --csempe: #fff; }
+
+/* ikon-csempe */
+.cs { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 13px; background: var(--csempe); vertical-align: middle; }
+.cs .ikon { width: 30px; height: 30px; }
+.cs-s { width: 32px; height: 32px; border-radius: 10px; }
+.cs-s .ikon { width: 22px; height: 22px; }
+.ikon-fej { display: flex; align-items: center; gap: 14px; }
+
+/* kulcsszó-kiemelés: sárga csík a szó alsó részén (több sorra törve is) */
+.kiem {
+  background-image: linear-gradient(var(--sarga), var(--sarga)); background-repeat: no-repeat;
+  background-size: 100% .34em; background-position: 0 74%;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  padding: 0 .05em; margin: 0 -.05em; border-radius: .12em;
+}
+
+/* bizalmi sáv: Fluent ikon fehér csempén a halványkék panelen */
+.bizalom .cs { margin-bottom: 14px; }
+
+/* kinek szól: két halvány árnyalatú hasáb */
+.kinek-racs { gap: 24px; }
+.kinek-igen, .kinek-nem { --csempe: #fff; padding: 32px 36px 36px; border-radius: 22px; }
+.kinek-igen { background: #EDF7F0; }
+.kinek-nem { background: #FCF0EF; }
+.kinek-racs h3 { margin-bottom: 22px; }
+.kinek-nem h3 { color: var(--sotet); }
+.kinek-nem .lista-nem li::before { color: #B4534B; }
+.kinek-nem .megjegyzes { color: #5A5F70; }
+
+/* így indul: ikon-csempe, a sarkán a számkarika (kék, az első sárga), köztük kék összekötő vonal */
+.lepes-jel { position: relative; display: inline-block; vertical-align: top; }
+.lepes-jel .lepes-szam { position: absolute; left: -9px; top: -9px; width: 26px; height: 26px; font-size: 13px; box-shadow: 0 0 0 3px var(--panel); }
+.lepesek li:first-child .lepes-szam { background: var(--sarga); color: var(--sotet); }
+.lepesek li:not(:last-child)::after { top: 21px; left: 58px; right: -10px; height: 2px; border-radius: 2px; background: #6F7FEA; }
+.lepesek h3 { margin-top: 18px; }
+
+/* ragadós bemutató: kicsi ikon a lépéscímke előtt (sötét alapon áttetsző csempe – a tulaj 11-21 kérésére visszaállítva) */
+.blepes-cimke { display: flex; align-items: center; gap: 10px; }
+.szakasz-sotet .cs { background: rgba(255, 255, 255, .08); }
+
+/* ki könyvel neked: soronként egy kis ikon */
+.feladatok dt { display: flex; align-items: center; gap: 12px; }
+.feladatok > div { align-items: start; }
+.feladatok dd { padding-top: 4px; }
+
+/* árak: kék keret és felső sáv, kék ár, a „Benne van” sárga címke */
+.arkartya { position: relative; overflow: hidden; border-color: #C9D3F6; }
+.arkartya::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--kek); }
+.ar-osszeg { color: var(--kek); }
+.ar-fo .pipa { color: var(--kek); }
+.ar-alcim span { display: inline-block; padding: 3px 12px; border-radius: 999px; background: var(--sarga); color: var(--sotet); font-size: 14px; }
+.dij dt { position: relative; padding-left: 44px; }
+.dij dt .cs { position: absolute; left: 0; top: -4px; display: grid; margin: 0; font-size: inherit; }
+.dij dt .cs .ikon { opacity: .9; }
+
+/* összevetés: az Adózz oszlop halványkék, kék fejléccel */
+.tabla { border-collapse: separate; border-spacing: 0; }
+.tabla .oszlop-adozz { background: #EEF2FE; }
+.tabla thead th.oszlop-adozz { background: var(--kek); color: #fff; box-shadow: none; border-bottom-color: var(--kek); border-radius: 14px 14px 0 0; }
+.tabla td.oszlop-adozz { border-bottom-color: #D9E1FA; }
+.tabla tbody tr:last-child td.oszlop-adozz { border-radius: 0 0 14px 14px; border-bottom-color: transparent; }
+
+@media (max-width: 980px) {
+  .kinek-igen, .kinek-nem { padding: 28px; }
+}
+
+@media (max-width: 760px) {
+  .bizalom-racs li, .bizalom-racs li:nth-child(n) { grid-template-columns: 44px minmax(0, 1fr); }
+  .bizalom .cs { grid-row: 1 / span 2; margin: 0; }
+
+  .kinek-racs { gap: 14px; }
+  .kinek-igen, .kinek-nem, .kinek-igen:nth-child(n) { padding: 24px 20px 26px; border: 0; }
+  .kinek-racs h3 { margin-bottom: 16px; }
+
+  .lepesek li, .lepesek li:nth-child(n) { grid-template-columns: 44px minmax(0, 1fr); column-gap: 16px; padding-bottom: 26px; }
+  .lepes-jel { grid-row: 1 / span 2; }
+  .lepesek li:not(:last-child)::after, .lepesek li:nth-child(2)::after { top: 54px; bottom: 8px; left: 21px; width: 2px; height: auto; right: auto; }
+  .lepesek h3 { margin: 10px 0 4px; }
+
+  .feladatok dd { padding-top: 2px; }
+
+  .ar-alcim span { font-size: 13.5px; }
+  .tabla td.oszlop-adozz { margin: 4px 0 6px; padding: 8px 12px; border-radius: 10px; background: #EEF2FE; }
+  .tabla tbody tr:last-child td.oszlop-adozz { border-radius: 10px; }
+}
+
+/* ================= 4e PRÓBA (11-21): erősebb, telt színű dobozok =================
+   A tulaj: a halvány, pasztell nagy dobozok „átlátszónak” hatnak (AI-sablon jegy) → „ERŐSEBB SZÍNŰ DOBOZOK”.
+   Csak két helyen: a hős alatti bizalmi sáv (telt márkakék) és a „Kinek szól” két doboza (telt zöld / sötét palaszürke).
+   Az ikonok fehér csempén maradnak, mint az appban. Kontraszt: kék alapon fehér 8,9:1, leírás #D6DEFF 6,7:1;
+   zöld alapon fehér 5,4:1; palaszürke alapon fehér 12,8:1, lista #E3E7F0 10,4:1, megjegyzés #B9C1D4 7,1:1. */
+
+/* bizalmi sáv: telt márkakék doboz */
+.bizalom.panel { --panel: #1428DB; --csempe: #fff; background: #1428DB; }
+.bizalom h3 { color: #fff; }
+.bizalom p { color: #D6DEFF; }
+.bizalom a { color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.bizalom a:hover { color: #fff; text-decoration-thickness: 2px; }
+.bizalom :focus-visible { outline-color: #fff; }
+
+/* kinek szól: telt zöld „igen” doboz */
+.kinek-igen { --csempe: #fff; background: #167A45; color: #fff; }
+.kinek-igen h3 { color: #fff; }
+.kinek-igen .lista { color: #fff; }
+.kinek-igen .pipa { color: #fff; }
+
+/* kinek szól: telt, de nem riasztó sötét palaszürke „nem” doboz (piros helyett, ami hibaüzenetnek hatna) */
+.kinek-nem { --csempe: #fff; background: #2A3247; color: #E3E7F0; }
+.kinek-nem h3 { color: #fff; }
+.kinek-nem .lista { color: #E3E7F0; }
+.kinek-nem .lista-nem li::before { color: rgba(255, 255, 255, .45); }
+.kinek-nem .megjegyzes { color: #B9C1D4; }

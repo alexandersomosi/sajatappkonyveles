@@ -109,15 +109,16 @@
 </section>
 
 <!-- ============ BIZALMI SOR (ellenőrizhető tények) ============
-     4. kör próba (11-21): egy halvány panelben 4 oszlop, mindegyiknél egy kis, egységes kék vonalikon (saját rajz, 24x24, 1,6 px vonal). -->
-<section class="bizalom panel panel-kicsi" aria-labelledby="bizalom-cim">
+     4. kör próba (11-21): egy halvány panelben 4 oszlop, mindegyiknél egy kis, egységes kék vonalikon (saját rajz, 24x24, 1,6 px vonal).
+     4b (11-21, tulaj: „ikonok, színek, kiemelések”): a vonalikonok helyett az app Fluent Emoji Flat ikonjai, semleges csempén, mint az appban. -->
+<section class="bizalom panel panel-kicsi panel-kek-h" aria-labelledby="bizalom-cim">
   <div class="kontener">
     <h2 class="rejtett" id="bizalom-cim">Röviden rólunk</h2>
     <ul class="bizalom-racs">
-      <li><span class="vikon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10.5" r="2.2"/><path d="M5.8 15.8c.6-1.5 1.8-2.3 3.2-2.3s2.6.8 3.2 2.3M14.5 9.5h3.5M14.5 12.5h2.5"/></svg></span><h3>Nyilvántartásba vett könyvelő</h3><p>A neve a szerződésedben és az appban is ott van.</p></li>
-      <li><span class="vikon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M14 3H7.5A1.5 1.5 0 0 0 6 4.5v15A1.5 1.5 0 0 0 7.5 21h9a1.5 1.5 0 0 0 1.5-1.5V7z"/><path d="M14 3v4h4M9.3 14.2l2 2 3.6-4"/></svg></span><h3>NAV-meghatalmazással</h3><p>Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.</p></li>
-      <li><span class="vikon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3M12 14.5v2.5"/></svg></span><h3>Európai szerveren</h3><p>Az irataidat titkosítva tároljuk, és csak a könyvelőd látja őket.</p></li>
-      <li><span class="vikon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4.5 20.5V5A1.5 1.5 0 0 1 6 3.5h7A1.5 1.5 0 0 1 14.5 5v15.5M14.5 9.5h4A1.5 1.5 0 0 1 20 11v9.5M3 20.5h18M8 8h3M8 11.5h3M8 15h3M17.2 13.5v.01M17.2 17v.01"/></svg></span><h3>Somosi Kft.</h3><p>1123 Budapest, Nagyenyed utca 5. · Adószám: 32769678-2-43 · <a href="#impresszum">Cégadatok</a></p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:igazolvany--></span><h3>Nyilvántartásba vett könyvelő</h3><p>A neve a szerződésedben és az appban is ott van.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><h3>NAV-meghatalmazással</h3><p>Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:lakat--></span><h3>Európai szerveren</h3><p>Az irataidat titkosítva tároljuk, és csak a könyvelőd látja őket.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:epulet--></span><h3>Somosi Kft.</h3><p>1123 Budapest, Nagyenyed utca 5. · Adószám: 32769678-2-43 · <a href="#impresszum">Cégadatok</a></p></li>
     </ul>
   </div>
 </section>
@@ -127,12 +128,12 @@
 <section class="szakasz" id="kinek">
   <div class="kontener resz">
     <div class="resz-fej">
-      <h2>Átalányadózó és katás egyéni vállalkozókat könyvelünk</h2>
+      <h2><span class="kiem">Átalányadózó és katás</span> egyéni vállalkozókat könyvelünk</h2>
       <p class="bevezeto">Csak alanyi áfamentes vállalkozókkal dolgozunk. Ezért lehet mindenkinek ugyanaz az előre kiírt ár.</p>
     </div>
     <div class="kinek-racs">
       <div class="kinek-igen">
-        <h3>Neked szól, ha</h3>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:pipa-kor--></span><span>Neked szól, ha</span></h3>
         <ul class="lista lista-pipa">
           <li><!--pipa-->átalányadózó vagy katás egyéni vállalkozó vagy,</li>
           <li><!--pipa-->alanyi áfamentes vagy,</li>
@@ -141,7 +142,7 @@
         </ul>
       </div>
       <div class="kinek-nem">
-        <h3>Most nem neked szól, ha</h3>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:info--></span><span>Most nem neked szól, ha</span></h3>
         <ul class="lista lista-nem">
           <li>tételes költségelszámolással (vállalkozói szja-val) adózol,</li>
           <li>áfakörbe tartozol,</li>
@@ -154,7 +155,7 @@
 </section>
 
 <!-- ============ HOGYAN MŰKÖDIK ============ -->
-<section class="szakasz panel" id="hogyan">
+<section class="szakasz panel panel-meleg" id="hogyan">
   <div class="kontener resz">
     <div class="resz-fej">
       <h2>Így indul a könyvelésed</h2>
@@ -163,22 +164,22 @@
     <!-- 4. kör próba: 4 rövid lépés egy sorban (a 3. kör szövegeiből rövidítve) -->
     <ol class="lepesek">
       <li>
-        <span class="lepes-szam">1</span>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:kerdoiv--></span><span class="lepes-szam">1</span></span>
         <h3>Regisztrálsz</h3>
         <p>Megadod az e-mail-címedet, és válaszolsz pár kérdésre a vállalkozásodról.</p>
       </li>
       <li>
-        <span class="lepes-szam">2</span>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:irat-toll--></span><span class="lepes-szam">2</span></span>
         <h3>Szerződés és NAV-meghatalmazás</h3>
         <p>Elfogadod a szerződést. A meghatalmazást a könyvelőd is beküldheti, neked csak jóvá kell hagynod.</p>
       </li>
       <li>
-        <span class="lepes-szam">3</span>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:telefon--></span><span class="lepes-szam">3</span></span>
         <h3>Átbeszéljük, ha szeretnéd</h3>
         <p>Az appban kérhetsz visszahívást. Fizetni csak utána kell, kártyával vagy átutalással.</p>
       </li>
       <li>
-        <span class="lepes-szam">4</span>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:dosszie--></span><span class="lepes-szam">4</span></span>
         <h3>Indul a könyvelés</h3>
         <p>A könyvelőd elkezdi a könyvelésedet. Innentől a számláid az appban vannak.</p>
       </li>
@@ -210,7 +211,7 @@
         <!-- SZÁMLÁK: értesítés + a beérkező számlasor „Új” címkével -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Számlák</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:nyugta--></span><span>Számlák</span></p>
             <h3>A kiállított számláid maguktól bejönnek</h3>
             <p>Az app a NAV Online Számla rendszeréből hozza be őket, nem kell begépelned. Minden számla mellett látod, nagyjából mennyit tegyél félre belőle adóra.</p>
           </div>
@@ -232,7 +233,7 @@
         <!-- FÉLRETENNI: a frissülő összeg kártyája (a „Keretek” kártya helyén) + koppintás a gombra -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Félretenni</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:tarca--></span><span>Félretenni</span></p>
             <h3>Egy szám mutatja, mennyit tegyél félre</h3>
             <p>A főoldalon látod, mennyit tegyél félre adóra és járulékra, és ez minden új számlával frissül. Ha félretetted, megjelölöd. A pénz közben nálad marad.</p>
           </div>
@@ -257,7 +258,7 @@
         <!-- HATÁRIDŐK: értesítés + a számlaszám kimásolása -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Határidők</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:csengo--></span><span>Határidők</span></p>
             <h3>Határidő előtt szólunk</h3>
             <p>Az appban ott az összeg, a NAV-számlaszám és a közlemény. Egy koppintással kimásolod őket a bankodba, az utalást te indítod. Katásként ugyanígy a havi katát.</p>
           </div>
@@ -278,7 +279,7 @@
         <!-- FOTÓZÁS: a papír a keretben, exponálás, a „Még nincs oldal” helyén „1 oldal”, értesítés -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Fotózás</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:kamera--></span><span>Fotózás</span></p>
             <h3>A papírszámlát elég lefotóznod</h3>
             <p>A nyugtát vagy a kézzel írt számlát lefotózod, vagy feltöltöd PDF-ben. Egyenesen a könyvelődhöz kerül, nem kell papírt hordanod.</p>
           </div>
@@ -301,7 +302,7 @@
         <!-- DOSSZIÉ: a beküldött papír megjelenik a listában, értesítés -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Dosszié</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:dosszie--></span><span>Dosszié</span></p>
             <h3>Amit küldesz, a könyvelőd átnézi</h3>
             <p>A havi dossziéban egy helyen van minden irat. Látod, mit nézett már át a könyvelőd, és mit kér még tőled.</p>
           </div>
@@ -323,7 +324,7 @@
         <!-- ÜZENETEK: a kérdés, a gépelés és a válasz egymás után; a „Ma” alatti, az írómezőnél félbevágott sort egy takaró végig fedi (a beszélgetés a válasszal ér véget) -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Üzenetek</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:uzenet--></span><span>Üzenetek</span></p>
             <h3>Bármikor írhatsz a könyvelődnek</h3>
             <p>Üzenetet küldesz neki az appban, igazolást pedig egy gombbal kérsz. Ha elakadsz, visszahívást is kérhetsz.</p>
           </div>
@@ -345,7 +346,7 @@
         <!-- KERETEK: a „Hónaponként” lista helyén a keret kártyája + a kereset kiemelve -->
         <li class="blepes">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Keretek</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:oszlop--></span><span>Keretek</span></p>
             <h3>Nem csúszol bele véletlenül az áfába</h3>
             <p>Az app mutatja, mennyit számlázhatsz még idén áfa nélkül, katásként a kata-keretedet is. Azt is látod, mennyi maradt neked az adók és járulékok után.</p>
           </div>
@@ -373,7 +374,7 @@
              böngészőablak jobb alsó sarkára húzódik, mögötte beúszik a böngészőablak (.szinpad.gep-mod). -->
         <li class="blepes blepes-gep">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Böngészőben</p>
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:fooldal--></span><span>Böngészőben</span></p>
             <h3>Gépen is ugyanez</h3>
             <p>Böngészőből is megnyitod, ugyanazzal a belépéssel. Ugyanazt látod, mint a telefonodon, és a papírokat a gépedről is feltöltheted.</p>
           </div>
@@ -404,7 +405,7 @@
 </section>
 
 <!-- ============ KÖNYVELŐ (fotó és név nélkül: ki ő, és mit csinál egy negyedévben) ============ -->
-<section class="szakasz panel" id="konyvelo">
+<section class="szakasz panel panel-szurke" id="konyvelo">
   <div class="kontener resz">
     <div class="resz-fej">
       <h2>Ki könyvel neked?</h2>
@@ -414,11 +415,11 @@
     <div>
       <h3 class="feladat-cim">Ezt csinálja a könyvelőd egy negyedévben</h3>
       <dl class="feladatok">
-        <div><dt>Minden hónapban</dt><dd>Vezeti a bevételi nyilvántartásodat, és átnézi a számláidat. Ha valami hiányzik, szól. A bankszámlakivonatodat is elkéri, mert abból látja, mikor érkezett meg a pénz.</dd></div>
-        <div><dt>A negyedév végén</dt><dd>Kiszámolja és bevallja a negyedéves adódat és járulékaidat, és az appban megírja, mennyit utalj.</dd></div>
-        <div><dt>Amikor utaltál</dt><dd>A feltöltött kivonatodon látja, hogy megérkezett a befizetésed, és az appban jelzi neked.</dd></div>
-        <div><dt>Ha NAV-levél jön</dt><dd>Elmondja, mit jelent, és a meghatalmazásod alapján elintézi.</dd></div>
-        <div><dt>Katásként</dt><dd>A havi katát és a kata-keretedet is figyeli.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:naptar--></span><span>Minden hónapban</span></dt><dd>Vezeti a bevételi nyilvántartásodat, és átnézi a számláidat. Ha valami hiányzik, szól. A bankszámlakivonatodat is elkéri, mert abból látja, mikor érkezett meg a pénz.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:szamologep--></span><span>A negyedév végén</span></dt><dd>Kiszámolja és bevallja a negyedéves adódat és járulékaidat, és az appban megírja, mennyit utalj.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:bank--></span><span>Amikor utaltál</span></dt><dd>A feltöltött kivonatodon látja, hogy megérkezett a befizetésed, és az appban jelzi neked.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:level--></span><span>Ha NAV-levél jön</span></dt><dd>Elmondja, mit jelent, és a meghatalmazásod alapján elintézi.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:oszlop--></span><span>Katásként</span></dt><dd>A havi katát és a kata-keretedet is figyeli.</dd></div>
       </dl>
     </div>
   </div>
@@ -428,7 +429,7 @@
 <section class="szakasz" id="biztonsag">
   <div class="kontener resz">
     <div class="resz-fej">
-      <h2>Mit jelent a meghatalmazás, és hol vannak az adataid?</h2>
+      <h2>Mit jelent a meghatalmazás, és hol vannak az <span class="kiem">adataid</span>?</h2>
       <div class="figyelmeztetes">
         <h3>Ha valaki a nevünkben keres</h3>
         <p>Telefonon soha nem kérjük el a kártyaadataidat, és sehol nem kérjük el a jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet vagy a kódjaidat. Ha valaki a nevünkben mégis ilyet kér, tedd le, és írj nekünk: <a href="mailto:ugyfelszolgalat@adozz.hu">ugyfelszolgalat@adozz.hu</a></p>
@@ -436,7 +437,7 @@
     </div>
     <div class="ket-hasab">
       <div>
-        <h3>A NAV-meghatalmazás</h3>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><span>A NAV-meghatalmazás</span></h3>
         <ul class="vonalas">
           <li>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet a NAV-nál.</li>
           <li>A NAV online felületén (ONYA) adod meg. A könyvelőd is beküldheti, ilyenkor te hagyod jóvá.</li>
@@ -445,7 +446,7 @@
         </ul>
       </div>
       <div>
-        <h3>Az adataid</h3>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:lakat--></span><span>Az adataid</span></h3>
         <ul class="vonalas">
           <li>Európai szerveren tároljuk őket, minden fájlt külön titkosítva.</li>
           <li>A könyvelési irataidat csak a könyvelőd látja.</li>
@@ -460,7 +461,7 @@
 
 <!-- ============ ÁRAK ============ -->
 <!-- 4. kör próba: gépen három oszlop: cím | árkártya (benne foglaltak + Regisztrálok) | külön díjak (doboz nélkül, a panelen) -->
-<section class="szakasz panel" id="arak">
+<section class="szakasz panel panel-kek-h" id="arak">
   <div class="kontener ar-racs">
     <div class="resz-fej">
       <h2>Mennyibe kerül?</h2>
@@ -473,7 +474,7 @@
         <p class="ar-osszeg">19&nbsp;999&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></p>
         <p class="ar-afa">bruttó, 27% áfával</p>
         <p class="ar-ev">Egy teljes év az éves zárással együtt: <b>254&nbsp;987&nbsp;Ft</b></p>
-        <h3 class="ar-alcim">Benne van</h3>
+        <h3 class="ar-alcim"><span>Benne van</span></h3>
         <ul class="lista lista-pipa">
           <li><!--pipa-->Saját, név szerint ismert könyvelő</li>
           <li><!--pipa-->Bevételi nyilvántartás a NAV Online Számlából</li>
@@ -495,27 +496,27 @@
         <p class="ar-kulon-bev">Az éves zárást akkor fizeted, ha az éves bevallásodat mi adjuk be. A többi díj csak akkor jár, ha te kéred a munkát. Mindet előre látod az appban, és a jóváhagyásod nélkül nem kérjük.</p>
         <dl class="dijlista">
           <div class="dij">
-            <dt><b>Éves zárás</b> <em class="cimke">évente egyszer</em><span>Az éves adóbevallások: szja vagy kata, és iparűzési adó.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:irat--></span><b>Éves zárás</b> <em class="cimke">évente egyszer</em><span>Az éves adóbevallások: szja vagy kata, és iparűzési adó.</span></dt>
             <dd>14&nbsp;999&nbsp;Ft<small>/ év</small></dd>
           </div>
           <div class="dij">
-            <dt><b>Változás bejelentése helyetted</b><span>Költözés, új tevékenység, telephely. Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:valtozas--></span><b>Változás bejelentése helyetted</b><span>Költözés, új tevékenység, telephely. Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
             <dd>4&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
           </div>
           <div class="dij">
-            <dt><b>Jogállás-változás bejelentése helyetted</b><span>Ha főállásból mellékállásba váltasz, vagy fordítva.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:jogi--></span><b>Jogállás-változás bejelentése helyetted</b><span>Ha főállásból mellékállásba váltasz, vagy fordítva.</span></dt>
             <dd>7&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
           </div>
           <div class="dij">
-            <dt><b>Amíg szünetel a vállalkozásod</b><span>Ilyenkor a havidíj helyett csak ennyit fizetsz.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:ora--></span><b>Amíg szünetel a vállalkozásod</b><span>Ilyenkor a havidíj helyett csak ennyit fizetsz.</span></dt>
             <dd>2&nbsp;999&nbsp;Ft<small>/ hó</small></dd>
           </div>
           <div class="dij">
-            <dt><b>A vállalkozásod megszüntetése helyetted</b><span>Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:kilep--></span><b>A vállalkozásod megszüntetése helyetted</b><span>Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
             <dd>7&nbsp;999&nbsp;Ft<small>/ alkalom</small></dd>
           </div>
           <div class="dij">
-            <dt><b>Bérszámfejtés</b><span>Ha alkalmazottat vagy alkalmi munkást foglalkoztatsz.</span></dt>
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:emberek--></span><b>Bérszámfejtés</b><span>Ha alkalmazottat vagy alkalmi munkást foglalkoztatsz.</span></dt>
             <dd class="dij-egyedi">egyedi ajánlat</dd>
           </div>
         </dl>
@@ -528,7 +529,7 @@
 <section class="szakasz" id="osszevetes">
   <div class="kontener resz">
     <div class="resz-fej">
-      <h2>Miben más, mint egy hagyományos könyvelőiroda?</h2>
+      <h2><span class="kiem">Miben más</span>, mint egy hagyományos könyvelőiroda?</h2>
       <p class="bevezeto">Ha személyesen szeretnél leülni a könyvelőddel, egy hagyományos iroda jobb neked. Ha inkább a telefonodról intéznéd, nézd meg, miben más nálunk.</p>
     </div>
     <div>
@@ -557,7 +558,7 @@
 
 <!-- ============ GYIK ============ -->
 <!-- 4. kör próba: gépen a kérdések két oszlopban (5 + 5) -->
-<section class="szakasz panel" id="gyik">
+<section class="szakasz panel panel-meleg" id="gyik">
   <div class="kontener resz">
     <div class="resz-fej">
       <h2>Gyakori kérdések</h2>
