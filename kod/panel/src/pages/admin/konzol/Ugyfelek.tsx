@@ -66,7 +66,7 @@ export default function KonzolUgyfelek() {
               setSp(n, { replace: true });
             }}
           >
-            <input value={kereso} onChange={(e) => setKereso(e.target.value)} placeholder="Név, e-mail, adószám vagy telefon vége" aria-label="Keresés" />
+            <input value={kereso} onChange={(e) => setKereso(e.target.value)} placeholder="Név, e-mail, adószám, telefon" aria-label="Keresés: név, e-mail, adószám vagy a telefonszám vége" />
             {/* k7c2: a visible button too (Enter still works) */}
             <button type="submit" className="gomb-m kicsi">
               Keresés

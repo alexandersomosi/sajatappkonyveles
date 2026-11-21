@@ -11,7 +11,9 @@ import { GUIDED_TEXTS } from '../src/_shared/k29g.js';
 
 const ALLOWED = 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.';
 /** Our own time promises (k8 0. fejezet): durations of the client's steps, our turnaround, the NAV's "20 perc". */
-const PROMISE = /[Kk]b\. \d+(?:[–-]\d+)? perc|Pár perc(?! múlva)|pár perc az|Kollégánk 24|általában \d+(?:[–-]\d+)? munkanap|általában pár (?:óra|nap)|perc múlva él|nálunk általában/;
+// k8 integrator (review F5): also "Általában 1 munkanap" (capital), "hamarosan hív / beadja / beküldi", "pár óra",
+// "pár napon belül kész", "valaki 24–48" – and the WHOLE jogi file (FAQ answers, szovegek), not only `tartalom`
+const PROMISE = /[Kk]b\. \d+(?:[–-]\d+)? perc|Pár perc(?! múlva)|pár perc az|, pár perc\.|Kollégánk 24|[Áá]ltalában \d+(?:[–-]\d+)? munkanap|általában pár (?:óra|nap)|perc múlva él|nálunk általában|[Hh]amarosan (?:hív|bead|beküld|jelentkez)|^pár óra$|pár napon belül kész|valaki 24–48/;
 
 function offenders(texts: Record<string, string>): string[] {
   const out: string[] = [];
@@ -44,5 +46,22 @@ describe('no time promise', () => {
     const t = Object.fromEntries(Object.entries(j.tartalom).filter(([k]) => !k.startsWith('_')));
     expect(offenders(t)).toEqual([]);
     expect(t['visszahivas.igeret']).toContain(ALLOWED);
+  });
+  it('the whole jogi file: FAQ answers and texts (the previous texts `elozo_*` excepted)', () => {
+    const j = JSON.parse(readFileSync(join(__dirname, '..', '..', 'jogi', 'app_szovegek.json'), 'utf8')) as Record<string, unknown>;
+    const flat: Record<string, string> = {};
+    const walk = (x: unknown, path: string) => {
+      if (typeof x === 'string') flat[path] = x;
+      else if (Array.isArray(x)) x.forEach((v, i) => walk(v, `${path}[${i}]`));
+      else if (x && typeof x === 'object') for (const [k, v] of Object.entries(x)) if (!k.startsWith('elozo_') && !k.startsWith('k8_elozo_') && !k.startsWith('_')) walk(v, `${path}.${k}`);
+    };
+    walk(j, '');
+    expect(offenders(flat)).toEqual([]);
+  });
+  it('the k29f certificate status texts', async () => {
+    const { CERT_STATUS_TEXTS } = await import('../src/_shared/k29f.js');
+    const flat: Record<string, string> = {};
+    for (const [k, v] of Object.entries(CERT_STATUS_TEXTS)) if (typeof v === 'string') flat[k] = v;
+    expect(offenders(flat)).toEqual([]);
   });
 });

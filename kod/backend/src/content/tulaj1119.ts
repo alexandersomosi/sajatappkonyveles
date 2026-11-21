@@ -99,7 +99,7 @@ export function tulaj1119Defaults(): Record<string, string> {
   for (const [k, v] of Object.entries(ASSIST_TEXTS)) out[`helyettunk.${snake(k)}`] = v;
   for (const [k, v] of Object.entries(ASSIST_STATUS_CLIENT_TEXT)) out[`helyettunk.allapot.${k}`] = v;
   // 11-19 javítás: 'egyeztetve' once the client gave everything (contract + data) – the default text is conditional.
-  out['helyettunk.allapot.egyeztetve.kesz'] = 'Beszéltünk. {firstName} hamarosan beküldi a meghatalmazást, utána jóváhagyod.';
+  out['helyettunk.allapot.egyeztetve.kesz'] = 'Beszéltünk. {firstName} beküldi a meghatalmazást, utána jóváhagyod.';
   for (const [k, v] of Object.entries(ASSIST_STATUS_CLIENT_TEXT_MH)) if (v) out[`helyettunk.allapot.${k}.mh`] = v;
   for (const [kind, list] of Object.entries(ASSIST_STEP_LIST)) list.forEach((x, i) => (out[`helyettunk.lepesek.${kind}.${i + 1}`] = x.text));
   for (const r of ASSIST_CLOSE_REASONS) out[`helyettunk.lezaras_ok.${r}`] = ASSIST_CLOSE_REASON_TEXT[r];

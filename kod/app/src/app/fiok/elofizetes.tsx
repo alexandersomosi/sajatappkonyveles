@@ -13,7 +13,8 @@ import { CARD_CONSENT_UI, PAYMENT_SCREEN_TEXTS as P, type SubscriptionViewK29 } 
 import { ApiHiba } from '@/api/http';
 import { useConfig, useElofizetesFolytat, useElofizetesLemond, useKartyaTorles } from '@/api/hooks';
 import { useElofizetesK29, useKartyaEngedely } from '@/api/hooks-k29';
-import { datumEvvel, datumEvvelIg, datumIg, maiNap, nagybetu, szam } from '@/lib/format';
+import { useSzamlazas } from '@/api/hooks-k8';
+import { datumEvvel, datumEvvelIg, datumIg, maiNap, nagybetu, napHozzaad, szam } from '@/lib/format';
 import { fizetesSzolgaltato, kartyaMentes } from '@/lib/fizetes';
 import { hibaUzenet } from '@/lib/hiba';
 import { engedelyGomb, KartyaEngedely } from '@/kepernyok/KartyaEngedely';
@@ -77,6 +78,9 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
   // k7c2: WE terminated the contract – one end date (terminated.effectiveOn), never "Lemondtad" / "Mégis maradok"
   const felmondva = e.terminatedUntil ?? null;
   const kartya = e.cardInfo ?? null;
+  // k8 (payment-path review 1): a transfer client is never told about cards or card charges
+  const atutal = useSzamlazas().data?.method === 'atutalas';
+  const utana = atutal ? 'utána nem küldünk több díjbekérőt' : 'utána nem vonunk le többet';
   const vegeIg = e.currentPeriodEnd ? datumIg(e.currentPeriodEnd) : 'a hónap végéig';
   const allapot = felmondva ? 'Felmondtuk' : fut ? 'Él' : lemondva ? 'Lemondva' : e.status === 'canceled' ? 'Megszűnt' : e.status === 'incomplete' ? 'Még nincs elindítva' : e.status === 'past_due' ? 'Fizetésre vár' : 'Szünetel';
 
@@ -112,7 +116,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
 
   return (
     <Kepernyo ful="fiok" fejlec={<CimSor visszaCim="Vissza a fiókhoz" vissza={() => vissza('/fiok')} cim="Előfizetés" al={`Havi ${szam(havi)} Ft, bruttó. Bármikor lemondhatod.`} />}>
-      {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
+      {demo ? <DemoFizetesJel atutalas={atutal} style={{ marginTop: 4 }} /> : null}
       {e.due ? (
         <Lap style={{ padding: 16, borderLeftWidth: 4, borderLeftColor: szin.veszely }}>
           <T m={18} s={700} lh={1.3} c={szin.veszelySzoveg} accessibilityRole="header">
@@ -134,10 +138,10 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
         ) : fut && e.nextChargeAt && kartya ? (
           <Sor2 cim={P.account.nextCharge} ertek={datumEvvel(e.nextChargeAt)} al={`${szam(e.nextChargeAmountHuf ?? havi)} Ft`} />
         ) : e.currentPeriodEnd && e.status !== 'incomplete' ? (
-          <Sor2 cim="Eddig fizetted ki" ertek={datumEvvel(e.currentPeriodEnd)} />
+          <Sor2 cim="Eddig fizetted ki" ertek={datumEvvel(napHozzaad(e.currentPeriodEnd, -1))} />
         ) : null}
-        <Sor2 cim={P.account.card} ertek={kartya ? kartya.label : 'nincs mentett kártya'} al={kartya?.expiryLabel ? fillPlaceholders(P.account.expires, { lejarat: kartya.expiryLabel }) + (kartya.expiringSoon ? ' – hamarosan' : '') : null} />
-        {e.status !== 'incomplete' && e.status !== 'canceled' ? (
+        {atutal && !kartya ? null : <Sor2 cim={P.account.card} ertek={kartya ? kartya.label : 'nincs mentett kártya'} al={kartya?.expiryLabel ? fillPlaceholders(P.account.expires, { lejarat: kartya.expiryLabel }) + (kartya.expiringSoon ? ' – hamarosan' : '') : null} />}
+        {e.status !== 'incomplete' && e.status !== 'canceled' && !(atutal && !kartya) ? (
           <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap', paddingHorizontal: 16, paddingTop: 4, paddingBottom: 16 }}>
             <GombM
               cim={kartya ? P.account.changeCard : 'Kártya megadása'}
@@ -178,7 +182,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
           setKerdes({ kartya: true });
         }}
       />
-      {fut && !kartya ? (
+      {fut && !kartya && !atutal ? (
         <T m={15} lh={1.45} c={szin.halvanyAlapon} style={{ marginTop: 10, paddingHorizontal: 4 }}>
           {`${nagybetu(vegeIg)} él az előfizetésed, utána csak új kártyával folytatódik.`}
         </T>
@@ -198,12 +202,12 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
           <View style={{ paddingLeft: 54 }}>
             {felmondva ? (
               <T m={16} lh={1.5}>
-                {`Felmondtuk a szerződésedet. ${nagybetu(datumIg(felmondva))} minden marad, utána nem vonunk le többet. A felmondó levelet a dossziédban találod.`}
+                {`Felmondtuk a szerződésedet. ${nagybetu(datumIg(felmondva))} minden marad, ${utana}. A felmondó levelet a dossziédban találod.`}
               </T>
             ) : lemondva ? (
               <>
                 <T m={16} lh={1.5}>
-                  {`Lemondtad. ${nagybetu(vegeIg)} minden megy tovább, utána nem vonunk le többet.`}
+                  {`Lemondtad. ${nagybetu(vegeIg)} minden megy tovább, ${utana}.`}
                 </T>
                 {kartya ? (
                   <GombM
@@ -223,7 +227,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
             ) : (
               <>
                 <T m={16} lh={1.5}>
-                  Bármikor lemondhatod. A kifizetett hónap végéig a könyvelőd mindent intéz, utána nem vonunk le többet. A már beadott bevallások és a dossziéd letölthetők maradnak.
+                  {`Bármikor lemondhatod. A kifizetett hónap végéig a könyvelőd mindent intéz, ${utana}. A már beadott bevallások és a dossziéd letölthetők maradnak.`}
                 </T>
                 <GombSz
                   cim={P.account.cancel}

@@ -5,7 +5,7 @@ import { Children, Fragment, isValidElement, type ReactElement, type ReactNode }
 import { View, type StyleProp, type ViewStyle } from 'react-native';
 import { elrendezes } from '../../_shared/v2/tokenek';
 import { useAsztali } from '../../lib/elrendezes';
-import { RacsCellaCtx } from '../alap';
+import { RacsCellaCtx, Szakasz } from '../alap';
 import { kartyasit } from '../keret';
 import { Beuszo } from '../mozgas';
 
@@ -25,10 +25,35 @@ function kibont(children: ReactNode): ReactNode[] {
   return ki;
 }
 
+/**
+ * k8 látvány 2: gépen a nagybetűs szakaszcím (Szakasz ikon nélkül, vagy a listás kártya fölötti) és az utána jövő kártya
+ * EGY rácselem – a cím soha nem kerül a másik oszlopba, mint a kártyája.
+ */
+function cimKartyaval(elemek: ReactNode[]): ReactNode[] {
+  const ki: ReactNode[] = [];
+  for (let i = 0; i < elemek.length; i++) {
+    const e = elemek[i];
+    const kov = elemek[i + 1];
+    if (isValidElement(e) && e.type === Szakasz && kov !== undefined && !(isValidElement(kov) && (kov as ReactElement).type === Szeles)) {
+      ki.push(
+        <View key={`ck${i}`}>
+          {e}
+          {kov}
+        </View>,
+      );
+      i++;
+      continue;
+    }
+    ki.push(e);
+  }
+  return ki;
+}
+
 export function Racs({ children, style, beuszo }: { children: ReactNode; style?: StyleProp<ViewStyle>; /** k8 mozgás #1: a kártyák egymás utáni beúszása (munkamenetenként egyszer, ezzel a kulccsal). */ beuszo?: string }) {
   const asztali = useAsztali();
   // a régi szakaszos tartalom (ikonos Szakasz + Lap) előbb egy-egy kártyává áll össze, utána kerül a rácsba
-  const nyers = kibont(kartyasit(children));
+  const kartyasitott = kibont(kartyasit(children));
+  const nyers = asztali ? cimKartyaval(kartyasitott) : kartyasitott;
   const kartyak = beuszo
     ? nyers.map((e, i) => {
         const szeles = isValidElement(e) && (e as ReactElement).type === Szeles;
@@ -58,10 +83,12 @@ export function Racs({ children, style, beuszo }: { children: ReactNode; style?:
     }
   }
   if (par.length) sorok.push(par);
+  // k8 látvány 2: egy magányos kártya (a pár nélkül maradt) a teljes szélességet kapja – nincs üres rácshely mellette
+  const egyedul = (sor: ReactNode[]) => sor.length === 1;
   return (
     <View style={[{ gap: KOZ, marginBottom: KOZ }, style]}>
       {sorok.map((sor, i) =>
-        sor.length === 1 && isValidElement(sor[0]) && (sor[0] as ReactElement).type === Szeles ? (
+        egyedul(sor) ? (
           <RacsCellaCtx.Provider key={i} value>
             <View style={{ flexDirection: 'row' }}>
               <View style={{ flex: 1, minWidth: 0 }}>{sor[0]}</View>
@@ -74,7 +101,6 @@ export function Racs({ children, style, beuszo }: { children: ReactNode; style?:
                 <View style={{ flex: 1, minWidth: 0 }}>{c}</View>
               </RacsCellaCtx.Provider>
             ))}
-            {sor.length === 1 ? <View style={{ flex: 1 }} /> : null}
           </View>
         ),
       )}

@@ -140,7 +140,7 @@ export default function Dijak() {
               </Lap>
             </>
           ) : null}
-          <Szakasz ikon="irat" cim={FEE_TEXTS.invoicesTitle} megj={lista.some((x) => x.demo) ? 'DEMO: ezek díjbekérők, nem valódi számlák.' : 'A számlát a Számlázz.hu e-mailben is elküldi.'} />
+          <Szakasz ikon="irat" cim={FEE_TEXTS.invoicesTitle} megj={lista.some((x) => x.demo) ? 'DEMO: ezek bemutató számlák, nem valódiak.' : 'A számlát e-mailben is elküldjük.'} />
           <Lap>
             {lista.length ? (
               lista.map((d, i) => <SzamlaSor key={d.id} d={d} elso={i === 0} hiba={(e) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.'))} />)

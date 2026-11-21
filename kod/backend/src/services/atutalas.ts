@@ -14,7 +14,7 @@
 //    the switch kesesLeallit is ON (then lock reason 'atutalas_kesik' from day 8); the console has a manual suspend.
 //  - switch kapcsolok.fizetes.atutalas: DEMO ON, production OFF until the ÁSZF knows the transfer. OFF = 409
 //    atutalas_kikapcsolva for a NEW choice; clients already on transfer keep getting their díjbekérők.
-import { and, asc, desc, eq, gte, inArray, isNull, lte, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNull, lte, ne, sql } from 'drizzle-orm';
 import brand from '../_shared/brand.json' with { type: 'json' };
 import {
   FIZETES_KAPCSOLOK_KEY,
@@ -179,7 +179,24 @@ export async function clientBillingView(deps: Deps, cl: ClientRow): Promise<Clie
     canSwitchToCard: method === 'atutalas' && !open.some((r) => r.kind === 'havi'),
     canSwitchToTransfer: k.atutalas && transferRoute(deps.cfg) !== null && method === 'kartya' && running && !cl.terminated,
     kozlemenyMode: k.kozlemeny,
+    // k8 review F4: a díjbekérő is being made (its document failed once; the job and the next tap try again)
+    preparing: rows.some((r) => r.status === 'hiba' && !r.proformaNumber),
   };
+}
+
+/**
+ * What a POST /client/billing/transfer really does (the route gates a 'subscribe' like the card start): a 'switch' with
+ * no running subscription is a first subscription (k8 review F1 – it must not skip the step lock, the open callback and
+ * the employer gate); a 'subscribe' over a paid, running month is a switch.
+ */
+export async function effectiveTransferPurpose(deps: Deps, clientId: string, purpose: 'subscribe' | 'switch'): Promise<'subscribe' | 'switch'> {
+  const today = todayBudapest(deps.now());
+  const [sub] = await deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
+  const paidRunning = Boolean(sub && (sub.status === 'active' || sub.status === 'canceled') && sub.currentPeriodEnd && sub.currentPeriodEnd > today);
+  const running = Boolean(sub && (sub.status === 'active' || sub.status === 'past_due' || sub.status === 'suspended' || paidRunning));
+  if (purpose === 'subscribe' && paidRunning) return 'switch';
+  if (purpose === 'switch' && !running) return 'subscribe';
+  return purpose;
 }
 
 function offError(): ApiError {
@@ -203,9 +220,7 @@ export async function chooseTransfer(deps: Deps, cl: ClientRow, purpose: 'subscr
   if (!cl.addressZip || !cl.addressCity || !cl.addressLine) throw E.conflict('Előbb add meg a címedet az Adataid lépésben (a díjbekérőhöz kell).');
   const today = todayBudapest(deps.now());
   let [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, cl.id)).limit(1);
-  const paidRunning = Boolean(sub && (sub.status === 'active' || sub.status === 'canceled') && sub.currentPeriodEnd && sub.currentPeriodEnd > today);
-  if (purpose === 'subscribe' && paidRunning) purpose = 'switch';
-  if (purpose === 'switch' && !sub) purpose = 'subscribe';
+  purpose = await effectiveTransferPurpose(deps, cl.id, purpose);
   if (!sub) {
     const { ensurePlan } = await import('./subscription.js');
     await ensurePlan(deps, db);
@@ -226,10 +241,15 @@ export async function chooseTransfer(deps: Deps, cl: ClientRow, purpose: 'subscr
     [sub] = await db.select().from(subscriptions).where(eq(subscriptions.id, sub.id)).limit(1);
   }
   if (purpose === 'subscribe') {
+    const { expireOpenFirstCheckouts } = await import('./payments.js');
+    await expireOpenFirstCheckouts(deps, sub!.id);
     const open = await openOf(db, cl.id, ['elso_havi']);
     if (!open.length) await issueFirst(deps, cl, sub!);
+    // k8 review F4: a díjbekérő whose document failed is tried again now (not only by the next job run)
+    else for (const r of open) if (r.status === 'hiba' && !r.proformaNumber) await processTransferIssue(deps, r.id);
   } else if (sub!.status === 'suspended' || (sub!.status === 'active' && sub!.currentPeriodEnd && sub!.currentPeriodEnd <= today)) {
     await issueMonthly(deps, cl, sub!);
+    for (const r of await openOf(db, cl.id, ['havi'])) if (r.status === 'hiba' && !r.proformaNumber) await processTransferIssue(deps, r.id);
   }
   return clientBillingView(deps, cl);
 }
@@ -567,6 +587,59 @@ export async function withdrawOpenFirst(db: DbOrTx, clientId: string, now: Date,
   return rows.length;
 }
 
+/**
+ * k8 review F2: the card paid a month → the open monthly díjbekérő of that month (or an earlier one) is withdrawn, so the
+ * same month is never asked twice and no reminder / late lock follows.
+ */
+export async function withdrawOpenMonthlyUpTo(db: DbOrTx, subscriptionId: string, periodStart: string, now: Date, note: string): Promise<number> {
+  const rows = await db
+    .update(transferRequests)
+    .set({ status: 'visszavonva', note, updatedAt: now })
+    .where(and(eq(transferRequests.subscriptionId, subscriptionId), eq(transferRequests.kind, 'havi'), lte(transferRequests.periodStart, periodStart), inArray(transferRequests.status, ['kiallitva', 'kesik', 'hiba'])))
+    .returning({ id: transferRequests.id });
+  return rows.length;
+}
+
+/**
+ * k8 review F3: an open díjbekérő of a month the client will not get any more is withdrawn (no reminder, no late lock):
+ * the subscription is cancelled (or cancelled at its period end and the díjbekérő is for a later month), or the contract
+ * was terminated / the client anonymised. Called by the cancellations and, as a safety net, by the reminder job.
+ */
+export async function withdrawStaleTransfers(deps: Pick<Deps, 'now'>, db: DbOrTx, clientId?: string): Promise<number> {
+  const rows = await db
+    .select({ r: transferRequests, sub: subscriptions, terminated: clients.terminated, anonymizedAt: clients.anonymizedAt })
+    .from(transferRequests)
+    .innerJoin(clients, eq(clients.id, transferRequests.clientId))
+    .leftJoin(subscriptions, eq(subscriptions.id, transferRequests.subscriptionId))
+    .where(and(inArray(transferRequests.status, ['kiallitva', 'kesik', 'hiba']), clientId ? eq(transferRequests.clientId, clientId) : sql`true`));
+  let n = 0;
+  for (const x of rows) {
+    const s = x.sub;
+    // a first-month díjbekérő is a new start (also after a cancelled subscription): only the end of the contract stops it
+    const ended = Boolean(x.terminated) || Boolean(x.anonymizedAt) || (x.r.kind === 'havi' && s?.status === 'canceled');
+    const laterMonth = Boolean(s?.cancelAtPeriodEnd && x.r.kind === 'havi' && s.currentPeriodEnd && x.r.periodStart && x.r.periodStart >= s.currentPeriodEnd);
+    if (!ended && !laterMonth) continue;
+    const [w] = await db
+      .update(transferRequests)
+      .set({ status: 'visszavonva', note: 'Lemondás vagy megszűnés miatt visszavonva.', updatedAt: deps.now() })
+      .where(and(eq(transferRequests.id, x.r.id), inArray(transferRequests.status, ['kiallitva', 'kesik', 'hiba'])))
+      .returning({ id: transferRequests.id });
+    if (w) {
+      n++;
+      await audit(db, { action: 'transfer.withdrawn', actorRole: 'system', targetType: 'transfer_request', targetId: x.r.id, clientId: x.r.clientId, details: { orderNo: x.r.orderNo, reason: ended ? 'megszunt' : 'lemondva' } });
+    }
+  }
+  return n;
+}
+
+/** The díjbekérők whose document is not made yet (every run of the issue and the reconcile job, at most 5 tries). */
+async function retryPendingIssues(deps: Deps): Promise<number> {
+  const pending = await deps.db.select({ id: transferRequests.id }).from(transferRequests).where(and(eq(transferRequests.status, 'hiba'), isNull(transferRequests.proformaNumber), lte(transferRequests.attempts, 5))).limit(20);
+  let n = 0;
+  for (const p of pending) if ((await processTransferIssue(deps, p.id)) === 'kiallitva') n++;
+  return n;
+}
+
 // ---------------------------------------------------------------------------------------------------------------------
 // jobs
 // ---------------------------------------------------------------------------------------------------------------------
@@ -593,8 +666,7 @@ export async function jobTransferIssue(deps: Deps): Promise<Record<string, numbe
     }
   }
   // the ones whose document is not made yet (back-off: every run, at most 5 tries)
-  const pending = await db.select({ id: transferRequests.id }).from(transferRequests).where(and(eq(transferRequests.status, 'hiba'), isNull(transferRequests.proformaNumber), lte(transferRequests.attempts, 5))).limit(20);
-  for (const p of pending) if ((await processTransferIssue(deps, p.id)) === 'kiallitva') out.ujraproba++;
+  out.ujraproba += await retryPendingIssues(deps);
   return out;
 }
 
@@ -605,8 +677,10 @@ export async function jobTransferIssue(deps: Deps): Promise<Record<string, numbe
  */
 export async function jobTransferReconcile(deps: Deps): Promise<Record<string, number>> {
   const db = deps.db;
-  const out = { fizetett: 0, nyitott: 0, hiba: 0 };
-  const rows = await db.select().from(transferRequests).where(inArray(transferRequests.status, ['kiallitva', 'kesik'])).orderBy(asc(transferRequests.lastCheckedAt)).limit(60);
+  const out = { fizetett: 0, nyitott: 0, hiba: 0, ujraproba: 0 };
+  // k8 review F4: a failed díjbekérő is not left until tomorrow's 06:30 run
+  if (transferRoute(deps.cfg)) out.ujraproba = await retryPendingIssues(deps).catch(() => 0);
+  const rows = await db.select().from(transferRequests).where(inArray(transferRequests.status, ['kiallitva', 'kesik'])).orderBy(sql`${transferRequests.lastCheckedAt} asc nulls first`).limit(60);
   const today = todayBudapest(deps.now());
   for (const r of rows) {
     try {
@@ -654,7 +728,9 @@ export async function jobTransferReconcile(deps: Deps): Promise<Record<string, n
 export async function jobTransferReminders(deps: Deps): Promise<Record<string, number>> {
   const db = deps.db;
   const today = todayBudapest(deps.now());
-  const out = { kesik: 0, emlekezteto: 0, zarolas: 0 };
+  const out = { kesik: 0, emlekezteto: 0, zarolas: 0, visszavonva: 0 };
+  // k8 review F3: no reminder for a month the client does not get any more (cancelled, terminated)
+  out.visszavonva = await withdrawStaleTransfers(deps, db);
   const late = await db.select().from(transferRequests).where(and(inArray(transferRequests.status, ['kiallitva', 'kesik']), sql`${transferRequests.dueOn} < ${today}`));
   const k = await fizetesKapcsolok(deps, db);
   const lockCheck = new Set<string>();
@@ -698,15 +774,16 @@ export async function transferLockOf(deps: Deps, db: DbOrTx, clientId: string): 
   const k = await fizetesKapcsolok(deps, db);
   if (!k.kesesLeallit) return { locked: false, amountHuf: 0 };
   const limit = addDays(todayBudapest(deps.now()), -TRANSFER_RULES.lockAfterDays);
-  const rows = await db.select({ amount: transferRequests.amountHuf }).from(transferRequests).where(and(eq(transferRequests.clientId, clientId), eq(transferRequests.status, 'kesik'), lte(transferRequests.dueOn, limit)));
+  const rows = await db.select({ amount: transferRequests.amountHuf }).from(transferRequests).where(and(eq(transferRequests.clientId, clientId), eq(transferRequests.status, 'kesik'), eq(transferRequests.kind, 'havi'), lte(transferRequests.dueOn, limit)));
   return { locked: rows.length > 0, amountHuf: rows.reduce((a, b) => a + b.amount, 0) };
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // console reads
 // ---------------------------------------------------------------------------------------------------------------------
-function adminRowOf(r: TrRow, name: string, no: number | null, today: string): AdminTransferRow {
+function adminRowOf(r: TrRow, name: string, no: number | null, today: string, locked = false): AdminTransferRow {
   return {
+    clientLocked: locked,
     id: r.id,
     clientId: r.clientId,
     clientName: name,
@@ -741,13 +818,13 @@ export async function adminTransfers(deps: Deps, f: { status?: 'fizetett' | 'var
   if (f.status === 'kesik') conds.push(eq(transferRequests.status, 'kesik'));
   if (f.status === 'hiba') conds.push(eq(transferRequests.status, 'hiba'));
   const rows = await deps.db
-    .select({ r: transferRequests, first: clients.firstName, last: clients.lastName, no: clients.customerNo })
+    .select({ r: transferRequests, first: clients.firstName, last: clients.lastName, no: clients.customerNo, lock: clients.serviceLock })
     .from(transferRequests)
     .innerJoin(clients, eq(clients.id, transferRequests.clientId))
     .where(conds.length ? and(...conds) : sql`true`)
     .orderBy(desc(transferRequests.createdAt))
     .limit(Math.min(f.limit ?? 200, 500));
-  return rows.map((x) => adminRowOf(x.r, clientName({ firstName: x.first, lastName: x.last }), x.no, today));
+  return rows.map((x) => adminRowOf(x.r, clientName({ firstName: x.first, lastName: x.last }), x.no, today, Boolean(x.lock)));
 }
 
 /** The console tile: paid this calendar month / waiting / late (counts and amounts straight from the table). */

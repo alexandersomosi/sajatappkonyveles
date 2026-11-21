@@ -4,6 +4,7 @@
 //    /admin/console/switches/fizetes
 //  - admin (adminRoutes): GET /admin/demo-outbox/:id/html – the HTML image of a DEMO mail on its own page with a strict
 //    CSP (the panel's CSP forbids frames: frame-src 'none'), DEMO only.
+import { timingSafeEqual } from 'node:crypto';
 import { Hono } from 'hono';
 import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
@@ -43,7 +44,9 @@ export function registerClientK8Routes(r: Hono<Env>, deps: Deps): void {
   r.post('/billing/transfer', async (c) => {
     const b = await readJson(c, z.strictObject({ purpose: z.enum(['subscribe', 'switch']) }));
     const cl = await client(c);
-    if (b.purpose === 'subscribe') {
+    // k8 review F1: a 'switch' without a running subscription is a first subscription – the same gates apply
+    const { effectiveTransferPurpose } = await import('../services/atutalas.js');
+    if ((await effectiveTransferPurpose(deps, cl.id, b.purpose)) === 'subscribe') {
       const { assertStepOpen } = await import('../services/onboarding.js');
       await assertStepOpen(deps, deps.db, cl, 'elofizetes');
       await assertNoOpenCallback(deps, cl);
@@ -93,6 +96,13 @@ export function registerAdminConsoleK8Routes(r: Hono<Env>, deps: Deps): void {
   });
 }
 
+/** Constant-time comparison of two tokens (review A14). */
+function sameText(a: string, b: string): boolean {
+  const x = Buffer.from(a);
+  const y = Buffer.from(b);
+  return x.length === y.length && timingSafeEqual(x, y);
+}
+
 /** Signed, 5-minute link of one DEMO mail's HTML image (the panel opens it in a new tab – no Bearer header there). */
 function demoMailToken(deps: Deps, id: string, exp: number): string {
   return `${id}.${exp}.${hmacHex(deps.cfg.auditIpSalt, `demo-level:${id}:${exp}`).slice(0, 32)}`;
@@ -127,7 +137,7 @@ export function demoMailPublicRoutes(deps: Deps) {
     if (!m) throw E.notFound();
     const [, id, expS, sig] = m;
     const exp = Number(expS);
-    if (exp < deps.now().getTime() || demoMailToken(deps, id!, exp) !== `${id}.${expS}.${sig}`) throw E.notFound('A link lejárt. Nyisd meg újra a DEMO-postafiókból.');
+    if (exp < deps.now().getTime() || !sameText(demoMailToken(deps, id!, exp), `${id}.${expS}.${sig}`)) throw E.notFound('A link lejárt. Nyisd meg újra a DEMO-postafiókból.');
     const [x] = await deps.db.select({ html: demoOutbox.bodyHtml }).from(demoOutbox).where(eq(demoOutbox.id, id!)).limit(1);
     if (!x?.html) throw E.notFound();
     c.header('Content-Security-Policy', "default-src 'none'; img-src https: data:; style-src 'unsafe-inline'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");

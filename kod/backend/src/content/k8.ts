@@ -51,7 +51,7 @@ export function k8Defaults(): Record<string, string> {
   out['email.fee_invoice.sztorno.body'] = ['Szia, {keresztnev}!', 'Visszautaltuk a díjat, ezért sztornóztuk a számlát ({eredeti}).', 'Sztornó számla: {szamlaszam}\nÖsszeg: {osszeg} Ft', 'A sztornó számla PDF-je csatolva van ehhez a levélhez.', '{link}'].join('\n\n');
   out['email.fee_invoice.helyesbito.subject'] = 'Helyesbítő számla: {eredeti}';
   out['email.fee_invoice.helyesbito.body'] = ['Szia, {keresztnev}!', 'A díj egy részét visszautaltuk, ezért helyesbítő számlát állítottunk ki ({eredeti}).', 'Helyesbítő számla: {szamlaszam}\nÖsszeg: {osszeg} Ft', 'A számla PDF-je csatolva van ehhez a levélhez.', '{link}'].join('\n\n');
-  out['email.fee_invoice.gomb'] = 'Letöltöm a számlát';
+  out['email.fee_invoice.gomb'] = 'Megnézem a számláimat';
   out['k8.fizetes.kartya'] = 'Kártyával fizetve';
   out['k8.fizetes.atutalas'] = 'Átutalással fizetve';
 
@@ -76,10 +76,10 @@ export function k8Defaults(): Record<string, string> {
   out['email.account_locked.subject'] = 'Zároltuk a belépést a fiókodba';
   out['email.account_locked.body'] = ['Szia!', 'Többször rossz jelszóval próbáltak belépni a fiókodba, ezért {perc} percre zároltuk a belépést.', 'Ha nem te voltál, állíts be új jelszót az „Elfelejtettem a jelszavam” gombbal.'].join('\n\n');
   out['email.guided_continue.subject'] = 'Folytasd ott, ahol abbahagytad';
-  out['email.guided_continue.body'] = ['Szia, {keresztnev}!', 'Már csak pár lépés, és {firstName} elkezdheti a könyvelésedet. Az appban onnan folytatod, ahol abbahagytad.', '{link}'].join('\n\n');
+  out['email.guided_continue.body'] = ['Szia, {keresztnev}!', 'Már csak pár lépés, és elkezdjük a könyvelésedet. Az appban onnan folytatod, ahol abbahagytad.', '{link}'].join('\n\n');
   out['email.guided_continue.gomb'] = 'Folytatom';
   out['notif.guided_continue.title'] = 'Folytasd ott, ahol abbahagytad';
-  out['notif.guided_continue.body'] = 'Már csak pár lépés, és {firstName} elkezdheti a könyvelésedet.';
+  out['notif.guided_continue.body'] = 'Már csak pár lépés, és elkezdjük a könyvelésedet.';
   out['email.fee_waived.subject'] = 'Elengedtük a díjat';
   out['email.fee_waived.body'] = ['Szia, {keresztnev}!', 'Ezt a díjat nem kell kifizetned: {label} ({osszeg} Ft).', '{link}'].join('\n\n');
   out['email.fee_waived.gomb'] = 'Megnézem a díjaimat';

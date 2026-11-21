@@ -8,7 +8,7 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { Ikon, Logo, fejGradiens, type EmojiNev } from '../_shared/v2/rn';
 import { useAsztali } from '../lib/elrendezes';
 import { forma, szin } from '../theme/tokens';
-import { Fejlec } from '../ui/alap';
+import { Fejlec, TeljesGombCtx } from '../ui/alap';
 import { DemoPirula } from '../ui/demoAllapot';
 import { vissza } from '../ui/keret';
 import { TeljesCtx } from '../ui/teljes';
@@ -101,7 +101,9 @@ export function AuthVaz({ fej, gepCim, gepAl, gepFelso, vissza: visszaGomb, chil
                   ) : null}
                 </View>
               ) : null}
-              <TeljesCtx.Provider value>{children}</TeljesCtx.Provider>
+              <TeljesCtx.Provider value>
+                <TeljesGombCtx.Provider value>{children}</TeljesGombCtx.Provider>
+              </TeljesCtx.Provider>
             </View>
           </ScrollView>
           <View pointerEvents="none" style={{ position: 'absolute', top: 24, right: 28 }}>

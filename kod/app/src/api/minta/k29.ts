@@ -102,7 +102,7 @@ function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | nu
     currentKey: cur?.key ?? null,
     progress: { done: counted.filter((s) => s.doneForClient).length, total: counted.length },
     finished: !cur,
-    pending: (j?.steps ?? []).filter((s) => s.state !== 'kesz' && s.state !== 'kihagyva' && !vezKulcsok.has(s.key) && s.key !== 'kedvezmenyek').map((s) => ({ key: s.key, title: s.title, actorLabel: s.actorLabel, timeText: s.state === 'var' ? 'általában 1–3 munkanap' : null, later: s.state !== 'var' })),
+    pending: (j?.steps ?? []).filter((s) => s.state !== 'kesz' && s.state !== 'kihagyva' && !vezKulcsok.has(s.key) && s.key !== 'kedvezmenyek').map((s) => ({ key: s.key, title: s.title, actorLabel: s.actorLabel, timeText: null, later: s.state !== 'var' })),
     waiting: j?.waiting ?? null,
     lastKey: g.lastKey ?? null,
     doneSeen: !!g.doneSeenAt,

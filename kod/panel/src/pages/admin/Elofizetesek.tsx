@@ -87,7 +87,8 @@ export default function Elofizetesek() {
                       <td className="elso">
                         <div className="felkover">{r.client.name}</div>
                         <div className="al">
-                          <span className={`cimke ${r.mode === 'live' ? 'info' : 'demo'}`}>{r.providerLabel || szolgaltatoCimke(r.provider, r.mode)}</span>
+                          {/* k8 (payment-path review 10): a transfer client is not labelled by the card provider */}
+                          <span className={`cimke ${r.mode === 'live' ? 'info' : 'demo'}`}>{r.billingMethod === 'atutalas' ? `Átutalás${r.mode === 'live' ? '' : ' (DEMO)'}` : r.providerLabel || szolgaltatoCimke(r.provider, r.mode)}</span>
                           {r.isTest ? ' · teszt-ügyfél' : ''}
                         </div>
                       </td>
@@ -100,6 +101,13 @@ export default function Elofizetesek() {
                         {r.nextChargeAt && r.status !== 'canceled' && !r.cancelAtPeriodEnd ? (
                           <>
                             {datumRovid(r.nextChargeAt.slice(0, 10))}
+                            <div className="al">
+                              <Ft n={r.nextChargeHuf} />
+                            </div>
+                          </>
+                        ) : r.billingMethod === 'atutalas' && r.status !== 'canceled' && !r.cancelAtPeriodEnd && r.currentPeriodEnd ? (
+                          <>
+                            díjbekérő {datumRovid(r.currentPeriodEnd)}
                             <div className="al">
                               <Ft n={r.nextChargeHuf} />
                             </div>

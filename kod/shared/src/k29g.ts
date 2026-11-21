@@ -134,12 +134,16 @@ export const GUIDED_TEXTS = {
     // k8: no time estimates (owner rule); the payment row names no card – the transfer may be chosen too
     { title: 'Pár kérdés rólad és a vállalkozásodról', time: '' },
     { title: 'Szerződés és engedély a NAV-nál', time: '' },
+    // k8 (tulaj 11-20, látvány 8): the optional callback comes BEFORE the payment
+    { title: 'Visszahívás a csapatunktól (nem kötelező)', time: '' },
     { title: 'Az előfizetés elindítása', time: '' },
     { title: '{firstName} bekapcsolja a könyvelést', time: 'a NAV-tól függ' },
   ],
   w3PriceTitle: 'Mennyibe kerül?',
   w3Price: '{osszeg} Ft / hó',
-  w3PriceBody: 'Minden benne van, amit az app tud. Az első hónapot az előfizetés elindításakor fizeted. Bármikor lemondhatod.',
+  w3PriceBody: 'Minden benne van, amit az app tud. Az első díjat csak a visszahívás-ajánlat után kérjük. Bármikor lemondhatod.',
+  /** k8: added when the server offers the transfer (/config fizetes.atutalas). */
+  w3PriceTransfer: 'Kártyával vagy átutalással fizetheted.',
   w3Start: 'Kezdjük',
   utTitle: 'Van már egyéni vállalkozásod?',
   utSub: 'Ha rosszat választasz, később módosíthatod.',

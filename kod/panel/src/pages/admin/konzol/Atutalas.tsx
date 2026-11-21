@@ -88,10 +88,20 @@ export function KeziJelolesFiok({ r, bezar, kesz }: { r: AdminTransferRow | null
   );
 }
 
+/** The inclusive last day of a [start, end) period (the mail and the PDF show this day too). */
+function utolsoNap(endExclusive: string): string {
+  const d = new Date(`${endExclusive}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
 function Tabla({ sorok, egyUgyfel, frissit }: { sorok: AdminTransferRow[]; egyUgyfel: boolean; frissit: () => void }) {
   const futtat = useLepcsos();
   const pir = usePirito();
   const [jelol, setJelol] = useState<AdminTransferRow | null>(null);
+  // k8 integrator (payment-path review 3): suspending stops the accounting and mails the client – never on one click
+  const [felfugg, setFelfugg] = useState<AdminTransferRow | null>(null);
+  const [felfuggDolgozik, setFelfuggDolgozik] = useState(false);
   if (!sorok.length) return <p className="halvany" style={{ padding: '6px 24px 18px' }}>Nincs ilyen díjbekérő.</p>;
   return (
     <>
@@ -121,7 +131,7 @@ function Tabla({ sorok, egyUgyfel, frissit }: { sorok: AdminTransferRow[]; egyUg
                       {r.customerNo ? <div className="al">ügyfélszám {r.customerNo}</div> : null}
                     </td>
                   ) : null}
-                  <td className={`nt${egyUgyfel ? ' elso' : ''}`}>{r.period ? `${datumRovid(r.period.start)} – ${datumRovid(r.period.end)}` : 'első hónap'}</td>
+                  <td className={`nt${egyUgyfel ? ' elso' : ''}`}>{r.period ? `${datumRovid(r.period.start)} – ${datumRovid(utolsoNap(r.period.end))}` : 'első hónap'}</td>
                   <td className="szam">
                     {r.orderNo}
                     {r.proformaNumber ? <div className="al">{r.proformaNumber}</div> : null}
@@ -143,8 +153,10 @@ function Tabla({ sorok, egyUgyfel, frissit }: { sorok: AdminTransferRow[]; egyUg
                           <button type="button" className="gomb-sz" onClick={() => void futtat(() => k8.consoleTransferResend(r.id)).then(() => pir.ok('Újraküldtük a díjbekérőt.'), pir.hiba)}>
                             Újraküldöm
                           </button>
-                          {r.status === 'kesik' ? (
-                            <button type="button" className="gomb-v" onClick={() => void futtat(() => k8.consoleLock(r.clientId, FELFUGGESZTES_OK)).then(() => (pir.ok('Felfüggesztettük a könyvelést.'), frissit()), pir.hiba)}>
+                          {r.status === 'kesik' && r.clientLocked ? (
+                            <span className="cimke hiba">Felfüggesztve</span>
+                          ) : r.status === 'kesik' ? (
+                            <button type="button" className="gomb-v" onClick={() => setFelfugg(r)}>
                               Felfüggesztem
                             </button>
                           ) : null}
@@ -160,6 +172,37 @@ function Tabla({ sorok, egyUgyfel, frissit }: { sorok: AdminTransferRow[]; egyUg
           </tbody>
         </table>
       </div>
+      <Fiok
+        nyitva={Boolean(felfugg)}
+        keskeny
+        bezar={() => setFelfugg(null)}
+        ikon="lakat"
+        cim="Felfüggeszted a könyvelést?"
+        bev={felfugg ? `${felfugg.clientName} könyvelése szünetel, és „Szünetel a könyvelésed” levelet kap. Feloldani az ügyfélkártyán tudod.` : ''}
+        children={null}
+        lab={
+          <>
+            <button
+              type="button"
+              className="gomb-e veszelyes"
+              disabled={felfuggDolgozik}
+              onClick={() => {
+                const r = felfugg;
+                if (!r) return;
+                setFelfuggDolgozik(true);
+                void futtat(() => k8.consoleLock(r.clientId, FELFUGGESZTES_OK))
+                  .then(() => (pir.ok('Felfüggesztettük a könyvelést.'), setFelfugg(null), frissit()), pir.hiba)
+                  .finally(() => setFelfuggDolgozik(false));
+              }}
+            >
+              Felfüggesztem
+            </button>
+            <button type="button" className="gomb-sz" onClick={() => setFelfugg(null)}>
+              Mégse
+            </button>
+          </>
+        }
+      />
       <KeziJelolesFiok
         r={jelol}
         bezar={() => setJelol(null)}
@@ -276,7 +319,7 @@ function KapcsolokBelso() {
             <tr>
               <td className="elso">
                 <div className="felkover">Közlemény</div>
-                <div className="al">Havi: a díjbekérő rendelésszáma (az Autokassza így biztosan párosítja). Állandó: ADZ-ügyfélszám (állandó átutaláshoz).</div>
+                <div className="al">Havi: a díjbekérő rendelésszáma (a Számlázz.hu leírása szerint az Autokassza ezt keresi; élőben még nem próbáltuk). Állandó: ADZ-ügyfélszám (állandó átutaláshoz, a párosítás nem biztos).</div>
               </td>
               <td className="utolso">
                 <select className="doboz" aria-label="Közlemény" value={d.kozlemeny} disabled={fut} onChange={(e) => void ment({ kozlemeny: e.target.value as 'havi' | 'allando', reason: 'Közlemény-formátum' })}>

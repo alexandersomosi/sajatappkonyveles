@@ -359,7 +359,7 @@ export async function sendTemplateMail(
     params?: Params;
     attachments?: MailAttachment[];
     /** k8: the footer reason of the HTML template (default: guessed from the key). */
-    lablec?: MailFooterKind;
+    lablec?: MailFooterKind | { szoveg: string };
     /** k8: the ONE button of the HTML template (the text part keeps its own link). */
     gomb?: { szoveg: string; link: string } | null;
     /** k8: extra blocks of the HTML template after the text paragraphs (e.g. the transfer details as a table). */

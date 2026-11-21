@@ -789,3 +789,15 @@ input[type=checkbox].kapcsolo:checked::after { left: 21px; }
 /* names never break inside a table row (k8 readability pass) */
 .visszahivas-tabla .nev, .tabla td.elso > .felkover:first-child { white-space: nowrap; }
 .sor-muveletek .sor-flex { flex-wrap: wrap; row-gap: 2px; }
+/* k8 integrator (panel-látvány 3, 5, 9): 1280–1400 px között a táblák szorosabbak, hogy a jobb szélső műveleti oszlop is
+   beférjen a kártyába; az e-mail-címek a „@” után / bárhol törhetnek, de nem szó közepén a név; a kijelölt „Késik” csempe
+   bal sávja a lekerekített keretben marad */
+@media (max-width: 1400px) {
+  .tabla th, .tabla td { padding-left: 10px; padding-right: 10px; }
+  .tabla .elso { padding-left: 20px; }
+  .tabla .utolso { padding-right: 20px; }
+  .tabla select { max-width: 176px; }
+}
+.tabla td .al, .tabla td .halvany.kicsi { overflow-wrap: anywhere; }
+.lap:has(> .tabla), .tabla-gorgo { scrollbar-width: thin; }
+.atutalas-csempek button { overflow: hidden; }

@@ -79,7 +79,15 @@ export async function computeServiceLock(deps: Deps, clientId: string): Promise<
     if (acc) await notify(deps, db, { userId: acc.userId, kind: 'client_locked', params: { clientName: clientName(cl), mit, osszeg: fmt(amountHuf) }, link: `/ugyfelek/${cl.id}` });
   } else if (!next && was) {
     await audit(db, { action: 'lock.off', actorRole: 'system', targetType: 'client', targetId: clientId, clientId });
-    await notify(deps, db, { userId: cl.userId, kind: 'service_unlocked', params, link: '/' });
+    // k8 (payment-path review 4): "Köszönjük a fizetést" only when money really came – a manual unlock or the late-transfer
+    // switch turned off (the díjbekérő still unpaid) gets the plain variant
+    const { transferRequests } = await import('../db/schema.js');
+    const manualOrLate = was.reasons.every((r) => r === 'kezi' || r === 'atutalas_kesik');
+    const [stillLate] = was.reasons.includes('atutalas_kesik')
+      ? await db.select({ id: transferRequests.id }).from(transferRequests).where(and(eq(transferRequests.clientId, clientId), eq(transferRequests.status, 'kesik'))).limit(1)
+      : [];
+    const noPayment = manualOrLate && (Boolean(stillLate) || !was.reasons.includes('atutalas_kesik'));
+    await notify(deps, db, { userId: cl.userId, kind: 'service_unlocked', ...(noPayment ? { variant: 'feloldva' } : {}), params, link: '/' });
   }
   return next;
 }

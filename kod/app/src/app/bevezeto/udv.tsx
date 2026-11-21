@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { fillPlaceholders } from '@/_shared/bekotes';
 import { GUIDED_TEXTS as G } from '@/_shared/k29g';
+import { useConfig } from '@/api/hooks';
 import { useGuided, useGuidedAction } from '@/api/hooks-k29g';
 import { szam } from '@/lib/format';
 import { hibaUzenet } from '@/lib/hiba';
@@ -26,6 +27,7 @@ const W1_SOROK: { cim: string; ikon: Ikon3dNev }[] = [
 export default function Udv() {
   const p = useLocalSearchParams<{ lap?: string }>();
   const g = useGuided();
+  const cfg = useConfig();
   const a = useGuidedAction();
   const later = useKesobb('udv');
   const [hiba, setHiba] = useState<string | null>(null);
@@ -131,7 +133,7 @@ export default function Udv() {
             {fillPlaceholders(G.w3Price, { osszeg: szam(v.welcome.priceHuf) })}
           </T>
           <T m={16} lh={1.45} c={szin.tinta} style={{ marginTop: 4 }}>
-            {G.w3PriceBody}
+            {cfg.data?.fizetes?.atutalas ? `${G.w3PriceBody} ${G.w3PriceTransfer}` : G.w3PriceBody}
           </T>
           <HibaSzoveg szoveg={hiba} />
           <GombSz cim={G.later} m={16} onPress={() => void later.kesobb()} style={{ marginTop: 6 }} />

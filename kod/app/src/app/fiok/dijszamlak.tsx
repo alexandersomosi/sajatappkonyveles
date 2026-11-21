@@ -22,7 +22,7 @@ export default function Dijszamlak() {
   const demo = lista.some((x) => x.demo);
   const bekerok = sz.data ? [...sz.data.open, ...sz.data.recent] : [];
   return (
-    <Kepernyo ful="fiok" fejlec={<CimSor visszaCim="Vissza a fiókhoz" vissza={() => vissza('/fiok')} cim="Díjszámlák" al={demo ? 'DEMO: ezek díjbekérők, nem valódi számlák.' : 'Minden levonás után automatikusan.'} />}>
+    <Kepernyo ful="fiok" fejlec={<CimSor visszaCim="Vissza a fiókhoz" vissza={() => vissza('/fiok')} cim="Díjszámlák" al={demo ? 'DEMO: ezek bemutató számlák, nem valódiak.' : 'Minden fizetés után automatikusan.'} />}>
       {bekerok.length ? (
         <>
           <Szakasz ikon="szamlaszam" cim={TRANSFER_TEXTS.proformaListTitle} megj={TRANSFER_TEXTS.invoiceAfterTransfer} />

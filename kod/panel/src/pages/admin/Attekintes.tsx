@@ -123,7 +123,7 @@ export default function Attekintes() {
                 <div className="lap">
                   <div className="lap-fej">
                     <h2>Díjbevétel havonta</h2>
-                    <span className="megj">sikeres kártyás terhelések, bruttó, visszatérítés nélkül</span>
+                    <span className="megj">sikeres fizetések (kártya és átutalás), bruttó, visszatérítés nélkül</span>
                   </div>
                   <Oszlopok
                     adatok={d.revenueByMonth.map((m) => ({
@@ -189,7 +189,7 @@ export default function Attekintes() {
                 </table>
               </div>
               <p className="halvany kicsi" style={{ padding: '12px 4px' }}>
-                Tulajdonosként üzleti adatokat látsz. Az ügyfelek iratait, üzeneteit, azonosítását és NAV-adatait csak a könyvelőjük látja.
+                Tulajdonosként üzleti adatokat látsz. Az ügyfelek iratait és üzeneteit a Konzol ügyfélkártyáján nyithatod meg, naplózva.
               </p>
             </>
           )

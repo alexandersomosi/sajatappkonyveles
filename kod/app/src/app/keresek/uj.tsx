@@ -171,7 +171,7 @@ function UjKeresTartalom() {
         <GombE cim={dupla && duplaOk ? 'Mégis elküldöm' : 'Elküldöm'} onPress={elkuld} tolt={kuld.isPending} />
       </Lap>
       <T m={14} c={szin.halvanyAlapon} lh={1.45} style={{ marginTop: 12, paddingHorizontal: 4 }}>
-        {igazolas ? `Az igazolás a NAV-tól általában 1–5 munkanap. ${fn} feltölti a dossziédba, és értesítést kapsz.` : `${fn} megnézi, és ha kell, a NAV-nál is átvezeti.`}
+        {igazolas ? `Az igazolást a NAV adja ki. ${fn} feltölti a dossziédba, és értesítést kapsz.` : `${fn} megnézi, és ha kell, a NAV-nál is átvezeti.`}
       </T>
     </Kepernyo>
   );

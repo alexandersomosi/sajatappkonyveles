@@ -65,18 +65,19 @@ export default function EvesAttekinto() {
         ) : q.isError ? (
           <HibaSav hiba={q.error} ujra={() => q.refetch()} />
         ) : (
-          <div className="lap">
+          <div className="lap tabla-gorgo">
+            {/* k8 panel-látvány 1: a lényeg, a „Mi hiányzik” közvetlenül az ügyfél mellett – 1280 px-en sem csúszik ki */}
             <table className="tabla">
               <thead>
                 <tr>
                   <th className="elso">{T.oszlopok.ugyfel}</th>
+                  <th style={{ minWidth: 220 }}>{T.oszlopok.hianyzik}</th>
                   <th>{T.oszlopok.negyedevek}</th>
                   <th>{T.oszlopok.folyoszamla}</th>
                   <th>{T.oszlopok.eves}</th>
                   <th className="jobb">{T.oszlopok.kulonbozet}</th>
                   <th>{T.oszlopok.hipa}</th>
-                  <th>{T.oszlopok.onell}</th>
-                  <th className="utolso" style={{ minWidth: 240 }}>{T.oszlopok.hianyzik}</th>
+                  <th className="utolso">{T.oszlopok.onell}</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,22 +99,27 @@ export default function EvesAttekinto() {
                         {r.lifecycle === 'megszunt' ? ' · megszűnt' : ''}
                       </div>
                     </td>
+                    <td className="kicsi" style={{ minWidth: 220 }}>
+                      {r.missing.map((m) => (
+                        <div key={m}>{m}</div>
+                      ))}
+                    </td>
                     <td className="szam">
                       {r.kata ? (
                         kataCella(r.kata)
                       ) : (
                         r.quarters.map((x) => (
-                          <span key={x.key} title={`${x.key.slice(5)}: ${NEGYEDEV_SZO[x.state] ?? x.state}${x.filed ? ', beadva' : ''}`} style={{ marginRight: 6, color: x.overdue ? 'var(--veszely)' : undefined }}>
+                          <span key={x.key} title={`${x.key.slice(5)}: ${NEGYEDEV_SZO[x.state] ?? x.state}${x.filed ? ', beadva' : ''}`} style={{ marginRight: 6, display: 'inline-block', whiteSpace: 'nowrap', color: x.overdue ? 'var(--veszely)' : undefined }}>
                             {x.key.slice(5)} {Q[x.state] ?? x.state}
                             {x.filed ? 'B' : ''}
                           </span>
                         ))
                       )}
                     </td>
-                    <td>
+                    <td style={{ minWidth: 150 }}>
                       {r.reconciliation ? (
                         <>
-                          {datum(r.reconciliation.asOf)} · {RECON_SZO[r.reconciliation.status] ?? r.reconciliation.status}
+                          <span className="nt">{datum(r.reconciliation.asOf)}</span> · {RECON_SZO[r.reconciliation.status] ?? r.reconciliation.status}
                           {r.reconciliation.nextCheckOn && (
                             <div className="kicsi" style={{ color: r.reconciliation.overdue ? 'var(--veszely)' : undefined }}>
                               következő: {datum(r.reconciliation.nextCheckOn)}
@@ -142,12 +148,7 @@ export default function EvesAttekinto() {
                       <div className="nt">előleg: {HIPA_ELOLEG_SZO[r.hipa.advance] ?? r.hipa.advance}</div>
                       <div className="nt">éves: {HIPA_EVES_SZO[r.hipa.annual] ?? r.hipa.annual}</div>
                     </td>
-                    <td className="szam">{r.openCorrections || ''}</td>
-                    <td className="kicsi utolso" style={{ minWidth: 240 }}>
-                      {r.missing.map((m) => (
-                        <div key={m}>{m}</div>
-                      ))}
-                    </td>
+                    <td className="szam utolso">{r.openCorrections || ''}</td>
                   </tr>
                 ))}
               </tbody>

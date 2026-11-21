@@ -113,7 +113,7 @@ export default function Fizetesek() {
           atutalas ? (
             <>Átutalással fizető ügyfelek díjbekérői: fizetett, vár, késik. A későknek a határidő után 1, 4 és 8 nappal emlékeztetőt küldünk.</>
           ) : (
-            <>Minden kártyás fizetés: első hónap, havidíj, külön díj, „Fizesd ki”. A sikertelen havidíjat +1, +3 és +7 nap múlva újra megpróbáljuk; naponta legfeljebb egyszer. <Link to="?nezet=simplepay">Régi SimplePay-tranzakciók</Link></>
+            <>Minden fizetés, kártyával és átutalással: első hónap, havidíj, külön díj, „Fizesd ki”. A sikertelen kártyás havidíjat +1, +3 és +7 nap múlva újra megpróbáljuk; naponta legfeljebb egyszer. <Link to="?nezet=simplepay">Régi SimplePay-tranzakciók</Link></>
           )
         }
       />

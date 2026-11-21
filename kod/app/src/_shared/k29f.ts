@@ -122,7 +122,7 @@ export const CERT_SZECHENYI_USER = 'KAVOSZ Zrt.';
 /** Client status texts (content k29f.cert.status.<status>). */
 export const CERT_STATUS_TEXTS: Record<CertStatus, string> = {
   dijra_var: 'Fizetésre vár: {osszeg} Ft',
-  beerkezett: 'Elküldted – {firstName} hamarosan beadja',
+  beerkezett: 'Elküldted – {firstName} beadja',
   navnal: '{firstName} beadta a NAV-nak ({datum}). A NAV legfeljebb 6 nap alatt adja ki.',
   kesz: 'Kész – letöltheted',
   elutasitva: 'Nem adható ki: {ok}',

@@ -82,7 +82,7 @@ export default function FizesdKi() {
     >
       {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
       {/* k7c2: the band above already says the amount and the month – here only WHY (the bank's answer), once */}
-      <Szakasz ikon="szamlaszam" cim="Miért kell?" />
+      <Szakasz ikon="kartya" cim="Miért kell?" />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <View style={{ paddingLeft: 54 }}>
           <T m={16} lh={1.5}>

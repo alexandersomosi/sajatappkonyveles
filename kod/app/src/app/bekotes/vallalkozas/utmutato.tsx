@@ -65,7 +65,7 @@ function BejelentesUtmutato() {
       vissza={() => (!egyben && lp.lepes > 0 ? lp.ugrik(lp.lepes - 1) : vissza('/bekotes'))}
       visszaCim={!egyben && lp.lepes > 0 ? 'Vissza' : 'Vissza a Főoldalra'}
       cim={g?.title ?? 'Így jelentsd be a vállalkozásodat'}
-      al={g?.activityPending ? 'Előbb megírjuk a tevékenységed sorát (általában 1 munkanap). Utána kb. 10–15 perc.' : 'Kb. 10–15 perc, ingyenes. Te küldöd be, mi átnézzük.'}
+      al={g?.activityPending ? 'Előbb megírjuk a tevékenységed sorát, és szólunk, ha kész.' : 'Ingyenes. Te küldöd be, mi átnézzük.'}
     />
   );
 

@@ -114,8 +114,8 @@ function VallalkozasKozpont() {
   const kerdoivre = () => router.push(adatokHianyzik ? { pathname: '/bekotes/adatok', params: { utana: 'adatlap', utanaLap: '1' } } : '/bekotes/vallalkozas/adatlap');
   const kerdoivGomb = adatokHianyzik ? 'Megadom az adataimat' : elkezdte ? 'Folytatom a kérdőívet' : 'Kitöltöm';
   const kerdoivSzoveg = adatokHianyzik
-    ? 'Előbb pár adat rólad (név, telefon, adóazonosító jel, lakcím), utána jön a kérdőív. Kb. 5–8 perc.'
-    : 'Pár kérdés a vállalkozásodról, kb. 5–8 perc. Ebből készül a személyre szabott útmutatód.';
+    ? 'Előbb pár adat rólad (név, telefon, adóazonosító jel, lakcím), utána jön a kérdőív.'
+    : 'Pár kérdés a vállalkozásodról. Ebből készül a személyre szabott útmutatód.';
   const kamaraSor = j?.steps.find((s) => s.key === 'kamara');
   const megsemOk = async (ok: RegistrationWithdrawReason) => {
     try {

@@ -17,7 +17,7 @@ import { PorgoOsszeg } from '@/ui/mozgas';
 import { Racs } from '@/ui/asztali/Racs';
 import { HIVAS_MONDAT } from '@/ui/Visszahivas';
 import { maBeallit } from '@/ui/ido';
-import { Arckep, Ikon3d, KeszJel, type Ikon3dNev } from '@/ui/kepek';
+import { Arckep, Ikon3d, KeszJel, type Ikon3dNev, type IkonNev } from '@/ui/kepek';
 import { EvesKartya, FelreteszKartya, HaviKartya, KedvezmenyTipp, KeresetKartya, KetSzam, OnellKartya, SzunetelKartya } from '@/kepernyok/k28';
 import { HOME_K_TEXTS } from '@/_shared/bekotes';
 import { Betolt, demoBeallit, Hiba, Kepernyo, useJelzes } from '@/ui/keret';
@@ -311,12 +311,12 @@ function FizetesLap({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
   );
 }
 
-const GYORS: { cim: string; ikon: Ikon3dNev; ut: string }[] = [
+const GYORS: { cim: string; ikon: IkonNev; ut: string }[] = [
   { cim: 'Feltöltés', ikon: 'feltoltes', ut: '/feltoltes' },
   { cim: 'Kérdezek', ikon: 'kerdezek', ut: '/uzenetek' },
   // SPEC §29.5 / §29.6: „Igazolást kérek” és a bevételi kimutatás egy koppintásra
   { cim: 'Igazolás', ikon: 'igazolas', ut: '/igazolas' },
-  { cim: 'Kimutatás', ikon: 'kivonat', ut: '/kimutatas' },
+  { cim: 'Kimutatás', ikon: 'oszlop', ut: '/kimutatas' },
   { cim: 'Határidők', ikon: 'hataridok', ut: '/hataridok' },
 ];
 function Gyorsgombok() {
@@ -522,7 +522,7 @@ export default function Fooldal() {
       {h.reserve ? <Racs.Szeles><FelreteszKartya c={h.reserve} fn={fn} /></Racs.Szeles> : null}
 
       {/* javító kör 11-21: a KATA client has its own Kata-kereted card above – this one is the ÁFA limit only */}
-      <Szakasz ikon="hataridok" cim={h.limits.kata ? 'ÁFA-mentes kereted' : 'Idei kereteid'} />
+      <Szakasz ikon="irat-toll" cim={h.limits.kata ? 'ÁFA-mentes kereted' : 'Idei kereteid'} />
       <Lap>
         {h.pause ? (
           // k6c2: szüneteltetés alatt nem számlázhat – nincs „Még … Ft-ot számlázhatsz ÁFA nélkül”
@@ -567,7 +567,7 @@ export default function Fooldal() {
       </Lap>
       {h.allowancesHint?.show ? <KedvezmenyTipp ev={Number(h.today.slice(0, 4))} /> : null}
 
-      <Szakasz ikon="kivonat" cim="Idei bevételed" />
+      <Szakasz ikon="oszlopok" cim="Idei bevételed" />
       <Lap>
         <BevetelOszlopok honapok={h.revenueByMonth} ma={h.today} />
       </Lap>
@@ -587,7 +587,7 @@ export default function Fooldal() {
         <KartyaFej
           ikon="kerdezek"
           cim="Ha elakadsz"
-          jobbra={<GombM cim="Visszahívás" ikon="ora" onPress={() => router.push({ pathname: '/visszahivas', params: { forras: 'konyvelo_kartya', tema: 'egyeb' } })} />}
+          jobbra={<GombM cim="Visszahívás" ikon="telefon" onPress={() => router.push({ pathname: '/visszahivas', params: { forras: 'konyvelo_kartya', tema: 'egyeb' } })} />}
           al={HIVAS_MONDAT}
         />
       </Lap>

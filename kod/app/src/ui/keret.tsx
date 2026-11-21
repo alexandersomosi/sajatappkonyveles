@@ -15,7 +15,7 @@ import { MOZGAS_IDO, mozgasKi } from '../lib/mozgas';
 import { useAsztali, useAsztaliMeretek } from '../lib/elrendezes';
 import { aktivFulUtbol, MINTA_NELKULI_MAX, TARTALOM_MAX } from '../lib/elrendezesLogika';
 import { arnyek, forma, szin } from '../theme/tokens';
-import { Fejlec, GombM, KartyaFej, Lap, Sor, Szakasz } from './alap';
+import { Fejlec, GombM, KartyaFej, Lap, Sor, Szakasz, TeljesGombCtx } from './alap';
 import { TeljesCtx } from './teljes';
 import { ZarolasSav } from './Zarolas';
 import { KeszJel } from './kepek';
@@ -140,14 +140,23 @@ function Dokk({ children, ful }: { children: ReactNode; ful: boolean }) {
   );
 }
 
-/** Gépen a dokk a tartalom végén áll, egy kártyában (nem fix alsó sáv). */
-function DokkAsztali({ children }: { children: ReactNode }) {
+/**
+ * Gépen a dokk a tartalomoszlop alján LEBEG (k8 látvány 1: a lap végén az első képernyőn nem látszott): egy fehér,
+ * árnyékos kártya az oszlop szélességében, a fő gomb jobbra – görgetéskor is mindig látszik, a tartalom alatta kifut.
+ */
+function DokkAsztali({ children, max, oldal }: { children: ReactNode; max: number; oldal: number }) {
   return (
-    <Lap style={{ paddingVertical: 18, paddingHorizontal: 22, marginTop: 4 }}>
-      <View style={{ maxWidth: 460 }}>{children}</View>
-    </Lap>
+    <View pointerEvents="box-none" style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
+      <View pointerEvents="box-none" style={{ width: '100%', maxWidth: max, alignSelf: 'center', paddingHorizontal: oldal }}>
+        <View style={{ backgroundColor: szin.lap, borderTopLeftRadius: forma.lap, borderTopRightRadius: forma.lap, paddingTop: 14, paddingBottom: 16, paddingHorizontal: 22, flexDirection: 'row', justifyContent: 'flex-end', ...arnyek.sav }}>
+          <View style={{ width: '100%', maxWidth: 460 }}>{children}</View>
+        </View>
+      </View>
+    </View>
   );
 }
+/** A lebegő gépes dokk helye a tartalom alján (hogy az utolsó kártya ne bújjon alá). */
+const DOKK_ASZTALI_TER = DOKK_MAGASSAG + 40;
 
 // ---------- szakaszfej + kártya összevonása ----------
 /** A tartalom elemei sorban (a Fragmentek és tömbök kibontva). */
@@ -279,12 +288,11 @@ export function Kepernyo({
   if (asztali) {
     const max = (szeles ? TARTALOM_MAX : MINTA_NELKULI_MAX) + 2 * meret.margo.oldal;
     const tartalom = (
-      <View style={{ width: '100%', maxWidth: max, alignSelf: 'center', paddingHorizontal: meret.margo.oldal, paddingTop: meret.margo.fent, paddingBottom: meret.margo.lent }}>
+      <View style={{ width: '100%', maxWidth: max, alignSelf: 'center', paddingHorizontal: meret.margo.oldal, paddingTop: meret.margo.fent, paddingBottom: meret.margo.lent + (dokk ? DOKK_ASZTALI_TER : 0) }}>
         {fejlec}
         {ful ? <ZarolasSav /> : null}
         <TeljesCtx.Provider value>
           <Animated.View style={[tartalomStilus, { opacity: attunes }]}>{kartyasit(children)}</Animated.View>
-          {dokk ? <DokkAsztali>{dokk}</DokkAsztali> : null}
         </TeljesCtx.Provider>
       </View>
     );
@@ -297,6 +305,11 @@ export function Kepernyo({
         ) : (
           tartalom
         )}
+        {dokk ? (
+          <DokkAsztali max={max} oldal={meret.margo.oldal}>
+            {dokk}
+          </DokkAsztali>
+        ) : null}
         {vanFejlec ? null : <MintaJel />}
       </View>
     );
@@ -505,7 +518,9 @@ export function AlsoLap({
                 if (g !== gorgetve) setGorgetve(g);
               }}
             >
-              <TeljesCtx.Provider value={false}>{children}</TeljesCtx.Provider>
+              <TeljesCtx.Provider value={false}>
+                <TeljesGombCtx.Provider value>{children}</TeljesGombCtx.Provider>
+              </TeljesCtx.Provider>
             </ScrollView>
             {lab ? <View style={{ borderTopWidth: 1, borderTopColor: szin.hajszal, marginHorizontal: -20, paddingHorizontal: 20, paddingTop: 2, backgroundColor: szin.lap }}>{lab}</View> : null}
           </Animated.View>

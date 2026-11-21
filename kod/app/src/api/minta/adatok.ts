@@ -330,7 +330,7 @@ export function kataKeresek(ma: string): RequestSummary[] {
       title: 'Jövedelemigazolás, 2025',
       body: 'A bank kéri a lakáshitelhez.',
       status: 'folyamatban',
-      statusLabel: 'Bence látta, pár napon belül kész',
+      statusLabel: 'Bence látta, és szól, ha kész',
       createdAt: '2026-11-17T08:02:00Z',
       certificate: { certificateType: 'jovedelemigazolas', year: 2025, purpose: 'bank, lakáshitel', language: 'hu' },
     },
@@ -418,7 +418,7 @@ export function onboardingAllapot(fajta: 'peter' | 'uj'): OnboardingState {
       milestones: [
         { key: 'alairva', label: 'Bejelentetted Bencét a NAV-nál', done: true, current: false, sub: 'hétfőn, az ONYA-ban' },
         { key: 'azonositva', label: 'Elküldted az igazolványaidat', done: true, current: false, sub: 'Titkosítva tároljuk, csak Bence látja.' },
-        { key: 'nav_bejelentve', label: 'Bence ellenőrzi a bejelentést a NAV-nál', done: false, current: true, sub: 'Általában 1–2 munkanap.' },
+        { key: 'nav_bejelentve', label: 'Bence ellenőrzi a bejelentést a NAV-nál', done: false, current: true, sub: 'Szólunk, ha rendben van.' },
         { key: 'szamlak_bekotve', label: 'Kiállított számlák bekötve', done: false, current: false, sub: 'Utána a kiállított számláid maguktól megjelennek itt.' },
         { key: 'kesz', label: 'Kész, minden be van kötve', done: false, current: false },
       ],

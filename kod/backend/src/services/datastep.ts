@@ -26,7 +26,7 @@ export function newFaqDefaults(deps: Deps): { kerdes: string; valasz: string }[]
     {
       kerdes: 'Hogyan kérhetek visszahívást?',
       valasz:
-        'Koppints a „Kérj visszahívást” gombra, add meg a számodat, és írd meg, miben segítsünk. Kollégánk 24–48 órán belül felhív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként, hanem valaki a csapatunkból. Telefonon soha nem kérjük a jelszavadat vagy a kódjaidat.',
+        'Koppints a „Kérj visszahívást” gombra, add meg a számodat, és írd meg, miben segítsünk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként, hanem valaki a csapatunkból. Telefonon soha nem kérjük a jelszavadat vagy a kódjaidat.',
     },
     {
       kerdes: 'Még nincs vállalkozásom. Mit tegyek?',

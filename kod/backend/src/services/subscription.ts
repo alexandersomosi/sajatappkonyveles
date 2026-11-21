@@ -616,6 +616,9 @@ export async function cancelSubscription(deps: Deps, clientId: string, userId: s
     return;
   }
   await deps.db.update(subscriptions).set({ cancelAtPeriodEnd: true, updatedAt: deps.now() }).where(eq(subscriptions.id, sub.id));
+  // k8 review F3: a díjbekérő of a month after the paid period is withdrawn at once (no reminder for it)
+  const { withdrawStaleTransfers } = await import('./atutalas.js');
+  await withdrawStaleTransfers(deps, deps.db, clientId);
   await audit(deps.db, { action: 'subscription.cancel_requested', actorUserId: by.userId, actorRole: by.role, targetType: 'subscription', targetId: sub.id, clientId, details: { by: by.role } });
   // The client must not read "Lemondtad" when the owner cancelled it (round 1, 2026-11-19): variant 'admin'.
   await notify(deps, deps.db, {
@@ -787,8 +790,10 @@ export async function pickToken(deps: Deps, db: DbOrTx, sub: SubRow): Promise<{ 
 }
 
 /** Something is due: an unpaid period (past_due / suspended) or an active subscription whose paid period has ended. */
-export function chargeDue(sub: Pick<SubRow, 'status' | 'currentPeriodEnd' | 'cancelAtPeriodEnd'>, today: string): boolean {
+export function chargeDue(sub: Pick<SubRow, 'status' | 'currentPeriodEnd' | 'cancelAtPeriodEnd'> & { billingMethod?: SubRow['billingMethod'] }, today: string): boolean {
   if (sub.cancelAtPeriodEnd) return false;
+  // k8 review F2: a transfer subscription is never charged by card (its month is paid by the díjbekérő)
+  if (sub.billingMethod === 'atutalas') return false;
   if (sub.status === 'past_due' || sub.status === 'suspended') return true;
   return sub.status === 'active' && (!sub.currentPeriodEnd || sub.currentPeriodEnd <= today);
 }
@@ -942,6 +947,10 @@ export async function runBillingJob(deps: Deps): Promise<Record<string, number>>
     }
     await db.update(clients).set({ lifecycle: 'megszunt', updatedAt: now }).where(eq(clients.id, s.clientId));
     await endRelationship(db, s.clientId, now);
+    {
+      const { withdrawStaleTransfers } = await import('./atutalas.js');
+      await withdrawStaleTransfers(deps, db, s.clientId);
+    }
     await audit(db, { action: 'subscription.canceled', actorRole: 'system', targetType: 'subscription', targetId: s.id, clientId: s.clientId });
     // k7b: the client and the accountant hear about it (a terminated client gets the termination notices instead)
     if (!tcl?.terminated) await notifyServiceEnded(deps, s.clientId, s.currentPeriodEnd ?? today).catch((err: Error) => log().warn({ err: safeErr(err) }, 'service-ended notice failed'));

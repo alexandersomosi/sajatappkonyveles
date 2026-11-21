@@ -123,7 +123,7 @@ Verzió: 2026-11-21. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 ## NAV-meghatalmazás
 
-**meghatalmazas.miert** – Ahhoz, hogy {{konyvelo.keresztnev}} beadhassa a bevallásaidat, a NAV-nál meg kell hatalmaznod. Az ONYA-ban kb. 5 perc, papír és aláírás nem kell. Ha kéred, {{konyvelo.keresztnev}} küldi be, és neked csak jóvá kell hagynod.
+**meghatalmazas.miert** – Ahhoz, hogy {{konyvelo.keresztnev}} beadhassa a bevallásaidat, a NAV-nál meg kell hatalmaznod. Az ONYA-ban intézed, papír és aláírás nem kell. Ha kéred, {{konyvelo.keresztnev}} küldi be, és neked csak jóvá kell hagynod.
 
 **meghatalmazas.jelszo** – Az Ügyfélkapu+- vagy DÁP-belépésedet senkinek ne add meg, nekünk sem. {{konyvelo.keresztnev}} a saját belépésével jár el.
 
@@ -290,7 +290,7 @@ Te, a saját bankodból. Mi megmondjuk, mennyit, mikorra, melyik számlaszámra 
 
 **4. Mi az a meghatalmazás, és visszavonhatom?**
 
-A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban kb. 5 perc alatt beállítod; az appban képekkel és videóval megmutatjuk, hogyan. Vagy kérd, hogy a könyvelőd küldje be, és te csak jóváhagyod. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod.
+A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban állítod be; az appban képekkel és videóval megmutatjuk, hogyan. Vagy kérd, hogy a könyvelőd küldje be, és te csak jóváhagyod. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod.
 
 (A válasz 2026-11-19-én változott.)
 
@@ -314,7 +314,7 @@ Igen. A fájljaidat titkosítva tároljuk európai szerveren, a NAV-kulcsaidat k
 
 **9. Hogyan kérhetek visszahívást?**
 
-Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.
+Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.
 
 (A válasz 2026-11-19-én változott.)
 
@@ -326,7 +326,7 @@ Az első kérdésnél válaszd: „Még nincs, most indítanám”. Utána vála
 
 **11. Bejelentitek helyettem a vállalkozásomat?**
 
-Igen, ha kéred. Koppints az „Intézzétek helyettem” gombra: felhívunk, átnézzük veled az adataidat, a könyvelőd pedig meghatalmazottként, a saját belépésével bejelenti. Neked csak a NAV oldalán kell jóváhagynod a meghatalmazást, és itt engedélyezned a bejelentést. A jelszavadat vagy a kódjaidat soha nem kérjük el. Ha inkább magad csinálod, lépésről lépésre megmutatjuk, kb. 10–15 perc.
+Igen, ha kéred. Koppints az „Intézzétek helyettem” gombra: felhívunk, átnézzük veled az adataidat, a könyvelőd pedig meghatalmazottként, a saját belépésével bejelenti. Neked csak a NAV oldalán kell jóváhagynod a meghatalmazást, és itt engedélyezned a bejelentést. A jelszavadat vagy a kódjaidat soha nem kérjük el. Ha inkább magad csinálod, lépésről lépésre megmutatjuk.
 
 Korábbi kérdés (2026-11-19-ig): „Miért nem ti jelentitek be a vállalkozásomat?”
 

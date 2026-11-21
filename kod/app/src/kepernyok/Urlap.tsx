@@ -5,6 +5,7 @@ import { Pressable, TextInput, View } from 'react-native';
 import { betu, forma, szin } from '@/theme/tokens';
 import { Fejlec } from '@/ui/alap';
 import { Ikon3d, type Ikon3dNev } from '@/ui/kepek';
+import { VezerloIkon } from '@/_shared/v2/rn';
 import { T } from '@/ui/T';
 import { useVezetettParam, VezetettFelsoSor, VezetettHaladas } from '@/ui/Vezetett';
 
@@ -63,9 +64,55 @@ export function UrlapKerdes({ i, n, cim, miert, ikon, valtozo }: { i?: number; n
   );
 }
 
-/** Válasz-kapszulák (egy vagy több választás). A kiválasztott tele kék, a többi világoskék; legalább 44 pt magas. */
+/**
+ * k8 látvány 5 (minta 32): az egymás alatti válaszok fehér sorok rádiógombbal (több választásnál jelölőnégyzettel), a
+ * kiválasztott kék kerettel – nem nagy, halványkék tömbök. 52 pt magas sorok.
+ */
+function ValaszSor({ cim, be, tobb, onPress }: { cim: string; be: boolean; tobb?: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole={tobb ? 'checkbox' : 'radio'}
+      accessibilityState={{ checked: be, selected: be }}
+      aria-checked={be}
+      onPress={onPress}
+      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+        { minHeight: 52, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 14, backgroundColor: '#fff', borderWidth: be ? 2 : 1.5, borderColor: be ? szin.tintakek : hovered ? szin.mezoKeret : szin.keret, flexDirection: 'row', alignItems: 'center', gap: 12 },
+        pressed && !be ? { backgroundColor: szin.hoverAlap } : null,
+      ]}
+    >
+      <View
+        style={{
+          width: 22,
+          height: 22,
+          borderRadius: tobb ? 6 : 11,
+          borderWidth: 2,
+          borderColor: be ? szin.tintakek : szin.mezoKeret,
+          backgroundColor: be && tobb ? szin.tintakek : '#fff',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {be ? tobb ? <VezerloIkon nev="pipa" pt={16} szin="#fff" /> : <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: szin.tintakek }} /> : null}
+      </View>
+      <T m={16} s={be ? 650 : 550} lh={1.3} style={{ flex: 1 }}>
+        {cim}
+      </T>
+    </Pressable>
+  );
+}
+
+/** Válasz-kapszulák (egy vagy több választás). Sorban: kis pirulák (a kiválasztott tele kék); egymás alatt: fehér sorok. */
 export function Kapszulak<K extends string>({ elemek, ertek, valt, tobb, oszlop }: { elemek: { kulcs: K; cim: string }[]; ertek: K | K[] | null; valt: (k: K) => void; tobb?: boolean; oszlop?: boolean }) {
   const on = (k: K) => (Array.isArray(ertek) ? ertek.includes(k) : ertek === k);
+  if (oszlop) {
+    return (
+      <View style={{ gap: 8 }} accessibilityRole={tobb ? undefined : 'radiogroup'}>
+        {elemek.map((e) => (
+          <ValaszSor key={e.kulcs} cim={e.cim} be={on(e.kulcs)} tobb={tobb} onPress={() => valt(e.kulcs)} />
+        ))}
+      </View>
+    );
+  }
   return (
     <View style={{ flexDirection: oszlop ? 'column' : 'row', flexWrap: oszlop ? 'nowrap' : 'wrap', gap: 8 }} accessibilityRole={tobb ? undefined : 'radiogroup'}>
       {elemek.map((e) => {

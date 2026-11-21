@@ -64,7 +64,7 @@ export function kezdo1118(fk: string): Allapot1118 {
       a.cb = visszahivas(a, { topic: 'vallalkozas_inditas', window: 'barmikor', note: 'Nem találom, melyik tevékenységet válasszam.', source: 'vallalkozas_utmutato' });
       a.cb.status = 'folyamatban';
       a.cb.staffFirstName = 'Anna';
-      a.cb.statusText = 'Anna intézi a kérésedet. Hamarosan hív.';
+      a.cb.statusText = 'Anna intézi a kérésedet, és felhív.';
     }
   }
   return a;

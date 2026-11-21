@@ -226,7 +226,7 @@ describe('K4 (API part) – one journey, one number, Előfizetés after the cont
       const st = await h.json('GET', '/client/onboarding', { token: c.token });
       const row = st.body.journey.steps.find((x: { key: string }) => x.key === 'elofizetes');
       expect(row.state).toBe('kesobb');
-      expect(row.lockedReason).toBe('Előbb fogadd el a szerződést. Utána megadhatod a kártyádat.');
+      expect(row.lockedReason).toBe('Előbb fogadd el a szerződést. Utána indíthatod az előfizetést.'); // k8 integrátor: kártya VAGY átutalás – semleges szöveg
       const sub = await h.json('POST', '/client/subscription/start', { token: c.token, body: { platform: 'web', acceptedDeclarations: true } });
       expect(sub.status).toBe(409);
       expect(sub.body.error.code).toBe('step_locked');

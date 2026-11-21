@@ -336,7 +336,8 @@ export function authRoutes(deps: Deps) {
           .where(eq(users.id, u.id));
         await auditC(c, deps.db, 'auth.login_failed', { actorUserId: u.id, actorRole: u.role, targetType: 'user', targetId: u.id, details: { locked: lockNow } });
         // k8 JL 15 (LEVEL_LEFEDETTSEG #4): the owner of the account hears about the lock (the way out: a new password)
-        if (lockNow) await sendTemplateMail(deps, { to: u.email, key: 'account_locked', lablec: 'kod', params: { perc: 15 } }).catch(() => undefined);
+        // review A12: its own footer line; sent in the background (the sign-in answer does not wait for the mail)
+        if (lockNow) void sendTemplateMail(deps, { to: u.email, key: 'account_locked', lablec: { szoveg: 'Ezt a levelet azért kaptad, mert az Adózz.hu-s fiókodba többször rossz jelszóval próbáltak belépni.' }, params: { perc: 15 } }).catch(() => undefined);
       } else if (u) {
         await auditC(c, deps.db, 'auth.login_failed', { actorUserId: u.id, actorRole: u.role, targetType: 'user', targetId: u.id, details: { whileLocked: true, passwordOk: ok, knownAddress: !locked } });
       } else {

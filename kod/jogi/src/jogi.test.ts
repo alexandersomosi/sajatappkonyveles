@@ -266,7 +266,9 @@ describe('appszövegek', () => {
     expect(valasz('Még nincs vállalkozásom. Mit tegyek?')).toMatch(/intézzük helyetted/);
     expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/meghatalmazottként, a saját belépésével/);
     expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/soha nem kérjük el/);
-    expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/10–15 perc/);
+    // k8 integrátor (tulaj 11-20: nincs időígéret): a „kb. 10–15 perc” kikerült
+    expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).toMatch(/lépésről lépésre megmutatjuk/);
+    expect(valasz('Bejelentitek helyettem a vállalkozásomat?')).not.toMatch(/perc/);
     // SPEC §29.4.2 (tulaj 11-20): nincs díjmentes időszak
     expect(valasz('Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?')).toMatch(/a szerződés és a kártya megadása napjától fizeted/);
     expect(valasz('Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?')).not.toMatch(/ingyenes|nem fizetsz semmit/);

@@ -21,7 +21,7 @@ const SZURO: [string, string][] = [
   ['mind', 'Mind'],
 ];
 const FAJTA: Record<AdminFeeInvoiceRow['kind'], string> = { szamla: 'Számla', sztorno: 'Sztornó', helyesbito: 'Helyesbítő' };
-const FIOK: Record<string, string> = { teszt: 'Számlázz.hu teszt', eles: 'Számlázz.hu éles', demo: 'DEMO díjbekérő' };
+const FIOK: Record<string, string> = { teszt: 'Számlázz.hu teszt', eles: 'Számlázz.hu éles', demo: 'DEMO (bemutató számla)' };
 
 function Allapot({ r }: { r: AdminFeeInvoiceRow }) {
   const cimke = INVOICE_STATUS_LABELS_K29[r.status] ?? r.status;

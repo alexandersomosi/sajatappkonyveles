@@ -34,7 +34,9 @@ describe('G – a brand-new client', () => {
     expect(v0.welcome.seen).toBe(false);
     expect(v0.welcome.accountant.firstName).toBe('Bence');
     expect(v0.welcome.priceHuf).toBe(19999);
-    expect(v0.welcome.rows[3].title).toContain('Bence');
+    // k8 integrator (tulaj 11-20, látvány 8): the optional callback row comes before the payment – the accountant's row is the 5th
+    expect(v0.welcome.rows[2].title).toBe('Visszahívás a csapatunktól (nem kötelező)');
+    expect(v0.welcome.rows[4].title).toContain('Bence');
     expect(v0.currentKey).toBe('ut');
     expect(keys(v0)).toEqual(['ut']);
 

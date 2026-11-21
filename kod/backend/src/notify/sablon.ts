@@ -30,7 +30,11 @@ export function ty(t: string): string {
 
 /** "Adózz.hu" → the explicit brand link (input is already escaped HTML text without tags). */
 export function brandLink(escapedText: string, color: string): string {
-  return escapedText.replace(/Adózz\.hu/g, `<a href="${MAIL_BRAND_URL}" style="color:${color};text-decoration:none;">Adózz.hu</a>`);
+  // review A3: never inside a link that is already there (an URL holding "Adózz.hu" stays one link)
+  return escapedText
+    .split(/(<a\b[^>]*>[\s\S]*?<\/a>)/)
+    .map((part, i) => (i % 2 === 1 ? part : part.replace(/Adózz\.hu/g, `<a href="${MAIL_BRAND_URL}" style="color:${color};text-decoration:none;">Adózz.hu</a>`)))
+    .join('');
 }
 
 /** Bare URLs in an escaped text → links (the URL text stays as it is). */

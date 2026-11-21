@@ -447,7 +447,7 @@ function ModValasztoTartalom({ bezar }: { bezar: () => void }) {
               {START_MODE_TEXTS.onalloTitle}
             </T>
             <T m={rovid ? 14.5 : 15.5} lh={1.45} c={szin.halvany} style={{ marginTop: rovid ? 2 : 4 }}>
-              {rovid ? 'Megmutatjuk, mit hova jelölj. Kb. 10–15 perc.' : START_MODE_TEXTS.onalloBody}
+              {rovid ? 'Megmutatjuk, mit hova jelölj.' : START_MODE_TEXTS.onalloBody}
             </T>
           </View>
         </View>

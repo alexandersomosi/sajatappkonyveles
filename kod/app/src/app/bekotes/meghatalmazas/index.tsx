@@ -314,7 +314,7 @@ export default function Meghatalmazas() {
               Magam adom meg
             </T>
             <T m={15.5} lh={1.5} c={szin.halvany} style={{ marginTop: 4 }}>
-              Kb. 5 perc az ONYA-ban, képekkel és videóval segítünk.
+              Az ONYA-ban adod meg, képekkel és videóval segítünk.
             </T>
           </View>
         </View>

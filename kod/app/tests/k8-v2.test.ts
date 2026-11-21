@@ -187,6 +187,11 @@ test('szövegek: nincs időígéret az app forrásában („kb. N perc”, „P�
     assert.doesNotMatch(kod, /Kollégánk 24–48/, f.p);
     // a jogszabályi határidő („5 munkanapon belül szólok” – az ügyfél nyilatkozata) marad, a mi ígéretünk nem
     assert.doesNotMatch(kod, /általában \d+ munkanapon belül/i, f.p);
+    // k8 integrator (review F5 / látvány 7): the other shapes the reviews found
+    assert.doesNotMatch(kod, /[Kk]b\. (?:\d+(?:[–-]\d+)?|\$\{[^}]+\}) perc/, f.p);
+    assert.doesNotMatch(kod, /általában \d+(?:[–-]\d+)? munkanap/i, f.p);
+    assert.doesNotMatch(kod, /[Hh]amarosan (?:hív|bead|beküld|megnéz|jelentkez)/, f.p);
+    assert.doesNotMatch(kod, /pár napon belül kész/i, f.p);
     for (const m of kod.matchAll(/24–48/g)) {
       const kornyezet = kod.slice(Math.max(0, m.index - 12), m.index + 70);
       assert.ok(kornyezet.includes(ENGEDETT), `${f.p}: a 24–48 nem az engedett mondatban: …${kornyezet}…`);
@@ -229,7 +234,7 @@ const TOBB_AG: Record<string, number> = {
   'kepernyok/simplepay/Kezeles.tsx': 3,
   'kepernyok/fizetes.tsx': 3, // három külön alsó lap
   'app/onellenorzes/[id].tsx': 3,
-  'app/fotozas.tsx': 3, // gépen „Fájl kiválasztása”; telefonon kamera-engedély VAGY „Kész, feltöltöm”
+  'app/fotozas.tsx': 4, // gépen „Fájl kiválasztása” VAGY (fájl után, k8 integrátor) „Kész, feltöltöm”; telefonon kamera-engedély VAGY „Kész, feltöltöm”
   'app/fizetes/[id].tsx': 3,
   'app/fizesd-ki.tsx': 3,
   'app/fiok/ketlepcsos.tsx': 3,

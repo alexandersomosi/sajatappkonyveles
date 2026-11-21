@@ -30,7 +30,7 @@ function Kamara() {
   const due = r?.chamber?.dueOn ?? (alapNap ? munkanapotHozzaad(alapNap, 5) : null);
   const kesz = !!r?.chamber?.doneAt;
   const lejart = !!due && due < ma && !kesz;
-  const fej = <SavCim vissza={() => vissza('/bekotes')} visszaCim="Vissza a Főoldalra" cim={KAMARA_TEXTS.title} al={due ? fillPlaceholders(KAMARA_TEXTS.sub, { hatarido: datumIg(due).replace(/^./, (c) => c.toLocaleUpperCase('hu-HU')) }) : 'Kb. 10 perc a kamara oldalán.'} />;
+  const fej = <SavCim vissza={() => vissza('/bekotes')} visszaCim="Vissza a Főoldalra" cim={KAMARA_TEXTS.title} al={due ? fillPlaceholders(KAMARA_TEXTS.sub, { hatarido: datumIg(due).replace(/^./, (c) => c.toLocaleUpperCase('hu-HU')) }) : 'A kamara oldalán intézed.'} />;
   if (reg.isLoading) return <Kepernyo ful="fooldal" fejlec={fej}><Betolt /></Kepernyo>;
   const allit = async (done: boolean) => {
     try {

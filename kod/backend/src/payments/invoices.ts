@@ -62,7 +62,8 @@ export function demoFeeInvoiceProvider(cfg: Pick<Config, 'fontDir'>): FeeInvoice
     async issue(i) {
       const prefix = i.docKind === 'sztorno' ? 'DEMO-S' : i.docKind === 'helyesbito' ? 'DEMO-H' : 'DEMO';
       const number = `${prefix}-${i.issuedOn.slice(0, 4)}-${String(i.seq).padStart(6, '0')}`;
-      const title = i.docKind === 'sztorno' ? 'DEMO SZTORNÓ – NEM SZÁMLA' : i.docKind === 'helyesbito' ? 'DEMO HELYESBÍTÉS – NEM SZÁMLA' : 'DEMO DÍJBEKÉRŐ – NEM SZÁMLA';
+      // k8 (payment-path review 6): "díjbekérő" is the transfer's real document now – the DEMO invoice is called a bemutató díjszámla
+      const title = i.docKind === 'sztorno' ? 'BEMUTATÓ SZTORNÓ – NEM VALÓDI SZÁMLA' : i.docKind === 'helyesbito' ? 'BEMUTATÓ HELYESBÍTÉS – NEM VALÓDI SZÁMLA' : 'BEMUTATÓ DÍJSZÁMLA – NEM VALÓDI SZÁMLA';
       const pdf = await simpleTablePdf(cfg.fontDir, {
         title,
         banner: 'BEMUTATÓ ADAT. Ez nem számla és nem számviteli bizonylat; valódi pénzmozgás nem történt.',
@@ -278,13 +279,15 @@ async function issueOne(deps: Deps, row: InvoiceRow): Promise<SzResult & { demo:
   if (row.provider === 'demo') {
     const [n] = await db.select({ n: sql<number>`count(*)::int` }).from(feeInvoices).where(and(eq(feeInvoices.provider, 'demo'), sql`${feeInvoices.number} is not null`));
     const [p] = row.paymentId ? await db.select().from(payments).where(eq(payments.id, row.paymentId)).limit(1) : [];
+    // k8: a transfer's DEMO invoice names the díjbekérő it was paid by (its order number and document number)
+    const [dtr] = p?.provider === 'atutalas' ? await db.select().from(transferRequests).where(eq(transferRequests.paymentId, p.id)).limit(1) : [];
     const out = await demoFeeInvoiceProvider(deps.cfg).issue({
       seq: Number(n?.n ?? 0) + 1,
       issuedOn: todayBudapest(deps.now()),
       amountHuf: row.amountHuf,
       periodStart: p?.periodStart ?? null,
       periodEnd: p?.periodEnd ?? null,
-      orderRef: row.externalKey ?? row.id,
+      orderRef: dtr ? `${dtr.orderNo}${dtr.proformaNumber ? ` (díjbekérő: ${dtr.proformaNumber})` : ''}` : (row.externalKey ?? row.id),
       simplepayTransactionId: null,
       client: { name: buyer.name, zip: buyer.zip, city: buyer.city, address: buyer.address, adoszam: buyer.adoszam },
       lineText: line.megnevezes,

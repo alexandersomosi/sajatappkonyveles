@@ -301,7 +301,12 @@ function FotozasTartalom() {
                 Legfeljebb 25 MB, PDF vagy fénykép. Több fényképből egy irat lesz.
               </T>
             </View>
-            <GombE cim="Fájl kiválasztása" ikon="feltoltes" onPress={() => void fajlValaszt()} style={{ alignSelf: 'center' }} />
+            {/* k8 látvány 10: a sárga az, ami most a teendő – fájl után a „Kész, feltöltöm” */}
+            {fajlok.length && !kesz ? (
+              <GombM cim="Fájl kiválasztása" ikon="feltoltes" magas={50} onPress={() => void fajlValaszt()} style={{ alignSelf: 'center' }} />
+            ) : (
+              <GombE cim="Fájl kiválasztása" ikon="feltoltes" onPress={() => void fajlValaszt()} style={{ alignSelf: 'center' }} />
+            )}
           </View>
         </BehuzoSav>
         {valasztoHiba ? (
@@ -339,7 +344,7 @@ function FotozasTartalom() {
             {!kesz ? (
               <View style={{ flexDirection: 'row', gap: 12, marginTop: 14, maxWidth: 520 }}>
                 <GombM cim="Még egy fájl" ikon="feltoltes" magas={50} onPress={() => void fajlValaszt()} style={{ flex: 1 }} />
-                <GombM cim="Kész, feltöltöm" magas={50} onPress={() => setLap(true)} style={{ flex: 1 }} />
+                <GombE cim="Kész, feltöltöm" onPress={() => setLap(true)} style={{ flex: 1 }} />
               </View>
             ) : null}
           </Lap>

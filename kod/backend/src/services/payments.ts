@@ -568,6 +568,8 @@ export async function startSubscriptionK29(deps: Deps, cl: ClientRow, input: Sub
 export async function duePeriod(deps: Deps, db: DbOrTx, clientId: string): Promise<{ sub: SubRow; periodStart: string; periodEnd: string; amountHuf: number } | null> {
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (!sub) return null;
+  // k8 review F2: a transfer client pays the month by its díjbekérő, never by "Fizesd ki" (the same month twice)
+  if (sub.billingMethod === 'atutalas') return null;
   let due = sub.status === 'past_due' || sub.status === 'suspended';
   if (!due && sub.status === 'active') {
     const [auth] = await db.select({ id: payments.id }).from(payments).where(and(eq(payments.subscriptionId, sub.id), eq(payments.status, 'hitelesites_kell'), inArray(payments.kind, ['havi']))).limit(1);
@@ -850,6 +852,11 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
             .where(eq(subscriptions.id, sub.id));
           if (cl.lifecycle === 'felfuggesztve' || cl.lifecycle === 'megszunt') await tx.update(clients).set({ lifecycle: 'aktiv', updatedAt: now }).where(eq(clients.id, cl.id));
         } else after.terminatedPaid = true;
+        // k8 review F2: the card paid this month → an open monthly díjbekérő of it (or an earlier one) is withdrawn
+        if (p.provider !== 'atutalas' && p.kind !== 'elso_havi') {
+          const { withdrawOpenMonthlyUpTo } = await import('./atutalas.js');
+          await withdrawOpenMonthlyUpTo(tx, sub.id, periodStart, now, 'Kártyával fizetett.');
+        }
         if (p.kind === 'elso_havi') {
           const { setStep } = await import('./onboarding.js');
           await setStep(deps, tx, cl.id, 'elofizetes', 'kesz');
@@ -908,7 +915,8 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
   }
   if (outcome === 'duplicate') {
     const [p0] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
-    const refunded = await refundDuplicate(deps, paymentId, p0?.kind === 'egyszeri' ? 'Dupla fizetés ugyanarra a díjra' : 'Dupla fizetés ugyanarra a hónapra');
+    // k8 review F2: money that came by bank transfer cannot be refunded by a provider – the admins are told (manual refund)
+    const refunded = p0?.provider === 'atutalas' ? false : await refundDuplicate(deps, paymentId, p0?.kind === 'egyszeri' ? 'Dupla fizetés ugyanarra a díjra' : 'Dupla fizetés ugyanarra a hónapra');
     const [p] = await db.select().from(payments).where(eq(payments.id, paymentId)).limit(1);
     if (p && !p.alertedAt) {
       await db.update(payments).set({ alertedAt: deps.now() }).where(eq(payments.id, paymentId));
@@ -1081,6 +1089,25 @@ export async function applyIntentState(deps: Deps, paymentId: string, st: Provid
   else if (st.status === 'requires_auth') await applyChargeFailure(deps, paymentId, { kind: 'requires_auth', providerRef: st.providerRef, code: 'authentication_required' });
   else if (st.status === 'canceled') await markCancelledAny(deps, paymentId);
   else if (st.status === 'processing') await deps.db.update(payments).set({ status: 'feldolgozas', updatedAt: deps.now() }).where(and(eq(payments.id, paymentId), inArray(payments.status, ['letrehozva', 'bizonytalan'])));
+}
+
+/**
+ * k8 review A9: the client chose the transfer – an open first-month card checkout is expired (it could pay the first
+ * month a second time with another period). Only hosted pages that are still 'letrehozva' (nothing was charged).
+ */
+export async function expireOpenFirstCheckouts(deps: Deps, subscriptionId: string): Promise<number> {
+  const rows = await deps.db.select().from(payments).where(and(eq(payments.subscriptionId, subscriptionId), eq(payments.kind, 'elso_havi'), eq(payments.status, 'letrehozva')));
+  let n = 0;
+  for (const r of rows) {
+    try {
+      if (r.stripeCheckoutSessionId) await providerOf(deps, r.provider).expireHosted(r.stripeCheckoutSessionId);
+      await markCancelledAny(deps, r.id);
+      n++;
+    } catch (e) {
+      log().warn({ err: safeErr(e) }, 'expire first checkout failed');
+    }
+  }
+  return n;
 }
 
 async function markCancelledAny(deps: Deps, paymentId: string): Promise<void> {
@@ -1558,6 +1585,8 @@ export async function refundPayment(
   if (!p0) throw E.notFound();
   // k7c2 A4: a duplicate whose automatic refund failed can be refunded from the console too
   if (p0.status !== 'sikeres' && p0.status !== 'duplikalt') throw E.conflict('Csak sikeres fizetést lehet visszatéríteni.');
+  // k8 review A8: a bank transfer is refunded from the bank by hand (no provider to call)
+  if (p0.provider === 'atutalas') throw E.conflict('Átutalással érkezett pénzt a bankból kell kézzel visszautalni.');
   if (i.reason.trim().length < 5 && !i.duplicate) throw E.validation({ reason: 'Írd le röviden az okát (legalább 5 karakter).' });
   const prov = providerOf(deps, p0.provider);
   if (p0.provider === 'stripe' && !p0.stripePaymentIntentId) throw E.conflict('Ehhez a fizetéshez nincs Stripe-azonosító.');
@@ -2067,6 +2096,9 @@ export async function cancelSubscriptionK29(deps: Deps, i: { clientId: string; w
   } else if (sub.status !== 'canceled') {
     await db.update(subscriptions).set({ cancelAtPeriodEnd: true, updatedAt: now }).where(eq(subscriptions.id, sub.id));
   }
+  // k8 review F3: the díjbekérő of a month the client does not get any more is withdrawn
+  const { withdrawStaleTransfers } = await import('./atutalas.js');
+  await withdrawStaleTransfers(deps, db, i.clientId);
   await audit(db, { action: 'subscription.cancel_k29', actorUserId: i.byUserId, actorRole: i.byUserId ? 'admin' : 'system', targetType: 'subscription', targetId: sub.id, clientId: i.clientId, details: { when: i.when, date: i.date ?? null, reason: i.reason.slice(0, 300) } });
 }
 

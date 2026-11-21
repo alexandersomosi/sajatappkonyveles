@@ -17,8 +17,8 @@ import { dijHibak, dijSzoveg, napPlusz } from '../../lib/k28';
 import { today } from '../../lib/today';
 
 const MIKOR: Record<string, string> = {
-  havidij: 'havonta, kártyáról (ismétlődő fizetés)',
-  havidij_kata: 'havonta, kártyáról (kata-csomag)',
+  havidij: 'havonta, kártyáról (ismétlődő fizetés) vagy átutalással (díjbekérő)',
+  havidij_kata: 'havonta, kártyáról vagy átutalással (kata-csomag)',
   eves_zaras: 'amikor elküldi az éves kérdőívet – előre',
   valtozas_egyszeru: 'mielőtt a csapat bejelenti helyette – előre',
   valtozas_jogallas: 'mielőtt a csapat bejelenti helyette – előre',

@@ -125,6 +125,8 @@ export interface ClientBillingView {
   canSwitchToTransfer: boolean;
   /** 'allando' → show the standing-order hint; 'havi' → the memo changes every month. */
   kozlemenyMode: FizetesKapcsolok['kozlemeny'];
+  /** k8 review F4: a díjbekérő is being made (the first try failed; the job and the next tap try again). */
+  preparing?: boolean;
 }
 /** POST /client/billing/transfer */
 export interface TransferChooseInput {
@@ -156,6 +158,8 @@ export interface AdminTransferRow {
   remindersSent: number[];
   pdfFileId: string | null;
   mode: 'demo' | 'teszt' | 'eles';
+  /** k8 integrator (payment-path review 3): the client's service is locked now (manual or automatic). */
+  clientLocked?: boolean;
 }
 /** The console tile: fizetett (this calendar month) / vár / késik. */
 export interface AdminTransferSummary {
@@ -219,6 +223,8 @@ export const TRANSFER_TEXTS = {
   downloadProforma: 'Letöltöm a díjbekérőt',
   off: 'Az átutalásos fizetés most nem érhető el. Fizess kártyával.',
   firstMonthLine: 'havidíj, első hónap (a befizetés napjától)',
+  preparing: 'Készül a díjbekérőd. Amint elkészül, e-mailben is elküldjük, és itt is látod.',
+  preparingRetry: 'Újra próbálom',
 } as const;
 
 /** The callback offer before the card (Bekötés, `/bekotes/visszahivas-ajanlat`; K8_TERV: kártya csak a visszahívás-ajánlat után). */

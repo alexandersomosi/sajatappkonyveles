@@ -338,6 +338,16 @@ export const AUDIT_LABEL: Record<string, string> = {
   'subscription.resumed': 'Visszavonta a lemondást',
   'subscription.start': 'Elindította a kártyamegadást',
   'subscription.suspended': 'Előfizetés szünetel',
+  // k8 (payment-path review 11): the transfer actions in plain words
+  'transfer.created': 'Díjbekérő készül',
+  'transfer.issued': 'Díjbekérő kiállítva',
+  'transfer.paid': 'Átutalás beérkezett',
+  'transfer.late': 'Díjbekérő késik',
+  'transfer.resent': 'Díjbekérőt újraküldte',
+  'transfer.withdrawn': 'Díjbekérő visszavonva',
+  'subscription.transfer_chosen': 'Átutalást választott',
+  'subscription.billing_method': 'Fizetési mód változott',
+  'admin.switch.fizetes': 'Fizetési kapcsolót állított',
   'tax.letter_updated': 'Javította a negyedéves levelet',
   'tax.hipa_approved': 'Jóváhagyta az iparűzési adót',
   // SPEC §26.9.4
@@ -510,6 +520,11 @@ const AUDIT_DETAIL_KEY: Record<string, string> = {
   item: 'pont',
   clearAdoszam: 'adószám törölve a profilból',
   expiredCount: 'lejárt jóváhagyás',
+  // k8
+  orderNo: 'rendelésszám',
+  dueOn: 'határidő',
+  adopted: 'átvett számla',
+  number: 'sorszám',
 };
 /** Detail keys that hold internal ids: never printed. */
 const AUDIT_REJTETT = new Set(['toUserId', 'userId', 'fromUserId', 'holderUserId', 'assignedTo']);
@@ -522,6 +537,8 @@ const AUDIT_VALUE_KULCS: Record<string, Record<string, string>> = {
   from: { van: 'már van vállalkozása', inditas: 'most indítja' },
   to: { van: 'már van vállalkozása', inditas: 'most indítja' },
   undo: { true: 'visszavonta 30 mp-en belül', false: 'nem' },
+  // k8: transfer.paid { source }
+  source: { kezi: 'kézzel rögzítve', autokassza: 'Autokassza', demo: 'DEMO' },
   topic: CALLBACK_TOPIC_LABELS as Record<string, string>,
   window: CALLBACK_WINDOW_LABELS as Record<string, string>,
   outcome: CALLBACK_ATTEMPT_OUTCOME_LABELS as Record<string, string>,

@@ -80,9 +80,11 @@ export function K28Kartyak({ c }: FulProps) {
               <h2>{MAILBOX_TEXTS.fiokRow}</h2>
               {c.demo && <DemoCimke />}
             </div>
-            <p className="szam" style={{ wordBreak: 'break-all' }}>
-              {c.mailboxAddress} <Masol ertek={c.mailboxAddress} />
-            </p>
+            {/* k8 panel-látvány 2/9: a cím a „@” után törhet, a Másolás gomb külön sorba kerülhet – soha nem vágódik le */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 12px', margin: '0 0 8px' }}>
+              <span className="szam" style={{ overflowWrap: 'anywhere', minWidth: 0 }}>{c.mailboxAddress.split('@')[0]}@<wbr />{c.mailboxAddress.split('@').slice(1).join('@')}</span>
+              <Masol ertek={c.mailboxAddress} />
+            </div>
             <p className="halvany kicsi">A saját címéről ide továbbított számlák és kivonatok a megfelelő hónap dossziéjába kerülnek.</p>
           </div>
         </div>

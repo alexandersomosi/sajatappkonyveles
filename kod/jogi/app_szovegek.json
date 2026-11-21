@@ -72,7 +72,7 @@
     "szerzodes.simplepay_ismetlodo": "Elfogadom az ismétlődő bankkártyás fizetésről szóló nyilatkozatot.",
     "szerzodes.pdf": "Letöltöm PDF-ben",
     "szerzodes.ujra_elfogadas": "Változott a(z) {{dok.cim}}. Nézd át, mi változott, és fogadd el, hogy folytathassuk.",
-    "meghatalmazas.miert": "Ahhoz, hogy {{konyvelo.keresztnev}} beadhassa a bevallásaidat, a NAV-nál meg kell hatalmaznod. Az ONYA-ban kb. 5 perc, papír és aláírás nem kell. Ha kéred, {{konyvelo.keresztnev}} küldi be, és neked csak jóvá kell hagynod.",
+    "meghatalmazas.miert": "Ahhoz, hogy {{konyvelo.keresztnev}} beadhassa a bevallásaidat, a NAV-nál meg kell hatalmaznod. Az ONYA-ban intézed, papír és aláírás nem kell. Ha kéred, {{konyvelo.keresztnev}} küldi be, és neked csak jóvá kell hagynod.",
     "meghatalmazas.jelszo": "Az Ügyfélkapu+- vagy DÁP-belépésedet senkinek ne add meg, nekünk sem. {{konyvelo.keresztnev}} a saját belépésével jár el.",
     "meghatalmazas.ugykorok": [
       "ADÓÜGYEK (kivéve egyes jövedéki ügyek)",
@@ -157,8 +157,9 @@
     },
     {
       "kerdes": "Mi az a meghatalmazás, és visszavonhatom?",
-      "valasz": "A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban kb. 5 perc alatt beállítod; az appban képekkel és videóval megmutatjuk, hogyan. Vagy kérd, hogy a könyvelőd küldje be, és te csak jóváhagyod. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod.",
-      "elozo_valasz": "A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban kb. 5 perc alatt beállítod; az appban képekkel és videóval megmutatjuk, hogyan. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod."
+      "valasz": "A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban állítod be; az appban képekkel és videóval megmutatjuk, hogyan. Vagy kérd, hogy a könyvelőd küldje be, és te csak jóváhagyod. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod.",
+      "elozo_valasz": "A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban kb. 5 perc alatt beállítod; az appban képekkel és videóval megmutatjuk, hogyan. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod.",
+      "k8_elozo_valasz": "A meghatalmazással a könyvelőd a NAV-nál a nevedben eljárhat: beadhatja a bevallásaidat és igazolást kérhet. Az ONYA-ban kb. 5 perc alatt beállítod; az appban képekkel és videóval megmutatjuk, hogyan. Vagy kérd, hogy a könyvelőd küldje be, és te csak jóváhagyod. Ugyanott bármikor visszavonhatod. A jelszavadat ehhez senkinek nem kell megadnod."
     },
     {
       "kerdes": "Mi történik, ha a könyvelő hibázik?",
@@ -179,8 +180,9 @@
     },
     {
       "kerdes": "Hogyan kérhetek visszahívást?",
-      "valasz": "Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.",
-      "elozo_valasz": "Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat."
+      "valasz": "Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.",
+      "elozo_valasz": "Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat.",
+      "k8_elozo_valasz": "Minden lépésnél ott a „Kérj visszahívást” gomb, és a Fiók oldalon is megtalálod. Add meg a telefonszámodat, és írd le röviden, miben segítsünk. A csapatunkból valaki 24–48 órán belül hív, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőd hív elsőként. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted."
     },
     {
       "kerdes": "Még nincs vállalkozásom. Mit tegyek?",
@@ -189,9 +191,10 @@
     },
     {
       "kerdes": "Bejelentitek helyettem a vállalkozásomat?",
-      "valasz": "Igen, ha kéred. Koppints az „Intézzétek helyettem” gombra: felhívunk, átnézzük veled az adataidat, a könyvelőd pedig meghatalmazottként, a saját belépésével bejelenti. Neked csak a NAV oldalán kell jóváhagynod a meghatalmazást, és itt engedélyezned a bejelentést. A jelszavadat vagy a kódjaidat soha nem kérjük el. Ha inkább magad csinálod, lépésről lépésre megmutatjuk, kb. 10–15 perc.",
+      "valasz": "Igen, ha kéred. Koppints az „Intézzétek helyettem” gombra: felhívunk, átnézzük veled az adataidat, a könyvelőd pedig meghatalmazottként, a saját belépésével bejelenti. Neked csak a NAV oldalán kell jóváhagynod a meghatalmazást, és itt engedélyezned a bejelentést. A jelszavadat vagy a kódjaidat soha nem kérjük el. Ha inkább magad csinálod, lépésről lépésre megmutatjuk.",
       "elozo_kerdes": "Miért nem ti jelentitek be a vállalkozásomat?",
-      "elozo_valasz": "Mert a bejelentés a te saját nyilatkozatod a NAV felé, és a vállalkozásod azon a napon indul, amikor beküldöd. Így te döntöd el, mikor indulsz, és a belépési adataidat senkinek nem kell megadnod. Az útmutatóval kb. 10–15 perc, utána mi átnézzük a NAV-os igazolást. Ha elakadsz, kérj visszahívást."
+      "elozo_valasz": "Mert a bejelentés a te saját nyilatkozatod a NAV felé, és a vállalkozásod azon a napon indul, amikor beküldöd. Így te döntöd el, mikor indulsz, és a belépési adataidat senkinek nem kell megadnod. Az útmutatóval kb. 10–15 perc, utána mi átnézzük a NAV-os igazolást. Ha elakadsz, kérj visszahívást.",
+      "k8_elozo_valasz": "Igen, ha kéred. Koppints az „Intézzétek helyettem” gombra: felhívunk, átnézzük veled az adataidat, a könyvelőd pedig meghatalmazottként, a saját belépésével bejelenti. Neked csak a NAV oldalán kell jóváhagynod a meghatalmazást, és itt engedélyezned a bejelentést. A jelszavadat vagy a kódjaidat soha nem kérjük el. Ha inkább magad csinálod, lépésről lépésre megmutatjuk, kb. 10–15 perc."
     },
     {
       "kerdes": "Mikor kezdődik a havidíj, ha most indítom a vállalkozásomat?",

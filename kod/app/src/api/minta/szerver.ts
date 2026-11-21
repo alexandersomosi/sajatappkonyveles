@@ -527,7 +527,7 @@ ut('POST', '/client/requests', (_m, _q, t) => {
   const r: RequestSummary = {
     id: `k${S.szamlalo++}`, direction: 'ugyfeltol', type: t.type as RequestSummary['type'],
     title: (t.title as string) || `${cimek[String(t.type)] ?? 'Kérés'}${cert?.year ? `, ${cert.year}` : ''}`,
-    body: String(t.body ?? ''), status: 'nyitott', statusLabel: 'Elküldve, Bence hamarosan megnézi', createdAt: new Date().toISOString(), certificate: cert,
+    body: String(t.body ?? ''), status: 'nyitott', statusLabel: 'Elküldve, Bence megnézi', createdAt: new Date().toISOString(), certificate: cert,
   };
   S.keresek = [r, ...S.keresek];
   S.uzenetek = [{ id: `m${S.szamlalo++}`, kind: 'keres_kartya', body: '', sender: 'en', createdAt: r.createdAt, attachments: [], request: r }, ...S.uzenetek];

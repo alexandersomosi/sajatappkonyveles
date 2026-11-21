@@ -27,6 +27,8 @@ export async function onClosingFollowup(deps: Deps, db: DbOrTx, actor: StaffActo
     const [s0] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, cl.id)).limit(1);
     if (s0 && s0.status !== 'canceled' && !s0.cancelAtPeriodEnd) {
       await db.update(subscriptions).set({ cancelAtPeriodEnd: true, updatedAt: deps.now() }).where(eq(subscriptions.id, s0.id));
+      const { withdrawStaleTransfers } = await import('./atutalas.js');
+      await withdrawStaleTransfers(deps, db, cl.id);
       await audit(db, { action: 'subscription.cancel_k29', actorUserId: actor.userId, actorRole: actor.role, targetType: 'subscription', targetId: s0.id, clientId: cl.id, details: { when: 'idoszak_vege', reason: 'megszuntetes' } });
     }
     const [sub] = await db.select({ end: subscriptions.currentPeriodEnd }).from(subscriptions).where(eq(subscriptions.clientId, cl.id)).limit(1);

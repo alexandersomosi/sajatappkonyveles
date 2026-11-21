@@ -16,6 +16,7 @@ import { runDataStepK29 } from './services/dijak.js';
 import { runDataStepKataF1 } from './services/datastep-kata.js';
 import { runDataStepEvJavitas } from './services/datastep-evjav.js';
 import { runDataStepK8 } from './services/datastep-k8.js';
+import { runDataStepK8Szoveg } from './services/datastep-k8-szoveg.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -121,6 +122,13 @@ async function main(): Promise<void> {
     log().info({ result: r }, 'data step k8');
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step k8 failed');
+  }
+  // k8 integrator: the FAQ rows / content overrides that still hold a pre-k8 time promise word for word (once).
+  try {
+    const r = await runDataStepK8Szoveg(deps);
+    log().info({ result: r }, 'data step k8_szoveg');
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step k8_szoveg failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

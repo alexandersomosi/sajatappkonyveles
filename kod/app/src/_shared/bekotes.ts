@@ -449,7 +449,7 @@ export const ONBOARDING_EXPLAINERS: readonly ExplainerDefault[] = [
     title: 'Kiállított számlák bekötése',
     what: '{firstName} összeköti a fiókodat a NAV számlarendszerével (Online Számla). Utána a kiállított számláid maguktól megjelennek itt.',
     why: 'Minden számla, amit a számlázóprogramodban kiállítasz, bekerül a NAV rendszerébe. Mi onnan töltjük le, így nem kell feltöltened őket, és mindig látod, mennyi adót kell fizetned.',
-    where: 'Neked ezzel nincs teendőd: {firstName} intézi, ha megvan a meghatalmazás. Általában 1–2 munkanap.',
+    where: 'Neked ezzel nincs teendőd: {firstName} intézi, ha megvan a meghatalmazás.',
     icon: 'szamlak',
     step: 'nav_bekotes',
     fields: [],
@@ -1650,7 +1650,7 @@ export const WAITING_TEXTS: Record<
   },
   helyettunk_hivas: {
     kicker: 'Most mi jövünk',
-    title: 'Hamarosan hívunk',
+    title: 'Visszahívunk',
     body: 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: {phoneMasked}.',
     time: '',
   },
@@ -1824,7 +1824,7 @@ export const ASSIST_STEP_LIST: Record<'vallalkozas_bejelentes' | 'meghatalmazas'
     { actor: 'csapat', text: 'Felhívunk, és elmondjuk, mi jön.', time: '' },
     { actor: 'konyvelo', text: '{firstName} beküldi a meghatalmazást.', time: '' },
     { actor: 'te', text: 'Jóváhagyod az ONYA-ban.', time: '4 napon belül' },
-    { actor: 'konyvelo', text: '{firstName} ellenőrzi, hogy él.', time: 'pár óra' },
+    { actor: 'konyvelo', text: '{firstName} ellenőrzi, hogy él.', time: '' },
   ],
 };
 /** Client status line per assist status (content `helyettunk.allapot.<status>`; `…_mh` overrides for kind 'meghatalmazas'). */
@@ -1887,7 +1887,7 @@ export const KERDOIV_TEXTS = {
 
 /** SPEC §27.4.2 – default texts of the new step lock (content key = the object key). */
 export const STEP_LOCK_DEFAULT_TEXTS: Record<string, string> = {
-  'bekotes.zarolt.elofizetes_szerzodes_utan': 'Előbb fogadd el a szerződést. Utána megadhatod a kártyádat.',
+  'bekotes.zarolt.elofizetes_szerzodes_utan': 'Előbb fogadd el a szerződést. Utána indíthatod az előfizetést.',
 };
 /** SPEC §27.1.2 – one line under the guide intro while any picture is drawn (content `vallalkozas.utmutato.rajz_megjegyzes`). */
 export const GUIDE_DRAWN_NOTE = 'Néhány képet rajzoltunk, mert arról a lapról nincs hivatalos NAV-kép. A valódi oldal kicsit eltérhet.';
@@ -3256,7 +3256,7 @@ export const FEE_TEXTS = {
   payButtonAmount: 'Fizetek ({dij} Ft)',
   demoChip: 'DEMO',
   demoEmail: '(DEMO ár)',
-  demoInvoice: 'DEMO DÍJBEKÉRŐ – NEM SZÁMLA',
+  demoInvoice: 'BEMUTATÓ DÍJSZÁMLA – NEM VALÓDI SZÁMLA',
   notPayable: 'Ezt most nem tudjuk elindítani: a díj még nincs véglegesítve. Kérj visszahívást.',
   payFailed: 'Nem sikerült a fizetés. Próbáld újra, vagy válassz másik kártyát.',
   paidToastChange: 'Kifizetted. {firstName} nekilát, és szól, ha jóvá kell hagynod valamit.',
@@ -3535,7 +3535,7 @@ export const REMINDER_TEXTS = {
 // ---------- §28.K.5 D – unpaid fee lock (content zarolas.*) ----------
 export const LOCK_TEXTS = {
   /** {mit} per reason. */
-  mit: { havidij: 'havidíj', eves_zaras: 'éves zárás díja' },
+  mit: { havidij: 'havidíj', eves_zaras: 'éves zárás díja', atutalas_kesik: 'havidíj' },
   banner: 'Szünetel a könyvelésed, mert nincs kifizetve a {mit} ({osszeg} Ft). Amint rendezed, {firstName} folytatja a munkát.',
   bannerButton: 'Fizetek',
   bannerLink: 'Írok az ügyfélszolgálatnak',
@@ -3815,7 +3815,12 @@ export const K28_NOTIFICATION_TEXTS = {
     body: 'Még nincs kifizetve a {mit}. Amint rendezed, {firstName} folytatja a munkát.',
     hatarido: { title: 'Közeleg egy határidő: {date}', body: 'Amíg a díj nincs rendezve, ezt nem tudjuk intézni helyetted.' },
   },
-  service_unlocked: { title: 'Újra minden működik', body: 'Köszönjük a fizetést. {firstName} folytatja a munkát.' },
+  service_unlocked: {
+    title: 'Újra minden működik',
+    body: 'Köszönjük a fizetést. {firstName} folytatja a munkát.',
+    /** k8: unlocked without a payment (the late-transfer switch turned off, or the console). */
+    feloldva: { title: 'Újra minden működik', body: '{firstName} folytatja a munkát.' },
+  },
   kata_business_invoice: {
     title: 'Cégnek számláztál – vigyázz a katádra',
     body: '{vevo}, {osszeg} Ft. Ha kifizeti, megszűnik a katád. Beszélj {firstNameWith}, mielőtt fizet.',

@@ -82,7 +82,7 @@ export const EV_UGYCSOPORTOK = ['ADÓÜGYEK (kivéve egyes jövedéki ügyek)', 
 
 /** 409 codes of §27.9.1 (the shared ASSIST_ERROR_CODES). */
 export const assistErr = {
-  alreadyOpen: (assist: AssistView) => new ApiError(409, 'assist_already_open', 'Ezt már kérted. Kollégánk hamarosan hív.', undefined, { assist }),
+  alreadyOpen: (assist: AssistView) => new ApiError(409, 'assist_already_open', 'Ezt már kérted. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.', undefined, { assist }),
   wrongStatus: (message: string) => new ApiError(409, 'assist_wrong_status', message),
   checklist: (missing: string[]) =>
     new ApiError(400, 'assist_checklist_incomplete', 'Előbb pipáld ki az összes pontot.', Object.fromEntries(missing.map((m) => [m, 'Pipáld ki.']))),

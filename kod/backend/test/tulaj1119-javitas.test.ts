@@ -163,7 +163,7 @@ describe('order 3 – the assisted path: client is the blocker before the UJEGYK
     expect(d2.body.readyForUjegyke).toBe(true);
     expect(d2.body.allowedActions).toContain('ujegyke_bekuldve');
     expect(d2.body.ball).toBe('konyvelo');
-    expect((await h.json('GET', '/client/assist', { token: c.token })).body.items[0].statusText).toBe('Beszéltünk. Bence hamarosan beküldi a meghatalmazást, utána jóváhagyod.');
+    expect((await h.json('GET', '/client/assist', { token: c.token })).body.items[0].statusText).toBe('Beszéltünk. Bence beküldi a meghatalmazást, utána jóváhagyod.'); // k8 integrator: "hamarosan" out (no time promise)
   });
 
   it('a mistaken "Jóváhagytam": the client can take it back; staff can say "Nem él" from jovahagyva; the worker alerts once after NAV\'s 4 days', async () => {

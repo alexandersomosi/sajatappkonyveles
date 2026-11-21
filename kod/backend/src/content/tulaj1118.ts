@@ -9,12 +9,12 @@ import { CALLBACK_CLOSE_REASONS, CLIENT_FEATURE_RULES, CLIENT_FEATURES, REGISTRA
 /** Client wording of the callback states (SPEC §26.2.6). */
 export const CALLBACK_STATUS_TEXT_DEFAULTS = {
   uj: 'Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: {phoneMasked}.',
-  folyamatban: '{staffFirstName} intézi a kérésedet. Hamarosan hív.',
+  folyamatban: '{staffFirstName} intézi a kérésedet, és felhív.',
   most_hiv: 'Most hív kollégánk, {staffFirstName}. Ha nem tudod felvenni, újra próbáljuk.',
   nem_ert_el: '{when} kerestünk, de nem értünk el. Újra próbáljuk.',
   hibas_szam: 'Nem értünk el a megadott számon. Írd be a jó számot, és újra hívunk.',
   kesobb: 'Megbeszéltük, hogy {when} körül hívunk újra.',
-  lejart: 'Sajnáljuk, hogy még nem hívtunk. Hamarosan jelentkezünk.',
+  lejart: 'Sajnáljuk, hogy még nem hívtunk. Keresni fogunk.',
   teljesitve: 'Beszéltünk {when}. Ha még kérdésed van, írj nekünk.',
   sikertelen: 'Háromszor kerestünk, de nem értünk el. Írj nekünk üzenetet, vagy kérj új visszahívást.',
   visszavonva: 'Lemondtad a visszahívást.',

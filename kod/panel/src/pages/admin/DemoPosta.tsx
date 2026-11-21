@@ -31,7 +31,7 @@ export default function DemoPosta() {
   };
   return (
     <>
-      <Fejlec felcim="DEMO" cim="Demo-postafiók" mellek="Amíg nincs bekötve a levélküldő (Brevo), az e-maileket nem küldjük el, hanem itt látod őket 7 napig. Élesben ez az oldal nincs." />
+      <Fejlec felcim="DEMO" cim="Demo-postafiók" mellek="Amíg nincs bekötve a levélküldő (ZeptoMail), az e-maileket nem küldjük el, hanem itt látod őket 7 napig. Élesben ez az oldal nincs." />
       <div className="tartalom">
         {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
         <div className="lap">

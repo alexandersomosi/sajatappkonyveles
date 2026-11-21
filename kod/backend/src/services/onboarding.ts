@@ -205,7 +205,7 @@ function clientMilestoneText(st: Map<OnboardingStep, StepRow>, key: Milestone, d
         case 'utmutato':
           return { label: 'Bejelentés a NAV-nál', sub: 'Ha beküldted, feltöltöd a NAV-os értesítést, és átnézzük.' };
         case 'beadva':
-          return { label: 'Átnézzük a bejelentésedet', sub: 'Általában 1 munkanap. Szólunk, ha minden rendben.' };
+          return { label: 'Átnézzük a bejelentésedet', sub: 'Szólunk, ha minden rendben.' };
         case 'javitas':
           return { label: 'Javítsd a bejelentésedet', sub: 'Megírtuk, mit és hogyan.' };
         case 'ellenorizve':
@@ -230,16 +230,16 @@ function clientMilestoneText(st: Map<OnboardingStep, StepRow>, key: Milestone, d
         const when = whenText(st.get('azonositas')?.completedAt);
         return { label: 'Elküldted az igazolványaidat', sub: when ? `${fn} rendben találta, ${when}.` : `${fn} rendben találta.` };
       }
-      if (status === 'konyvelore_var') return { label: `${fn} átnézi az igazolványaidat`, sub: 'Általában 1 munkanap. Titkosítva tároljuk, csak ő látja.' };
+      if (status === 'konyvelore_var') return { label: `${fn} átnézi az igazolványaidat`, sub: 'Titkosítva tároljuk, csak ő látja.' };
       if (status === 'hianyos') return { label: 'Pótold az igazolványaidat', sub: `${fn} megírta, mit kér még.` };
-      return { label: 'Küldd el az igazolványaidat', sub: current ? 'Fotó a személyidről és a lakcímkártyád címoldaláról, pár perc.' : 'Fotó a személyidről és a lakcímkártyád címoldaláról.' };
+      return { label: 'Küldd el az igazolványaidat', sub: current ? 'Fotó a személyidről és a lakcímkártyád címoldaláról.' : 'Fotó a személyidről és a lakcímkártyád címoldaláról.' };
     }
     case 'nav_bejelentve': {
       // Round-2 owner finding 8: method-aware – a meghatalmazás the client gave himself is CHECKED by the accountant.
       if (done) return { label: `${fn} a NAV-nál a könyvelőd`, sub: whenText(st.get('meghatalmazas')?.completedAt) };
       const own = methodOf(st) !== 'onya_konyvelo' && methodOf(st) !== 'alairt_pdf';
       const label = own ? `${fn} ellenőrzi a meghatalmazásodat a NAV-nál` : `${fn} beküldi a meghatalmazást, te jóváhagyod`;
-      if (current) return { label, sub: own ? 'Általában 1 munkanap.' : 'Utána 4 napod van jóváhagyni az ONYA-ban.' };
+      if (current) return { label, sub: own ? 'Szólunk, ha rendben van.' : 'Utána 4 napod van jóváhagyni az ONYA-ban.' };
       return { label };
     }
     case 'szamlak_bekotve':

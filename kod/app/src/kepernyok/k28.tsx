@@ -113,7 +113,7 @@ export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
   const [jelol, setJelol] = useState(false);
   return (
     <Kartyak>
-      <Szakasz ikon="szamlaszam" cim={RESERVE_TEXTS.kartya.title} jobbra={<MiEzKor kulcs="felretesz_miert" />} />
+      <Szakasz ikon="tarca" cim={RESERVE_TEXTS.kartya.title} jobbra={<MiEzKor kulcs="felretesz_miert" />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
         <View style={{ paddingLeft: BELJEBB }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -194,7 +194,7 @@ function JelolesLap({ lathato, bezar, ev, most }: { lathato: boolean; bezar: () 
 export function KeresetKartya({ e }: { e: EarningsCard }) {
   return (
     <Kartyak>
-      <Szakasz ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} jobbra={<MiEzKor kulcs="kereset_miert" />} />
+      <Szakasz ikon="oszlopok" cim={EARNINGS_TEXTS.cardTitle} jobbra={<MiEzKor kulcs="kereset_miert" />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
         <View style={{ paddingLeft: BELJEBB }}>
           <T m={20} s={700} lh={1.3} szam>
@@ -293,7 +293,7 @@ export function TartalekBlokk({ r, haviFix, fn }: { r: InvoiceReserveView; haviF
   const line = r.line + (r.nextYear ? RESERVE_TEXTS.jovore : '');
   return (
     <Kartyak>
-      <Szakasz ikon="szamlaszam" cim={RESERVE_TEXTS.blockTitle} jobbra={r.zone !== 'nincs_adat' ? <GombM cim={RESERVE_TEXTS.miertLink} onPress={() => setMiert(true)} /> : undefined} />
+      <Szakasz ikon="tarca" cim={RESERVE_TEXTS.blockTitle} jobbra={r.zone !== 'nincs_adat' ? <GombM cim={RESERVE_TEXTS.miertLink} onPress={() => setMiert(true)} /> : undefined} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
         <View style={{ paddingLeft: BELJEBB }}>
           <T m={17} s={600} lh={1.4} szam>

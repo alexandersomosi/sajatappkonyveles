@@ -8,7 +8,7 @@ import { View } from 'react-native';
 import { BILLING_METHOD_LABELS, TRANSFER_TEXTS as X, type ClientBillingView, type TransferRequestView } from '@/_shared/k8';
 import { useAtutalasValasztas, useSzamlazas } from '@/api/hooks-k8';
 import { fajlMegnyit } from '@/lib/fajlok';
-import { datumEvvel, szam } from '@/lib/format';
+import { datum, datumEvvel, napHozzaad, szam } from '@/lib/format';
 import { hibaUzenet } from '@/lib/hiba';
 import { MASOLAS_HIBA, vagolapra } from '@/lib/vagolap';
 import { szin } from '@/theme/tokens';
@@ -71,7 +71,7 @@ export function UtalasiAdatok({ d, mod }: { d: TransferRequestView; mod: ClientB
 export function AtutalasValaszto({ mod, valt }: { mod: FizetesMod; valt: (m: FizetesMod) => void }) {
   return (
     <Kartyak>
-      <Szakasz ikon="szamlaszam" cim={X.choiceTitle} />
+      <Szakasz ikon="tarca" cim={X.choiceTitle} />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <Valaszto<FizetesMod>
           elemek={[
@@ -91,6 +91,26 @@ export function AtutalasBekotes({ v, kesz }: { v: ClientBillingView | undefined;
   const valaszt = useAtutalasValasztas();
   const [hiba, setHiba] = useState<string | null>(null);
   const nyitott = v?.open.find((x) => x.kind === 'elso_havi') ?? null;
+  // k8 review F4: the document of the díjbekérő failed once – say so and let the client try again (no silent restart)
+  if (!nyitott && v?.preparing) {
+    return (
+      <Kartyak>
+        <Szakasz ikon="szamlaszam" cim={X.waitingTitle} />
+        <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+          <T m={15.5} lh={1.45} accessibilityLiveRegion="polite">
+            {X.preparing}
+          </T>
+          <GombM
+            cim={X.preparingRetry}
+            tolt={valaszt.isPending}
+            style={{ marginTop: 12, alignSelf: 'flex-start' }}
+            onPress={() => valaszt.mutate({ purpose: 'subscribe' }, { onSuccess: () => setHiba(null), onError: (e) => setHiba(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')) })}
+          />
+          <HibaSzoveg szoveg={hiba} />
+        </Lap>
+      </Kartyak>
+    );
+  }
   if (nyitott) {
     return (
       <Kartyak>
@@ -144,7 +164,7 @@ export function AtutalasFiok({ kartyara }: { kartyara: () => void }) {
   if (!v || (v.method === 'kartya' && !v.canSwitchToTransfer)) return null;
   return (
     <Kartyak>
-      <Szakasz ikon="szamlaszam" cim={X.methodLabel} />
+      <Szakasz ikon="tarca" cim={X.methodLabel} />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <T m={16} s={600}>
           {BILLING_METHOD_LABELS[v.method].charAt(0).toUpperCase() + BILLING_METHOD_LABELS[v.method].slice(1)}
@@ -152,6 +172,11 @@ export function AtutalasFiok({ kartyara }: { kartyara: () => void }) {
         {v.method === 'atutalas' ? (
           <T m={15} c={szin.halvany} lh={1.45} style={{ marginTop: 4 }}>
             {X.how1} {X.how2} {X.how3}
+          </T>
+        ) : null}
+        {v.preparing ? (
+          <T m={15} lh={1.45} style={{ marginTop: 6 }} accessibilityLiveRegion="polite">
+            {X.preparing}
           </T>
         ) : null}
         {v.nextIssueOn ? (
@@ -163,7 +188,7 @@ export function AtutalasFiok({ kartyara }: { kartyara: () => void }) {
           <View key={d.id} style={{ marginTop: 14 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
               <T m={16} s={650}>
-                {d.period ? `${datumEvvel(d.period.start)} –` : 'Első havidíj'}
+                {d.period ? `${datumEvvel(d.period.start)} – ${datum(napHozzaad(d.period.end, -1))}` : 'Első havidíj'}
               </T>
               <Cimke szoveg={d.statusLabel} veszely={d.status === 'kesik'} />
             </View>

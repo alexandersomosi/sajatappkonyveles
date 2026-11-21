@@ -98,7 +98,8 @@ describe('F1 – Igazolást kérek', () => {
     expect(r.body.status).toBe('beerkezett');
     expect(r.body.userName).toBe('KAVOSZ Zrt.');
     expect(r.body.neededByWarn).toBe(true);
-    expect(r.body.statusText).toContain('Bence hamarosan beadja');
+    // k8 integrator (review F5, tulaj 11-20: nincs időígéret): "hamarosan" out of the status line
+    expect(r.body.statusText).toContain('Bence beadja');
     const [n] = await h.deps.db.select().from(notifications).where(and(eq(notifications.userId, bence.userId), eq(notifications.kind, 'certificate_requested' as never)));
     expect(n?.title).toContain('Szabó Kata');
     expect((await h.json('GET', `/acc/certificates/${r.body.id}`, { token: mari.token })).status).toBe(404);

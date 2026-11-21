@@ -70,7 +70,17 @@ function KartyaLepes() {
   const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva && !ajanlatKell && mod === 'kartya', elo.data?.status === 'canceled' ? 'restart' : 'subscribe');
   const c = engedely.data;
   const demo = c?.demo ?? (cfg.data?.demo && fizetesSzolgaltato(cfg.data) === 'demo');
-  const fej = <CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim={P.cardStep.bandTitle} al={P.cardStep.bandText.replace('{havidij}', szam(ar))} />;
+  // k8 (payment-path review 2 / látvány 8): the card header only on the card path; with the choice or the transfer the
+  // step is "az előfizetés" and nothing says "levonjuk"
+  const kartyaFej = !atutalhato && !ajanlatKell;
+  const fej = (
+    <CimSor
+      visszaCim="Vissza a Főoldalra"
+      vissza={() => vissza('/bekotes')}
+      cim={kartyaFej ? P.cardStep.bandTitle : 'Utolsó lépés: az előfizetés'}
+      al={!atutalhato ? P.cardStep.bandText.replace('{havidij}', szam(ar)) : mod === 'atutalas' ? `Havi ${szam(ar)} Ft. Minden hónapban díjbekérőt küldünk, te utalod el. Bármikor lemondhatod.` : `Havi ${szam(ar)} Ft. Kártyával vagy átutalással fizetheted. Bármikor lemondhatod.`}
+    />
+  );
 
   if (lepes?.locked) {
     return (
@@ -100,7 +110,7 @@ function KartyaLepes() {
   if (mod === 'atutalas' && atutalhato && !aktiv) {
     return (
       <Kepernyo ful="fooldal" fejlec={fej}>
-        {cfg.data?.demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
+        {cfg.data?.demo ? <DemoFizetesJel atutalas style={{ marginTop: 4 }} /> : null}
         {!sz.data?.open.length ? <AtutalasValaszto mod={mod} valt={setMod} /> : null}
         <AtutalasBekotes v={sz.data} kesz={() => bekotesre()} />
         <Elakadtal forras="elofizetes" tema="elofizetes" style={{ marginTop: 6, marginLeft: 4 }} />

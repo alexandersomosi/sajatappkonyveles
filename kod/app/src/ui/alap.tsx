@@ -148,6 +148,8 @@ export function Fejlec({
 // ---------- kártya ----------
 /** A kártyarács cellája (gépen): a benne lévő első kártya kitölti a cella magasságát. */
 export const RacsCellaCtx = createContext(false);
+/** k8 látvány 9: űrlapkártyán (belépés, regisztráció, párbeszédablak) gépen is teljes szélességű a fő gomb. */
+export const TeljesGombCtx = createContext(false);
 
 /**
  * Tartalom-kártya (v2 .k): tiszta fehér, r 20 (gépen 22), finom árnyék, 12 pt köz alatta. A hívó adja a belső teret
@@ -271,6 +273,7 @@ type GombProps = Omit<PressableProps, 'children' | 'style'> & { cim: string; iko
 export function GombE({ cim, tolt, style, magas = 52, disabled, ikon, ...p }: GombProps) {
   const tiltva = disabled || tolt;
   const asztali = useAsztali();
+  const teljes = useContext(TeljesGombCtx);
   const m = asztali && magas === 52 ? 50 : magas;
   return (
     <Nyomhato
@@ -279,9 +282,9 @@ export function GombE({ cim, tolt, style, magas = 52, disabled, ikon, ...p }: Go
       {...p}
       style={style}
       // gépen a fő gomb nem nyúlik a kártya teljes szélességére (A01/A53: kb. 280–420 pt)
-      alapIgazitas={asztali ? 'flex-start' : 'stretch'}
+      alapIgazitas={asztali && !teljes ? 'flex-start' : 'stretch'}
       alap={({ pressed, hovered }) => [
-        asztali ? { minWidth: 280 } : null,
+        asztali && !teljes ? { minWidth: 280 } : null,
         { minHeight: m, borderRadius: forma.gomb, backgroundColor: szin.sarga, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 22, paddingVertical: 4, flexDirection: 'row', gap: 8 },
         tiltva ? { backgroundColor: tolt ? szin.sarga : szin.letiltvaAlap } : (arnyek.gomb as ViewStyle),
         ATMENET,
