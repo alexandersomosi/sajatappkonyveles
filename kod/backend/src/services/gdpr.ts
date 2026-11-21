@@ -35,7 +35,7 @@ import {
   taxCalculations,
   taxPaymentItems,
   taxPeriods,
-  users, businessRegistrations, callbackRequests } from '../db/schema.js';
+  users, businessRegistrations, callbackRequests, annualClosings, taxCorrections, accountReconciliations } from '../db/schema.js';
 import { addDays, todayBudapest } from '../lib/dates.js';
 import { unlink } from 'node:fs/promises';
 import { ZipFileWriter, type ZipEntry } from '../lib/zip.js';
@@ -215,6 +215,16 @@ export async function buildExport(deps: Deps, exportId: string): Promise<void> {
       const periods = await db.select().from(taxPeriods).where(eq(taxPeriods.clientId, cl.id));
       const pids = periods.map((p) => p.id).concat(['00000000-0000-0000-0000-000000000000']);
       entries.push(json('ugyfel/adoszamolasok.json', { idoszakok: periods, szamolasok: await db.select().from(taxCalculations).where(inArray(taxCalculations.taxPeriodId, pids)), befizetendok: await db.select().from(taxPaymentItems).where(inArray(taxPaymentItems.taxPeriodId, pids)) }));
+      // javító kör 11-21 (SPEC §32.B): the annual closings with their amounts (the refund account stays encrypted / out),
+      // the önellenőrzések (without the staff's internal note) and the NAV folyószámla checks
+      entries.push(
+        json(
+          'ugyfel/eves_zarasok.json',
+          (await db.select().from(annualClosings).where(eq(annualClosings.clientId, cl.id))).map(({ refundAccountEnc: _r, ...a }) => a),
+        ),
+      );
+      entries.push(json('ugyfel/onellenorzesek.json', (await db.select().from(taxCorrections).where(eq(taxCorrections.clientId, cl.id))).map(({ internalNote: _n, ...x }) => x)));
+      entries.push(json('ugyfel/folyoszamla.json', await db.select().from(accountReconciliations).where(eq(accountReconciliations.clientId, cl.id))));
       const msgs = await db.select().from(messages).where(and(eq(messages.clientId, cl.id), isNull(messages.deletedAt)));
       entries.push(json('ugyfel/uzenetek.json', msgs.map((m) => ({ ido: m.createdAt, kuldo: m.senderRole, szoveg: m.body }))));
       const atts = msgs.length ? await db.select().from(messageAttachments).where(inArray(messageAttachments.messageId, msgs.map((m) => m.id))) : [];

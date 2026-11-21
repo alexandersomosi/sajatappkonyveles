@@ -3,7 +3,8 @@
 import { and, desc, eq, gte, inArray, isNotNull, lt, notInArray } from 'drizzle-orm';
 import type { Hono } from 'hono';
 import { z } from 'zod';
-import type { AccClientDetailK28 } from '../_shared/api.js';
+import type { AccClientDetailK28, NextYearRegimeView } from '../_shared/api.js';
+import { evesKapcsolok } from '../services/kata.js';
 import { ALLOWANCE_KINDS, ALLOWANCE_REJECT_REASONS, ANNUAL_CHECK_ITEMS, ANYAK_JOGCIMEK, CHECKIN_ITEM_STATUSES, EMPLOYER_DECISIONS, FEE_KINDS, RESPONSE_TIME_FORBIDDEN_PATTERNS, type AllowanceKind } from '../_shared/enums.js';
 import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
 import type { Deps } from '../deps.js';
@@ -35,7 +36,7 @@ import { changeDone, changeFiled, changeReady, followupViews, isChangeKind, patc
 import { assistForStaff, teamAssistDetail } from '../services/assist.js';
 import { chargeById, feeChargeView } from '../services/dijak.js';
 import { currentCheckin } from '../services/havi-ellenorzes.js';
-import { KATA_EXEMPT_KINDS, KATA_VARIANTS } from '../_shared/kata.js';
+import { KATA_EXEMPT_KINDS, KATA_PANEL_TEXTS, KATA_VARIANTS } from '../_shared/kata.js';
 import { kataHomeView, kataYearView, setKataBreaks, syncKataPeriods } from '../services/kata.js';
 import { ensurePeriods, verifyPayment } from '../services/tax.js';
 import { computeFlags } from '../services/flags.js';
@@ -58,13 +59,14 @@ async function staffClient(deps: Deps, c: C): Promise<{ actor: StaffActor; cl: C
 export async function accDetailK28(deps: Deps, cl: ClientRow): Promise<AccClientDetailK28> {
   const today = todayBudapest(deps.now());
   const year = Number(today.slice(0, 4));
-  const [tp] = await deps.db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
+  const [tp] = await deps.db.select({ regime: clientTaxProfiles.regime, kataVariant: clientTaxProfiles.kataVariant, kataFofoglalkozasu: clientTaxProfiles.kataFofoglalkozasu }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
   const open = await deps.db.select({ id: checkinItems.id }).from(checkinItems).where(and(eq(checkinItems.clientId, cl.id), inArray(checkinItems.status, ['uj', 'dijra_var', 'csapatnal', 'ugyfel_intezi'])));
   const ann = await annualOf(deps.db, cl.id, year - 1);
   return {
     allowancesPending: await pendingAllowances(deps.db, cl.id, year),
-    reserve: cl.lifecycle === 'bekotes_alatt' ? null : await reserveCard(deps, deps.db, cl, today).catch(() => null),
-    earnings: cl.lifecycle === 'bekotes_alatt' ? null : ((await earnings(deps, deps.db, cl, year, today).catch(() => null))?.card ?? null),
+    // javító kör 11-21: a KATA client never sees the átalány reserve / earnings, so "Ezt látja az ügyfél" shows none either
+    reserve: cl.lifecycle === 'bekotes_alatt' || tp?.regime === 'kata' ? null : await reserveCard(deps, deps.db, cl, today).catch(() => null),
+    earnings: cl.lifecycle === 'bekotes_alatt' || tp?.regime === 'kata' ? null : ((await earnings(deps, deps.db, cl, year, today).catch(() => null))?.card ?? null),
     taxRegime: tp?.regime ?? 'atalany',
     serviceLock: await serviceLockView(deps, cl),
     pause: await pauseView(deps, deps.db, cl.id),
@@ -72,8 +74,34 @@ export async function accDetailK28(deps: Deps, cl: ClientRow): Promise<AccClient
     annual: ann ? await annualView(deps, deps.db, cl, year - 1) : null,
     adoszamPending: cl.adoszamPending,
     checkinOpenItems: open.length,
+    kataVariant: tp?.kataVariant ?? null,
+    kataFofoglalkozasu: tp?.kataFofoglalkozasu ?? null,
+    nextYearRegime: cl.lifecycle === 'bekotes_alatt' ? null : await nextYearRegimeView(deps, cl.id, today),
     // SPEC §32: the KATA card (keret, months, business customers) – filled for a KATA year
     ...(tp?.regime === 'kata' && cl.lifecycle !== 'bekotes_alatt' ? { kata: await kataCardOf(deps, cl, year) } : {}),
+  };
+}
+
+/** Javító kör 11-21 (kritika 2.1): the card shows from 15 November to 31 December – the next year's mode, as recorded. */
+const NEXT_YEAR_CARD_FROM = '11-15';
+async function nextYearRegimeView(deps: Deps, clientId: string, today: string): Promise<NextYearRegimeView | null> {
+  const year = Number(today.slice(0, 4));
+  if (today.slice(5) < NEXT_YEAR_CARD_FROM) return null;
+  const [np] = await deps.db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, year + 1))).limit(1);
+  const k = await evesKapcsolok(deps.db);
+  const d = np?.regimeDecision ?? null;
+  return {
+    year: year + 1,
+    showFrom: `${year}-${NEXT_YEAR_CARD_FROM}`,
+    recorded: Boolean(np),
+    regime: np?.regime ?? null,
+    kataVariant: np?.kataVariant ?? null,
+    kataFofoglalkozasu: np?.kataFofoglalkozasu ?? null,
+    decidedAt: d?.decidedAt ?? null,
+    filedOn: d?.filedOn ?? null,
+    filedBy: d?.filedBy ?? null,
+    note: d?.note ?? null,
+    newKataDraft: !(year + 1 === 2027 && k.kata2027),
   };
 }
 
@@ -86,7 +114,8 @@ async function kataCardOf(deps: Deps, cl: ClientRow, year: number): Promise<AccC
   const risks = await kataRisksOf(deps, cl, { limit: 10 }).catch(() => []);
   return {
     ...v,
-    ...(staff ? { meter: staff.meter, draftNote: staff.draftNote } : {}),
+    // the staff months count the backfilled (before the app) months too – "Adóköteles hónap" is the whole year so far
+    ...(staff ? { meter: staff.meter, draftNote: staff.draftNote, liableMonths: staff.months.filter((m) => m.liable).map((m) => m.month) } : {}),
     businessInvoices: risks.map((r) => ({ navInvoiceId: r.navInvoiceId, customerName: r.vevo || null, amountHuf: r.amountHuf ?? 0, payerKind: r.payerKind, endsOn: r.endsOn ?? null, reportBy: r.reportBy ?? null })),
   };
 }
@@ -282,8 +311,8 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
               ).id
             : null;
         if (step === 'draft') {
-          await doc(filesIn, 'bevallas', 'Bevallás tervezete – jóváhagyásra');
-          return annualStep(deps, tx, cl, param(c, 'aid'), step, actor);
+          const draftDocumentId = await doc(filesIn, 'bevallas', 'Bevallás tervezete – jóváhagyásra');
+          return annualStep(deps, tx, cl, param(c, 'aid'), step, actor, { filedOn: todayBudapest(deps.now()), draftDocumentId });
         }
         const szja = step === 'filed-szja';
         const returnDocumentId = await doc(filesIn, szja ? 'bevallas' : 'nav_visszaigazolas', szja ? `Éves bevallás – beadva (${y - 1})` : `Iparűzési adó bevallás – beadva (${y - 1})`);
@@ -353,6 +382,68 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
     return c.json({ regime: b.regime, kataFrom: b.kataFrom ?? null, kataTo: b.kataTo ?? null, kataVariant: upd[0]!.kataVariant ?? null, kataFofoglalkozasu: upd[0]!.kataFofoglalkozasu ?? null });
   });
 
+  // ---- javító kör 11-21 (kritika 2.1): the next year's mode, recorded in December (T/928: the choice from 1 December).
+  // The accountant records what was decided and filed; the app recommends nothing. The profile of the next year is made
+  // now (a copy of this year's, like the 1 January job), and jobNewYear keeps it (onConflictDoNothing). No period is made
+  // before 1 January; the new KATA's months get no amount while the kata2027 switch is off.
+  r.post('/clients/:id/next-year-regime', async (c) => {
+    const { actor, cl } = await staffClient(deps, c);
+    const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: 'ÉÉÉÉ-HH-NN alakban.' });
+    const b = await readJson(
+      c,
+      z.strictObject({
+        year: z.number().int().min(2025).max(2100),
+        regime: z.enum(['atalany', 'kata']),
+        kataVariant: z.enum(KATA_VARIANTS).optional(),
+        kataFofoglalkozasu: z.boolean().nullish(),
+        filedOn: day.nullish(),
+        filedBy: z.enum(['konyvelo', 'ugyfel', 'nem_kell']).nullish(),
+        note: z.string().trim().max(500).nullish(),
+      }),
+    );
+    const today = todayBudapest(deps.now());
+    if (b.year !== thisYear() + 1) throw E.validation({ year: `Csak a következő év (${thisYear() + 1}) módját rögzítheted itt.` });
+    if (b.filedOn && b.filedOn > today) throw E.validation({ filedOn: 'A bejelentés napja nem lehet a jövőben.' });
+    const variant = b.regime === 'kata' ? (b.kataVariant ?? 'regi') : null;
+    if (variant === 'uj' && b.year < 2027) throw E.validation({ kataVariant: 'Az új kata (T/928) legkorábban 2027-től létezik.' });
+    if (variant === 'regi' && b.kataFofoglalkozasu === false) throw E.validation({ kataFofoglalkozasu: 'A (régi) kata csak főfoglalkozású egyéni vállalkozónak választható.' });
+    if (variant === 'uj' && (b.kataFofoglalkozasu === null || b.kataFofoglalkozasu === undefined)) throw E.validation({ kataFofoglalkozasu: 'Az új katánál add meg, főfoglalkozású-e.' });
+    const [cur] = await deps.db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, b.year - 1))).limit(1);
+    if (!cur) throw E.notFound(`Nincs ${b.year - 1}. évi adózási profil.`);
+    const start = `${b.year}-01-01`;
+    const regimeFields = {
+      regime: b.regime,
+      kataFrom: b.regime === 'kata' ? start : null,
+      kataTo: null,
+      kataVariant: variant,
+      kataFofoglalkozasu: variant === 'regi' ? true : variant === 'uj' ? (b.kataFofoglalkozasu ?? null) : null,
+      regimeDecision: { decidedAt: deps.now().toISOString(), decidedBy: actor.userId, filedOn: b.filedOn ?? null, filedBy: b.filedBy ?? null, note: b.note ?? null },
+      updatedAt: deps.now(),
+    };
+    const [np] = await deps.db.select({ id: clientTaxProfiles.id }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, b.year))).limit(1);
+    if (np) await deps.db.update(clientTaxProfiles).set(regimeFields).where(eq(clientTaxProfiles.id, np.id));
+    else
+      await deps.db
+        .insert(clientTaxProfiles)
+        .values({
+          clientId: cl.id,
+          year: b.year,
+          costRatio: cur.costRatio,
+          costRatioSource: 'ugyfel_javaslat',
+          status: cur.status,
+          guaranteedMinimum: cur.guaranteedMinimum,
+          retail: cur.retail,
+          insuranceBreaks: (cur.insuranceBreaks ?? []).filter((x) => x.to >= start).map((x) => ({ from: x.from < start ? start : x.from, to: x.to, kind: x.kind })),
+          hipaMethod: cur.hipaMethod,
+          hipaRatePct: cur.hipaRatePct,
+          hipaAccountNumber: cur.hipaAccountNumber,
+          ...regimeFields,
+        })
+        .onConflictDoNothing();
+    await auditC(c, deps.db, 'tax_regime.next_year_set', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { year: b.year, regime: b.regime, kataVariant: variant, filedBy: b.filedBy ?? null } });
+    return c.json(await nextYearRegimeView(deps, cl.id, today));
+  });
+
   // ---- SPEC §32 KATA months, free months, group verification
   r.get('/clients/:id/kata', async (c) => {
     const { cl } = await staffClient(deps, c);
@@ -373,14 +464,17 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
   r.post('/clients/:id/kata/verify', async (c) => {
     const { actor, cl } = await staffClient(deps, c);
     if (!cl.accountantId) throw E.conflict('Az ügyfélnek nincs könyvelője.');
-    const b = await readJson(c, z.strictObject({ periodIds: z.array(z.string().uuid()).min(1).max(24), note: z.string().trim().max(500).optional() }));
+    // javító kör 11-21 [DÁVID K11]: "Rendben" only from the statement row – its day and amount are required as the note
+    const b = await readJson(c, z.strictObject({ periodIds: z.array(z.string().uuid()).min(1).max(24), note: z.string().trim().min(5, { error: KATA_PANEL_TEXTS.csoportosMegjegyzesKell }).max(500) }));
     const rows = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.kind, 'kata'), isNullOp(taxPeriods.hiddenAt), inArray(taxPeriods.id, b.periodIds)));
     if (rows.length !== new Set(b.periodIds).size) throw E.notFound();
     let year = thisYear();
+    // one client notice for the group (the latest month), not one per month
+    const last = [...rows].sort((a, z2) => a.dueDate.localeCompare(z2.dueDate)).at(-1)!;
     await deps.db.transaction(async (tx) => {
       for (const p of rows) {
         year = p.year;
-        await verifyPayment(deps, tx, p.id, actor.userId, cl.accountantId!, [{ kind: 'kata_teteles', verification: 'rendben', ...(b.note ? { note: b.note } : {}) }]);
+        await verifyPayment(deps, tx, p.id, actor.userId, cl.accountantId!, [{ kind: 'kata_teteles', verification: 'rendben', note: b.note }], { notifyClient: p.id === last.id, actorRole: actor.role });
       }
     });
     await auditC(c, deps.db, 'kata.verified', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { count: rows.length } });

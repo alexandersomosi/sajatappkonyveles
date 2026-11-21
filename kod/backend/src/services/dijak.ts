@@ -118,8 +118,12 @@ export async function chargeById(db: DbOrTx, id: string | null | undefined): Pro
 export async function feesView(deps: Deps, db: DbOrTx, cl: ClientRow): Promise<FeesView> {
   const table: FeesView['table'] = [];
   const params = await accountantParams(db, cl.accountantId);
+  // javító kör 11-21: the annual-closing fee is not listed while its switch is off (the ÁSZF is fixed first) [T1, JOGI]
+  const { evesKapcsolok } = await import('./kata.js');
+  const evesDijBe = (await evesKapcsolok(db)).evesZarasDij;
   for (const kind of FEE_KINDS) {
     if (kind === 'havidij_kata') continue;
+    if (kind === 'eves_zaras' && !evesDijBe) continue;
     const s = await feeSetting(db, kind);
     table.push({
       kind,

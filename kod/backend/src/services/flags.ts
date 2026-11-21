@@ -6,7 +6,7 @@ import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { annualClosings, appointments, clients, clientTaxProfiles, deadlines, navCredentials, onboardingSteps, requests, subscriptions, taxPaymentItems, taxPeriods } from '../db/schema.js';
 import { daysBetween, monthName, todayBudapest } from '../lib/dates.js';
-import { KATA_EXEMPT_LABELS, kataExemptNeedsReport, type KataExemptKind } from '../_shared/kata.js';
+import { KATA_EXEMPT_LABELS, KATA_F1_RULES, kataExemptNeedsReport, type KataExemptKind } from '../_shared/kata.js';
 import { deadlinesFor } from '../tax/engine.js';
 import { fill } from '../content.js';
 import { accountantParams } from '../notify/notify.js';
@@ -30,7 +30,8 @@ export async function computeFlags(deps: Deps, db: DbOrTx, clientId: string): Pr
     .select({ id: taxPaymentItems.id })
     .from(taxPaymentItems)
     .innerJoin(taxPeriods, eq(taxPeriods.id, taxPaymentItems.taxPeriodId))
-    .where(and(eq(taxPeriods.clientId, clientId), periodVisible, isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)))
+    // javító kör 11-21: a backfilled KATA month (before the app) is the accountant's check (due 10 December), not a missed payment
+    .where(and(eq(taxPeriods.clientId, clientId), periodVisible, eq(taxPeriods.backfilled, false), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)))
     .limit(1);
   const [nav] = await db.select({ status: navCredentials.status }).from(navCredentials).where(eq(navCredentials.clientId, clientId)).limit(1);
   if (overdueReq.length || hianyos.length || overdueTax.length || nav?.status === 'hibas') flags.add('hianyzik_valami');
@@ -118,8 +119,11 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       } else {
         const paid = p.paymentStatus === 'befizetve_jelezve' || p.paymentStatus === 'ellenorizve';
         const verified = p.paymentStatus === 'befizetve_jelezve' ? false : paid ? true : undefined;
-        const title = acc && p.backfilled && !verifiedOk ? `Kata – ${honap}: ellenőrizd a folyószámlán (az app előtti hónap)` : fill(await content.get('kata.f1.hatarido_befizetes'), { honap, osszeg: fmt(amount) });
-        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', title, p.dueDate, paid, acc ? `/ugyfelek/${clientId}/ado` : `/fizetes/${p.id}`, amount, verified, false));
+        const unchecked = acc && p.backfilled && !verifiedOk;
+        const title = unchecked ? `Kata – ${honap}: ellenőrizd a folyószámlán (az app előtti hónap)` : fill(await content.get('kata.f1.hatarido_befizetes'), { honap, osszeg: fmt(amount) });
+        // javító kör 11-21 (kritika 2.4): the check of a month before the app is due by 10 December (before the 100 000 Ft rule)
+        const due = unchecked ? (p.dueDate > `${p.year}-${KATA_F1_RULES.yearEndStaffDays[0]}` ? p.dueDate : `${p.year}-${KATA_F1_RULES.yearEndStaffDays[0]}`) : p.dueDate;
+        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', title, due, paid, acc ? `/ugyfelek/${clientId}/ado` : `/fizetes/${p.id}`, amount, verified, false));
       }
       continue;
     }
@@ -138,8 +142,9 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       // SPEC §32.B: the yearly differences and the önellenőrzés show their amount ("Szja-különbözet 2026: 120 000 Ft")
       if (isAnnualPeriodKind(p.kind)) {
         const accLink = p.kind === 'onellenorzes' ? `/ugyfelek/${clientId}/onellenorzes` : `/ugyfelek/${clientId}/eves`;
-        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', total ? `${periodLabel(p)}: ${fmt(total)} Ft` : periodLabel(p), p.dueDate, paid, acc ? accLink : `/fizetes/${p.id}`, total ?? undefined, verified));
-      } else out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, acc ? '/' : `/fizetes/${p.id}`, total ?? undefined, verified));
+        // the amount is exact (approved): never "kb."; the client's row shows it in its own column
+        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', total && acc ? `${periodLabel(p)}: ${fmt(total)} Ft` : periodLabel(p), p.dueDate, paid, acc ? accLink : `/fizetes/${p.id}`, total ?? undefined, verified, false));
+      } else out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, acc ? '/' : `/fizetes/${p.id}`, total ?? undefined, verified, false));
     } else if (acc || p.dueDate >= today) {
       // Not approved yet: the date is known, the amount (= last year's tax) comes from the accountant.
       // An overdue unapproved advance is the accountant's to-do, so only the panel shows it as lejárt.
@@ -190,7 +195,10 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
         // no 26SZJA for a KATA year: EVERY KATA client files the yearly declaration instead ('26KATA, Kata tv. 10. §) – below
         if (prof.regime === 'kata') continue;
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
-        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, szjaDone(y, d.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
+        // javító kör 11-21: once filed with its numbers, the difference is its own row → this one only says the return is in
+        const filedOwnRow = Boolean(closingOf(y)?.filedSzjaAt) && closingOf(y)?.diffHuf != null;
+        const szjaTitle = filedOwnRow ? `Éves szja-bevallás ${y} (${String(y).slice(2)}SZJA) – ${acc ? 'beadva' : 'beadtuk'}` : `${d.title} és a különbözet befizetése (${who})`;
+        out.push(dl(today, `ev:${y}:szja`, 'bevallas', szjaTitle, d.dueDate, szjaDone(y, d.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
       } else if (d.periodKey === `${y}-HIPA`) {
         out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, annualDone(hipaFiled(y), d.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
       }
@@ -226,7 +234,8 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
     if (a.refundExpectedBy < from || a.refundExpectedBy > to) continue;
     const done = a.refundStatus !== 'var';
     if (!acc && !done && a.refundExpectedBy < today) continue;
-    out.push(dl(today, `refund:${a.id}`, 'egyeb', `Visszajáró szja: ${fmt(-a.diffHuf)} Ft – a NAV utalja`, a.refundExpectedBy, done, acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
+    const { evesText } = await import('./eves-ciklus.js');
+    out.push(dl(today, `refund:${a.id}`, 'egyeb', await evesText(deps, 'hataridoVisszajaro', { osszeg: fmt(-a.diffHuf) }), a.refundExpectedBy, done, acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
   }
   // SPEC §32.B: the next NAV folyószámla check (accountant only)
   if (acc) {

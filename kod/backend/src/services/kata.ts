@@ -62,6 +62,8 @@ export async function evesKapcsolok(db: DbOrTx): Promise<EvesKapcsolok> {
   if (typeof v.refundDatumUgyfelnek === 'boolean') out.refundDatumUgyfelnek = v.refundDatumUgyfelnek;
   if (typeof v.reszletfizetesSzoveg === 'boolean') out.reszletfizetesSzoveg = v.reszletfizetesSzoveg;
   if (typeof v.csjkBirsagTetel === 'boolean') out.csjkBirsagTetel = v.csjkBirsagTetel;
+  // javító kör 11-21: the confirmed 2027 amount (whole Ft, 1 000 – 500 000), used only with kata2027 on
+  if (typeof v.kata2027Osszeg === 'number' && Number.isSafeInteger(v.kata2027Osszeg) && v.kata2027Osszeg >= 1_000 && v.kata2027Osszeg <= 500_000) out.kata2027Osszeg = v.kata2027Osszeg;
   return out;
 }
 
@@ -100,7 +102,9 @@ export async function kataCompute(db: DbOrTx, clientId: string, year: number, as
   const rules = kataRulesFor(year, profile.kataVariant ?? 'regi');
   if (!rules) return null;
   const kap = k ?? (await evesKapcsolok(db));
-  const monthlyHuf = kataMonthlyHuf(rules, { fofoglalkozasu: profile.kataFofoglalkozasu ?? (rules.variant === 'regi' ? true : null), allowDraft: draftAllowed(year, kap) });
+  const engineHuf = kataMonthlyHuf(rules, { fofoglalkozasu: profile.kataFofoglalkozasu ?? (rules.variant === 'regi' ? true : null), allowDraft: draftAllowed(year, kap) });
+  // javító kör 11-21 [D24]: the old KATA's 2027 amount as confirmed in the switch (50 000 if the T/928 fails, 75 000 if not)
+  const monthlyHuf = engineHuf !== null && year === 2027 && rules.variant === 'regi' && draftAllowed(year, kap) && kap.kata2027Osszeg !== null ? kap.kata2027Osszeg : engineHuf;
   const revRows = await db
     .select({ receivedOn: revenueItems.receivedOn, amountHuf: revenueItems.amountHuf, counts: revenueItems.countsForAtalany })
     .from(revenueItems)
@@ -135,7 +139,7 @@ export interface KataSyncResult {
  * Only STARTED months get a row (one row per month, at the latest on the 1st). A row made after its due date is
  * `backfilled` (no reminder; the client sees it only after the accountant verified it).
  */
-export async function syncKataPeriods(deps: Deps, db: DbOrTx, clientId: string, year: number, o: { k?: EvesKapcsolok } = {}): Promise<KataSyncResult> {
+export async function syncKataPeriods(deps: Deps, db: DbOrTx, clientId: string, year: number, o: { k?: EvesKapcsolok; noCreate?: boolean } = {}): Promise<KataSyncResult> {
   const now = deps.now();
   const today = todayBudapest(now);
   const out: KataSyncResult = { created: 0, updated: 0, hidden: 0, backfilled: [], paidButExempt: [], unconfirmed: 0 };
@@ -158,6 +162,8 @@ export async function syncKataPeriods(deps: Deps, db: DbOrTx, clientId: string, 
   for (const m of wanted.values()) {
     let p = existing.find((x) => x.periodKey === m.periodKey);
     if (!p) {
+      // javító kör 11-21: a client whose service ended / is suspended gets no new month row (the old ones still follow)
+      if (o.noCreate) continue;
       const backfilled = m.dueDate < today;
       const [ins] = await db
         .insert(taxPeriods)
@@ -281,10 +287,11 @@ export function meterView(c: KataComputation, o: { staff: boolean; k: EvesKapcso
   const m = c.meter;
   const T: KataF1Texts = o.t ?? KATA_F1_TEXTS;
   const showProjection = o.staff || o.k.kataElorejelzesUgyfelnek;
-  const limitLine =
-    m.liableMonths >= 12 || c.rules.limitPerMonthHuf === null
-      ? fill(T.keretTeljes, { keret: fmt(m.limitHuf) })
-      : fill(T.keretHonapok, { n: m.liableMonths, havi: fmt(c.rules.limitPerMonthHuf) });
+  // javító kör 11-21: the panel line is not tegező ("Keret: …"); a prorated month of the new KATA is not a whole number
+  const full = m.liableMonths >= 12 || c.rules.limitPerMonthHuf === null;
+  const limitLine = full
+    ? fill(o.staff ? KATA_PANEL_TEXTS.keretTeljesPanel : T.keretTeljes, { keret: fmt(m.limitHuf) })
+    : fill(o.staff ? KATA_PANEL_TEXTS.keretHonapokPanel : T.keretHonapok, { n: m.liableMonths, havi: fmt(Math.round(c.rules.limitPerMonthHuf!)) });
   let warningLine: string | null = null;
   if (m.level === 'tullepve') warningLine = fill(T.keretTullepve, { tobblet: fmt(m.overHuf), kulonado: fmt(m.kulonadoEstimateHuf), hatarido: m.kulonadoDue ? huDayMonthIg(m.kulonadoDue) : 'a nyilatkozattal' });
   else if (showProjection && m.projectedOverHuf > 0) warningLine = fill(T.keretElore, { ...o.params, tobblet: fmt(m.projectedOverHuf) });
@@ -377,10 +384,21 @@ export async function kataHomeView(deps: Deps, db: DbOrTx, cl: ClientRow, year: 
   let nothingToPayLine: string | null = null;
   if (!nextOpen) {
     // the next month to come (or the current one, not yet due) – "A következő kata: december, január 12-ig."
+    // javító kör 11-21: the current month only while it is still to pay (not marked, not free); else the next KATA month of
+    // the year (never a month that is already marked, and never a free one)
     const today = todayBudapest(deps.now());
-    const upcoming = v.months.find((m) => m.status === 'fizetendo' && m.dueDate >= today) ?? null;
-    const thisMonth = Number(today.slice(5, 7));
-    const nextDue = upcoming ? { honap: upcoming.label, due: upcoming.dueDate } : v.monthlyHuf !== null && Number(today.slice(0, 4)) === year ? { honap: monthName(thisMonth), due: nextWorkingDay(thisMonth === 12 ? `${year + 1}-01-12` : `${year}-${String(thisMonth + 1).padStart(2, '0')}-12`) } : null;
+    const cur = today.slice(0, 7);
+    const all = (await kataCompute(db, cl.id, year, today).catch(() => null))?.months ?? [];
+    const curView = v.months.find((m) => m.monthKey === cur);
+    const curMonth = all.find((m) => m.monthKey === cur);
+    let nextDue: { honap: string; due: string } | null = null;
+    if (v.monthlyHuf !== null && Number(today.slice(0, 4)) === year) {
+      if (curMonth?.liable && (!curView || curView.status === 'fizetendo')) nextDue = { honap: monthName(curMonth.month), due: curView?.dueDate ?? curMonth.dueDate };
+      else {
+        const next = all.find((m) => m.monthKey > cur && m.liable);
+        if (next) nextDue = { honap: monthName(next.month), due: next.dueDate };
+      }
+    }
     nothingToPayLine = nextDue ? fill(T.nincsFizetnivalo, { honap: nextDue.honap, hatarido: huDayMonthIg(nextDue.due) }) : null;
   }
   const rules = kataRulesFor(year, v.variant);
@@ -438,10 +456,16 @@ export async function jobKataPeriods(deps: Deps): Promise<Record<string, number>
   const out = { clients: 0, created: 0, hidden: 0 };
   for (const y of today.slice(5, 7) === '01' ? [year - 1, year] : [year]) {
     // every client with ANY period of the year too: a regime switched back to átalány hides its KATA months
-    const ids = new Set((await kataClients(deps.db, y)).map((c) => c.id));
+    const active = new Set((await kataClients(deps.db, y)).map((c) => c.id));
+    const ids = new Set(active);
     for (const r of await deps.db.selectDistinct({ id: taxPeriods.clientId }).from(taxPeriods).where(and(eq(taxPeriods.year, y), eq(taxPeriods.kind, 'kata'), isNull(taxPeriods.hiddenAt)))) ids.add(r.id);
     for (const id of ids) {
-      const r = await syncKataPeriods(deps, deps.db, id, y, { k });
+      let noCreate = false;
+      if (!active.has(id)) {
+        const [c] = await deps.db.select({ lifecycle: clients.lifecycle }).from(clients).where(eq(clients.id, id)).limit(1);
+        noCreate = c?.lifecycle !== 'aktiv';
+      }
+      const r = await syncKataPeriods(deps, deps.db, id, y, { k, noCreate });
       out.clients++;
       out.created += r.created;
       out.hidden += r.hidden;

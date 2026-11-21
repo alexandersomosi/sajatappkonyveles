@@ -234,7 +234,8 @@ export async function jobNewYear(deps: Deps): Promise<number> {
         status: p.status,
         guaranteedMinimum: p.guaranteedMinimum,
         retail: p.retail,
-        insuranceBreaks: [],
+        // javító kör 11-21: a state that goes on into the new year (szünetel, táppénz, GYED…) is carried over from 1 January
+        insuranceBreaks: (p.insuranceBreaks ?? []).filter((b) => b.to >= newStart).map((b) => ({ from: b.from < newStart ? newStart : b.from, to: b.to, kind: b.kind })),
         hipaMethod: p.hipaMethod,
         hipaRatePct: p.hipaRatePct,
         hipaAccountNumber: p.hipaAccountNumber,

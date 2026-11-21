@@ -111,8 +111,8 @@
 		# Stripe webhook 256 KB; everything else 1 MB (the API checks the same per route while streaming –
 		# backend/src/app.ts bodyLimitFor).
 		@kezjegy_egy_fajl path_regexp ^/api/v1/(client|acc|team)/attachments/?$
-		@kezjegy_feltoltes path_regexp ^/api/v1/(client/(kyc|documents(/[^/]+/versions)?|business-registration/filed)|acc/(clients/[^/]+/documents|documents/[^/]+/versions))/?$
-		@kezjegy_nem_feltoltes not path_regexp ^/api/v1/(client/(kyc|attachments|documents(/[^/]+/versions)?|business-registration/filed)|acc/(attachments|clients/[^/]+/documents|documents/[^/]+/versions)|team/attachments)/?$
+		@kezjegy_feltoltes path_regexp ^/api/v1/(client/(kyc|documents(/[^/]+/versions)?|business-registration/filed)|acc/(clients/[^/]+/documents|documents/[^/]+/versions|clients/[^/]+/annual/[^/]+/(draft|filed-szja|filed-hipa)|corrections/[^/]+/filed|clients/[^/]+/reconciliations))/?$
+		@kezjegy_nem_feltoltes not path_regexp ^/api/v1/(client/(kyc|attachments|documents(/[^/]+/versions)?|business-registration/filed)|acc/(attachments|clients/[^/]+/documents|documents/[^/]+/versions|clients/[^/]+/annual/[^/]+/(draft|filed-szja|filed-hipa)|corrections/[^/]+/filed|clients/[^/]+/reconciliations)|team/attachments)/?$
 		@kezjegy_webhook path /api/v1/webhooks/stripe
 		request_body @kezjegy_egy_fajl {
 			max_size 26MB

@@ -701,7 +701,8 @@ export function paymentStatusOf(items: { markedPaidAt: Date | null; verification
 
 export async function markPaid(deps: Deps, db: DbOrTx, clientId: string, periodId: string, kinds: PaymentItemKind[] | undefined, paidOn: string, userId: string): Promise<PeriodRow> {
   const [p] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, periodId), eq(taxPeriods.clientId, clientId), periodVisible)).limit(1);
-  if (!p) throw E.notFound();
+  // javító kör 11-21: a backfilled KATA month the client cannot see yet (before the accountant's check) is not his to mark
+  if (!p || (p.backfilled && p.paymentStatus !== 'ellenorizve')) throw E.notFound();
   if (p.calcStatus !== 'jovahagyva') throw E.conflict('Ezt még nem hagyta jóvá a könyvelőd. Várd meg a végleges összeget.');
   const today = todayBudapest(deps.now());
   if (paidOn > today) throw E.validation({ paidOn: 'A befizetés napja nem lehet a jövőben.' });
@@ -762,6 +763,9 @@ export async function verifyPayment(
   accountantUserId: string,
   accountantId: string,
   checks: { kind: PaymentItemKind; verification: 'rendben' | 'elteres'; note?: string }[],
+  /** javító kör 11-21: notifyClient false = no client notice (a folyószámla "eltérés", all but the last month of a group
+   *  "Rendben"); actorRole = who really did it (an admin is audited as admin). */
+  o: { notifyClient?: boolean; actorRole?: string } = {},
 ): Promise<PeriodRow> {
   const [p] = await db.select().from(taxPeriods).where(eq(taxPeriods.id, periodId)).limit(1);
   if (!p) throw E.notFound();
@@ -782,7 +786,7 @@ export async function verifyPayment(
   const allOk = after.length > 0 && after.every((i) => i.verification === 'rendben');
   const status = anyMismatch ? 'elteres' : allOk ? 'ellenorizve' : p.paymentStatus;
   const [updated] = await db.update(taxPeriods).set({ paymentStatus: status, updatedAt: now }).where(eq(taxPeriods.id, p.id)).returning();
-  await audit(db, { action: 'tax.payment_verified', actorUserId: accountantUserId, actorRole: 'accountant', targetType: 'tax_period', targetId: p.id, clientId: cl.id, details: { status } });
+  await audit(db, { action: 'tax.payment_verified', actorUserId: accountantUserId, actorRole: o.actorRole ?? 'accountant', targetType: 'tax_period', targetId: p.id, clientId: cl.id, details: { status } });
   const ap = await accountantParams(db, accountantId);
   // The iparűzési adóelőleg goes to the önkormányzat, not to NAV: its own wording (variant 'hipa').
   // SPEC §32.B: the yearly differences and the önellenőrzés have their own "látta" wording too.
@@ -791,8 +795,9 @@ export async function verifyPayment(
   const mismatchVariant = p.kind === 'hipa' || p.kind === 'kata' ? okVariant : {};
   const honap = p.kind === 'kata' ? monthName(Number(p.periodKey.slice(5, 7))) : undefined;
   const link = p.kind === 'hipa' ? '/hataridok' : p.kind === 'kata' || isAnnualPeriodKind(p.kind) ? `/fizetes/${p.id}` : '/';
-  if (status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...okVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link });
-  if (status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...mismatchVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link: '/uzenetek' });
+  const tell = o.notifyClient !== false;
+  if (tell && status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...okVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link });
+  if (tell && status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...mismatchVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link: '/uzenetek' });
   // SPEC §32.B: a verified difference may finish the annual closing or settle the önellenőrzés
   if (isAnnualPeriodKind(p.kind) && status === 'ellenorizve') await (await import('./eves-ciklus.js')).afterSettlementVerified(deps, db, updated!);
   return updated!;
@@ -929,7 +934,9 @@ export async function heroPeriod(
   const open = await db
     .select()
     .from(taxPeriods)
-    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.kind, 'negyedev'), periodVisible, eq(taxPeriods.calcStatus, 'jovahagyva'), inArray(taxPeriods.paymentStatus, ['fizetendo', 'befizetve_jelezve', 'elteres'])))
+    // javító kör 11-21: the yearly differences and the önellenőrzés are payments too – the Főoldal never says "Most nincs
+    // mit fizetned" while one is open (the earliest due first)
+    .where(and(eq(taxPeriods.clientId, clientId), inArray(taxPeriods.kind, ['negyedev', 'eves_szja', 'kata_eves', 'hipa_eves', 'onellenorzes']), periodVisible, eq(taxPeriods.calcStatus, 'jovahagyva'), inArray(taxPeriods.paymentStatus, ['fizetendo', 'befizetve_jelezve', 'elteres'])))
     .orderBy(asc(taxPeriods.dueDate));
   if (open.length) {
     const p = open[0]!;

@@ -22,7 +22,7 @@ import { accountantUserOf, staffRefs } from './team.js';
 import { clientName, type ClientRow } from './people.js';
 import { fmt } from './kedvezmeny.js';
 import { evesKapcsolok } from './kata.js';
-import { annualExtras, annualStaffExtras, approvalDueOf, approvalHashFor, buildSummary, fileAnnual, fileAnnualHipa, latestDraft, type AnnualFilingInput } from './eves-ciklus.js';
+import { annualExtras, annualStaffExtras, approvalDueOf, approvalHashFor, buildSummary, draftOf, evesText, fileAnnual, fileAnnualHipa, type AnnualFilingInput } from './eves-ciklus.js';
 
 export type AnnualRow = typeof annualClosings.$inferSelect;
 const AAD = 'annual_closings.refund_account';
@@ -70,10 +70,18 @@ async function view(deps: Deps, db: DbOrTx, cl: ClientRow, r: AnnualRow): Promis
       refundMasked = '…';
     }
   }
-  const [draft] = r.status === 'jovahagyasra_var' ? await db.select().from(documents).where(and(eq(documents.clientId, cl.id), eq(documents.category, 'bevallas'), eq(documents.visibility, 'kozos'))).orderBy(desc(documents.createdAt)).limit(1) : [];
+  // javító kör 11-21: the draft the closing was sent with (never a later quarterly 'bevallas' document), not deleted
+  const draft = r.status === 'jovahagyasra_var' ? await draftOf(db, cl.id, r) : null;
   const draftDto = draft ? (await listItems(db, [draft], { firstName: String(params.firstName), staff: false }))[0] ?? null : null;
   const y = r.taxYear;
-  const statusText = await deps.content.render(`eves.allapot.${r.status}`, { ...params, hatarido: huDayMonthIg(r.questionnaireDue), dij: fmt(ch?.amountHuf ?? fee.amountHuf) });
+  const approvedWaiting = r.status === 'jovahagyasra_var' && Boolean(r.approvedAt);
+  const extras = await annualExtras(deps, db, cl, r);
+  // the status line follows what the client really sees: approved → "Jóváhagytad…"; filed → the difference / refund line
+  const statusText = approvedWaiting
+    ? await evesText(deps, r.regime === 'kata' ? 'allapotJovahagyvaKata' : 'allapotJovahagyva', params)
+    : r.status === 'beadva' && extras.settlement?.text
+      ? extras.settlement.text
+      : await deps.content.render(`eves.allapot.${r.status}`, { ...params, hatarido: huDayMonthIg(r.questionnaireDue), dij: fmt(ch?.amountHuf ?? fee.amountHuf) });
   return {
     id: r.id,
     year: y,
@@ -86,11 +94,11 @@ async function view(deps: Deps, db: DbOrTx, cl: ClientRow, r: AnnualRow): Promis
     feeCharge: ch ? await feeChargeView(deps, db, ch) : null,
     draft: draftDto,
     approval: r.approvedAt && r.approvalHash ? { at: r.approvedAt.toISOString(), hash: r.approvalHash } : null,
-    nextAction: r.status === 'kerdoiv' ? 'kitoltes' : r.status === 'dijra_var' ? 'fizetes' : r.status === 'jovahagyasra_var' ? 'jovahagyas' : null,
+    nextAction: r.status === 'kerdoiv' ? 'kitoltes' : r.status === 'dijra_var' ? 'fizetes' : r.status === 'jovahagyasra_var' && !approvedWaiting ? 'jovahagyas' : null,
     canEdit: r.status === 'kerdoiv' && !cl.serviceLock,
     feeHuf: feeOn ? fee.amountHuf : null,
     // SPEC §32.B: the numbers to approve (+ hash), the settlement after filing, the timeline, the HIPA, the önellenőrzések
-    ...(await annualExtras(deps, db, cl, r)),
+    ...extras,
   };
 }
 
@@ -158,8 +166,10 @@ export function draftHash(docId: string, sha: string | null): string {
 export async function approveAnnual(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, hash: string, ctx: { userId: string; ipHmac: string; ua: string }): Promise<AnnualView> {
   const r = await own(db, cl, id);
   if (r.status !== 'jovahagyasra_var') throw annualErr.wrongStatus();
-  const draft = await latestDraft(db, cl.id);
+  const draft = await draftOf(db, cl.id, r);
   if (!draft) throw annualErr.wrongStatus('Még nincs feltöltött tervezet.');
+  // a second tap on "Jóváhagyom" (the same hash) changes nothing
+  if (r.approvedAt && r.approvalHash === hash) return view(deps, db, cl, r);
   // SPEC §32.B: the hash covers the draft AND the numbers the accountant entered (older closings: the draft only)
   const expect = r.amounts ? approvalHashFor(draft.id, r) : draftHash(draft.id, null);
   if (hash !== expect) throw new ApiError(409, 'assist_consent_stale', 'A tervezet változott. Nyisd meg újra, és nézd át.');
@@ -217,7 +227,7 @@ export async function annualCheck(deps: Deps, db: DbOrTx, cl: ClientRow, id: str
  * client only with the amounts saved and "Az összegek egyeznek a bevallás tervezetével" ticked; the filings are in
  * services/eves-ciklus.ts (iktatószám, the two documents, the difference / refund, the HIPA difference).
  */
-export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, step: 'draft' | 'filed-szja' | 'filed-hipa', actor: { userId: string; role: string }, filing?: AnnualFilingInput & { accountNumber?: string | null }): Promise<AnnualRow> {
+export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, step: 'draft' | 'filed-szja' | 'filed-hipa', actor: { userId: string; role: string }, filing?: AnnualFilingInput & { accountNumber?: string | null; draftDocumentId?: string | null }): Promise<AnnualRow> {
   if (step === 'filed-szja') return fileAnnual(deps, db, cl, id, filing ?? { filedOn: todayBudapest(deps.now()) }, actor);
   if (step === 'filed-hipa') return fileAnnualHipa(deps, db, cl, id, filing ?? { filedOn: todayBudapest(deps.now()) }, actor);
   const [r] = await db.select().from(annualClosings).where(and(eq(annualClosings.id, id), eq(annualClosings.clientId, cl.id))).limit(1);
@@ -227,7 +237,9 @@ export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: stri
   if (r.status !== 'konyvelonel' && r.status !== 'jovahagyasra_var') throw annualErr.wrongStatus();
   if (!r.amounts) throw annualErr.wrongStatus('Előbb rögzítsd az összegeket az Összegek kártyán: az ügyfél ezeket hagyja jóvá.');
   if (!r.amounts.matchesDraft) throw annualErr.wrongStatus('Jelöld be: „Az összegek egyeznek a bevallás tervezetével.”');
-  const patch: Partial<AnnualRow> = { status: 'jovahagyasra_var', approvedAt: null, approvalHash: null, approvedSummary: null, checklist: { ...(r.checklist ?? {}), tervezet_feltoltve: { at: now.toISOString(), by: actor.userId } } };
+  const checklist: NonNullable<AnnualRow['checklist']> = { ...(r.checklist ?? {}), tervezet_feltoltve: { at: now.toISOString(), by: actor.userId } };
+  delete checklist.ugyfel_jovahagyta; // a new draft needs a new approval
+  const patch: Partial<AnnualRow> = { status: 'jovahagyasra_var', approvedAt: null, approvalHash: null, approvedSummary: null, checklist, ...(filing?.draftDocumentId ? { draftDocumentId: filing.draftDocumentId } : {}) };
   const [u] = await db.update(annualClosings).set({ ...patch, updatedAt: now }).where(eq(annualClosings.id, r.id)).returning();
   await audit(db, { action: `annual.${step}`, actorUserId: actor.userId, actorRole: actor.role, targetType: 'annual_closing', targetId: r.id, clientId: cl.id });
   await notify(deps, db, { userId: cl.userId, kind: 'annual_status', variant: 'jovahagyasra_var', params, link: '/eves-zaras/jovahagyas' });

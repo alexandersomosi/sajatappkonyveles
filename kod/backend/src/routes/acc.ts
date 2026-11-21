@@ -81,6 +81,7 @@ import { registerAccEvRoutes } from './acc-ev.js';
 import { registerAccK29fRoutes } from './acc-k29f.js';
 import { pendingAllowances } from '../services/kedvezmeny.js';
 import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
+import { KATA_EXEMPT_KINDS } from '../_shared/kata.js';
 
 /**
  * One CSV cell for Excel (";" separated). Text from clients or NAV (customer names, descriptions) that starts
@@ -339,7 +340,9 @@ export function accRoutes(deps: Deps) {
         guaranteedMinimum: z.boolean().optional(),
         retail: z.boolean().optional(),
         atalanyFrom: z.string().refine(isIsoDate).nullable().optional(),
-        insuranceBreaks: z.array(z.object({ from: z.string().refine(isIsoDate), to: z.string().refine(isIsoDate), kind: z.enum(['szunetel', 'kieso']) })).max(24).optional(),
+        // javító kör 11-21: the GET returns the KATA free months too (their own form) – the card sends them back unchanged;
+        // they are accepted here and ignored (the stored KATA entries are kept), so the card can be saved for a KATA client
+        insuranceBreaks: z.array(z.object({ from: z.string().refine(isIsoDate), to: z.string().refine(isIsoDate), kind: z.enum(['kieso', ...KATA_EXEMPT_KINDS] as const), reportedOn: z.string().nullish() })).max(48).optional(),
         hipa: z.object({ method: z.enum(['savos', 'altalanos', 'nincs']), ratePct: z.number().min(0).max(2), accountNumber: z.string().max(40).optional() }).optional(),
         priorOverrides: z.object({ throughQuarter: z.union([z.literal(1), z.literal(2), z.literal(3)]), priorActualBaseSum: z.number().int().min(0), priorSzjaAdvanceSum: z.number().int().min(0) }).nullable().optional(),
         // null / '' clears it: the questionnaire never asks for ÖVTJ, so most new clients have none yet.
@@ -360,7 +363,9 @@ export function accRoutes(deps: Deps) {
       ...(b.retail !== undefined ? { retail: b.retail } : {}),
       ...(b.atalanyFrom !== undefined ? { atalanyFrom: b.atalanyFrom } : {}),
       // SPEC §32: the KATA free months (their own form, PUT /acc/clients/:id/kata/breaks) are kept when this list is saved
-      ...(b.insuranceBreaks ? { insuranceBreaks: [...(tp?.insuranceBreaks ?? []).filter((x) => x.kind !== 'szunetel' && x.kind !== 'kieso'), ...b.insuranceBreaks] } : {}),
+      ...(b.insuranceBreaks
+        ? { insuranceBreaks: [...(tp?.insuranceBreaks ?? []).filter((x) => x.kind !== 'szunetel' && x.kind !== 'kieso'), ...b.insuranceBreaks.filter((x) => x.kind === 'szunetel' || x.kind === 'kieso').map((x) => ({ from: x.from, to: x.to, kind: x.kind }))] }
+        : {}),
       ...(b.hipa ? { hipaMethod: b.hipa.method, hipaRatePct: b.hipa.ratePct.toFixed(2), hipaAccountNumber: b.hipa.accountNumber ?? null } : {}),
       ...(b.priorOverrides !== undefined ? { priorOverrides: b.priorOverrides } : {}),
       ...(b.allowances !== undefined ? { allowances: b.allowances?.length ? b.allowances : null } : {}),
@@ -992,6 +997,8 @@ export function accRoutes(deps: Deps) {
                 manual: true,
                 estimate: hipaEstimate,
                 accountNumber: tp?.hipaAccountNumber ?? null,
+                // SPEC §32.B: last year's tax from the annual closing (Htv. 39/A. § (9): the sávos advance) – a prefill only
+                priorYearHuf: tp?.hipaPriorYearHuf ?? null,
                 hint: 'Az iparűzési adóelőleg az előző évi adóval egyezik meg. Add meg kézzel az összeget és az önkormányzat számlaszámát.',
               },
             }

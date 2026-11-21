@@ -303,7 +303,7 @@ export function adminRoutes(deps: Deps) {
       .select({ n: count() })
       .from(taxPaymentItems)
       .innerJoin(taxPeriods, eq(taxPeriods.id, taxPaymentItems.taxPeriodId))
-      .where(and(inArray(taxPeriods.clientId, clientIds), isNull(taxPeriods.hiddenAt), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)));
+      .where(and(inArray(taxPeriods.clientId, clientIds), isNull(taxPeriods.hiddenAt), eq(taxPeriods.backfilled, false), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)));
     const [fil] = await deps.db
       .select({ n: count() })
       .from(taxPeriods)

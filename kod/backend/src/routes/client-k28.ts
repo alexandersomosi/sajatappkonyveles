@@ -12,7 +12,9 @@ import { and } from 'drizzle-orm';
 import { audit, auditC } from '../audit.js';
 import { auth, param, parseQuery, readJson, type C, type Env } from '../http/core.js';
 import { todayBudapest } from '../lib/dates.js';
-import { E } from '../lib/errors.js';
+import { ApiError, E } from '../lib/errors.js';
+import { fill } from '../content.js';
+import { KATA_F1_TEXTS } from '../_shared/kata.js';
 import { accountantParams } from '../notify/notify.js';
 import { clientOfUser, type ClientRow } from '../services/people.js';
 import { isRestricted } from '../services/access.js';
@@ -97,7 +99,12 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
   r.get('/reserve', async (c) => {
     const cl = await client(c);
     const year = parseQuery(c, yearQ).year ?? thisYear();
-    if (await isKata(deps.db, cl.id, year)) throw E.notFound(`Katás vagy: a havi 50 000 Ft-ot és a keretedet ${await firstName(cl)} figyeli.`);
+    if (await isKata(deps.db, cl.id, year)) {
+      // javító kör 11-21: the KATA sentence (terv 3.8) instead of an error the client cannot fix
+      const kv = await kataYearView(deps, deps.db, cl, year, { staff: false }).catch(() => null);
+      const t = (await deps.content.get('kata.f1.felretesz')) || KATA_F1_TEXTS.felretesz;
+      throw new ApiError(404, 'kata_no_reserve', fill(t, { havi: fmt(kv?.monthlyHuf ?? 50_000) }));
+    }
     const v = await reserveList(deps, deps.db, cl, year, todayBudapest(deps.now()));
     if (!v) throw E.notFound('Még nincs adózási profilod. Ha {firstName} beállította, itt látod.'.replace('{firstName}', await firstName(cl)));
     return c.json(v);

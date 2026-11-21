@@ -338,7 +338,9 @@ export function HipaIdoszak({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
   const t = today();
   const qc = useQueryClient();
   const pir = usePirito();
-  const [osszeg, setOsszeg] = useState('');
+  // SPEC §32.B: prefilled with last year's tax when the annual closing recorded it ("Előző évi adó (Htv. 39/A. § (9))")
+  const elozo = (p as { hipa?: { priorYearHuf?: number | null } }).hipa?.priorYearHuf ?? null;
+  const [osszeg, setOsszeg] = useState(elozo !== null ? String(elozo) : '');
   const [szamla, setSzamla] = useState(c.taxProfile?.hipa.accountNumber ?? '');
   const [megerosit, setMegerosit] = useState(false);
   const [ujranyit, setUjranyit] = useState(false);

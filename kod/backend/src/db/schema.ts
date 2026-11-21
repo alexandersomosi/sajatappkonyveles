@@ -423,6 +423,8 @@ export const clientTaxProfiles = pgTable(
     /** SPEC §32.B: the previous year's HIPA (the sávos advance = last year's tax, Htv. 39/A. § (9)) and where it came from. */
     hipaPriorYearHuf: integer(),
     hipaPriorYearSource: text().$type<'eves_zaras' | 'atvetel' | 'kezi'>(),
+    /** Javító kör 11-21 (kritika 2.1): the accountant's decision of the next year's mode, recorded in December (when, who filed it). */
+    regimeDecision: jsonb().$type<{ decidedAt: string; decidedBy: string; filedOn: string | null; filedBy: 'konyvelo' | 'ugyfel' | 'nem_kell' | null; note: string | null }>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1774,6 +1776,8 @@ export const annualClosings = pgTable(
     closedManuallyReason: text(),
     openedManuallyBy: uuid(),
     openedManuallyAt: ts(),
+    /** Javító kör 11-21: the draft document sent to the client for approval (the approval hash covers this one). */
+    draftDocumentId: uuid(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },

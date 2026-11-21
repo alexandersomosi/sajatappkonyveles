@@ -35,7 +35,7 @@ import { snake } from '../content/tulaj1119.js';
 import { addDays, huDayMonth, huDayMonthIg, huDayMonthTol, quarterLabel, todayBudapest } from '../lib/dates.js';
 import { ApiError, E } from '../lib/errors.js';
 import { accountantParams, notify } from '../notify/notify.js';
-import { kataDeclarationDue, kataRulesFor, NAV_ACCOUNTS, nextWorkingDay, refundExpectedBy } from '../tax/engine.js';
+import { kataDeclarationDue, kataRulesFor, NAV_ACCOUNTS, nextWorkingDay, refundExpectedBy, rulesForYear } from '../tax/engine.js';
 import { fmt } from './kedvezmeny.js';
 import { clientName, type ClientRow } from './people.js';
 import { accountantUserOf } from './team.js';
@@ -175,7 +175,8 @@ export async function annualPrefill(deps: Deps, db: DbOrTx, cl: Pick<ClientRow, 
   const revenue = qs.reduce((a, q) => a + q.revenueHuf, 0);
   const szja = last.szjaCumulativeHuf ?? qs.reduce((a, q) => a + q.szjaAdvanceHuf, 0);
   return {
-    prefill: { revenueHuf: revenue, incomeHuf: last.incomeYtdHuf, taxableHuf: last.taxableYtdHuf, szjaHuf: szja, advancesHuf: advances },
+    // javító kör 11-21: the adómentes rész too (the summary shows "Adómentes rész −1 936 800 Ft", terv 3.3)
+    prefill: { revenueHuf: revenue, incomeHuf: last.incomeYtdHuf, taxFreeHuf: Math.min(last.incomeYtdHuf, rulesForYear(y)?.taxFreeIncomeHuf ?? Math.max(0, last.incomeYtdHuf - last.taxableYtdHuf)), taxableHuf: last.taxableYtdHuf, szjaHuf: szja, advancesHuf: advances },
     estimate: { diffHuf: szja - advances, szjaHuf: szja, advancesHuf: advances, byQuarter, revenueHuf: revenue },
     warnings,
   };
@@ -222,6 +223,17 @@ export function approvalHashFor(docId: string, r: Parameters<typeof numbersHash>
 /** The latest shared draft return of the client ('bevallas', kozos). */
 export async function latestDraft(db: DbOrTx, clientId: string) {
   const [d] = await db.select().from(documents).where(and(eq(documents.clientId, clientId), eq(documents.category, 'bevallas'), eq(documents.visibility, 'kozos'), isNull(documents.deletedAt))).orderBy(desc(documents.createdAt)).limit(1);
+  return d ?? null;
+}
+
+/**
+ * The draft of THIS closing (javító kör 11-21): the document stored at the 'draft' step (draft_document_id). A later
+ * 'bevallas' document of the client (a quarterly 2658 filed in April, an önellenőrzés) is never taken for it. Closings sent
+ * before the column existed fall back to the latest shared draft, as before.
+ */
+export async function draftOf(db: DbOrTx, clientId: string, r: Pick<AnnualRow, 'draftDocumentId'>) {
+  if (!r.draftDocumentId) return latestDraft(db, clientId);
+  const [d] = await db.select().from(documents).where(and(eq(documents.id, r.draftDocumentId), eq(documents.clientId, clientId), isNull(documents.deletedAt))).limit(1);
   return d ?? null;
 }
 
@@ -503,7 +515,10 @@ export async function fileAnnual(deps: Deps, db: DbOrTx, cl: ClientRow, id: stri
   } else variant = 'nulla';
   await db.update(annualClosings).set(patch).where(eq(annualClosings.id, r.id));
   await audit(db, { action: 'annual.filed-szja', actorUserId: actor.userId, actorRole: actor.role, targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { diffHuf: diff, withoutApproval: !r.approvedAt, filingRefLength: ref.length } });
-  const emailKey = `email.annual_status.${variant}.body`;
+  // the "Ha egyszerre nem tudod kifizetni, írj nekünk" sentence only with the switch on [TULAJ T6]
+  const { evesKapcsolok } = await import('./kata.js');
+  const reszlet = variant === 'fizetendo' && (await evesKapcsolok(db)).reszletfizetesSzoveg;
+  const emailKey = `email.annual_status.${variant}${reszlet ? '_reszlet' : ''}.body`;
   await notify(deps, db, { userId: cl.userId, kind: 'annual_status', variant, params, link, ...((await deps.content.exists(emailKey)) ? { emailBodyKey: emailKey } : {}) });
   return maybeCloseAnnual(deps, db, r.id);
 }
@@ -601,6 +616,13 @@ export async function saveAnnualHipa(deps: Deps, db: DbOrTx, cl: ClientRow, id: 
         if (input.taxHuf == null) throw E.validation({ taxHuf: 'Írd be az éves iparűzési adót.' });
         return { hipaNeeded: true, hipaAmounts: { taxHuf: input.taxHuf, advancesHuf: input.advancesHuf ?? 0, returnNeeded: input.returnNeeded ?? null }, updatedAt: now };
       })();
+  // javító kör 11-21 (Htv. 39/A. § (8)): without a return only with the sávos method, and only if the tax is not more than
+  // the advances paid – otherwise the return is required
+  if (!input.notNeeded && input.returnNeeded === false) {
+    const prof = await profileOf(db, cl.id, r.taxYear);
+    if (prof?.hipaMethod === 'altalanos') throw E.validation({ returnNeeded: 'Általános módszernél mindig kell bevallás.' });
+    if (n0(input.taxHuf) > n0(input.advancesHuf)) throw E.validation({ returnNeeded: 'Ha az éves adó több a befizetett előlegnél, bevallás kell (Htv. 39/A. § (8)).' });
+  }
   const before = numbersHash(r);
   const [u] = await db.update(annualClosings).set(patch).where(eq(annualClosings.id, r.id)).returning();
   await audit(db, { action: 'annual.hipa_saved', actorUserId: actor.userId, actorRole: actor.role, targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { notNeeded: Boolean(input.notNeeded) } });
@@ -608,8 +630,9 @@ export async function saveAnnualHipa(deps: Deps, db: DbOrTx, cl: ClientRow, id: 
     await db.update(annualClosings).set({ approvedAt: null, approvalHash: null, approvedSummary: null }).where(eq(annualClosings.id, r.id));
     await notifyChanged(deps, db, cl, r);
   }
-  // no return needed (sávos, H ≤ E): the tax is final → next year's advance base (Htv. 39/A. § (9))
-  if (!input.notNeeded && input.returnNeeded === false && input.taxHuf != null) await writePriorYearHipa(deps, db, cl.id, r.taxYear, input.taxHuf);
+  // no return needed (sávos, H ≤ E): the tax counts as paid with the advances (Htv. 39/A. § (8)) → next year's advance base
+  // is the advance paid, E (Htv. 39/A. § (9)); the accountant can still change the prefill [DÁVID]
+  if (!input.notNeeded && input.returnNeeded === false && input.taxHuf != null) await writePriorYearHipa(deps, db, cl.id, r.taxYear, Math.max(input.taxHuf, n0(input.advancesHuf)));
   return maybeCloseAnnual(deps, db, r.id);
 }
 
@@ -764,6 +787,17 @@ export async function settlementView(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
   return { diffHuf: r.diffHuf, filedOn: r.filedSzjaOn ?? null, filingRef: r.szjaFilingRef ?? null, periodId: p?.id ?? null, paymentStatus: p?.paymentStatus ?? null, refund, text };
 }
 
+/** Σ the year's HIPA advance items the client marked or the accountant verified (the prefill of E). */
+async function hipaAdvancesPaid(db: DbOrTx, clientId: string, year: number): Promise<number | null> {
+  const rows = await db
+    .select({ amountHuf: taxPaymentItems.amountHuf, markedPaidAt: taxPaymentItems.markedPaidAt, verification: taxPaymentItems.verification })
+    .from(taxPaymentItems)
+    .innerJoin(taxPeriods, eq(taxPeriods.id, taxPaymentItems.taxPeriodId))
+    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'hipa'), periodVisible, isNull(taxPaymentItems.voidedAt)));
+  const paid = rows.filter((i) => i.markedPaidAt || i.verification === 'rendben');
+  return paid.length ? paid.reduce((a, b) => a + b.amountHuf, 0) : null;
+}
+
 export function hipaView(r: AnnualRow): AnnualHipaView {
   const h = r.hipaAmounts;
   return {
@@ -787,12 +821,14 @@ export async function annualTimeline(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
   const t = (path: string) => evesText(deps, path, { ...ap, ev: y });
   const filed = Boolean(r.filedSzjaAt);
   const after = (s: string[]) => s.includes(r.status);
-  type Row = Omit<AnnualTimelineItem, 'status' | 'dateLabel'> & { done: boolean; start?: boolean };
+  type Row = Omit<AnnualTimelineItem, 'status' | 'dateLabel'> & { done: boolean; start?: boolean; ig?: boolean };
   const rows: Row[] = [];
-  const add = async (key: string, date: string, path: string, who: Row['who'], done: boolean, o: { start?: boolean; link?: string | null; subPath?: string } = {}) => {
+  const add = async (key: string, date: string, path: string, who: Row['who'], done: boolean, o: { start?: boolean; ig?: boolean; link?: string | null; subPath?: string; titlePath?: string } = {}) => {
     const sub = await t(`${o.subPath ?? path}.sub`).catch(() => '');
-    rows.push({ key, date, title: await t(`${path}.title`), sub: sub || null, who, done, start: o.start, link: o.link ?? null });
+    rows.push({ key, date, title: await t(o.titlePath ?? `${path}.title`), sub: sub || null, who, done, start: o.start, ig: o.ig, link: o.link ?? null });
   };
+  // javító kör 11-21: once filed with a difference to pay, the row says what is left ("Utald el a különbözetet")
+  const payLeft = filed && r.diffHuf != null && r.diffHuf > 0;
   const [settle] = r.settlementPeriodId ? await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, r.settlementPeriodId), periodVisible)).limit(1) : [];
   const paidOrNothing = r.diffHuf == null || r.diffHuf <= 0 || (settle ? ['befizetve_jelezve', 'ellenorizve'].includes(settle.paymentStatus) : false);
   const hipaApplies = profile?.hipaMethod !== 'nincs' && r.hipaNeeded;
@@ -804,7 +840,7 @@ export async function annualTimeline(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
     await add('kerdoiv', r.questionnaireDue, 'idovonal.kerdoiv', 'te', Boolean(r.submittedAt) || after(['konyvelonel', 'jovahagyasra_var', 'beadva', 'kesz']), { link: r.status === 'kerdoiv' ? '/eves-zaras/kerdoiv' : null });
     await add('keszites', r.questionnaireDue, 'idovonal.keszitesKata', 'konyvelo', after(['jovahagyasra_var', 'beadva', 'kesz']), { start: true });
     await add('jovahagyas', approvalDue, 'idovonal.jovahagyas', 'te', Boolean(r.approvedAt) || filed || r.status === 'kesz', { link: r.status === 'jovahagyasra_var' ? '/eves-zaras/jovahagyas' : null });
-    await add('beadas', settlementDue(r, profile), 'idovonal.beadasKata', 'kozos', (filed && paidOrNothing) || r.status === 'kesz', { link: settle ? `/fizetes/${settle.id}` : null });
+    await add('beadas', settlementDue(r, profile), 'idovonal.beadasKata', 'kozos', (filed && paidOrNothing) || r.status === 'kesz', { link: settle ? `/fizetes/${settle.id}` : null, ...(payLeft ? { titlePath: 'beadvaUtaldKata' } : {}) });
   } else {
     await add('nyitas', `${y + 1}-${ANNUAL_RULES.openMonthDay}`, 'idovonal.nyitas', 'te', r.status !== 'nem_indult', { start: true });
     const [q4] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.periodKey, `${y}-Q4`), periodVisible)).limit(1);
@@ -815,8 +851,9 @@ export async function annualTimeline(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
     await add('kerdoiv', r.questionnaireDue, 'idovonal.kerdoiv', 'te', Boolean(r.submittedAt) || after(['konyvelonel', 'jovahagyasra_var', 'beadva', 'kesz']), { link: r.status === 'kerdoiv' ? '/eves-zaras/kerdoiv' : null });
     await add('keszites', `${y + 1}-03-15`, 'idovonal.keszites', 'konyvelo', after(['jovahagyasra_var', 'beadva', 'kesz']), { start: true });
     await add('jovahagyas', approvalDue, 'idovonal.jovahagyas', 'te', Boolean(r.approvedAt) || filed || r.status === 'kesz', { link: r.status === 'jovahagyasra_var' ? '/eves-zaras/jovahagyas' : null });
-    await add('beadas', settlementDue(r, profile), 'idovonal.beadas', 'kozos', (filed && paidOrNothing) || r.status === 'kesz', { link: settle ? `/fizetes/${settle.id}` : null });
-    if (filed && r.diffHuf != null && r.diffHuf < 0 && r.refundExpectedBy) await add('visszajar', r.refundExpectedBy, 'idovonal.visszajar', 'nav', Boolean(r.refundStatus && r.refundStatus !== 'var'), { start: true });
+    await add('beadas', settlementDue(r, profile), 'idovonal.beadas', 'kozos', (filed && paidOrNothing) || r.status === 'kesz', { link: settle ? `/fizetes/${settle.id}` : null, ...(payLeft ? { titlePath: 'beadvaUtald' } : {}) });
+    // the refund is expected BY that day (Art. 64. § (1)): "május 20-ig", never "-ától"; it never turns "lejárt" for the client
+    if (filed && r.diffHuf != null && r.diffHuf < 0 && r.refundExpectedBy) await add('visszajar', r.refundExpectedBy, 'idovonal.visszajar', 'nav', Boolean(r.refundStatus && r.refundStatus !== 'var'), { start: true, ig: true });
   }
   if (hipaApplies) await add('hipa', nextWorkingDay(`${y + 1}-${ANNUAL_RULES.legalDue.hipa}`), 'idovonal.hipa', 'kozos', hipaDone || r.status === 'kesz', { link: r.hipaPeriodId ? `/fizetes/${r.hipaPeriodId}` : null });
   rows.sort((a, b) => a.date.localeCompare(b.date));
@@ -829,8 +866,8 @@ export async function annualTimeline(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
       status = 'most';
       mostGiven = true;
     } else status = 'kovetkezik';
-    const { done: _d, start, ...rest } = x;
-    return { ...rest, dateLabel: start ? huDayMonthTol(x.date) : huDayMonth(x.date), status };
+    const { done: _d, start, ig, ...rest } = x;
+    return { ...rest, dateLabel: ig ? huDayMonthIg(x.date) : start ? huDayMonthTol(x.date) : huDayMonth(x.date), status };
   });
 }
 
@@ -840,12 +877,13 @@ export async function annualExtras(deps: Deps, db: DbOrTx, cl: ClientRow, r: Ann
   const settled = r.status === 'beadva' || r.status === 'kesz';
   out.summary = settled && r.approvedSummary ? r.approvedSummary : r.amounts ? await buildSummary(deps, db, cl, r) : null;
   if (r.status === 'jovahagyasra_var') {
-    const d = await latestDraft(db, cl.id);
+    const d = await draftOf(db, cl.id, r);
     const { draftHash } = await import('./eves-zaras.js');
     out.approvalHash = d ? (r.amounts ? approvalHashFor(d.id, r) : draftHash(d.id, null)) : null;
   } else out.approvalHash = null;
   out.settlement = await settlementView(deps, db, cl, r);
-  out.hipa = hipaView(r);
+  const hp = await profileOf(db, cl.id, r.taxYear);
+  out.hipa = { ...hipaView(r), advancesPaidHuf: await hipaAdvancesPaid(db, cl.id, r.taxYear), method: hp?.hipaMethod ?? null };
   if (r.status !== 'nem_indult' || r.taxYear < Number(todayBudapest(deps.now()).slice(0, 4))) {
     out.timeline = await annualTimeline(deps, db, cl, r);
     const next = out.timeline.find((x) => x.status === 'most' || x.status === 'kovetkezik' || x.status === 'lejart');

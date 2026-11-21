@@ -539,7 +539,9 @@ export const CLOSING_TEXTS = {
   formEmployeesTitle: 'Volt alkalmazottad az idén?',
   formEmployees: { igen: 'Igen', nem: 'Nem' },
   formSubTitle: 'Mi lesz az Adózz-előfizetéseddel?',
-  formSubText: 'A záró bevallásokig folytatjuk, utána magától megszűnik. Az éves zárás díja ({evesDij} Ft) akkor jár, ha az idei SZJA-bevallást is mi adjuk be.',
+  // javító kör 11-21: no annual-closing fee while its switch is off (evesZarasDij, the ÁSZF is fixed first) – the sentence
+  // "Az éves zárás díja ({evesDij} Ft) akkor jár, ha az idei SZJA-bevallást is mi adjuk be." comes back with the switch
+  formSubText: 'A záró bevallásokig folytatjuk, utána magától megszűnik.',
   validationDatePast: 'A megszűnés legkorábban holnap lehet.',
   validationDateFar: 'Legfeljebb 90 nappal előre add meg.',
   summaryDate: 'Megszűnés napja',

@@ -25,6 +25,8 @@ export function registerClientEvRoutes(r: Hono<Env>, deps: Deps): void {
   r.get('/annual/timeline', async (c) => {
     const cl = await client(c);
     const year = parseQuery(c, z.object({ year: z.coerce.number().int().min(2024).max(2100).optional() })).year ?? (await defaultAnnualYear(deps.db, cl.id, thisYear()));
+    // javító kör 11-21: no 'nem_indult' row for a year far from now (last year, this year, next year only)
+    if (year < thisYear() - 1 || year > thisYear() + 1) throw E.notFound();
     await annualView(deps, deps.db, cl, year); // makes the 'nem_indult' row when missing
     const row = await annualOf(deps.db, cl.id, year);
     return c.json({ year, items: row ? await annualTimeline(deps, deps.db, cl, row) : [] });

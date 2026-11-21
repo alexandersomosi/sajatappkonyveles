@@ -264,7 +264,7 @@ export function kataLimitMeter(months: readonly KataMonth[], o: KataMeterOptions
   const assumedFutureMonths = liable.length - liableMonthsSoFar;
   const prorationKnown = rules.limitPerMonthHuf !== null;
   const limitHuf =
-    liable.length >= 12 || rules.limitPerMonthHuf === null ? rules.yearlyLimitHuf : Math.min(rules.yearlyLimitHuf, liable.length * rules.limitPerMonthHuf);
+    liable.length >= 12 || rules.limitPerMonthHuf === null ? rules.yearlyLimitHuf : Math.min(rules.yearlyLimitHuf, Math.round(liable.length * rules.limitPerMonthHuf));
   let usedHuf = 0;
   if (range) {
     const until = minDate(range.to, o.asOf);

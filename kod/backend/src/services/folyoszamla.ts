@@ -202,7 +202,8 @@ export async function saveReconciliation(deps: Deps, db: DbOrTx, cl: ClientRow, 
     const [item] = await db.select().from(taxPaymentItems).where(eq(taxPaymentItems.id, s.itemId)).limit(1);
     if (!item) continue;
     const note = `Folyószámla ${huDayMonth(input.asOf)}: befizetés ${huDayMonth(s.paidOn)}, ${s.amountHuf} Ft${s.note ? ` – ${s.note}` : ''}`;
-    await verifyPayment(deps, db, it.periodId, actor.userId, cl.accountantId!, [{ kind: item.kind, verification: s.verification, note }]);
+    // javító kör 11-21: an "eltérés" here is never an automatic client notice – "Szólok az ügyfélnek" is the accountant's choice
+    await verifyPayment(deps, db, it.periodId, actor.userId, cl.accountantId!, [{ kind: item.kind, verification: s.verification, note }], { notifyClient: s.verification === 'rendben', actorRole: actor.role });
     await db.update(taxPaymentItems).set({ reconciliationId: row!.id }).where(eq(taxPaymentItems.id, s.itemId));
     if (s.verification === 'rendben') verified.push(s.itemId);
   }

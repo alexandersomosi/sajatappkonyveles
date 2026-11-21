@@ -20,7 +20,9 @@ import { naptarRoutes } from './routes/public-naptar.js';
 import { publicMarketingRoutes } from './routes/public-marketing.js';
 
 // Multipart upload routes – the only ones that may send up to 60 MB (Caddy mirrors this, kezjegy.caddy).
-export const UPLOAD_PATH = /^\/api\/v1\/(client\/(kyc|attachments|documents(\/[^/]+\/versions)?|business-registration\/filed)|acc\/(attachments|clients\/[^/]+\/documents|documents\/[^/]+\/versions)|team\/attachments)\/?$/;
+// Javító kör 11-21: + the annual filings (draft, filed-szja, filed-hipa), the önellenőrzés filing (two PDFs) and the
+// folyószámla extract – they carry documents too.
+export const UPLOAD_PATH = /^\/api\/v1\/(client\/(kyc|attachments|documents(\/[^/]+\/versions)?|business-registration\/filed)|acc\/(attachments|clients\/[^/]+\/documents|documents\/[^/]+\/versions|clients\/[^/]+\/annual\/[^/]+\/(draft|filed-szja|filed-hipa)|corrections\/[^/]+\/filed|clients\/[^/]+\/reconciliations)|team\/attachments)\/?$/;
 /** One-file upload routes: 26 MB instead of 60 (Caddy mirrors this). */
 export const SINGLE_FILE_PATH = /^\/api\/v1\/(client|acc|team)\/attachments\/?$/;
 const KB = 1024;

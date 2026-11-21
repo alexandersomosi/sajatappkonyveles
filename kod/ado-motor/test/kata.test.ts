@@ -64,7 +64,8 @@ describe('KATA rules and account (NAV list from 2026-11-01)', () => {
     expect(kataMonthlyHuf(regi)).toBeNull();
     expect(kataMonthlyHuf(regi, { allowDraft: true })).toBe(75_000);
     expect(kataMonthlyHuf(uj, { allowDraft: true, fofoglalkozasu: true })).toBeNull(); // no NAV account known yet
-    expect(uj).toMatchObject({ monthlyHuf: 100_000, monthlyNotMainHuf: 50_000, yearlyLimitHuf: 22_000_000, limitPerMonthHuf: null, kiegeszitoPermille: 150, onlyMainJob: false });
+    // javító kör 11-21: T/928/9 7. § (4) prorates the keret (1/12 a month), 7. § (6) / 10. § (1) the 25 February due
+    expect(uj).toMatchObject({ monthlyHuf: 100_000, monthlyNotMainHuf: 50_000, yearlyLimitHuf: 22_000_000, limitPerMonthHuf: 22_000_000 / 12, declarationDue: { month: 2, day: 25 }, kiegeszitoPermille: 150, onlyMainJob: false });
     expect(kataMonthlyHuf(R)).toBe(50_000);
   });
 });
@@ -160,11 +161,15 @@ describe('kataLimitMeter – keret 18 M / liable months × 1.5 M, 40 % különad
     const m = kataLimitMeter(months({ kataFrom: '2026-06-01' }), { year: 2026, kataFrom: '2026-06-01', revenue: [{ receivedOn: '2026-05-31', amountHuf: 5_000_000 }, { receivedOn: '2026-06-02', amountHuf: 1_000 }], asOf: '2026-12-31' }, R);
     expect(m.usedHuf).toBe(1_000);
   });
-  it('the T/928 new KATA (draft): keret 22 M; a part year keret is not known → the yearly one, flagged', () => {
+  it('the T/928 new KATA (draft): keret 22 M; a part year is 1/12 a month (T/928/9 7. § (4)), rounded; due 25 February', () => {
     const uj = kataRulesFor(2027, 'uj')!;
     const ms = kataMonths({ year: 2027, kataFrom: '2027-04-01', monthlyHuf: null }, uj);
     const m = kataLimitMeter(ms, { year: 2027, kataFrom: '2027-04-01', revenue: [], asOf: '2027-05-01' }, uj);
-    expect(m).toMatchObject({ limitHuf: 22_000_000, limitProrationKnown: false, draft: true, kulonadoDue: null });
+    // 9 months × 22 000 000 / 12 = 16 500 000
+    expect(m).toMatchObject({ limitHuf: 16_500_000, limitProrationKnown: true, draft: true });
+    const ms7 = kataMonths({ year: 2027, kataFrom: '2027-06-01', monthlyHuf: null }, uj);
+    // 7 months × 1 833 333,33 = 12 833 333,33 → 12 833 333
+    expect(kataLimitMeter(ms7, { year: 2027, kataFrom: '2027-06-01', revenue: [], asOf: '2027-07-01' }, uj).limitHuf).toBe(12_833_333);
   });
 });
 

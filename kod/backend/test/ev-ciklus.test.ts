@@ -149,8 +149,9 @@ describe('átalány: amounts → approval (hash covers the numbers) → filed (i
     expect(filedNote.link).toBe(`/fizetes/${sp.id}`);
     // Határidők: the difference is its own row; the return row is done for the client
     const dl = await clientDeadlines(h.deps, h.deps.db, c.clientId, '2027-04-01', '2027-06-30');
-    expect(dl.find((x) => x.id === `per:${sp.id}:befizetes`)).toMatchObject({ title: 'Szja-különbözet 2026: 50 000 Ft', link: `/fizetes/${sp.id}`, status: 'nyitott' });
-    expect(dl.find((x) => x.id === 'ev:2026:szja')!.status).toBe('kesz');
+    // javító kör 11-21: the client's row has the exact amount in its own column (never "kb."); the return row says "beadtuk"
+    expect(dl.find((x) => x.id === `per:${sp.id}:befizetes`)).toMatchObject({ title: 'Szja-különbözet 2026', amountHuf: 50_000, estimate: false, link: `/fizetes/${sp.id}`, status: 'nyitott' });
+    expect(dl.find((x) => x.id === 'ev:2026:szja')).toMatchObject({ status: 'kesz', title: 'Éves szja-bevallás 2026 (26SZJA) – beadtuk' });
     // the payment sheet works for the new kind; mark → verify → still 'beadva' (HIPA open) → HIPA not needed → kész
     const sheet = await h.json('GET', `/client/tax-periods/${sp.id}`, { token: c.token });
     expect(sheet.body).toMatchObject({ kind: 'eves_szja', sheetTitle: 'Szja-különbözet 2026', totalHuf: 50_000 });
@@ -277,7 +278,7 @@ describe('önellenőrzés (tax_corrections)', () => {
     await h.deps.db.update(taxPeriods).set({ filingStatus: 'beadva', filedOn: '2026-10-10', filingForm: '2658' }).where(eq(taxPeriods.id, q3.id));
     const small = await h.json('POST', `/acc/clients/${c.clientId}/corrections`, { token: bence.token, body: { ...body, diffs: [{ adonem: '103', label: 'Szja', amountHuf: 900, originalDueDate: '2026-10-12' }] } });
     expect(small.status).toBe(400);
-    expect(JSON.stringify(small.body)).toContain('1000 Ft-ig nem önellenőrzés');
+    expect(JSON.stringify(small.body)).toContain('1 000 Ft fölötti különbözet');
     at('2027-03-20T09:00:00Z');
     try {
       const cr = await h.json('POST', `/acc/clients/${c.clientId}/corrections`, { token: bence.token, body });
@@ -339,7 +340,7 @@ describe('önellenőrzés (tax_corrections)', () => {
     const hipa = await h.json('POST', `/acc/clients/${c.clientId}/corrections`, { token: bence.token, body: { form: 'HIPA', subjectKey: '2026', cause: 'egyeb', reason: 'A székhely-település adómértéke változott.', diffs: [{ adonem: 'HIPA', label: 'Iparűzési adó', amountHuf: 20_000, originalDueDate: '2026-09-01' }], needsClientApproval: false, noApprovalNote: 'Telefonon megbeszéltük 04-19-én.', potlekPayer: 'iroda' } });
     expect(hipa.status).toBe(201);
     expect(hipa.body.potlek.suggestedHuf).toBe(0);
-    expect(hipa.body.warnings.join(' ')).toContain('önkormányzathoz megy');
+    expect(hipa.body.warnings.join(' ')).toContain('az önkormányzaté');
     const sent = await h.json('POST', `/acc/corrections/${hipa.body.id}/send`, { token: bence.token });
     expect(sent.body.status).toBe('jovahagyva'); // the recorded phone agreement
     const f = await h.json('POST', `/acc/corrections/${hipa.body.id}/filed`, { token: bence.token, form: form({ filedOn: '2027-04-20', filingRef: 'H-1' }, { file: true, receipt: true }) });

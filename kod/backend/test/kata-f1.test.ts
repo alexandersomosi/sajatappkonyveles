@@ -223,7 +223,7 @@ describe('KATA months (syncKataPeriods)', () => {
     expect(home.status).toBe(200);
     expect(home.body.hero).toMatchObject({ state: 'jovahagyva', periodKey: '2026-11-KATA', amountHuf: 50_000, dueDate: '2026-12-14' });
     expect(home.body.paymentItems[0].accountNumber).toBe('10032000-01076349');
-    expect(home.body.kata.meter).toMatchObject({ usedHuf: 3_000_000, limitHuf: 18_000_000, level: 'rendben', limitLine: 'Kereted: 18 000 000 Ft', remainingLine: 'Még 15 000 000 Ft fér bele.' });
+    expect(home.body.kata.meter).toMatchObject({ usedHuf: 3_000_000, limitHuf: 18_000_000, level: 'rendben', limitLine: 'Kereted: 18 000 000 Ft.', remainingLine: 'Még 15 000 000 Ft fér bele.' });
     expect(home.body.kata.nextPayable.periodId).toBe(home.body.hero.periodId);
     expect(home.body.limits.kata).toBe(true);
     await h.json('POST', `/client/tax-periods/${home.body.hero.periodId}/mark-paid`, { token: c.token, body: { paidOn: '2026-11-21' } });

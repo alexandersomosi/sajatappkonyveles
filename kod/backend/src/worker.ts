@@ -14,6 +14,7 @@ import { runDataStepK6c } from './services/datastep-k6c.js';
 import { runDataStepK7b } from './services/datastep-k7b.js';
 import { runDataStepK29 } from './services/dijak.js';
 import { runDataStepKataF1 } from './services/datastep-kata.js';
+import { runDataStepEvJavitas } from './services/datastep-evjav.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -105,6 +106,13 @@ async function main(): Promise<void> {
     log().info(r, 'data step kata_f1');
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step kata_f1 failed');
+  }
+  // javító kör 11-21: reworded defaults in unedited overrides; the annual_due e-mail default on (once).
+  try {
+    const r = await runDataStepEvJavitas(deps);
+    log().info(r, 'data step ev_javitas');
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step ev_javitas failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

@@ -183,6 +183,13 @@
       "when": 1795455840000,
       "tag": "0025_ev_ciklus",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795455900000,
+      "tag": "0026_ev_javitas",
+      "breakpoints": true
     }
   ]
 }

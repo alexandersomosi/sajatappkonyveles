@@ -20,22 +20,24 @@ export const KATA_RULES_REGI_2027_DRAFT: KataRules = {
 
 /**
  * The new KATA of T/928 (from 2027, if enacted): 100 000 Ft/hó főfoglalkozásúnak, 50 000 Ft/hó nem főfoglalkozásúnak
- * (7. § (1)); keret 22 M Ft, 40 % above it (7. § (4)–(5)); kiegészítő adó 15 % of the kifizetői bevétel above the yearly
- * tételes adó (8. §, not modelled). Its NAV account, the monthly proration of the keret and the declaration are NOT known
- * yet → null (no payment item can be made even with the switch on).
+ * (7. § (1)); keret 22 M Ft, 40 % above it (7. § (4)–(5)); the keret of a partial year is 1/12 of 22 M Ft per month
+ * (7. § (4), javító kör 11-21 – not a whole number: the engine rounds the product); kiegészítő adó 15 % of the kifizetői
+ * bevétel above the yearly tételes adó (8. §, not modelled); the declaration and the különadó by 25 February of the next
+ * year (7. § (6), 8. § (6), 10. § (1)). Its NAV account and the form's name are NOT known yet → null (no payment item can be
+ * made even with the switch on).
  */
 export const KATA_RULES_UJ_2027_DRAFT: KataRules = {
   variant: 'uj',
   monthlyHuf: 100_000,
   monthlyNotMainHuf: 50_000,
   yearlyLimitHuf: 22_000_000,
-  limitPerMonthHuf: null,
+  limitPerMonthHuf: 22_000_000 / 12,
   kulonadoPermille: 400,
   dueDay: 12,
   exemptMinDays: 30,
   reportDays: 15,
   debtLimitHuf: 100_000,
-  declarationDue: null,
+  declarationDue: { month: 2, day: 25 },
   declarationForm: null,
   terminationDays: 30,
   kiegeszitoPermille: 150,
@@ -44,7 +46,7 @@ export const KATA_RULES_UJ_2027_DRAFT: KataRules = {
   adonem: null,
   draft: true,
   sources: ['t928'],
-  note: 'T/928 nincs kihirdetve. A számlaszám, a keret havi arányosítása és a nyilatkozat még nem ismert.',
+  note: 'T/928 nincs kihirdetve. A számlaszám és a nyilatkozat nyomtatványa még nem ismert.',
 };
 
 // DRAFT for 2027 – only the changes already enacted in 2025/2026 are applied:

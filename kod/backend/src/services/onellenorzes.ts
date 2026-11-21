@@ -125,21 +125,31 @@ async function resolveSubject(db: DbOrTx, cl: ClientRow, i: CorrectionInputParse
   return { formLabel: i.form === 'KATA' ? `'${yy}KATA` : `${yy}SZJA`, subjectKey: String(y), subjectLabel: String(y), originalPeriodId: null, annualClosingId: a.id };
 }
 
-function totals(diffs: CorrectionDiff[], potlekHuf: number, payer: 'ugyfel' | 'iroda') {
-  const toPay = diffs.filter((d) => d.amountHuf > 0 && d.adonem !== 'egyeb').reduce((a, d) => a + d.amountHuf, 0) + (payer === 'ugyfel' ? potlekHuf : 0);
+/**
+ * The lines the client has to pay. Art. 212. § (2) (javító kör 11-21): when the tax was paid in full originally (the
+ * accountant's flag), the difference is NOT paid again – only the pótlék is due.
+ */
+function payableDiffs(diffs: CorrectionDiff[], paidInFull: boolean): CorrectionDiff[] {
+  return paidInFull ? [] : diffs.filter((d) => d.amountHuf > 0 && d.adonem !== 'egyeb');
+}
+
+function totals(diffs: CorrectionDiff[], potlekHuf: number, payer: 'ugyfel' | 'iroda', paidInFull = false) {
+  const toPay = payableDiffs(diffs, paidInFull).reduce((a, d) => a + d.amountHuf, 0) + (payer === 'ugyfel' ? potlekHuf : 0);
   const inFavour = diffs.filter((d) => d.amountHuf < 0).reduce((a, d) => a - d.amountHuf, 0);
   return { toPay, inFavour };
 }
 
+/** Art. 56. § (3): only a tax whose difference is more than 1 000 Ft can be corrected – per tax (javító kör 11-21). */
 function checkThreshold(diffs: CorrectionDiff[]): void {
-  if (diffs.every((d) => Math.abs(d.amountHuf) <= EV_RULES.correctionMinHuf)) throw E.validation({ diffs: ONELL_PANEL_TEXTS.kuszob });
+  if (diffs.some((d) => d.amountHuf !== 0 && Math.abs(d.amountHuf) <= EV_RULES.correctionMinHuf) || diffs.every((d) => d.amountHuf === 0)) throw E.validation({ diffs: ONELL_PANEL_TEXTS.kuszob });
 }
 
 async function nextSeq(db: DbOrTx, clientId: string, form: string, subjectKey: string, exceptId?: string): Promise<number> {
   const rows = await db
     .select({ id: taxCorrections.id })
     .from(taxCorrections)
-    .where(and(eq(taxCorrections.clientId, clientId), eq(taxCorrections.form, form as CorrectionRow['form']), eq(taxCorrections.subjectKey, subjectKey), ne(taxCorrections.status, 'visszavonva')));
+    // javító kör 11-21: "ismételt" = an earlier correction of the same return was FILED (a draft not filed yet does not count)
+    .where(and(eq(taxCorrections.clientId, clientId), eq(taxCorrections.form, form as CorrectionRow['form']), eq(taxCorrections.subjectKey, subjectKey), inArray(taxCorrections.status, ['beadva', 'rendezve'])));
   return rows.filter((r) => r.id !== exceptId).length + 1;
 }
 
@@ -241,6 +251,8 @@ export async function updateCorrection(deps: Deps, db: DbOrTx, cl: ClientRow, ro
 /** POST /acc/corrections/:id/potlek { huf, reason } – the accountant approves the final pótlék (a different number needs a reason). */
 export async function approvePotlek(deps: Deps, db: DbOrTx, cl: ClientRow, row: CorrectionRow, i: { huf: number; reason?: string | null; payer?: 'ugyfel' | 'iroda' }, actor: Actor): Promise<CorrectionRow> {
   if (row.status !== 'tervezet') throw wrong('A pótlékot a tervezetben hagyhatod jóvá.');
+  // javító kör 11-21 (kritika 2.3, [DÁVID K7]): no NAV line to pay (e.g. a HIPA correction) → no pótlék in the app
+  if (!needsPotlekApproval(row)) throw wrong(ONELL_PANEL_TEXTS.hipaPotlek);
   if (!Number.isSafeInteger(i.huf) || i.huf < 0 || i.huf > 100_000_000) throw E.validation({ huf: 'Nézd meg az összeget.' });
   const differs = row.potlekSuggestedHuf === null || row.potlekSuggestedHuf !== i.huf;
   if (differs && !i.reason?.trim()) throw E.validation({ reason: row.potlekSuggestedHuf === null ? 'Írd be, honnan van az összeg (pl. „NAV pótlékkalkulátor”).' : ONELL_PANEL_TEXTS.potlekIndok });
@@ -257,7 +269,7 @@ const needsPotlekApproval = (r: CorrectionRow) => r.diffs.some((d) => NAV_POTLEK
 
 /** What the client sees and approves (the hash covers it). */
 function clientSummaryOf(r: CorrectionRow) {
-  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer);
+  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer, Boolean(r.potlekFlags?.paidInFull));
   return {
     id: r.id,
     form: r.formLabel,
@@ -291,7 +303,7 @@ export async function sendCorrection(deps: Deps, db: DbOrTx, cl: ClientRow, row:
   const hash = correctionHash(row);
   const [u] = await db.update(taxCorrections).set({ status: 'ugyfelre_var', approvalHash: hash, updatedAt: now }).where(eq(taxCorrections.id, row.id)).returning();
   await audit(db, { action: 'correction.sent', actorUserId: actor.userId, actorRole: actor.role, targetType: 'tax_correction', targetId: row.id, clientId: cl.id });
-  const t = totals(row.diffs, row.potlekHuf, row.potlekPayer);
+  const t = totals(row.diffs, row.potlekHuf, row.potlekPayer, Boolean(row.potlekFlags?.paidInFull));
   const variant = t.toPay > 0 ? 'jovahagyasra_var' : 'jovahagyasra_var_javara';
   const emailKey = `email.correction_status.${variant}.body`;
   await notify(deps, db, { userId: cl.userId, kind: 'correction_status', variant, params: { ...(await accountantParams(db, cl.accountantId)), mit: whatOf(row) }, link: `/onellenorzes/${row.id}`, data: { correctionId: row.id }, ...((await deps.content.exists(emailKey)) ? { emailBodyKey: emailKey } : {}) });
@@ -333,8 +345,27 @@ export async function fileCorrection(deps: Deps, db: DbOrTx, cl: ClientRow, row:
   if (ref.length > EV_RULES.filingRefMaxChars) throw E.validation({ filingRef: `Legfeljebb ${EV_RULES.filingRefMaxChars} karakter.` });
   if (!f.returnDocumentId) throw E.validation({ file: 'Töltsd fel a beadott önellenőrzést (PDF).' });
   if (!f.receiptDocumentId) throw E.validation({ receipt: 'Töltsd fel a NAV visszaigazolását.' });
+  // javító kör 11-21 (Art. 212. § (1)): the pótlék runs to the FILING day. An app suggestion is recomputed for the real day;
+  // a number the accountant entered by hand (with a reason) for another day has to be checked again.
+  const basis = (row.potlekBasis ?? {}) as { filedOn?: string; lines?: string[]; reasons?: string[] };
+  let potlekHuf = row.potlekHuf;
+  if (needsPotlekApproval(row) && basis.filedOn && basis.filedOn !== f.filedOn) {
+    if (row.potlekOverrideReason)
+      throw wrong(`A pótlékot ${huDayMonth(basis.filedOn)} beadásra hagytad jóvá. A pótlék a beadás napjáig jár: nyisd meg (Módosítom), írd be a ${huDayMonth(f.filedOn)} napra járó összeget, és hagyd jóvá újra.`);
+    const sug = suggestPotlek(row.diffs, row.potlekFlags, row.seq, f.filedOn);
+    if (sug.huf === null) throw wrong(ONELL_PANEL_TEXTS.nincsKamat);
+    if (sug.huf !== row.potlekHuf) {
+      await db
+        .update(taxCorrections)
+        .set({ potlekHuf: sug.huf, potlekSuggestedHuf: sug.huf, potlekBasis: { ...basis, lines: sug.basis, reasons: sug.reasons, filedOn: f.filedOn, rates: BASE_RATES, source: BASE_RATES_SOURCE }, updatedAt: now })
+        .where(eq(taxCorrections.id, row.id));
+      await audit(db, { action: 'correction.potlek_recalculated', actorUserId: actor.userId, actorRole: actor.role, targetType: 'tax_correction', targetId: row.id, clientId: cl.id, details: { from: row.potlekHuf, to: sug.huf, plannedOn: basis.filedOn, filedOn: f.filedOn } });
+      potlekHuf = sug.huf;
+    }
+  }
+  const paidInFull = Boolean(row.potlekFlags?.paidInFull);
   const byAdonem = new Map<string, number>();
-  for (const d of row.diffs) if (d.amountHuf > 0 && d.adonem !== 'egyeb') byAdonem.set(d.adonem, (byAdonem.get(d.adonem) ?? 0) + d.amountHuf);
+  for (const d of payableDiffs(row.diffs, paidInFull)) byAdonem.set(d.adonem, (byAdonem.get(d.adonem) ?? 0) + d.amountHuf);
   const items: ManualPeriodItem[] = [];
   const label = `önellenőrzés, ${row.formLabel} ${row.subjectLabel}`;
   const navLine = (adonem: string, kind: ManualPeriodItem['kind'], name: string, account: { name: string; number: string; iban?: string | null }) => {
@@ -352,7 +383,8 @@ export async function fileCorrection(deps: Deps, db: DbOrTx, cl: ClientRow, row:
     const town = cl.hqMunicipality?.trim();
     items.push({ kind: 'hipa_kulonbozet', label: 'Iparűzési adó', sublabel: label, amountHuf: hipa, account: { name: town ? `${town} önkormányzata – iparűzési adó beszedési számla` : 'Önkormányzat – iparűzési adó beszedési számla', number }, adonem: null });
   }
-  if (row.potlekPayer === 'ugyfel' && row.potlekHuf > 0) items.push({ kind: 'onellenorzesi_potlek', label: 'Önellenőrzési pótlék', sublabel: label, amountHuf: row.potlekHuf, account: NAV_ACCOUNTS_EV.onellenorzes, adonem: '215' });
+  // the NAV 215 account only for the pótlék of NAV taxes – a HIPA pótlék is the municipality's [DÁVID K7]: no item
+  if (row.potlekPayer === 'ugyfel' && potlekHuf > 0 && needsPotlekApproval(row)) items.push({ kind: 'onellenorzesi_potlek', label: 'Önellenőrzési pótlék', sublabel: label, amountHuf: potlekHuf, account: NAV_ACCOUNTS_EV.onellenorzes, adonem: '215' });
   let paymentPeriodId: string | null = null;
   if (items.length) {
     const p = await createManualPeriod(deps, db, {
@@ -375,10 +407,12 @@ export async function fileCorrection(deps: Deps, db: DbOrTx, cl: ClientRow, row:
     .where(eq(taxCorrections.id, row.id))
     .returning();
   await audit(db, { action: 'correction.filed', actorUserId: actor.userId, actorRole: actor.role, targetType: 'tax_correction', targetId: row.id, clientId: cl.id, details: { items: items.length, totalHuf: items.reduce((a, b) => a + b.amountHuf, 0) } });
-  const t = totals(row.diffs, row.potlekHuf, row.potlekPayer);
+  const t = totals(row.diffs, potlekHuf, row.potlekPayer, paidInFull);
   const ap = await accountantParams(db, cl.accountantId);
   const toPay = items.reduce((a, b) => a + b.amountHuf, 0);
-  const variant = toPay > 0 ? 'beadva_fizetendo' : t.inFavour > 0 ? 'beadva_javara' : 'beadva';
+  // javító kör 11-21: "A pótlékot mi álljuk" only when the office really pays a pótlék; "csak a pótlék" when the tax was paid
+  const variant =
+    toPay > 0 ? (paidInFull ? 'beadva_potlek' : 'beadva_fizetendo') : t.inFavour > 0 ? 'beadva_javara' : row.potlekPayer === 'iroda' && potlekHuf > 0 ? 'beadva_iroda' : 'beadva';
   const emailKey = `email.correction_status.${variant}.body`;
   await notify(deps, db, {
     userId: cl.userId,
@@ -422,13 +456,15 @@ export async function correctionOf(db: DbOrTx, id: string): Promise<CorrectionRo
 export async function accCorrectionDto(deps: Deps, db: DbOrTx, r: CorrectionRow): Promise<AccTaxCorrection> {
   const refs = await staffRefs(db, [r.potlekApprovedBy]);
   const [p] = r.paymentPeriodId ? await db.select({ s: taxPeriods.paymentStatus }).from(taxPeriods).where(and(eq(taxPeriods.id, r.paymentPeriodId), periodVisible)).limit(1) : [];
-  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer);
-  const basis = (r.potlekBasis ?? {}) as { lines?: string[]; reasons?: string[] };
+  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer, Boolean(r.potlekFlags?.paidInFull));
+  const basis = (r.potlekBasis ?? {}) as { lines?: string[]; reasons?: string[]; filedOn?: string };
   const reasonText: Record<string, string> = { nincs_kamat: ONELL_PANEL_TEXTS.nincsKamat, kesobbi_bevallas: ONELL_PANEL_TEXTS.kesobbiBevallas, lancolt: ONELL_PANEL_TEXTS.lancolt, igazolas_hiba: ONELL_PANEL_TEXTS.igazolasHiba };
   const rate = BASE_RATES[BASE_RATES.length - 1]!;
   const warnings: string[] = [];
   if (r.seq > 1) warnings.push(ONELL_PANEL_TEXTS.ismetelt);
   if (r.diffs.some((d) => d.adonem === 'HIPA' && d.amountHuf > 0)) warnings.push(ONELL_PANEL_TEXTS.hipaPotlek);
+  if (r.potlekFlags?.paidInFull) warnings.push(ONELL_PANEL_TEXTS.hianytalanSor);
+  if (needsPotlekApproval(r) && basis.filedOn && (r.status === 'tervezet' || r.status === 'ugyfelre_var' || r.status === 'jovahagyva')) warnings.push(fill(ONELL_PANEL_TEXTS.potlekDatum, { datum: huDayMonth(basis.filedOn) }));
   warnings.push(ONELL_PANEL_TEXTS.eredetiErintetlen);
   return {
     id: r.id,
@@ -482,7 +518,7 @@ async function statusText(deps: Pick<Deps, 'content'>, r: CorrectionRow, fn: str
 
 export async function clientCorrectionView(deps: Deps, db: DbOrTx, cl: ClientRow, r: CorrectionRow): Promise<TaxCorrectionView> {
   const ap = await accountantParams(db, cl.accountantId);
-  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer);
+  const t = totals(r.diffs, r.potlekHuf, r.potlekPayer, Boolean(r.potlekFlags?.paidInFull));
   return {
     id: r.id,
     status: r.status,
@@ -499,6 +535,7 @@ export async function clientCorrectionView(deps: Deps, db: DbOrTx, cl: ClientRow
     approvedAt: r.approvedAt?.toISOString() ?? null,
     filedOn: r.filedOn ?? null,
     paymentPeriodId: r.paymentPeriodId ?? null,
+    diffsAlreadyPaid: Boolean(r.potlekFlags?.paidInFull) && r.diffs.some((d) => d.amountHuf > 0),
   };
 }
 
