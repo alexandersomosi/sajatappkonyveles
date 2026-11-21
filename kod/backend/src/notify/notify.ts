@@ -84,7 +84,9 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   // SPEC §28.K.17 – client
   checkin_due: { push: true, email: false, to: 'client' },
   fee_due: { push: true, email: true, to: 'client' },
-  annual_due: { push: true, email: false, to: 'client' },
+  // SPEC §32 (critique 2.5): at launch every client is on the web without push – the annual to-dos (questionnaire,
+  // fee, APPROVAL) go by e-mail too. The client's own setting (Fiók → Értesítések → Befizetési határidők) still wins.
+  annual_due: { push: true, email: true, to: 'client' },
   annual_status: { push: true, email: true, to: 'client' },
   service_locked: { push: true, email: true, to: 'client' },
   service_unlocked: { push: true, email: true, to: 'client' },
@@ -118,6 +120,8 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   profile_changed_by_admin: { push: false, email: true, to: 'client' },
   announcement: { push: true, email: true, to: 'client' },
   guided_continue: { push: true, email: false, to: 'client' },
+  // SPEC §32 – staff: the accountant's tax tasks (panel badge + the daily digest e-mail)
+  tax_task: { push: false, email: false, to: 'accountant' },
 };
 
 /** SPEC §28.2.3: the defaults when a user has no user_notification_settings row. */

@@ -14,6 +14,7 @@ import { k29fDefaults } from './content/k29f.js';
 import { k29Defaults } from './content/k29.js';
 import { k7bDefaults } from './content/k7b.js';
 import { K7B_REGI } from './content/k7b_regi.js';
+import { kataDefaults } from './content/kata.js';
 
 /**
  * jogi-reviewed §26 content texts (kod/jogi/app_szovegek.json → `tartalom`, same content keys). Read once at start from
@@ -41,7 +42,7 @@ function supersededJogi(jogi: Record<string, string>): Record<string, string> {
 }
 
 /** Shipped defaults + the SPEC §26 and §27 texts generated from kod/shared, then the jogi-reviewed texts on top. */
-export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...k28Defaults(), ...k29Defaults(), ...k29fDefaults(), ...k7bDefaults(), ...supersededJogi(jogiTartalom()) };
+export const DEFAULT_TEXTS: Record<string, string> = { ...generatedDefaults(), ...defaults, ...tulaj1119Defaults(), ...k28Defaults(), ...k29Defaults(), ...k29fDefaults(), ...k7bDefaults(), ...kataDefaults(), ...supersededJogi(jogiTartalom()) };
 
 export function placeholdersOf(s: string): string[] {
   return [...new Set([...s.matchAll(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g)].map((m) => m[1]!))];

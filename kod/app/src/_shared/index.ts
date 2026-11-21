@@ -10,3 +10,5 @@ export * from './k29f';
 export * from './k29g';
 // SPEC §31 (marketing): the source rules shared by the landing, the app, the backend and the panel.
 export * from './marketing';
+// SPEC §32 (éves ciklus és KATA, F0 + F1a): KATA months, payment sheet, switches.
+export * from './kata';

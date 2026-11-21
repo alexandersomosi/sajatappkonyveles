@@ -1,11 +1,11 @@
 // Deadlines calendar (SPEC §7.4): NAV / municipal due dates with the "next working day" rule.
 
 import { BRIDGE_REST_DAYS, MOVED_WORKING_DAYS, statutoryHolidays } from './rules/holidays.js';
-import { rulesForYear, RULES_2026 } from './rules/index.js';
-import type { MonthDay, TaxRules } from './rules/types.js';
+import { kataRulesFor, rulesForYear, RULES_2026 } from './rules/index.js';
+import type { KataVariant, MonthDay, TaxRules } from './rules/types.js';
 import type { DeadlineItem, HipaMethod } from './types.js';
-import { addDays, isIsoDate, isoWeekday, toIso, yearOf } from './util/dates.js';
-import { quarterLabel, yearAdjective } from './util/format.js';
+import { addDays, isIsoDate, isoWeekday, monthOf, toIso, yearOf } from './util/dates.js';
+import { monthName, quarterLabel, yearAdjective } from './util/format.js';
 
 const holidayCache = new Map<number, Set<string>>();
 
@@ -65,23 +65,44 @@ export function hipaDates(year: number, method: HipaMethod, rules: TaxRules = ru
  *  - 'nincs': no HIPA dates.
  * Sorted by date. periodKey: "2026-Q1" … "2026-Q4", "2026" (annual SZJA), "2026-HIPA-1"/"-2" (advances), "2026-HIPA" (yearly).
  */
-export function deadlinesFor(year: number, options: { hipaMethod?: HipaMethod } = {}): DeadlineItem[] {
+export function deadlinesFor(
+  year: number,
+  options: { hipaMethod?: HipaMethod; regime?: 'atalany' | 'kata'; kataFrom?: string | null; kataTo?: string | null; kataVariant?: KataVariant } = {},
+): DeadlineItem[] {
   if (!Number.isInteger(year) || year < 2000 || year > 2100) throw new RangeError(`bad year: ${year}`);
   const rules = rulesForYear(year) ?? RULES_2026;
   const method = options.hipaMethod ?? 'savos';
   const out: DeadlineItem[] = [];
-  for (const q of [1, 2, 3, 4] as const) {
-    const dueDate = quarterDueDate(year, q, rules);
-    const periodKey = `${year}-Q${q}`;
-    out.push({ kind: 'befizetes', title: `TB-járulék, szocho és SZJA-előleg – ${quarterLabel(q)}`, dueDate, periodKey });
-    out.push({ kind: 'bevallas', title: `Járulékbevallás (${rules.jarulekQuarterlyForm}) – ${quarterLabel(q)}`, dueDate, periodKey });
+  if (options.regime === 'kata') {
+    // SPEC §32: a KATA year has no átalány quarter, no '58 return and no 26SZJA – the monthly KATA (Kata tv. 7. § (2))
+    // and the yearly declaration (10. §) instead. periodKey 'YYYY-MM-KATA' / 'YYYY-KATA'.
+    const k = kataRulesFor(year, options.kataVariant ?? 'regi');
+    if (k) {
+      const yStart = toIso(year, 1, 1);
+      const yEnd = toIso(year, 12, 31);
+      const from = options.kataFrom && isIsoDate(options.kataFrom) && options.kataFrom > yStart ? options.kataFrom : yStart;
+      const to = options.kataTo && isIsoDate(options.kataTo) && options.kataTo < yEnd ? options.kataTo : yEnd;
+      for (let m = monthOf(from); m <= monthOf(to) && from <= to; m++) {
+        const dueDate = m === 12 ? nextWorkingDay(toIso(year + 1, 1, k.dueDay)) : nextWorkingDay(toIso(year, m + 1, k.dueDay));
+        out.push({ kind: 'befizetes', title: `Kata – ${monthName(m)}`, dueDate, periodKey: `${year}-${String(m).padStart(2, '0')}-KATA` });
+      }
+      const declDue = to < yEnd ? nextWorkingDay(addDays(to, k.terminationDays)) : k.declarationDue ? due(year + 1, k.declarationDue) : null;
+      if (declDue) out.push({ kind: 'bevallas', title: `Kata-nyilatkozat${k.declarationForm ? ` ('${k.declarationForm.slice(0, 2)}KATA)` : ''} a ${yearAdjective(year)} évről`, dueDate: declDue, periodKey: `${year}-KATA` });
+    }
+  } else {
+    for (const q of [1, 2, 3, 4] as const) {
+      const dueDate = quarterDueDate(year, q, rules);
+      const periodKey = `${year}-Q${q}`;
+      out.push({ kind: 'befizetes', title: `TB-járulék, szocho és SZJA-előleg – ${quarterLabel(q)}`, dueDate, periodKey });
+      out.push({ kind: 'bevallas', title: `Járulékbevallás (${rules.jarulekQuarterlyForm}) – ${quarterLabel(q)}`, dueDate, periodKey });
+    }
+    out.push({
+      kind: 'bevallas',
+      title: `Éves SZJA-bevallás (${rules.szjaAnnualReturnForm}) a ${yearAdjective(year)} évről`,
+      dueDate: due(year + 1, rules.szjaAnnualReturn),
+      periodKey: String(year),
+    });
   }
-  out.push({
-    kind: 'bevallas',
-    title: `Éves SZJA-bevallás (${rules.szjaAnnualReturnForm}) a ${yearAdjective(year)} évről`,
-    dueDate: due(year + 1, rules.szjaAnnualReturn),
-    periodKey: String(year),
-  });
   const h = hipaDates(year, method, rules);
   if (method === 'savos') {
     out.push({

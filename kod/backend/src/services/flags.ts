@@ -5,11 +5,13 @@ import type { ClientFlag } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { annualClosings, appointments, clients, clientTaxProfiles, deadlines, navCredentials, onboardingSteps, requests, subscriptions, taxPaymentItems, taxPeriods } from '../db/schema.js';
-import { daysBetween, lastDayOfMonth, MONTHS_HU, todayBudapest } from '../lib/dates.js';
-import { nextWorkingDay } from '../lib/munkanap.js';
-import { KATA_RULES_2026 } from '../_shared/enums.js';
+import { daysBetween, monthName, todayBudapest } from '../lib/dates.js';
+import { KATA_EXEMPT_LABELS, kataExemptNeedsReport, type KataExemptKind } from '../_shared/kata.js';
 import { deadlinesFor } from '../tax/engine.js';
-import { computeYear, periodLabel, periodTotal } from './tax.js';
+import { fill } from '../content.js';
+import { accountantParams } from '../notify/notify.js';
+import { fmt } from './kedvezmeny.js';
+import { computeYear, kataRangeOfProfile, periodLabel, periodTotal, periodVisible, quarterFullyKata } from './tax.js';
 
 export async function computeFlags(deps: Deps, db: DbOrTx, clientId: string): Promise<ClientFlag[]> {
   const today = todayBudapest(deps.now());
@@ -28,15 +30,24 @@ export async function computeFlags(deps: Deps, db: DbOrTx, clientId: string): Pr
     .select({ id: taxPaymentItems.id })
     .from(taxPaymentItems)
     .innerJoin(taxPeriods, eq(taxPeriods.id, taxPaymentItems.taxPeriodId))
-    .where(and(eq(taxPeriods.clientId, clientId), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)))
+    .where(and(eq(taxPeriods.clientId, clientId), periodVisible, isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)))
     .limit(1);
   const [nav] = await db.select({ status: navCredentials.status }).from(navCredentials).where(eq(navCredentials.clientId, clientId)).limit(1);
   if (overdueReq.length || hianyos.length || overdueTax.length || nav?.status === 'hibas') flags.add('hianyzik_valami');
 
   const comp = await computeYear(db, clientId, Number(today.slice(0, 4)), today);
+  // SPEC §32 H6: a KATA year has the KATA keret instead of the átalány cap; 'kata_figyelem' = business customer or over the keret
+  const { kataCompute } = await import('./kata.js');
+  const kata = cl.lifecycle === 'aktiv' ? await kataCompute(db, clientId, Number(today.slice(0, 4)), today) : null;
   if (comp) {
     const m = comp.result.meters;
-    if (m.afa.ratio >= 0.8 || m.afa.projectedHuf >= m.afa.limitHuf || m.atalanyCap.ratio >= 0.8) flags.add('hatar_kozel');
+    if (m.afa.ratio >= 0.8 || m.afa.projectedHuf >= m.afa.limitHuf || (!kata && m.atalanyCap.ratio >= 0.8)) flags.add('hatar_kozel');
+  }
+  if (kata && !kata.rules.draft) {
+    if (kata.meter.level !== 'rendben' || kata.meter.projectedOverHuf > 0) flags.add('hatar_kozel');
+    if (kata.meter.level === 'tullepve') flags.add('kata_figyelem');
+    const { kataRisksOf } = await import('./szamla-ertesites.js');
+    if ((await kataRisksOf(deps, cl, { limit: 1 })).length) flags.add('kata_figyelem');
   }
   const [sub] = await db.select({ status: subscriptions.status }).from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (sub && (sub.status === 'past_due' || sub.status === 'suspended')) flags.add('dij_elmaradt');
@@ -70,31 +81,56 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
   const today = todayBudapest(deps.now());
   const acc = view.perspective === 'accountant';
   const out: Deadline[] = [];
-  const [cl] = await db.select({ createdAt: clients.createdAt, firstName: clients.firstName, lastName: clients.lastName }).from(clients).where(eq(clients.id, clientId)).limit(1);
+  const [cl] = await db.select({ createdAt: clients.createdAt, firstName: clients.firstName, lastName: clients.lastName, accountantId: clients.accountantId }).from(clients).where(eq(clients.id, clientId)).limit(1);
   // Deadlines that passed before the client joined belong to the previous accountant: they are not
   // shown as ours (and never as "lejárt"), unless we approved or filed that period ourselves.
   const serviceStart = cl ? todayBudapest(cl.createdAt) : '0000-01-01';
   const profiles = await db
-    .select({ year: clientTaxProfiles.year, status: clientTaxProfiles.status, hipaMethod: clientTaxProfiles.hipaMethod, regime: clientTaxProfiles.regime, kataFrom: clientTaxProfiles.kataFrom, kataTo: clientTaxProfiles.kataTo })
+    .select({ year: clientTaxProfiles.year, status: clientTaxProfiles.status, hipaMethod: clientTaxProfiles.hipaMethod, regime: clientTaxProfiles.regime, kataFrom: clientTaxProfiles.kataFrom, kataTo: clientTaxProfiles.kataTo, kataVariant: clientTaxProfiles.kataVariant })
     .from(clientTaxProfiles)
     .where(eq(clientTaxProfiles.clientId, clientId));
   const statusOf = (year: number) => profiles.find((x) => x.year === year)?.status;
-  // k7c2: a KATA year has no átalány quarters, no '58 return and no 26SZJA – its own monthly 50 000 Ft instead
-  const kataYear = (year: number) => profiles.find((x) => x.year === year)?.regime === 'kata';
-  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), sql`${taxPeriods.dueDate} between ${from} and ${to}`));
+  // k7c2 / SPEC §32: no átalány quarter for the months of a KATA (H1 hides the rows; this guards rows not hidden yet)
+  const kataQuarter = (year: number, quarter: number | null) => quarterFullyKata(kataRangeOfProfile(profiles.find((x) => x.year === year) ? { ...profiles.find((x) => x.year === year)!, year } : null), year, quarter ?? 0);
+  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), periodVisible, sql`${taxPeriods.dueDate} between ${from} and ${to}`));
+  const content = deps.content;
+  const ap = periods.some((p) => p.kind === 'kata') ? await accountantParams(db, cl?.accountantId ?? null) : {};
   for (const p of periods) {
+    // SPEC §32: a KATA month. Before the app (backfilled): the client sees it only after the accountant verified it.
+    if (p.kind === 'kata') {
+      const items = await db.select().from(taxPaymentItems).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt)));
+      const verifiedOk = items.length > 0 && items.every((i) => i.verification === 'rendben');
+      if (p.backfilled && !verifiedOk && !acc) continue;
+      const honap = monthName(Number(p.periodKey.slice(5, 7)));
+      const amount = items.reduce((a, b) => a + b.amountHuf, 0);
+      if (p.exemptReason && !items.length) {
+        const ok = (await content.get(`kata.mentes_ok.${p.exemptReason}`)) || KATA_EXEMPT_LABELS[p.exemptReason as KataExemptKind] || p.exemptReason;
+        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', fill(await content.get('kata.f1.hatarido_mentes'), { honap, ok }), p.dueDate, true, `/fizetes/${p.id}`));
+      } else if (p.calcStatus !== 'jovahagyva') {
+        // 2027 (T/928): the amount is not confirmed – no amount, never "lejárt" for the client
+        if (acc) out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', `Kata – ${honap}: a havi összeg nincs megerősítve (T/928)`, p.dueDate, false, `/ugyfelek/${clientId}/ado`, undefined, undefined, true));
+        else if (p.dueDate >= today) out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', fill(await content.get('kata.f1.hatarido_nincs_osszeg'), { ...ap, honap }), p.dueDate, false, `/fizetes/${p.id}`, undefined, undefined, true));
+      } else {
+        const paid = p.paymentStatus === 'befizetve_jelezve' || p.paymentStatus === 'ellenorizve';
+        const verified = p.paymentStatus === 'befizetve_jelezve' ? false : paid ? true : undefined;
+        const title = acc && p.backfilled && !verifiedOk ? `Kata – ${honap}: ellenőrizd a folyószámlán (az app előtti hónap)` : fill(await content.get('kata.f1.hatarido_befizetes'), { honap, osszeg: fmt(amount) });
+        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', title, p.dueDate, paid, acc ? `/ugyfelek/${clientId}/ado` : `/fizetes/${p.id}`, amount, verified, false));
+      }
+      continue;
+    }
     if (p.dueDate < serviceStart && p.calcStatus !== 'jovahagyva' && p.filingStatus !== 'beadva') continue;
-    if (p.kind === 'negyedev' && kataYear(p.year)) continue;
+    if (p.kind === 'negyedev' && kataQuarter(p.year, p.quarter)) continue;
     const total = await periodTotal(db, p);
     const paid = p.paymentStatus === 'befizetve_jelezve' || p.paymentStatus === 'ellenorizve' || (p.calcStatus === 'jovahagyva' && p.paymentStatus === 'nincs_fizetendo');
     const verified = p.paymentStatus === 'befizetve_jelezve' ? false : paid ? true : undefined;
     if (p.kind === 'negyedev') {
       const nyugdijas = statusOf(p.year) === 'nyugdijas' || p.filingForm === null;
-      out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', `${periodLabel(p)}: ${nyugdijas ? 'SZJA-előleg' : 'TB-járulék, szocho, SZJA-előleg'}`, p.dueDate, paid, '/', total ?? undefined, verified, p.calcStatus !== 'jovahagyva'));
+      out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', `${periodLabel(p)}: ${nyugdijas ? 'SZJA-előleg' : 'TB-járulék, szocho, SZJA-előleg'}`, p.dueDate, paid, p.calcStatus === 'jovahagyva' && !acc ? `/fizetes/${p.id}` : '/', total ?? undefined, verified, p.calcStatus !== 'jovahagyva'));
       // NAV 100 ch. 6.3: no '58 return for a nyugdíjas átalányadózó.
       if (!nyugdijas) out.push(dl(today, `per:${p.id}:bevallas`, 'bevallas', `${periodLabel(p)}: bevallás (${acc ? 'te adod be' : 'a könyvelőd adja be'})`, p.dueDate, p.filingStatus === 'beadva', '/dosszie'));
     } else if (p.calcStatus === 'jovahagyva') {
-      out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, '/', total ?? undefined, verified));
+      // SPEC §32: an approved payment opens the shared payment sheet
+      out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, acc ? '/' : `/fizetes/${p.id}`, total ?? undefined, verified));
     } else if (acc || p.dueDate >= today) {
       // Not approved yet: the date is known, the amount (= last year's tax) comes from the accountant.
       // An overdue unapproved advance is the accountant's to-do, so only the panel shows it as lejárt.
@@ -122,7 +158,8 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       if (d.dueDate < from || d.dueDate > to || d.dueDate < serviceStart) continue;
       const who = acc ? 'te adod be' : 'a könyvelőd adja be';
       if (d.periodKey === String(y)) {
-        if (prof.regime === 'kata') continue; // no 26SZJA for a KATA year (the '26KATA only above the keret)
+        // no 26SZJA for a KATA year: EVERY KATA client files the yearly declaration instead ('26KATA, Kata tv. 10. §) – below
+        if (prof.regime === 'kata') continue;
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
         out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, annualDone(closingOf(y)?.filedSzjaAt, d.dueDate), '/hataridok'));
       } else if (d.periodKey === `${y}-HIPA`) {
@@ -130,21 +167,27 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       }
     }
   }
-  // k7c2 (SPEC §28.K.11): the KATA months – 50 000 Ft per started month by the 12th of the next month (next working day).
-  // We do not track the KATA transfers yet, so only the coming ones are listed (never a "lejárt" we cannot know).
+  // SPEC §32 (H3): the KATA months are real tax_periods rows now (above); the synthetic k7c2 rows are gone. Listed here: the
+  // yearly declaration (Kata tv. 10. §: EVERY KATA client – 25 February next year, or kataTo + 30 days) and, for the
+  // accountant, the free-month notices (7. § (10): a)–c) states, by the 12th of the next month).
   for (let y = Math.max(fromYear, 2026); y <= toYear; y++) {
     const prof = profiles.find((x) => x.year === y);
-    if (!prof || prof.regime !== 'kata') continue;
-    for (let m = 1; m <= 12; m++) {
-      const monthStart = `${y}-${String(m).padStart(2, '0')}-01`;
-      const monthEnd = lastDayOfMonth(monthStart.slice(0, 7));
-      if (prof.kataFrom && monthEnd < prof.kataFrom) continue;
-      if (prof.kataTo && monthStart > prof.kataTo) continue;
-      const ny = m === 12 ? y + 1 : y;
-      const nm = m === 12 ? 1 : m + 1;
-      const due = nextWorkingDay(`${ny}-${String(nm).padStart(2, '0')}-${String(KATA_RULES_2026.dueDayOfNextMonth).padStart(2, '0')}`);
-      if (due < from || due > to || due < today || due < serviceStart) continue;
-      out.push(dl(today, `kata:${y}-${String(m).padStart(2, '0')}`, 'befizetes', `Kata – ${MONTHS_HU[m - 1]}: ${new Intl.NumberFormat('hu-HU').format(KATA_RULES_2026.monthlyHuf)} Ft`, due, false, '/', KATA_RULES_2026.monthlyHuf, undefined, false));
+    const kr = prof ? kataRangeOfProfile({ ...prof, year: y }) : null;
+    if (!prof || !kr) continue;
+    const decl = deadlinesFor(y, { regime: 'kata', kataFrom: kr.from, kataTo: kr.to, kataVariant: prof.kataVariant ?? 'regi', hipaMethod: 'nincs' }).find((d) => d.periodKey === `${y}-KATA`);
+    if (decl && decl.dueDate >= from && decl.dueDate <= to && decl.dueDate >= serviceStart) {
+      const form = `'${String(y).slice(2)}KATA`;
+      out.push(dl(today, `ev:${y}:kata`, 'bevallas', fill(await content.get('kata.f1.hatarido_nyilatkozat'), { form, who: acc ? 'te adod be' : 'a könyvelőd adja be' }), decl.dueDate, annualDone(closingOf(y)?.filedSzjaAt, decl.dueDate), '/hataridok'));
+    }
+    if (acc) {
+      const { kataCompute } = await import('./kata.js');
+      const kc = await kataCompute(db, clientId, y, today < `${y}-12-31` ? today : `${y}-12-31`);
+      for (const m of kc?.months ?? []) {
+        if (m.liable || !m.exemptReason || !kataExemptNeedsReport(m.exemptReason as KataExemptKind)) continue;
+        if (m.dueDate < from || m.dueDate > to) continue;
+        const reported = (kc?.breaks ?? []).some((b) => b.reportedOn && b.from <= `${m.monthKey}-31` && b.to >= `${m.monthKey}-01`);
+        out.push(dl(today, `kata-bej:${clientId}:${m.monthKey}`, 'egyeb', `Mentesség bejelentése: ${monthName(m.month)} (Kata tv. 7. § (10))`, m.dueDate, reported, `/ugyfelek/${clientId}/ado`));
+      }
     }
   }
   const reqs = await db

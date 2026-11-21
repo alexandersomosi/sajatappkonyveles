@@ -3,7 +3,7 @@
 // clients.service_lock and recomputed on every payment event and by the daily job. While locked the accounting service
 // stops (API 403 service_locked on the listed client and staff actions); paying, the GDPR export, Fiók, notification
 // settings and writing to customer service keep working.
-import { and, eq, inArray, lt } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lt } from 'drizzle-orm';
 import type { MiddlewareHandler } from 'hono';
 import type { ServiceLockView } from '../_shared/api.js';
 import { ANNUAL_RULES, SERVICE_LOCK_ERROR_CODE, type ServiceLockReason } from '../_shared/enums.js';
@@ -182,7 +182,7 @@ export async function jobServiceLockCheck(deps: Deps): Promise<number> {
   const locked = await db.select().from(clients).where(inArray(clients.id, [...ids]));
   for (const cl of locked) {
     if (!cl.serviceLock) continue;
-    const soon = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), inArray(taxPeriods.paymentStatus, ['fizetendo', 'nincs_fizetendo'])));
+    const soon = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), isNull(taxPeriods.hiddenAt), inArray(taxPeriods.paymentStatus, ['fizetendo', 'nincs_fizetendo'])));
     const near = soon.find((p) => p.dueDate >= today && p.dueDate <= addDays(today, 14));
     if (!near) continue;
     const { notifyOnce } = await import('./emlekezteto.js');

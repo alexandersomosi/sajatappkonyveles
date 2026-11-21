@@ -1,5 +1,5 @@
 // SPEC §28.K.3 – „Éves zárás {év}”: az állapot egy mondatban, a következő dátum, és az ügyfél következő lépésének egyetlen
-// gombja (Kitöltöm / Fizetek / Átnézem és jóváhagyom). A bevallást az app nem adja be: Bence, meghatalmazottként.
+// gombja (Kitöltöm / Fizetek / Átnézem és jóváhagyom). A bevallást az app nem adja be: a könyvelő, meghatalmazottként.
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ANNUAL_TEXTS as E, fillPlaceholders } from '@/_shared/bekotes';
@@ -56,8 +56,8 @@ export default function EvesZaras() {
               {z ? (
                 <>
                   <OsszegSor elso cim="A kérdőív kitöltése" al={datumEvvel(z.questionnaireDue)} huf={null} />
-                  {z.legalDue.szja ? <OsszegSor cim="SZJA-bevallás (Bence adja be)" al={datumEvvel(z.legalDue.szja)} huf={null} /> : null}
-                  {z.legalDue.kata ? <OsszegSor cim="Kata-nyilatkozat (Bence adja be)" al={datumEvvel(z.legalDue.kata)} huf={null} /> : null}
+                  {z.legalDue.szja ? <OsszegSor cim={`Szja-bevallás (${fn} adja be)`} al={datumEvvel(z.legalDue.szja)} huf={null} /> : null}
+                  {z.legalDue.kata ? <OsszegSor cim={`Kata-nyilatkozat (${fn} adja be)`} al={datumEvvel(z.legalDue.kata)} huf={null} /> : null}
                   <OsszegSor cim="Iparűzési adó bevallása" al={datumEvvel(z.legalDue.hipa)} huf={null} />
                 </>
               ) : (

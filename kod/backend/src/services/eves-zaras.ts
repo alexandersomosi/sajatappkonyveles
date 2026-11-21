@@ -20,6 +20,7 @@ import { chargeById, createFeeCharge, feeChargeView, feeSetting } from './dijak.
 import { accountantUserOf, staffRefs } from './team.js';
 import { clientName, type ClientRow } from './people.js';
 import { fmt } from './kedvezmeny.js';
+import { evesKapcsolok } from './kata.js';
 
 export type AnnualRow = typeof annualClosings.$inferSelect;
 const AAD = 'annual_closings.refund_account';
@@ -56,6 +57,8 @@ async function view(deps: Deps, db: DbOrTx, cl: ClientRow, r: AnnualRow): Promis
   const params = await accountantParams(db, cl.accountantId);
   const ch = await chargeById(db, r.feeChargeId);
   const fee = await feeSetting(db, 'eves_zaras');
+  // SPEC §32: the 14 999 Ft fee is switched off until the ÁSZF is fixed [T1, JOGI] (EVES_KAPCSOLOK.evesZarasDij)
+  const feeOn = (await evesKapcsolok(db)).evesZarasDij;
   const answers = (r.answers ?? null) as AnnualAnswers | null;
   let refundMasked: string | null = null;
   if (r.refundAccountEnc) {
@@ -83,6 +86,7 @@ async function view(deps: Deps, db: DbOrTx, cl: ClientRow, r: AnnualRow): Promis
     approval: r.approvedAt && r.approvalHash ? { at: r.approvedAt.toISOString(), hash: r.approvalHash } : null,
     nextAction: r.status === 'kerdoiv' ? 'kitoltes' : r.status === 'dijra_var' ? 'fizetes' : r.status === 'jovahagyasra_var' ? 'jovahagyas' : null,
     canEdit: r.status === 'kerdoiv' && !cl.serviceLock,
+    feeHuf: feeOn ? fee.amountHuf : null,
   };
 }
 
@@ -131,7 +135,9 @@ export async function submitAnnual(deps: Deps, db: DbOrTx, cl: ClientRow, id: st
   const r = await own(db, cl, id);
   if (r.status !== 'kerdoiv') throw annualErr.wrongStatus();
   const now = deps.now();
-  const charge = await createFeeCharge(deps, db, cl, 'eves_zaras', { type: 'eves_zaras', annualId: r.id }, userId);
+  // SPEC §32: no annual-closing fee while the switch is off (the ÁSZF says the yearly return is in the monthly fee) [T1, JOGI]
+  const feeOn = (await evesKapcsolok(db)).evesZarasDij;
+  const charge = feeOn ? await createFeeCharge(deps, db, cl, 'eves_zaras', { type: 'eves_zaras', annualId: r.id }, userId) : null;
   const status: AnnualStatus = charge ? 'dijra_var' : 'konyvelonel';
   const [u] = await db.update(annualClosings).set({ status, submittedAt: now, feeChargeId: charge?.id ?? null, updatedAt: now }).where(eq(annualClosings.id, r.id)).returning();
   await audit(db, { action: 'annual.submitted', actorUserId: userId, actorRole: 'client', targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { fee: Boolean(charge) } });
@@ -208,7 +214,9 @@ export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: stri
   } else if (step === 'filed-szja') {
     if (r.status !== 'jovahagyasra_var' && r.status !== 'konyvelonel') throw annualErr.wrongStatus();
     if (!r.approvedAt) throw annualErr.wrongStatus('Az ügyfél még nem hagyta jóvá a tervezetet. Jóváhagyás nélkül csak a hívásban rögzített egyeztetés után adhatod be.');
-    patch = { status: 'beadva', filedSzjaAt: now, checklist: { ...(r.checklist ?? {}), [r.regime === 'kata' ? 'kata_beadva' : 'szja_beadva']: { at: now.toISOString(), by: actor.userId } } };
+    // H8 (SPEC §32): without iparűzési adó (the profile's HIPA method 'nincs') the closing is done once the return is filed
+    const [tp] = await db.select({ hipaMethod: clientTaxProfiles.hipaMethod }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, r.taxYear))).limit(1);
+    patch = { status: tp?.hipaMethod === 'nincs' ? 'kesz' : 'beadva', filedSzjaAt: now, checklist: { ...(r.checklist ?? {}), [r.regime === 'kata' ? 'kata_beadva' : 'szja_beadva']: { at: now.toISOString(), by: actor.userId } } };
   } else {
     if (r.status !== 'beadva') throw annualErr.wrongStatus();
     patch = { status: 'kesz', filedHipaAt: now, checklist: { ...(r.checklist ?? {}), hipa_beadva: { at: now.toISOString(), by: actor.userId } } };

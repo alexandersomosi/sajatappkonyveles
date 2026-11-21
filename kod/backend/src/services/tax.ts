@@ -18,7 +18,8 @@ import {
   taxPaymentItems,
   taxPeriods,
 } from '../db/schema.js';
-import { addDays, daysBetween, huDayMonth, huFullDate, quarterLabel, todayBudapest } from '../lib/dates.js';
+import { addDays, daysBetween, huDayMonth, huFullDate, monthName, MONTHS_ADJ_HU, quarterLabel, todayBudapest } from '../lib/dates.js';
+import { KATA_EXEMPT_LABELS, type KataExemptKind } from '../_shared/kata.js';
 import { E } from '../lib/errors.js';
 import { calculateYear, deadlinesFor, ibanHu, NAV_ACCOUNTS, type QuarterResult, type TaxProfileInput, type YearInput, type YearResult } from '../tax/engine.js';
 import { accountantParams, notify } from '../notify/notify.js';
@@ -29,8 +30,16 @@ export type PeriodRow = typeof taxPeriods.$inferSelect;
 export type CalcRow = typeof taxCalculations.$inferSelect;
 type ProfileRow = typeof clientTaxProfiles.$inferSelect;
 
+/**
+ * SPEC §32: a hidden row (a KATA year's átalány quarters, a month no longer KATA) is never shown, reminded or counted.
+ * Every client- and job-side query of tax_periods uses it (test/kata-f1.test.ts checks the source files).
+ */
+export const periodVisible = isNull(taxPeriods.hiddenAt);
+
 export function periodLabel(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'>): string {
   if (p.kind === 'negyedev' && p.quarter) return quarterLabel(p.quarter);
+  // SPEC §32: "Kata – november" (key 'YYYY-MM-KATA')
+  if (p.kind === 'kata') return `Kata – ${monthName(Number(p.periodKey.slice(5, 7)))}`;
   // No unexplained "HIPA" for the client. Sávos (the usual case) has one advance a year; only the
   // általános method has a second instalment (HIPA-2).
   if (p.periodKey.endsWith('HIPA-1')) return `${p.year}. évi iparűzési adóelőleg`;
@@ -40,8 +49,52 @@ export function periodLabel(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' 
 
 /** "III. negyedévi" */
 export function periodAdj(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'>): string {
+  if (p.kind === 'kata') return `${MONTHS_ADJ_HU[Number(p.periodKey.slice(5, 7)) - 1] ?? ''} kata`;
   return p.kind === 'negyedev' ? `${periodLabel(p)}i` : periodLabel(p);
 }
+
+/** SPEC §32: the KATA kinds of insurance_breaks are read by the átalány engine as 'kieso' (szünetelés stays). */
+function engineBreaks(list: ProfileRow['insuranceBreaks']): NonNullable<TaxProfileInput['insuranceBreaks']> {
+  return (list ?? []).map((b) => ({ from: b.from, to: b.to, kind: b.kind === 'szunetel' ? 'szunetel' : 'kieso' }));
+}
+
+/**
+ * SPEC §32: the KATA part of a year – [kataFrom, kataTo] of a KATA profile, or of an átalány profile whose KATA ended
+ * during the year (kataTo set; a "vegyes év"). null = no KATA that year.
+ */
+export function kataRangeOfProfile(p: Pick<ProfileRow, 'regime' | 'kataFrom' | 'kataTo' | 'year'> | null | undefined): { from: string; to: string } | null {
+  if (!p) return null;
+  const yStart = `${p.year}-01-01`;
+  const yEnd = `${p.year}-12-31`;
+  if (p.regime === 'kata') {
+    const from = p.kataFrom && p.kataFrom > yStart ? p.kataFrom : yStart;
+    const to = p.kataTo && p.kataTo < yEnd ? p.kataTo : yEnd;
+    return from <= to ? { from, to } : null;
+  }
+  if (p.kataTo && p.kataTo >= yStart && p.kataTo <= yEnd) return { from: p.kataFrom && p.kataFrom > yStart ? p.kataFrom : yStart, to: p.kataTo };
+  return null;
+}
+
+/** All three months of the quarter are KATA months (a started month counts): no átalány quarter for it (H1). */
+export function quarterFullyKata(range: { from: string; to: string } | null, year: number, quarter: number): boolean {
+  if (!range) return false;
+  const firstMonth = `${year}-${String(quarter * 3 - 2).padStart(2, '0')}`;
+  const lastMonth = `${year}-${String(quarter * 3).padStart(2, '0')}`;
+  return range.from.slice(0, 7) <= firstMonth && range.to.slice(0, 7) >= lastMonth;
+}
+
+/** SPEC §32: any month of the year is KATA (the KATA months come from services/kata.ts). */
+export async function kataRangeOf(db: DbOrTx, clientId: string, year: number): Promise<{ from: string; to: string } | null> {
+  const [tp] = await db.select({ regime: clientTaxProfiles.regime, kataFrom: clientTaxProfiles.kataFrom, kataTo: clientTaxProfiles.kataTo, year: clientTaxProfiles.year }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, clientId), eq(clientTaxProfiles.year, year))).limit(1);
+  return kataRangeOfProfile(tp);
+}
+
+/** The quarter is entirely in the KATA part of its year. */
+export async function isKataQuarter(db: DbOrTx, clientId: string, year: number, quarter: number): Promise<boolean> {
+  return quarterFullyKata(await kataRangeOf(db, clientId, year), year, quarter);
+}
+
+export const KATA_NO_QUARTER = 'Katás évben nincs átalányos negyedév.';
 
 export function profileInput(p: ProfileRow, o: { legacyAllowances?: boolean } = {}): TaxProfileInput {
   return {
@@ -51,7 +104,7 @@ export function profileInput(p: ProfileRow, o: { legacyAllowances?: boolean } = 
     guaranteedMinimum: p.guaranteedMinimum,
     atalanyFrom: p.atalanyFrom ?? undefined,
     retail: p.retail,
-    insuranceBreaks: p.insuranceBreaks ?? [],
+    insuranceBreaks: engineBreaks(p.insuranceBreaks),
     hipa: { method: p.hipaMethod, ratePct: Number(p.hipaRatePct) },
     priorOverrides: p.priorOverrides ?? undefined,
     // NAV 100 ch. 4: családi kedvezmény, 25 év alattiak, anyák, első házasok – not modelled, but their
@@ -148,12 +201,28 @@ export async function ensurePeriods(
   const filingForm = status === 'nyugdijas' ? null : '2658';
   const method = hipaMethod === true ? 'savos' : hipaMethod === false ? 'nincs' : hipaMethod;
   const cal = deadlinesFor(year, { hipaMethod: method });
+  // SPEC §32 H1: no átalány quarter for the months of a KATA. A quarter entirely in the KATA part of the year is not
+  // created, and a not approved one is hidden (never deleted); an approved or filed one stays (the panel shows it, the
+  // accountant decides). A quarter only partly in the KATA ("vegyes év") stays: the accountant computes it by hand [D27].
+  // Back to átalány → the hidden quarters come back.
+  const range = await kataRangeOf(db, clientId, year);
+  const existingQ = await db.select({ id: taxPeriods.id, periodKey: taxPeriods.periodKey, quarter: taxPeriods.quarter, hiddenAt: taxPeriods.hiddenAt, hiddenReason: taxPeriods.hiddenReason, calcStatus: taxPeriods.calcStatus, filingStatus: taxPeriods.filingStatus }).from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev')));
+  for (const e of existingQ) {
+    const full = quarterFullyKata(range, year, e.quarter ?? 0);
+    if (full && !e.hiddenAt && e.calcStatus !== 'jovahagyva' && e.filingStatus !== 'beadva') {
+      await db.update(taxPeriods).set({ hiddenAt: new Date(), hiddenReason: 'kata_ev' }).where(eq(taxPeriods.id, e.id));
+      await audit(db, { action: 'tax.period_hidden', actorRole: 'system', targetType: 'tax_period', targetId: e.id, clientId, details: { periodKey: e.periodKey, reason: 'kata_ev' } });
+    } else if (!full && e.hiddenAt && e.hiddenReason === 'kata_ev') {
+      await db.update(taxPeriods).set({ hiddenAt: null, hiddenReason: null }).where(eq(taxPeriods.id, e.id));
+    }
+  }
   const want: { kind: 'negyedev' | 'hipa'; key: string; quarter: number | null; due: string }[] = [];
   for (const d of cal) {
     if (d.kind !== 'befizetes' || !d.periodKey) continue;
     const q = /^\d{4}-Q([1-4])$/.exec(d.periodKey);
-    if (q) want.push({ kind: 'negyedev', key: d.periodKey, quarter: Number(q[1]), due: d.dueDate });
-    else if (/^\d{4}-HIPA-\d$/.test(d.periodKey) && method !== 'nincs') want.push({ kind: 'hipa', key: d.periodKey, quarter: null, due: d.dueDate });
+    if (q) {
+      if (!quarterFullyKata(range, year, Number(q[1]))) want.push({ kind: 'negyedev', key: d.periodKey, quarter: Number(q[1]), due: d.dueDate });
+    } else if (/^\d{4}-HIPA-\d$/.test(d.periodKey) && method !== 'nincs') want.push({ kind: 'hipa', key: d.periodKey, quarter: null, due: d.dueDate });
   }
   for (const w of want) {
     await db
@@ -166,7 +235,7 @@ export async function ensurePeriods(
       .update(taxPeriods)
       .set({ filingForm })
       .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev'), sql`${taxPeriods.filingStatus} <> 'beadva'`, sql`${taxPeriods.filingForm} is distinct from ${filingForm}`));
-  return db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
+  return db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), periodVisible)).orderBy(asc(taxPeriods.dueDate));
 }
 
 function quarterSnapshot(year: YearResult, q: QuarterResult) {
@@ -191,9 +260,13 @@ export async function recalcYear(deps: Deps, db: DbOrTx, clientId: string, year:
   const comp = await computeYear(db, clientId, year, asOf);
   if (!comp) return null;
   const periods = await ensurePeriods(db, clientId, year, comp.input.profile.hipa?.method ?? 'nincs', comp.input.profile.status);
+  // SPEC §32 H1: no átalány estimate for a quarter that touches a KATA month (fully KATA: no row at all; partly: the
+  // accountant computes the "vegyes év" by hand [D27]). The KATA months come from services/kata.ts.
+  const kRange = await kataRangeOf(db, clientId, year);
   for (const q of comp.result.quarters) {
     const p = periods.find((x) => x.periodKey === q.periodKey);
     if (!p || p.calcStatus === 'jovahagyva') continue;
+    if (kRange && kRange.from.slice(0, 7) <= `${year}-${String(q.quarter * 3).padStart(2, '0')}` && kRange.to.slice(0, 7) >= `${year}-${String(q.quarter * 3 - 2).padStart(2, '0')}`) continue;
     const quarterStart = `${year}-${String(q.quarter * 3 - 2).padStart(2, '0')}-01`;
     if (quarterStart > asOf) continue;
     const snap = quarterSnapshot(comp.result, q);
@@ -226,6 +299,7 @@ export async function calculatePeriod(deps: Deps, db: DbOrTx, clientId: string, 
   const m = /^(\d{4})-Q([1-4])$/.exec(periodKey);
   if (!m) throw E.validation({ periodKey: 'Negyedév kulcs kell, pl. 2026-Q3.' });
   const year = Number(m[1]);
+  if (await isKataQuarter(db, clientId, year, Number(m[2]))) throw E.conflict(KATA_NO_QUARTER);
   const comp = await computeYear(db, clientId, year, asOf);
   if (!comp) throw E.conflict('Előbb add meg az ügyfél adóprofilját erre az évre.');
   const periods = await ensurePeriods(db, clientId, year, comp.input.profile.hipa?.method ?? 'nincs', comp.input.profile.status);
@@ -267,6 +341,7 @@ export async function approveCalculation(deps: Deps, db: DbOrTx, calcId: string,
   const [cl] = await db.select().from(clients).where(and(eq(clients.id, p.clientId), eq(clients.accountantId, accountantId))).limit(1);
   if (!cl) throw E.notFound();
   if (p.calcStatus === 'jovahagyva') throw E.conflict('Ez a negyedév már jóvá van hagyva. Előbb nyisd újra.');
+  if (p.hiddenAt || (p.kind === 'negyedev' && p.quarter && (await isKataQuarter(db, p.clientId, p.year, p.quarter)))) throw E.conflict(KATA_NO_QUARTER);
   if (p.latestCalculationId && p.latestCalculationId !== calc.id) throw E.conflict('Van újabb számolás ehhez a negyedévhez. Azt hagyd jóvá.');
   const snap = calc.result as CalcResultJson;
   const q = snap.quarter;
@@ -527,6 +602,9 @@ export async function periodDetail(db: DbOrTx, p: PeriodRow, clientFirstName: st
     disclaimer,
     letter: await letterFor(db, p, clientFirstName, acc ?? null),
     filed: p.filingStatus === 'beadva' ? { filedOn: p.filedOn ?? todayBudapest(p.filedAt ?? new Date()), documents: ids.length ? await docList(ids) : [] } : null,
+    // SPEC §32: the payment sheet's title and a free KATA month's reason
+    sheetTitle: periodLabel(p),
+    ...(p.kind === 'kata' ? { exemptReasonLabel: p.exemptReason ? (KATA_EXEMPT_LABELS[p.exemptReason as KataExemptKind] ?? p.exemptReason) : null } : {}),
   };
 }
 
@@ -540,7 +618,7 @@ export function paymentStatusOf(items: { markedPaidAt: Date | null; verification
 }
 
 export async function markPaid(deps: Deps, db: DbOrTx, clientId: string, periodId: string, kinds: PaymentItemKind[] | undefined, paidOn: string, userId: string): Promise<PeriodRow> {
-  const [p] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, periodId), eq(taxPeriods.clientId, clientId))).limit(1);
+  const [p] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, periodId), eq(taxPeriods.clientId, clientId), periodVisible)).limit(1);
   if (!p) throw E.notFound();
   if (p.calcStatus !== 'jovahagyva') throw E.conflict('Ezt még nem hagyta jóvá a könyvelőd. Várd meg a végleges összeget.');
   const today = todayBudapest(deps.now());
@@ -579,7 +657,7 @@ export async function markPaid(deps: Deps, db: DbOrTx, clientId: string, periodI
 }
 
 export async function unmarkPaid(deps: Deps, db: DbOrTx, clientId: string, periodId: string, kinds: PaymentItemKind[] | undefined, userId: string): Promise<PeriodRow> {
-  const [p] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, periodId), eq(taxPeriods.clientId, clientId))).limit(1);
+  const [p] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, periodId), eq(taxPeriods.clientId, clientId), periodVisible)).limit(1);
   if (!p) throw E.notFound();
   const items = await activeItems(db, p.id);
   const target = items.filter((i) => (!kinds || kinds.includes(i.kind)) && !i.verifiedAt);
@@ -625,9 +703,11 @@ export async function verifyPayment(
   await audit(db, { action: 'tax.payment_verified', actorUserId: accountantUserId, actorRole: 'accountant', targetType: 'tax_period', targetId: p.id, clientId: cl.id, details: { status } });
   const ap = await accountantParams(db, accountantId);
   // The iparűzési adóelőleg goes to the önkormányzat, not to NAV: its own wording (variant 'hipa').
-  const hv = p.kind === 'hipa' ? { variant: 'hipa' } : {};
-  if (status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p) }, link: p.kind === 'hipa' ? '/hataridok' : '/' });
-  if (status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p) }, link: '/uzenetek' });
+  const hv = p.kind === 'hipa' ? { variant: 'hipa' } : p.kind === 'kata' ? { variant: 'kata' } : {};
+  const honap = p.kind === 'kata' ? monthName(Number(p.periodKey.slice(5, 7))) : undefined;
+  const link = p.kind === 'hipa' ? '/hataridok' : p.kind === 'kata' ? `/fizetes/${p.id}` : '/';
+  if (status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link });
+  if (status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link: '/uzenetek' });
   return updated!;
 }
 
@@ -679,6 +759,7 @@ export async function filingCheck(db: DbOrTx, p: PeriodRow, today: string): Prom
   let reason: string | null = null;
   if (p.filingStatus === 'beadva') reason = 'Ez az időszak már be van adva.';
   else if (p.kind === 'hipa') reason = 'Az iparűzési adóelőleghez nincs külön bevallás. Az éves iparűzésiadó-bevallást a következő év május végéig adod be.';
+  else if (p.kind === 'kata') reason = 'A katához nincs havi bevallás: a havi összeget csak be kell fizetni. Az éves kata-nyilatkozatot az Éves zárás fülön rögzíted.';
   else if (p.kind === 'negyedev' && p.filingForm === null) reason = 'Nyugdíjas átalányadózónak nincs negyedéves járulékbevallása (2658), csak az SZJA-előleget fizeti be.';
   else if (today <= periodEnd) reason = `Az időszak még tart (${huFullDate(periodEnd)} a vége), ezért még nem adható be.`;
   else if (p.calcStatus !== 'jovahagyva') reason = 'Előbb hagyd jóvá az összeget, utána jelöld beadottnak.';
@@ -760,7 +841,7 @@ export async function heroPeriod(
   const open = await db
     .select()
     .from(taxPeriods)
-    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.kind, 'negyedev'), eq(taxPeriods.calcStatus, 'jovahagyva'), inArray(taxPeriods.paymentStatus, ['fizetendo', 'befizetve_jelezve', 'elteres'])))
+    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.kind, 'negyedev'), periodVisible, eq(taxPeriods.calcStatus, 'jovahagyva'), inArray(taxPeriods.paymentStatus, ['fizetendo', 'befizetve_jelezve', 'elteres'])))
     .orderBy(asc(taxPeriods.dueDate));
   if (open.length) {
     const p = open[0]!;
@@ -774,7 +855,7 @@ export async function heroPeriod(
   const [prev] = await db
     .select()
     .from(taxPeriods)
-    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.periodKey, prevKey)))
+    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.periodKey, prevKey), periodVisible))
     .limit(1);
   if (prev && prev.calcStatus !== 'jovahagyva' && today <= addDays(prev.dueDate, CLOSED_QUARTER_HERO_DAYS)) {
     // Only quarters that are ours: one that was due before the client joined was the previous accountant's.
@@ -786,7 +867,7 @@ export async function heroPeriod(
   const [cur] = await db
     .select()
     .from(taxPeriods)
-    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.periodKey, `${year}-Q${q}`)))
+    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.periodKey, `${year}-Q${q}`), periodVisible))
     .limit(1);
   if (cur) {
     if (cur.calcStatus === 'jovahagyva') return { period: cur, state: cur.paymentStatus === 'nincs_fizetendo' ? 'nincs_fizetendo' : 'befizetve' };
@@ -796,7 +877,7 @@ export async function heroPeriod(
   const [last] = await db
     .select()
     .from(taxPeriods)
-    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.kind, 'negyedev'), lte(taxPeriods.dueDate, addDays(today, 120))))
+    .where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.kind, 'negyedev'), periodVisible, lte(taxPeriods.dueDate, addDays(today, 120))))
     .orderBy(desc(taxPeriods.dueDate))
     .limit(1);
   return last ? { period: last, state: 'nincs_fizetendo' } : null;

@@ -12,7 +12,8 @@ import { computeFlags, recomputeAllFlags } from './services/flags.js';
 import { syncAll } from './services/navsync.js';
 import { runGdprExports, runGdprJob } from './services/gdpr.js';
 import { runBillingJob } from './services/subscription.js';
-import { computeYear, ensurePeriods, periodAdj, periodLabel, ft } from './services/tax.js';
+import { computeYear, ensurePeriods, periodAdj, periodLabel, periodVisible, ft } from './services/tax.js';
+import { evesKapcsolok, jobKataPeriods, jobKataYearEnd, kataLimitWarnings, syncKataPeriods } from './services/kata.js';
 import { clientName } from './services/people.js';
 import { jobCallbackSla } from './services/callbacks.js';
 import { businessRegistrations, callbackRequests, teamMembers } from './db/schema.js';
@@ -49,7 +50,8 @@ export async function jobReminders(deps: Deps): Promise<Record<string, number>> 
       .from(taxPeriods)
       .innerJoin(clients, eq(clients.id, taxPeriods.clientId))
       // only active clients: before activation the tax data is locked (SPEC §26.5.2, review k3c2)
-      .where(and(eq(taxPeriods.dueDate, due), eq(taxPeriods.calcStatus, 'jovahagyva'), eq(taxPeriods.paymentStatus, 'fizetendo'), eq(clients.lifecycle, 'aktiv')));
+      // SPEC §32: never a hidden or backfilled row; the KATA months have their own rhythm (8th, due day, +1 day – reminders_k28)
+      .where(and(eq(taxPeriods.dueDate, due), eq(taxPeriods.calcStatus, 'jovahagyva'), eq(taxPeriods.paymentStatus, 'fizetendo'), eq(clients.lifecycle, 'aktiv'), periodVisible, eq(taxPeriods.backfilled, false), sql`${taxPeriods.kind} <> 'kata'`));
     for (const { p, c } of rows) {
       const items = await db.select().from(taxPaymentItems).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt)));
       if (!items.length) continue;
@@ -104,7 +106,13 @@ export async function jobReminders(deps: Deps): Promise<Record<string, number>> 
   // limit warnings (ÁFA ≥ 80 %) once a year, client + accountant
   const year = Number(today.slice(0, 4));
   const active = await db.select().from(clients).where(eq(clients.lifecycle, 'aktiv'));
+  const kapcs = await evesKapcsolok(db);
   for (const c of active) {
+    // SPEC §32: the KATA keret (80 %, over, projection) – once a year per threshold
+    out.limits += await kataLimitWarnings(deps, c, year, today, kapcs).catch((e: Error) => {
+      log().warn({ err: safeErr(e) }, 'kata limit warning failed');
+      return 0;
+    });
     const comp = await computeYear(db, c.id, year, today);
     if (!comp || comp.result.meters.afa.ratio < 0.8) continue;
     const params = { ...(await accountantParams(db, c.accountantId)), percent: 80 };
@@ -190,15 +198,27 @@ export async function jobMonthly(deps: Deps): Promise<number> {
   return n;
 }
 
-/** 1 January: next year's tax profiles (copied, flagged for review) and periods. */
+/**
+ * 1 January: next year's tax profiles (copied, flagged for review) and periods.
+ * SPEC §32 H2: the regime is copied too – a KATA client stays KATA (kataFrom = 1 January when the KATA was still on at the
+ * end of the year, kataTo only when it is in the new year), with its variant and főfoglalkozás flag; the periods follow
+ * the regime and the jogállás (no quarter in a KATA year, no 2658 for a nyugdíjas). A profile the accountant already
+ * recorded for the new year (e.g. the 2027 KATA decision in December) is kept as it is (onConflictDoNothing).
+ * The new year's KATA months come from syncKataPeriods (2027: without amount while the T/928 switch is off).
+ */
 export async function jobNewYear(deps: Deps): Promise<number> {
   const db = deps.db;
   const year = Number(todayBudapest(deps.now()).slice(0, 4));
   const rows = await db.select().from(clientTaxProfiles).where(eq(clientTaxProfiles.year, year - 1));
+  const kapcs = await evesKapcsolok(db);
   let n = 0;
   for (const p of rows) {
     const [cl] = await db.select({ lifecycle: clients.lifecycle }).from(clients).where(eq(clients.id, p.clientId)).limit(1);
     if (!cl || cl.lifecycle === 'megszunt') continue;
+    const newStart = `${year}-01-01`;
+    // the KATA goes on into the new year only if it did not end in the old one
+    const kataGoesOn = p.regime === 'kata' && (!p.kataTo || p.kataTo >= newStart);
+    const regime = kataGoesOn ? 'kata' : 'atalany';
     await db
       .insert(clientTaxProfiles)
       .values({
@@ -213,9 +233,16 @@ export async function jobNewYear(deps: Deps): Promise<number> {
         hipaMethod: p.hipaMethod,
         hipaRatePct: p.hipaRatePct,
         hipaAccountNumber: p.hipaAccountNumber,
+        regime,
+        kataFrom: kataGoesOn ? (p.kataFrom && p.kataFrom >= newStart ? p.kataFrom : newStart) : null,
+        kataTo: kataGoesOn && p.kataTo && p.kataTo >= newStart ? p.kataTo : null,
+        kataVariant: kataGoesOn ? (p.kataVariant ?? 'regi') : null,
+        kataFofoglalkozasu: kataGoesOn ? (p.kataFofoglalkozasu ?? true) : null,
       })
       .onConflictDoNothing();
-    await ensurePeriods(db, p.clientId, year, p.hipaMethod);
+    const [np] = await db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, p.clientId), eq(clientTaxProfiles.year, year))).limit(1);
+    await ensurePeriods(db, p.clientId, year, np?.hipaMethod ?? p.hipaMethod, np?.status ?? p.status);
+    if (np?.regime === 'kata') await syncKataPeriods(deps, db, p.clientId, year, { k: kapcs });
     n++;
   }
   return n;
@@ -349,6 +376,10 @@ export function jobDefs(deps: Deps): JobDef[] {
         ]
       : []),
     { name: 'gdpr', slot: at(3, 30), run: (d) => runGdprJob(d) },
+    // SPEC §32: the KATA month rows (03:10, after the night's revenue sync is not needed: a month row exists from its 1st)
+    { name: 'kata_periods', slot: at(3, 10), run: (d) => jobKataPeriods(d) },
+    // SPEC §32: KATA year end (10 / 16 / 22 December) and the free-month notices (3 days before the 12th)
+    { name: 'kata_year_end', slot: at(9, 0), run: (d) => jobKataYearEnd(d) },
     // SPEC §31 / Adatkezelési tájékoztató 2.11., 8.: click ids after 90 days, source details after 2 years (fields emptied)
     { name: 'marketing_retention', slot: at(3, 40), run: async (d) => (await import('./services/marketing.js')).jobMarketingRetention(d) },
     {

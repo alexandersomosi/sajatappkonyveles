@@ -37,4 +37,15 @@ export {
   type ReserveLine,
   type EarningsMonthEngine,
   type YearProjection,
+  // SPEC §32 – KATA
+  kataMonths,
+  kataLimitMeter,
+  kataMonthlyHuf,
+  kataRulesFor,
+  kataDueDate,
+  kataDeclarationDue,
+  KATA_RULES_REGI_2026,
+  type KataMonth,
+  type KataRules,
+  type KataLimitMeter,
 } from '@kezjegy/ado-motor';

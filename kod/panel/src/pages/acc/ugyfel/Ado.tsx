@@ -17,6 +17,7 @@ import { datum, datumIg, ft, jarulekNyomtatvany, hataridoMondat, hatridoSzoveg, 
 import { today } from '../../../lib/today';
 import { fajlHiba } from '../../../lib/validate';
 import { MegjegyzesFiok } from './Bekotes';
+import KataEv from './KataEv';
 
 function rovidNev(p: AccTaxPeriod, osszes?: AccTaxPeriod[]): string {
   const nev = negyedevNev(p.periodKey).replace(/^\d{4}\.\s/, '');
@@ -96,11 +97,17 @@ export default function Ado({ c }: FulProps) {
   }, [alap, ev, rogzitett]);
   const kulcs = sp.get('idoszak') ?? (rogzitett?.ev === ev ? rogzitett.kulcs : alap);
   const p = items.find((x) => x.periodKey === kulcs);
+  // SPEC §32: a KATA year shows its months (KataEv); the list above then holds the HIPA advances only
+  const kataEv = c.taxRegime === 'kata' && ev === Number(t.slice(0, 4));
   return (
     <>
       <div className="sor-flex ter" style={{ marginBottom: 14 }}>
         <EvValaszto ev={Number(ev)} evek={[Number(t.slice(0, 4)), Number(t.slice(0, 4)) - 1]} valt={(y) => setSp({ ev: String(y) }, { replace: true })} />
-        <span className="halvany kicsi">2026-tól a TB-járulékot, a szochót és az SZJA-előleget is negyedévente fizeti, a negyedév utáni hónap 12-éig ({szamRag(jarulekNyomtatvany(Number(ev)))} bevallás).</span>
+        <span className="halvany kicsi">
+          {kataEv
+            ? 'Katás év: nincs átalányos negyedév és 2658. Minden megkezdett hónapra fizet, a következő hónap 12-éig (Kata tv. 7. § (2)).'
+            : <>2026-tól a TB-járulékot, a szochót és az SZJA-előleget is negyedévente fizeti, a negyedév utáni hónap 12-éig ({szamRag(jarulekNyomtatvany(Number(ev)))} bevallás).</>}
+        </span>
       </div>
       {c.lifecycle === 'bekotes_alatt' && (
         // SPEC §26.5.2 (order 4): the client cannot see tax data before activation, so approving waits (review k3c2).
@@ -121,6 +128,7 @@ export default function Ado({ c }: FulProps) {
         </div>
       ) : (
         <>
+          {kataEv && <KataEv c={c} ev={ev} />}
           <div className="racs k4" style={{ gridTemplateColumns: `repeat(${Math.max(4, items.length)}, minmax(0, 1fr))` }}>
             {items.map((x) => (
               <button key={x.id} className={`negyedev-kartya${x.periodKey === kulcs ? ' on' : ''}`} onClick={() => setSp({ ev: String(ev), idoszak: x.periodKey }, { replace: true })}>

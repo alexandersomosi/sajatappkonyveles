@@ -35,6 +35,12 @@ import { changeDone, changeFiled, changeReady, followupViews, isChangeKind, patc
 import { assistForStaff, teamAssistDetail } from '../services/assist.js';
 import { chargeById, feeChargeView } from '../services/dijak.js';
 import { currentCheckin } from '../services/havi-ellenorzes.js';
+import { KATA_EXEMPT_KINDS, KATA_VARIANTS } from '../_shared/kata.js';
+import { kataHomeView, kataYearView, setKataBreaks, syncKataPeriods } from '../services/kata.js';
+import { ensurePeriods, verifyPayment } from '../services/tax.js';
+import { computeFlags } from '../services/flags.js';
+import { taxPeriods } from '../db/schema.js';
+import { isNull as isNullOp } from 'drizzle-orm';
 
 /** SPEC §28.K.15: no answer-time promise in the accountant's response text. */
 export function hasResponseTimePromise(s: string): boolean {
@@ -66,6 +72,22 @@ export async function accDetailK28(deps: Deps, cl: ClientRow): Promise<AccClient
     annual: ann ? await annualView(deps, deps.db, cl, year - 1) : null,
     adoszamPending: cl.adoszamPending,
     checkinOpenItems: open.length,
+    // SPEC §32: the KATA card (keret, months, business customers) – filled for a KATA year
+    ...(tp?.regime === 'kata' && cl.lifecycle !== 'bekotes_alatt' ? { kata: await kataCardOf(deps, cl, year) } : {}),
+  };
+}
+
+/** The panel KATA card: the client's KataHomeView with the staff meter (projection) and the business invoices. */
+async function kataCardOf(deps: Deps, cl: ClientRow, year: number): Promise<AccClientDetailK28['kata']> {
+  const v = await kataHomeView(deps, deps.db, cl, year).catch(() => null);
+  if (!v) return null;
+  const staff = await kataYearView(deps, deps.db, cl, year, { staff: true }).catch(() => null);
+  const { kataRisksOf } = await import('../services/szamla-ertesites.js');
+  const risks = await kataRisksOf(deps, cl, { limit: 10 }).catch(() => []);
+  return {
+    ...v,
+    ...(staff ? { meter: staff.meter, draftNote: staff.draftNote } : {}),
+    businessInvoices: risks.map((r) => ({ navInvoiceId: r.navInvoiceId, customerName: r.vevo || null, amountHuf: r.amountHuf ?? 0, payerKind: r.payerKind, endsOn: r.endsOn ?? null, reportBy: r.reportBy ?? null })),
   };
 }
 
@@ -264,15 +286,82 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
     return c.json({ employer: employerView(row) });
   });
 
-  // ---- KATA regime (§28.K.11; the accountant sets it)
+  // ---- KATA regime (§28.K.11; the accountant sets it). SPEC §32: + the KATA variant and the főfoglalkozás flag; the
+  // quarters (H1) and the KATA months follow at once. The app never suggests a regime or a KATA variant to the client.
   r.post('/clients/:id/tax-regime', async (c) => {
     const { cl } = await staffClient(deps, c);
-    const b = await readJson(c, z.strictObject({ regime: z.enum(['atalany', 'kata']), kataFrom: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(), kataTo: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(), year: z.number().int().min(2024).max(2100).optional() }));
+    const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+    const b = await readJson(
+      c,
+      z.strictObject({
+        regime: z.enum(['atalany', 'kata']),
+        kataFrom: day.nullish(),
+        kataTo: day.nullish(),
+        year: z.number().int().min(2024).max(2100).optional(),
+        kataVariant: z.enum(KATA_VARIANTS).optional(),
+        kataFofoglalkozasu: z.boolean().nullish(),
+      }),
+    );
     const year = b.year ?? thisYear();
-    const upd = await deps.db.update(clientTaxProfiles).set({ regime: b.regime, kataFrom: b.kataFrom ?? null, kataTo: b.kataTo ?? null, updatedAt: deps.now() }).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).returning({ id: clientTaxProfiles.id });
+    for (const d of [b.kataFrom, b.kataTo]) if (d && Number(d.slice(0, 4)) !== year) throw E.validation({ kataFrom: `A dátumnak ${year}-re kell esnie.` });
+    if (b.kataFrom && b.kataTo && b.kataFrom > b.kataTo) throw E.validation({ kataTo: 'A kata vége nem lehet a kezdete előtt.' });
+    const variant = b.regime === 'kata' ? (b.kataVariant ?? 'regi') : null;
+    // the new KATA (T/928) exists only from 2027, and only once the law is published (the switch) – the data can be recorded
+    if (variant === 'uj' && year < 2027) throw E.validation({ kataVariant: 'Az új kata (T/928) legkorábban 2027-től létezik.' });
+    // the Kata tv. KATA is for a főfoglalkozású EV only (Kata tv. 3. §)
+    if (variant === 'regi' && b.kataFofoglalkozasu === false) throw E.validation({ kataFofoglalkozasu: 'A (régi) kata csak főfoglalkozású egyéni vállalkozónak választható.' });
+    const upd = await deps.db
+      .update(clientTaxProfiles)
+      .set({
+        regime: b.regime,
+        kataFrom: b.kataFrom ?? null,
+        kataTo: b.kataTo ?? null,
+        ...(b.regime === 'kata' ? { kataVariant: variant, kataFofoglalkozasu: variant === 'regi' ? true : (b.kataFofoglalkozasu ?? null) } : {}),
+        updatedAt: deps.now(),
+      })
+      .where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year)))
+      .returning();
     if (!upd.length) throw E.notFound('Nincs adózási profil erre az évre.');
-    await auditC(c, deps.db, 'tax_regime.set', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { regime: b.regime, year } });
-    return c.json({ regime: b.regime, kataFrom: b.kataFrom ?? null, kataTo: b.kataTo ?? null });
+    await auditC(c, deps.db, 'tax_regime.set', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { regime: b.regime, year, kataVariant: variant } });
+    await ensurePeriods(deps.db, cl.id, year, upd[0]!.hipaMethod, upd[0]!.status);
+    await syncKataPeriods(deps, deps.db, cl.id, year);
+    await computeFlags(deps, deps.db, cl.id);
+    return c.json({ regime: b.regime, kataFrom: b.kataFrom ?? null, kataTo: b.kataTo ?? null, kataVariant: upd[0]!.kataVariant ?? null, kataFofoglalkozasu: upd[0]!.kataFofoglalkozasu ?? null });
+  });
+
+  // ---- SPEC §32 KATA months, free months, group verification
+  r.get('/clients/:id/kata', async (c) => {
+    const { cl } = await staffClient(deps, c);
+    const v = await kataYearView(deps, deps.db, cl, parseQuery(c, yearQ).year ?? thisYear(), { staff: true });
+    if (!v) throw E.notFound('Ebben az évben az ügyfél nem katás.');
+    return c.json(v);
+  });
+  const isoDay = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: 'ÉÉÉÉ-HH-NN alakban.' });
+  r.put('/clients/:id/kata/breaks', async (c) => {
+    const { actor, cl } = await staffClient(deps, c);
+    const b = await readJson(c, z.strictObject({ year: z.number().int().min(2024).max(2100), breaks: z.array(z.strictObject({ from: isoDay, to: isoDay, kind: z.enum(KATA_EXEMPT_KINDS), reportedOn: isoDay.nullish() })).max(24) }));
+    // no transaction: the sync's staff notifications go through deps.db (PGlite has one connection)
+    await setKataBreaks(deps, deps.db, cl, b.year, b.breaks.map((x) => ({ ...x, reportedOn: x.reportedOn ?? null })), actor.userId);
+    await computeFlags(deps, deps.db, cl.id);
+    const v = await kataYearView(deps, deps.db, cl, b.year, { staff: true });
+    return c.json(v);
+  });
+  r.post('/clients/:id/kata/verify', async (c) => {
+    const { actor, cl } = await staffClient(deps, c);
+    if (!cl.accountantId) throw E.conflict('Az ügyfélnek nincs könyvelője.');
+    const b = await readJson(c, z.strictObject({ periodIds: z.array(z.string().uuid()).min(1).max(24), note: z.string().trim().max(500).optional() }));
+    const rows = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.kind, 'kata'), isNullOp(taxPeriods.hiddenAt), inArray(taxPeriods.id, b.periodIds)));
+    if (rows.length !== new Set(b.periodIds).size) throw E.notFound();
+    let year = thisYear();
+    await deps.db.transaction(async (tx) => {
+      for (const p of rows) {
+        year = p.year;
+        await verifyPayment(deps, tx, p.id, actor.userId, cl.accountantId!, [{ kind: 'kata_teteles', verification: 'rendben', ...(b.note ? { note: b.note } : {}) }]);
+      }
+    });
+    await auditC(c, deps.db, 'kata.verified', { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { count: rows.length } });
+    await computeFlags(deps, deps.db, cl.id);
+    return c.json(await kataYearView(deps, deps.db, cl, year, { staff: true }));
   });
 }
 

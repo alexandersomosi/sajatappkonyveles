@@ -4,7 +4,7 @@
 // deducted (a tax rule, not a cost). Round 2 of 2026-11-19: the year-to-date total counts the year's real SZJA – what
 // the quarterly advances overpaid (they never go below 0) comes back in the annual return and is shown as such.
 // The same month figures are the "eddig" of the home Félretenni card (felretesz.ts reserveCard), so the two never differ.
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, isNull } from 'drizzle-orm';
 import type { EarningsCard, EarningsMonthView, EarningsView } from '../_shared/api.js';
 import { EARNINGS_RULES, type EarningsBasis } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
@@ -56,7 +56,7 @@ export type ApprovedParts = Record<string, { tbHuf: number; szochoHuf: number; s
  * that the quarters already approved were recomputed with it; only the overpaid SZJA comes back.
  */
 export async function approvedQuarterParts(db: DbOrTx, clientId: string, year: number): Promise<{ approved: ApprovedParts; basisOf: Record<string, EarningsBasis> }> {
-  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev'))).orderBy(asc(taxPeriods.dueDate));
+  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, clientId), eq(taxPeriods.year, year), eq(taxPeriods.kind, 'negyedev'), isNull(taxPeriods.hiddenAt))).orderBy(asc(taxPeriods.dueDate));
   const approved: ApprovedParts = {};
   const basisOf: Record<string, EarningsBasis> = {};
   for (const p of periods) {

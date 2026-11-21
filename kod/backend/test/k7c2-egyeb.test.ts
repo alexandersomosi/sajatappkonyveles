@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { clients, clientTaxProfiles, feeSettings, revenueItems } from '../src/db/schema.js';
 import { statementData } from '../src/services/kimutatas.js';
 import { clientDeadlines } from '../src/services/flags.js';
+import { syncKataPeriods } from '../src/services/kata.js';
 import { serviceNotice } from '../src/services/subscription.js';
 import { dateSuffixFix, fill } from '../src/content.js';
 import { fillPlaceholders } from '../src/_shared/bekotes.js';
@@ -36,16 +37,14 @@ describe('KATA: no átalány deadlines; the monthly 50 000 Ft instead', () => {
     const c = await newClient(h, 'k7c2-kata@demo.kezjegy.test', { first: 'Gréta', last: 'Lakatos' });
     await h.deps.db.insert(clientTaxProfiles).values({ clientId: c.clientId, year: 2026, costRatio: 45, regime: 'kata', status: 'fofoglalkozasu', kataFrom: '2026-01-01' }).onConflictDoNothing();
     await h.deps.db.update(clients).set({ createdAt: new Date('2026-01-01T00:00:00Z') }).where(eq(clients.id, c.clientId));
+    // SPEC §32 (2026-11-21): the KATA months are real tax_periods rows (a row from the 1st of the month), no synthetic
+    // 'kata:' rows; the 12 December working Saturday was repealed (4/2026. SZCSM r.) → November is due on Monday 14 December.
+    await syncKataPeriods(h.deps, h.deps.db, c.clientId, 2026);
     const list = await clientDeadlines(h.deps, h.deps.db, c.clientId, '2026-11-20', '2027-06-30');
     expect(list.some((d) => /negyedév/.test(d.title))).toBe(false);
     expect(list.some((d) => /26SZJA|SZJA-bevallás/.test(d.title))).toBe(false);
-    const kata = list.filter((d) => d.id.startsWith('kata:'));
-    // November → 2026-12-12 (a Saturday, but a WORKING day in 2026: the 24 December swap in the engine's calendar),
-    // December → 2027-01-12
-    expect(kata.map((d) => [d.dueDate, d.amountHuf])).toEqual([
-      ['2026-12-12', 50_000],
-      ['2027-01-12', 50_000],
-    ]);
+    const kata = list.filter((d) => /^Kata – /.test(d.title));
+    expect(kata.map((d) => [d.dueDate, d.amountHuf])).toEqual([['2026-12-14', 50_000]]);
   });
 });
 

@@ -8,9 +8,11 @@
 // 2) Bridge rest days and the Saturdays worked in exchange come from the yearly NGM decree:
 //    2026: 10/2025. (IV. 30.) NGM rendelet – 2 Jan (Fri) rest ↔ 10 Jan (Sat) work, 21 Aug (Fri)
 //    rest ↔ 8 Aug (Sat) work, 24 Dec (Thu) rest ↔ 12 Dec (Sat) work. 24 Dec has since become a
-//    public holiday; the repeal of the 12 Dec working Saturday was announced but its decree was not
-//    found on 2026-11-18, so 12 Dec stays a working day here (safe side: a deadline never moves
-//    later because of it).
+//    public holiday, and the 4/2026. (XI. 13.) SZCSM rendelet 1. § repealed 2. § c) of the NGM
+//    decree: 12 Dec 2026 is NOT a working Saturday any more (njt, checked 2026-11-21:
+//    https://njt.jog.gov.hu/jogszabaly/2025-10-20-2X). A deadline on that day moves to Monday
+//    14 Dec (e.g. the November KATA: 2026-12-14). The repealed day is kept in
+//    REPEALED_WORKING_DAYS for the record only; the calendar never reads it.
 //    2027: no decree was published when this was written → only statutory holidays and weekends.
 //
 // Policy: a moved working Saturday counts as a working day (deadline does not move). If unsure,
@@ -35,9 +37,16 @@ export const MOVED_WORKING_DAYS: Record<number, DayNote[]> = {
   2026: [
     { date: '2026-01-10', name: 'Áthelyezett munkanap (10/2025. NGM r.)' },
     { date: '2026-08-08', name: 'Áthelyezett munkanap (10/2025. NGM r.)' },
-    { date: '2026-12-12', name: 'Áthelyezett munkanap (10/2025. NGM r.; törlése bejelentve, rendelet még nem ismert)' },
   ],
   2027: [],
+};
+
+/**
+ * Working Saturdays that a later decree repealed – for the record only (the calendar never reads this).
+ * 2026-12-12: 10/2025. (IV. 30.) NGM r. 2. § c), repealed by 4/2026. (XI. 13.) SZCSM r. 1. § [ngm-10-2025, szcsm-4-2026].
+ */
+export const REPEALED_WORKING_DAYS: Record<number, DayNote[]> = {
+  2026: [{ date: '2026-12-12', name: 'Törölt áthelyezett munkanap (10/2025. NGM r. 2. § c), hatályon kívül: 4/2026. (XI. 13.) SZCSM r. 1. §)' }],
 };
 
 /** Years whose NGM decree has been entered above. Other years use statutory holidays only. */

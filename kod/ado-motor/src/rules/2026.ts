@@ -1,9 +1,9 @@
-import type { NavAccount, TaxRules } from './types.js';
+import type { KataRules, NavAccount, TaxRules } from './types.js';
 
 // 2026 rules for átalányadózó egyéni vállalkozók (alanyi ÁFA-mentes). Checked 2026-11-17/18.
 // Each value names its source (ids refer to `sources` at the bottom; full list also in SPEC §25).
 
-export const NAV_ACCOUNTS: { szja: NavAccount; tb: NavAccount; szocho: NavAccount } = {
+export const NAV_ACCOUNTS: { szja: NavAccount; tb: NavAccount; szocho: NavAccount; kata: NavAccount } = {
   // Source: nav-iban (NAV "Adóztatási IBAN számlaszámok"), nav-szamlaszamok.
   szja: {
     name: 'NAV Személyi jövedelemadó magánszemélyt, őstermelőt, egyéni vállalkozót, kifizetőt terhelő kötelezettség beszedési számla',
@@ -23,6 +23,38 @@ export const NAV_ACCOUNTS: { szja: NavAccount; tb: NavAccount; szocho: NavAccoun
     number: '10032000-06055912',
     iban: 'HU12100320000605591200000000',
   },
+  // SPEC §32: adónem 288; the 40 % különadó goes here too. Name and number from the NAV list in force from
+  // 2026-11-01 (checked 2026-11-21) [nav-szamlaszamok-2026, nav-99].
+  kata: {
+    name: 'NAV Kisadózó vállalkozások adója bevételi számla',
+    shortName: 'NAV kata-számla',
+    number: '10032000-01076349',
+    iban: 'HU27100320000107634900000000',
+  },
+};
+
+/**
+ * SPEC §32 – KATA (Kata tv. = 2022. évi XIII. törvény), 2026. Checked 2026-11-21 against the njt text (7. § (8)–(10),
+ * 5. § (1) e)) and the NAV 99. füzet; the critique of 2026-11-21 confirmed 7. § (4)–(10) and 10. § [katv, nav-99].
+ */
+export const KATA_RULES_REGI_2026: KataRules = {
+  variant: 'regi',
+  monthlyHuf: 50_000, // 7. § (1)–(3): per started month
+  yearlyLimitHuf: 18_000_000, // 7. § (4)
+  limitPerMonthHuf: 1_500_000, // 7. § (4): not the whole year → liable months × 1.5 M
+  kulonadoPermille: 400, // 7. § (5)
+  dueDay: 12, // 7. § (2): by the 12th of the next month
+  exemptMinDays: 30, // 7. § (9)
+  reportDays: 15, // 5. § (3a)
+  debtLimitHuf: 100_000, // 5. § (1) e)
+  declarationDue: { month: 2, day: 25 }, // 10. §
+  declarationForm: '26KATA',
+  terminationDays: 30, // 7. § (6), 10. § (2)
+  onlyMainJob: true,
+  account: NAV_ACCOUNTS.kata,
+  adonem: '288',
+  draft: false,
+  sources: ['katv', 'nav-99', 'nav-szamlaszamok-2026'],
 };
 
 export const RULES_2026: TaxRules = {
@@ -107,6 +139,9 @@ export const RULES_2026: TaxRules = {
     nyugdijasAnyaSzochoLimitHuf: 34_356_720, // Szocho tv. 5. § (1a) – guard only [szocho-tv]
   },
 
+  // SPEC §32: only the Kata tv. KATA exists in 2026
+  kata: { regi: KATA_RULES_REGI_2026 },
+
   sources: [
     {
       id: 'nav-100',
@@ -170,6 +205,26 @@ export const RULES_2026: TaxRules = {
       id: 'ngm-10-2025',
       title: '10/2025. (IV. 30.) NGM rendelet a 2026. évi munkaszüneti napok körüli munkarendről',
       url: 'https://njt.jog.gov.hu/jogszabaly/2025-10-20-2X',
+    },
+    {
+      id: 'szcsm-4-2026',
+      title: '4/2026. (XI. 13.) SZCSM rendelet – hatályon kívül helyezte a 10/2025. NGM r. 2. § c) pontját (2026.12.12. nem munkanap)',
+      url: 'https://njt.jog.gov.hu/jogszabaly/2025-10-20-2X',
+    },
+    {
+      id: 'katv',
+      title: '2022. évi XIII. törvény a kisadózó vállalkozások tételes adójáról (Kata tv.) 5. § (1) e), g), (3a); 7. § (1)–(10); 10. §',
+      url: 'https://njt.jog.gov.hu/jogszabaly/2022-13-00-00',
+    },
+    {
+      id: 'nav-99',
+      title: 'NAV 99. sz. információs füzet – Kisadózó vállalkozók tételes adója (kata), 2026.02.20',
+      url: 'https://nav.gov.hu/pfile/file?path=%2Fugyfeliranytu%2Fnezzen-utana%2Finf_fuz%2F2026%2F99.-Kisadozo-vallalkozok-teteles-adoja-kata-2026.-02.-20',
+    },
+    {
+      id: 'nav-szamlaszamok-2026',
+      title: 'NAV adóztatási számlaszámok (2026.11.01-től) – 288 kata, 103 szja, 138 késedelmi pótlék, 215 bírság/önellenőrzés',
+      url: 'https://nav.gov.hu/print/ugyfeliranytu/szamlaszamok/szamlaszamok/nav-adoztatasi-szamlaszamok',
     },
   ],
 };

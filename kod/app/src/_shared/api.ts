@@ -58,6 +58,7 @@ import type {
   CalcStatus,
   PaymentStatus,
   FilingStatus,
+  TaxPeriodKind,
   UserRole,
   ActivityAnswer,
   ClientKind,
@@ -411,7 +412,8 @@ export interface Explanation {
 export interface TaxPeriodSummary {
   id: string;
   periodKey: string;
-  kind: 'negyedev' | 'hipa';
+  /** SPEC §32: + 'kata' (one KATA month). */
+  kind: TaxPeriodKind;
   label: string;
   dueDate: ISODate;
   calcStatus: CalcStatus;
@@ -425,6 +427,10 @@ export interface TaxPeriodDetail extends TaxPeriodSummary {
   disclaimer: string | null; // set while not approved
   letter: Letter | null;
   filed: { filedOn: ISODate; documents: DocumentListItem[] } | null;
+  /** SPEC §32 (+): the payment sheet /fizetes/[id] – a free KATA month carries its reason ("táppénz"). */
+  exemptReasonLabel?: string | null;
+  /** SPEC §32 (+): "Kata – november" style title of the sheet (server-built). */
+  sheetTitle?: string;
 }
 export interface Deadline {
   id: string;
@@ -2016,6 +2022,11 @@ export interface AnnualView {
   approval: { at: ISODateTime; hash: string } | null;
   nextAction: 'kitoltes' | 'fizetes' | 'jovahagyas' | null;
   canEdit: boolean;
+  /**
+   * SPEC §32 (+): the annual-closing fee charged at submit; null = no fee (the switch evesZarasDij is off until the ÁSZF
+   * is fixed [T1, JOGI]). Absent (older servers / the app's sample data) = the fee of FEE_DEFAULTS.
+   */
+  feeHuf?: number | null;
 }
 /** PUT /client/annual/:id/answers (draft save; every field optional). */
 export interface AnnualAnswersInput {
@@ -2176,6 +2187,14 @@ export interface KataHomeView {
   nextPayment: { amountHuf: number; dueDate: ISODate; accountName: string; accountNumber: string; iban: string; reference: string } | null;
   businessInvoices: { navInvoiceId: string; customerName: string | null; amountHuf: number; payerKind: PayerKind; endsOn: ISODate | null; reportBy: ISODate | null }[];
   infoCardSeen: boolean;
+  /** SPEC §32 (+): the keret bar with its lines (KATA_F1_TEXTS), filled by the server. */
+  meter?: import('./kata').KataMeterView;
+  /** SPEC §32 (+): the earliest open KATA month to pay (→ /fizetes/{periodId}), or null. */
+  nextPayable?: import('./kata').KataYearView['nextPayable'];
+  /** SPEC §32 (+): "Most nincs mit fizetned. A következő kata: …" when nothing is open. */
+  nothingToPayLine?: string | null;
+  /** SPEC §32 (+): the year's rules are a draft (T/928): the amount is not confirmed. */
+  draftNote?: string | null;
 }
 
 // ---------- §28.K.12 K – Accountable patterns ----------

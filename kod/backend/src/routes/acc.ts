@@ -66,6 +66,7 @@ import {
   updateLetter,
   verifyPayment,
   type CalcResultJson,
+  periodVisible,
 } from '../services/tax.js';
 import { clientDeadlines, computeFlags } from '../services/flags.js';
 import { credsFor, syncClient } from '../services/navsync.js';
@@ -355,7 +356,8 @@ export function accRoutes(deps: Deps) {
       ...(b.guaranteedMinimum !== undefined ? { guaranteedMinimum: b.guaranteedMinimum } : {}),
       ...(b.retail !== undefined ? { retail: b.retail } : {}),
       ...(b.atalanyFrom !== undefined ? { atalanyFrom: b.atalanyFrom } : {}),
-      ...(b.insuranceBreaks ? { insuranceBreaks: b.insuranceBreaks } : {}),
+      // SPEC §32: the KATA free months (their own form, PUT /acc/clients/:id/kata/breaks) are kept when this list is saved
+      ...(b.insuranceBreaks ? { insuranceBreaks: [...(tp?.insuranceBreaks ?? []).filter((x) => x.kind !== 'szunetel' && x.kind !== 'kieso'), ...b.insuranceBreaks] } : {}),
       ...(b.hipa ? { hipaMethod: b.hipa.method, hipaRatePct: b.hipa.ratePct.toFixed(2), hipaAccountNumber: b.hipa.accountNumber ?? null } : {}),
       ...(b.priorOverrides !== undefined ? { priorOverrides: b.priorOverrides } : {}),
       ...(b.allowances !== undefined ? { allowances: b.allowances?.length ? b.allowances : null } : {}),
@@ -957,7 +959,8 @@ export function accRoutes(deps: Deps) {
     const year = q.year ?? Number(todayBudapest(deps.now()).slice(0, 4));
     const [tp] = await deps.db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
     if (tp) await ensurePeriods(deps.db, cl.id, year, tp.hipaMethod, tp.status);
-    const periods = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
+    // SPEC §32: hidden rows (a KATA year's quarters) never; the KATA months have their own endpoint (GET /acc/clients/:id/kata)
+    const periods = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), periodVisible, sql`${taxPeriods.kind} <> 'kata'`)).orderBy(asc(taxPeriods.dueDate));
     // The engine's iparűzési adó estimate (band, base, yearly tax, note) for the HIPA cards.
     const yearComp = tp ? await computeYear(deps.db, cl.id, year, todayBudapest(deps.now())) : null;
     const hipaEstimate = yearComp?.result.hipa ?? null;

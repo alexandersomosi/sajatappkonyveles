@@ -160,7 +160,8 @@ export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number];
 export const DOCUMENT_VISIBILITIES = ['kozos', 'csak_konyvelo'] as const;
 export type DocumentVisibility = (typeof DOCUMENT_VISIBILITIES)[number];
 
-export const TAX_PERIOD_KINDS = ['negyedev', 'hipa'] as const;
+// SPEC §32: + 'kata' (one row per KATA month, key 'YYYY-MM-KATA'; tax_periods.kind is text, no DB enum).
+export const TAX_PERIOD_KINDS = ['negyedev', 'hipa', 'kata'] as const;
 export type TaxPeriodKind = (typeof TAX_PERIOD_KINDS)[number];
 
 export const CALC_STATUSES = ['nincs', 'becsles', 'jovahagyva'] as const;
@@ -342,6 +343,8 @@ export const NOTIFICATION_KINDS = [
   'profile_changed_by_admin',
   'announcement',
   'guided_continue',
+  // SPEC §32 (DB: ADD VALUE in 0022_kata_enumok.sql): the accountant's tax tasks (KATA year end, free-month notice, backfill, 2027 amount)
+  'tax_task',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 /** Kinds never sent any more and hidden from the client's notification settings (SPEC §26.2.9). */
@@ -1692,7 +1695,7 @@ export const REMINDER_GROUP_KINDS: Record<ReminderGroup, readonly NotificationKi
 export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated'];
 /** Variants used by §28.K.4 (content notif.<kind>.<variant>.*). */
 export const REMINDER_VARIANTS = {
-  tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'hipa'],
+  tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'kata_lejart', 'kata_ev_vege', 'hipa'],
   upload_reminder: ['kivonat', 'nyugta'],
   request_reminder: ['nap3', 'nap7'],
   nudge: ['egy', 'tobb', 'szunetel_ket_ev'],
@@ -1799,7 +1802,8 @@ export const KATA_RULES_2026 = {
   monthlyHuf: 50_000,
   /** Due by the 12th of the following month (next working day). */
   dueDayOfNextMonth: 12,
-  accountName: 'NAV Kisadózó vállalkozások tételes adója bevételi számla',
+  // SPEC §32: the name in the NAV list in force from 2026-11-01 (checked 2026-11-21); the engine's NAV_ACCOUNTS.kata is the source
+  accountName: 'NAV Kisadózó vállalkozások adója bevételi számla',
   accountNumber: '10032000-01076349',
   iban: 'HU27100320000107634900000000',
   adonem: '288',

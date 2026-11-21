@@ -82,6 +82,7 @@ import {
 } from '../_shared/enums.js';
 import type { AllowanceAnswers, AllowanceParams, AnnualAnswers, ChangeData, CheckinItemAnswer } from '../_shared/api.js';
 import type { BusinessRegistrationAnswers } from '../_shared/api.js';
+import type { KataExemptKind } from '../_shared/kata.js';
 
 const ts = (name?: string) => (name ? timestamp(name, { withTimezone: true }) : timestamp({ withTimezone: true }));
 const createdAt = () => timestamp({ withTimezone: true }).notNull().defaultNow();
@@ -402,7 +403,8 @@ export const clientTaxProfiles = pgTable(
     guaranteedMinimum: boolean().notNull().default(false),
     retail: boolean().notNull().default(false),
     atalanyFrom: day(),
-    insuranceBreaks: jsonb().$type<{ from: string; to: string; kind: 'szunetel' | 'kieso' }[]>().notNull().default([]),
+    /** SPEC §32: a KATA profile also stores its free months here (KATA_EXEMPT_KINDS, + reportedOn); the átalány engine reads them as 'kieso'. */
+    insuranceBreaks: jsonb().$type<{ from: string; to: string; kind: 'szunetel' | 'kieso' | KataExemptKind; reportedOn?: string | null }[]>().notNull().default([]),
     hipaMethod: text().$type<'savos' | 'altalanos' | 'nincs'>().notNull().default('savos'),
     hipaRatePct: numeric({ precision: 4, scale: 2 }).notNull().default('2.00'),
     hipaAccountNumber: text(),
@@ -413,6 +415,10 @@ export const clientTaxProfiles = pgTable(
     regime: text().$type<(typeof TAX_REGIMES)[number]>().notNull().default('atalany'),
     kataFrom: day(),
     kataTo: day(),
+    /** SPEC §32: 'regi' = Kata tv. KATA, 'uj' = the T/928 new KATA (2027-, if enacted); null = not KATA / not set. */
+    kataVariant: text().$type<'regi' | 'uj'>(),
+    /** SPEC §32: főfoglalkozású (the old KATA requires it; the new one has two amounts). */
+    kataFofoglalkozasu: boolean(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -420,6 +426,7 @@ export const clientTaxProfiles = pgTable(
     uniqueIndex().on(t.clientId, t.year),
     check('client_tax_profiles_cost_ratio_chk', sql`${t.costRatio} in (45, 50, 80, 90)`),
     check('client_tax_profiles_regime_chk', sql`${t.regime} in ${inList(TAX_REGIMES)}`),
+    check('client_tax_profiles_kata_variant_chk', sql`${t.kataVariant} in ('regi', 'uj')`),
   ],
 );
 
@@ -717,7 +724,7 @@ export const taxPeriods = pgTable(
     clientId: uuid()
       .notNull()
       .references(() => clients.id),
-    kind: text().$type<'negyedev' | 'hipa'>().notNull(),
+    kind: text().$type<'negyedev' | 'hipa' | 'kata'>().notNull(),
     periodKey: text().notNull(),
     year: integer().notNull(),
     quarter: integer(),
@@ -733,10 +740,17 @@ export const taxPeriods = pgTable(
     filingForm: text(),
     returnDocumentId: uuid(),
     receiptDocumentId: uuid(),
+    /** SPEC §32: hidden instead of deleted (a KATA year's átalány quarters: 'kata_ev'; a month no longer KATA: 'nem_kata'). */
+    hiddenAt: ts(),
+    hiddenReason: text(),
+    /** SPEC §32: a free KATA month (Kata tv. 7. § (8)–(9)) – the reason kind. */
+    exemptReason: text(),
+    /** SPEC §32: made after its due date (before the app): no reminder, the client sees it only once the accountant verified it. */
+    backfilled: boolean().notNull().default(false),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [uniqueIndex().on(t.clientId, t.periodKey)],
+  (t) => [uniqueIndex().on(t.clientId, t.periodKey), index('tax_periods_kind_due_idx').on(t.kind, t.dueDate)],
 );
 
 export const taxCalculations = pgTable(
@@ -787,6 +801,8 @@ export const taxPaymentItems = pgTable(
     verification: text().$type<'rendben' | 'elteres'>(),
     verificationNote: text(),
     voidedAt: ts(),
+    /** SPEC §32: NAV adónem (288 kata, 103 szja, 406 TB, 258 szocho; HIPA: null). */
+    adonem: text(),
     createdAt: createdAt(),
   },
   (t) => [index().on(t.taxPeriodId)],

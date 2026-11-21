@@ -6,6 +6,7 @@
 import type { MockClient } from './data';
 import { ts, uid, TODAY } from './data';
 import { today } from '../lib/today';
+import { KATA_EXEMPT_LABELS, type KataBreak, type KataMonthView, type KataYearView } from '../_shared/kata';
 import type { AccClientRow, RevenueItem, Message } from '../_shared/api';
 import type {
   AccAllowanceItem,
@@ -860,6 +861,102 @@ export function installK28(x: K28Ctx): K28Hooks {
     adoszamPending.delete(c.id);
     x.logAudit('client.adoszam_set', c);
     return { ok: true };
+  });
+  // ---------- SPEC §32 KATA months (mock: January–September verified, October marked, November to pay) ----------
+  const kataAllapot = new Map<string, { breaks: KataBreak[]; ok: Set<string>; marked: Set<string> }>();
+  const kataAll = (id: string) => {
+    let st = kataAllapot.get(id);
+    if (!st) {
+      st = { breaks: [], ok: new Set(['01', '02', '03', '04', '05', '06', '07', '08', '09'].map((m) => `2026-${m}`)), marked: new Set(['2026-10']) };
+      kataAllapot.set(id, st);
+    }
+    return st;
+  };
+  const HONAPNEV = ['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'];
+  const kataYear = (c: MockClient, year: number): KataYearView => {
+    const st = kataAll(c.id);
+    const hv = kataView(c);
+    const utolso = Number(today().slice(5, 7));
+    const months: KataMonthView[] = [];
+    for (let m = 1; m <= utolso; m++) {
+      const mk = `${year}-${String(m).padStart(2, '0')}`;
+      const br = st.breaks.find((b) => b.from <= `${mk}-01` && b.to >= `${mk}-28`);
+      const due = m === 12 ? `${year + 1}-01-12` : m === 11 ? '2026-12-14' : `${year}-${String(m + 1).padStart(2, '0')}-12`;
+      const status: KataMonthView['status'] = br ? 'mentes' : st.ok.has(mk) ? 'ellenorizve' : st.marked.has(mk) ? 'befizetve_jelezve' : 'fizetendo';
+      months.push({
+        periodId: `kata-${c.id}-${mk}`,
+        month: m,
+        monthKey: mk,
+        label: HONAPNEV[m - 1]!,
+        status,
+        liable: !br,
+        exemptReason: br?.kind ?? null,
+        exemptReasonLabel: br ? KATA_EXEMPT_LABELS[br.kind] : null,
+        exemptLostByRevenue: false,
+        amountHuf: br ? 0 : KATA_RULES_2026.monthlyHuf,
+        dueDate: due,
+        overdue: status === 'fizetendo' && due < today(),
+        markedPaidOn: st.marked.has(mk) ? '2026-11-10' : null,
+        verification: st.ok.has(mk) ? 'rendben' : null,
+        backfilled: false,
+        paidButExempt: false,
+        reportDue: br && br.kind !== 'szunetel' && !br.reportedOn ? due : null,
+      });
+    }
+    const liable = months.filter((x) => x.liable).length + (12 - utolso);
+    const limit = Math.min(18_000_000, liable * 1_500_000);
+    return {
+      year,
+      variant: 'regi',
+      fofoglalkozasu: true,
+      kataFrom: `${year}-01-01`,
+      kataTo: null,
+      monthlyHuf: KATA_RULES_2026.monthlyHuf,
+      draftNote: null,
+      months,
+      meter: {
+        usedHuf: hv.revenueHuf,
+        limitHuf: limit,
+        pct: Math.floor((hv.revenueHuf / limit) * 100),
+        level: hv.level,
+        liableMonths: liable,
+        limitLine: liable >= 12 ? 'Kereted: 18 000 000 Ft' : `Kereted: ${liable} hónap × 1 500 000 Ft`,
+        remainingLine: null,
+        warningLine: null,
+        remainingHuf: Math.max(0, limit - hv.revenueHuf),
+        overHuf: Math.max(0, hv.revenueHuf - limit),
+        projectedHuf: hv.revenueHuf,
+        projectedOverHuf: 0,
+        kulonadoEstimateHuf: 0,
+        kulonadoDue: '2027-02-25',
+        draft: false,
+      },
+      nextPayable: null,
+      breaks: st.breaks,
+      toVerify: months.filter((x) => x.status === 'befizetve_jelezve').length,
+    };
+  };
+  on('GET', '/acc/clients/:id/kata', ({ p, q }) => {
+    const c = kliens(p.id!);
+    if (regime.get(c.id) !== 'kata') throw x.hiba(404, 'not_found', 'Ebben az évben az ügyfél nem katás.');
+    return kataYear(c, Number(q.get('year') ?? today().slice(0, 4)));
+  });
+  on('PUT', '/acc/clients/:id/kata/breaks', ({ p, body }) => {
+    const c = kliens(p.id!);
+    kataAll(c.id).breaks = (body.breaks as KataBreak[]) ?? [];
+    x.logAudit('kata.breaks_saved', c);
+    return kataYear(c, Number(body.year));
+  });
+  on('POST', '/acc/clients/:id/kata/verify', ({ p, body }) => {
+    const c = kliens(p.id!);
+    const st = kataAll(c.id);
+    for (const id of (body.periodIds as string[]) ?? []) {
+      const mk = id.slice(-7);
+      st.ok.add(mk);
+      st.marked.delete(mk);
+    }
+    x.logAudit('kata.verified', c);
+    return kataYear(c, Number(today().slice(0, 4)));
   });
   on('POST', '/acc/clients/:id/tax-regime', ({ p, body }) => {
     const c = kliens(p.id!);

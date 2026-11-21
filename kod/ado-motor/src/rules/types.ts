@@ -81,10 +81,62 @@ export interface TaxRules {
     altalanosAdvances: MonthDay[];
   };
 
-  accounts: { szja: NavAccount; tb: NavAccount; szocho: NavAccount };
+  /** (+) SPEC §32: `kata` = the NAV KATA account (adónem 288), used by both KATA variants while known. */
+  accounts: { szja: NavAccount; tb: NavAccount; szocho: NavAccount; kata?: NavAccount };
   /** (+) SPEC §28.3.7 b: personal SZJA allowances of an átalányadózó EV (Szja tv. 29/A–29/H, Tbj. 80. §). */
   allowances: AllowanceRules;
+  /**
+   * (+) SPEC §32 – KATA rule sets per variant. 'regi' = Kata tv. (2022. évi XIII. tv.), 'uj' = the "kisadózó egyéni
+   * vállalkozók tételes adója" of the T/928 bill (not law yet → draft). A variant missing here does not exist that year.
+   */
+  kata?: { regi?: KataRules; uj?: KataRules };
   sources: RuleSource[];
+}
+
+/** SPEC §32: which KATA. 'regi' = Kata tv. 2022; 'uj' = T/928 (from 2027, if enacted). */
+export type KataVariant = 'regi' | 'uj';
+
+/**
+ * One KATA rule set (SPEC §32). Every value names its source in `sources` (ids of TaxRules.sources). `draft: true` = the
+ * values come from a bill or are not confirmed: the engine returns no amount for it unless the caller explicitly allows
+ * draft rules (the backend's switch, off until the law is published).
+ */
+export interface KataRules {
+  variant: KataVariant;
+  /** Monthly tételes adó per started month (Ft). 'uj': the főfoglalkozású amount. null = not known for this year. */
+  monthlyHuf: number | null;
+  /** 'uj' only: the nem főfoglalkozású amount (T/928 7. § (1)). */
+  monthlyNotMainHuf?: number | null;
+  /** Kata tv. 7. § (4): the yearly keret. */
+  yearlyLimitHuf: number;
+  /** Kata tv. 7. § (4): per liable month when not the whole year. null = the proration is not known (draft). */
+  limitPerMonthHuf: number | null;
+  /** Kata tv. 7. § (5): különadó above the keret, permille (400 = 40 %). */
+  kulonadoPermille: number;
+  /** Payment by this day of the next month (next working day), Kata tv. 7. § (2)–(3). */
+  dueDay: number;
+  /** Kata tv. 7. § (9): the closing month of an a)–c) state is free when the state lasted ≥ this many days (exempt months not counted). */
+  exemptMinDays: number;
+  /** Notice deadline in days (kifizetői bevétel, lost főfoglalkozás – Kata tv. 5. § (3a)). */
+  reportDays: number;
+  /** Kata tv. 5. § (1) e): a végrehajtható nettó adótartozás above this on 31 December ends the KATA. */
+  debtLimitHuf: number;
+  /** Kata tv. 10. §: the yearly declaration (next year). null = not known (draft). */
+  declarationDue: MonthDay | null;
+  declarationForm: string | null;
+  /** Kata tv. 7. § (6) / 10. § (2): declaration and különadó this many days after the KATA ended during the year. */
+  terminationDays: number;
+  /** 'uj' only: kiegészítő adó on the kifizetői bevétel above the yearly tételes adó (T/928 8. §) – NOT modelled. */
+  kiegeszitoPermille?: number;
+  /** 'regi': only a főfoglalkozású EV may be katás (Kata tv. 3. §, 7. § (1)). */
+  onlyMainJob: boolean;
+  /** The NAV account of the payment. null = not known (no payment item can be made). */
+  account: NavAccount | null;
+  adonem: string | null;
+  draft: boolean;
+  /** Ids of TaxRules.sources. */
+  sources: string[];
+  note?: string;
 }
 
 /** SPEC §28.3.7 b. Amounts in forint per month; every value names its source in `sources`. */

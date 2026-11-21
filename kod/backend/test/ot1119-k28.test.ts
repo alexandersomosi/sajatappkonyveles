@@ -472,7 +472,10 @@ describe('A – monthly check-in, B – annual closing', () => {
     expect(s.status).toBe(200);
     expect(s.body.answers.refundAccountMasked).toBe('117…0000');
     expect(JSON.stringify(s.body)).not.toContain('11773016');
+    // SPEC §32: the fee is switched off by default until the ÁSZF is fixed – this test switches it on
+    await h.deps.db.insert(systemState).values({ key: 'kapcsolok.ev_ciklus', value: { evesZarasDij: true } }).onConflictDoUpdate({ target: systemState.key, set: { value: { evesZarasDij: true } } });
     const sub = await h.json('POST', `/client/annual/${v.body.id}/submit`, { token: t });
+    await h.deps.db.delete(systemState).where(eq(systemState.key, 'kapcsolok.ev_ciklus'));
     expect(sub.body.status).toBe('dijra_var');
     expect(sub.body.feeCharge).toMatchObject({ kind: 'eves_zaras', status: 'nyitott' });
     h.clock.set('2026-11-19T09:00:00Z');

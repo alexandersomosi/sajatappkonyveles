@@ -3394,6 +3394,9 @@ export const ANNUAL_TEXTS = {
     title: 'Éves zárás {ev}',
     text: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} az SZJA-bevallásodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
     textKata: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
+    /** SPEC §32: while the annual-closing fee is switched off (EVES_KAPCSOLOK.evesZarasDij) – no fee sentence. */
+    textNoFee: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} az szja-bevallásodat és az iparűzési adó bevallását.',
+    textKataNoFee: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását.',
     button: 'Kezdjük',
   },
   E1: {
@@ -3424,7 +3427,7 @@ export const ANNUAL_TEXTS = {
   E5: { title: 'Ha adó jár vissza, melyik bankszámládra kéred?', field: 'Bankszámlaszám (nem kötelező)' },
   E6: { title: 'Van még iratod {ev}-ből, amit nem töltöttél fel?', hint: 'Például a decemberi bankszámlakivonat.' },
   E7: { title: 'Üzenet {firstName} számára (nem kötelező)' },
-  E8: { title: 'Összefoglaló', feeRow: 'Éves zárás díja: {dij} Ft', button: 'Elküldöm és fizetek' },
+  E8: { title: 'Összefoglaló', feeRow: 'Éves zárás díja: {dij} Ft', button: 'Elküldöm és fizetek', buttonNoFee: 'Elküldöm' },
   sentToast: 'Köszönjük! {firstName} nekilát. Szól, ha kérdése van, vagy ha jóvá kell hagynod a bevallást.',
   card: { title: 'Éves zárás {ev}', due: 'A kérdőívet {hatarido} töltsd ki.' },
   buttons: { kerdoiv: 'Kitöltöm', dijra_var: 'Fizetek', jovahagyasra_var: 'Átnézem és jóváhagyom' },

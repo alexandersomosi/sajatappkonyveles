@@ -33,8 +33,27 @@ export {
 export { csaladiFrameHuf, fiatal25Months } from './engine/allowances.js';
 export type { AllowanceRules } from './rules/types.js';
 export { deadlinesFor, quarterDueDate, hipaDates, isWorkingDay, nextWorkingDay } from './calendar.js';
-export { RULES_2026, RULES_2027, NAV_ACCOUNTS, rulesForYear, SUPPORTED_YEARS } from './rules/index.js';
-export { statutoryHolidays, easterSunday, BRIDGE_REST_DAYS, MOVED_WORKING_DAYS } from './rules/holidays.js';
+export { RULES_2026, RULES_2027, NAV_ACCOUNTS, rulesForYear, SUPPORTED_YEARS, kataRulesFor, KATA_RULES_REGI_2026, KATA_RULES_REGI_2027_DRAFT, KATA_RULES_UJ_2027_DRAFT, T928_SOURCE } from './rules/index.js';
+export type { KataRules, KataVariant } from './rules/types.js';
+// SPEC §32 – KATA months, keret meter, deadlines
+export {
+  kataMonths,
+  kataLimitMeter,
+  kataMonthlyHuf,
+  kataDueDate,
+  kataDeclarationDue,
+  kataReasonNeedsReport,
+  KATA_EXEMPT_REASONS,
+  type KataExemptReason,
+  type KataBreakInput,
+  type KataRevenueInput,
+  type KataMonthsInput,
+  type KataMonth,
+  type KataLimitMeter,
+  type KataLimitLevel,
+  type KataMeterOptions,
+} from './engine/kata.js';
+export { statutoryHolidays, easterSunday, BRIDGE_REST_DAYS, MOVED_WORKING_DAYS, REPEALED_WORKING_DAYS } from './rules/holidays.js';
 export { AdoMotorInputError, validateYearInput } from './validate.js';
 export { hungarianIban, isValidIban } from './util/iban.js';
 export { formatHuf, formatNumber, quarterLabel, monthName } from './util/format.js';

@@ -13,6 +13,30 @@
 > A tulaj gépén át futó „Adozz mentes kulso” feladat KIKAPCSOLVA (Disabled, nem törölve).
 
 
+## Éves ciklus és KATA, F0 + F1a (SPEC §32) – ÉPÍTŐ A, 2026-11-21: KÉSZ HELYBEN, **MÉG NINCS TELEPÍTVE**
+
+- **Migráció (csak hozzáadó):** `0022_kata_enumok.sql` (enumértékek: `payment_item_kind` + `kata_teteles`, `kata_kulonado`;
+  `notification_kind` + `tax_task` – ebben a futásban semmi nem használja őket) és `0023_kata.sql` (`tax_periods` +
+  `hidden_at`, `hidden_reason`, `exempt_reason`, `backfilled`; `tax_payment_items.adonem`; `client_tax_profiles` +
+  `kata_variant` (CHECK `regi`|`uj`), `kata_fofoglalkozasu`; egy index). Meglévő sort és oszlopot nem módosít.
+- **Előtte pg_dump** (az `up.sh` titkosított mentése + egy kézi `_regi/pg_dump_elotte_kata_f1_<idő>.dump.gpg`,
+  `pg_restore -l` próbával). Soha nem újraseedelés.
+- **Worker-adatlépés `data.kata_f1`** (egyszer, idempotens): az idei katás profilok `kata_variant = 'regi'`,
+  főfoglalkozású; a katás év NEM jóváhagyott negyedévei rejtve (`hidden_reason 'kata_ev'`, nem törölve); a kata-hónapok
+  sorai 2026-ra (a ma előtt lejártak `backfilled`: nincs emlékeztető, az ügyfél csak a könyvelő „Rendben”-je után látja,
+  a könyvelő egy `tax_task` feladatot kap); a meglévő tételek `adonem`-je. A DEMO-n ma 1 katás ügyfél van.
+- **Új jobok:** `kata_periods` (03:10), `kata_year_end` (09:00: dec. 10/22 könyvelői feladat, dec. 16 ügyfél, mentesség
+  bejelentése 3 nappal a 12-e előtt). A `reminders_k28` (08:00) küldi a kata-emlékeztetőt (8-án / határnapon / +1 nap).
+- **Kapcsolók** (`system_state['kapcsolok.ev_ciklus']`, JSON; kódbeli alapérték mind KI): `kata2027` (a T/928 szerinti
+  2027-es kata – csak a törvény kihirdetése után), `kataElorejelzesUgyfelnek`, `kataEvVegeUgyfelnek` (`jeloletlen`|`ki`),
+  `evesZarasDij` (a 14 999 Ft-os éves zárási díj – az ÁSZF javításáig KI). Bekapcsolás pl.:
+  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"evesZarasDij": true}') on conflict (key) do update set value = excluded.value;`
+- **Viselkedésváltozás a DEMO-n:** az éves zárás kérdőíve díj nélkül megy a könyvelőhöz (`evesZarasDij` KI); a
+  `annual_due` értesítés e-mailben is megy (az ügyfél beállítása szerint); a novemberi kata határideje 2026-12-14.
+- **Ellenőrzés telepítés után:** `select key, value from system_state where key = 'data.kata_f1';`, a katás ügyfél
+  Határidők-listája („Kata – november: 50 000 Ft”, december 14.), a fizetési lap (`/fizetes/<id>`), a panel Adó füle.
+
+
 ## Marketing (SPEC §31) – ÉLESÍTVE 2026-11-21 01:19–01:36 (javító + telepítő)
 
 Ahogy ment (a lépések lent, a „telepítési terv” szerint):

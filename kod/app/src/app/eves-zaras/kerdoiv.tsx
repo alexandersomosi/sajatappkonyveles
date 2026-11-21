@@ -58,7 +58,9 @@ export default function EvesKerdoiv() {
   const i = Math.max(0, Math.min(lapok.length - 1, Number(p.lap ?? 0) || 0));
   const lap = lapok[i];
   const dij = FEE_DEFAULTS.eves_zaras;
-  const sz = (s: string) => fillPlaceholders(s, { firstName: fn, ev: String(z.year), dij: szam(dij.amountHuf) });
+  // SPEC §32: the annual-closing fee is switched off on the server until the ÁSZF is fixed (feeHuf null) – no fee line then
+  const vanDij = z.feeHuf !== null;
+  const sz = (s: string) => fillPlaceholders(s, { firstName: fn, ev: String(z.year), dij: szam(z.feeHuf ?? dij.amountHuf) });
   const set = (x: Partial<AnnualAnswers>) => setA((r) => ({ ...r, ...x }));
   const ugrik = (n: number) => {
     setHiba(null);
@@ -84,16 +86,16 @@ export default function EvesKerdoiv() {
       setHiba(hibaUzenet(e, 'Nem sikerült menteni. Próbáld újra.'));
     }
   };
-  const gomb = lap === 'E0' ? E.E0.button : lap === 'E8' ? E.E8.button : 'Tovább';
+  const gomb = lap === 'E0' ? E.E0.button : lap === 'E8' ? (vanDij ? E.E8.button : E.E8.buttonNoFee) : 'Tovább';
   return (
     <Kepernyo ful="fooldal" fejlec={<UrlapFej vissza={() => (i > 0 ? ugrik(i - 1) : vissza('/eves-zaras'))} szakasz={sz(E.card.title)} />} dokk={<GombE cim={gomb} tolt={ment.isPending || bekuld.isPending} onPress={() => void tovabb()} />}>
       {lap === 'E0' ? (
         <>
           <UrlapKerdes cim={sz(E.E0.title)} ikon="bevallas" />
           <T m={17} lh={1.5}>
-            {sz(kata ? E.E0.textKata : E.E0.text)}
+            {sz(vanDij ? (kata ? E.E0.textKata : E.E0.text) : kata ? E.E0.textKataNoFee : E.E0.textNoFee)}
           </T>
-          {!dij.confirmed ? (
+          {vanDij && !dij.confirmed ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
               <T m={15} c={szin.halvany}>
                 A díj még nincs véglegesítve.
@@ -212,12 +214,14 @@ export default function EvesKerdoiv() {
             <T m={16} lh={1.5}>{`Hol dolgoztál: ${a.hipaPlace === 'mas_telepulesen_is' ? E.E3.masHol : E.E3.csakSzekhely}`}</T>
             <T m={16} lh={1.5}>{`Visszatérítés: ${szamla ? 'megadtad' : a.refundAccountMasked ?? 'nem adtad meg'}`}</T>
           </Lap>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginTop: 12 }}>
-            <T m={17} s={650} szam>
-              {sz(E.E8.feeRow)}
-            </T>
-            {!dij.confirmed ? <DemoDij /> : null}
-          </View>
+          {vanDij ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', marginTop: 12 }}>
+              <T m={17} s={650} szam>
+                {sz(E.E8.feeRow)}
+              </T>
+              {!dij.confirmed ? <DemoDij /> : null}
+            </View>
+          ) : null}
         </>
       ) : null}
       <HibaSzoveg szoveg={hiba} />

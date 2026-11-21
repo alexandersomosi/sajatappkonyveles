@@ -20,7 +20,10 @@ import { reserveCard, reserveList, reservesForInvoices, setReserveMark } from '.
 import { approvedQuarterParts, earnings, earningsBasis, kb1000 } from '../services/kereset.js';
 import { allowanceState, allowancesHint, answersRow, clientPreview, fmt, saveAnswers, setGate } from '../services/kedvezmeny.js';
 import type { DbOrTx } from '../db/client.js';
-import { engineInput } from '../services/tax.js';
+import { activeItems, daysLeft, engineInput, paymentItemDto, periodVisible } from '../services/tax.js';
+import { kataHomeView, kataYearView } from '../services/kata.js';
+import { taxPeriods } from '../db/schema.js';
+import { desc, isNull as isNullOp } from 'drizzle-orm';
 import {
   buildChangeGuide,
   changeAssistView,
@@ -112,6 +115,16 @@ export function registerClientK28Routes(r: Hono<Env>, deps: Deps): void {
     const card = await reserveCard(deps, deps.db, cl, todayBudapest(deps.now()));
     if (!card) throw E.notFound();
     return c.json(card);
+  });
+
+  // ================= SPEC §32 KATA =================
+  r.get('/kata', async (c) => {
+    const cl = await client(c);
+    if (isRestricted(cl)) throw E.notFound();
+    const year = parseQuery(c, yearQ).year ?? thisYear();
+    const v = await kataYearView(deps, deps.db, cl, year, { staff: false });
+    if (!v) throw E.notFound('Ebben az évben nem vagy katás.');
+    return c.json(v);
   });
 
   // ================= §28.4 "Mennyit kerestem?" =================
@@ -327,17 +340,50 @@ export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, t
     const params = await accountantParams(db, cl.accountantId);
     home.reserve = null;
     home.earnings = null;
+    // SPEC §32: the KATA view – the keret bar, the next KATA month as the hero (→ /fizetes/{id}), "Most nincs mit fizetned"
+    const kv = await kataHomeView(deps, db, cl, year).catch(() => null);
+    home.kata = kv;
     home.twoNumbers = {
       revenueHuf: home.revenueByMonth.reduce((a, m) => a + m.amountHuf, 0),
       revenueSub: '',
       taxesHuf: null,
       taxesSub: `${await deps.content.get('fooldal.kata_taxes')} · ${await deps.content.render('fooldal.kata_taxes_sub', params)}`,
+      ...(kv ? { kata: { limitHuf: kv.limitHuf, usedPct: kv.usedPct, level: kv.level } } : {}),
     };
-    // no átalány estimate: no "Hogyan jött ki?" (periodId) and no estimate letter
-    if (home.hero.state === 'becsles') {
-      home.hero = { state: 'nincs_fizetendo', note: await deps.content.render('fooldal.kata_hero_note', params) };
-      home.letter = null;
-      home.paymentItems = [];
+    home.letter = null;
+    home.paymentItems = [];
+    const next = kv?.nextPayable ?? null;
+    const [p] = next ? await db.select().from(taxPeriods).where(and(eq(taxPeriods.id, next.periodId), periodVisible)).limit(1) : [];
+    if (p && next) {
+      const items = await activeItems(db, p.id);
+      home.hero = {
+        state: 'jovahagyva',
+        periodId: p.id,
+        periodKey: p.periodKey,
+        periodLabel: next.label.split(':')[0],
+        amountHuf: items.reduce((a, b) => a + b.amountHuf, 0),
+        dueDate: p.dueDate,
+        daysLeft: daysLeft(today, p.dueDate),
+        verified: false,
+        ...(p.paymentStatus === 'elteres' ? { note: `${params.firstName} eltérést látott a befizetésnél. Nézd meg az üzeneteidet.` } : {}),
+      };
+      home.paymentItems = items.map(paymentItemDto);
+    } else {
+      // the last KATA month the client marked (not verified yet): "Befizetted … {firstName} ellenőrzi"
+      const [marked] = await db
+        .select()
+        .from(taxPeriods)
+        .where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.kind, 'kata'), periodVisible, eq(taxPeriods.paymentStatus, 'befizetve_jelezve'), isNullOp(taxPeriods.exemptReason)))
+        .orderBy(desc(taxPeriods.dueDate))
+        .limit(1);
+      if (marked && marked.dueDate >= today) {
+        const items = await activeItems(db, marked.id);
+        const paidOn = items.map((i) => i.markedPaidOn).filter((d): d is string => Boolean(d)).sort().at(-1);
+        home.hero = { state: 'befizetve', periodId: marked.id, periodKey: marked.periodKey, amountHuf: items.reduce((a, b) => a + b.amountHuf, 0), dueDate: marked.dueDate, daysLeft: daysLeft(today, marked.dueDate), verified: false, ...(paidOn ? { paidOn } : {}) };
+        home.paymentItems = items.map(paymentItemDto);
+      } else {
+        home.hero = { state: 'nincs_fizetendo', note: kv?.nothingToPayLine ?? (await deps.content.render('fooldal.kata_hero_note', params)) };
+      }
     }
     home.limits.adomentes = { ...home.limits.adomentes, reached: false, sentence: '', afterText: null };
     home.limits.kata = true;

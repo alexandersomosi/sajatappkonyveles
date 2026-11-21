@@ -6,7 +6,10 @@ import { and, eq, gte, inArray, isNull, lt, sql } from 'drizzle-orm';
 import { REMINDER_RULES, type NudgeSubject } from '../_shared/enums.js';
 import type { Deps } from '../deps.js';
 import { accountants, annualClosings, assistRequests, clientAllowances, clients, documents, feeCharges, monthlyCheckins, notifications, requests, taxPaymentItems, taxPeriods } from '../db/schema.js';
-import { addDays, budapestLocalToUtc, monthLabel, prevMonthKey, todayBudapest } from '../lib/dates.js';
+import { addDays, budapestLocalToUtc, huDayMonth, huDayMonthIg, monthLabel, monthName, prevMonthKey, todayBudapest } from '../lib/dates.js';
+import { nextWorkingDay } from '../lib/munkanap.js';
+import { KATA_F1_RULES } from '../_shared/kata.js';
+import { periodVisible } from './tax.js';
 import { accountantParams, notify, type NotifyInput } from '../notify/notify.js';
 import { fmt } from './kedvezmeny.js';
 
@@ -27,7 +30,7 @@ const daysAgo = (deps: Deps, d: Date) => Math.floor((deps.now().getTime() - d.ge
 export async function jobRemindersK28(deps: Deps): Promise<Record<string, number>> {
   const db = deps.db;
   const today = todayBudapest(deps.now());
-  const out = { taxToday: 0, taxLate: 0, requests: 0, statements: 0, nudges: 0 };
+  const out = { taxToday: 0, taxLate: 0, requests: 0, statements: 0, nudges: 0, kata: 0 };
   const active = await db.select().from(clients).where(eq(clients.lifecycle, 'aktiv'));
   const byId = new Map(active.map((c) => [c.id, c]));
 
@@ -36,7 +39,11 @@ export async function jobRemindersK28(deps: Deps): Promise<Record<string, number
     ['ma', today],
     ['lejart', addDays(today, -REMINDER_RULES.taxOverdueDaysAfter)],
   ] as const) {
-    const rows = await db.select().from(taxPeriods).where(and(eq(taxPeriods.dueDate, due), eq(taxPeriods.calcStatus, 'jovahagyva'), eq(taxPeriods.paymentStatus, 'fizetendo')));
+    // SPEC §32: never a hidden or backfilled row; the KATA months get their own texts below
+    const rows = await db
+      .select()
+      .from(taxPeriods)
+      .where(and(eq(taxPeriods.dueDate, due), eq(taxPeriods.calcStatus, 'jovahagyva'), eq(taxPeriods.paymentStatus, 'fizetendo'), periodVisible, eq(taxPeriods.backfilled, false), sql`${taxPeriods.kind} <> 'kata'`));
     for (const p of rows) {
       const cl = byId.get(p.clientId);
       if (!cl) continue;
@@ -46,6 +53,37 @@ export async function jobRemindersK28(deps: Deps): Promise<Record<string, number
       if (await notifyOnce(deps, `rem:tax_due_soon:${p.id}:${variant}`, { userId: cl.userId, kind: 'tax_due_soon', variant, params: { ...(await accountantParams(db, cl.accountantId)), osszeg }, link: '/' }))
         variant === 'ma' ? out.taxToday++ : out.taxLate++;
     }
+  }
+
+  // 1b. SPEC §32 – KATA: on the 8th (or the next working day) for the month due this month ('kata'), on the due day
+  // ('kata_ma') and one day after ('kata_lejart'). Only an unmarked item of a visible, not backfilled, not free month with
+  // a confirmed amount; payment texts go to a locked client too (as the quarters'). Push + e-mail (tax_due_soon), the
+  // client's own setting wins; one per step (notifyOnce).
+  const eighth = nextWorkingDay(`${today.slice(0, 7)}-${String(KATA_F1_RULES.reminderDay).padStart(2, '0')}`) === today;
+  const kataRows = await db
+    .select()
+    .from(taxPeriods)
+    .where(
+      and(
+        eq(taxPeriods.kind, 'kata'),
+        periodVisible,
+        eq(taxPeriods.backfilled, false),
+        isNull(taxPeriods.exemptReason),
+        eq(taxPeriods.calcStatus, 'jovahagyva'),
+        inArray(taxPeriods.paymentStatus, ['fizetendo', 'elteres']),
+        sql`${taxPeriods.dueDate} between ${addDays(today, -1)} and ${addDays(today, 10)}`,
+      ),
+    );
+  for (const p of kataRows) {
+    const cl = byId.get(p.clientId);
+    if (!cl) continue;
+    const step = p.dueDate === today ? 'ma' : p.dueDate === addDays(today, -1) ? 'lejart' : eighth && p.dueDate.slice(0, 7) === today.slice(0, 7) ? '8' : null;
+    if (!step) continue;
+    const items = await db.select().from(taxPaymentItems).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt)));
+    if (!items.length) continue;
+    const params = { ...(await accountantParams(db, cl.accountantId)), osszeg: fmt(items.reduce((a, b) => a + b.amountHuf, 0)), honap: monthName(Number(p.periodKey.slice(5, 7))), datum: huDayMonth(p.dueDate), hatarido: huDayMonthIg(p.dueDate) };
+    const variant = step === 'ma' ? 'kata_ma' : step === 'lejart' ? 'kata_lejart' : 'kata';
+    if (await notifyOnce(deps, `rem:kata:${p.id}:${step}`, { userId: cl.userId, kind: 'tax_due_soon', variant, params, link: `/fizetes/${p.id}`, data: { periodId: p.id } })) out.kata++;
   }
 
   // 2. open accountant requests: 3 and 7 days after they were sent

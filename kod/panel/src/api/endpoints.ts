@@ -422,3 +422,7 @@ export const adminConfirmFee = (kind: string) => api.post<FeeSettingView[] | { i
 export const adminFeeCharges = (status?: string) => api.get<{ items: AdminFeeChargeRow[] }>(`/admin/fee-charges${q({ status })}`);
 export const adminWaiveCharge = (id: string, reason: string) => api.post<unknown>(`/admin/fee-charges/${e(id)}/waive`, { reason });
 export const adminChargeRefunded = (id: string, note?: string) => api.post<unknown>(`/admin/fee-charges/${e(id)}/refunded`, note ? { note } : {});
+/** SPEC §32 – KATA months, free months, group "Rendben" (backend routes/acc-k28.ts). */
+export const accKata = (id: string, year: number) => api.get<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata${q({ year })}`);
+export const accKataBreaks = (id: string, body: import('../_shared/kata').KataBreaksInput) => api.put<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata/breaks`, body);
+export const accKataVerify = (id: string, body: import('../_shared/kata').KataVerifyInput) => api.post<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata/verify`, body);

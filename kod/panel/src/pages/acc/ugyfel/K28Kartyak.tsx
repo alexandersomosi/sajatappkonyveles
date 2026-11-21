@@ -10,6 +10,7 @@ import type { FulProps } from '../UgyfelAdatlap';
 import { DemoCimke, Fiok, Ft, HibaSav, Lenyilo, Masol, Toltes } from '../../../ui/kozos';
 import { I3 } from '../../../ui/Icon3d';
 import { usePirito } from '../../../ui/Pirito';
+import { useKonyveloNev } from '../../../auth/Auth';
 import { ApiError } from '../../../api/client';
 import {
   CHECKIN_PANEL_TEXTS,
@@ -90,6 +91,7 @@ export function K28Kartyak({ c }: FulProps) {
 
 // ---------- "Ezt látja az ügyfél" (SPEC §28.1.9 + §28.4.4) ----------
 function EztLatja({ c }: FulProps) {
+  const fn = useKonyveloNev();
   const [nyit, setNyit] = useState<null | 'felre' | 'kereset'>(null);
   const r = c.reserve;
   const e = c.earnings;
@@ -111,7 +113,7 @@ function EztLatja({ c }: FulProps) {
           {r.estimateReasons.length > 0 && (
             <ul className="k28-okok">
               {r.estimateReasons.map((x) => (
-                <li key={x.code}>{x.text.replace('{firstName}', 'Bence')}</li>
+                <li key={x.code}>{x.text.replace('{firstName}', fn)}</li>
               ))}
             </ul>
           )}
@@ -283,10 +285,20 @@ function KataKartya({ c }: FulProps) {
         <div className="sav k28-sav" aria-hidden="true">
           <i style={{ width: `${Math.min(100, k.usedPct)}%`, background: szin }} />
         </div>
-        <p className="halvany">
-          Az idei keret {k.usedPct}%-a ({szam(KATA_RULES_2026.monthlyLimitHuf)} Ft a kata minden hónapjára). Adóköteles hónap eddig: {k.liableMonths.length}. 40% különadó csak a keret fölött
-          {k.kulonadoEstimateHuf > 0 ? `: becslés ${ft(k.kulonadoEstimateHuf)}` : ''}.
-        </p>
+        {k.meter ? (
+          // SPEC §32: the server's lines (keret by liable months, remaining, warning; the projection only here)
+          <p className="halvany">
+            Az idei keret {k.usedPct}%-a. {k.meter.limitLine} {k.meter.remainingLine ?? ''} Adóköteles hónap: {k.liableMonths.length}.
+            {k.kulonadoEstimateHuf > 0 ? ` Különadó-becslés: ${ft(k.kulonadoEstimateHuf)}.` : ''}
+            {k.meter.projectedOverHuf > 0 ? ` Év végére kb. ${ft(k.meter.projectedHuf)} (csak te látod).` : ''}
+            {k.draftNote ? ` ${k.draftNote}` : ''}
+          </p>
+        ) : (
+          <p className="halvany">
+            Az idei keret {k.usedPct}%-a ({szam(KATA_RULES_2026.monthlyLimitHuf)} Ft a kata minden hónapjára). Adóköteles hónap eddig: {k.liableMonths.length}. 40% különadó csak a keret fölött
+            {k.kulonadoEstimateHuf > 0 ? `: becslés ${ft(k.kulonadoEstimateHuf)}` : ''}.
+          </p>
+        )}
         {k.nextPayment && (
           <p className="halvany kicsi">
             Következő: {ft(k.nextPayment.amountHuf)}, {datum(k.nextPayment.dueDate)} – {k.nextPayment.accountNumber}

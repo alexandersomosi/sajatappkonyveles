@@ -28,6 +28,8 @@ import { useGuided } from '@/api/hooks-k29g';
 import { useElofizetesK29 } from '@/api/hooks-k29';
 import { HAVIDIJ_OK } from '@/lib/fizetes';
 import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
+import { KATA_F1_TEXTS } from '@/_shared/kata';
+import { KataKeret } from '@/kepernyok/kata';
 
 /** S25 – egyszeri kártya az első aktív Főoldalon: „Kész a bekötés!” (SPEC §27.4.4). Csak ezen a telefonon jegyzi meg. */
 function AktivalasKartya({ ugyfel, fn }: { ugyfel: string; fn: string }) {
@@ -415,7 +417,10 @@ export default function Fooldal() {
     <Kepernyo
       ful="fooldal"
       fejlec={<Sav h={h} lap={setLap} />}
-      dokk={fizetendo ? <GombE cim={HOME_K_TEXTS.paidButton} onPress={() => setLap('befizettem')} /> : due ? <GombE cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} /> : undefined}
+      dokk={fizetendo && h.kata?.nextPayable ? (
+        // SPEC §32: a katás hónap a közös fizetési lapon (Másolom, „Megjelölöm, hogy befizettem”)
+        <GombE cim={KATA_F1_TEXTS.fizetesGomb} onPress={() => router.push(`/fizetes/${h.kata!.nextPayable!.periodId}`)} />
+      ) : fizetendo ? <GombE cim={HOME_K_TEXTS.paidButton} onPress={() => setLap('befizettem')} /> : due ? <GombE cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} /> : undefined}
     >
       {due ? (
         <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, backgroundColor: szin.veszelyAlap }}>
@@ -436,6 +441,7 @@ export default function Fooldal() {
       ) : null}
       {h.kataRisk?.length ? <KataKockazat items={h.kataRisk} /> : null}
       {h.twoNumbers ? <KetSzam v={h.twoNumbers} /> : null}
+      {h.kata?.meter ? <KataKeret k={h.kata} /> : null}
       <AktivalasKartya ugyfel={h.client.id} fn={fn} />
       {h.serviceNotice ? <SzolgaltatasVege n={h.serviceNotice} fn={fn} /> : null}
       {h.pause ? <SzunetelKartya p={h.pause} /> : null}

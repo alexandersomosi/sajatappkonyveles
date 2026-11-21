@@ -44,7 +44,7 @@ import { isValidHuZip, normalizeHuPhone } from '../_shared/bekotes.js';
 import { notifyTeamOfClientMessage } from '../services/team.js';
 import { addVersion, createDocument, documentDetail, dossierMonths, dossierView, listItems } from '../services/documents.js';
 import { messageDtos, messagePage, openRequestsFromAccountant, postRequestNote, REQUEST_TYPE_TITLES, requestSummary } from '../services/requests.js';
-import { computeYear, daysLeft, ensurePeriods, heroPeriod, letterFor, markPaid, paymentItemDto, activeItems, periodDetail, periodSummary, unmarkPaid, recalcYear, periodLabel } from '../services/tax.js';
+import { computeYear, daysLeft, ensurePeriods, heroPeriod, letterFor, markPaid, paymentItemDto, activeItems, periodDetail, periodSummary, unmarkPaid, recalcYear, periodLabel, periodVisible } from '../services/tax.js';
 import { cancelSubscription, deleteCard, resumeSubscription, serviceNotice, startRegistration, subscriptionView } from '../services/subscription.js';
 import { clientLegalPdf, filledLegalText } from '../services/contracts.js';
 import { markdownToPdf } from '../lib/pdf.js';
@@ -629,7 +629,8 @@ export function clientRoutes(deps: Deps) {
     const cl = await client(c, deps);
     const q = parseQuery(c, z.object({ year: z.coerce.number().int().min(2020).max(2100).optional() }));
     const year = q.year ?? Number(todayBudapest(deps.now()).slice(0, 4));
-    const rows = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
+    // SPEC §32: never a hidden row; a backfilled KATA month only once the accountant verified it
+    const rows = (await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), periodVisible)).orderBy(asc(taxPeriods.dueDate))).filter((p) => !p.backfilled || p.paymentStatus === 'ellenorizve');
     return c.json({ items: await Promise.all(rows.map((p) => periodSummary(deps.db, p))) });
   });
 
@@ -642,8 +643,8 @@ export function clientRoutes(deps: Deps) {
 
   r.get('/tax-periods/:id', async (c) => {
     const cl = await client(c, deps);
-    const [p] = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.id, param(c, 'id')), eq(taxPeriods.clientId, cl.id))).limit(1);
-    if (!p) throw E.notFound();
+    const [p] = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.id, param(c, 'id')), eq(taxPeriods.clientId, cl.id), periodVisible)).limit(1);
+    if (!p || (p.backfilled && p.paymentStatus !== 'ellenorizve')) throw E.notFound();
     return c.json(await periodDetail(deps.db, p, cl.firstName, cl.accountantId, (ids) => docsById(cl, ids)));
   });
 
@@ -758,7 +759,7 @@ export function clientRoutes(deps: Deps) {
     const [filedQ] = await deps.db
       .select({ id: taxPeriods.id })
       .from(taxPeriods)
-      .where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.periodKey, `${meta.data.dossierMonth.slice(0, 4)}-Q${q}`), eq(taxPeriods.filingStatus, 'beadva')))
+      .where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.periodKey, `${meta.data.dossierMonth.slice(0, 4)}-Q${q}`), eq(taxPeriods.filingStatus, 'beadva'), periodVisible))
       .limit(1);
     if (filedQ) await auditC(c, deps.db, 'document.after_filing', { targetType: 'document', targetId: created.id, clientId: cl.id, details: { dossierMonth: meta.data.dossierMonth } });
     if (acc)

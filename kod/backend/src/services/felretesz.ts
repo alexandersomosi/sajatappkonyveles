@@ -270,7 +270,7 @@ export async function reserveCard(deps: Deps, db: DbOrTx, cl: ClientRow, today: 
   // to 1 000; a storno counts negative). A is still "one eddig" (= Mennyit kerestem?), so the row says it is rounded up.
   const listedHuf = Math.max(0, rows.filter((x) => x.receivedOn <= today).reduce((a, x) => a + x.r.reserveHuf, 0));
   // B: the quarters that ended before today (approved amount, else the engine estimate) + HIPA periods due by today
-  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year))).orderBy(asc(taxPeriods.dueDate));
+  const periods = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), isNull(taxPeriods.hiddenAt))).orderBy(asc(taxPeriods.dueDate));
   let B = 0;
   for (const p of periods) {
     if (p.kind === 'negyedev' && p.quarter) {

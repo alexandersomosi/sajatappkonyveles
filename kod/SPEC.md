@@ -52,6 +52,9 @@ Demo "today" for all expected numbers in this file: **2026-11-17** (`kod/shared/
 27. Tulaj-kérések 11-19: real screenshots, changeable branch, "Intézzük helyetted" (assisted path), one transparent journey, "anyukád", issued-invoice wording, round-2 findings → builders
 28. Öt új funkció 11-19 (félretenni, new-invoice notification, allowances, "Mennyit kerestem?", change guides) + **28.K Kiegészítés** (check-in, annual closing, reminders, lock, suspension fee, EFO, calculator, adószám auto-fill, clarity pass (C look + 8 px separator band), KATA, Accountable patterns, real NAV screens, k5 leftovers, no response-time promise, prices 19 999 Ft and fees)
 29. Stripe, Számlázz.hu, adozz.hu (k7): Stripe payments (consent, monthly off-session charges, "Fizesd ki", pre-debit reminder, webhooks, refunds), Számlázz.hu e-invoices + storno, own proxy + adozz.hu hosts + landing, real prices / no trial / separator / taxpayer lookup, F1 certificates, F2 income statement PDF, F3 closing guide, F4 calendar feed, F9 owner console, G guided first run, owner scripts
+30. k7b – the missing e-mails and the wording review
+31. Marketing (own statistics, sources, Marketing tab, prepared ad measurement)
+32. Éves ciklus és KATA – F0 + F1a (hotfixes H1–H8 + 12-12 working day; KATA months, payment sheet, reminders, keret, free months, 2027 variants switched off, annual-closing fee switch). The supervision plan (TERV_FELUGYELET) takes §33.
 
 ---
 
@@ -5093,3 +5096,90 @@ Supersedes the lines above where they differ.
   `umami-beallit.sh` 01:24 (`.env` copy `_regi/env_20261121_012422`). After: owner accounts VÁLTOZATLAN
   (`utana_marketing_20261121_013515`), all 8 hosts 200/301, demo logins 200, live visit + DEMO registration checked (see
   deploy/README.md "Marketing (SPEC §31)").
+
+## 32. Éves ciklus és KATA – F0 + F1a (ÉPÍTŐ A, 2026-11-21; NOT deployed)
+
+Source plans: `_munka/TERV_EVES_CIKLUS_KATA.md` and `_munka/TERV_KRITIKA_2026-11-21.md` (the critique wins). This section is
+the contract of what was built; F1b (folyószámla, HIPA history, Éves áttekintő), F2 and F3 are NOT in it. The supervision
+plan uses §33.
+
+### 32.1 Rules used (only rules with a source in the plans; njt re-checked 2026-11-21)
+- **12 December 2026 is not a working day** (4/2026. (XI. 13.) SZCSM r. 1. § repealed 10/2025. NGM r. 2. § c)):
+  `ado-motor/src/rules/holidays.ts` (`REPEALED_WORKING_DAYS` keeps it for the record). The November KATA is due 2026-12-14.
+- **KATA (Kata tv. = 2022. évi XIII. tv.)**: 50 000 Ft per started month, due the 12th of the next month (next working day)
+  (7. § (1)–(3)); keret 18 M Ft or liable months × 1.5 M Ft, 40 % különadó above it, due 25 February or kataTo + 30 days
+  (7. § (4)–(6)); free months (7. § (8)): every day of the month on a) táppénz/baleseti táppénz, CSED, örökbefogadói díj,
+  GYED, GYES, GYET, GYOD, ápolási díj, b) önkéntes tartalékos szolgálat, c) fogvatartás, d) szünetelés – unless there is
+  revenue; (9) the month an a)–c) state ENDS is free too if the state lasted ≥ 30 days, counting only days of months not
+  already free; (10) a)–c) free months must be reported by the 12th of the next month (szünetelés not). More than
+  100 000 Ft végrehajtható nettó tartozás on 31 December ends the KATA; paid until the decision is final, NAV withdraws it
+  (5. § (1) e)). Örökbefogadói díj and GYOD are in the njt text but not in the plan: the panel labels them
+  "[Dávid erősítse meg]" (critique K9); only the accountant records free months [D21].
+- **NAV KATA account**: "NAV Kisadózó vállalkozások adója bevételi számla" 10032000-01076349, IBAN
+  HU27100320000107634900000000, adónem 288 (NAV list from 2026-11-01). Közlemény = adószám [D22].
+- **2027 (T/928/9, not law)**: rule sets `kata.regi` (75 000 Ft) and `kata.uj` (100 000 / 50 000 Ft, keret 22 M, 15 %
+  kiegészítő adó not modelled, account / proration / declaration unknown) in `rules/2027.ts`, both `draft: true`. Off by the
+  switch `kata2027` (32.5): 2027 months exist without amount ('becsles', no item, no reminder) and the accountant gets one
+  `tax_task.kata_osszeg`. The app never suggests a regime or a KATA variant to the client.
+
+### 32.2 Data (migrations 0022 = enum values, 0023 = additive columns)
+`tax_periods` + `hidden_at`, `hidden_reason` ('kata_ev' | 'nem_kata'), `exempt_reason`, `backfilled`; kind 'kata', key
+`YYYY-MM-KATA` (text column, no CHECK). `tax_payment_items.adonem`. `client_tax_profiles.kata_variant` ('regi' | 'uj'),
+`kata_fofoglalkozasu`. The KATA free months are `insurance_breaks` entries with a KATA kind (+ `reportedOn`); the átalány
+engine reads them as 'kieso'; the átalány PATCH keeps them. Enum `payment_item_kind` + `kata_teteles`, `kata_kulonado`
+(they were only in the shared contract before); `notification_kind` + `tax_task`. Nothing is deleted: hidden rows and
+voided items stay. Data step `data.kata_f1` (deploy/README.md).
+
+### 32.3 Hotfixes (F0)
+- **H1**: a quarter entirely in the KATA part of a year is not created; a not approved / not filed one is hidden
+  ('kata_ev'); back to átalány un-hides it. A quarter only partly KATA ("vegyes év") stays, without automatic estimate
+  [D27]. `calculate` / `approve` of a KATA quarter → 409 "Katás évben nincs átalányos negyedév." Every client and job query
+  of `tax_periods` uses `periodVisible` (`services/tax.ts`; source-scan test in `backend/test/kata-f1.test.ts`).
+- **H2** `jobNewYear`: the regime, kataFrom (1 January if the KATA went on), kataTo (only if in the new year), the variant
+  and the főfoglalkozás flag are copied; a profile already recorded for the new year is kept; the periods follow the
+  jogállás (nyugdíjas: no 2658) and the regime; the KATA months come from `syncKataPeriods`.
+- **H3/H4**: the synthetic `kata:` deadline rows are gone (real rows); every KATA client gets the '26KATA row
+  (`ev:<y>:kata`, 25 February or kataTo + 30 days) – the old comment "only above the keret" was wrong.
+- **H6**: `computeFlags` – in a KATA year `hatar_kozel` comes from the KATA keret (80 %, over, projection), not from the
+  átalány cap; `kata_figyelem` for a business customer or over the keret.
+- **H8**: no hard-coded "Bence" (app `eves-zaras/index.tsx`, the panel's reserve reasons); `filed-szja` closes the annual
+  closing (`kesz`) when the profile's HIPA method is 'nincs'.
+
+### 32.4 KATA months (F1a)
+- `services/kata.ts` `syncKataPeriods` (idempotent; job `kata_periods` 03:10, the tax-regime and breaks endpoints,
+  `jobNewYear`, the data step): one row per started month; liable → `jovahagyva` + one `kata_teteles` item (50 000 Ft,
+  the account above, adónem 288); free → `exempt_reason`, the unmarked item voided, a marked one kept (panel "Befizette, de
+  mentes hónap" + `tax_task.befizetett_mentes`); amount unknown → 'becsles'; a row made after its due date → `backfilled`
+  (no reminder, hidden from the client until verified, `tax_task.backfill`). A KATA that ended during an átalány year keeps
+  its months until kataTo.
+- **Client**: `GET /client/kata?year=` (`KataYearView`), the Főoldal (`ClientHome.kata` = `KataHomeView` + meter; the
+  next payable month is the hero; "Most nincs mit fizetned. A következő kata: …"), Határidők ("Kata – november: 50 000 Ft",
+  link `/fizetes/{id}`; approved quarters and HIPA advances link there too). New screen **`/fizetes/[id]`**: per item
+  Összeg, Kedvezményezett, Számlaszám, Közlemény with "Másolom"; "Megjelölöm, hogy befizettem" + "Ez csak jelölés: pénzt nem
+  vonunk le, nem utalunk." (the existing mark-paid / unmark-paid); states jelölve / rendben / eltérés / mentes / nincs összeg.
+- **Panel** (Adó tab of a KATA year, `KataEv.tsx`): month table (status, due, amount, marked on, "Eltérés"), the group
+  "Rendben (folyószámla alapján)" (`POST /acc/clients/:id/kata/verify {periodIds[], note}`), free months
+  (`PUT /acc/clients/:id/kata/breaks {year, breaks[]}`, reportedOn for a)–c)), the keret bar with the projection;
+  `GET /acc/clients/:id/kata?year=`; `POST /acc/clients/:id/tax-regime` + `kataVariant`, `kataFofoglalkozasu` ('uj' only
+  from 2027; 'regi' only főfoglalkozású) syncs the quarters and the months at once. `AccClientDetailK28.kata` is filled.
+- **Reminders** (`reminders_k28` 08:00): `tax_due_soon.kata` on the 8th (next working day), `.kata_ma` on the due day,
+  `.kata_lejart` the day after; never for a marked, free, backfilled or unconfirmed month; the 7/3/1 quarter rhythm skips
+  KATA. Push + e-mail (`tax_due_soon` e-mail on by default; the client's own setting wins); `notifyOnce` per step.
+- **Keret** (`jobReminders`): `limit_warning.kata80` / `.kata100` (client + `_staff`), `.kata_elore` to the accountant
+  only (`kataElorejelzesUgyfelnek` off); no warning on draft rules.
+- **Year end** (job `kata_year_end` 09:00): 10 and 22 December `tax_task.kata_ev_vege` for every active KATA client;
+  16 December `tax_due_soon.kata_ev_vege` to a client with an unmarked overdue visible month (the e-mail adds the
+  5. § (1) e) withdrawal sentence); 3 days before the 12th `tax_task.mentesseg_bejelentes`; Határidő-figyelő row `kata-bej:`.
+- **E-mail at launch (web clients without push)**: `annual_due` e-mail default ON (questionnaire, fee, approval);
+  `tax_due_soon` was already on. `tax_task` is a staff kind (panel badge + the daily digest).
+
+### 32.5 Switches (`EVES_KAPCSOLOK_DEFAULT` in kod/shared/src/kata.ts, override `system_state['kapcsolok.ev_ciklus']`)
+`kata2027` false · `kataElorejelzesUgyfelnek` false · `kataEvVegeUgyfelnek` 'jeloletlen' · `evesZarasDij` **false**: the
+14 999 Ft annual-closing fee is not charged at submit (the closing goes straight to the accountant) and the questionnaire
+shows no fee (`AnnualView.feeHuf` null) until the ÁSZF is fixed [T1, JOGI].
+
+### 32.6 Texts
+`kod/shared/src/kata.ts` (`KATA_F1_TEXTS`, `PAYMENT_SHEET_TEXTS`, `KATA_PANEL_TEXTS`, `KATA_NOTIFICATION_TEXTS`,
+`KATA_EXEMPT_LABELS`) → content keys `kata.f1.*`, `fizetes.*`, `kata.mentes_ok.*`, `kata.panel.*`,
+`notif.tax_due_soon.kata*`, `notif.limit_warning.kata*`, `notif.tax_task.*`, `notif.tax_payment_(verified|mismatch).kata`,
+`email.tax_due_soon.kata_ev_vege.body` (`backend/src/content/kata.ts`; editable in /admin/szovegek).

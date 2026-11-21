@@ -303,12 +303,12 @@ export function adminRoutes(deps: Deps) {
       .select({ n: count() })
       .from(taxPaymentItems)
       .innerJoin(taxPeriods, eq(taxPeriods.id, taxPaymentItems.taxPeriodId))
-      .where(and(inArray(taxPeriods.clientId, clientIds), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)));
+      .where(and(inArray(taxPeriods.clientId, clientIds), isNull(taxPeriods.hiddenAt), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt), lt(taxPaymentItems.dueDate, today)));
     const [fil] = await deps.db
       .select({ n: count() })
       .from(taxPeriods)
       .innerJoin(clients, eq(clients.id, taxPeriods.clientId))
-      .where(and(inArray(taxPeriods.clientId, clientIds), eq(taxPeriods.kind, 'negyedev'), sql`${taxPeriods.filingStatus} <> 'beadva'`, lt(taxPeriods.dueDate, today), sql`${taxPeriods.dueDate} >= (${clients.createdAt} at time zone 'Europe/Budapest')::date`));
+      .where(and(inArray(taxPeriods.clientId, clientIds), eq(taxPeriods.kind, 'negyedev'), isNull(taxPeriods.hiddenAt), sql`${taxPeriods.filingStatus} <> 'beadva'`, lt(taxPeriods.dueDate, today), sql`${taxPeriods.dueDate} >= (${clients.createdAt} at time zone 'Europe/Budapest')::date`));
     return Number(rq?.n ?? 0) + Number(pay?.n ?? 0) + Number(fil?.n ?? 0);
   }
 
