@@ -254,7 +254,7 @@ describe('kamara reminders (§27.8) – 2 working days before and on the due day
     expect(await jobKamaraReminders(h.deps)).toBe(0);
     const n = await h.deps.db.select().from(notifications).where(eq(notifications.userId, c.userId));
     expect(n.filter((x) => x.kind === 'kamara_reminder').map((x) => x.title)).toEqual(['Ne felejtsd el: kamarai regisztráció', 'Ne felejtsd el: kamarai regisztráció']);
-    expect(n.find((x) => x.kind === 'kamara_reminder')!.body).toBe('november 26-ig regisztrálj a kamaránál. Kb. 10 perc.');
+    expect(n.find((x) => x.kind === 'kamara_reminder')!.body).toBe('november 26-ig regisztrálj a kamaránál.'); // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim
     h.clock.set('2026-11-19T09:00:00Z');
   });
 });

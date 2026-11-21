@@ -97,6 +97,11 @@ export function registerClientPaymentsK29(r: Hono<Env>, deps: Deps): void {
     const b = await readJson(c, z.strictObject({ platform: platformSchema, purpose: z.enum(['subscribe', 'card_update', 'restart']).default('subscribe'), ...consentFields, returnOrigin: originSchema }));
     const { assertStepOpen } = await import('../services/onboarding.js');
     if (b.purpose !== 'card_update') await assertStepOpen(deps, deps.db, cl, 'elofizetes');
+    // k8 (owner 11-20): the card only after the optional callback – an open callback during the onboarding waits
+    if (b.purpose !== 'card_update') {
+      const { assertNoOpenCallback } = await import('./k8.js');
+      await assertNoOpenCallback(deps, cl);
+    }
     // SPEC §28.K.7: with employees / EFO no card is charged before the accountant's decision.
     const { blocksActivation, employerRow } = await import('../services/alkalmazott.js');
     if (b.purpose !== 'card_update' && blocksActivation(await employerRow(deps.db, cl.id))) {

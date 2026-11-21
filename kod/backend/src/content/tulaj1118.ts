@@ -8,7 +8,7 @@ import { CALLBACK_CLOSE_REASONS, CLIENT_FEATURE_RULES, CLIENT_FEATURES, REGISTRA
 
 /** Client wording of the callback states (SPEC §26.2.6). */
 export const CALLBACK_STATUS_TEXT_DEFAULTS = {
-  uj: 'Megkaptuk. Kollégánk 24–48 órán belül hív a {phoneMasked} számon.',
+  uj: 'Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: {phoneMasked}.',
   folyamatban: '{staffFirstName} intézi a kérésedet. Hamarosan hív.',
   most_hiv: 'Most hív kollégánk, {staffFirstName}. Ha nem tudod felvenni, újra próbáljuk.',
   nem_ert_el: '{when} kerestünk, de nem értünk el. Újra próbáljuk.',
@@ -68,11 +68,11 @@ export function generatedDefaults(): Record<string, string> {
   out['vallalkozas.hint.jarulek_nyugdij'] = 'Saját jogú nyugdíjasként nem fizetsz TB-járulékot és szochót, csak SZJA-t a tényleges jövedelmed után.';
   out['vallalkozas.utmutato.elavult'] = '2027-től a vállalkozások nyilvántartását a kamara vezeti. Ezt az útmutatót frissítjük. Addig kérj visszahívást, és segítünk.';
   out['vallalkozas.adoszam.nem_afamentes'] = 'Ez az adószám nem ÁFA-mentes vállalkozásé. Nézd meg még egyszer, vagy írj nekünk.';
-  out['visszahivas.igeret'] = 'Kollégánk 24–48 órán belül felhív. Munkanapokon 9 és 17 óra között telefonálunk. Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.';
+  out['visszahivas.igeret'] = 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.';
   out['visszahivas.hivoszam'] = 'Erről a számról hívunk: {callerId}';
   out['visszahivas.csalas'] = 'Telefonon soha nem kérjük a jelszavadat, a belépési kódjaidat vagy a kártyaadataidat. Ha valaki ezt kéri, tedd le, és írj nekünk az alkalmazásban.';
   out['visszahivas.adatkezeles'] = 'A megadott számon ezzel a kéréssel kapcsolatban hívunk. A hívásról rövid jegyzetet írunk, a hívást nem rögzítjük. Részletek az Adatkezelési tájékoztatóban.';
-  out['visszahivas.toast'] = 'Megkaptuk. Kollégánk 24–48 órán belül hív.';
+  out['visszahivas.toast'] = 'Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.';
   for (const [k, v] of Object.entries(CALLBACK_STATUS_TEXT_DEFAULTS)) out[`visszahivas.allapot.${k}`] = v;
   for (const [k, v] of Object.entries(CLOSE_REASON_TEXT)) out[`visszahivas.lezaras_ok.${k}`] = v;
   out['visszahivas.regi_idopont_megjegyzes'] = 'Korábban egyeztetett hívás: {date} {time} ({channel})';

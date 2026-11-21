@@ -77,7 +77,8 @@ describe('K3.1–K3.5 – the EV happy path', () => {
     const r = await h.json('POST', '/client/assist', { token: c.token, body: { kind: 'vallalkozas_bejelentes', source: 'helyettunk_vallalkozas', note: 'Nem értek a számítógéphez.' } });
     expect(r.status).toBe(201);
     expect(r.body.assist.status).toBe('visszahivas_kerve');
-    expect(r.body.assist.statusText).toBe('Visszahívást kértél. Kollégánk 24–48 órán belül hív.');
+    // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim
+    expect(r.body.assist.statusText).toBe('Visszahívást kértél. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.');
     expect(r.body.callback.topic).toBe('vallalkozas_bejelentes_helyettem');
     expect(r.body.callback.assistId).toBe(r.body.assist.id);
     assistId = r.body.assist.id;

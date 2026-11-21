@@ -15,6 +15,7 @@ import { fileRoutes } from './routes/files.js';
 import { meRoutes } from './routes/me.js';
 import { publicRoutes } from './routes/public.js';
 import { paymentsPublicK29Routes } from './routes/payments-k29.js';
+import { demoMailPublicRoutes } from './routes/k8.js';
 import { teamRoutes } from './routes/team.js';
 import { naptarRoutes } from './routes/public-naptar.js';
 import { publicMarketingRoutes } from './routes/public-marketing.js';
@@ -74,6 +75,8 @@ export function createApp(deps: Deps) {
   api.route('/', publicRoutes(deps));
   // SPEC §29.1 (B1): Stripe back URL, DEMO pay page, Stripe webhook
   api.route('/', paymentsPublicK29Routes(deps));
+  // k8: the DEMO mail's HTML image behind a signed 5-minute link (DEMO only)
+  api.route('/', demoMailPublicRoutes(deps));
   // SPEC §31.6: /public/marketing-config, /public/hozzajarulas (ads switched off: { ads: false } / 404)
   api.route('/', publicMarketingRoutes(deps));
   api.route('/auth', authRoutes(deps));

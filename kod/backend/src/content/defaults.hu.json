@@ -148,7 +148,7 @@
   "notif.callback_closed.title": "Lezártuk a visszahívási kérésed",
   "notif.callback_closed.body": "{reasonText}",
   "notif.registration_reminder.title": "Folytasd a vállalkozásod bejelentését",
-  "notif.registration_reminder.body": "Az útmutatód készen áll. Pár perc az egész, és ha elakadsz, kérj visszahívást.",
+  "notif.registration_reminder.body": "Az útmutatód készen áll. Ha elakadsz, kérj visszahívást.",
   "notif.registration_reminder.adatlap.title": "Folytasd az adatlapot",
   "notif.registration_reminder.adatlap.body": "Ott folytathatod, ahol abbahagytad. Utána elkészül a személyre szabott útmutatód.",
   "notif.registration_reminder.tevekenyseg.title": "Megírtuk, melyik sort válaszd",

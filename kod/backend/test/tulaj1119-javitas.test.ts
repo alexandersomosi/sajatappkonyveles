@@ -121,10 +121,12 @@ describe('order 4 – rows others work on show their time; the waiting card whil
     const j = (await h.json('GET', '/client/onboarding', { token: c.token })).body.journey;
     const row = j.steps.find((x: { key: string }) => x.key === 'meghatalmazas');
     expect(row.state).toBe('var');
-    expect(row.timeText).toBe('24–48 órán belül');
+    // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim: no turnaround time on the row and the card
+    expect(row.timeText).toBeNull();
     expect(j.waiting.key).toBe('helyettunk_hivas');
     expect(j.waiting.body).not.toContain('kérdőív');
-    expect(j.waiting.timeText).toBe('24–48 órán belül');
+    expect(j.waiting.body).toContain('A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.');
+    expect(j.waiting.timeText).toBeNull();
     expect(j.waiting.escalateKind).toBe('uzenet');
     expect(j.waiting.escalateText).toMatch(/sem hívtunk, írj nekünk az Üzenetekben\.$/);
   });
@@ -202,7 +204,7 @@ describe('order 3 – the assisted path: client is the blocker before the UJEGYK
     const vegso = j.steps.find((x: { key: string }) => x.key === 'vegso_jovahagyas');
     expect(vegso.actor).toBe('te');
     expect(vegso.state).toBe('kesobb');
-    expect(vegso.statusText).toBe('Előbb megírjuk a tevékenységed sorát (általában 1 munkanap).');
+    expect(vegso.statusText).toBe('Előbb megírjuk a tevékenységed sorát.'); // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim
     const patch = await h.json('PATCH', `/team/registrations/${reg!.id}`, {
       token: anna.token,
       body: { ovtjKodok: [{ index: 0, ovtjKod: '742001' }] },

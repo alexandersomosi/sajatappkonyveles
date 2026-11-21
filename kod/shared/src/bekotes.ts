@@ -140,7 +140,7 @@ export const ONBOARDING_EXPLAINERS: readonly ExplainerDefault[] = [
   {
     key: 'adataid',
     title: 'Adataid',
-    what: 'Pár adat rólad: a neved, a telefonszámod, az adóazonosító jeled és a lakcímed. Ha már van vállalkozásod, az adószámod, a tevékenységed és az, hogy mellette dolgozol-e máshol. Kb. 3 perc.',
+    what: 'Pár adat rólad: a neved, a telefonszámod, az adóazonosító jeled és a lakcímed. Ha már van vállalkozásod, az adószámod, a tevékenységed és az, hogy mellette dolgozol-e máshol.',
     why: 'Ezekkel azonosít a NAV, ezekkel köti meg {firstName} veled a szerződést, és ebből tudja, mennyi adót és járulékot fizetsz. A telefonszámodon hívunk, ha elakadsz.',
     where: 'Az adóazonosító jeled az adóigazolványodon van, a lakcímed a lakcímkártyádon. Amit egyszer beírtál, megmarad: ha félbehagyod, később ott folytatod.',
     icon: 'fiok',
@@ -409,7 +409,7 @@ export const ONBOARDING_EXPLAINERS: readonly ExplainerDefault[] = [
     title: 'NAV-meghatalmazás',
     what: 'Egy nyilatkozat a NAV felé, hogy {firstName} intézheti helyetted az adóügyeidet.',
     why: 'Enélkül {firstName} nem adhatja be a bevallásaidat, és nem láthatja a NAV-nál az adataidat. A meghatalmazás hozzád mint személyhez kötődik, ezért a vállalkozásodra is érvényes.',
-    where: 'Kétféleképpen: magad adod meg az ONYA-ban (onya.nav.gov.hu, kb. 5 perc, lépésről lépésre megmutatjuk), vagy {firstName} küldi be, és te csak jóváhagyod. Mindkettőhöz Ügyfélkapu+ vagy DÁP kell.',
+    where: 'Kétféleképpen: magad adod meg az ONYA-ban (onya.nav.gov.hu, lépésről lépésre megmutatjuk), vagy {firstName} küldi be, és te csak jóváhagyod. Mindkettőhöz Ügyfélkapu+ vagy DÁP kell.',
     icon: 'igazolas',
     illustration: 'meghatalmazas_alairva',
     step: 'meghatalmazas',
@@ -456,7 +456,7 @@ export const ONBOARDING_EXPLAINERS: readonly ExplainerDefault[] = [
   {
     key: 'visszahivas',
     title: 'Visszahívás',
-    what: 'Ha elakadsz, kérj visszahívást, és a csapatunkból valaki 24–48 órán belül felhív.',
+    what: 'Ha elakadsz, kérj visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.',
     why: 'Telefonon gyorsabb megbeszélni, ha valami nem világos. Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.',
     where: 'Minden lépésnél ott az „Elakadtál? Kérj visszahívást” gomb. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat.',
     icon: 'ora',
@@ -496,14 +496,14 @@ export const ONBOARDING_EXPLAINERS: readonly ExplainerDefault[] = [
     title: 'Intézzük helyetted: vállalkozás bejelentése',
     what: 'Ha nem boldogulsz a NAV oldalával, {firstName} bejelenti helyetted a vállalkozásodat. Meghatalmazottként, a saját belépésével teszi, a te engedélyeddel.',
     why: 'Így neked nem kell kitöltened a NAV-os űrlapot. A te dolgod csak ennyi: a rövid kérdőív, egy jóváhagyás a NAV oldalán, és a végső engedély itt az alkalmazásban.',
-    where: 'Kérj visszahívást az „Ezt kérem” gombbal: 24–48 órán belül hívunk, és mindent elmondunk. A belépési adataidat soha nem kérjük el. A jóváhagyáshoz Ügyfélkapu+ vagy DÁP kell; ha nincs, a hívásban segítünk.',
+    where: 'Kérj visszahívást az „Ezt kérem” gombbal, és mindent elmondunk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A belépési adataidat soha nem kérjük el. A jóváhagyáshoz Ügyfélkapu+ vagy DÁP kell; ha nincs, a hívásban segítünk.',
     icon: 'bevallas',
     fields: [],
   },
   {
     key: 'helyettunk_meghatalmazas',
     title: 'Megcsináljuk helyetted a meghatalmazást',
-    what: '{firstName} beküldi a NAV-nak a meghatalmazást. Te csak jóváhagyod az ONYA-ban, ez kb. 3 perc.',
+    what: '{firstName} beküldi a NAV-nak a meghatalmazást. Te csak jóváhagyod az ONYA-ban.',
     why: 'Így nem kell kitöltened a meghatalmazás űrlapját, és nem tudsz rossz rovatot jelölni.',
     where: 'Kérj visszahívást az „Ezt kérem” gombbal: elmondjuk, mi jön. Ha {firstName} beküldte, értesítést kapsz, és 4 napod van jóváhagyni. A jelszavadat vagy a kódjaidat soha nem kérjük el.',
     icon: 'igazolas',
@@ -764,13 +764,13 @@ export type GuideScreenKind = 'nav' | 'kamara' | 'app';
 /** Hold texts of the steps that need the exact activity line (SPEC §24 11-18 javító). */
 export const ACTIVITY_PENDING_HOLD: Record<string, string> = {
   tevekenysegek:
-    'A pontos tevékenység-sort még egyeztetjük, általában 1 munkanapon belül. Várd meg, amíg megírjuk, melyiket válaszd: értesítést küldünk, és itt is látod. Rossz sort csak a bejelentés után, a Vállalkozói Ügysegédben, változásbejelentéssel lehet javítani.',
+    'A pontos tevékenység-sort még egyeztetjük. Várd meg, amíg megírjuk, melyiket válaszd: értesítést küldünk, és itt is látod. Rossz sort csak a bejelentés után, a Vállalkozói Ügysegédben, változásbejelentéssel lehet javítani.',
   ellenorzes: 'A tevékenységed sorát még megírjuk. Addig ne küldd be.',
-  bekuldes: 'Még ne küldd be: előbb megírjuk, melyik tevékenység-sort válaszd (általában 1 munkanapon belül). Értesítést küldünk.',
+  bekuldes: 'Még ne küldd be: előbb megírjuk, melyik tevékenység-sort válaszd. Értesítést küldünk.',
 };
 /** The same hold, once, at the TOP of the guide and on the hub (review k3c2: before the client opens the NAV form). */
 export const ACTIVITY_PENDING_BANNER =
-  'Mielőtt elkezded: a tevékenységed pontos sorát még megírjuk, általában 1 munkanapon belül. Az útmutatót már átnézheted, de a NAV-os bejelentést még ne kezdd el. Értesítést küldünk, ha megírtuk.';
+  'Mielőtt elkezded: a tevékenységed pontos sorát még megírjuk. Az útmutatót már átnézheted, de a NAV-os bejelentést még ne kezdd el. Értesítést küldünk, ha megírtuk.';
 /** Team deadline for writing the ÖVTJ line of a waiting client (working days after the guide was requested). */
 export const ACTIVITY_PENDING_DEADLINE_WORKDAYS = 1;
 /**
@@ -824,7 +824,7 @@ export const NAV_WORK_KIND_OPTIONS: readonly { navCode: string; label: string; w
 export const GUIDE_TEMPLATES: { vallalkozas_bejelentes: GuideTemplate; meghatalmazas: GuideTemplate; meghatalmazas_jovahagyas: GuideTemplate } = {
   vallalkozas_bejelentes: {
     title: 'Így jelentsd be a vállalkozásodat',
-    intro: 'A válaszaid alapján összeírtuk, mit jelölj be. A NAV-os űrlap 6 lapból áll: Személyi adatok, Címadatok, Tevékenységek, Adózási adatok, Nyilatkozatok, Ellenőrzés. Kb. 10–15 perc, és ingyenes. A vállalkozásod azon a napon indul, amikor beküldöd.',
+    intro: 'A válaszaid alapján összeírtuk, mit jelölj be. A NAV-os űrlap 6 lapból áll: Személyi adatok, Címadatok, Tevékenységek, Adózási adatok, Nyilatkozatok, Ellenőrzés. A bejelentés ingyenes. A vállalkozásod azon a napon indul, amikor beküldöd.',
     validUntil: '2026-12-31',
     steps: [
       {
@@ -1013,11 +1013,11 @@ export const GUIDE_TEMPLATES: { vallalkozas_bejelentes: GuideTemplate; meghatalm
         screenKind: 'kamara',
       },
     ],
-    outro: 'Ha feltöltötted, átnézzük, általában 1 munkanapon belül. Addig megadhatod a NAV-meghatalmazást, és lefotózhatod az igazolványaidat.',
+    outro: 'Ha feltöltötted, átnézzük, és szólunk. Addig megadhatod a NAV-meghatalmazást, és lefotózhatod az igazolványaidat.',
   },
   meghatalmazas: {
     title: 'Így add meg a NAV-meghatalmazást',
-    intro: 'Az ONYA-ban jelented be a NAV-nak, hogy {firstName} intézheti az adóügyeidet. Kb. 5 perc. A meghatalmazás hozzád mint személyhez kötődik, ezért akkor is jó, ha a vállalkozásod most indul.',
+    intro: 'Az ONYA-ban jelented be a NAV-nak, hogy {firstName} intézheti az adóügyeidet. A meghatalmazás hozzád mint személyhez kötődik, ezért akkor is jó, ha a vállalkozásod most indul.',
     validUntil: '2026-12-31',
     steps: [
       {
@@ -1080,7 +1080,7 @@ export const GUIDE_TEMPLATES: { vallalkozas_bejelentes: GuideTemplate; meghatalm
         text: 'Kattints az „Ellenőrzés és benyújtás” gombra, majd a felugró ablakban a „Tovább” gombra. Az értesítést a sikeres benyújtásról elmentheted.',
         fields: [
           { label: 'Ellenőrzés és benyújtás', action: 'kattints' },
-          { label: 'Tovább', action: 'kattints', why: 'Kb. 20 perc múlva él a meghatalmazás.' },
+          { label: 'Tovább', action: 'kattints', why: 'Ezzel küldöd be. A NAV ezután élesíti a meghatalmazást.' },
         ],
       },
       {
@@ -1099,7 +1099,7 @@ export const GUIDE_TEMPLATES: { vallalkozas_bejelentes: GuideTemplate; meghatalm
   // 2025.03.11 and ONYA bemutató 2026.01.23; the JÓVÁHAGYÁS button has no official image yet → drawn or owner's own shot).
   meghatalmazas_jovahagyas: {
     title: 'Így hagyd jóvá a meghatalmazást',
-    intro: '{firstName} beküldte a NAV-nak a meghatalmazást. Most neked kell jóváhagynod az ONYA-ban, {jovahagyasHatarido}. Kb. 3 perc. A jelszavadat vagy a kódjaidat soha nem kérjük el: a jóváhagyás a te dolgod, a saját belépéseddel.',
+    intro: '{firstName} beküldte a NAV-nak a meghatalmazást. Most neked kell jóváhagynod az ONYA-ban, {jovahagyasHatarido}. A jelszavadat vagy a kódjaidat soha nem kérjük el: a jóváhagyás a te dolgod, a saját belépéseddel.',
     validUntil: '2027-12-31',
     steps: [
       {
@@ -1149,7 +1149,7 @@ export const GUIDE_TEMPLATES: { vallalkozas_bejelentes: GuideTemplate; meghatalm
         screenKind: 'app',
       },
     ],
-    outro: 'Ha jóváhagytad, kb. 20 perc múlva él a meghatalmazás. {firstName} ellenőrzi, és szól.',
+    outro: 'Ha jóváhagytad, a NAV élesíti a meghatalmazást. {firstName} ellenőrzi, és szól.',
   },
 };
 
@@ -1520,45 +1520,45 @@ export const JOURNEY_STEP_TEXTS: Record<
   | 'alkalmazottak',
   JourneyStepText
 > = {
-  ut: { title: 'Vállalkozásod', explainer: 'vallalkozas_van_e', route: '/bekotes', actionLabel: 'Válaszolok', time: '1 koppintás' },
-  visszahivas: { title: 'Visszahívás', explainer: 'visszahivas', route: '/visszahivas', actionLabel: '', time: '24–48 órán belül' },
-  adatok: { title: 'Adataid', explainer: 'adataid', route: '/bekotes/adatok', actionLabel: 'Kitöltöm', time: 'kb. 3 perc' },
-  kerdoiv: { title: 'Kérdőív a vállalkozásodról', explainer: 'tevekenyseg', route: '/bekotes/vallalkozas/adatlap', actionLabel: 'Kitöltöm', time: 'kb. 5–8 perc' },
+  ut: { title: 'Vállalkozásod', explainer: 'vallalkozas_van_e', route: '/bekotes', actionLabel: 'Válaszolok', time: null },
+  visszahivas: { title: 'Visszahívás', explainer: 'visszahivas', route: '/visszahivas', actionLabel: '', time: null },
+  adatok: { title: 'Adataid', explainer: 'adataid', route: '/bekotes/adatok', actionLabel: 'Kitöltöm', time: null },
+  kerdoiv: { title: 'Kérdőív a vállalkozásodról', explainer: 'tevekenyseg', route: '/bekotes/vallalkozas/adatlap', actionLabel: 'Kitöltöm', time: null },
   bejelentes: {
     title: 'Bejelentés a NAV-nál',
     explainer: 'vallalkozoi_ugyseged',
     route: '/bekotes/vallalkozas/utmutato',
     actionLabel: 'Megnyitom az útmutatót',
-    time: 'kb. 10–15 perc',
-    timeSegitett: 'általában 1 munkanap',
+    time: null,
+    timeSegitett: null,
     actionLabelSegitett: '',
   },
-  ertesites: { title: 'NAV-os értesítés feltöltése', explainer: 'nav_igazolas_pdf', route: '/bekotes/vallalkozas/feltoltes', actionLabel: 'Feltöltöm az értesítést', time: 'kb. 2 perc' },
-  atnezes: { title: 'Átnézzük', explainer: 'nav_igazolas_pdf', route: '/bekotes/vallalkozas', actionLabel: '', time: 'általában 1 munkanap' },
+  ertesites: { title: 'NAV-os értesítés feltöltése', explainer: 'nav_igazolas_pdf', route: '/bekotes/vallalkozas/feltoltes', actionLabel: 'Feltöltöm az értesítést', time: null },
+  atnezes: { title: 'Átnézzük', explainer: 'nav_igazolas_pdf', route: '/bekotes/vallalkozas', actionLabel: '', time: null },
   vegso_jovahagyas: {
     title: 'Végső engedély',
     explainer: 'helyettunk_vallalkozas',
     route: '/bekotes/vallalkozas/engedely',
     actionLabel: 'Átnézem és engedélyezem',
-    time: 'kb. 2 perc',
+    time: null,
   },
-  kamara: { title: 'Kamarai regisztráció', explainer: 'kamarai_regisztracio', route: '/bekotes/vallalkozas/kamara', actionLabel: 'Megnyitom', time: 'kb. 10 perc, 5 munkanapon belül' },
-  szerzodes: { title: 'Szerződés', explainer: 'szerzodes', route: '/bekotes/szerzodes', actionLabel: 'Elolvasom', time: 'kb. 3 perc' },
+  kamara: { title: 'Kamarai regisztráció', explainer: 'kamarai_regisztracio', route: '/bekotes/vallalkozas/kamara', actionLabel: 'Megnyitom', time: '5 munkanapon belül' },
+  szerzodes: { title: 'Szerződés', explainer: 'szerzodes', route: '/bekotes/szerzodes', actionLabel: 'Elolvasom', time: null },
   meghatalmazas: {
     title: 'NAV-meghatalmazás',
     explainer: 'nav_meghatalmazas',
     route: '/bekotes/meghatalmazas',
     // 11-19 javító kör 2: neutral – the screen it opens offers both (self-service and "Megcsináljuk helyetted").
     actionLabel: 'Megnézem a két lehetőséget',
-    time: 'kb. 5 perc',
-    timeSegitett: 'jóváhagyás: kb. 3 perc',
+    time: null,
+    timeSegitett: null,
     actionLabelSegitett: 'Megnyitom a jóváhagyás útmutatóját',
   },
-  azonositas: { title: 'Igazolványok', explainer: 'szemelyi_foto', route: '/bekotes/azonositas', actionLabel: 'Lefotózom', time: 'kb. 5 perc' },
-  elofizetes: { title: 'Előfizetés', explainer: 'elofizetes', route: '/bekotes/elofizetes', actionLabel: 'Megadom a kártyámat', time: 'kb. 2 perc' },
-  nav_bekotes: { title: 'Kiállított számlák bekötése', explainer: 'nav_bekotes', route: '', actionLabel: '', time: 'általában 1–2 munkanap' },
-  // SPEC §28.3.4: optional, never 'most', never counted (sub "Te · kb. 3 perc · ha jár").
-  kedvezmenyek: { title: 'Adókedvezmények', explainer: 'kedvezmenyek', route: '/kedvezmenyek', actionLabel: 'Megnézem', time: 'kb. 3 perc · ha jár' },
+  azonositas: { title: 'Igazolványok', explainer: 'szemelyi_foto', route: '/bekotes/azonositas', actionLabel: 'Lefotózom', time: null },
+  elofizetes: { title: 'Előfizetés', explainer: 'elofizetes', route: '/bekotes/elofizetes', actionLabel: 'Megadom a kártyámat', time: null },
+  nav_bekotes: { title: 'Kiállított számlák bekötése', explainer: 'nav_bekotes', route: '', actionLabel: '', time: null },
+  // SPEC §28.3.4: optional, never 'most', never counted (sub "Te · ha jár"); k8: no time estimates in the rows.
+  kedvezmenyek: { title: 'Adókedvezmények', explainer: 'kedvezmenyek', route: '/kedvezmenyek', actionLabel: 'Megnézem', time: null },
   // SPEC §28.K.7: only when the employer answer is not 'nincs'; the accountant decides (actor konyvelo, state var).
   alkalmazottak: { title: 'Alkalmazottak', explainer: 'alkalmazott_efo', route: '/bekotes/alkalmazottak', actionLabel: '', time: null },
 };
@@ -1619,63 +1619,63 @@ export const WAITING_TEXTS: Record<
   tevekenyseg_sor: {
     kicker: 'Most mi dolgozunk',
     title: 'Megírjuk, melyik tevékenység-sort válaszd',
-    body: 'Általában 1 munkanapon belül. Értesítünk, ha kész. Addig a NAV-os bejelentést még ne kezdd el.',
-    time: 'általában 1 munkanap',
+    body: 'Értesítünk, ha kész. Addig a NAV-os bejelentést még ne kezdd el.',
+    time: '',
   },
-  atnezes: { kicker: 'Most mi dolgozunk', title: 'Átnézzük a NAV-os értesítésedet', body: 'Általában 1 munkanapon belül. Értesítünk, ha rendben van.', time: 'általában 1 munkanap' },
+  atnezes: { kicker: 'Most mi dolgozunk', title: 'Átnézzük a NAV-os értesítésedet', body: 'Értesítünk, ha rendben van.', time: '' },
   adoszam: {
     kicker: 'Most a NAV dolgozik',
     title: 'Várjuk az adószámodat',
     body: 'Ha nincs rajta az értesítésen, a NAV pár napon belül adja meg: a Vállalkozói Ügysegédben, a Bejelentéseim között látod. Ha megvan, írd be itt. Mi is figyeljük.',
-    time: 'általában pár nap',
+    time: '',
   },
   meghatalmazas_ellenorzes: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} ellenőrzi a meghatalmazásodat a NAV-nál',
-    body: 'Általában 1 munkanapon belül. Értesítünk, ha él.',
-    time: 'általában 1 munkanap',
+    body: 'Értesítünk, ha él.',
+    time: '',
   },
   azonositas_ellenorzes: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} átnézi az igazolványaidat',
-    body: 'Általában 1 munkanapon belül. Titkosítva tároljuk őket, csak ő látja.',
-    time: 'általában 1 munkanap',
+    body: 'Titkosítva tároljuk őket, csak ő látja.',
+    time: '',
   },
   nav_bekotes: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} beköti a kiállított számláidat',
-    body: 'Általában 1–2 munkanap. Utána a kiállított számláid maguktól megjelennek itt, és minden megnyílik.',
-    time: 'általában 1–2 munkanap',
+    body: 'Utána a kiállított számláid maguktól megjelennek itt, és minden megnyílik.',
+    time: '',
   },
   helyettunk_hivas: {
     kicker: 'Most mi jövünk',
     title: 'Hamarosan hívunk',
-    body: 'Kollégánk 24–48 órán belül hív a {phoneMasked} számon.',
-    time: '24–48 órán belül',
+    body: 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: {phoneMasked}.',
+    time: '',
   },
   helyettunk_ujegyke: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} beküldi a meghatalmazást',
-    body: 'Általában 1 munkanapon belül. Utána értesítést kapsz, és 4 napod lesz jóváhagyni az ONYA-ban.',
-    time: 'általában 1 munkanap',
+    body: 'Utána értesítést kapsz, és 4 napod lesz jóváhagyni az ONYA-ban.',
+    time: '',
   },
   helyettunk_ellenorzes: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} ellenőrzi, hogy él-e a meghatalmazás',
-    body: 'A jóváhagyás után a NAV-nál kb. 20 perc, nálunk általában pár óra.',
-    time: 'általában pár óra',
+    body: 'A jóváhagyásod után ellenőrizzük, és szólunk, ha él.',
+    time: '',
   },
   helyettunk_bekuldes: {
     kicker: 'Most {firstName} dolgozik',
     title: '{firstName} beküldi a bejelentésedet',
-    body: 'Általában 1 munkanapon belül, a saját belépésével, meghatalmazottként. A vállalkozásod azon a napon indul, amikor beküldi.',
-    time: 'általában 1 munkanap',
+    body: 'A saját belépésével, meghatalmazottként. A vállalkozásod azon a napon indul, amikor beküldi.',
+    time: '',
   },
   helyettunk_adoszam: {
     kicker: 'Most mi dolgozunk',
     title: 'Rögzítjük az adószámodat',
-    body: 'A bejelentés elment a NAV-hoz. Átnézzük az értesítést, és általában 1 munkanapon belül rögzítjük az adószámodat.',
-    time: 'általában 1 munkanap',
+    body: 'A bejelentés elment a NAV-hoz. Átnézzük az értesítést, és rögzítjük az adószámodat.',
+    time: '',
   },
 };
 /** Under every waiting card. Content `bekotes.varakozas.eszkalacio`. */
@@ -1726,7 +1726,7 @@ export const START_MODE_TEXTS = {
   title: 'Hogyan jelentsük be a vállalkozásodat?',
   sub: 'Bármelyiket választod, később módosíthatod.',
   onalloTitle: 'Magam jelentem be',
-  onalloBody: 'Lépésről lépésre megmutatjuk, mit hova jelölj a NAV oldalán. Kb. 10–15 perc. Ügyfélkapu+ vagy DÁP kell hozzá.',
+  onalloBody: 'Lépésről lépésre megmutatjuk, mit hova jelölj a NAV oldalán. Ügyfélkapu+ vagy DÁP kell hozzá.',
   onalloButton: 'Ezt választom',
   segitettBadge: 'Ha nem boldogulsz vele',
   segitettTitle: 'Intézzétek helyettem',
@@ -1741,7 +1741,7 @@ export const ASSIST_TEXTS = {
   evCardBody: 'Felhívunk, átnézzük veled az adataidat, és {firstName} a saját belépésével, meghatalmazottként bejelenti a vállalkozásodat. Neked: pár adat, egy jóváhagyás az ONYA-ban (a NAV online nyomtatványkitöltője) és egy engedély itt – a kérdőívet a hívásban együtt is kitölthetjük.',
   mhCardBadge: 'Megcsináljuk helyetted',
   mhCardTitle: 'Megcsináljuk helyetted a meghatalmazást',
-  mhCardBody: '{firstName} beküldi a NAV-nak, te csak jóváhagyod az ONYA-ban (a NAV online nyomtatványkitöltője), 4 napon belül. Kb. 3 perc a részed.',
+  mhCardBody: '{firstName} beküldi a NAV-nak, te csak jóváhagyod az ONYA-ban (a NAV online nyomtatványkitöltője), 4 napon belül.',
   cardButton: 'Ezt kérem',
   guideLink: 'Nem boldogulsz vele? Intézzük helyetted',
   /** The strip inside the self-service meghatalmazás guide (owner order 3: "ki kell emelni"). */
@@ -1763,13 +1763,13 @@ export const ASSIST_TEXTS = {
   /** [OWNER] the EV registration and the meghatalmazás assists only. Assisted CHANGES are prepaid (SPEC §28.K.1, FEE_TEXTS). */
   free: 'Ezért nem fizetsz külön.',
   sendButton: 'Kérem a visszahívást',
-  toast: 'Megkaptuk. Kollégánk 24–48 órán belül hív.',
+  toast: 'Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.',
   cancelLink: 'Mégis magam csinálom',
   cancelSheetTitle: 'Mégis magad intézed?',
   cancelSheetBody: 'Rendben. A visszahívást is lemondjuk. Ha a meghatalmazást már beküldtük, azt jóváhagyhatod: az így is jó.',
   cancelButton: 'Igen, magam intézem',
   approveTitle: 'Hagyd jóvá a meghatalmazást a NAV-nál',
-  approveSub: '{hatarido} (még {days} nap). Kb. 3 perc az ONYA-ban.',
+  approveSub: '{hatarido} (még {days} nap), az ONYA-ban.',
   approveLastDay: 'Ma van az utolsó nap: hagyd jóvá ma.',
   /** The day after the shown due day (NAV's real 4 × 24 hours are not over yet). */
   approveAfterDue: 'Ma még jóváhagyhatod, de siess: ha ma nem hagyod jóvá, a NAV törli.',
@@ -1801,7 +1801,7 @@ export const ASSIST_TEXTS = {
   consentInstruction:
     'Az adatokat én adtam meg és ellenőriztem. Kérem, hogy {accountantName} ezekkel az adatokkal, meghatalmazottként küldje be a vállalkozásom bejelentését. Tudom, hogy beküldés után nem lehet visszavonni, és a vállalkozásom a beküldés napján indul.',
   consentButton: 'Engedélyezem a bejelentést',
-  consentToast: 'Megkaptuk. {firstName} általában 1 munkanapon belül beküldi.',
+  consentToast: 'Megkaptuk. {firstName} beküldi, és szólunk.',
   consentStale: 'Módosítottad a kérdőívet, ezért engedélyezd újra.',
   filedTitle: 'Bejelentettük a vállalkozásodat!',
   filedBody: 'Elment a NAV-hoz ({date}). Az értesítést itt meg is nézheted.',
@@ -1811,18 +1811,18 @@ export const ASSIST_TEXTS = {
 /** The numbered "így megy" list of the confirm sheet (actor = enums JourneyActor). Content `helyettunk.lepesek.<kind>.<i>`. */
 export const ASSIST_STEP_LIST: Record<'vallalkozas_bejelentes' | 'meghatalmazas', readonly { actor: 'te' | 'konyvelo' | 'csapat' | 'nav'; text: string; time: string }[]> = {
   vallalkozas_bejelentes: [
-    { actor: 'csapat', text: 'Felhívunk, és megbeszéljük.', time: '24–48 órán belül' },
-    { actor: 'te', text: 'Kitöltöd a kérdőívet (a hívásban együtt is kitölthetjük), és elfogadod a szerződést.', time: 'kb. 10 perc' },
-    { actor: 'konyvelo', text: '{firstName} beküldi a meghatalmazást.', time: 'általában 1 munkanap' },
-    { actor: 'te', text: 'Jóváhagyod az ONYA-ban.', time: '4 napon belül, kb. 3 perc' },
-    { actor: 'te', text: 'Átnézed az adataidat, és engedélyezed a bejelentést.', time: 'kb. 2 perc' },
-    { actor: 'konyvelo', text: '{firstName} bejelenti a vállalkozásodat.', time: 'általában 1 munkanap' },
-    { actor: 'nav', text: 'Megkapod az adószámodat.', time: 'általában azonnal' },
+    { actor: 'csapat', text: 'Felhívunk, és megbeszéljük.', time: '' },
+    { actor: 'te', text: 'Kitöltöd a kérdőívet (a hívásban együtt is kitölthetjük), és elfogadod a szerződést.', time: '' },
+    { actor: 'konyvelo', text: '{firstName} beküldi a meghatalmazást.', time: '' },
+    { actor: 'te', text: 'Jóváhagyod az ONYA-ban.', time: '4 napon belül' },
+    { actor: 'te', text: 'Átnézed az adataidat, és engedélyezed a bejelentést.', time: '' },
+    { actor: 'konyvelo', text: '{firstName} bejelenti a vállalkozásodat.', time: '' },
+    { actor: 'nav', text: 'Megkapod az adószámodat.', time: '' },
   ],
   meghatalmazas: [
-    { actor: 'csapat', text: 'Felhívunk, és elmondjuk, mi jön.', time: '24–48 órán belül' },
-    { actor: 'konyvelo', text: '{firstName} beküldi a meghatalmazást.', time: 'általában 1 munkanap' },
-    { actor: 'te', text: 'Jóváhagyod az ONYA-ban.', time: '4 napon belül, kb. 3 perc' },
+    { actor: 'csapat', text: 'Felhívunk, és elmondjuk, mi jön.', time: '' },
+    { actor: 'konyvelo', text: '{firstName} beküldi a meghatalmazást.', time: '' },
+    { actor: 'te', text: 'Jóváhagyod az ONYA-ban.', time: '4 napon belül' },
     { actor: 'konyvelo', text: '{firstName} ellenőrzi, hogy él.', time: 'pár óra' },
   ],
 };
@@ -1842,7 +1842,7 @@ export const ASSIST_STATUS_CLIENT_TEXT: Record<
   | 'lezarva',
   string
 > = {
-  visszahivas_kerve: 'Visszahívást kértél. Kollégánk 24–48 órán belül hív.',
+  visszahivas_kerve: 'Visszahívást kértél. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.',
   // SPEC §28.K.1: only change kinds use it ({dij} = "4 999").
   dijra_var: 'Megkaptuk az adataidat. Ha kifizeted a díjat ({dij} Ft), {firstName} nekilát.',
   egyeztetve: 'Beszéltünk. Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a meghatalmazást, utána jóváhagyod.',
@@ -1850,7 +1850,7 @@ export const ASSIST_STATUS_CLIENT_TEXT: Record<
   meghatalmazas_lejart: 'Lejárt a 4 nap. {firstName} újra beküldi a meghatalmazást, és szólunk.',
   meghatalmazas_jovahagyva: 'Jóváhagytad. {firstName} ellenőrzi, hogy él-e a meghatalmazás.',
   meghatalmazas_el: 'Él a meghatalmazás. Nézd át az adataidat, és engedélyezd a bejelentést.',
-  ugyfel_engedelyezte: 'Engedélyezted. {firstName} általában 1 munkanapon belül beküldi a bejelentésedet.',
+  ugyfel_engedelyezte: 'Engedélyezted. {firstName} beküldi a bejelentésedet.',
   bejelentes_bekuldve: 'Bejelentettük a vállalkozásodat. Rögzítjük az adószámodat.',
   kesz: 'Elindult a vállalkozásod. Jöhet a következő lépés.',
   visszavonva: 'Lemondtad. Ha mégis kéred, bármikor szólhatsz.',
@@ -1863,7 +1863,7 @@ export const ASSIST_STATUS_CLIENT_TEXT_MH: Partial<Record<keyof typeof ASSIST_ST
 /** SPEC §27.4.4 S12 – chamber registration row (content `vallalkozas.kamara.<key>`). */
 export const KAMARA_TEXTS = {
   title: 'Regisztrálj a kamaránál',
-  sub: '{hatarido} (5 munkanap). Kb. 10 perc a kamara oldalán.',
+  sub: '{hatarido} (5 munkanap).',
   body: 'A törvény kéri minden új vállalkozótól. Kell hozzá az adószámod. A kamarai tagsággal évi 5 000 Ft kamarai hozzájárulás jár: ezt a kamara kéri, nem mi.',
   openButton: 'Megnyitom a kamara oldalát',
   doneButton: 'Megcsináltam',
@@ -2150,15 +2150,15 @@ export const ALLOWANCE_TEXTS = {
   kapu: {
     title: 'Jár neked adókedvezmény?',
     body: 'Például gyerekek után, 25 év alatt, édesanyáknak, friss házasoknak vagy súlyos betegség miatt. Ha jár, kevesebb adót fizetsz.',
-    primary: 'Megnézem (kb. 3 perc)',
+    primary: 'Megnézem',
     nemJar: 'Nem jár',
     nemJarToast: 'Rendben. Ha változik valami, a Fiókban bármikor megadhatod.',
     kesobb: 'Később',
   },
   /** Főoldal hint (ClientHome.allowancesHint). */
-  hint: { text: 'Jár neked adókedvezmény? Nézd meg, kb. 3 perc.', button: 'Megnézem', close: 'Most nem' },
+  hint: { text: 'Jár neked adókedvezmény? Nézd meg.', button: 'Megnézem', close: 'Most nem' },
   /** Journey row (§28.3.4). */
-  journeySub: 'Te · kb. 3 perc · ha jár',
+  journeySub: 'Te · ha jár',
   /** Fiók → "Adózás" row and its status sub-line. */
   fiok: {
     section: 'Adózás',
@@ -2333,7 +2333,7 @@ export const ALLOWANCE_NOTIFICATION_TEXTS = {
     elutasitva: { title: '{firstName} átnézte a kedvezményeidet', body: 'Egy kedvezmény most nem jár. Az appban megnézheted, miért.' },
   },
   allowance_check: {
-    ev_eleje: { title: 'Új év: nézd át a kedvezményeidet', body: 'Változott valami a családodban? Kb. 1 perc.' },
+    ev_eleje: { title: 'Új év: nézd át a kedvezményeidet', body: 'Változott valami a családodban?' },
     lejar: { title: 'Ebben a hónapban véget ér: {label}', body: 'Utána több SZJA-val számolunk. {firstName} tud róla.' },
   },
   digest: 'Kedvezmény vár: {n} ügyfél',
@@ -2419,12 +2419,12 @@ export const CHANGE_TEXTS = {
   },
   /** Hub rows (title + one line). */
   sorok: {
-    valtozas_szekhely: { title: 'Költözik a székhelyed', line: 'Új cím a NAV-nál. Kb. 10 perc.' },
-    valtozas_tevekenyseg: { title: 'Új vagy más tevékenység', line: 'Új munka, új ÖVTJ-kód. Kb. 10 perc.' },
-    valtozas_telephely: { title: 'Új telephely', line: 'Üzlet, műhely, iroda másik címen. Kb. 10 perc.' },
-    valtozas_szuneteltetes: { title: 'Szüneteltetés', line: 'Szünetet tartasz a vállalkozásodban. Kb. 10 perc.' },
+    valtozas_szekhely: { title: 'Költözik a székhelyed', line: 'Új cím a NAV-nál.' },
+    valtozas_tevekenyseg: { title: 'Új vagy más tevékenység', line: 'Új munka, új ÖVTJ-kód.' },
+    valtozas_telephely: { title: 'Új telephely', line: 'Üzlet, műhely, iroda másik címen.' },
+    valtozas_szuneteltetes: { title: 'Szüneteltetés', line: 'Szünetet tartasz a vállalkozásodban.' },
     valtozas_adoadat: { title: 'Adózási adat változik', line: 'Például munkaviszonyt kezdesz vagy befejezel. Ezt a könyvelőd intézi.' },
-    valtozas_folytatas: { title: 'Újrakezdés szünetelés után', line: 'Újra dolgoznál a vállalkozásodban. Kb. 10 perc.' },
+    valtozas_folytatas: { title: 'Újrakezdés szünetelés után', line: 'Újra dolgoznál a vállalkozásodban.' },
   } as Record<_ChangeKind, { title: string; line: string }>,
   /** Info pages /valtozas/[fajta]: "Mit jelent?" + "Mire figyelj?" (final unless marked [ELLENŐRIZENDŐ]). */
   info: {
@@ -2511,20 +2511,20 @@ export const CHANGE_FACTS: readonly { key: string; text: string; verified: boole
 ];
 /** "Így megy" list of the assisted change sheet (SPEC §28.5.5 + §28.K.1 prepayment; the 'dij' row only when a fee applies). */
 export const CHANGE_STEP_LIST: readonly { actor: _JourneyActorKey; text: string; time: string; onlyWithFee?: boolean }[] = [
-  { actor: 'te', text: 'Megadod az új adatokat.', time: 'kb. 3 perc' },
-  { actor: 'te', text: 'Kifizeted a díjat ({dij} Ft).', time: 'kb. 1 perc', onlyWithFee: true },
-  { actor: 'konyvelo', text: '{firstName} átnézi, és ha kell, kiegészíti.', time: 'általában 1 munkanap' },
-  { actor: 'te', text: 'Jóváhagyod az appban.', time: 'kb. 1 perc' },
-  { actor: 'konyvelo', text: '{firstName} meghatalmazottként beküldi.', time: 'általában 1 munkanap' },
+  { actor: 'te', text: 'Megadod az új adatokat.', time: '' },
+  { actor: 'te', text: 'Kifizeted a díjat ({dij} Ft).', time: '', onlyWithFee: true },
+  { actor: 'konyvelo', text: '{firstName} átnézi, és ha kell, kiegészíti.', time: '' },
+  { actor: 'te', text: 'Jóváhagyod az appban.', time: '' },
+  { actor: 'konyvelo', text: '{firstName} meghatalmazottként beküldi.', time: '' },
   { actor: 'nav', text: 'A NAV elfogadja, és szólunk.', time: '' },
 ];
 /** Client status line of a change assist (content valtozas.allapot.<status>); the others use ASSIST_STATUS_CLIENT_TEXT. */
 export const CHANGE_STATUS_CLIENT_TEXT = {
-  visszahivas_kerve: 'Visszahívást kértél. Kollégánk 24–48 órán belül hív.',
+  visszahivas_kerve: 'Visszahívást kértél. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.',
   dijra_var: 'Fizesd ki a díjat ({dij} Ft), és {firstName} nekilát.',
   egyeztetve: 'Megkaptuk. {firstName} átnézi az adataidat.',
   meghatalmazas_el: 'Nézd át, mit jelentünk be, és engedélyezd.',
-  ugyfel_engedelyezte: 'Engedélyezted. {firstName} általában 1 munkanapon belül beküldi.',
+  ugyfel_engedelyezte: 'Engedélyezted. {firstName} beküldi.',
   bejelentes_bekuldve: 'Beküldtük. Amint a NAV elfogadta, szólunk.',
   kesz: 'Kész: a NAV elfogadta. Az értesítést a dossziédban találod.',
 } as const;
@@ -2632,7 +2632,7 @@ export const CHANGE_FORM_TEXTS = {
 } as const;
 /** Notification variants of the change kinds (SPEC §28.5.5, §28.8). */
 export const CHANGE_NOTIFICATION_TEXTS = {
-  assist_consent_needed: { valtozas: { title: 'Nézd át, mit jelentünk be', body: 'Ha rendben van, engedélyezd. Kb. 1 perc.' } },
+  assist_consent_needed: { valtozas: { title: 'Nézd át, mit jelentünk be', body: 'Ha rendben van, engedélyezd.' } },
   assist_ev_filed: { valtozas: { title: 'Beküldtük a változásbejelentésedet', body: 'Amint a NAV elfogadta, szólunk.' } },
   assist_change_done: {
     title: 'Kész: {kindLabel}',
@@ -2745,7 +2745,7 @@ export const CHANGE_GUIDE_VERSION = '2026-11-19.ot';
 export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   valtozas_szekhely: {
     title: 'Így jelented be a költözést',
-    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés. Kb. 10 perc, gépen a legkényelmesebb.',
+    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2778,7 +2778,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_tevekenyseg: {
     title: 'Így jelentesz be új tevékenységet',
-    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés. Kb. 10 perc.',
+    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2806,7 +2806,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_telephely: {
     title: 'Így jelentesz be telephelyet',
-    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés. Kb. 10 perc.',
+    intro: 'A Vállalkozói Ügysegédben 4 lépés: Személyi adatok, Vállalkozói címadatok, Tevékenységek, Ellenőrzés.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2829,7 +2829,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_szuneteltetes: {
     title: 'Így szünetelteted a vállalkozásodat',
-    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. A kezdőnapot utólag nem lehet módosítani, ezért előbb beszéld meg {firstNameWith}. A szüneteltetés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
+    intro: 'A Vállalkozói Ügysegédben. A kezdőnapot utólag nem lehet módosítani, ezért előbb beszéld meg {firstNameWith}. A szüneteltetés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -2860,7 +2860,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_adoadat: {
     title: 'Így jelented be az adózási adatod változását',
-    intro: 'Ezt az ONYA-ban, a T101E nyomtatványon kell bejelenteni, nem a Vállalkozói Ügysegédben. Általában {firstName} intézi; ha magad csinálod, kb. 15 perc.',
+    intro: 'Ezt az ONYA-ban, a T101E nyomtatványon kell bejelenteni, nem a Vállalkozói Ügysegédben. Általában {firstName} intézi, de magad is beadhatod.',
     validUntil: '2027-12-31',
     steps: [
       {
@@ -2905,7 +2905,7 @@ export const CHANGE_GUIDE_TEMPLATES: Record<_ChangeKind, GuideTemplate> = {
   },
   valtozas_folytatas: {
     title: 'Így kezded újra a vállalkozásodat',
-    intro: 'A Vállalkozói Ügysegédben, kb. 10 perc. Az újrakezdés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
+    intro: 'A Vállalkozói Ügysegédben. Az újrakezdés NAV-os lapjairól még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
     validUntil: UGYSEGED_GUIDE_VALID_UNTIL,
     steps: [
       UGYSEGED_BELEPES,
@@ -3076,7 +3076,7 @@ export const EXPLAINERS_28: readonly ExplainerDefault[] = [
     title: 'Adókedvezmények',
     what: 'Kedvezmény járhat gyerekek után, 25 év alatt, édesanyáknak, friss házasoknak vagy súlyos betegség miatt. Ha jár, kevesebb adót fizetsz.',
     why: 'Pár igen–nem kérdésből {firstName} megnézi, mi jár neked. Amit jóváhagy, azt beszámoljuk az adódba. Neveket, TAJ-számot nem kérünk.',
-    where: 'A Fiókban, az „Adókedvezményeid” sorban, kb. 3 perc. Ha változik valami, bármikor módosíthatod.',
+    where: 'A Fiókban, az „Adókedvezményeid” sorban. Ha változik valami, bármikor módosíthatod.',
     icon: 'igazolas',
     fields: [],
   },
@@ -3157,7 +3157,7 @@ export const EXPLAINERS_28: readonly ExplainerDefault[] = [
     title: 'Éves zárás',
     what: 'Az év végén {firstName} elkészíti az éves SZJA-bevallásodat (katánál a kata-nyilatkozatot) és az iparűzési adó bevallását.',
     why: 'Ez a havidíjon felül külön díjas: a díjat a kérdőív beküldésekor fizeted, és előre látod, mennyi.',
-    where: 'Januártól a Főoldalon és az „Éves zárás” oldalon. Kb. 5 perces kérdőívvel indul.',
+    where: 'Januártól a Főoldalon és az „Éves zárás” oldalon.',
     icon: 'bevallas',
     fields: [],
   },
@@ -3292,13 +3292,13 @@ export const FEE_TEXTS = {
 // ---------- §28.K.2 A – monthly check-in (content havi.*) ----------
 export const CHECKIN_TEXTS = {
   title: 'Változott valami {honap} óta?',
-  sub: 'Pár igen–nem kérdés, kb. 1 perc. Ha semmi nem változott, egy koppintás.',
+  sub: 'Pár igen–nem kérdés. Ha semmi nem változott, egy koppintás.',
   yes: 'Igen',
   noneButton: 'Nem változott semmi',
   nextButton: 'Tovább',
   noneToast: 'Köszönjük! Jövő hónapban újra rákérdezünk.',
   progress: '{i}/{n}',
-  homeCard: { title: 'Változott valami?', body: 'Havonta egyszer rákérdezünk. Kb. 1 perc.', button: 'Megnézem' },
+  homeCard: { title: 'Változott valami?', body: 'Havonta egyszer rákérdezünk.', button: 'Megnézem' },
   egyebPlaceholder: 'Írd le pár szóban (nem kötelező)',
   /** Prefix of the message the 'egyeb' answer sends to the accountant. */
   egyebMessagePrefix: 'Havi ellenőrzés:',
@@ -3334,7 +3334,7 @@ export const CHECKIN_FOLLOWUP_TEXTS = {
   pensionSince: 'Mióta kapod?',
   koltozesSzekhely: 'A székhelyem költözik',
   koltozesTelephely: 'Új telephelyem lesz',
-  csalad: 'Ezt az adókedvezmény-kérdőívben adod meg, kb. 3 perc.',
+  csalad: 'Ezt az adókedvezmény-kérdőívben adod meg.',
   csaladButton: 'Megnyitom',
   kataCeges:
     'Ha egy cég vagy egyéni vállalkozó fizet neked, a katád a fizetés előtti nappal megszűnik. Előbb beszélj {firstNameWith}: lehet, hogy jobb, ha előtte átállsz átalányadózásra.',
@@ -3392,11 +3392,11 @@ export const CHECKIN_PANEL_TEXTS = {
 export const ANNUAL_TEXTS = {
   E0: {
     title: 'Éves zárás {ev}',
-    text: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} az SZJA-bevallásodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
-    textKata: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
+    text: 'Pár kérdés az évedről. Ebből készíti el {firstName} az SZJA-bevallásodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
+    textKata: 'Pár kérdés az évedről. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását. Díja: {dij} Ft, a végén fizeted.',
     /** SPEC §32: while the annual-closing fee is switched off (EVES_KAPCSOLOK.evesZarasDij) – no fee sentence. */
-    textNoFee: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} az szja-bevallásodat és az iparűzési adó bevallását.',
-    textKataNoFee: 'Pár kérdés az évedről, kb. 5 perc. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását.',
+    textNoFee: 'Pár kérdés az évedről. Ebből készíti el {firstName} az szja-bevallásodat és az iparűzési adó bevallását.',
+    textKataNoFee: 'Pár kérdés az évedről. Ebből készíti el {firstName} a kata-nyilatkozatodat és az iparűzési adó bevallását.',
     button: 'Kezdjük',
   },
   E1: {
@@ -3501,15 +3501,15 @@ export const REMINDER_TEXTS = {
     hipa: { title: 'Közeleg az iparűzési adóelőleg: {osszeg} Ft', body: 'Határidő: {hatarido}. A számlaszámot az appban találod.' },
   },
   upload_reminder: {
-    kivonat: { title: 'Töltsd fel a {honap} bankszámlakivonatot', body: 'Fotó vagy PDF, vagy továbbítsd e-mailben. Kb. 1 perc.' },
+    kivonat: { title: 'Töltsd fel a {honap} bankszámlakivonatot', body: 'Fotó vagy PDF, vagy továbbítsd e-mailben.' },
     nyugta: { title: 'Vannak {honap} nyugtáid?', body: 'Töltsd fel őket, vagy a pénztárgép havi összesítőjét.' },
   },
   request_reminder: {
-    nap3: { title: '{firstName} vár valamire tőled', body: '{title} – 3 napja kérte. Kb. 1 perc.' },
+    nap3: { title: '{firstName} vár valamire tőled', body: '{title} – 3 napja kérte.' },
     nap7: { title: '{firstName} még mindig vár: {title}', body: 'Egy hete kérte. Ha elakadtál, írj neki.' },
   },
   nudge: {
-    egy: { title: '{mi} még rád vár', body: 'Pár perc az egész. Ha elakadtál, írj nekünk.' },
+    egy: { title: '{mi} még rád vár', body: 'Ha elakadtál, írj nekünk.' },
     tobb: { title: '{n} dolog vár rád', body: 'Nézd meg a Főoldalon.' },
     /** [ELLENŐRIZENDŐ Evectv.] – sent only after B4 confirmed the 2-year rule. */
     szunetel_ket_ev: { title: 'Hamarosan két éve szünetel a vállalkozásod', body: 'Ha {datum}-ig nem kezded újra, a NAV törölheti. Beszéljünk róla.' },
@@ -3799,7 +3799,7 @@ export const RESPONSE_TIME_SETTINGS_ERROR = 'Ide ne írj időt: a lehető leggyo
 
 // ---------- §28.K.17 notifications (content notif.<kind>[.<variant>].title|body) ----------
 export const K28_NOTIFICATION_TEXTS = {
-  checkin_due: { title: 'Változott valami {honap} óta?', body: 'Pár igen–nem kérdés, kb. 1 perc.' },
+  checkin_due: { title: 'Változott valami {honap} óta?', body: 'Pár igen–nem kérdés.' },
   fee_due: {
     valtozas: { title: 'Fizesd ki a bejelentés díját', body: '{dij} Ft. Utána {firstName} nekilát.' },
     eves_zaras: { title: 'Fizesd ki az éves zárás díját', body: '{dij} Ft. Utána {firstName} nekilát.' },

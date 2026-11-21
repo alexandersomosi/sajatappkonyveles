@@ -20,7 +20,7 @@ export function registerClientK29gRoutes(r: Hono<Env>, deps: Deps): void {
     const cl = await client(c);
     const v = await guidedAction(deps, deps.db, cl, b.action, b.key as never);
     // only the pause / resume / done moments are worth a line in the log (not every step)
-    if (b.action === 'later' || b.action === 'resume' || b.action === 'done_seen') await auditC(c, deps.db, `onboarding.guided_${b.action}`, { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { key: b.key ?? null } });
+    if (b.action === 'later' || b.action === 'resume' || b.action === 'done_seen' || b.action === 'callback_offer_skip') await auditC(c, deps.db, `onboarding.guided_${b.action}`, { targetType: 'client', targetId: cl.id, clientId: cl.id, details: { key: b.key ?? null } });
     return c.json(v);
   });
 }

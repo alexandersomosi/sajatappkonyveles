@@ -1,0 +1,26 @@
+{
+  "//": "Adózz.hu v2 – típusellenőrzés webes Reactre (a kod/panel/tsconfig.json beállításai). A típusokat a kod/panel/node_modules-ból CSAK OLVASSA. Futtatás: node ../../panel/node_modules/typescript/bin/tsc -p tsconfig.web.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "react": ["../../panel/node_modules/@types/react"],
+      "react/*": ["../../panel/node_modules/@types/react/*"]
+    },
+    "typeRoots": ["../../panel/node_modules/@types", "../../panel/node_modules"],
+    "types": ["vite/client", "node"]
+  },
+  "include": ["index.ts", "tokenek.ts", "ikon/**/*.ts", "logo/**/*.ts", "web/**/*.ts", "web/**/*.tsx"]
+}

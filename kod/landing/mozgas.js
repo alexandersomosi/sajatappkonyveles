@@ -14,6 +14,12 @@
      mellette (gépen) vagy alatta (telefonon) a lépés szövege; lépésenként egy részes haladásjelző. Az utolsó lépés („Gépen is
      ugyanez”): a telefon kisebb lesz és félrehúzódik, mögötte beúszik a böngészőablak a gépes nézettel. Csökkentett mozgásnál
      ugyanez, átúszás és animáció nélkül (a rétegek a végállapotukban).
+     Telefonon (keskeny nézet, ≤ 980 px; tulaj 11-21): minden görgetési mozdulat pontosan EGY lépés. A lépések egy-egy színpadnyi
+     magasak, mindegyik elején egy láthatatlan beakadási pont (.beakado, CSS scroll-snap, scroll-snap-stop: always), és egy-egy a
+     szakasz tetején (.beakado-be) és a lista végén (.beakado-ki). A gyökér görgetője (html.beakad: scroll-snap-type: y mandatory)
+     CSAK a két szélső pont között kapcsol be: a szakasz előtt és után, és a két szélső ponton is szabad a görgetés, így sehol nem
+     ragad be. Horgony-linkre (menü) és fókuszváltásra a beakadás rövid időre kikapcsol, hogy a link oda vigyen, ahová kell.
+     A telefon mellett egy szöveg nélküli, pattogó nyíl (.szinpad-nyil) jelzi, hogy lefelé kell görgetni; az utolsó lépésnél eltűnik.
    Csak transform/opacity mozog (CSS); a telefonon belüli számokat requestAnimationFrame lépteti. */
 (function () {
   'use strict';
@@ -155,9 +161,22 @@
     tel.appendChild(tarto);
     if (bongeszo) kepTarto.appendChild(bongeszo);
     kepTarto.appendChild(tel);
+    // a görgetést jelző nyíl (csak keskeny nézetben látszik; a színpad aria-hidden, a nyíl nem fókuszálható)
+    var nyil = d.createElement('span'); nyil.className = 'szinpad-nyil'; nyil.setAttribute('aria-hidden', 'true');
+    kepTarto.appendChild(nyil);
     szinpad.appendChild(kepTarto); szinpad.appendChild(halado); szinpad.appendChild(szovegek);
     b.insertBefore(szinpad, b.firstChild);
     b.classList.add('szinpad-mod');
+
+    // beakadási pontok (csak keskeny nézetben számítanak, ld. stilus.css): lépésenként egy, a lista végén és a szakasz tetején egy-egy
+    function pont(szulo, nev) {
+      var p = d.createElement('i'); p.className = 'beakado' + (nev ? ' ' + nev : ''); p.setAttribute('aria-hidden', 'true');
+      szulo.appendChild(p); return p;
+    }
+    var pontok = lepesek.map(function (l) { return pont(l); });
+    var pontKi = pont(lepesek[n - 1], 'beakado-ki');
+    var szakasz = b.closest ? b.closest('section') : null;
+    var pontBe = szakasz ? pont(szakasz, 'beakado-be') : pontok[0];
 
     var lista = b.querySelector('.blepesek');
     var aktiv = -1, fut = false, keres = 0;
@@ -179,12 +198,20 @@
     }
     function korlat(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
 
+    // beakadás (html.beakad) be/ki; horgony-linkre és fókuszváltásra rövid időre szabad (amíg az ugrás tart, utána újra számol)
+    var beakad = false, szabad = false, szabadT = 0;
+    function beallit(be) { if (be !== beakad) { beakad = be; html.classList.toggle('beakad', be); } }
+    function elenged() { szabad = false; kerj(); }
+    function szabadit(ms) { szabad = true; beallit(false); clearTimeout(szabadT); szabadT = setTimeout(elenged, ms || 800); }
+    // a pont beakadási helye a mostani helyzethez képest (px): ennyit kell lefelé görgetni, hogy a pont a helyére érjen
+    function tav(p) { return p.getBoundingClientRect().top - (parseFloat(window.getComputedStyle(p).scrollMarginTop) || 0); }
+
     function szamol() {
       keres = 0;
       var vh = window.innerHeight || html.clientHeight;
       var br = b.getBoundingClientRect();
       var tops = lepesek.map(function (l) { return l.getBoundingClientRect(); });
-      var k = 0, toltes = [];
+      var k = 0, toltes = [], kell = false;
       if (szeles.matches) {
         // gépen: az a lépés aktív, amelyiken a képernyő közepe áll
         var vonal = vh * 0.5;
@@ -198,14 +225,19 @@
         var m = Math.max(0, lista.getBoundingClientRect().bottom - szinpad.getBoundingClientRect().bottom);
         toltes[n - 1] = a <= 0 ? 0 : korlat(a / Math.max(1, a + m));
       } else {
-        // telefonon: a ragadós szakasz görgetési hosszát egyenlően osztjuk el a lépések között
+        // telefonon: a (láthatatlan) lépéslista a ragadós színpad alatt görög, lépésenként egy színpadnyi magas (CSS).
+        // x: hány lépésnyit görgetett a lista a ragadás kezdete óta (j = a j. lépés beakadási pontja); a lépés a félútnál vált,
+        // nyugalomban (a j. ponton) a haladásjelző első j + 1 szakasza teli
         var fent = parseFloat(window.getComputedStyle(szinpad).top) || 0;
-        var hossz = tops[n - 1].bottom - tops[0].top - szinpad.offsetHeight;
-        var p = hossz > 0 ? (fent - tops[0].top) / hossz : 0;
-        var x = korlat(p) * n;
-        k = Math.min(n - 1, Math.floor(x));
-        for (var j = 0; j < n; j++) toltes.push(korlat(x - j));
+        var lh = Math.max(1, n > 1 ? tops[1].top - tops[0].top : tops[0].height);
+        var x = (fent - tops[0].top) / lh;
+        k = Math.max(0, Math.min(n - 1, Math.round(x)));
+        for (var j = 0; j < n; j++) toltes.push(korlat(x + 1 - j));
+        // beakadás csak a szakasz teteje és a lista vége KÖZÖTT (a két szélső ponton már nem: onnan szabadon tovább lehet menni)
+        kell = tav(pontBe) < -3 && tav(pontKi) > 3;
       }
+      beallit(kell && !szabad);
+      szinpad.classList.toggle('vegen', k === n - 1);
       toltok.forEach(function (t, j) {
         var f = csendes ? (j <= k ? 1 : 0) : toltes[j];
         t.style.transform = 'scaleX(' + f.toFixed(3) + ')';
@@ -216,7 +248,16 @@
       aktival(k, latszik);
     }
     function kerj() { if (!keres) keres = window.requestAnimationFrame(szamol); }
-    window.addEventListener('scroll', kerj, { passive: true });
+    window.addEventListener('scroll', function () {
+      if (szabad) { clearTimeout(szabadT); szabadT = setTimeout(elenged, 250); }   // amíg az ugrás görget, szabad marad
+      kerj();
+    }, { passive: true });
+    d.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if (a) szabadit();
+    }, true);
+    d.addEventListener('focusin', function () { szabadit(); });
+    window.addEventListener('hashchange', function () { szabadit(); });
     window.addEventListener('resize', kerj);
     if (szeles.addEventListener) szeles.addEventListener('change', kerj); else if (szeles.addListener) szeles.addListener(kerj);
     jelol(0);

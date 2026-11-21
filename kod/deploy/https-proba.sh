@@ -45,7 +45,7 @@ done
 req GET api /health
 chk "health: névtelenül csak ok / version / db (módok nélkül)" test "$(j .ok)" = true -a "$(j .appEnv)" = null -a "$(j .modes)" = null
 req GET api /config
-chk "config: APP_ENV=demo, DEMO jelölve" test "$(j .appEnv)" = demo -a "$(j .demo)" = true -a "$(j .simplepayMode)" = demo
+chk "config: APP_ENV=demo, DEMO jelölve, k29 fizetés (demo/stripe)" test "$(j .appEnv)" = demo -a "$(j .demo)" = true -a "$(j .paymentProvider)" != disabled
 curl -sS -D "$W/h" -o /dev/null "https://api.$D/api/v1/health"
 chk "API: Cache-Control no-store" grep -qi '^cache-control: no-store' "$W/h"
 for h in app konyvelo; do
@@ -157,14 +157,29 @@ req PUT app /client/profile "$(jq -nc --arg aj "$NAJ" --arg asz "$NTSZ-1-41" '{f
 chk "kérdőív (adatok, ellenőrző számjegyek)" test "$ST" = 200 -a "$(j .adoazonositoJelMasked)" != null
 req GET app /config; ITEMS=$(j '[.legal | to_entries[] | select(.key|test("^(aszf|adatkezeles|megbizasi_szerzodes)$")) | {docType:.key,version:.value}]')
 req POST app /me/consents "{\"items\":$ITEMS}"; chk "ÁSZF + adatkezelés + megbízás elfogadva" test "$ST" = 204 -o "$ST" = 200
-req POST app /client/subscription/start '{"platform":"web","acceptedDeclarations":true}'; chk "SimplePay indítás (DEMO)" test "$ST" = 200 -a "$(j .paymentUrl)" != null
-PURL=$(j .paymentUrl); ORD=$(j .orderRef)
-ST=$(curl -sS -D "$W/h" -o "$W/b" -w '%{http_code}' "$PURL"); chk "DEMO fizetőoldal (api host, saját CSP)" bash -c "[ $ST = 200 ] && grep -q 'DEMO FIZETÉS' '$W/b' && grep -qi 'form-action .self. https://app.$D kezjegy:' '$W/h'"
-ST=$(curl -sS -o "$W/b" -w '%{http_code} %{redirect_url}' -X POST "https://api.$D/api/v1/payments/demo/pay" --data-urlencode "o=$ORD" --data-urlencode eredmeny=ok)
-B1=${ST#* }; ST=${ST%% *}; chk "sikeres fizetés szimulálása → 303 a vissza-URL-re" test "$ST" = 303
-ST=$(curl -sS -o "$W/b" -w '%{http_code} %{redirect_url}' "$B1"); B2=${ST#* }; ST=${ST%% *}
-chk "vissza-URL (aláírás ellenőrizve) → app eredményoldal" bash -c "[ $ST = 302 ] && [[ '$B2' == https://app.$D/fiok/elofizetes?eredmeny=SUCCESS* ]]"
-req GET app /client/subscription; chk "előfizetés aktív, DEMO kártya rögzítve" test "$ST" = 200 -a "$(j .status)" = active -a "$(j .card.mask)" != null
+# k8 (k7b remnant): the k29 card flow (consent hash → hosted page) instead of the retired SimplePay start; and the k8
+# bank transfer (díjbekérő) when the switch is on. PAYMENT_PROVIDER=demo: the DEMO pay page is clicked through here;
+# PAYMENT_PROVIDER=stripe (Stripe TEST): only the Checkout URL is checked – a test card is paid by hand in a browser.
+req GET app /config; PPROV=$(j .paymentProvider); ATUT=$(j .fizetes.atutalas)
+if [ "$ATUT" = true ]; then
+  req GET app /client/billing; chk "átutalás választható (/client/billing)" test "$ST" = 200 -a "$(j .transferAvailable)" = true
+fi
+req GET app '/client/subscription/consent?purpose=subscribe'; CV=$(j .version); CSH=$(j .sha256)
+chk "kártyás hozzájárulás (verzió + hash)" test "$ST" = 200 -a -n "$CV" -a "$CV" != null
+req POST app /client/subscription/start "{\"platform\":\"web\",\"purpose\":\"subscribe\",\"consentVersion\":\"$CV\",\"consentSha256\":\"$CSH\"}"
+chk "kártyás indítás ($PPROV)" test "$ST" = 200 -a "$(j .url)" != null
+PURL=$(j .url); PID=$(j .paymentId)
+if [ "$PPROV" = demo ]; then
+  ST=$(curl -sS -D "$W/h" -o "$W/b" -w '%{http_code}' "$PURL"); chk "DEMO fizetőoldal (api host, saját CSP)" bash -c "[ $ST = 200 ] && grep -q 'DEMO' '$W/b' && grep -qi 'form-action .self.' '$W/h'"
+  ST=$(curl -sS -o "$W/b" -w '%{http_code} %{redirect_url}' -X POST "https://api.$D/api/v1/payments/demo/fizetes" --data-urlencode "p=$PID" --data-urlencode valasztas=ok)
+  B1=${ST#* }; ST=${ST%% *}; chk "sikeres fizetés szimulálása → 303 a vissza-URL-re" test "$ST" = 303
+  ST=$(curl -sS -o "$W/b" -w '%{http_code} %{redirect_url}' "$B1"); B2=${ST#* }; ST=${ST%% *}
+  chk "vissza-URL → app eredményoldal" bash -c "[ $ST = 302 ] && [[ '$B2' == https://app.$D/elofizetes/eredmeny?cs=* ]]"
+  req GET app /client/subscription; chk "előfizetés aktív, DEMO kártya rögzítve" test "$ST" = 200 -a "$(j .status)" = active
+else
+  chk "Stripe TESZT Checkout URL (a fizetés kézzel, tesztkártyával)" bash -c "[[ '$PURL' == https://checkout.stripe.com/* ]]"
+  echo "      (Stripe TESZT: az ügyfél nem lesz aktív ebben a próbában – a lenti aktív-függő lépések ezért hibázhatnak)"
+fi
 printf '%%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj 3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]>>endobj\ntrailer<</Root 1 0 R>>\n%%%%EOF\n' > "$W/proba.pdf"
 MONTH=$(TZ=Europe/Budapest date +%Y-%m)
 up POST app /client/documents -F "file=@$W/proba.pdf;type=application/pdf;filename=proba_szamla.pdf" -F category=koltseg_bizonylat -F "dossierMonth=$MONTH" -F "title=Próba számla"

@@ -8,7 +8,9 @@ import { JOURNEY_STEP_TEXTS } from '../_shared/bekotes.js';
 import { GUIDED_ORDER, GUIDED_OWN_ROUTES, GUIDED_STEP_ROUTES, GUIDED_TEXTS, type GuidedAction, type GuidedState, type GuidedStepKey, type GuidedStepView, type GuidedView } from '../_shared/k29g.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { accountants, allowanceAnswers, clients, clientTaxProfiles } from '../db/schema.js';
+import { accountants, allowanceAnswers, callbackRequests, clients, clientTaxProfiles } from '../db/schema.js';
+import { CALLBACK_OFFER_TEXTS } from '../_shared/k8.js';
+import { CALLBACK_OPEN_STATUSES } from '../_shared/enums.js';
 import { todayBudapest } from '../lib/dates.js';
 import { ApiError } from '../lib/errors.js';
 import { accountantPublic, type ClientRow } from './people.js';
@@ -75,6 +77,18 @@ export async function buildGuided(deps: Deps, db: DbOrTx, cl: ClientRow, j?: Jou
     if (key === 'adoszam') {
       const done = Boolean(cl.adoszam) || cl.adoszamPending;
       steps.push({ key, title: GUIDED_TEXTS.adoszamStep, state: done ? 'kesz' : 'nyitva', route: GUIDED_STEP_ROUTES.adoszam!, timeText: done ? null : GUIDED_TEXTS.adoszamTime, actorLabel: 'Te', doneForClient: done });
+      continue;
+    }
+    if (key === 'visszahivas_ajanlat') {
+      // k8: the optional callback offer before the payment. Done when the payment step is done, when the client said
+      // "Nem kell, mehetünk tovább", or when he already talked with us (a closed callback); waiting while one is open.
+      const pay = byKey.get('elofizetes');
+      const cbs = await db.select({ status: callbackRequests.status }).from(callbackRequests).where(eq(callbackRequests.clientId, cl.id));
+      const open = cbs.some((c) => (CALLBACK_OPEN_STATUSES as readonly string[]).includes(c.status));
+      const talked = cbs.some((c) => c.status === 'teljesitve');
+      const done = pay?.state === 'kesz' || Boolean(guided?.callbackOfferSkippedAt) || talked;
+      const state = open ? 'var' : done ? 'kesz' : 'nyitva';
+      steps.push({ key, title: CALLBACK_OFFER_TEXTS.stepTitle, state, route: GUIDED_OWN_ROUTES.visszahivas_ajanlat!, timeText: null, ...(state === 'var' ? { waitText: CALLBACK_OFFER_TEXTS.waiting } : {}), actorLabel: open ? 'Csapatunk' : 'Te', doneForClient: state !== 'nyitva' });
       continue;
     }
     const js = byKey.get(key);
@@ -157,6 +171,10 @@ export async function guidedAction(deps: Deps, db: DbOrTx, cl: ClientRow, action
       g.doneSeenAt ??= now;
       g.finishedAt ??= now;
       g.pausedAt = null;
+      break;
+    case 'callback_offer_skip':
+      g.callbackOfferSkippedAt ??= now;
+      g.lastKey = 'visszahivas_ajanlat';
       break;
   }
   await writeGuided(db, cl.id, g);

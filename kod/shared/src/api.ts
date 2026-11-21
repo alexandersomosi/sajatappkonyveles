@@ -150,6 +150,8 @@ export interface PublicConfig {
   paymentProvider?: 'stripe' | 'simplepay' | 'demo' | 'disabled';
   paymentMode?: 'test' | 'live' | 'demo' | 'sandbox' | null;
   simplepayEnabled?: boolean;
+  /** k8: a NEW client may choose the bank transfer (switch kapcsolok.fizetes.atutalas; DEMO ON, production OFF until the ÁSZF). */
+  fizetes?: { atutalas: boolean };
 }
 export interface Health {
   ok: boolean;

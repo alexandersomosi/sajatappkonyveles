@@ -1,0 +1,29 @@
+{
+  "//": "Adózz.hu v2 – típusellenőrzés React Native célra (az app beállításai + a panel szigorúsága). A típusokat a kod/app/node_modules-ból CSAK OLVASSA. Futtatás: node ../../app/node_modules/typescript/bin/tsc -p tsconfig.rn.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "customConditions": ["react-native"],
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "react": ["../../app/node_modules/@types/react"],
+      "react/*": ["../../app/node_modules/@types/react/*"],
+      "react-native": ["../../app/node_modules/react-native/types_generated/index.d.ts"],
+      "react-native-svg": ["../../app/node_modules/react-native-svg"]
+    },
+    "typeRoots": ["../../app/node_modules/@types"],
+    "types": ["node"]
+  },
+  "include": ["index.ts", "tokenek.ts", "ikon/**/*.ts", "logo/**/*.ts", "rn/**/*.ts", "rn/**/*.tsx"]
+}

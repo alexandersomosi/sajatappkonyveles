@@ -1,0 +1,783 @@
+{
+ "modell": "google/gemini-3.8-flash",
+ "datum": "2026-11-21T12:22:39",
+ "oldal": "kod/landing/dist/index.html (telt színes változat, 11-21 11:37-es build; az élő adozz.hu szövege azonos)",
+ "kepek": [
+  {
+   "fajl": "telefon_01.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 1/8. szelet: FEJLÉC, ELSŐ KÉPERNYŐ (hős), „RÖVIDEN RÓLUNK” SÁV, KINEK SZÓL"
+  },
+  {
+   "fajl": "telefon_02.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 2/8. szelet: KINEK SZÓL, „ÍGY INDUL A KÖNYVELÉSED”, „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés)"
+  },
+  {
+   "fajl": "telefon_03.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 3/8. szelet: „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés), „KI KÖNYVEL NEKED?”"
+  },
+  {
+   "fajl": "telefon_04.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 4/8. szelet: „KI KÖNYVEL NEKED?”, MEGHATALMAZÁS ÉS ADATOK"
+  },
+  {
+   "fajl": "telefon_05.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 5/8. szelet: ÁRAK"
+  },
+  {
+   "fajl": "telefon_06.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 6/8. szelet: ÁRAK, ÖSSZEVETÉS"
+  },
+  {
+   "fajl": "telefon_07.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 7/8. szelet: ÖSSZEVETÉS, GYIK (lenyitható kérdések), ZÁRÓ FELHÍVÁS"
+  },
+  {
+   "fajl": "telefon_08.jpg",
+   "cim": "TELEFON (390 px széles kijelző), 8/8. szelet: ZÁRÓ FELHÍVÁS, LÁBLÉC"
+  },
+  {
+   "fajl": "gep_01.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 1/6. szelet: FEJLÉC, ELSŐ KÉPERNYŐ (hős), „RÖVIDEN RÓLUNK” SÁV, KINEK SZÓL"
+  },
+  {
+   "fajl": "gep_02.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 2/6. szelet: „ÍGY INDUL A KÖNYVELÉSED”, „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés)"
+  },
+  {
+   "fajl": "gep_03.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 3/6. szelet: „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés), „KI KÖNYVEL NEKED?”"
+  },
+  {
+   "fajl": "gep_04.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 4/6. szelet: „KI KÖNYVEL NEKED?”, MEGHATALMAZÁS ÉS ADATOK, ÁRAK"
+  },
+  {
+   "fajl": "gep_05.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 5/6. szelet: ÁRAK, ÖSSZEVETÉS, GYIK (lenyitható kérdések)"
+  },
+  {
+   "fajl": "gep_06.jpg",
+   "cim": "GÉP (1440 px széles böngésző), 6/6. szelet: GYIK (lenyitható kérdések), ZÁRÓ FELHÍVÁS, LÁBLÉC"
+  }
+ ],
+ "oldal_szovege": [
+  {
+   "szakasz": "1. FEJLÉC",
+   "szoveg": "[kép: Adózz.hu – az oldal teteje]\nHogyan működik\nMit kapsz\nKönyvelő\nÁrak\nGYIK\nBelépés\nRegisztrálok"
+  },
+  {
+   "szakasz": "2. ELSŐ KÉPERNYŐ (hős)",
+   "szoveg": "Online könyvelés egyéni vállalkozóknak\n# Saját könyvelő átalányadózóknak és katásoknak\nNyilvántartásba vett könyvelő intézi a bevallásaidat és a NAV-os ügyeidet. Te közben az appban látod, mennyit tegyél félre adóra, és mikor mit kell befizetned.\nRegisztrálok\nÍgy indul a könyvelésed\n19 999 Ft/hó bruttó · éves zárás 14 999 Ft/év · a többi díj\nRegisztrálni kártya nélkül tudsz. Hűségidő nincs.\napp.adozz.hu\n[kép: Az app főoldala gépen, böngészőben, oldalt a menüvel] [kép: Gépen: a novemberi dosszié, a beküldött iratok listája] [kép: Gépen: papír beküldése, a fájlt a gépedről választod ki, vagy a telefonodon lefotózod] [kép: Gépen: üzenetek a könyvelődnek és igazoláskérés]\n[kép: Az app főoldala telefonon: most kb. 250 000 Ft legyen félretéve az adóra] [kép: A novemberi dosszié telefonon: a könyvelőd átnézte az iratokat, 5 irat rendben] [kép: Fotózás az appban: a papírt lefotózod, vagy a galériából, fájlból választod ki] [kép: Üzenetek az appban: igazolást kérsz egy gombnyomással, vagy írsz a könyvelődnek]"
+  },
+  {
+   "szakasz": "3. „RÖVIDEN RÓLUNK” SÁV",
+   "szoveg": "## Röviden rólunk\n- ### Nyilvántartásba vett könyvelő\nA neve a szerződésedben és az appban is ott van.\n- ### NAV-meghatalmazással\nAz ONYA-n adod meg, és ugyanott bármikor visszavonhatod.\n- ### Előre kiírt árak\nHavi 19 999 Ft bruttó. A külön díjakat is előre látod az appban.\n- ### Nincs hűségidő\nBármikor lemondhatod. A kifizetett hónap végéig minden működik."
+  },
+  {
+   "szakasz": "4. KINEK SZÓL",
+   "szoveg": "## Átalányadózó és katás egyéni vállalkozókat könyvelünk\nCsak alanyi áfamentes vállalkozókkal dolgozunk. Ezért lehet mindenkinek ugyanaz az előre kiírt ár.\n### Neked szól, ha\n- átalányadózó vagy katás egyéni vállalkozó vagy,\n- alanyi áfamentes vagy,\n- alkalmazottad vagy alkalmi munkásod is lehet: a bérszámfejtést felárért vállaljuk,\n- vagy most indítod a vállalkozásodat. Ebben is segítünk.\n### Most nem neked szól, ha\n- tételes költségelszámolással (vállalkozói szja-val) adózol,\n- áfakörbe tartozol,\n- Kft.-d vagy Bt.-d van.\nHa év közben ide kerülsz, szólunk, és megbeszéljük, mi legyen."
+  },
+  {
+   "szakasz": "5. „ÍGY INDUL A KÖNYVELÉSED”",
+   "szoveg": "## Így indul a könyvelésed\nRegisztrálni kártya nélkül tudsz. Hűségidő nincs.\n- 1\n### Regisztrálsz\nMegadod az e-mail-címedet, és válaszolsz pár kérdésre a vállalkozásodról.\n- 2\n### Szerződés és NAV-meghatalmazás\nElfogadod a szerződést. A meghatalmazást a könyvelőd is beküldheti, neked csak jóvá kell hagynod.\n- 3\n### Átbeszéljük, ha szeretnéd\nAz appban kérhetsz visszahívást. Fizetni csak utána kell, bankkártyával.\n- 4\n### Indul a könyvelés\nA könyvelőd elkezdi a könyvelésedet. Innentől a számláid az appban vannak."
+  },
+  {
+   "szakasz": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés)",
+   "szoveg": "## Mindig látod, mennyit tegyél félre adóra\nA számolást és a bevallást a könyvelőd csinálja helyetted.\n[a telefon a bemutató színpadán: képernyője és felugró értesítései lépésenként váltanak, lásd a lépéseknél]\n- Számlák\n### A kiállított számláid maguktól bejönnek\nAz app a NAV Online Számla rendszeréből hozza be őket, nem kell begépelned. Minden számla mellett látod, nagyjából mennyit tegyél félre belőle adóra.\n[kép: Kiállított számlák az appban: Napfény Étterem Kft., 418 000 Ft-os számla, ebből kb. 29 000 Ft-ot tegyél félre]\nÚj\nÚj kiállított számla\nNapfény Étterem Kft. · 418 000 Ft\nmost\n- Félretenni\n### Egy szám mutatja, mennyit tegyél félre\nA főoldalon látod, mennyit tegyél félre adóra és járulékra, és ez minden új számlával frissül. Ha félretetted, megjelölöd. A pénz közben nálad marad.\n[kép: Az app főoldala: most kb. 250 000 Ft legyen félretéve az adóra, gomb a félretett összeg megjelöléséhez]\nMost legyen félretéve\n+29 000 Ft\nkb. 250 000 Ft\nMegjelölve\n- Határidők\n### Határidő előtt szólunk\nAz appban ott az összeg, a NAV-számlaszám és a közlemény. Egy koppintással kimásolod őket a bankodba, az utalást te indítod. Katásként ugyanígy a havi katát.\n[kép: Szja-előleg a IV. negyedévre: kb. 49 680 Ft, NAV-számlaszám és közlemény Másolom gombbal]\nKimásolva\nKözeleg egy határidő\nSzja-előleg, IV. negyedév: jan. 12.\nmost\n- Fotózás\n### A papírszámlát elég lefotóznod\nA nyugtát vagy a kézzel írt számlát lefotózod, vagy feltöltöd PDF-ben. Egyenesen a könyvelődhöz kerül, nem kell papírt hordanod.\n[kép: Fotózás az appban: kameranézet, Galéria és Fájl, PDF gomb]\nPAPÍRBOLT\nnyomtatópapír\n1 oldal\nElküldve a könyvelődnek\nPapírbolt, nyomtatópapír\nmost\n- Dosszié\n### Amit küldesz, a könyvelőd átnézi\nA havi dossziéban egy helyen van minden irat. Látod, mit nézett már át a könyvelőd, és mit kér még tőled.\n[kép: A novemberi dosszié: a könyvelő átnézte az iratokat, 5 irat rendben, a beküldött papírok listája]\nÚj\nA könyvelőd átnézte\nPapírbolt, nyomtatópapír\nmost\n- Üzenetek\n### Bármikor írhatsz a könyvelődnek\nÜzenetet küldesz neki az appban, igazolást pedig egy gombbal kérsz. Ha elakadsz, visszahívást is kérhetsz.\n[kép: Beszélgetés a könyvelővel az appban: mennyit fizettem be eddig az adóból? Eddig 317 000 Ft-ot]\n- Keretek\n### Nem csúszol bele véletlenül az áfába\nAz app mutatja, mennyit számlázhatsz még idén áfa nélkül, katásként a kata-keretedet is. Azt is látod, mennyi maradt neked az adók és járulékok után.\n[kép: Mennyit kerestem? Idén eddig kb. 14 527 000 Ft maradt neked az adók és járulékok után]\nIdei kereteid\nMég 3 685 000 Ft\nennyit számlázhatsz még áfa nélkül\neddig 16 315 000 Ft\nkeret 20 000 000 Ft\n- Böngészőben\n### Gépen is ugyanez\nBöngészőből is megnyitod, ugyanazzal a belépéssel. Ugyanazt látod, mint a telefonodon, és a papírokat a gépedről is feltöltheted.\napp.adozz.hu\n[kép: Az app főoldala gépen, böngészőben: ugyanaz, mint a telefonon, oldalt a menüvel]\n[kép: Ugyanez a főoldal telefonon]\nAz app képei bemutató adatokkal és az app új, bevezetés alatt álló kinézetével készültek. Gépen az app ma még telefonos elrendezésben nyílik meg."
+  },
+  {
+   "szakasz": "7. „KI KÖNYVEL NEKED?”",
+   "szoveg": "## Ki könyvel neked?\nEgy nyilvántartásba vett könyvelő. A neve és a nyilvántartási száma benne van a szerződésedben, és az appban is megtalálod.\nA szerződést a Somosi Kft.-vel kötöd. A könyvelőd munkájáért a Somosi Kft. felel.\n### Ezt csinálja a könyvelőd egy negyedévben\nMinden hónapban\nVezeti a bevételi nyilvántartásodat, és átnézi a számláidat. Ha valami hiányzik, szól. A bankszámlakivonatodat is elkéri, mert abból látja, mikor érkezett meg a pénz.\nA negyedév végén\nKiszámolja és bevallja a negyedéves adódat és járulékaidat, és az appban megírja, mennyit utalj.\nAmikor utaltál\nA feltöltött kivonatodon látja, hogy megérkezett a befizetésed, és az appban jelzi neked.\nHa NAV-levél jön\nElmondja, mit jelent, és a meghatalmazásod alapján elintézi.\nKatásként\nA havi katát és a kata-keretedet is figyeli."
+  },
+  {
+   "szakasz": "8. MEGHATALMAZÁS ÉS ADATOK",
+   "szoveg": "## Mit jelent a meghatalmazás, és hol vannak az adataid?\n### Ha valaki a nevünkben keres\nTelefonon soha nem kérjük el a kártyaadataidat, és sehol nem kérjük el a jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet vagy a kódjaidat. Ha valaki a nevünkben mégis ilyet kér, tedd le, és írj nekünk: ugyfelszolgalat@adozz.hu\n### A NAV-meghatalmazás\n- Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet a NAV-nál.\n- A NAV online felületén (ONYA) adod meg. A könyvelőd is beküldheti, ilyenkor te hagyod jóvá.\n- Bármikor visszavonhatod, ugyanott.\n- Az app semmit nem küld be a NAV-nak. A bevallást a könyvelőd adja be, miután átnézte.\n### Az adataid\n- Európai szerveren tároljuk őket, minden fájlt külön titkosítva.\n- A könyvelési irataidat a könyvelőd kezeli. Rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva.\n- Nem adjuk el az adataidat, nem mutatunk hirdetést, és nincs követő süti.\n- Bármikor letöltheted őket, és kérheted a törlésüket. Amit a törvény miatt meg kell őriznünk, azt a határidőig elzárva tartjuk.\nAdatkezelési tájékoztató"
+  },
+  {
+   "szakasz": "9. ÁRAK",
+   "szoveg": "## Mennyibe kerül?\nA havidíjhoz évente egyszer jön hozzá az éves zárás. A többi díj is itt van. Ami egyedi, arra előre, írásban adunk ajánlatot.\nHavonta előre fizetsz, bankkártyával. Hűségidő nincs: ha lemondod, a kifizetett hónap végéig minden működik. Minden ár bruttó, 27% áfával, a részleteket az ÁSZF-ben találod.\nHavidíj\n19 999 Ft / hó\nbruttó, 27% áfával\nEgy teljes év az éves zárással együtt: 254 987 Ft\n### Benne van\n- Saját, név szerint ismert könyvelő\n- Bevételi nyilvántartás a NAV Online Számlából\n- A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)\n- Katásként: a havi kata és a kata-keret figyelése\n- Mennyit tegyél félre, számlánként\n- Határidő-figyelés és emlékeztetők\n- NAV-ügyek meghatalmazással, NAV-levelek értelmezése\n- Igazolások kérése\n- Üzenetek a könyvelődnek, visszahívás igény szerint\n- Ha most indulsz: segítség a vállalkozásod elindításához\nRegisztrálok\nRegisztrálni kártya nélkül tudsz.\n### Külön díjak\nAz éves zárást akkor fizeted, ha az éves bevallásodat mi adjuk be. A többi díj csak akkor jár, ha te kéred a munkát. Mindet előre látod az appban, és a jóváhagyásod nélkül nem kérjük.\nÉves zárás évente egyszer\nAz éves adóbevallások: szja vagy kata, és iparűzési adó.\n14 999 Ft\n/ év\nVáltozás bejelentése helyetted\nKöltözés, új tevékenység, telephely. Ha magad jelented be az útmutatónkkal: 0 Ft.\n4 999 Ft\n/ alkalom\nJogállás-változás bejelentése helyetted\nHa főállásból mellékállásba váltasz, vagy fordítva.\n7 999 Ft\n/ alkalom\nAmíg szünetel a vállalkozásod\nIlyenkor a havidíj helyett csak ennyit fizetsz.\n2 999 Ft\n/ hó\nA vállalkozásod megszüntetése helyetted\nHa magad jelented be az útmutatónkkal: 0 Ft.\n7 999 Ft\n/ alkalom\nBérszámfejtés\nHa alkalmazottat vagy alkalmi munkást foglalkoztatsz.\negyedi ajánlat\nSzintén egyedi ajánlattal, előre és írásban: áfabevallás, képviselet NAV-ellenőrzésnél, korábbi évek rendbetétele."
+  },
+  {
+   "szakasz": "10. ÖSSZEVETÉS",
+   "szoveg": "## Miben más, mint egy hagyományos könyvelőiroda?\nHa személyesen szeretnél leülni a könyvelőddel, egy hagyományos iroda jobb neked. Ha inkább a telefonodról intéznéd, nézd meg, miben más nálunk.\nSzempont\nAdózz Hagyományos iroda\nÁr 19 999 Ft/hó bruttó, a díjak kiírva ezen az oldalon Irodánként eltér, sokszor egyedi ajánlat alapján\nKönyvelő Nyilvántartásba vett könyvelő, név szerint Nyilvántartásba vett könyvelő\nMennyit tegyél félre Az appban, számlánként, folyamatosan látod Általában akkor tudod meg, amikor a könyvelő kiszámolja\nIratok A kiállított számláid a NAV Online Számlából jönnek, a többit lefotózod Irodánként eltér: papíron, e-mailben vagy online\nKapcsolat Üzenet az appban és visszahívás E-mail, telefon, sokszor személyesen is\nSzemélyes találkozó Nincs, minden online megy Általában lehetséges\nHűségidő Nincs, bármikor lemondhatod Szerződéstől függ\nA hagyományos irodák gyakorlata eltérő. A jobb oszlop általános tapasztalatot mutat, nem egy konkrét irodát."
+  },
+  {
+   "szakasz": "11. GYIK (lenyitható kérdések)",
+   "szoveg": "## Gyakori kérdések\nNem találod a választ? Írj nekünk: ugyfelszolgalat@adozz.hu\n[kérdés] Kinek szól az Adózz?\nMagyarországon nyilvántartott, alanyi áfamentes egyéni vállalkozóknak, akik átalányadóval vagy katával adóznak. Ha alkalmazottad vagy alkalmi munkásod is van, a bérszámfejtést felárért, egyedi ajánlat alapján vállaljuk. Ha év közben megváltozik az adózásod, vagy elveszíted az áfamentességet, szólunk, és együtt megnézzük, mi a teendő.\n[kérdés] Katás vagyok. Nekem is jó?\nIgen, ugyanennyiért. Az app figyeli a kata-keretedet, és szól, ha cégnek számlázol, mert ha egy cég fizet neked, megszűnhet a katád. Ha át kell állnod átalányadóra, ebben is segítünk.\n[kérdés] Mi van benne a havidíjban, és mi kerül külön?\nA havidíjban benne van a könyvelőd munkája, a negyedéves bevallások, a határidők figyelése, az igazolások kérése és az app minden funkciója. Külön díjas az éves zárás (évente egyszer), a helyetted intézett változás vagy megszüntetés, és a szünetelés idejére járó kisebb díj. A pontos lista az Árak résznél van.\n[kérdés] Az adót is ti fizetitek be?\nNem, az utalást mindig te indítod, a saját bankodból. Mi megmondjuk, mennyit, mikorra és melyik NAV-számlára utalj. A számládról pénzt nem vonunk le.\n[kérdés] Mi az a NAV-meghatalmazás, és visszavonható?\nEzzel a könyvelőd a nevedben adhatja be a bevallásaidat, és intézheti az adóügyeidet a NAV-nál. A NAV online felületén (ONYA) adod meg, vagy a könyvelőd küldi be, és te jóváhagyod. Ugyanott bármikor visszavonhatod. A belépési adataidat ehhez sem kérjük el.\n[kérdés] Hol vannak az adataim, és ki látja őket?\nEurópai szerveren, titkosítva. A könyvelési irataidat a könyvelőd kezeli; rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva. Ügyfélszolgálatunk csak azt látja, ami az induláshoz és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az Adatkezelési tájékoztatóban.\n[kérdés] Miért nincs próbaidő? Mikor kell fizetni?\nA havidíjért egy könyvelő dolgozik a vállalkozásodon, ezért ingyenes időszakot nem tudunk adni. Regisztrálni kártya nélkül tudsz. Ha szeretnéd, előbb visszahívunk, átbeszélünk mindent, és csak utána fizetsz, bankkártyával.\n[kérdés] Hogyan mondhatom fel?\nBármikor, az appban (Fiók > Előfizetés > Lemondás) vagy e-mailben. A lemondás a kifizetett hónap végén lép életbe, addig minden ugyanúgy működik, utána több díjat nem kérünk.\n[kérdés] Mi kell az induláshoz?\nEgy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a törvény előírja, hogy azonosítsuk az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.\n[kérdés] Még nincs vállalkozásom. Segítetek elindítani?\nIgen. Olyan útmutatót kapsz, ami a te helyzetedre szól, képekkel és videóval. A bejelentést te küldöd be, és mi átnézzük a NAV-os értesítést. Ha elakadsz, 2026 végéig kérheted, hogy a könyvelőd intézze helyetted, meghatalmazottként (2027-től a nyilvántartást a gazdasági kamara vezeti). Ez is benne van a havidíjban."
+  },
+  {
+   "szakasz": "12. ZÁRÓ FELHÍVÁS",
+   "szoveg": "## Legyen saját könyvelőd\nRegisztrálj, és válaszolj pár kérdésre a vállalkozásodról.\nRegisztrálok\nHavi 19 999 Ft bruttó, hűségidő nélkül.\n### Előbb beszélnél velünk?\nRegisztráció után az appban kérhetsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nem kötelező.\nVisszahívást kérek\nKérdésed van a regisztráció előtt? Írj nekünk: ugyfelszolgalat@adozz.hu"
+  },
+  {
+   "szakasz": "13. LÁBLÉC",
+   "szoveg": "[kép: Adózz.hu – az oldal teteje]\nOnline könyvelés átalányadózó és katás egyéni vállalkozóknak.\n## SZOLGÁLTATÁS\nHogyan működik\nMit kapsz\nKönyvelő\nÁrak\nGYIK\n## FIÓK\nRegisztráció\nBelépés\n## JOGI\nÁSZF\nAdatkezelés\nSüti-tájékoztató\nImpresszum\n## ÜGYFÉLSZOLGÁLAT\nugyfelszolgalat@adozz.hu\nVisszahívás munkanapokon 9 és 17 óra között.\n## IMPRESSZUM\nSzolgáltató\nSomosi Kft.\nSzékhely\n1123 Budapest, Nagyenyed utca 5.\nAdószám\n32769678-2-43\nCégjegyzékszám\n01-09-441659 (Fővárosi Törvényszék Cégbírósága)\nE-mail\nugyfelszolgalat@adozz.hu\nTárhelyszolgáltató\nContabo GmbH, Aschauer Straße 32a, 81549 München, Németország\n© 2026 Somosi Kft.\nAz app képei bemutató adatokkal készültek.\nEz az oldal nem használ sütit. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.\nNe mérjétek a látogatásomat"
+  }
+ ],
+ "keret_elotte": {
+  "limit_remaining": 7.827286882999999,
+  "usage": 52.172713117
+ },
+ "keret_osszesen": 0.08,
+ "perszonak": [
+  {
+   "kod": "a",
+   "nev": "Szabó Péter",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Szabó Péter",
+    "ot_masodperc": {
+     "mi_ez_szerintem": "Egy online könyvelési szolgáltatás mobilappal összekötve, ahol egy élő könyvelő dolgozik a háttérben.",
+     "kinek_szol": "Átalányadózó és katás egyéni vállalkozóknak.",
+     "nekem_szol": "igen",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kapok_a_havidijert": "Név szerinti könyvelőt, bevallások beadását, számlák figyelését a NAV-ból és folyamatos tanácsadást üzenetben.",
+     "mit_csinal_az_app": "Megmutatja, mennyi pénzt tegyek félre adóra, jelzi a határidőket, és itt tölthetem fel a papírszámlákat fotózva.",
+     "mi_kerul_kulon": "Az éves zárás (14 999 Ft), a bérszámfejtés, a szünetelés, valamint az adatok és jogállás hivatalos módosítása.",
+     "ami_homalyos": "Nem teljesen világos, hogy az éves zárási díjat pontosan mikor és hogyan vonják le a havidíjon felül."
+    },
+    "nem_ertem": [
+     {
+      "idezet": "Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.",
+      "szakasz": "3. „RÖVIDEN RÓLUNK” SÁV",
+      "miert": "Nem tudom, mi az az ONYA, sosem hallottam még ezt a rövidítést és nem magyarázzák el.",
+      "javaslat": "A NAV online felületén (ONYA) adod meg, és ugyanott bármikor visszavonhatod."
+     },
+     {
+      "idezet": "A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)",
+      "szakasz": "9. ÁRAK",
+      "miert": "A szocho és az szja-előleg nekem túl szakmai, csak annyi érdekelne, mennyi adót kell befizetnem.",
+      "javaslat": "A negyedéves kötelező adók és járulékok kiszámítása és hivatalos bevallása"
+     },
+     {
+      "idezet": "alanyi áfamentes vagy",
+      "szakasz": "4. KINEK SZÓL",
+      "miert": "Kezdőként bizonytalan vagyok a hivatalos kifejezésekben, jó lenne egy félmondat, hogy ez mit jelent a gyakorlatban.",
+      "javaslat": null
+     }
+    ],
+    "meggyozne": [
+     {
+      "mi": "Azonnal látom a telefonomon, mennyi pénzt nem szabad elköltenem, mert adóra kell majd.",
+      "idezet": "Egy szám mutatja, mennyit tegyél félre"
+     },
+     {
+      "mi": "Nem nekem kell kézzel gépelgetnem vagy beküldözgetnem a számláimat.",
+      "idezet": "Az app a NAV Online Számla rendszeréből hozza be őket, nem kell begépelned."
+     },
+     {
+      "mi": "Nem kötelező azonnal fizetnem, előbb beszélhetek egy emberrel telefonon.",
+      "idezet": "Az appban kérhetsz visszahívást. Fizetni csak utána kell, bankkártyával."
+     }
+    ],
+    "visszatart": [
+     {
+      "mi": "Félek a rejtett költségektől, az éves zárás plusz 15 ezer forintja meglepetésként ért a havidíjon felül.",
+      "idezet": "A havidíjhoz évente egyszer jön hozzá az éves zárás."
+     },
+     {
+      "mi": "Nincs közvetlen telefonszám, csak az appból lehet visszahívást kérni, ha elakadok.",
+      "idezet": "Üzenetet küldesz neki az appban, igazolást pedig egy gombbal kérsz. Ha elakadsz, visszahívást is kérhetsz."
+     }
+    ],
+    "hianyzik_a_donteshez": [
+     "Egy közvetlen telefonszám, amit most azonnal felhívhatnék kérdezni regisztráció nélkül.",
+     "Pontos információ arról, hogy mennyi idő alatt válaszol a könyvelő az appban feltett kérdésekre.",
+     "Vélemények vagy értékelések más egyéni vállalkozóktól, akik már használják."
+    ],
+    "bizalom": {
+     "pont_1_10": 8,
+     "miert": "Megnyugtató, hogy valós könyvelő dolgozik a háttérben névvel, és teljesen átláthatóan fel vannak sorolva a cégadatok és az árak."
+    },
+    "zavaros_hosszu_ismetlodo": [
+     {
+      "hol": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA” (görgetős bemutató, 8 lépés)",
+      "tipus": "túl hosszú",
+      "idezet": "Az app képei bemutató adatokkal és az app új, bevezetés alatt álló kinézetével készültek. Gépen az app ma még telefonos elrendezésben nyílik meg.",
+      "miert": "Túl sok a 8 lépéses bemutató mobilon, gyorsan át akarom látni a lényeget, nem végtelenségig görgetni a funkciókat."
+     },
+     {
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "tipus": "ismétlődő",
+      "idezet": "Regisztrálj, és válaszolj pár kérdésre a vállalkozásodról.",
+      "miert": "A regisztrációs lépések és az árak már többször szerepeltek feljebb szinte szó szerint."
+     }
+    ],
+    "mit_tennek": "előbb visszahívást kérnék",
+    "miert": "Két rendezvény közt nincs időm végigkattintani a beállításokat, megvárom, hogy felhívjanak és 5 perc alatt elmondják, nekem való-e."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 23026,
+    "completion_tokens": 1588,
+    "total_tokens": 24614,
+    "cost": 0.0091227,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 22266,
+     "cache_write_tokens": 22266,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.0091227,
+     "upstream_inference_prompt_cost": 0.0031677,
+     "upstream_inference_completions_cost": 0.005955
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.0091227
+  },
+  {
+   "kod": "b",
+   "nev": "Kiss Anna",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Kiss Anna",
+    "ot_masodperc": {
+     "mi_ez_szerintem": "Egy online könyvelési szolgáltatás egyéni vállalkozóknak mobilapplikációval.",
+     "kinek_szol": "Átalányadózóknak és katás vállalkozóknak.",
+     "nekem_szol": "igen",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kapok_a_havidijert": "Név szerint ismert valódi könyvelőt, a bevételeim és a kata-keretem figyelését, valamint hivatalos ügyintézést a NAV felé.",
+     "mit_csinal_az_app": "Megmutatja, mennyi adót kell fizetnem, mik a határidők, beemeli a számlákat a NAV-tól, és ezen keresztül tölthetek fel papírokat vagy írhatok a könyvelőmnek.",
+     "mi_kerul_kulon": "Az éves zárás 14 999 Ft-ért, a szünetelés havi 2 999 Ft-ért, az adatmódosítások és a bérszámfejtés.",
+     "ami_homalyos": "Katásként az átalányadós adókról és járulékokról szóló részek feleslegesen keverednek a leírásban, ami kicsit elbizonytalanít."
+    },
+    "nem_ertem": [
+     {
+      "idezet": "A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)",
+      "szakasz": "9. ÁRAK",
+      "miert": "Katásként nekem ezeket nem kell fizetnem, így nem tudom, ebből mi vonatkozik rám és miért fizetek ezért.",
+      "javaslat": null
+     },
+     {
+      "idezet": "Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.",
+      "szakasz": "3. „RÖVIDEN RÓLUNK” SÁV",
+      "miert": "Nem tudom, mi az az ONYA, sosem használtam még ezt a felületet.",
+      "javaslat": "A NAV online felületén (ONYA) adod meg, és ugyanott bármikor visszavonhatod."
+     },
+     {
+      "idezet": "Ügyfélkapu+ vagy DÁP",
+      "szakasz": "11. GYIK (lenyitható kérdések)",
+      "miert": "Sima Ügyfélkapum van, a pluszról vagy a DÁP-ról nem tudom pontosan, micsoda és kötelező-e most nekem.",
+      "javaslat": null
+     }
+    ],
+    "meggyozne": [
+     {
+      "mi": "Hogy nem egy automata gép könyvel, hanem egy valódi, hivatalos szakember.",
+      "idezet": "Nyilvántartásba vett könyvelő intézi a bevallásaidat és a NAV-os ügyeidet."
+     },
+     {
+      "mi": "Hogy figyelmeztet, ha véletlenül céges számlát fogadnék be, ami tönkretenné a katámat.",
+      "idezet": "Az app figyeli a kata-keretedet, és szól, ha cégnek számlázol, mert ha egy cég fizet neked, megszűnhet a katád."
+     },
+     {
+      "mi": "Hogy nem kell papírokat hurcolnom a város másik végébe.",
+      "idezet": "A nyugtát vagy a kézzel írt számlát lefotózod, vagy feltöltöd PDF-ben. Egyenesen a könyvelődhöz kerül, nem kell papírt hordanod."
+     }
+    ],
+    "visszatart": [
+     {
+      "mi": "Hogy egyáltalán nincs lehetőség személyes találkozóra, ha komolyabb gond lenne.",
+      "idezet": "Nincs, minden online megy"
+     },
+     {
+      "mi": "A megszokott könyvelőm személyes jelenléte és az új technológiák (DÁP, ONYA) intézésétől való félelem.",
+      "idezet": null
+     }
+    ],
+    "hianyzik_a_donteshez": [
+     "Konkrét leírás arról, hogyan segítik át a váltást a régi könyvelőmtől hozzájuk.",
+     "Egy telefonszám, amit még a regisztráció előtt felhívhatok kérdésekkel.",
+     "Ügyfélvélemények vagy tapasztalatok más katás kisvállalkozóktól."
+    ],
+    "bizalom": {
+     "pont_1_10": 7,
+     "miert": "Megbízhatónak tűnik a pontos céges adatok és az előre megadott árak miatt, de a személyes kontaktus hiánya kicsit távolságtartóvá teszi."
+    },
+    "zavaros_hosszu_ismetlodo": [
+     {
+      "hol": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA”",
+      "tipus": "túl hosszú",
+      "idezet": "A kiállított számláid maguktól bejönnek",
+      "miert": "A 8 lépéses bemutató nagyon sok képernyőt és görgetést igényel mobilon, a fele nekem katásként nem is érdekes."
+     },
+     {
+      "hol": "9. ÁRAK",
+      "tipus": "zavaros",
+      "idezet": "A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)",
+      "miert": "Összemossa az átalányadós és katás tennivalókat a közös csomagban, így nem látom tisztán a saját teendőimet."
+     },
+     {
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "tipus": "ismétlődő",
+      "idezet": "Regisztrálj, és válaszolj pár kérdésre a vállalkozásodról.",
+      "miert": "Már sokadszorra kéri a regisztrációt pontosan ugyanazokkal a szavakkal."
+     }
+    ],
+    "mit_tennek": "elmenteném későbbre",
+    "miert": "Bár kényelmesnek tűnik az applikáció, a 6 éve megszokott személyes könyvelőmet nem cserélem le hirtelen egy tisztán online rendszerre."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 23019,
+    "completion_tokens": 1653,
+    "total_tokens": 24672,
+    "cost": 0.008434125,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 22265,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.008434125,
+     "upstream_inference_prompt_cost": 0.002235375,
+     "upstream_inference_completions_cost": 0.00619875
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.008434125
+  },
+  {
+   "kod": "c",
+   "nev": "Tóth Gábor",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Tóth Gábor, 52 éves villanyszerelő",
+    "ot_masodperc": {
+     "mi_ez_szerintem": "Egy telefonos alkalmazás és könyvelési szolgáltatás egyben, ami adóbevallást csinál.",
+     "kinek_szol": "Átalányadózó és katás egyéni vállalkozóknak.",
+     "nekem_szol": "igen",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kapok_a_havidijert": "Egy valódi, nevesített könyvelőt, aki megcsinálja a negyedéves adó- és járulékbevallásokat, valamint intézi a NAV-os ügyeimet meghatalmazással.",
+     "mit_csinal_az_app": "Letölti a számláimat a NAV-tól, mutatja, mennyi pénzt tegyek félre adóra, figyelmeztet a határidőkre, és rajta keresztül tölthetek fel papírokat.",
+     "mi_kerul_kulon": "Az éves zárás 14 999 Ft-ért, a székhely- vagy telephelyváltozás, a jogállásváltás, a szünetelés havidíja, a megszüntetés és a bérszámfejtés.",
+     "ami_homalyos": "Nem világos, hogy ha a bérszámfejtés egyedi ajánlatos, akkor egy egyszerű alkalmi munkás bejelentése pontosan mekkora pluszköltséget jelent nekem havonta."
+    },
+    "nem_ertem": [
+     {
+      "idezet": "Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.",
+      "szakasz": "3. „RÖVIDEN RÓLUNK” SÁV",
+      "miert": "Nem tudom fejből, mi az az ONYA, nekem az Ügyfélkapu a megszokott, és félek elrontani a meghatalmazást.",
+      "javaslat": "A NAV online felületén (az ONYA rendszerben) adod meg Ügyfélkapuval, és bármikor visszavonhatod."
+     },
+     {
+      "idezet": "A könyvelőd munkájáért a Somosi Kft. felel.",
+      "szakasz": "7. „KI KÖNYVEL NEKED?”",
+      "miert": "Nem derül ki, van-e a cégnek felelősségbiztosítása arra az esetre, ha a könyvelő hibázik és megbírságol a NAV.",
+      "javaslat": "A könyvelőd hibájából eredő NAV-bírságokért a Somosi Kft. anyagi felelősséget vállal felelősségbiztosítással."
+     },
+     {
+      "idezet": "Európai szerveren tároljuk őket, minden fájlt külön titkosítva.",
+      "szakasz": "8. MEGHATALMAZÁS ÉS ADATOK",
+      "miert": "A láblécben németországi cég van, aggódom, hogy külföldi szerverekre kerülnek a személyes és üzleti adataim.",
+      "javaslat": null
+     }
+    ],
+    "meggyozne": [
+     {
+      "mi": "Világosan leírják, hogy nem férnek hozzá a bankomhoz, én magam utalok.",
+      "idezet": "Nem, az utalást mindig te indítod, a saját bankodból."
+     },
+     {
+      "mi": "Konkrétan figyelmeztetnek a csalókra, és leírják, hogy nem kérik el a jelszavaimat.",
+      "idezet": "Telefonon soha nem kérjük el a kártyaadataidat, és sehol nem kérjük el a jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet vagy a kódjaidat."
+     },
+     {
+      "mi": "A szerződésben szerepelni fog a könyvelő valódi neve és nyilvántartási száma, nem egy névtelen gép könyvel.",
+      "idezet": "A neve és a nyilvántartási száma benne van a szerződésedben, és az appban is megtalálod."
+     }
+    ],
+    "visszatart": [
+     {
+      "mi": "Nem lehet személyesen találkozni és átadni a számlákat vagy megbeszélni a dolgokat a baj esetén.",
+      "idezet": "Személyes találkozó Nincs, minden online megy"
+     },
+     {
+      "mi": "Külföldi szerveren tárolják az adataimat és papírjaimat.",
+      "idezet": "Contabo GmbH, Aschauer Straße 32a, 81549 München, Németország"
+     },
+     {
+      "mi": "Nem hívhatom fel őket közvetlenül telefonon bármikor, csak visszahívást kérhetek az appban vagy e-mailt írhatok.",
+      "idezet": "Kapcsolat Üzenet az appban és visszahívás"
+     }
+    ],
+    "hianyzik_a_donteshez": [
+     "Közvetlen telefonszám, amit most azonnal felhívhatnék kérdezni a regisztráció előtt.",
+     "Egyértelmű nyilatkozat arról, hogy rendelkeznek-e szakmai felelősségbiztosítással NAV-bírság esetére.",
+     "Pontos leírás arról, hogy mi a teendő, ha a NAV ellenőrzést indít ellenem."
+    ],
+    "bizalom": {
+     "pont_1_10": 6,
+     "miert": "Megnyugtató, hogy van cégnév, adószám és nevesített könyvelő, de az online ügyintézés, a személyes iroda és a közvetlen telefonszám hiánya miatt gyanakvó maradok."
+    },
+    "zavaros_hosszu_ismetlodo": [
+     {
+      "hol": "8. MEGHATALMAZÁS ÉS ADATOK",
+      "tipus": "ismétlődő",
+      "idezet": "A NAV online felületén (ONYA) adod meg. A könyvelőd is beküldheti, ilyenkor te hagyod jóvá.",
+      "miert": "Ezt már a fenti folyamatlépéseknél és a GYIK-ben is szinte szó szerint elmondták."
+     },
+     {
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "tipus": "zavaros",
+      "idezet": "Regisztráció után az appban kérhetsz visszahívást.",
+      "miert": "Zavar, hogy előbb meg kell adnom az adataimat és regisztrálnom kell ahhoz, hogy telefonon beszélhessek egy emberrel."
+     }
+    ],
+    "mit_tennek": "elmenteném későbbre",
+    "miert": "Mivel félek látatlanban NAV-meghatalmazást adni és kártyát kötni, előbb utánakérdezek a céges adatoknak és megfontolom, merjem-e rábízni az adóügyeimet."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 23027,
+    "completion_tokens": 1791,
+    "total_tokens": 24818,
+    "cost": 0.008957625,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 22265,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.008957625,
+     "upstream_inference_prompt_cost": 0.002241375,
+     "upstream_inference_completions_cost": 0.00671625
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.008957625
+  },
+  {
+   "kod": "d",
+   "nev": "Nagy Lili",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Nagy Lili",
+    "ot_masodperc": {
+     "mi_ez_szerintem": "Egy online könyvelési szolgáltatás saját könyvelővel és egy telefonos appal összekötve.",
+     "kinek_szol": "Már működő átalányadózó vagy katás egyéni vállalkozóknak.",
+     "nekem_szol": "részben",
+     "eltalalta": "részben"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kapok_a_havidijert": "Egy valódi, nevesített könyvelőt, aki megcsinálja a negyedéves bevallásaimat, figyeli a határidőket és intézi a NAV-os dolgaimat.",
+     "mit_csinal_az_app": "Automatikusan behúzza a kiállított számláimat a NAV-ból, mutatja, mennyi pénzt tegyek félre adóra, figyelmeztet a fizetésekre, és fotózva küldhetek be papírokat.",
+     "mi_kerul_kulon": "Az éves zárás (14 999 Ft/év), a helyettem intézett bejelentések vagy szünetelés, és a bérszámfejtés.",
+     "ami_homalyos": "Kezdőként nem tiszta, hogy az induláskor azonnal elindul-e a havidíj, mielőtt egyáltalán egy forint bevételem lenne."
+    },
+    "nem_ertem": [
+     {
+      "idezet": "alanyi áfamentes vagy,",
+      "szakasz": "4. KINEK SZÓL",
+      "miert": "Kezdőként nem vagyok benne biztos, hogy automatikusan az vagyok-e, vagy ezt nekem kell választanom az induláskor.",
+      "javaslat": "alanyi áfamentes vagy (ebben a bejelentéskor segítünk),"
+     },
+     {
+      "idezet": "A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)",
+      "szakasz": "9. ÁRAK",
+      "miert": "A háromféle adónem és rövidítés ijesztő, nem tudom, ezek rám vonatkoznak-e majd vagy a könyvelő leegyszerűsíti.",
+      "javaslat": null
+     },
+     {
+      "idezet": "Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.",
+      "szakasz": "3. „RÖVIDEN RÓLUNK” SÁV",
+      "miert": "Fogalmam sincs, mi az az ONYA, ez valamilyen állami portál vagy külön app?",
+      "javaslat": "A NAV online felületén (ONYA) adod meg, és ugyanott bármikor visszavonhatod."
+     },
+     {
+      "idezet": "Éves zárás évente egyszer",
+      "szakasz": "9. ÁRAK",
+      "miert": "Nem értem, miért kell a havidíjon felül még egy tizenötezres tétel arra, hogy lezárják az évet.",
+      "javaslat": null
+     }
+    ],
+    "meggyozne": [
+     {
+      "mi": "Hogy segítenek elindulni és nem hagynak magamra a bürokráciával.",
+      "idezet": "vagy most indítod a vállalkozásodat. Ebben is segítünk."
+     },
+     {
+      "mi": "A vizuális, tiszta felület, ahol látom előre a félreteendő adót.",
+      "idezet": "Minden számla mellett látod, nagyjából mennyit tegyél félre belőle adóra."
+     },
+     {
+      "mi": "Hogy nem terhelnek meg rögtön költségekkel bankkártya megadása nélkül.",
+      "idezet": "Regisztrálni kártya nélkül tudsz. Hűségidő nincs."
+     }
+    ],
+    "visszatart": [
+     {
+      "mi": "A 20 ezer forintos fix havidíj túl soknak tűnik egy olyan kezdőnek, akinek még nincs fix ügyfélköre.",
+      "idezet": "19 999 Ft / hó"
+     },
+     {
+      "mi": "Hogy nem tudom meg az oldalról, nekem átalányadó vagy kata lenne-e a jobb.",
+      "idezet": null
+     }
+    ],
+    "hianyzik_a_donteshez": [
+     "Egy gyors kalkulátor vagy összehasonlítás, hogy grafikusként a kata vagy az átalányadó éri-e meg jobban nekem.",
+     "Annak pontosítása, hogy az elindulás előtti tanácsadás ingyen van-e a regisztráció utáni visszahívásban.",
+     "Valódi fotók az igazi könyvelőkről vagy a csapatról, hogy lássam, kivel fogok beszélni."
+    ],
+    "bizalom": {
+     "pont_1_10": 8,
+     "miert": "Nagyon igényes, letisztult a weboldal dizájnja, pontosak a jogi és céges adatok a láblécben, és transzparensen leírják az összes felmerülő költséget."
+    },
+    "zavaros_hosszu_ismetlodo": [
+     {
+      "hol": "8. MEGHATALMAZÁS ÉS ADATOK",
+      "tipus": "ismétlődő",
+      "idezet": "A NAV online felületén (ONYA) adod meg. A könyvelőd is beküldheti, ilyenkor te hagyod jóvá.",
+      "miert": "Ugyanez a mondat szinte szóról szóra szerepel a 3., 5. és a 11. (GYIK) szakaszban is."
+     },
+     {
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "tipus": "zavaros",
+      "idezet": "Regisztráció után az appban kérhetsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.",
+      "miert": "Kicsit furcsa, hogy van egy 'Visszahívást kérek' gomb a weboldalon, miközben a szöveg szerint ehhez előbb regisztrálnom kell az appba."
+     }
+    ],
+    "mit_tennek": "elmenteném későbbre",
+    "miert": "Nagyon tetszik a letisztult appos működés, de amíg nem találtam meg az első fizető ügyfeleimet, nem merek bevállalni egy havi 20 ezer forintos fix költséget."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 23036,
+    "completion_tokens": 1703,
+    "total_tokens": 24739,
+    "cost": 0.008634375,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 22265,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.008634375,
+     "upstream_inference_prompt_cost": 0.002248125,
+     "upstream_inference_completions_cost": 0.00638625
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.008634375
+  },
+  {
+   "kod": "e",
+   "nev": "Szakember",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Tapasztalt hazai CRO és webdesigner szakértő",
+    "ot_masodperc": {
+     "mi_ez_egy_latogato_szerint": "Egy online könyvelési szolgáltatás mobilappal kiegészítve, ahol élő könyvelő dolgozik a háttérben.",
+     "kinek_szol": "Átalányadózó és katás egyéni vállalkozóknak.",
+     "eltalalja_e": "igen",
+     "miert": "A hero főcíme és alcíme azonnal, félreérthetetlenül tisztázza a célcsoportot és az alapvető értékesítési ígéretet."
+    },
+    "havidij": {
+     "ertheto": "igen",
+     "mit_kap_a_havidijert_a_latogato_szerint": "Hús-vér könyvelőt, bevallások beadását, NAV-levelek intézését, igazoláskérést és hozzáférést a pénzügyi apphoz.",
+     "mit_csinal_az_app": "Automatikusan behúzza a számlákat a NAV-tól, kiszámolja a félreteendő adót, mutatja a kereteket és a határidőket, valamint kezeli az iratfotózást és az üzeneteket.",
+     "mi_kerul_kulon": "Az éves zárás (14 999 Ft/év), a helyettünk intézett adatmódosítások (4 999 vagy 7 999 Ft), szünetelés (2 999 Ft/hó) és a bérszámfejtés.",
+     "ami_homalyos": "Az éves zárás feltétele: 'Az éves zárást akkor fizeted, ha az éves bevallásodat mi adjuk be.' Nem egyértelmű, mi történik, ha valaki év közben lép be vagy lép ki."
+    },
+    "nem_ertheto": [
+     {
+      "idezet": "Az app képei bemutató adatokkal és az app új, bevezetés alatt álló kinézetével készültek. Gépen az app ma még telefonos elrendezésben nyílik meg.",
+      "szakasz": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA”",
+      "miert": "CRO szempontból súlyos bizalomromboló: azt üzeni, hogy a gép felület még nincs kész, béta állapotú a termék.",
+      "javaslat": null
+     },
+     {
+      "idezet": "A visszahívás ingyenes, és nem kötelező.",
+      "szakasz": "12. ZÁRÓ FELHÍVÁS",
+      "miert": "Nem világos, kinek nem kötelező: a cégnek nem kötelező visszahívni, vagy a felhasználónak nem kötelező kérni?",
+      "javaslat": "A visszahívás ingyenes és kötelezettségmentes."
+     },
+     {
+      "idezet": "Az éves zárást akkor fizeted, ha az éves bevallásodat mi adjuk be.",
+      "szakasz": "9. ÁRAK",
+      "miert": "Nem tisztázott, hogy ez választható opció-e (beadhatom magamnak is?), vagy kötelező velejárója a könyvelésnek.",
+      "javaslat": null
+     }
+    ],
+    "meggyozne": [
+     {
+      "mi": "Azonnal látni a félreteendő összeget, elkerülve a negyedéves adósokkot.",
+      "idezet": "Te közben az appban látod, mennyit tegyél félre adóra, és mikor mit kell befizetned."
+     },
+     {
+      "mi": "Transzparens, előre rögzített árazás rejtett költségek és apróbetűs meglepetések nélkül.",
+      "idezet": "Előre kiírt árak"
+     },
+     {
+      "mi": "Alacsony belépési gát: kipróbálás és szerződéskötés bankkártyaadatok megadása nélkül.",
+      "idezet": "Regisztrálni kártya nélkül tudsz. Hűségidő nincs."
+     }
+    ],
+    "visszatart": [
+     {
+      "mi": "Félelem a félkész szoftvertől asztali környezetben.",
+      "idezet": "Gépen az app ma még telefonos elrendezésben nyílik meg."
+     },
+     {
+      "mi": "Hiányzó ügyfélvélemények vagy konkrét könyvelői arcok/nevek miatti távolságtartás.",
+      "idezet": null
+     }
+    ],
+    "hianyzik_a_donteshez": [
+     "Társadalmi bizonyíték (ügyfélértékelések, esettanulmányok, aktív ügyfélszám).",
+     "A könyvelőcsapat vagy a cégvezetés bemutatása képpel (arcok a Somosi Kft. mögött).",
+     "Garantált válaszidő a könyvelői üzenetekre (mennyi idő alatt válaszolnak az appban?)."
+    ],
+    "bizalom": {
+     "pont_1_10": 8,
+     "miert": "A céges és felelősségi adatok (Somosi Kft., székhely, adószám) transzparensek, a NAV- és adatvédelmi folyamatok korrektek, de a social proof teljes hiánya rontja az összhatást."
+    },
+    "zavaros_hosszu_ismetlodo": [
+     {
+      "hol": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA”",
+      "tipus": "túl hosszú",
+      "idezet": "A kiállított számláid maguktól bejönnek [...] Gépen is ugyanez",
+      "miert": "A 8 lépéses interaktív görgetés mobilon rendkívül hosszúvá teszi az oldalt, a figyelem elfárad a végére."
+     },
+     {
+      "hol": "10. ÖSSZEVETÉS",
+      "tipus": "ismétlődő",
+      "idezet": "19 999 Ft/hó bruttó, a díjak kiírva ezen az oldalon",
+      "miert": "Az előző 'Árak' szakasz után közvetlenül ugyanazokat az előnyöket és díjakat sorolja fel újra táblázatban."
+     },
+     {
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "tipus": "zavaros",
+      "idezet": "Regisztráció után az appban kérhetsz visszahívást. [...] Visszahívást kérek",
+      "miert": "A gomb azt sugallja, azonnal kérhetek visszahívást, de a szöveg szerint előbb regisztrálnom kell az appban."
+     }
+    ],
+    "szakmai": {
+     "elrendezes": [
+      "Kiváló ritmusú szakaszváltások a desktop verzióban, logikus információáramlás a problémától az árazásig.",
+      "A 8 lépéses bemutató mobilon túlzottan megnyújtja a vertikális görgetési sávot.",
+      "A GYIK kétoszlopos asztali tördelése jól tömöríti a tartalmat és csökkenti a hajtás alatti üres teret."
+     ],
+     "hierarchia": [
+      "Erős és tiszta vizuális hierarchia a főcímek és alcímek között az 1-4. szakaszokban.",
+      "A 'Ki könyvel neked?' blokkban az időrendi felsorolás jól tagolt, könnyen szkennelhető.",
+      "Az ártáblázat kártyás kiemelése egyértelműen a havidíjra irányítja a szemet a mellékköltségek helyett."
+     ],
+     "cta": [
+      "A fő 'Regisztrálok' gombok kiemelkedő sárga színe jó kontrasztot ad a kék és fehér háttereken.",
+      "A záró felhívásnál a 'Visszahívást kérek' másodlagos CTA megtévesztő, ha előbb regisztrációhoz kötött a funkció.",
+      "Hiányzik egy fixen lebegő (sticky) CTA gomb a hosszú mobilos görgetés során."
+     ],
+     "szinek": [
+      "A kék, fehér és sárga trió professzionális, tiszta fintech hangulatot teremt.",
+      "A zöld használata a 'Neked szól, ha' és 'Ki könyvel neked?' dobozoknál kissé megtöri a konzisztens márkaszín-palettát.",
+      "A szöveg és háttér közötti kontrasztarányok mindenhol megfelelnek az akadálymentességi elvárásoknak."
+     ],
+     "telefon_vs_gep": [
+      "A desktop verzió sokkal kompaktabb, a telefonos nézet a sok kártya és a bemutató miatt túlságosan hosszú.",
+      "Desktopon a hero mockup képernyőpárja kifejezetten prémium hatású, míg mobilon kissé zsúfolt.",
+      "A GYIK mobilon harmonikaszerűen kezelhető, ami elengedhetetlen a vertikális helytakarékossághoz."
+     ]
+    },
+    "top_javitasok": [
+     {
+      "mit": "Társadalmi bizonyíték (valós ügyfélvélemények, értékelések, esettanulmányok) beépítése a havidíj blokk elé.",
+      "hol": "8. és 9. szakasz közé",
+      "miert": "A magas bizalmi igényű könyvelési piacon a social proof hiánya a legnagyobb konverziós gát."
+     },
+     {
+      "mit": "A záró visszahívás-CTA logikájának tisztázása: közvetlen űrlap megnyitása a regisztrációs kényszer helyett.",
+      "hol": "12. ZÁRÓ FELHÍVÁS",
+      "miert": "A bizonytalan érdeklődők nem akarnak fiókot regisztrálni csak azért, hogy feltehessenek egy kérdést."
+     },
+     {
+      "mit": "A negatív sugallatú technikai megjegyzés törlése vagy átfogalmazása az asztali nézetről.",
+      "hol": "6. „MINDIG LÁTOD, MENNYIT TEGYÉL FÉLRE ADÓRA”",
+      "miert": "A félkész, mobilos nézetet mutató gép felület említése komolytalanná teszi a digitális terméket."
+     },
+     {
+      "mit": "Lebegő (sticky) 'Regisztrálok' sáv bevezetése mobilon a képernyő alján a hosszú görgetés közben.",
+      "hol": "Teljes mobil felület",
+      "miert": "A látogató bármely meggyőző érvnél azonnal konvertálhasson anélkül, hogy vissza kellene tekernie."
+     },
+     {
+      "mit": "A könyvelői felelősségbiztosítás és a szakmai csapat vizuális (arccal ellátott) megjelenítése.",
+      "hol": "7. „KI KÖNYVEL NEKED?”",
+      "miert": "Az emberi tényező és a felelősségbiztosítás említése radikálisan növeli a biztonságérzetet a NAV-bírságoktól félő KKV-knál."
+     }
+    ]
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 23158,
+    "completion_tokens": 2888,
+    "total_tokens": 26046,
+    "cost": 0.013169625,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 22265,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.013169625,
+     "upstream_inference_prompt_cost": 0.002339625,
+     "upstream_inference_completions_cost": 0.01083
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.013169625
+  }
+ ],
+ "koltseg_osszes": 0.04832,
+ "keret_utana": {
+  "limit_remaining": 7.8097300579999995,
+  "usage": 52.190269942
+ }
+}

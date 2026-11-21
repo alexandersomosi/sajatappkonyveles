@@ -25,6 +25,7 @@ import { assistDigestLine, jobDefsTulaj1119 } from './jobs-tulaj1119.js';
 import { jobDefsK28, k28DigestLines } from './jobs-k28.js';
 import { jobDefsK29f } from './jobs-k29f.js';
 import { jobDefsK29 } from './jobs-k29.js';
+import { jobDefsK8, k8DigestLines } from './jobs-k8.js';
 
 /** Creates a notification only once per dedupe key (stored in notifications.data.dedupe). */
 async function notifyOnce(deps: Deps, key: string, n: NotifyInput): Promise<boolean> {
@@ -334,6 +335,7 @@ export async function jobStaffDigest(deps: Deps): Promise<number> {
     const assistLine = await assistDigestLine(deps, p); // SPEC §27.8
     if (assistLine) lines.push(assistLine);
     lines.push(...(await k28DigestLines(deps, p))); // SPEC §28.8 / §28.K.17
+    lines.push(...(await k8DigestLines(deps, p))); // k8: new clients, failed charges, late transfers (admins)
     if (!lines.length) continue;
     const firstName = p.first ?? (p.displayName ?? '').trim().split(/\s+/).pop() ?? '';
     const params = { brand: brand.name, count: lines.length, firstName, lines: lines.join('\n'), panelUrl: deps.cfg.panelPublicUrl };
@@ -368,6 +370,7 @@ export function jobDefs(deps: Deps): JobDef[] {
     ...jobDefsK29f(), // SPEC §29.9.5 F9: termination_effective 06:10 (+ calendar feed revoke)
     ...jobDefsK29(), // SPEC §29.13 (B1): predebit 10:00, suspension_warning 10:05, payments_reconcile /15 min, invoices_issue /min
     ...jobDefsK28(), // SPEC §28 / §28.K: allowances yearly/monthly, check-in, reminders, annual closing, service lock
+    ...jobDefsK8(), // k8: transfer_issue 06:30, transfer_reconcile /2 h (working days), transfer_reminders 09:30, guided_continue 11:00
     // SPEC §31.6: server-side ad conversions, every 5 minutes – registered only while ADS_TRACKING_ENABLED=true
     ...(deps.cfg.ads.enabled
       ? [

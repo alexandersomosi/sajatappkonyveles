@@ -358,7 +358,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 @media (max-width: 980px) {
   .szinpad-mod { display: grid; grid-template-columns: minmax(0, 1fr); }
   .szinpad-mod > .szinpad, .szinpad-mod > .blepesek { grid-area: 1 / 1; }
-  .szinpad-mod .blepes { display: block; height: 88vh; height: 88svh; padding: 0; border: 0; }
+  .szinpad-mod .blepes { display: block; height: calc(100vh - var(--fej)); height: calc(100svh - var(--fej)); padding: 0; border: 0; }   /* lépésenként egy színpadnyi (11-21, ld. lent: görgetésenként egy lépés) */
   .szinpad-mod .blepesek .blepes-szoveg { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .szinpad-mod .szinpad {
     display: flex; flex-direction: column; align-items: center; z-index: 1;
@@ -389,6 +389,48 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .szinpad-szovegek h3 { font-size: 17px; }
   .szinpad-szovegek p:not(.blepes-cimke) { font-size: 14px; }
 }
+
+/* ---------- telefonon: görgetésenként egy lépés + mozgó nyíl (tulaj, 11-21) ----------
+   „Minden görgetés egy lépés legyen, és legyen mellette valami mozgó nyíl, ami mutatja, hogy le kell görgetni – írás nem kell.”
+   - A lépések (.blepes) egy-egy színpadnyi magasak (100svh − fejléc). A mozgas.js minden lépés elejére tesz egy láthatatlan
+     beakadási pontot (.beakado; scroll-snap-stop: always, hogy egy gyors legyintés se ugorjon át lépést), egyet a lista végére
+     (.beakado-ki: a színpad épp elengedett, innen szabad tovább) és egyet a szakasz tetejére (.beakado-be: ugyanoda, ahová a menü
+     „Mit kapsz” linkje visz).
+   - A gyökér görgetője csak akkor „mandatory” (html.beakad), amikor a helyzet a két szélső pont KÖZÖTT van; a szakasz előtt és után,
+     és a két szélső ponton is szabad a görgetés (így sehol nem ragad be, és a menü linkjei is oda visznek, ahová kell).
+   - Gépen (≥ 981 px) nincs beakadás, a pontok nem látszanak. JS nélkül nincs .szinpad-mod: a lépések egymás alatt állnak.
+   - A nyíl: két sárga chevron a ragadós telefon mellett jobbra, az alsó részénél (a telefon és a képernyő széle közötti sávban,
+     nem takar szöveget); finoman le-fel pattog (csak transform, csak .mozog alatt: csökkentett mozgásnál áll); az utolsó lépésnél
+     eltűnik (.vegen). Csak látvány (aria-hidden), nem fókuszálható, nem kattintható. Konténer-egység nélküli böngészőben nincs nyíl. */
+.beakado, .szinpad-nyil { display: none; }
+@media (max-width: 980px) {
+  html.beakad { scroll-snap-type: y mandatory; }
+  .beakado { display: block; position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; scroll-snap-align: start; scroll-margin-top: var(--fej); }
+  .blepes > .beakado { scroll-snap-stop: always; }
+  .blepes > .beakado-ki { top: 100%; scroll-snap-stop: normal; }
+  .beakado-be { scroll-margin-top: calc(var(--fej) + 8px); }
+}
+@supports (width: 1cqw) {
+  @media (max-width: 980px) {
+    .szinpad-nyil {
+      display: block; position: absolute; z-index: 2; width: 24px; height: 30px; pointer-events: none;
+      left: calc(50% + var(--w0, var(--szw)) / 2 + min((100cqw + 2 * var(--oldalso) - var(--w0, var(--szw))) / 4, 40px) - 12px);
+      top: calc(50% + var(--w0, var(--szw)) * 1.023 - 58px);
+      transition: opacity .3s var(--mozgas);
+    }
+    .szinpad-nyil::before, .szinpad-nyil::after {
+      content: ""; position: absolute; left: 50%; width: 13px; height: 13px; margin-left: -6.5px;
+      border-right: 3px solid var(--sarga); border-bottom: 3px solid var(--sarga); border-radius: 0 0 3px 0;
+      transform: rotate(45deg);
+    }
+    .szinpad-nyil::before { top: 0; opacity: .45; }
+    .szinpad-nyil::after { top: 10px; }
+    .szinpad.vegen .szinpad-nyil { opacity: 0; }
+    .mozog .szinpad-nyil { animation: nyil-pattog 1.5s cubic-bezier(.45, 0, .55, 1) infinite; }
+    .mozog .szinpad.vegen .szinpad-nyil { animation-play-state: paused; }
+  }
+}
+@keyframes nyil-pattog { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(5px); } }
 
 /* ---------- a telefon képernyője + a mozgó rétegek (minden méret a kijelző szélességéhez, --k-hoz igazodik) ----------
    Képernyőnként legfeljebb két látható réteg. A helyek a 780x1688-as app-képek valódi elemeihez igazodnak

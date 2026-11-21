@@ -54,7 +54,8 @@ describe('O2.1 – client creates a callback', () => {
     const first = await ask(c.token, { note: 'Elakadtam a meghatalmazásnál.' });
     expect(first.status).toBe(201);
     expect(first.body).toMatchObject({ status: 'uj', phoneMasked: '+36 30 *** **67', canCancel: true, overdue: false, callingNow: false });
-    expect(first.body.statusText).toContain('24–48 órán belül hív a +36 30 *** **67 számon');
+    // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim
+    expect(first.body.statusText).toContain('A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: +36 30 *** **67.');
     const dup = await ask(c.token);
     expect(dup.status).toBe(409);
     expect(dup.body.error.code).toBe('callback_already_open');

@@ -31,8 +31,17 @@ export interface SzInvoiceInput {
   correctionOf?: string | null;
   /** Fallback rounding when the Agent refuses the cents (§29.2.2). */
   wholeNet?: boolean;
-  /** Számlázz.hu sends the invoice e-mail (true in production flows). */
+  /** Számlázz.hu sends the invoice e-mail. k8 (K8_TERV:22): the pipeline always sends false – our own mail goes out. */
   sendEmail?: boolean;
+  // ---- k8 ALAP-B (bank transfer). Absent = the card invoice exactly as before. ----
+  /** fizmod text (default 'Bankkártya'); 'Átutalás' for a díjbekérő and its final invoice. */
+  fizmod?: string;
+  /** fizetesiHataridoDatum when it differs from the payment day (a díjbekérő: kelt + 8 nap). */
+  dueDate?: string;
+  /** A díjbekérő (dijbekero=true, fizetve=false). */
+  proforma?: boolean;
+  /** The final invoice of a paid díjbekérő refers to it (dijbekeroSzamlaszam). */
+  dijbekeroSzamlaszam?: string | null;
 }
 
 export interface SzStornoInput {
@@ -118,18 +127,19 @@ export function buildInvoiceXml(agentKey: string, i: SzInvoiceInput): string {
       [
         ['keltDatum', i.issueDate],
         ['teljesitesDatum', i.paymentDate],
-        ['fizetesiHataridoDatum', i.paymentDate],
-        ['fizmod', 'Bankkártya'],
+        ['fizetesiHataridoDatum', i.dueDate ?? i.paymentDate],
+        ['fizmod', i.fizmod ?? 'Bankkártya'],
         ['penznem', 'HUF'],
         ['szamlaNyelve', 'hu'],
         ['megjegyzes', i.megjegyzes],
         ['rendelesSzam', i.key],
+        ['dijbekeroSzamlaszam', i.dijbekeroSzamlaszam ?? null],
         ['elolegszamla', false],
         ['vegszamla', false],
         ['helyesbitoszamla', Boolean(i.correctionOf)],
         ['helyesbitettSzamlaszam', i.correctionOf ?? null],
-        ['dijbekero', false],
-        ['fizetve', true],
+        ['dijbekero', Boolean(i.proforma)],
+        ['fizetve', !i.proforma],
       ],
     ],
     [
@@ -180,6 +190,65 @@ export function buildQueryXml(agentKey: string, key: string): string {
     ['pdf', true],
     ['szamlaKulsoAzon', key],
   ]);
+}
+
+/**
+ * k8: xmlszamlaxml by order number or by document number (xmlszamlaxml.xsd order: szamlaszam, rendelesSzam, pdf,
+ * szamlaKulsoAzon). Used for the díjbekérő's payment state (the díjbekérő carries our order number as rendelesSzam AND
+ * szamlaKulsoAzon) and to read an invoice Autokassza made from a paid díjbekérő.
+ */
+export function buildQueryXmlBy(agentKey: string, by: { szamlaszam?: string; rendelesSzam?: string; szamlaKulsoAzon?: string }, pdf = true): string {
+  return doc('xmlszamlaxml', NS_XML, 'agentxml/xmlszamlaxml.xsd', [
+    ['szamlaagentkulcs', agentKey],
+    ['szamlaszam', by.szamlaszam ?? null],
+    ['rendelesSzam', by.rendelesSzam ?? null],
+    ['pdf', pdf],
+    ['szamlaKulsoAzon', by.szamlaKulsoAzon ?? null],
+  ]);
+}
+
+/**
+ * k8: the parts of a queried document the transfer reconciliation needs (docs.szamlazz.hu "Számla XML lekérdezése –
+ * válasz", root `szamla`): alap/tipus (D = díjbekérő, SZ = számla, VS = végszámla …), alap/szamlaszam, alap/fizh,
+ * alap/hivdijbekszam (an invoice made from a díjbekérő names it), osszegek/totalossz/brutto and kifizetesek/kifizetes
+ * (datum, jogcim, osszeg) – there is no "paid" flag: the payments list is the state.
+ */
+export interface SzDocDetails {
+  number: string;
+  tipus: string | null;
+  dueOn: string | null;
+  refProforma: string | null;
+  grossHuf: number | null;
+  payments: { datum: string | null; jogcim: string | null; osszeg: number }[];
+  paidHuf: number;
+  pdf: Buffer;
+}
+
+/** Parses the query answer (exported for the tests). */
+export function parseDocDetails(text: string): SzDocDetails | null {
+  const number = tagText(text, 'szamlaszam', 'alap');
+  if (!number) return null;
+  const payments: SzDocDetails['payments'] = [];
+  const block = /<kifizetesek>([\s\S]*?)<\/kifizetesek>/.exec(text)?.[1] ?? '';
+  for (const m of block.matchAll(/<kifizetes>([\s\S]*?)<\/kifizetes>/g)) {
+    const one = m[1]!;
+    const osszeg = Number(tagText(one, 'osszeg'));
+    if (!Number.isFinite(osszeg)) continue;
+    payments.push({ datum: tagText(one, 'datum'), jogcim: tagText(one, 'jogcim'), osszeg });
+  }
+  const grossText = tagText(text, 'brutto', 'totalossz');
+  const gross = grossText ? Number(grossText) : Number.NaN;
+  const pdfB64 = tagText(text, 'pdf')?.replace(/\s+/g, '');
+  return {
+    number,
+    tipus: tagText(text, 'tipus', 'alap'),
+    dueOn: tagText(text, 'fizh', 'alap'),
+    refProforma: tagText(text, 'hivdijbekszam', 'alap') || null,
+    grossHuf: Number.isFinite(gross) ? gross : null,
+    payments,
+    paidHuf: Math.round(payments.reduce((a, p) => a + p.osszeg, 0)),
+    pdf: pdfB64 ? Buffer.from(pdfB64, 'base64') : Buffer.alloc(0),
+  };
 }
 
 /** xmlszamlast (storno) – NB: in this schema valaszVerzio comes after szamlaLetoltes (no Pld/aggregator used). */
@@ -237,6 +306,8 @@ export interface SzamlazzClient {
   storno(xml: string): Promise<SzResult>;
   /** null = no document with this key (error code 7). */
   query(xml: string): Promise<SzResult | null>;
+  /** k8: the same query, with the document type, the due day and the payments (díjbekérő reconciliation). */
+  queryDetails?(xml: string): Promise<SzDocDetails | null>;
 }
 
 export function createSzamlazzClient(o: { url: string; fetch?: typeof fetch; timeoutMs?: number }): SzamlazzClient {
@@ -290,6 +361,20 @@ export function createSzamlazzClient(o: { url: string; fetch?: typeof fetch; tim
       const grossText = tagText(text, 'brutto', 'totalossz');
       const gross = grossText ? Number(grossText) : Number.NaN;
       return { number, pdf, grossHuf: Number.isFinite(gross) ? gross : null };
+    },
+    async queryDetails(xml) {
+      const res = await post('action-szamla_agent_xml', xml);
+      const text = await res.text();
+      const hibakod = tagText(text, 'hibakod') ?? res.headers.get('szlahu_error_code');
+      if (hibakod) {
+        if (hibakod === '7') return null;
+        const msg = tagText(text, 'hibauzenet') ?? decodeHeader(res.headers.get('szlahu_error')) ?? 'hiba';
+        throw new SzamlazzError(`Számlázz.hu lekérdezés: ${msg.trim().slice(0, 160)}`, hibakod, false);
+      }
+      if (res.status >= 500) throw new SzamlazzError(`Számlázz.hu: HTTP ${res.status}`, `http_${res.status}`, true);
+      const d = parseDocDetails(text);
+      if (!d) throw new SzamlazzError('Számlázz.hu lekérdezés: váratlan válasz', 'bad_response', true);
+      return d;
     },
   };
 }

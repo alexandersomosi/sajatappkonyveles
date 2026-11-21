@@ -11,6 +11,7 @@ import { documents, documentVersions, files, gdprExports, clients } from '../db/
 import { audit } from '../audit.js';
 import { auth, param, parseQuery, readJson, type C, type Env } from '../http/core.js';
 import { E } from '../lib/errors.js';
+import { registerAdminConsoleK8Routes } from './k8.js';
 import { assertConsoleMfa, consoleClientHeader, consoleClients, consoleOverview, consolePreview, consoleSection, consoleStepUp, requireStepUp, revealField, stepUpState } from '../services/konzol.js';
 import {
   addAdminFee,
@@ -54,6 +55,8 @@ export function registerAdminConsoleRoutes(r: Hono<Env>, deps: Deps): void {
   });
 
   r.get('/console/overview', async (c) => c.json(await consoleOverview(deps)));
+  // k8: díjbekérők (fizetett / vár / késik), the manual mark, resend, the payment switches
+  registerAdminConsoleK8Routes(r, deps);
   r.get('/console/clients', async (c) => {
     const q = parseQuery(
       c,

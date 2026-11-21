@@ -34,6 +34,7 @@ import {
   type SubscriptionStartInputK29,
 } from '../_shared/k29.js';
 import { ASSIST_KIND_LABELS, type FeeKind } from '../_shared/enums.js';
+import { TRANSFER_TEXTS } from '../_shared/k8.js';
 import { FEE_KIND_LABELS } from '../_shared/bekotes.js';
 import { paymentModeOf } from '../config.js';
 import type { Deps } from '../deps.js';
@@ -483,6 +484,11 @@ export async function startSubscriptionK29(deps: Deps, cl: ClientRow, input: Sub
   if (!cl.addressZip || !cl.addressCity || !cl.addressLine) throw E.conflict('Előbb add meg a címedet az Adataid lépésben (a számlához kell).');
   const today = todayBudapest(deps.now());
   const [sub] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, cl.id)).limit(1);
+  // k8: an unpaid monthly díjbekérő is paid by transfer first (the card would pay the same month twice)
+  if (sub?.billingMethod === 'atutalas') {
+    const { hasOpenMonthlyTransfer } = await import('./atutalas.js');
+    if (await hasOpenMonthlyTransfer(db, cl.id)) throw new ApiError(409, 'atutalas_nyitott', TRANSFER_TEXTS.switchToCardBlocked);
+  }
   const due = await duePeriod(deps, db, cl.id);
   // money due: a card change pays the due month with the new card ("Fizesd ki")
   if (input.purpose === 'card_update' && due) return startDuePayment(deps, cl, { platform: input.platform, returnOrigin: input.returnOrigin, consentVersion: input.consentVersion, consentSha256: input.consentSha256 }, meta);
@@ -737,13 +743,14 @@ function isUniqueViolation(e: unknown): boolean {
 export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info: SuccessInfo): Promise<'applied' | 'already' | 'duplicate' | 'missing' | 'mismatch'> {
   const db = deps.db;
   let outcome = 'missing' as 'applied' | 'already' | 'duplicate' | 'missing' | 'mismatch';
-  const after: { invoiceId: string | null; detach: { provider: string; ref: string }[]; charge: typeof feeCharges.$inferSelect | null; clientId: string | null; userId: string | null; terminatedPaid: boolean } = {
+  const after: { invoiceId: string | null; detach: { provider: string; ref: string }[]; charge: typeof feeCharges.$inferSelect | null; clientId: string | null; userId: string | null; terminatedPaid: boolean; firstMonth: boolean } = {
     invoiceId: null,
     detach: [],
     charge: null,
     clientId: null,
     userId: null,
     terminatedPaid: false,
+    firstMonth: false,
   };
   const run = async (asDuplicate: boolean) =>
     db.transaction(async (tx) => {
@@ -822,7 +829,8 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
               currentPeriodStart: periodStart,
               currentPeriodEnd: periodEnd,
               // k7c2 A8: the day the pre-debit notice names is the day the 06:00 job charges (not the next morning)
-              nextChargeAt: budapestLocalToUtc(periodEnd, '00:00'),
+              // k8: a transfer subscription is never charged by `billing` (its next díjbekérő comes from jobTransferIssue)
+              nextChargeAt: p.provider === 'atutalas' || (sub.billingMethod === 'atutalas' && p.kind !== 'elso_havi') ? null : budapestLocalToUtc(periodEnd, '00:00'),
               nextRetryAt: null,
               failedAttempts: 0,
               firstFailedAt: null,
@@ -830,10 +838,13 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
               graceUntil: null,
               renewalNotifiedAt: null,
               suspensionWarnedFor: null,
-              provider: p.provider === 'stripe' ? 'stripe' : 'demo',
+              // k8: a transfer keeps the subscription's card provider (a later card change charges with it)
+              provider: p.provider === 'atutalas' ? sub.provider : p.provider === 'stripe' ? 'stripe' : 'demo',
               mode: subModeOf(p.mode),
               ...(newPmId ? { paymentMethodId: newPmId, cardRegistrationId: null } : {}),
               ...(p.kind === 'elso_havi' ? { cancelAtPeriodEnd: false, canceledAt: null } : {}),
+              // k8: the first month paid by card after the transfer was chosen → the card pays from now on
+              ...(p.kind === 'elso_havi' && p.provider !== 'atutalas' && sub.billingMethod === 'atutalas' ? { billingMethod: 'kartya' as const } : {}),
               updatedAt: now,
             })
             .where(eq(subscriptions.id, sub.id));
@@ -842,6 +853,12 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
         if (p.kind === 'elso_havi') {
           const { setStep } = await import('./onboarding.js');
           await setStep(deps, tx, cl.id, 'elofizetes', 'kesz');
+          // k8: the card paid the first month → the open first-month díjbekérő is withdrawn (never paid twice)
+          if (p.provider !== 'atutalas') {
+            const { withdrawOpenFirst } = await import('./atutalas.js');
+            await withdrawOpenFirst(tx, cl.id, now, 'Kártyával fizetett.');
+          }
+          after.firstMonth = true;
           // SPEC §31.6: the "fizetett" conversion – nothing unless ads are on AND the account has a granted consent
           const { queueAdConversionSafe } = await import('./hirdetes.js');
           await queueAdConversionSafe(deps, tx, { event: 'fizetes', userId: cl.userId, ref: p.id, valueHuf: p.amountHuf });
@@ -849,6 +866,12 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
       }
       if (p.kind === 'kartya' && sub && newPmId) {
         await tx.update(subscriptions).set({ paymentMethodId: newPmId, cardRegistrationId: null, provider: p.provider === 'stripe' ? 'stripe' : 'demo', mode: subModeOf(p.mode), renewalNotifiedAt: null, updatedAt: now }).where(eq(subscriptions.id, sub.id));
+        // k8 "Átváltok kártyára": a transfer client's new card pays from the next period on
+        if (sub.billingMethod === 'atutalas')
+          await tx
+            .update(subscriptions)
+            .set({ billingMethod: 'kartya', nextChargeAt: sub.currentPeriodEnd && (sub.status === 'active' || sub.status === 'past_due') ? budapestLocalToUtc(sub.currentPeriodEnd, '00:00') : null, updatedAt: now })
+            .where(eq(subscriptions.id, sub.id));
       }
       if (p.kind === 'egyszeri' && p.feeChargeId) {
         const [ch] = await tx.update(feeCharges).set({ status: 'fizetve', paidAt: now, paymentId: p.id }).where(and(eq(feeCharges.id, p.feeChargeId), inArray(feeCharges.status, ['nyitott']))).returning();
@@ -932,7 +955,20 @@ export async function applyPaymentSucceeded(deps: Deps, paymentId: string, info:
     await computeFlags(deps, db, after.clientId);
     await computeServiceLock(deps, after.clientId);
   }
+  // k8 JL 14 (LEVEL_LEFEDETTSEG): "Elindult az előfizetésed" after the first successful payment (card or transfer), once
+  if (after.firstMonth && after.userId) await subscriptionStartedMail(deps, after.userId, paymentId).catch((e) => log().warn({ err: safeErr(e) }, 'subscription started mail failed'));
   return outcome;
+}
+
+/** k8 JL 14: the welcome-to-the-subscription mail (the invoice follows in its own mail). */
+async function subscriptionStartedMail(deps: Deps, userId: string, paymentId: string): Promise<void> {
+  const [u] = await deps.db.select({ email: users.email, status: users.status }).from(users).where(eq(users.id, userId)).limit(1);
+  const [cl] = await deps.db.select({ firstName: clients.firstName }).from(clients).where(eq(clients.userId, userId)).limit(1);
+  const [p] = await deps.db.select({ amountHuf: payments.amountHuf }).from(payments).where(eq(payments.id, paymentId)).limit(1);
+  if (!u || u.status !== 'active' || !cl || !p || p.amountHuf <= 0) return;
+  const { sendTemplateMail } = await import('../notify/notify.js');
+  const link = `${deps.cfg.appPublicUrl}/`;
+  await sendTemplateMail(deps, { to: u.email, key: 'subscription_started', lablec: 'ugyfel', gomb: { szoveg: await deps.content.render('email.subscription_started.gomb', {}), link }, params: { keresztnev: cl.firstName, link } });
 }
 
 async function saveCard(deps: Deps, tx: DbOrTx, clientId: string, p: PaymentRow, info: SuccessInfo, detach: { provider: string; ref: string }[]): Promise<string> {
@@ -2038,6 +2074,7 @@ export async function cancelSubscriptionK29(deps: Deps, i: { clientId: string; w
 export async function detachAllCards(deps: Deps, clientId: string): Promise<number> {
   const db = deps.db;
   const cards = await db.select().from(paymentMethods).where(and(eq(paymentMethods.clientId, clientId), eq(paymentMethods.status, 'aktiv')));
+  let n = 0;
   for (const c of cards) {
     if (c.provider === 'stripe' && c.stripePaymentMethodId) {
       try {
@@ -2047,9 +2084,11 @@ export async function detachAllCards(deps: Deps, clientId: string): Promise<numb
         throw E.upstream('A kártya törlése most nem sikerült a Stripe-nál. Próbáld újra pár perc múlva.');
       }
     }
-    await db.update(paymentMethods).set({ status: 'torolve', detachedAt: deps.now() }).where(eq(paymentMethods.id, c.id));
+    // k8 (k7b remnant): only the call that really flips the row counts it – two parallel deletions never both report it
+    const flipped = await db.update(paymentMethods).set({ status: 'torolve', detachedAt: deps.now() }).where(and(eq(paymentMethods.id, c.id), eq(paymentMethods.status, 'aktiv'))).returning({ id: paymentMethods.id });
+    n += flipped.length;
   }
-  return cards.length;
+  return n;
 }
 
 /** §29.9.6 helper for the anonymisation (= scrubCustomerK29). */

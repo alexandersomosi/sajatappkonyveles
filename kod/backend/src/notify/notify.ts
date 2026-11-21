@@ -11,6 +11,8 @@ import { accountants, clients, notificationPrefs, notifications, pushTokens, use
 import { log, safeErr } from '../log.js';
 import { addDays, budapestLocalToUtc, budapestParts, todayBudapest } from '../lib/dates.js';
 import type { MailAttachment, MailResult } from './mailer.js';
+import type { MailFooterKind } from '../_shared/k8.js';
+import { levelFromText, type Level } from './sablon.js';
 
 export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boolean; to: 'client' | 'accountant' | 'any' }> = {
   tax_approved: { push: true, email: true, to: 'client' },
@@ -119,12 +121,17 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   price_changed: { push: false, email: true, to: 'client' },
   profile_changed_by_admin: { push: false, email: true, to: 'client' },
   announcement: { push: true, email: true, to: 'client' },
-  guided_continue: { push: true, email: false, to: 'client' },
+  // k8 JL 16: e-mail on (jobs-k8 jobGuidedContinue sends it once per client; nothing sent this kind before)
+  guided_continue: { push: true, email: true, to: 'client' },
   // SPEC §32 – staff: the accountant's tax tasks (panel badge + the daily digest e-mail)
   tax_task: { push: false, email: false, to: 'accountant' },
   // SPEC §32.B – client: the önellenőrzés steps (approve, filed, settled). Push + e-mail; the client's own setting wins
   // (Fiók → Értesítések; REMINDER_GROUP_KINDS.befizetes), every step goes once.
   correction_status: { push: true, email: true, to: 'client' },
+  // k8 ALAP-B: bank transfer. The díjbekérő goes in its own mail with the PDF (services/atutalas.ts), so the in-app row
+  // sends no second mail; the late reminders (day 1, 4, 8 after the due day) go by e-mail too. Both always on.
+  transfer_request: { push: true, email: false, to: 'client' },
+  transfer_reminder: { push: true, email: true, to: 'client' },
 };
 
 /** SPEC §28.2.3: the defaults when a user has no user_notification_settings row. */
@@ -345,7 +352,21 @@ export async function sendCodeEmail(
  */
 export async function sendTemplateMail(
   deps: Deps,
-  m: { to: string; key: string; variant?: string; params?: Params; attachments?: MailAttachment[] },
+  m: {
+    to: string;
+    key: string;
+    variant?: string;
+    params?: Params;
+    attachments?: MailAttachment[];
+    /** k8: the footer reason of the HTML template (default: guessed from the key). */
+    lablec?: MailFooterKind;
+    /** k8: the ONE button of the HTML template (the text part keeps its own link). */
+    gomb?: { szoveg: string; link: string } | null;
+    /** k8: extra blocks of the HTML template after the text paragraphs (e.g. the transfer details as a table). */
+    extra?: Level['blokkok'];
+    /** k8: the heading (default: the subject). */
+    cim?: string;
+  },
 ): Promise<MailResult | 'failed'> {
   const params: Params = { brand: brand.name, appUrl: deps.cfg.appPublicUrl, panelUrl: deps.cfg.panelPublicUrl, ...(m.params ?? {}) };
   const keyOf = async (part: 'subject' | 'body') => {
@@ -358,7 +379,14 @@ export async function sendTemplateMail(
   try {
     const subject = await deps.content.render(await keyOf('subject'), params);
     const text = await deps.content.render(await keyOf('body'), params);
-    return await deps.mailer.send({ to: m.to, subject, text, template: m.key, ...(m.attachments?.length ? { attachments: m.attachments } : {}) });
+    let level: Level | undefined;
+    if (m.gomb || m.extra?.length || m.cim || m.lablec) {
+      const { lablecOfTemplate } = await import('./sablon.js');
+      const base = levelFromText(subject, text, { lablec: m.lablec ?? lablecOfTemplate(m.key), cim: m.cim ?? null });
+      // the button replaces a trailing app link of the text (the text part keeps it)
+      level = { ...base, blokkok: [...base.blokkok, ...(m.extra ?? [])], ...(m.gomb ? { gomb: m.gomb, link: null } : {}) };
+    }
+    return await deps.mailer.send({ to: m.to, subject, text, template: m.key, ...(m.attachments?.length ? { attachments: m.attachments } : {}), ...(level ? { level } : {}) });
   } catch (err) {
     log().warn({ template: m.key, err: safeErr(err) }, 'template mail failed');
     return 'failed';
@@ -433,15 +461,25 @@ export async function dispatchPending(deps: Deps, limit = 200): Promise<{ push: 
       const [u] = await db.select({ email: users.email, status: users.status, role: users.role }).from(users).where(eq(users.id, p.userId)).limit(1);
       if (u && u.status === 'active') {
         try {
-          const footer = await deps.content.render('email.generic.footer', { brand: brand.name });
+          // k8: staff get their own footer (the client's "Fiók → Értesítések" does not exist for them)
+          const staffRole = u.role !== 'client';
+          const footerKey = staffRole && (await deps.content.exists('email.generic.footer_munkatars')) ? 'email.generic.footer_munkatars' : 'email.generic.footer';
+          const footer = await deps.content.render(footerKey, { brand: brand.name });
           // Staff links open the panel, client links the app.
-          const link = claimE.link ? `\n\n${u.role === 'client' ? deps.cfg.appPublicUrl : deps.cfg.panelPublicUrl}${claimE.link}` : '';
+          const url = claimE.link ? `${u.role === 'client' ? deps.cfg.appPublicUrl : deps.cfg.panelPublicUrl}${claimE.link}` : '';
+          const link = url ? `\n\n${url}` : '';
           const d = (claimE.data ?? {}) as { emailBody?: unknown; emailSubject?: unknown; emailTemplate?: unknown };
           const emailBody = typeof d.emailBody === 'string' ? d.emailBody : claimE.body;
           // k7b: a dedicated e-mail text (NotifyInput.emailKey) has its own subject and template key
           const subject = typeof d.emailSubject === 'string' ? d.emailSubject : claimE.title;
           const template = typeof d.emailTemplate === 'string' ? d.emailTemplate : claimE.kind;
-          const r = await deps.mailer.send({ to: u.email, subject, text: `${emailBody}${link}${footer}`, template });
+          // k8: the HTML part – the body paragraphs in the new template; the link is the button when the template has a
+          // button text (email.<template>.gomb), else a plain "Megnyitom" link; staff get the staff footer line
+          const gombKey = `email.${template}.gomb`;
+          const gombSzoveg = url && (await deps.content.exists(gombKey)) ? await deps.content.render(gombKey, {}) : null;
+          const base = levelFromText(subject, emailBody, { lablec: staffRole ? 'munkatars' : 'ugyfel' });
+          const level: Level = { ...base, gomb: url && gombSzoveg ? { szoveg: gombSzoveg, link: url } : null, link: url && !gombSzoveg ? { szoveg: 'Megnyitom', cel: url } : base.link };
+          const r = await deps.mailer.send({ to: u.email, subject, text: `${emailBody}${link}${footer}`, template, level });
           if (r === 'disabled') await db.update(notifications).set({ error: 'mail_not_configured' }).where(eq(notifications.id, p.id));
           else mailN++;
         } catch (err) {

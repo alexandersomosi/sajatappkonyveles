@@ -735,14 +735,19 @@ export async function hasUsableCard(db: DbOrTx, clientId: string): Promise<boole
   return Boolean(reg);
 }
 
-/** SimplePay rule: card deletion must always be possible, without conditions (SPEC §9.6). */
-export async function deleteCard(deps: Deps, clientId: string, actor: { userId: string | null; role: string }): Promise<void> {
+/**
+ * SimplePay rule: card deletion must always be possible, without conditions (SPEC §9.6). k8 (k7b remnant): returns how many
+ * ACTIVE cards THIS call deleted (a conditional update) – the admin route mails the client only then, so two deletions at
+ * the same moment send one mail.
+ */
+export async function deleteCard(deps: Deps, clientId: string, actor: { userId: string | null; role: string }): Promise<number> {
   // SPEC §29.1.11 (ÁSZF 8.4, unconditional): the Stripe / new DEMO card is detached at the provider and marked 'torolve'.
   const { detachAllCards } = await import('./payments.js');
   const pms = await detachAllCards(deps, clientId);
   const regs = await deps.db.select().from(cardRegistrations).where(and(eq(cardRegistrations.clientId, clientId), inArray(cardRegistrations.status, ['aktiv', 'fuggo'])));
   if (pms) await audit(deps.db, { action: 'subscription.card_deleted', actorUserId: actor.userId, actorRole: actor.role, targetType: 'client', targetId: clientId, clientId, details: { cards: pms, provider: 'k29' } });
-  if (pms && !regs.length) return;
+  if (pms && !regs.length) return pms;
+  let flippedActive = 0;
   for (const reg of regs) {
     if (reg.mode !== 'demo' && reg.status === 'aktiv' && reg.simplepayCardId) {
       if (!deps.simplepay) throw E.notConfigured('A SimplePay-kapcsolat nincs bekapcsolva; a kártyát a SimplePay ügyfélszolgálatán keresztül tudjuk törölni.');
@@ -753,10 +758,16 @@ export async function deleteCard(deps: Deps, clientId: string, actor: { userId: 
         throw E.upstream('A kártya törlése most nem sikerült a SimplePaynél. Próbáld újra pár perc múlva.');
       }
     }
-    await deps.db.update(cardRegistrations).set({ status: 'torolve', updatedAt: deps.now() }).where(eq(cardRegistrations.id, reg.id));
+    const flipped = await deps.db
+      .update(cardRegistrations)
+      .set({ status: 'torolve', updatedAt: deps.now() })
+      .where(and(eq(cardRegistrations.id, reg.id), inArray(cardRegistrations.status, ['aktiv', 'fuggo'])))
+      .returning({ id: cardRegistrations.id });
+    if (flipped.length && reg.status === 'aktiv') flippedActive++;
     await deps.db.update(paymentTokens).set({ status: 'visszavont' }).where(and(eq(paymentTokens.cardRegistrationId, reg.id), inArray(paymentTokens.status, ['aktiv', 'fuggo'])));
   }
   await audit(deps.db, { action: 'subscription.card_deleted', actorUserId: actor.userId, actorRole: actor.role, targetType: 'client', targetId: clientId, clientId, details: { cards: regs.length } });
+  return pms + flippedActive;
 }
 
 // ---------------- worker ----------------

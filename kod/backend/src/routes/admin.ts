@@ -35,6 +35,7 @@ import { registerAdminK28Routes } from './acc-k28.js';
 import { registerAdminPaymentsK29 } from './payments-k29.js';
 import { registerAdminConsoleRoutes } from './admin-konzol.js';
 import { registerAdminMarketingRoutes } from './admin-marketing.js';
+import { registerAdminDemoMailHtml } from './k8.js';
 import { issueCode } from '../auth/codes.js';
 import { hmacHex } from '../lib/crypto.js';
 import { endRelationship } from '../services/kyc.js';
@@ -106,6 +107,8 @@ export function adminRoutes(deps: Deps) {
   registerAdminConsoleRoutes(r, deps);
   // SPEC §31.4: the Marketing tab (/admin/marketing, /admin/marketing/koltes)
   registerAdminMarketingRoutes(r, deps);
+  // k8: the DEMO mail's HTML image (signed link)
+  registerAdminDemoMailHtml(r, deps);
 
   /**
    * DEMO only: no mail leaves the server and the Demo-postafiók hides other staff members' sign-in mails, so a newly
@@ -455,9 +458,10 @@ export function adminRoutes(deps: Deps) {
     const [s] = await deps.db.select().from(subscriptions).where(eq(subscriptions.id, param(c, 'id'))).limit(1);
     if (!s) throw E.notFound();
     const had = await hasUsableCard(deps.db, s.clientId);
-    await deleteCard(deps, s.clientId, { userId: auth(c).userId, role: 'admin' });
-    // k7b (LEVEL_LEFEDETTSEG #33): the client is told (only when there was a card to delete)
-    if (had) await notifyCardDeletedByAdmin(deps, s.clientId);
+    const deleted = await deleteCard(deps, s.clientId, { userId: auth(c).userId, role: 'admin' });
+    // k7b (LEVEL_LEFEDETTSEG #33): the client is told (only when there was a card to delete); k8: only by the call that
+    // really deleted it – two deletions at the same moment send ONE mail
+    if (had && deleted > 0) await notifyCardDeletedByAdmin(deps, s.clientId);
     return c.json({ ok: true });
   });
 

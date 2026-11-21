@@ -45,9 +45,10 @@ describe('G – a brand-new client', () => {
     expect((await h.json('PUT', '/client/onboarding/business-status', { token: c.token, body: { businessStatus: 'van' } })).status).toBe(200);
     const v1 = await guided(c.token);
     expect(v1.variant).toBe('van');
-    expect(keys(v1)).toEqual(['ut', 'adoszam', 'adatok', 'kedvezmenyek', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes']);
+    // k8: the optional callback offer before the payment ('visszahivas_ajanlat'), tulaj 11-20 ("kártya csak a visszahívás-ajánlat után")
+    expect(keys(v1)).toEqual(['ut', 'adoszam', 'adatok', 'kedvezmenyek', 'szerzodes', 'meghatalmazas', 'azonositas', 'visszahivas_ajanlat', 'elofizetes']);
     expect(v1.currentKey).toBe('adoszam');
-    expect(v1.progress).toEqual({ done: 1, total: 8 });
+    expect(v1.progress).toEqual({ done: 1, total: 9 });
     expect(v1.steps.find((s: { key: string }) => s.key === 'adoszam').route).toBe('/bevezeto/adoszam');
     expect(v1.steps.find((s: { key: string }) => s.key === 'ut').route).toBe('/bevezeto/ut');
     // the card waits for the contract (journey lock), so it is never the current step before it
@@ -81,7 +82,8 @@ describe('G – a brand-new client', () => {
     await h.json('PUT', '/client/onboarding/business-status', { token: c.token, body: { businessStatus: 'inditas', mode: 'onallo' } });
     const v = await guided(c.token);
     expect(v.variant).toBe('inditas_onallo');
-    expect(keys(v)).toEqual(['ut', 'adatok', 'kedvezmenyek', 'kerdoiv', 'bejelentes', 'ertesites', 'szerzodes', 'azonositas', 'elofizetes', 'meghatalmazas']);
+    // k8: the callback offer before the payment (tulaj 11-20)
+    expect(keys(v)).toEqual(['ut', 'adatok', 'kedvezmenyek', 'kerdoiv', 'bejelentes', 'ertesites', 'szerzodes', 'azonositas', 'visszahivas_ajanlat', 'elofizetes', 'meghatalmazas']);
     expect(v.currentKey).toBe('adatok');
 
     await h.deps.db.update(clients).set({ taxRegimeAnswer: 'kata' }).where(eq(clients.id, c.clientId));

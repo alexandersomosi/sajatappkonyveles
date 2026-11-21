@@ -222,7 +222,7 @@ function clientMilestoneText(st: Map<OnboardingStep, StepRow>, key: Milestone, d
         if (method === 'onya_konyvelo') return { label: `Kérted, hogy ${fn} adja be a meghatalmazást`, sub: when ? `${when}. Az ONYA-ban hagyd jóvá, amikor szól.` : undefined };
         return { label: 'Beadtad a meghatalmazást', sub: when ? `${when}, az ONYA-ban` : 'az ONYA-ban' };
       }
-      if (current) return { label: 'Add meg a meghatalmazást', sub: `Ezzel lesz ${fn} a könyvelőd a NAV-nál. Pár perc az ONYA-ban.` };
+      if (current) return { label: 'Add meg a meghatalmazást', sub: `Ezzel lesz ${fn} a könyvelőd a NAV-nál. Az ONYA-ban adod meg.` };
       return { label: 'Meghatalmazás', sub: `Ezzel lesz ${fn} a könyvelőd a NAV-nál.` };
     }
     case 'azonositva': {

@@ -53,7 +53,7 @@ export const JOURNEY_EXTRA_TEXTS = {
   zarolt_ertesites: 'Ha beküldted a bejelentést, töltsd fel itt a NAV-os értesítést.',
   zarolt_atnezes: 'A feltöltött értesítés után jön.',
   zarolt_vegso: 'Előbb töltsd ki a kérdőívet.',
-  zarolt_vegso_tevekenyseg: 'Előbb megírjuk a tevékenységed sorát (általában 1 munkanap).',
+  zarolt_vegso_tevekenyseg: 'Előbb megírjuk a tevékenységed sorát.',
   zarolt_kamara: 'Az adószámod után jön.',
   zarolt_visszahivas: 'Előbb kérj visszahívást.',
   zarolt_nav_bekotes: 'A NAV-meghatalmazás után {firstName} beköti.',
@@ -82,7 +82,8 @@ export function tulaj1119Defaults(): Record<string, string> {
     out[`bekotes.varakozas.${k}.felso`] = v.kicker;
     out[`bekotes.varakozas.${k}.cim`] = v.title;
     out[`bekotes.varakozas.${k}.szoveg`] = v.body;
-    out[`bekotes.varakozas.${k}.ido`] = v.time;
+    // k8: no turnaround promise – an empty time makes no content key (the row shows no time)
+    if (v.time) out[`bekotes.varakozas.${k}.ido`] = v.time;
   }
   out['bekotes.varakozas.eszkalacio'] = WAITING_ESCALATE_TEXT;
   out['bekotes.varakozas.eszkalacio_hivas'] = WAITING_ESCALATE_CALLBACK_TEXT;
@@ -113,7 +114,7 @@ export function tulaj1119Defaults(): Record<string, string> {
   for (const [k, v] of Object.entries(HUB_TEXTS)) out[`vallalkozas.kozpont.${snake(k)}`] = v;
   out['vallalkozas.utmutato.rajz_megjegyzes'] = GUIDE_DRAWN_NOTE;
   // 11-19 javító kör 2: the hub while the ÖVTJ line is still being written (no "Kész az útmutatód" next to "ne kezdd el").
-  out['vallalkozas.allapot.utmutato_varakozik'] = 'Már átnézheted az útmutatót. A tevékenység-sorodat még megírjuk (általában 1 munkanap), utána bejelentheted.';
+  out['vallalkozas.allapot.utmutato_varakozik'] = 'Már átnézheted az útmutatót. A tevékenység-sorodat még megírjuk, utána bejelentheted.';
   // ---------- the new step lock (§27.4.2) ----------
   for (const [k, v] of Object.entries(STEP_LOCK_DEFAULT_TEXTS)) out[k] = v;
   // ---------- §27 rewording of older texts (old texts: tulaj1119_regi.ts) ----------
@@ -145,15 +146,15 @@ export function tulaj1119Defaults(): Record<string, string> {
   };
   // k7b (SZOVEG_JAVITAS_LEVELEK 11, 12, 23–26): the client learns what the meghatalmazás is for and what the ONYA is
   n('assist_started', 'Beszéltünk – így haladunk', 'Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a NAV-nak a meghatalmazást, hogy a nevedben intézhesse az ügyeidet. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.');
-  n('assist_mh_filed', 'Hagyd jóvá a meghatalmazást {hatarido}', '{firstName} beküldte a NAV-nak, hogy intézhesse helyetted a NAV-os ügyeidet. Hagyd jóvá a NAV online felületén (ONYA): kb. 3 perc, lépésről lépésre megmutatjuk.');
-  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc a NAV online felületén (ONYA), az appban megmutatjuk, hogyan.');
-  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. Kb. 3 perc a NAV online felületén (ONYA), az appban megmutatjuk, hogyan.', 'elso');
-  n('assist_mh_reminder', 'Ma hagyd jóvá a meghatalmazást', 'Ma van az utolsó nap: lépj be a NAV online felületére (ONYA), és hagyd jóvá. Kb. 3 perc. Ha ma kimarad, a NAV törli a kérést, és újra kell kezdeni.', 'utolso_nap');
+  n('assist_mh_filed', 'Hagyd jóvá a meghatalmazást {hatarido}', '{firstName} beküldte a NAV-nak, hogy intézhesse helyetted a NAV-os ügyeidet. Hagyd jóvá a NAV online felületén (ONYA), lépésről lépésre megmutatjuk.');
+  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. A NAV online felületén (ONYA) hagyod jóvá, az appban megmutatjuk, hogyan.');
+  n('assist_mh_reminder', 'Még nem hagytad jóvá a meghatalmazást', 'Még {hatarido} van időd. A NAV online felületén (ONYA) hagyod jóvá, az appban megmutatjuk, hogyan.', 'elso');
+  n('assist_mh_reminder', 'Ma hagyd jóvá a meghatalmazást', 'Ma van az utolsó nap: lépj be a NAV online felületére (ONYA), és hagyd jóvá. Ha ma kimarad, a NAV törli a kérést, és újra kell kezdeni.', 'utolso_nap');
   n('assist_mh_expired', 'Újra beküldjük a meghatalmazást', 'A 4 nap alatt nem érkezett jóváhagyás, ezért a NAV törölte a meghatalmazást. {firstName} újra beküldi, és szólunk, amikor jóváhagyhatod.');
-  n('assist_consent_needed', 'Él a meghatalmazás – nézd át az adataidat', 'Ha rendben vannak, engedélyezd a bejelentést. Kb. 2 perc.');
+  n('assist_consent_needed', 'Él a meghatalmazás – nézd át az adataidat', 'Ha rendben vannak, engedélyezd a bejelentést.');
   n('assist_consent_needed', 'Engedélyezd újra a bejelentést', 'Módosult a kérdőív, ezért nézd át újra.', 'ujra');
   n('assist_ev_filed', 'Bejelentettük a vállalkozásodat!', 'Elment a NAV-hoz. Rögzítjük az adószámodat, és szólunk.');
-  n('kamara_reminder', 'Ne felejtsd el: kamarai regisztráció', '{hatarido} regisztrálj a kamaránál. Kb. 10 perc.');
+  n('kamara_reminder', 'Ne felejtsd el: kamarai regisztráció', '{hatarido} regisztrálj a kamaránál.');
   n('assist_task', 'Küldd be a meghatalmazást: {clientName}', 'Egyeztettünk vele. UJEGYKE meghatalmazottként: {ugycsoportok}.');
   n('assist_task', 'Küldd be a meghatalmazást: {clientName}', 'Egyeztettünk vele. UJEGYKE meghatalmazottként: {ugycsoportok}.', 'ujegyke');
   n('assist_task', 'Jóváhagyta: {clientName}', 'Nézd meg az ONYA-ban, hogy él-e a meghatalmazás.', 'ellenorzes');

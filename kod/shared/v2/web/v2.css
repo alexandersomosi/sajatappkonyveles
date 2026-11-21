@@ -1,0 +1,141 @@
+/* GENERÁLT – kézzel ne írd. Forrás: kod/shared/v2/tokenek.ts → node kod/shared/v2/scripts/gen-css.mjs
+   Adózz.hu v2 dizájn-alap a webes felületekhez (panel, konzol). Globális reset nincs: csak :root változók és v2- osztályok.
+   Betöltés egyszer, a saját stíluslap ELŐTT (panel: src/main.tsx). */
+
+:root {
+  --v2-kek: #1428DB;
+  --v2-kek-vil: #E6EBFF;
+  --v2-kek-ikon: #1F3BE0;
+  --v2-kek-valasztott: #F5F7FF;
+  --v2-sarga: #FFC93C;
+  --v2-sarga-s: #E9AE12;
+  --v2-sarga-feheren: #F2B705;
+  --v2-sotet: #10152B;
+  --v2-szoveg2: #2A3247;
+  --v2-szurke: #5B6478;
+  --v2-feher: #FFFFFF;
+  --v2-fej-halvany: #D5DCFF;
+  --v2-hatter: #F3F5FB;
+  --v2-kartya: #FFFFFF;
+  --v2-csempe: #F1F3F9;
+  --v2-szurke-alap: #EEF0F6;
+  --v2-vonal: #ECEFF6;
+  --v2-keret: #DCE2F0;
+  --v2-hover-alap: #F5F7FC;
+  --v2-csik-alap: #E6E9F2;
+  --v2-szegmens-alap: #E9ECF5;
+  --v2-kapcsolo-ki: #D5DAE6;
+  --v2-jelolo-keret: #C3CADB;
+  --v2-feltolto-keret: #C9D2EE;
+  --v2-zold: #157A3E;
+  --v2-zold-vil: #DFF5E8;
+  --v2-narancs: #9A5B00;
+  --v2-narancs-vil: #FFF0DA;
+  --v2-piros: #B42318;
+  --v2-piros-vil: #FFE4E4;
+  --v2-piros-keret: #F4C7C3;
+  --v2-hiba-keret: #E5484D;
+  --v2-pont: #EF3B3B;
+  --v2-letiltva-alap: #ECEEF4;
+  --v2-letiltva-szoveg: #9AA2B5;
+  --v2-dekor-halvany: #8A93A8;
+  --v2-dekor-nyil: #9AA2B5;
+  --v2-fej-gradiens: linear-gradient(160deg, #1D35EC 0%, #1428DB 55%, #0F20BE 100%);
+  --v2-r-kartya: 20px;
+  --v2-r-kartya-asztali: 22px;
+  --v2-r-gomb: 14px;
+  --v2-r-kapszula: 999px;
+  --v2-r-mezo: 14px;
+  --v2-r-csempe-kicsi: 11px;
+  --v2-r-csempe: 13px;
+  --v2-r-csempe-nagy: 20px;
+  --v2-r-fejlec: 26px;
+  --v2-r-fejlec-kis: 24px;
+  --v2-r-hos: 24px;
+  --v2-r-sav: 22px;
+  --v2-r-valaszto: 16px;
+  --v2-r-buborek: 18px;
+  --v2-r-buborek-csucs: 6px;
+  --v2-r-menu-elem: 12px;
+  --v2-r-jelolo: 7px;
+  --v2-r-szegmens: 14px;
+  --v2-r-szegmens-elem: 10px;
+  --v2-r-feltolto: 18px;
+  --v2-t1: 4px;
+  --v2-t2: 6px;
+  --v2-t3: 8px;
+  --v2-t4: 10px;
+  --v2-t5: 12px;
+  --v2-t6: 14px;
+  --v2-t7: 16px;
+  --v2-t8: 18px;
+  --v2-t9: 22px;
+  --v2-t10: 28px;
+  --v2-t11: 36px;
+  --v2-arnyek-kartya: 0 1px 2px rgba(16,21,43,.04), 0 6px 20px rgba(16,21,43,.06);
+  --v2-arnyek-gomb: 0 2px 0 #E9AE12, 0 6px 14px rgba(233,174,18,.25);
+  --v2-arnyek-gomb-kis: 0 2px 0 #E9AE12;
+  --v2-arnyek-sav: 0 -6px 22px rgba(16,21,43,.08);
+  --v2-arnyek-fejlec: 0 8px 24px rgba(20,40,219,.22);
+  --v2-arnyek-hos: 0 8px 24px rgba(20,40,219,.2);
+  --v2-arnyek-szegmens: 0 1px 3px rgba(16,21,43,.1);
+  --v2-arnyek-mezo-fokusz: 0 0 0 3px rgba(20,40,219,.12);
+  --v2-betu: "Geist Variable", "Geist", "Segoe UI", Arial, sans-serif;
+  --v2-mozgas-rovid: 200ms;
+  --v2-mozgas-alap: 300ms;
+  --v2-mozgas-hosszu: 400ms;
+  --v2-gorbe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- kártya: tiszta fehér, r 20, finom árnyék (nem pasztell doboz) ---------- */
+.v2-kartya { background: var(--v2-kartya); border-radius: var(--v2-r-kartya); padding: 16px 14px; margin-bottom: 12px; box-shadow: var(--v2-arnyek-kartya); color: var(--v2-sotet); }
+.v2-kartya-sor { display: flex; align-items: flex-start; gap: 12px; }
+.v2-kartya-tomor { padding-top: 6px; padding-bottom: 6px; }
+.v2-kartya-asztali { border-radius: var(--v2-r-kartya-asztali); padding: 22px 24px; }
+.v2-kartya-asztali.v2-kartya-sor { gap: 16px; }
+.v2-kartya-asztali.v2-kartya-tomor { padding-top: 6px; padding-bottom: 6px; }
+.v2-kartya-racsban { margin-bottom: 0; }
+
+/* ---------- ikonok, csempe (#F1F3F9, 42/34 · 36/29 · 64/50) ---------- */
+.v2-ikon, .v2-vezerlo { flex: none; display: inline-block; vertical-align: middle; }
+.v2-csempe { flex: none; display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; background: #F1F3F9; }
+.v2-csempe-kicsi { width: 36px; height: 36px; border-radius: 11px; }
+.v2-csempe-nagy { width: 64px; height: 64px; border-radius: 20px; }
+.v2-csempe > svg { display: block; }
+.v2-logo { display: block; }
+
+/* ---------- gombok: képernyőnként legfeljebb EGY sárga főgomb ---------- */
+.v2-gomb { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 0 20px; border: 0; border-radius: var(--v2-r-gomb);
+  background: var(--v2-sarga); color: var(--v2-sotet); font-family: var(--v2-betu); font-size: 17px; font-weight: 750; line-height: 1.2; box-shadow: var(--v2-arnyek-gomb); text-decoration: none; cursor: pointer; }
+.v2-gomb-masod { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 18px; border-radius: var(--v2-r-gomb);
+  background: var(--v2-feher); border: 1.5px solid var(--v2-keret); color: var(--v2-sotet); font-family: var(--v2-betu); font-size: 16px; font-weight: 700; line-height: 1.2; text-decoration: none; cursor: pointer; }
+.v2-gomb-veszely { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 0 18px; border-radius: var(--v2-r-gomb);
+  background: var(--v2-feher); border: 1.5px solid var(--v2-piros-keret); color: var(--v2-piros); font-family: var(--v2-betu); font-size: 16px; font-weight: 700; line-height: 1.2; text-decoration: none; cursor: pointer; }
+.v2-gomb-kis { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 0 16px 0 13px; border: 0; border-radius: var(--v2-r-kapszula);
+  background: var(--v2-sarga); color: var(--v2-sotet); font-family: var(--v2-betu); font-size: 15.5px; font-weight: 750; line-height: 1.2; box-shadow: var(--v2-arnyek-gomb-kis); white-space: nowrap; text-decoration: none; cursor: pointer; }
+.v2-gomb-kis.v2-gomb-kis-masod { background: var(--v2-kek-vil); color: var(--v2-kek); box-shadow: none; padding: 0 16px; }
+.v2-gomb:disabled, .v2-gomb[aria-disabled="true"], .v2-gomb-kis:disabled, .v2-gomb-kis[aria-disabled="true"] { background: var(--v2-letiltva-alap); color: var(--v2-letiltva-szoveg); box-shadow: none; cursor: not-allowed; }
+.v2-gomb-masod:disabled, .v2-gomb-veszely:disabled, .v2-gomb-masod[aria-disabled="true"], .v2-gomb-veszely[aria-disabled="true"] { color: var(--v2-letiltva-szoveg); border-color: var(--v2-keret); cursor: not-allowed; }
+.v2-link { color: var(--v2-kek); font-weight: 650; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- állapotcímkék (kicsi, telt világos alapon – maradhat) ---------- */
+.v2-cimke { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: var(--v2-r-kapszula); font-family: var(--v2-betu); font-size: 13px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.v2-cimke-ok { background: var(--v2-zold-vil); color: var(--v2-zold); }
+.v2-cimke-var { background: var(--v2-narancs-vil); color: var(--v2-narancs); }
+.v2-cimke-hiba { background: var(--v2-piros-vil); color: var(--v2-piros); }
+.v2-cimke-info { background: var(--v2-kek-vil); color: var(--v2-kek); }
+.v2-cimke-szurke { background: var(--v2-szurke-alap); color: var(--v2-szurke); }
+
+/* ---------- szöveg ---------- */
+.v2-betu { font-family: var(--v2-betu); }
+.v2-szakasz-cim { font-size: 14px; font-weight: 700; line-height: 1.3; letter-spacing: 0.04em; text-transform: uppercase; color: var(--v2-szurke); margin: 18px 6px 8px; }
+.v2-kartya-cim { font-size: 18.5px; font-weight: 750; line-height: 1.25; letter-spacing: -0.015em; color: var(--v2-sotet); }
+.v2-szoveg2 { color: var(--v2-szoveg2); }
+.v2-masodlagos { color: var(--v2-szurke); }
+
+/* ---------- alsó sáv / menü jelzői ---------- */
+.v2-pont { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--v2-pont); }
+
+/* ---------- látható fókusz (billentyűzet): 2 px kék körvonal, 2 px eltolással ---------- */
+.v2-fokusz:focus-visible, .v2-gomb:focus-visible, .v2-gomb-masod:focus-visible, .v2-gomb-veszely:focus-visible, .v2-gomb-kis:focus-visible, .v2-link:focus-visible {
+  outline: 2px solid #1428DB; outline-offset: 2px; }

@@ -54,8 +54,11 @@ export function publicRoutes(deps: Deps) {
       newBusinessChargePolicy: cfg.newBusinessChargePolicy,
     };
     c.header('Cache-Control', 'public, max-age=60');
+    // k8: may a NEW client choose the bank transfer (switch kapcsolok.fizetes.atutalas and an invoicing route)?
+    const { fizetesKapcsolok, transferRoute } = await import('../services/atutalas.js');
+    const fizetes = { atutalas: (await fizetesKapcsolok(deps, deps.db)).atutalas && transferRoute(cfg) !== null };
     // SPEC §29.14: the payment provider of new card flows (+ simplepayEnabled kept for old app builds)
-    return c.json({ ...body, paymentProvider: cfg.payment.provider, paymentMode: paymentModeOf(cfg), simplepayEnabled: cfg.payment.provider !== 'disabled' });
+    return c.json({ ...body, paymentProvider: cfg.payment.provider, paymentMode: paymentModeOf(cfg), simplepayEnabled: cfg.payment.provider !== 'disabled', fizetes });
   });
 
   r.get('/legal/:docType', async (c) => {

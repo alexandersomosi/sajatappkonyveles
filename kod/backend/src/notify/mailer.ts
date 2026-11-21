@@ -1,4 +1,6 @@
-// E-mail over SMTP (Brevo: smtp-relay.brevo.com:587 STARTTLS) with nodemailer (SPEC §11.1).
+// E-mail over SMTP (ZeptoMail / Brevo, STARTTLS) with nodemailer (SPEC §11.1).
+// k8 ALAP-B: every mail's HTML part is the new template (notify/sablon.ts): a structured `level` when the caller has one,
+// else built from the plain text. The text/plain part and the subjects are unchanged. DEMO stores the HTML image too.
 // DEMO: nothing leaves the server; the mail goes to demo_outbox with a masked recipient and the
 // log says only "mail not sent (DEMO)". Disabled (production without SMTP): send() returns
 // 'disabled' and callers that need mail answer 503 not_configured.
@@ -9,7 +11,9 @@ import type { Db } from '../db/client.js';
 import { demoOutbox } from '../db/schema.js';
 import { hmacHex } from '../lib/crypto.js';
 import { maskEmail } from '../lib/validators.js';
-import { log } from '../log.js';
+import { log, safeErr } from '../log.js';
+import type { MailFooterKind } from '../_shared/k8.js';
+import { lablecOfTemplate, levelFromText, renderLevel, type Level } from './sablon.js';
 
 export type MailResult = 'sent' | 'demo' | 'disabled';
 
@@ -19,9 +23,33 @@ export interface MailAttachment {
   contentType: string;
 }
 
+export interface MailMessage {
+  to: string;
+  subject: string;
+  text: string;
+  template: string;
+  attachments?: MailAttachment[];
+  /** k8: the structured content of the new template (else built from `text`). */
+  level?: Level;
+  /** k8: the footer reason when `level` is absent (else guessed from the template name). */
+  lablec?: MailFooterKind;
+  /** k8: the label of the button made from the trailing link (else a plain "Megnyitom" link). */
+  gombSzoveg?: string | null;
+}
+
 export interface Mailer {
   readonly mode: Config['mail']['mode'];
-  send(m: { to: string; subject: string; text: string; template: string; attachments?: MailAttachment[] }): Promise<MailResult>;
+  send(m: MailMessage): Promise<MailResult>;
+}
+
+/** k8: the HTML part of a mail (the new template). Never throws: a broken level falls back to the text paragraphs. */
+export function htmlOfMail(m: MailMessage): string {
+  try {
+    return renderLevel(m.level ?? levelFromText(m.subject, m.text, { lablec: m.lablec ?? lablecOfTemplate(m.template), gombSzoveg: m.gombSzoveg ?? null }));
+  } catch (err) {
+    log().warn({ template: m.template, err: safeErr(err) }, 'mail template render failed');
+    return htmlOf(m.subject, m.text);
+  }
 }
 
 function escapeHtml(s: string): string {
@@ -63,7 +91,7 @@ export function createMailer(cfg: Config, db: Db): Mailer {
       if (mode === 'demo') {
         // The DEMO outbox stores text only: an attachment is named at the end of the body, never stored a second time.
         const att = (m.attachments ?? []).map((a) => `\n\n[Csatolmány: ${a.filename}, ${Math.max(1, Math.round(a.content.length / 1024))} KB – DEMO módban nem megy ki levél, az iratot az appban találod.]`).join('');
-        await db.insert(demoOutbox).values({ toHash, toDisplay: maskEmail(m.to), subject: m.subject, bodyText: `${m.text}${att}`, template: m.template });
+        await db.insert(demoOutbox).values({ toHash, toDisplay: maskEmail(m.to), subject: m.subject, bodyText: `${m.text}${att}`, template: m.template, bodyHtml: htmlOfMail(m) });
         log().info({ template: m.template, toHash }, 'mail not sent (DEMO)');
         return 'demo';
       }
@@ -77,7 +105,7 @@ export function createMailer(cfg: Config, db: Db): Mailer {
         to: m.to,
         subject: m.subject,
         text: m.text,
-        html: htmlOf(m.subject, m.text),
+        html: htmlOfMail(m),
         ...(m.attachments?.length ? { attachments: m.attachments.map((a) => ({ filename: a.filename, content: a.content, contentType: a.contentType })) } : {}),
       });
       log().info({ template: m.template, toHash }, 'mail sent');

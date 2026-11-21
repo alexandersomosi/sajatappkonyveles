@@ -11,13 +11,13 @@ import { INVOICE_FAILED_TEXTS, INVOICE_RULES, INVOICE_TEXTS } from '../_shared/k
 import type { Config } from '../config.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { clients, feeCharges, feeInvoices, payments, users, type FeeInvoiceBuyer } from '../db/schema.js';
+import { clients, feeCharges, feeInvoices, payments, transferRequests, users, type FeeInvoiceBuyer } from '../db/schema.js';
 import { audit } from '../audit.js';
 import { simpleTablePdf } from '../lib/pdf.js';
 import { todayBudapest } from '../lib/dates.js';
 import { log, safeErr } from '../log.js';
 import { fmtHuf } from './huf.js';
-import { buildInvoiceXml, buildQueryXml, buildStornoXml, isDuplicateOrderError, SzamlazzError, type SzResult } from './szamlazzhu.js';
+import { buildInvoiceXml, buildQueryXml, buildQueryXmlBy, buildStornoXml, isDuplicateOrderError, SzamlazzError, type SzResult } from './szamlazzhu.js';
 
 export interface FeeInvoiceInput {
   seq: number;
@@ -288,7 +288,7 @@ async function issueOne(deps: Deps, row: InvoiceRow): Promise<SzResult & { demo:
       simplepayTransactionId: null,
       client: { name: buyer.name, zip: buyer.zip, city: buyer.city, address: buyer.address, adoszam: buyer.adoszam },
       lineText: line.megnevezes,
-      paidWith: p?.provider === 'stripe' ? 'Fizetve bankkártyával (Stripe TESZT, DEMO)' : 'Fizetve bankkártyával (DEMO)',
+      paidWith: p?.provider === 'stripe' ? 'Fizetve bankkártyával (Stripe TESZT, DEMO)' : p?.provider === 'atutalas' ? 'Fizetve átutalással (DEMO)' : 'Fizetve bankkártyával (DEMO)',
       docKind: row.kind,
       refersTo: orig?.number ?? null,
     });
@@ -305,10 +305,17 @@ async function issueOne(deps: Deps, row: InvoiceRow): Promise<SzResult & { demo:
   const texts = await invoiceTexts(deps, buyer, row.kind === 'sztorno' ? (orig?.line?.megnevezes ?? line.megnevezes) : line.megnevezes, key);
   try {
     if (row.kind === 'sztorno') {
-      return { ...(await deps.szamlazz.storno(buildStornoXml(agentKey, { key, originalNumber: orig!.number!, date: todayBudapest(deps.now()), megjegyzes: INVOICE_TEXTS.stornoMegjegyzes.replace('{ok}', line.megnevezes), email: buyer.email, replyTo: texts.replyTo, emailTargy: texts.targy, emailSzoveg: texts.szoveg }))), demo: false };
+      return { ...(await deps.szamlazz.storno(buildStornoXml(agentKey, { key, originalNumber: orig!.number!, date: todayBudapest(deps.now()), megjegyzes: INVOICE_TEXTS.stornoMegjegyzes.replace('{ok}', line.megnevezes), /* k8: no buyer e-mail = Számlázz.hu sends nothing; our own mail goes */ email: null, replyTo: texts.replyTo, emailTargy: texts.targy, emailSzoveg: texts.szoveg }))), demo: false };
     }
     const [p] = row.paymentId ? await deps.db.select().from(payments).where(eq(payments.id, row.paymentId)).limit(1) : [];
-    const payDay = todayBudapest(p?.succeededAt ?? row.createdAt);
+    // k8: the final invoice of a paid díjbekérő – fizmod Átutalás, the díjbekérő's number, the day the money arrived; an
+    // invoice Autokassza already made of it is adopted (queried by its number), never issued a second time
+    const [tr] = p?.provider === 'atutalas' && row.kind === 'szamla' ? await deps.db.select().from(transferRequests).where(eq(transferRequests.paymentId, p.id)).limit(1) : [];
+    if (tr?.adoptedInvoiceNumber) {
+      const adopted = await deps.szamlazz.query(buildQueryXmlBy(agentKey, { szamlaszam: tr.adoptedInvoiceNumber }));
+      if (adopted) return { ...adopted, demo: false };
+    }
+    const payDay = tr?.paidOn ?? todayBudapest(p?.succeededAt ?? row.createdAt);
     const xml = buildInvoiceXml(agentKey, {
       key,
       issueDate: todayBudapest(deps.now()),
@@ -318,9 +325,12 @@ async function issueOne(deps: Deps, row: InvoiceRow): Promise<SzResult & { demo:
       replyTo: texts.replyTo,
       emailTargy: texts.targy,
       emailSzoveg: texts.szoveg,
-      megjegyzes: INVOICE_TEXTS.megjegyzes.replace('{kulcs}', key),
+      megjegyzes: (tr ? 'Átutalással fizetve. Azonosító: {kulcs}' : INVOICE_TEXTS.megjegyzes).replace('{kulcs}', key),
       correctionOf: row.kind === 'helyesbito' ? orig!.number : null,
       wholeNet: process.env.SZAMLAZZHU_WHOLE_NET === '1',
+      // k8 (K8_TERV:22): Számlázz.hu never e-mails the invoice – our own mail with the PDF goes out (storeIssued)
+      sendEmail: false,
+      ...(tr ? { fizmod: 'Átutalás', dijbekeroSzamlaszam: tr.proformaNumber } : {}),
     });
     return { ...(await deps.szamlazz.issue(xml)), demo: false };
   } catch (e) {
@@ -370,9 +380,46 @@ async function storeIssued(deps: Deps, row: InvoiceRow, res: SzResult & { demo: 
   if (row.kind === 'szamla') {
     const [cl] = await db.select({ userId: clients.userId }).from(clients).where(eq(clients.id, row.clientId)).limit(1);
     const { notify } = await import('../notify/notify.js');
-    // Számlázz.hu e-mails the invoice itself: our notification is in-app + push only then.
-    if (cl) await notify(deps, db, { userId: cl.userId, kind: 'fee_invoice_issued', params: { amount: `${fmtHuf(row.amountHuf)} Ft` }, link: '/fiok/dijak', noEmail: row.provider === 'szamlazzhu' });
+    // k8: the invoice goes in our own mail (below): the notification is in-app + push only
+    if (cl) await notify(deps, db, { userId: cl.userId, kind: 'fee_invoice_issued', params: { amount: `${fmtHuf(row.amountHuf)} Ft` }, link: '/fiok/dijak', noEmail: true });
   }
+  await invoiceMail(deps, row, res).catch((e: unknown) => log().warn({ invoice: row.id, err: safeErr(e) }, 'fee invoice mail failed'));
+}
+
+/**
+ * k8 B4 (K8_TERV:22): our own fee-invoice mail with the PDF (Számlázz.hu sendEmail=false) for every issued document –
+ * invoice, storno, correction; the text by kind (havidíj with the period, a one-off fee, storno, correction).
+ */
+async function invoiceMail(deps: Deps, row: InvoiceRow, res: SzResult & { demo: boolean }): Promise<void> {
+  const db = deps.db;
+  const [cl] = await db.select().from(clients).where(eq(clients.id, row.clientId)).limit(1);
+  const [u] = cl ? await db.select({ email: users.email, status: users.status }).from(users).where(eq(users.id, cl.userId)).limit(1) : [];
+  if (!cl || !u || u.status !== 'active' || cl.anonymizedAt) return;
+  const [p] = row.paymentId ? await db.select().from(payments).where(eq(payments.id, row.paymentId)).limit(1) : [];
+  const [orig] = row.stornoOf ? await db.select().from(feeInvoices).where(eq(feeInvoices.id, row.stornoOf)).limit(1) : [];
+  const monthly = Boolean(p && (p.kind === 'elso_havi' || p.kind === 'havi' || p.kind === 'fizesd_ki') && p.periodStart && p.periodEnd);
+  const { periodSpace } = await import('../services/atutalas.js');
+  const variant = row.kind === 'sztorno' ? 'sztorno' : row.kind === 'helyesbito' ? 'helyesbito' : monthly ? 'havidij' : undefined;
+  const link = `${deps.cfg.appPublicUrl}/fiok/dijszamlak`;
+  const { sendTemplateMail } = await import('../notify/notify.js');
+  await sendTemplateMail(deps, {
+    to: u.email,
+    key: 'fee_invoice',
+    ...(variant ? { variant } : {}),
+    lablec: 'ugyfel',
+    gomb: { szoveg: await deps.content.render('email.fee_invoice.gomb', {}), link },
+    attachments: res.pdf.length ? [{ filename: `szamla-${res.number}.pdf`, content: res.pdf, contentType: 'application/pdf' }] : [],
+    params: {
+      keresztnev: cl.firstName,
+      megnevezes: row.line?.megnevezes ?? 'díj',
+      idoszak: monthly ? periodSpace(p!.periodStart!, p!.periodEnd!) : '',
+      osszeg: fmtHuf(Math.abs(row.amountHuf)),
+      szamlaszam: res.number,
+      eredeti: orig?.number ?? '',
+      fizetes: await deps.content.render(p?.provider === 'atutalas' ? 'k8.fizetes.atutalas' : 'k8.fizetes.kartya', {}),
+      link,
+    },
+  });
 }
 
 /**

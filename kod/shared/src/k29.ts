@@ -399,7 +399,8 @@ export interface AdminPaymentRow {
   id: string;
   client: { id: string; name: string };
   kind: PaymentKind;
-  provider: PaymentProviderName;
+  /** k8: 'atutalas' = the bank transfer of a díjbekérő. */
+  provider: PaymentProviderName | 'atutalas';
   mode: PaymentProviderMode;
   amountHuf: number;
   status: PaymentStatusK29;

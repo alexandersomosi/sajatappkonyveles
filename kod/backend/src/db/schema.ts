@@ -139,6 +139,8 @@ export const users = pgTable('users', {
   totpFailures: integer().notNull().default(0),
   /** SPEC §27.11 S1: lock set ONLY by wrong TOTP / recovery codes (the password lock never blocks the second factor). */
   totpLockedUntil: ts(),
+  /** k8 B7 (0028_k8.sql, prepared – not used yet): the client's two-step sign-in with an e-mail code. */
+  mfaEmailEnabledAt: ts(),
   lastLoginAt: ts(),
   deletionRequestedAt: ts(),
   deletionDueAt: ts(),
@@ -350,7 +352,7 @@ export const clients = pgTable(
     disabledAt: ts(),
     disabledReason: text(),
     /** SPEC §28.K.5: the accounting service is locked for an unpaid fee (null = open). */
-    serviceLock: jsonb().$type<{ reasons: ('havidij' | 'eves_zaras' | 'kezi')[]; since: string; amountHuf: number } | null>(),
+    serviceLock: jsonb().$type<{ reasons: ('havidij' | 'eves_zaras' | 'kezi' | 'atutalas_kesik')[]; since: string; amountHuf: number } | null>(),
     /** SPEC §28.K.9: "Most nem tudom" – the accountant fills the adószám later from ONYA. */
     adoszamPending: boolean().notNull().default(false),
     /** SPEC §28.K.11: "Hogyan adózol most?" */
@@ -360,7 +362,7 @@ export const clients = pgTable(
     mailboxSenders: text().array().notNull().default(sql`'{}'::text[]`),
     // ---- SPEC §29.12 (0018_k29.sql) ----
     /** §29.10 guided first run (null = never started). */
-    guided: jsonb().$type<{ welcomeSeenAt?: string | null; pausedAt?: string | null; finishedAt?: string | null; lastKey?: string | null; doneSeenAt?: string | null } | null>(),
+    guided: jsonb().$type<{ welcomeSeenAt?: string | null; pausedAt?: string | null; finishedAt?: string | null; lastKey?: string | null; doneSeenAt?: string | null; callbackOfferSkippedAt?: string | null } | null>(),
     /** §29.4.4: where the business identity came from ('nav' lookup or 'kezi'). */
     businessIdentitySource: text().$type<'nav' | 'kezi'>(),
     /** §29.4.4: the confirmed business identity (EV name, seat, ÁFA answer) – the fee invoice buyer name. */
@@ -379,6 +381,8 @@ export const clients = pgTable(
     terminated: jsonb().$type<{ kind: string; subReason?: string | null; reason: string; noticeAt: string; effectiveOn: string; by: string; appliedAt?: string | null } | null>(),
     /** §29.9.6: anonymised (never a hard delete). */
     anonymizedAt: ts(),
+    /** k8 (0028_k8.sql): ügyfélszám from 10001 (DB default nextval – never written by the code). ADZ-<ügyfélszám>. */
+    customerNo: integer(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -1048,6 +1052,8 @@ export const subscriptions = pgTable('subscriptions', {
   /** k7c2 (0019): the period (start day) the last pre-debit notice was for – an off-session charge needs it (≥ 3 days before). */
   predebitPeriod: day(),
   suspensionWarnedFor: day(),
+  /** k8 (0028_k8.sql): 'kartya' (Stripe / DEMO card, charged by `billing`) or 'atutalas' (monthly díjbekérő, transfer_requests). */
+  billingMethod: text().$type<'kartya' | 'atutalas'>().notNull().default('kartya'),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
 });
@@ -1256,6 +1262,8 @@ export const demoOutbox = pgTable('demo_outbox', {
   bodyText: text().notNull(),
   /** Template of the mail (auth_password_reset_code …): the admin outbox masks by template, not by subject. */
   template: text(),
+  /** k8 (0028_k8.sql): the HTML image of the new mail template (panel DEMO-postafiók → "Levél képe"). */
+  bodyHtml: text(),
   createdAt: createdAt(),
 });
 
@@ -1988,7 +1996,8 @@ export const payments = pgTable(
     subscriptionId: uuid(),
     feeChargeId: uuid(),
     kind: text().$type<'elso_havi' | 'havi' | 'egyszeri' | 'fizesd_ki' | 'kartya'>().notNull(),
-    provider: text().$type<'stripe' | 'demo' | 'simplepay'>().notNull(),
+    /** k8: 'atutalas' = a bank transfer of a díjbekérő (transfer_requests.payment_id); text column, no DB enum. */
+    provider: text().$type<'stripe' | 'demo' | 'simplepay' | 'atutalas'>().notNull(),
     mode: text().$type<'test' | 'live' | 'demo' | 'sandbox'>().notNull(),
     amountHuf: integer().notNull(),
     periodStart: day(),
@@ -2333,4 +2342,51 @@ export const adSpend = pgTable(
     check('ad_spend_platform_chk', sql`${t.platform} in ('meta', 'google', 'egyeb')`),
     check('ad_spend_amount_chk', sql`${t.amountHuf} > 0 and ${t.amountHuf} <= 100000000`),
   ],
+);
+
+// ---------- k8 ALAP-B (0028_k8.sql): bank transfer with a monthly díjbekérő ----------
+/**
+ * One díjbekérő (Számlázz.hu proforma, or the DEMO PDF). order_no = rendelesSzam = szamlaKulsoAzon, unique per month
+ * (ADZ-<ügyfélszám>-<ÉÉÉÉ>-<HH>[-n]); kozlemeny = what the client writes on the transfer. The money creates a `payments`
+ * row (provider 'atutalas') through applyTransferPaid → the same success path as a card payment.
+ */
+export const transferRequests = pgTable(
+  'transfer_requests',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    subscriptionId: uuid(),
+    kind: text().$type<'elso_havi' | 'havi' | 'egyszeri'>().notNull(),
+    /** null for the first month (it starts on the day the money arrives). */
+    periodStart: day(),
+    periodEnd: day(),
+    amountHuf: integer().notNull(),
+    orderNo: text().notNull().unique(),
+    kozlemeny: text().notNull(),
+    proformaNumber: text(),
+    proformaPdfFileId: uuid(),
+    issuedOn: day().notNull(),
+    dueOn: day().notNull(),
+    status: text().$type<'kiallitva' | 'fizetve' | 'kesik' | 'visszavonva' | 'hiba'>().notNull().default('kiallitva'),
+    paidOn: day(),
+    paidAmountHuf: integer(),
+    paidSource: text().$type<'autokassza' | 'kezi' | 'demo'>(),
+    paymentId: uuid(),
+    lastCheckedAt: ts(),
+    /** The reminder days already sent (1, 4, 8 after the due day). */
+    remindersSent: jsonb().$type<number[]>().notNull().default([]),
+    mode: text().$type<'demo' | 'teszt' | 'eles'>().notNull(),
+    attempts: integer().notNull().default(0),
+    lastErrorCode: text(),
+    error: text(),
+    /** Manual mark / withdrawal reason (console). */
+    note: text(),
+    /** Autokassza turned the paid díjbekérő into an invoice itself: its number (our final invoice adopts it). */
+    adoptedInvoiceNumber: text(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [index('transfer_requests_status_due_idx').on(t.status, t.dueOn), index('transfer_requests_client_idx').on(t.clientId, t.createdAt)],
 );

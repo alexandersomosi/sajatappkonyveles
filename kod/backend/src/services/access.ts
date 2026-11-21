@@ -22,6 +22,7 @@ const ROUTE_FEATURES: [RegExp, ClientFeature | 'nyitott'][] = [
   [/^\/assist(\/|$)/, 'helyettunk'], // SPEC §27.3 "Intézzük helyetted" – open before activation
   [/^\/appointments(\/|$)/, 'visszahivas'], // retired: GET read-only, writes answer 410
   [/^\/subscription(\/|$)/, 'elofizetes'],
+  [/^\/billing(\/|$)/, 'elofizetes'], // k8: bank transfer (díjbekérő)
   [/^\/fee-invoices(\/|$)/, 'dijszamlak'],
   [/^\/(explainers|access)(\/|$)/, 'gyik_jogi'],
   [/^\/requests(\/|$)/, 'keres_valasz'], // POST /requests is checked in the handler (kerdes vs igazolas_keres)

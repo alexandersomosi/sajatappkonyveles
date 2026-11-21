@@ -54,6 +54,7 @@ import { registerClientEvRoutes } from './client-ev.js';
 import { lastYearClosingWrite } from '../services/eves-ciklus.js';
 import { registerClientPaymentsK29 } from './payments-k29.js';
 import { registerClientK29gRoutes } from './client-k29g.js';
+import { registerClientK8Routes } from './k8.js';
 import { registerClientK29fRoutes } from './client-k29f.js';
 import { clientServiceLock } from '../services/zarolas.js';
 import { blocksActivation, employerRow } from '../services/alkalmazott.js';
@@ -115,6 +116,8 @@ export function clientRoutes(deps: Deps) {
   registerClientEvRoutes(r, deps);
   // SPEC §29.10 G: the guided first run (GET/POST /client/guided).
   registerClientK29gRoutes(r, deps);
+  // k8: bank transfer (GET /client/billing, POST /client/billing/transfer)
+  registerClientK8Routes(r, deps);
   // SPEC §29 F1/F2/F4: certificates, income statement, calendar (+ the label-only /deadlines/:id/ics).
   registerClientK29fRoutes(r, deps);
   // SPEC §26: branch question, new-business registration, guides, explainers, access matrix, callbacks.

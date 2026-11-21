@@ -40,6 +40,13 @@ export async function lockReasonsOf(deps: Deps, db: DbOrTx, clientId: string): P
     const due = await duePeriod(deps, db, clientId);
     amount += due ? due.amountHuf : await planAmountHuf(deps, db, sub.planCode);
   }
+  // k8: a díjbekérő 8 days late locks only while the switch kapcsolok.fizetes.kesesLeallit is ON (default OFF)
+  const { transferLockOf } = await import('./atutalas.js');
+  const tl = await transferLockOf(deps, db, clientId);
+  if (tl.locked) {
+    reasons.push('atutalas_kesik');
+    amount += tl.amountHuf;
+  }
   const cutoff = new Date(deps.now().getTime() - ANNUAL_RULES.lockAfterDays * 86_400_000);
   const annual = await db.select().from(annualClosings).where(and(eq(annualClosings.clientId, clientId), eq(annualClosings.status, 'dijra_var'), lt(annualClosings.submittedAt, cutoff)));
   for (const a of annual) {
@@ -67,7 +74,7 @@ export async function computeServiceLock(deps: Deps, clientId: string): Promise<
   const mit = await mitText(deps, reasons);
   if (next && !was) {
     await audit(db, { action: 'lock.on', actorRole: 'system', targetType: 'client', targetId: clientId, clientId, details: { reasons } });
-    await notify(deps, db, { userId: cl.userId, kind: 'service_locked', ...(reasons.length === 1 && reasons[0] === 'kezi' ? { variant: 'kezi' } : {}), params: { ...params, mit, osszeg: fmt(amountHuf) }, link: reasons.includes('havidij') ? '/fiok/elofizetes' : reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek' });
+    await notify(deps, db, { userId: cl.userId, kind: 'service_locked', ...(reasons.length === 1 && reasons[0] === 'kezi' ? { variant: 'kezi' } : {}), params: { ...params, mit, osszeg: fmt(amountHuf) }, link: reasons.includes('havidij') || reasons.includes('atutalas_kesik') ? '/fiok/elofizetes' : reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek' });
     const acc = await accountantUserOf(db, cl);
     if (acc) await notify(deps, db, { userId: acc.userId, kind: 'client_locked', params: { clientName: clientName(cl), mit, osszeg: fmt(amountHuf) }, link: `/ugyfelek/${cl.id}` });
   } else if (!next && was) {
@@ -100,7 +107,7 @@ export async function serviceLockView(deps: Deps, cl: ClientRow): Promise<Servic
     amountHuf: l.amountHuf,
     // SPEC §29.9.4: a manual lock has its own short text (no amount)
     text: onlyManual ? await deps.content.render('k29.zarolas.kezi_banner', params) : await deps.content.render('zarolas.banner', { ...params, mit, osszeg: fmt(l.amountHuf) }),
-    payRoute: l.reasons.includes('havidij') ? '/fiok/elofizetes' : l.reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek',
+    payRoute: l.reasons.includes('havidij') || l.reasons.includes('atutalas_kesik') ? '/fiok/elofizetes' : l.reasons.includes('eves_zaras') ? '/fiok/dijak' : '/uzenetek',
   };
 }
 
@@ -174,6 +181,9 @@ export async function jobServiceLockCheck(deps: Deps): Promise<number> {
   const ids = new Set<string>();
   for (const r of await db.select({ id: subscriptions.clientId }).from(subscriptions).where(eq(subscriptions.status, 'suspended'))) ids.add(r.id);
   for (const r of await db.select({ id: annualClosings.clientId }).from(annualClosings).where(eq(annualClosings.status, 'dijra_var'))) ids.add(r.id);
+  // k8: late díjbekérők (the lock itself only with kesesLeallit ON – lockReasonsOf decides)
+  const { transferRequests } = await import('../db/schema.js');
+  for (const r of await db.select({ id: transferRequests.clientId }).from(transferRequests).where(eq(transferRequests.status, 'kesik'))) ids.add(r.id);
   for (const r of await db.select({ id: clients.id, l: clients.serviceLock, m: clients.serviceLockManual }).from(clients)) if (r.l || r.m) ids.add(r.id);
   let n = 0;
   for (const id of ids) if (await computeServiceLock(deps, id)) n++;

@@ -5,7 +5,8 @@
 //   2. registration of a NEW fictional test client in the web app UI → "Nézd meg a postafiókodat" (k7b: no session
 //      yet); the code is read from the DEMO outbox over ssh (never printed) and typed in on that screen → signed in;
 //   3. the server (over ssh, test values via stdin, nothing printed) fills the questionnaire + consents and starts
-//      the SimplePay DEMO registration → prints only the payment URL;
+//      the card start of the k29 flow (consent version + hash → hosted page) → prints only the payment URL (k8: the
+//      retired SimplePay start replaced; with PAYMENT_PROVIDER=stripe the Stripe TEST Checkout opens – paid by hand);
 //   4. the browser opens the DEMO payment page on api., clicks "Sikeres fizetés", follows the cross-host
 //      redirects (form-action CSP!) back to app./elofizetes/eredmeny with its own session; then home + bekötés.
 // Screenshots → kod/_qa/eles_https/. Usage: node kod/deploy/bongeszo-proba.mjs
@@ -147,7 +148,7 @@ printf 'Authorization: Bearer %s\n' "$ATOK" | curl -fsS -H @- https://konyvelo.$
   await shot(page, '04b_app_kod_utan');
   ok('a kód a böngészőben megnyitja a munkamenetet');
 
-  // server side: questionnaire + consents + SimplePay DEMO start (test values over stdin only; the address is confirmed)
+  // server side: questionnaire + consents + the k29 card start (test values over stdin only; the address is confirmed)
   const remote = execFileSync('ssh', ['appok-1', 'bash -s'], {
     // `bash -s` reads its script from stdin, so the test values travel base64-encoded inside the script text
     // (never in argv, never printed).
@@ -172,25 +173,31 @@ j --arg aj "$AJ" --arg asz "$TSZ-1-41" '{firstName:"Böngésző",lastName:"Teszt
 H | curl -fsS -o /dev/null -X PUT -H @- -H 'content-type: application/json' --data-binary @/dev/shm/kj_prof_$$ https://api.$D/api/v1/client/profile; rm -f /dev/shm/kj_prof_$$
 ITEMS=$(curl -fsS https://api.$D/api/v1/config | jq -c '[.legal | to_entries[] | select(.key|test("^(aszf|adatkezeles|megbizasi_szerzodes)$")) | {docType:.key,version:.value}]')
 H | curl -fsS -o /dev/null -H @- -H 'content-type: application/json' --data "{\"items\":$ITEMS}" https://api.$D/api/v1/me/consents
-H | curl -fsS -H @- -H 'content-type: application/json' --data '{"platform":"web","acceptedDeclarations":true}' https://api.$D/api/v1/client/subscription/start | jq -r .paymentUrl
+CV=$(H | curl -fsS -H @- 'https://api.'$D'/api/v1/client/subscription/consent?purpose=subscribe')
+START=$(jq -nc --arg v "$(echo "$CV" | jq -r .version)" --arg s "$(echo "$CV" | jq -r .sha256)" '{platform:"web",purpose:"subscribe",consentVersion:$v,consentSha256:$s}')
+H | curl -fsS -H @- -H 'content-type: application/json' --data "$START" https://api.$D/api/v1/client/subscription/start | jq -r .url
 `,
     encoding: 'utf8',
   }).trim();
   const payUrl = remote.split('\n').pop();
-  if (!payUrl.startsWith(`https://api.${D}/api/v1/payments/demo/pay?o=`)) throw new Error('nincs fizetési URL');
-  ok('szerver: kérdőív + szerződések, SimplePay DEMO indítva');
+  const stripeTest = payUrl.startsWith('https://checkout.stripe.com/');
+  if (!payUrl.startsWith(`https://api.${D}/api/v1/payments/demo/fizetes?p=`) && !stripeTest) throw new Error('nincs fizetési URL');
+  ok(`szerver: kérdőív + szerződések, kártyás indítás (${stripeTest ? 'Stripe TESZT' : 'DEMO'})`);
+  if (stripeTest) ok('Stripe TESZT: a fizetést kézzel, tesztkártyával kell befejezni – a próba itt nem fizet');
 
   await page.goto(payUrl, { waitUntil: 'networkidle2', timeout: 45000 });
-  await shot(page, '05_demo_fizetooldal');
-  const cspPay = await page.evaluate(() => window.__csp);
-  await Promise.all([page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 45000 }), byText(page, 'Sikeres fizetés szimulálása', 'button')]);
-  await page.waitForFunction(() => location.host.startsWith('app.') && location.pathname.includes('elofizetes'), { timeout: 20000 });
-  await wait(2500);
-  await shot(page, '06_app_fizetes_eredmeny');
-  const txt = await page.evaluate(() => document.body.innerText);
-  if (cspPay.length) bad('DEMO fizetőoldal CSP', cspPay.join(' | '));
-  if (/sikeres|rendben|megvan|köszön/i.test(txt)) ok(`fizetés → vissza az appba (${await page.evaluate(() => location.pathname)}), sikeres eredmény`);
-  else bad('fizetés eredménye', txt.slice(0, 200));
+  await shot(page, stripeTest ? '05_stripe_teszt_checkout' : '05_demo_fizetooldal');
+  if (!stripeTest) {
+    const cspPay = await page.evaluate(() => window.__csp);
+    await Promise.all([page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 45000 }), byText(page, 'Sikeres fizetés szimulálása', 'button')]);
+    await page.waitForFunction(() => location.host.startsWith('app.') && location.pathname.includes('elofizetes'), { timeout: 20000 });
+    await wait(2500);
+    await shot(page, '06_app_fizetes_eredmeny');
+    const txt = await page.evaluate(() => document.body.innerText);
+    if (cspPay.length) bad('DEMO fizetőoldal CSP', cspPay.join(' | '));
+    if (/sikeres|rendben|megvan|köszön/i.test(txt)) ok(`fizetés → vissza az appba (${await page.evaluate(() => location.pathname)}), sikeres eredmény`);
+    else bad('fizetés eredménye', txt.slice(0, 200));
+  }
 
   await page.goto(`${APP}/bekotes`, { waitUntil: 'networkidle2', timeout: 45000 });
   await wait(1500);

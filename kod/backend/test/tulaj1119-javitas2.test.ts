@@ -55,7 +55,7 @@ describe('journey rows: who waits for whom', () => {
     const sub = await h.json('POST', '/client/business-registration/submit', { token: c.token });
     expect(sub.status).toBe(200);
     expect(sub.body.activityPending).toBe(true);
-    expect(sub.body.statusText).toBe('Már átnézheted az útmutatót. A tevékenység-sorodat még megírjuk (általában 1 munkanap), utána bejelentheted.');
+    expect(sub.body.statusText).toBe('Már átnézheted az útmutatót. A tevékenység-sorodat még megírjuk, utána bejelentheted.'); // k8 (k7b remnant, tulaj 11-20): no time promise; the one allowed callback sentence verbatim
     const j = (await h.json('GET', '/client/onboarding', { token: c.token })).body.journey;
     const b = row(j, 'bejelentes');
     expect(b.actor).toBe('te');
