@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="hu"><!-- MÁSOLAT: landing_v2/_eszkoz/app_minta_gep.py készítette a C5_v2/asztali/A70_uzenetek.html-ből. -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adózz – Üzenetek (gép)</title>
+<link rel="stylesheet" href="../../../C5_v2/v2.css">
+<link rel="stylesheet" href="../../../C5_v2/asztali/v2_asztali.css">
+<style>.szil{display:inline-grid;place-items:center;flex:none;border-radius:50%;background:#fff;color:#5B6BEF;box-shadow:0 0 0 2px rgba(255,255,255,.7)}.szil svg{width:62%;height:62%;fill:currentColor;margin-top:8%}.sav-konyvelo .szil,.atnezte .szil,.lista-fej .szil{background:#E6EBFF;box-shadow:none}body.asztali{min-height:0}.oldalsav{min-height:0;height:100vh}.feltolto.sav.kijelolt{border-style:solid;border-color:#1428DB;background:#F5F7FF}.uj-cimke{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:99px;background:#1428DB;color:#fff;font-size:12px;font-weight:700;vertical-align:2px}.ketpanel.bekuld{grid-template-columns:470px minmax(0,1fr)}.valaszto{flex-direction:column;gap:0!important;padding:22px 22px 18px!important}.valaszto>h2{font-size:19px}.valaszto>.al{margin:2px 0 14px;font-size:15px;color:var(--szurke)}.opcio{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:16px;border:1.5px solid var(--vonal);margin-top:10px}.opcio.on{border:2px solid #1428DB;background:#F5F7FF;padding:15px}.opcio .sz{flex:1;min-width:0}.opcio h3{font-size:16.5px;font-weight:750}.opcio p{margin-top:2px;font-size:14.5px;color:var(--szurke);line-height:1.4}.opcio .gomb{width:auto;height:46px;margin-top:12px;padding:0 22px;font-size:16px;display:inline-flex;gap:8px}.opcio svg.chev{width:20px;height:20px;align-self:center;color:#9AA2B5;fill:currentColor}.valaszto .megj{margin:12px 2px 0;font-size:13.5px;color:var(--szurke)}.ketpanel.bekuld>.valaszto{margin:0}.bekuld .tabla-fej,.bekuld .tabla-sor{grid-template-columns:40px minmax(0,1fr) 104px 20px}</style></head>
+<body class="asztali">
+<script src="../../../C5_v2/v2.js"></script>
+<aside class="oldalsav">
+  <span class="logo" data-meret="34" data-hatter="feher"></span>
+  <nav class="menu" aria-label="Menü">
+    <a href="A01_fooldal.html"><svg><use href="#i-fooldal"/></svg>Főoldal</a>
+    <a href="A60_dosszie.html"><svg><use href="#i-dosszie"/></svg>Dosszié</a>
+    <a href="A60_dosszie.html"><svg><use href="#i-kamera"/></svg>Fotózás</a>
+    <a class="on" aria-current="page" href="A70_uzenetek.html"><svg><use href="#i-uzenet"/></svg>Üzenetek<span class="pont"></span></a>
+    <a href="A80_fiok.html"><svg><use href="#i-fiok"/></svg>Fiók</a>
+  </nav>
+  <div class="sav-konyvelo">
+    <div class="ki"><span class="szil" style="width:40px;height:40px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span><div><b>A könyvelőd</b><span>itt írhatsz neki</span></div></div>
+    <button class="gomb-kis masod"><svg><use href="#i-telefon"/></svg>Visszahívást kérek</button>
+  </div>
+</aside>
+
+<div class="tartalom">
+  <header class="hos kis">
+    <div class="sor1">
+      <div class="ki"><span class="szil" style="width:34px;height:34px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span><span><b>A könyvelőd</b> átnézi a számláidat</span></div>
+      <span class="demo">DEMO</span>
+    </div>
+    <h1>Üzenetek</h1>
+    <p>Bármit megkérdezhetsz a könyvelődtől, amiben elakadtál.</p>
+  </header>
+
+  <main class="ketpanel szeles">
+    <aside class="lista blokkos">
+      <div class="lista-fej">
+        <span class="szil" style="width:52px;height:52px"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
+        <div><b>A könyvelőd</b><span>itt írhatsz neki</span></div>
+      </div>
+      <div class="lista-blokk">
+        <h3>Ha inkább beszélnél vele</h3>
+        <p>Munkanapokon 9 és 17 óra között hívunk vissza.</p>
+        <button class="gomb-kis masod teljes"><svg><use href="#i-telefon"/></svg>Visszahívást kérek</button>
+      </div>
+      <div class="lista-blokk">
+        <h3>Kérj tőle egy gombnyomással</h3>
+        <div class="lsor"><div class="tile kicsi t-kek"><svg><use href="#i-irat"/></svg></div><div class="l"><div class="c">Jövedelemigazolás</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+        <div class="lsor"><div class="tile kicsi t-zold"><svg><use href="#i-pipa-kor"/></svg></div><div class="l"><div class="c">Nullás igazolás</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+        <div class="lsor"><div class="tile kicsi t-lila"><svg><use href="#i-pajzs"/></svg></div><div class="l"><div class="c">Köztartozásmentességi igazolás</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+        <div class="lsor"><div class="tile kicsi t-narancs"><svg><use href="#i-valtozas"/></svg></div><div class="l"><div class="c">Megváltozott egy adatom</div></div><svg class="chev"><use href="#i-chev"/></svg></div>
+      </div>
+      <div class="lista-blokk">
+        <h3>Javasolt kérdések</h3>
+        <a class="kerdes" href="#">Mennyit kell befizetnem, és mikorra?<svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="kerdes" href="#">Mit töltsek fel ebben a hónapban?<svg class="chev"><use href="#i-chev"/></svg></a>
+        <a class="kerdes" href="#">Mennyit tegyek félre?<svg class="chev"><use href="#i-chev"/></svg></a>
+      </div>
+    </aside>
+
+    <section class="reszlet">
+      <div class="reszlet-fej"><h2>Beszélgetés a könyvelőddel</h2></div>
+      <div class="reszlet-torzs">
+        <div class="nap">Hétfő, november 17.</div>
+        <div class="felado">A könyvelőd</div>
+        <div class="buborek tole">Szia! Itt vagyok, ha kérdésed van. Bármit megkérdezhetsz, amiben elakadtál.<span class="ido">09:12</span></div>
+        <div class="buborek enyem">Szia! Mennyit fizettem be eddig az adóból?<span class="ido">09:20</span></div>
+        <div class="felado">A könyvelőd</div>
+        <div class="buborek tole">Eddig 317&nbsp;000&nbsp;Ft-ot. A következő összeget a főoldalon látod, amint kiszámoltam.<span class="ido">09:41</span></div>
+
+        <div class="nap">Ma</div>
+        <div class="buborek tole kerkartya"><div class="tile kicsi t-sarga"><svg><use href="#i-feltolt"/></svg></div><div><div class="kis-cim">A könyvelőd kéri</div><b>Október havi bankszámlakivonat</b><div class="cimke-sor"><span class="cimke c-var">Nyitott</span></div></div></div>
+        <div class="buborek enyem">Feltöltöttem a kivonatot.
+          <div class="csat"><svg><use href="#i-gemkapocs"/></svg>kivonat_oktober.pdf</div>
+          <span class="ido">10:05 · látta</span></div>
+      </div>
+      <div class="reszlet-sav"><button class="csatol" aria-label="Fájl csatolása"><svg><use href="#i-gemkapocs"/></svg></button><div class="mezo ures">Írj a könyvelődnek…</div><button class="kuld" aria-label="Küldés"><svg><use href="#i-kuld"/></svg></button></div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

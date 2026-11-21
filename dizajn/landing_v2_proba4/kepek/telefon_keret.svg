@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 434 888" width="434" height="888">
+<!-- Adózz.hu - saját rajzolású, márkajelzés nélküli telefonkeret (2026-11-20).
+     Kijelző (tartalom): x22 y22 390x844, sarok r44. Látható nyílás: x22.5 y22.5 389x843, r43.5.
+     A nyílás átlátszó: az app képe a keret ALÁ kerül. -->
+<defs>
+  <linearGradient id="fem" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#b9bec7"/>
+    <stop offset=".06" stop-color="#6c717a"/>
+    <stop offset=".26" stop-color="#34373d"/>
+    <stop offset=".5" stop-color="#4a4e56"/>
+    <stop offset=".74" stop-color="#2e3136"/>
+    <stop offset=".94" stop-color="#686d76"/>
+    <stop offset="1" stop-color="#a9aeb7"/>
+  </linearGradient>
+  <linearGradient id="perem" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".62"/>
+    <stop offset=".12" stop-color="#fff" stop-opacity=".22"/>
+    <stop offset=".5" stop-color="#fff" stop-opacity=".1"/>
+    <stop offset=".88" stop-color="#fff" stop-opacity=".2"/>
+    <stop offset="1" stop-color="#fff" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="gomb" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2b2e33"/>
+    <stop offset=".64" stop-color="#3b3f46"/>
+    <stop offset=".8" stop-color="#a3a8b1"/>
+    <stop offset=".93" stop-color="#5d6269"/>
+    <stop offset="1" stop-color="#2b2e33"/>
+  </linearGradient>
+  <linearGradient id="uvegel" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff" stop-opacity=".16"/>
+    <stop offset=".15" stop-color="#fff" stop-opacity=".07"/>
+    <stop offset=".85" stop-color="#fff" stop-opacity=".04"/>
+    <stop offset="1" stop-color="#fff" stop-opacity=".1"/>
+  </linearGradient>
+  <radialGradient id="lencse" cx=".42" cy=".4" r=".62">
+    <stop offset="0" stop-color="#34405e"/>
+    <stop offset=".45" stop-color="#121725"/>
+    <stop offset="1" stop-color="#020203"/>
+  </radialGradient>
+  <linearGradient id="tukor" x1="0" y1="0" x2="1" y2=".62">
+    <stop offset="0" stop-color="#fff" stop-opacity=".09"/>
+    <stop offset=".42" stop-color="#fff" stop-opacity=".025"/>
+    <stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+  </linearGradient>
+  <mask id="nyilas" maskUnits="userSpaceOnUse" x="0" y="0" width="434" height="888">
+    <rect width="434" height="888" fill="#fff"/>
+    <rect x="22.5" y="22.5" width="389" height="843" rx="43.5" fill="#000"/>
+  </mask>
+  <clipPath id="kijelzo"><rect x="22.5" y="22.5" width="389" height="843" rx="43.5"/></clipPath>
+</defs>
+<!-- oldalgombok (jobb oldal: hangerő + bekapcsoló) -->
+<rect x="426" y="196" width="7.6" height="102" rx="2.2" fill="url(#gomb)"/>
+<rect x="426" y="330" width="7.6" height="66" rx="2.2" fill="url(#gomb)"/>
+<g mask="url(#nyilas)">
+  <!-- fém perem: alap, külső él, csúcsfény, belső árnyék -->
+  <rect x="3" y="3" width="428" height="882" rx="63" fill="url(#fem)"/>
+  <rect x="3.35" y="3.35" width="427.3" height="881.3" rx="62.65" fill="none" stroke="#15161a" stroke-opacity=".55" stroke-width=".7"/>
+  <rect x="4.5" y="4.5" width="425" height="879" rx="61.5" fill="none" stroke="url(#perem)" stroke-width="1.1"/>
+  <rect x="6.6" y="6.6" width="420.8" height="874.8" rx="59.4" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="1"/>
+  <!-- antennacsíkok -->
+  <g fill="#1c1e22" opacity=".85">
+    <rect x="3" y="120" width="4.6" height="2.2"/><rect x="426.4" y="120" width="4.6" height="2.2"/>
+    <rect x="3" y="766" width="4.6" height="2.2"/><rect x="426.4" y="766" width="4.6" height="2.2"/>
+  </g>
+  <!-- üveg + fekete kijelzőperem -->
+  <rect x="7.5" y="7.5" width="419" height="873" rx="58.5" fill="#060709"/>
+  <rect x="7.5" y="7.5" width="419" height="873" rx="58.5" fill="none" stroke="#000" stroke-width="1.4"/>
+  <rect x="8.7" y="8.7" width="416.6" height="870.6" rx="57.3" fill="none" stroke="url(#uvegel)" stroke-width=".9"/>
+  <!-- hangszóró-rés -->
+  <rect x="185" y="12.4" width="64" height="3.2" rx="1.6" fill="#22252a"/>
+  <rect x="185.6" y="12.9" width="62.8" height="1.4" rx=".7" fill="#000" opacity=".55"/>
+</g>
+<!-- halvány tükröződés az üvegen -->
+<rect x="22.5" y="22.5" width="389" height="843" rx="43.5" fill="url(#tukor)" clip-path="url(#kijelzo)"/>
+<!-- előlapi kamera (kör alakú kivágás) -->
+<circle cx="217" cy="44" r="6.4" fill="#040405"/>
+<circle cx="217" cy="44" r="5.7" fill="none" stroke="#1d2026" stroke-width=".8"/>
+<circle cx="217" cy="44" r="3.3" fill="url(#lencse)"/>
+<circle cx="215.7" cy="42.7" r="1" fill="#fff" opacity=".38"/>
+<circle cx="218.5" cy="45.3" r=".55" fill="#9fb4ff" opacity=".22"/>
+</svg>

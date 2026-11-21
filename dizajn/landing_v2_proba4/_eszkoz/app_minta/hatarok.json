@@ -1,0 +1,1170 @@
+{
+ "01_fooldal": {
+  "magassag": 1448,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    282,
+    "9:41\n  \n    Adózz.hu\n    DEMO\n  \n  A kön"
+   ]
+  ],
+  ".fej .sor1": [
+   [
+    18,
+    50,
+    354,
+    36,
+    "Adózz.hu\n    DEMO"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    144,
+    354,
+    62,
+    "Most kb. 250 000 Ft legyen félretéve az "
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    214,
+    354,
+    45,
+    "Az idei számláid után eddig kb. 16 170 0"
+   ]
+  ],
+  ".fej .ki": [
+   [
+    18,
+    98,
+    354,
+    32,
+    "A könyvelőd átnézi a számláidat"
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    296,
+    366,
+    331,
+    "Félretenni\n      III. negyedév96 000FtJú"
+   ],
+   [
+    12,
+    640,
+    366,
+    185,
+    "Idei kereteid\n      Még 3 685 000 Ft\n   "
+   ],
+   [
+    12,
+    836,
+    366,
+    179,
+    "Mennyit kerestem?\n      16 170 000 Ft\n  "
+   ],
+   [
+    12,
+    1028,
+    366,
+    161,
+    "Határidők\n      Szja-előleg, IV. negyedé"
+   ],
+   [
+    12,
+    1201,
+    366,
+    124,
+    "Ha elakadszVisszahívás\n      Munkanapoko"
+   ]
+  ],
+  ".hsor": [
+   [
+    80,
+    1068,
+    284,
+    43,
+    "Szja-előleg, IV. negyedévjan. 12."
+   ],
+   [
+    80,
+    1111,
+    284,
+    62,
+    "TB-járulék és szocho, IV. negyedévjan. 1"
+   ]
+  ],
+  ".megj": [
+   [
+    80,
+    534,
+    284,
+    44,
+    "Ez csak jelölés: pénzt nem vonunk le, ne"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1363,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".gomb": [
+   [
+    80,
+    474,
+    284,
+    52,
+    "Megjelölöm, hogy félretettem"
+   ]
+  ]
+ },
+ "51_felretesz": {
+  "magassag": 1709,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    200,
+    "9:41\n  Adózz.hu\n  Ennyit tegyél félre\n  "
+   ]
+  ],
+  ".fej .vissza-sor": [
+   [
+    18,
+    50,
+    354,
+    40,
+    "Adózz.hu"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    102,
+    354,
+    29,
+    "Ennyit tegyél félre"
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    137,
+    354,
+    44,
+    "Az idei számláid után most összesen kb. "
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    214,
+    366,
+    230,
+    "Novemberkb. 29 000Ft\n    Napfény Étterem"
+   ],
+   [
+    12,
+    456,
+    366,
+    148,
+    "Októberkb. 125 000Ft\n    Napfény Étterem"
+   ],
+   [
+    12,
+    616,
+    366,
+    249,
+    "Szeptemberkb. 33 000Ft\n    Napfény Étter"
+   ],
+   [
+    12,
+    877,
+    366,
+    148,
+    "Augusztuskb. 29 000Ft\n    Napfény Éttere"
+   ],
+   [
+    12,
+    1037,
+    366,
+    148,
+    "Júliuskb. 34 000Ft\n    Napfény Étterem K"
+   ],
+   [
+    12,
+    1197,
+    366,
+    116,
+    "Június és korábbanBefizetve\n    A II. ne"
+   ],
+   [
+    12,
+    1378,
+    366,
+    124,
+    "Ha elakadszVisszahívás\n      Munkanapoko"
+   ]
+  ],
+  ".hsor": [
+   [
+    26,
+    266,
+    338,
+    80,
+    "Napfény Étterem Kft.SZ-2026-0019 · 418 0"
+   ],
+   [
+    26,
+    346,
+    338,
+    81,
+    "Gyöngyvirág Rendezvényház Kft.SZ-2026-00"
+   ],
+   [
+    26,
+    508,
+    338,
+    80,
+    "Napfény Étterem Kft.SZ-2026-0018 · 1 840"
+   ],
+   [
+    26,
+    668,
+    338,
+    80,
+    "Napfény Étterem Kft.SZ-2026-0017 · 1 606"
+   ],
+   [
+    26,
+    748,
+    338,
+    101,
+    "Gyöngyvirág Rendezvényház Kft.SZ-2026-00"
+   ],
+   [
+    26,
+    929,
+    338,
+    80,
+    "Napfény Étterem Kft.SZ-2026-0015 · 1 510"
+   ],
+   [
+    26,
+    1089,
+    338,
+    80,
+    "Napfény Étterem Kft.SZ-2026-0014 · 1 760"
+   ]
+  ],
+  ".megj": [
+   [
+    18,
+    1325,
+    354,
+    41,
+    "Becslés. A befizetendőt negyedévente a k"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1624,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".dokk": [
+   [
+    0,
+    1523,
+    390,
+    102,
+    "Megjelölöm, hogy félretettemEz csak jelö"
+   ]
+  ],
+  ".gomb": [
+   [
+    16,
+    1534,
+    358,
+    52,
+    "Megjelölöm, hogy félretettem"
+   ]
+  ]
+ },
+ "53_hataridok_b": {
+  "magassag": 1627,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    229,
+    "9:41\n  Adózz.hu\n  IV. negyedév: szja és "
+   ]
+  ],
+  ".fej .vissza-sor": [
+   [
+    18,
+    50,
+    354,
+    40,
+    "Adózz.hu"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    102,
+    354,
+    57,
+    "IV. negyedév: szja és járulékok"
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    165,
+    354,
+    44,
+    "2027. január 12-ig utald el. Három külön"
+   ]
+  ],
+  ".doboz": [
+   [
+    12,
+    1332,
+    366,
+    87,
+    "A bankodban három külön utalásként add f"
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    243,
+    366,
+    114,
+    "Összesen\n      kb. 154 000 Ft\n      eddi"
+   ],
+   [
+    12,
+    368,
+    366,
+    320,
+    "Szja-előleg\n    Összegkb. 49 680 Ft\n    "
+   ],
+   [
+    12,
+    700,
+    366,
+    298,
+    "TB-járulék\n    Összegkb. 61 270 Ft\n    K"
+   ],
+   [
+    12,
+    1010,
+    366,
+    309,
+    "Szociális hozzájárulási adó (szocho)\n   "
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1542,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".dokk": [
+   [
+    0,
+    1441,
+    390,
+    102,
+    "Megjelölöm, hogy befizettemEz csak jelöl"
+   ]
+  ],
+  ".gomb": [
+   [
+    16,
+    1452,
+    358,
+    52,
+    "Megjelölöm, hogy befizettem"
+   ]
+  ]
+ },
+ "54_kereset": {
+  "magassag": 1423,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    178,
+    "9:41\n  Adózz.hu\n  Mennyit kerestem?\n  20"
+   ]
+  ],
+  ".fej .vissza-sor": [
+   [
+    18,
+    50,
+    354,
+    40,
+    "Adózz.hu"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    102,
+    354,
+    29,
+    "Mennyit kerestem?"
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    137,
+    354,
+    22,
+    "2026. január–október, adók és járulékok "
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    192,
+    366,
+    201,
+    "Idén eddig kb.\n      14 527 000 Ft\n     "
+   ],
+   [
+    12,
+    439,
+    366,
+    577,
+    "Októberbevétel 1 840 000 Ftadó 202 000 F"
+   ],
+   [
+    12,
+    1066,
+    366,
+    201,
+    "Év végéig várhatóan\n      kb. 17 420 000"
+   ]
+  ],
+  ".hsor": [
+   [
+    26,
+    445,
+    338,
+    112,
+    "Októberbevétel 1 840 000 Ftadó 202 000 F"
+   ],
+   [
+    26,
+    558,
+    338,
+    113,
+    "Szeptemberbevétel 1 690 000 Ftadó 186 00"
+   ],
+   [
+    26,
+    671,
+    338,
+    113,
+    "Augusztusbevétel 1 510 000 Ftadó 166 000"
+   ],
+   [
+    26,
+    784,
+    338,
+    113,
+    "Júliusbevétel 1 760 000 Ftadó 194 000 Ft"
+   ],
+   [
+    26,
+    898,
+    338,
+    113,
+    "Júniusbevétel 1 592 000 Ftadó 175 000 Ft"
+   ]
+  ],
+  ".megj": [
+   [
+    18,
+    1279,
+    354,
+    20,
+    "Becslés. A végleges adót a könyvelőd hag"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1338,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".szakasz-cim": [
+   [
+    18,
+    411,
+    354,
+    20,
+    "Hónaponként"
+   ]
+  ]
+ },
+ "60_dosszie": {
+  "magassag": 1642,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    208,
+    "9:41Adózz.huDEMO\nNovemberi dossziéItt va"
+   ]
+  ],
+  ".fej .sor1": [
+   [
+    18,
+    50,
+    354,
+    36,
+    "Adózz.huDEMO"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    100,
+    354,
+    31,
+    "Novemberi dosszié"
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    139,
+    354,
+    45,
+    "Itt van minden irat, amit küldtél, és am"
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    280,
+    366,
+    279,
+    "A könyvelőd átnézte az iratokatma 9:12\n5"
+   ],
+   [
+    12,
+    605,
+    366,
+    206,
+    "Telefonszámla, októberFeldolgozva · nov."
+   ],
+   [
+    12,
+    970,
+    366,
+    76,
+    "2 kiállított számlaFeldolgozva · nov. 12"
+   ],
+   [
+    12,
+    1125,
+    366,
+    76,
+    "Adószámla-értesítőFeldolgozva · nincs te"
+   ],
+   [
+    12,
+    1300,
+    366,
+    76,
+    "Megbízási szerződésPDF, megnyithatod és "
+   ],
+   [
+    12,
+    1422,
+    366,
+    96,
+    "Szja-előleg kiszámítása, III. negyedévBe"
+   ]
+  ],
+  ".lsor": [
+   [
+    26,
+    611,
+    338,
+    64,
+    "Telefonszámla, októberFeldolgozva · nov."
+   ],
+   [
+    26,
+    675,
+    338,
+    65,
+    "Papírbolt, nyomtatópapírA könyvelőd látt"
+   ],
+   [
+    26,
+    740,
+    338,
+    65,
+    "Pénztárgép havi összesítőFeltöltve · teg"
+   ],
+   [
+    26,
+    976,
+    338,
+    64,
+    "2 kiállított számlaFeldolgozva · nov. 12"
+   ],
+   [
+    26,
+    1131,
+    338,
+    64,
+    "Adószámla-értesítőFeldolgozva · nincs te"
+   ],
+   [
+    26,
+    1306,
+    338,
+    64,
+    "Megbízási szerződésPDF, megnyithatod és "
+   ],
+   [
+    26,
+    1428,
+    338,
+    84,
+    "Szja-előleg kiszámítása, III. negyedévBe"
+   ]
+  ],
+  ".megj": [
+   [
+    82,
+    318,
+    248,
+    20,
+    "ma 9:12"
+   ],
+   [
+    18,
+    918,
+    354,
+    41,
+    "A kiállított számláid maguktól megjelenn"
+   ],
+   [
+    18,
+    1093,
+    354,
+    20,
+    "Amit a NAV küldött neked. Ezeket nem kel"
+   ],
+   [
+    18,
+    1247,
+    354,
+    41,
+    "Az elfogadott szerződés PDF-ben. A NAV-h"
+   ]
+  ],
+  ".szegmens": [
+   [
+    12,
+    222,
+    366,
+    46,
+    "NovemberOktóberKorábbiak"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1557,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".gomb-masod": [
+   [
+    26,
+    493,
+    338,
+    50,
+    "Kivonat feltöltése"
+   ],
+   [
+    12,
+    821,
+    366,
+    50,
+    "Fájl hozzáadása"
+   ]
+  ],
+  ".szakasz-cim": [
+   [
+    18,
+    577,
+    354,
+    20,
+    "Amit te küldtél"
+   ],
+   [
+    18,
+    889,
+    354,
+    20,
+    "Kiállított számlák"
+   ],
+   [
+    18,
+    1064,
+    354,
+    20,
+    "Levelek a NAV-tól"
+   ],
+   [
+    18,
+    1219,
+    354,
+    20,
+    "Szerződéseid"
+   ],
+   [
+    18,
+    1394,
+    354,
+    20,
+    "A könyvelőd beadta"
+   ]
+  ]
+ },
+ "61_dosszie_honap": {
+  "magassag": 844,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    200,
+    "9:41Adózz.hu\nKiállított számlák2 számla,"
+   ]
+  ],
+  ".fej .vissza-sor": [
+   [
+    18,
+    50,
+    354,
+    40,
+    "Adózz.hu"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    102,
+    354,
+    29,
+    "Kiállított számlák"
+   ]
+  ],
+  ".fej p": [
+   [
+    18,
+    137,
+    354,
+    44,
+    "2 számla, összesen 563 000 Ft, naponta l"
+   ]
+  ],
+  ".doboz": [
+   [
+    12,
+    214,
+    366,
+    45,
+    "Ebből eddig kb. 29 000 Ft-ot tegyél félr"
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    271,
+    366,
+    220,
+    "Gyöngyvirág Rendezvényház Kft.SZ-2026-00"
+   ]
+  ],
+  ".lsor": [
+   [
+    26,
+    277,
+    338,
+    123,
+    "Gyöngyvirág Rendezvényház Kft.SZ-2026-00"
+   ],
+   [
+    26,
+    400,
+    338,
+    85,
+    "Napfény Étterem Kft.SZ-2026-0019 · nov. "
+   ]
+  ],
+  ".megj": [
+   [
+    18,
+    503,
+    354,
+    41,
+    "A félreteendőt akkor számoljuk, amikor a"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    759,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ]
+ },
+ "64_fotozas": {
+  "magassag": 844,
+  ".allapot": [
+   [
+    0,
+    0,
+    390,
+    46,
+    "9:41"
+   ]
+  ],
+  ".kamera .felso": [
+   [
+    16,
+    54,
+    358,
+    40,
+    "MégseA könyvelőd kapja meg"
+   ]
+  ],
+  ".kamera .keret": [
+   [
+    35,
+    128,
+    320,
+    386,
+    "Auto"
+   ]
+  ],
+  ".kamera .tipp-sor": [
+   [
+    24,
+    537,
+    342,
+    69,
+    "Még nincs oldalFotózd le sötét alapon, v"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    759,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ]
+ },
+ "70_uzenetek": {
+  "magassag": 1531,
+  ".allapot": [
+   [
+    18,
+    0,
+    354,
+    46,
+    "9:41"
+   ]
+  ],
+  ".fej": [
+   [
+    0,
+    0,
+    390,
+    199,
+    "9:41\n  Adózz.hu\n  Üzenetek\n  A könyvelőd"
+   ]
+  ],
+  ".fej .sor1": [
+   [
+    18,
+    50,
+    354,
+    36,
+    "Adózz.hu"
+   ]
+  ],
+  ".fej h1": [
+   [
+    18,
+    100,
+    354,
+    31,
+    "Üzenetek"
+   ]
+  ],
+  ".fej .ki": [
+   [
+    18,
+    143,
+    354,
+    32,
+    "A könyvelőd · itt írhatsz neki"
+   ]
+  ],
+  "main .k": [
+   [
+    12,
+    245,
+    366,
+    255,
+    "Jövedelemigazolás\n    Nullás igazolás\n  "
+   ],
+   [
+    12,
+    512,
+    366,
+    76,
+    "Visszahívást kérekMunkanapokon 9 és 17 ó"
+   ]
+  ],
+  ".lsor": [
+   [
+    26,
+    251,
+    338,
+    60,
+    "Jövedelemigazolás"
+   ],
+   [
+    26,
+    311,
+    338,
+    61,
+    "Nullás igazolás"
+   ],
+   [
+    26,
+    372,
+    338,
+    61,
+    "Köztartozásmentességi igazolás"
+   ],
+   [
+    26,
+    433,
+    338,
+    61,
+    "Megváltozott egy adatom"
+   ],
+   [
+    26,
+    518,
+    338,
+    64,
+    "Visszahívást kérekMunkanapokon 9 és 17 ó"
+   ]
+  ],
+  ".nap": [
+   [
+    12,
+    600,
+    366,
+    19,
+    "Hétfő, november 17."
+   ],
+   [
+    12,
+    996,
+    366,
+    19,
+    "Ma"
+   ]
+  ],
+  ".felado": [
+   [
+    20,
+    629,
+    358,
+    19,
+    "A könyvelőd"
+   ],
+   [
+    20,
+    859,
+    358,
+    19,
+    "A könyvelőd"
+   ]
+  ],
+  ".buborek": [
+   [
+    12,
+    651,
+    300,
+    107,
+    "Szia! Itt vagyok, ha kérdésed van. Bármi"
+   ],
+   [
+    78,
+    766,
+    300,
+    85,
+    "Szia! Mennyit fizettem be eddig az adóbó"
+   ],
+   [
+    12,
+    881,
+    300,
+    107,
+    "Eddig 317 000 Ft-ot. A következő összege"
+   ],
+   [
+    12,
+    1025,
+    300,
+    114,
+    "A könyvelőd kériOktóber havi bankszámlak"
+   ],
+   [
+    78,
+    1147,
+    300,
+    92,
+    "Feltöltöttem a kivonatot.\n    kivonat_ok"
+   ]
+  ],
+  ".nav": [
+   [
+    0,
+    1446,
+    390,
+    85,
+    "FőoldalDossziéFotózásÜzenetekFiók"
+   ]
+  ],
+  ".uzenet-sav": [
+   [
+    0,
+    1380,
+    390,
+    67,
+    "Írj a könyvelődnek…"
+   ]
+  ],
+  ".szakasz-cim": [
+   [
+    18,
+    217,
+    354,
+    20,
+    "Kérj tőle egy gombnyomással"
+   ],
+   [
+    18,
+    1257,
+    354,
+    20,
+    "Javasolt kérdések"
+   ]
+  ]
+ }
+}

@@ -1,0 +1,264 @@
+{
+ "ido": "2026-11-20T20:48:29",
+ "modell": "google/gemini-3.8-flash",
+ "kepek": [
+  "gep_01.png",
+  "gep_02.png",
+  "gep_03.png",
+  "gep_04.png",
+  "gep_05.png",
+  "gep_06.png",
+  "gep_07.png",
+  "gep_08.png",
+  "gep_09.png"
+ ],
+ "kep_meret": [
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1250
+  ],
+  [
+   1000,
+   1120
+  ]
+ ],
+ "cimkek": {
+  "1": "fejléc; hős (bal: cím, szöveg, ár, gombok; jobb: telefon + mögötte böngészős app-kép és lila/kék doboz, alatta lejátszás-gomb + Főoldal/Dosszié/Üzenetek/Fotózás/Határidők fülgombok + felirat); kék bizalmi sáv 4 ikonnal; „Kinek szól” (zöld „igen” és rózsaszín „nem” kártya)",
+  "2": "„Hogyan működik” 4 számozott lépés-kártya sárgás alapon; a sötét „Mit kapsz” szakasz eleje: 1. Számlák (görgetésre mozgó telefon) + „Neked ebből:” kiemelő doboz",
+  "3": "„Mit kapsz”: 2. Félretenni, 3. Határidők (minden lépésnél: színes számkör + címke, nagy cím, szöveg, „Neked ebből:” színes bal szegélyű doboz, telefon lekerekített keretes panelben, mögötte színes ragyogás)",
+  "4": "„Mit kapsz”: 4. Fotózás, 5. Dosszié, 6. Üzenetek eleje",
+  "5": "„Mit kapsz”: 6. Üzenetek vége, 7. Keretek; a szakasz végi 3 kis kártya (Telefonon és gépen / A pénzed nálad marad / A NAV-hoz a könyvelőd fordul); a mentazöld könyvelő-szakasz eleje",
+  "6": "Könyvelő-szakasz: bal „Egy negyedév a könyvelőddel” idővonal ikonokkal, jobb „Név szerint ismered” / „Egy szerződés, egy felelős” / „Amit soha nem kérünk el” dobozok; Biztonság (levendula alap, 2 felsorolásos kártya)",
+  "7": "Árak (bal: havidíj + „Benne van” pipás lista + sárga gomb; jobb: külön díjak listája), alatta 3 pipás sor; „Összevetés” eleje",
+  "8": "Összevetés táblázat (Adózz vs. hagyományos iroda); sárga csíkos szaggatott doboz = BELSŐ HELYŐRZŐ a későbbi valódi véleményeknek, élesítés előtt kikerül, EZT NE ÉRTÉKELD; GYIK (harmonika)",
+  "9": "GYIK vége; záró kék CTA-sáv + „Előbb beszélnél velünk?” üveghatású doboz; sötét lábléc + impresszum"
+ },
+ "rendszer": "Az Adózz.hu egy magyar online könyvelés-szolgáltatás alanyi ÁFA-mentes, átalányadózó és katás egyéni vállalkozóknak: nyilvántartásba vett, név szerint ismert könyvelő + mobilapp (számlák a NAV Online Számlából, mennyit tegyél félre adóra, határidők, fotózott iratok, üzenet a könyvelőnek). 19 999 Ft/hó bruttó, éves zárás 14 999 Ft/év. Az app nem utal és nem von le pénzt, nem küld be semmit a NAV-nak; a bevallást a könyvelő adja be meghatalmazással. Szolgáltató: Somosi Kft. Az alapító YouTuber-vállalkozó, a weboldalt főleg telefonon nézik majd.\nEz egy még NEM élő dizájnminta értékesítő oldala. A tulaj célja: megbízható, valódi magyar cég benyomása (ő a Billingót és a Számlázz.hu-t hozta példának), emberi kéz munkája, NE sablonos „AI-landing” hatás.\nKötöttségek (a javaslataid ezeken belül maradjanak): az arculat marad (fő kék #1428DB, sárga főgomb #FFC93C, sötét #10152B, Geist betű, az appban Fluent Emoji Flat ikonok), de a használatuk módja változhat. Nem lesz: kitalált vélemény, ügyfélszám, statisztika, díj/elismerés; könyvelő-fotó vagy kitalált könyvelőnév (az app-képeken a „Kovács Bence” bemutató adat); AI-val generált kép; mesterséges intelligencia említése; válaszidő-ígéret (egyetlen engedett mondat: „A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.”); külső betű/CDN/követő kód. Csak valós funkciót mutathatunk. Az árak maradnak. Animáció csak transform/opacity.\nMár eldöntött változások a hősben (ezekkel nem kell foglalkoznod): a böngészős app-kép, a lila/kék doboz és a telefon alatti gombsor + felirat kikerül, a telefon csak árnyékot kap, és az oldal minden telefonja valósághű készülékkeretet (mockupot) kap.",
+ "feladat": "Két szemmel nézd végig a 9 képszeletet (asztali gép, 1440 px széles nézet, fentről lefelé):\nTERVEZŐ = tapasztalt magyar webdizájner, aki ügynökségnél dolgozott, és ránézésre felismeri a sablonos/AI-generált landingokat (pl. Tailwind/shadcn-ízű kártyarácsok, ikon+cím+2 sor kártyák, színes bal szegélyű „callout” dobozok, minden szakasz más pasztell háttér, gradiens ragyogás, eyebrow-címke minden szakasz fölött, egyforma lekerekítés és árnyék mindenen, „X. Y.” kétütemű címek, hármas felsorolások).\nVÁLLALKOZÓ = átlagos magyar egyéni vállalkozó (40 körüli villanyszerelő vagy kozmetikus), aki nem ért a dizájnhoz, de érzi, ha valami „gépies”, „túl szép, hogy igaz legyen” vagy „nem igazi cég”.\nKérdések: tűnik-e AI-generáltnak/sablonosnak az oldal; MELY részek és MIÉRT (konkrétan: doboz, ikon, szín, szöveg, elrendezés, tipográfia, mozgás, ismétlődés); mi kelt bizalmat és mi nem; mit tenne egy valódi magyar ügynökség másképp, hogy kézzel tervezett, valódi cég hatása legyen. A tulaj külön AI-hatásúnak érezte: a „Mit kapsz” szakasz dobozait, különösen a „Neked ebből: …” kiemelőket; a szakasz végi 3 kis kártyát; a könyvelő-szakaszt (idővonal + 3 doboz). Ezekre adj külön, konkrét magyarázatot és megvalósítható javítást (CSS/elrendezés szinten), de az EGÉSZ oldalt nézd, mást is jelezz.\nLegyél őszinte és konkrét, ne udvariaskodj; ne ismételd magad; mindenhol add meg a képszelet számát. Magyarul, tömören. Válasz CSAK JSON:\n{\"osszkep\":{\"tervezo_ai_hatas_1_10\":<1=kézzel tervezett, 10=tiszta AI-sablon>,\"vallalkozo_ai_hatas_1_10\":<szám>,\"tervezo_egy_mondatban\":\"...\",\"vallalkozo_egy_mondatban\":\"...\",\"legerosebb_ai_jel\":\"...\"},\n\"ai_jelek\":[{\"resz\":\"<szakasz + elem>\",\"kep\":<szám>,\"tipus\":\"doboz|ikon|szín|szöveg|elrendezés|tipográfia|mozgás|ismétlődés\",\"miert_ai\":\"<miért ismerős ez AI/sablon-oldalakról>\",\"ugynokseg_igy_csinalna\":\"<konkrét, megvalósítható>\",\"sulyossag\":\"nagy|közepes|kicsi\"}],\n\"tulaj_altal_jelzett\":[{\"resz\":\"Neked ebből dobozok|3 kis kártya a Mit kapsz végén|Mit kapsz lépés-elrendezés|könyvelő idővonal|könyvelő 3 doboz\",\"miert_ai\":\"...\",\"javitas\":\"<konkrét: mit vegyünk ki, mivé alakítsuk, milyen tipográfia/elrendezés>\"}],\n\"szoveg_ai_jelek\":[{\"idezet\":\"<PONTOS idézet a képről>\",\"kep\":<szám>,\"miert_ai\":\"...\",\"emberibb\":\"<rövid, tegező, magyaros>\"}],\n\"bizalom\":{\"kelt\":[{\"mi\":\"...\",\"kep\":<szám>,\"miert\":\"...\"}],\"nem_kelt\":[{\"mi\":\"...\",\"kep\":<szám>,\"miert\":\"...\",\"javitas\":\"...\"}]},\n\"megtartando\":[\"<ami jó, ne nyúljunk hozzá>\"],\n\"ugynokseg_maskepp\":[\"<átfogó tervezési elv/döntés, amit egy valódi ügynökség másképp csinálna; pl. színhasználat, ritmus, tipográfiai hierarchia, kevesebb doboz>\"],\n\"top_7_javitas\":[\"<rangsorolva, a legnagyobb hatású elöl>\"]}",
+ "valasz": {
+  "osszkep": {
+   "tervezo_ai_hatas_1_10": 8,
+   "vallalkozo_ai_hatas_1_10": 6,
+   "tervezo_egy_mondatban": "Tipikus v0/Lovable/Tailwind landing: túl sok mikrodoboz, szivárványszerű pasztell szekcióhátterek és formula-szerű 'Neked ebből' kiemelések rejtik el a valóban erős terméket.",
+   "vallalkozo_egy_mondatban": "Nagyon csili-vili és startupos, de a sok kis színes buborék miatt inkább tűnik egy külföldről fordított szoftvernek, mint egy megbízható magyar könyvelőirodának.",
+   "legerosebb_ai_jel": "A 'Mit kapsz' szakaszban 7-szer mechanikusan ismétlődő 'Neked ebből: ...' bal szegélyes callout konténer és a szakaszok egymásra pakolt, indokolatlan pasztell váltakozásai (sárga, sötétkék, menta, levendula)."
+  },
+  "ai_jelek": [
+   {
+    "resz": "Hogyan működik lépéskártyák",
+    "kep": 2,
+    "tipus": "elrendezés",
+    "miert_ai": "Szabvány 4 oszlopos shadcn kártyasor lebegő árnyékkal, sárga háttérre téve fehér kártyákkal, nyíl ikonokkal a kártyák között – klasszikus LLM-komponens sablon.",
+    "ugynokseg_igy_csinalna": "Fehér háttér, kártyadobozok nélkül: egyetlen horizontális folyamatvonal minimál számozással vagy sima, strukturált szöveges lépések.",
+    "sulyossag": "közepes"
+   },
+   {
+    "resz": "Mit kapsz lépések (bal/jobb cikk-cakk telefonok glow effekttel)",
+    "kep": 3,
+    "tipus": "ismétlődés",
+    "miert_ai": "A sötétkék háttér mögött derengő színes radiális gradiens gömbök (glow) és a mechanikus bal-jobb váltakozás a tipikus 2023-as AI 'SaaS template' védjegye.",
+    "ugynokseg_igy_csinalna": "Glow törlése. A telefonokat nem kell mind külön dobozba zárni: tisztán a telefon mockup álljon a sötét háttéren, vagy a funkciókat csoportosítva 3-4 fő fókuszpontra szűkíteni.",
+    "sulyossag": "nagy"
+   },
+   {
+    "resz": "Szakaszok háttérszínei",
+    "kep": 6,
+    "tipus": "szín",
+    "miert_ai": "Minden görgetésnél új pasztell alapszín jön be: sárgás (2) -> sötétkék (2-5) -> mentazöld (5-6) -> levendula (6) -> fehér (7-8) -> vajsárga (8) -> élénkkék (9). Ez promptolt landing page-eknél fordul elő, ahol szekciónként generálták a kódot.",
+    "ugynokseg_igy_csinalna": "Szigorú 2-tónusú rendszer: tiszta fehér/nagyon világos szürke alap a tartalom 80%-ának, és csak a hős vagy a CTA kap sötét/kék kontrasztot. A menta és levendula törlendő.",
+    "sulyossag": "nagy"
+   },
+   {
+    "resz": "Bizalmi sáv a hős alatt",
+    "kep": 1,
+    "tipus": "doboz",
+    "miert_ai": "Kék sávban 4 teljesen egyforma kapszula/kártya, Fluent ikonokkal és 2-2 soros mikro-szöveggel – tipikus 'feature grid' komponens.",
+    "ugynokseg_igy_csinalna": "Kék háttér helyett fehér alapon diszkrét, szürke ikon-érték lista, vagy a hősbe integrált közvetlen megerősítés felesleges kék sávkonténer nélkül.",
+    "sulyossag": "közepes"
+   },
+   {
+    "resz": "Kinek szól: Zöld és rózsaszín kártyák",
+    "kep": 1,
+    "tipus": "szín",
+    "miert_ai": "Zöld 'Neked szól' vs piros/rózsaszín 'Nem neked szól' konténerek – tankönyvi B2B sablon, ami óvodás hangulatot kölcsönöz egy pénzügyi szolgáltatásnak.",
+    "ugynokseg_igy_csinalna": "Színezett háttér nélküli kéthasábos tipográfiai összevetés diszkrét szürke elválasztóval, színkódos kártya-keretek nélkül.",
+    "sulyossag": "közepes"
+   },
+   {
+    "resz": "Záró CTA 'Előbb beszélnél velünk?' üveghatású kártya",
+    "kep": 9,
+    "tipus": "doboz",
+    "miert_ai": "Glassmorphism doboz (fehér áttetsző border és háttér homályosítással) lekerekítve egy gradiens kék háttéren: elcsépelt Dribbble/AI elem.",
+    "ugynokseg_igy_csinalna": "Egyszerű fehér vagy diszkrét tömör sötétkék kártya tiszta kontraszttal, homályosítás és felesleges fény-effektusok nélkül.",
+    "sulyossag": "kicsi"
+   }
+  ],
+  "tulaj_altal_jelzett": [
+   {
+    "resz": "Neked ebből dobozok",
+    "miert_ai": "Színes bal oldali 'border-l-4' kiemelő doboz, fekete alapon félkövér sárga/ciánkék felirattal. Ez a klasszikus dokumentáció/AI összefoglaló blokk, ami megszakítja az olvasást és didaktikus.",
+    "javitas": "A dobozt, a bal szegélyt és a 'Neked ebből:' címkét teljesen törölni kell. A benne lévő mondat legyen maga a bekezdés záró mondata enyhén kiemelve (pl. sima szövegként font-medium fehérrel), dobozolás nélkül."
+   },
+   {
+    "resz": "3 kis kártya a Mit kapsz végén",
+    "miert_ai": "Három sötét háttérből alig kiemelkedő doboz Fluent ikonnal a tetején, ami töltelékként zárja le a hosszú görgetést, mint egy kötelezően kitöltendő 3 oszlopos grid.",
+    "javitas": "Dobozok törlése. Alakítsuk át egy soros, horizontális ikonmentes vagy diszkrét pipás garancialistává a sötét szekció láblécében, vagy tegyük át a Biztonság szekció szövegébe."
+   },
+   {
+    "resz": "Mit kapsz lépés-elrendezés",
+    "miert_ai": "7 különálló görgetési képernyő, ahol szinte pixeles pontossággal ugyanaz a sablon ismétlődik: sorszám-pill, H3 cím, bekezdés, callout doboz, telefon lekerekített panelben glow-val.",
+    "javitas": "Ritmust kell váltani. Csökkenteni kell a különálló lépések számát: a 7 nézetet vonjuk össze 3 logikai blokkba (1. Számlák és adómegtakarítás, 2. Papírmunka és iratleadás fotóval, 3. Könyvelői kapcsolat és keretek). Nem kell minden telefon köré sötét lekerekített tároló doboz, elég maga a telefonmockup tiszta árnyékkal."
+   },
+   {
+    "resz": "könyvelő idővonal",
+    "miert_ai": "Vertikális szürke vonalra fűzött naptár/irat ikonok szöveges címkékkel – sablonos 'How it works / Roadmap' komponens.",
+    "javitas": "Idővonal vonalát kivenni. Helyette hozzunk létre egy letisztult, 3-4 oszlopos vagy kártyamentes táblázatos rendszert: 'Havonta', 'Negyedévente', 'Évente' fejezetekkel, emberi, élő mondatokkal, irodai hangulatban."
+   },
+   {
+    "resz": "könyvelő 3 doboz",
+    "miert_ai": "Egymás alá dobált fehér kártyák, bal oldali színes vagy szürke kerettel, bennük magányos Fluent ikonnal. Túl sok apró konténer egy kupacon.",
+    "javitas": "Egyetlen összefüggő, jól tördelt információs blokk legyen dobozok nélkül. Cím + bekezdés elrendezés tiszta fehér alapon, bal szélén egy finom kiemeléssel a felelősségvállalásról (Somosi Kft.)."
+   }
+  ],
+  "szoveg_ai_jelek": [
+   {
+    "idezet": "Nézd meg lépésről lépésre, mit mutat neked az app egy hónap alatt. A számlást és a bevallást a könyvelőd végzi. Te csak látod, hol tartasz.",
+    "kep": 2,
+    "miert_ai": "Didaktikus, utasító narráció ('Nézd meg lépésről lépésre...'), elárulja a landing oldal struktúráját.",
+    "emberibb": "Az appban pontosan látod a fizetendő adódat. A számlákat és a bevallást a könyvelőd rendezi a háttérben."
+   },
+   {
+    "idezet": "Neked ebből: nem költöd el az adó pénzét, és a negyedév végén nem ér meglepetés.",
+    "kep": 3,
+    "miert_ai": "Gépies 'Feature -> Benefit' sablonmondat, eléaggatott címkével.",
+    "emberibb": "Így nem költöd el véletlenül a járulékra szánt pénzt, és pontosan tudod, mennyi marad a zsebedben."
+   },
+   {
+    "idezet": "Neked ebből: látod, hogy rendben vagy, és nem kell rákérdezned.",
+    "kep": 4,
+    "miert_ai": "Faék egyszerűségű mesterséges szlogenesítés, hiányzik belőle a szakmai biztonságérzet.",
+    "emberibb": "Nyugodtan hátradőlhetsz: látod, amikor a könyvelőd mindent átnézett és jóváhagyott."
+   },
+   {
+    "idezet": "Négy lépés, és a könyvelésed rendben van.",
+    "kep": 2,
+    "miert_ai": "Közhelyes SaaS formula-cím ('X lépés és Y van').",
+    "emberibb": "Hogyan indul el a közös munka?"
+   }
+  ],
+  "bizalom": {
+   "kelt": [
+    {
+     "mi": "Konkrét forintárak és részletes tételes díjjegyzék",
+     "kep": 7,
+     "miert": "A 19 999 Ft/hó és az éves zárás 14 999 Ft/év azonnal eloszlatja a 'rejtett költséges' könyvelői félelmeket. Nincs 'kérj egyedi ajánlatot' ködösítés."
+    },
+    {
+     "mi": "Somosi Kft. cégnév, adószám és német Contabo tárhely kiírása az impresszumban",
+     "kep": 9,
+     "miert": "Valós magyar entitás, ellenőrizhető cégadatok a láblécben, ami azonnal elválasztja az oldalt a külföldi kamu appoktól."
+    },
+    {
+     "mi": "Valósághű magyar applikációs képernyők (NAV Online Számla, ÁFA-keret)",
+     "kep": 3,
+     "miert": "A képernyőkön valódi magyar adózási kifejezések (szja-előleg, szocho, ÁFA mentes keret) szerepelnek életszerű összegekkel."
+    }
+   ],
+   "nem_kelt": [
+    {
+     "mi": "A szekciók pasztell színezése (menta és levendula háttér)",
+     "kep": 6,
+     "miert": "Egy pénzügyi/adóügyi szolgáltatásnál a lilás és mentazöld háttér komolytalan, gyermekded benyomást kelt, csorbítja a hivatalos jelleget.",
+     "javitas": "Egységes fehér vagy nagyon világos semleges szürke (#F8FAFC) háttér használata a teljes középső szakaszon."
+    },
+    {
+     "mi": "Túlzott 'Neked ebből' dobozolás és számozott körök",
+     "kep": 3,
+     "miert": "A felnőtt vállalkozónak olyan érzése van, mintha egy oktató-prezentációt olvasna, nem egy profi szolgáltatóval szerződne.",
+     "javitas": "Folyó szövegbe integrált haszonérvelés, a számozott színes bogyók és szegélyes panelek törlése."
+    },
+    {
+     "mi": "Kézzel rajzolt jellegű / lapos Fluent emojik a hivatalos szövegek mellett",
+     "kep": 6,
+     "miert": "A postafiók, telefon és személy ikonok emojiként való megjelenése amatőr hatást kelt a komoly adóügyi jognyilatkozatok mellett.",
+     "javitas": "Vékony vonalas, precíz monokróm SVG ikonok (pl. Lucide/Heroicons 1.5px stroke-kal) használata."
+    }
+   ]
+  },
+  "megtartando": [
+   "Az árazási kártya (7. szelet) struktúrája: balra a havidíj, jobbra a külön díjak listája rendkívül transzparens és tiszta.",
+   "A hős szekció bal oldali tiszta felépítése: főcím, alcím, ár, gombok és garanciapontok egy kupacban jól működnek.",
+   "Az összehasonlító táblázat (8. szelet) tartalma: nagyon erős érvek a hagyományos könyvelővel szemben, világos és közvetlen.",
+   "Az impresszum és jogi adatok részletessége a láblécben (9. szelet)."
+  ],
+  "ugynokseg_maskepp": [
+   "Szigorú háttér-hierarchia: A színkavalkád megszüntetése. Az oldal gerince (Hogyan működik, Könyvelő, Biztonság, Árak, GYIK) tiszta fehér alapon futna, a 'Mit kapsz' app-bemutató pedig egyetlen kontrasztos sötétkék tömbként fogná össze a mobilképernyőket.",
+   "Kártya- és doboz-diéta: A borderrel és árnyékkal ellátott mikrodobozok 60%-át felszámolnák. A tartalmat szellős fehér térközzel (whitespace) és tipográfiával (betűméret-kontraszt) tagolnák, nem dobozba zárt keretekkel.",
+   "Glow és lebegtetések törlése: A mockupok mögül kivennék a színes elmosott gradiens foltokat, és valódi lebegő árnyékot (box-shadow helyett ambient + key shadow réteget) adnának a telefonoknak.",
+   "Tipográfiai mikro-hierarchia: Az eyebrow-tagek (pl. kék 'MIT KAPSZ', 'BIZTONSÁG') túltengése helyett közvetlenül a beszédes főcímek vezetnék a szemet."
+  ],
+  "top_7_javitas": [
+   "1. Az összes 'Neked ebből: ...' doboz megszüntetése a 2-5. szeletben: a szöveget be kell olvasztani a bekezdésekbe kiemelő konténer nélkül.",
+   "2. A mentazöld és levendula háttérszínek törlése a 6. szeletben: váltson át tiszta fehér vagy diszkrét törtfehér háttérre a teljes Könyvelő és Biztonság szekció.",
+   "3. A 'Mit kapsz' szakasz sötét panelsorozatának egyszerűsítése: a telefonok mögül ki kell venni a lekerekített háttér-tárolódobozokat és a színes glow effektet; a mockup álljon közvetlenül a sötétkék alapon.",
+   "4. A könyvelő szekció (6. szelet) idővonalának és 3 egymás alatti dobozának átalakítása egy szellős, 2 hasábos tipográfiai szerkezetté, törölve a vertikális vonalat.",
+   "5. A Fluent Emojik cseréje a teljes oldalon letisztult, szürke vagy egyszínű vonalas ikonokra (pl. Lucide/Feather).",
+   "6. A 'Kinek szól' zöld és rózsaszín kártyáinak (1. szelet) fehérítés: a színes háttérkitöltések helyett szürke finom elválasztó és letisztult pipás/ikszes tipográfia.",
+   "7. A 'Mit kapsz' végén lévő 3 lebegő kis kártya (5. szelet) beolvasztása egy vízszintes szöveges zárócsíkba vagy átmozgatása a Biztonság pontjai közé."
+  ]
+ },
+ "finish_reason": "stop",
+ "hiba": "",
+ "usage": {
+  "prompt_tokens": 12043,
+  "completion_tokens": 4511,
+  "total_tokens": 16554,
+  "cost": 0.0259485,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0259485,
+   "upstream_inference_prompt_cost": 0.00903225,
+   "upstream_inference_completions_cost": 0.01691625
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 0,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "koltseg_usd": 0.0259485
+}

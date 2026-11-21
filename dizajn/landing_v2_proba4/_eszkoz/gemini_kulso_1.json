@@ -1,0 +1,590 @@
+{
+ "modell": "google/gemini-3.8-flash",
+ "datum": "2026-11-20T19:46:42",
+ "oldal": "landing_v2/index.html",
+ "szeletek": [
+  {
+   "cim": "Első képernyő telefonon (hős, felül)",
+   "y_css": 0
+  },
+  {
+   "cim": "„Hogyan működik” – négy lépés",
+   "y_css": 2836
+  },
+  {
+   "cim": "„Mindig tudod, hol tartasz az adóval” – a szakasz eleje",
+   "y_css": 3705
+  },
+  {
+   "cim": "„Mit kapsz” – funkciók telefonnal, a szakasz közepe",
+   "y_css": 5300
+  },
+  {
+   "cim": "„Mit kapsz” vége és „A könyvelőd” eleje (szakaszhatár)",
+   "y_css": 7100
+  },
+  {
+   "cim": "„Árak” – a szakasz eleje",
+   "y_css": 10282
+  }
+ ],
+ "keret_elotte": {
+  "limit_remaining": 7.965570823999997,
+  "usage": 52.034429176
+ },
+ "perszonak": [
+  {
+   "kod": "a",
+   "nev": "Szabó Péter",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Szabó Péter",
+    "ot_masodperc": {
+     "gondolat": "Végre nem nekem kell bajlódnom az adókkal, van egy saját könyvelőm és egy mobilapp, ami mutatja a pénzügyeimet.",
+     "mi_ez": "Online könyvelés telefonos alkalmazással összekötve.",
+     "kinek_szol": "Átalányadós és katás egyéni vállalkozóknak.",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kap_szerinte": "Hús-vér szakembert, aki beadja helyettem a bevallásokat, tartja a kapcsolatot a NAV-val, és egy appot a határidőkhöz.",
+     "mit_csinal_az_app_szerinte": "Begyűjti a számláimat a NAV-tól, és kiszámolja, hány forintot rakjak félre, de pénzt nem utal helyettem.",
+     "ami_homalyos": "Nem tiszta, hogy a számlák befizetését nekem kell-e kézzel jelölnöm, vagy látja a bankomból."
+    },
+    "meggyozne": [
+     {
+      "mi": "Azonnal tudom, mennyi pénzt nem költhetek el a bevételeimből.",
+      "idezet": "Minden számla után látod, mennyit tegyél félre."
+     },
+     {
+      "mi": "Nem kell keresgélnem az utalási adatokat és a bonyolult számlaszámokat.",
+      "idezet": "összeg, NAV-számlaszám, közlemény. Egy koppintással átmásolod a bankodba, és határidő előtt emlékeztetünk."
+     },
+     {
+      "mi": "Hivatalos ügyintézés gombnyomásra, sorban állás nélkül.",
+      "idezet": "kérj jövedelemigazolást vagy nullás igazolást egy gombnyomással"
+     }
+    ],
+    "visszatart": [
+     {
+      "felelem_vagy_kerdes": "Félek, hogy valójában senki nem nézi át a számláimat, csak egy algoritmus dobálja a számokat.",
+      "idezet": "Valódi könyvelő dolgozik neked, név szerint.",
+      "mi_oldana_fel": "Világos leírás arról, hogy a szerződéskötéskor megkapom a könyvelőm közvetlen elérhetőségét és kamarai azonosítóját."
+     },
+     {
+      "felelem_vagy_kerdes": "Gyanús az extra költségek sora, félek, hogy a 20 ezer forint csak a kezdet.",
+      "idezet": "Egy teljes év az éves zárással együtt: 254 987 Ft",
+      "mi_oldana_fel": "Egyértelmű kiemelés, hogy ha nincs változás az adataimban, pontosan ennyi az egész éves költségem és semmi más."
+     },
+     {
+      "felelem_vagy_kerdes": "Nem tudom, mit kell tennem, ha elrontok egy számlát a számlázómban.",
+      "idezet": "A kiállított számláid a NAV Online Számla rendszeréből jönnek.",
+      "mi_oldana_fel": "Rövid mondat arról, hogy sztornózáskor vagy hibánál az app automatikusan újraszámol-e."
+     }
+    ],
+    "erthetetlen_vagy_gyanus": [
+     {
+      "idezet": "beadja a negyedéves SZJA-előleget, TB-járulékot és szochót",
+      "szakasz": "4. HOGYAN MŰKÖDIK / 6. A KÖNYVELŐD",
+      "miert": "Rendezvényszervezőként nem akarom tudni, mi az a szocho, a sok rövidítés ijesztő.",
+      "uj_szoveg": "kiszámolja és beküldi a kötelező negyedéves adóidat és járulékaidat"
+     },
+     {
+      "idezet": "Jogállás-változás bejelentése helyetted",
+      "szakasz": "8. ÁRAK",
+      "miert": "Hivatalos bikkfanyelv, elsőre nem értem, mikor érintene ez engem.",
+      "uj_szoveg": "Főállás vagy mellékállás váltásának bejelentése"
+     },
+     {
+      "idezet": "a pénzmosás elleni törvény miatt azonosítanunk kell az ügyfeleinket",
+      "szakasz": "11. GYIK",
+      "miert": "Rémisztően hangzik a pénzmosás szó egy sima könyvelős oldalon.",
+      "uj_szoveg": "törvényi előírás miatt igazolnod kell a személyazonosságodat"
+     }
+    ],
+    "mozgo_bemutato": [
+     {
+      "lepes": "Számla beérkezése",
+      "mit_lat_mozogni": "Megjelenik egy friss kiállított számla, és a félretenni való keret azonnal megugrik egy konkrét összeggel.",
+      "miert_jo_nekem": "Látom, hogy munka után azonnal képben leszek a valós hasznommal."
+     },
+     {
+      "lepes": "Félretétel rögzítése",
+      "mit_lat_mozogni": "A képernyőn megnyomják a Megjelölöm, hogy félretettem gombot, és a tétel zöldre vált egy pipával.",
+      "miert_jo_nekem": "Megnyugtat, hogy rendezett marad a pénzem, nem költöm el véletlenül az adót."
+     },
+     {
+      "lepes": "Fizetési adatok másolása",
+      "mit_lat_mozogni": "A Másolom gombra kattintva felugrik egy kis pipás értesítés, hogy a NAV-számlaszám vágólapra került.",
+      "miert_jo_nekem": "Rögtön átlátom, hogy nem kell kézzel gépelnem hosszú számsorokat a mobilbankban."
+     },
+     {
+      "lepes": "Havi dosszié ellenőrzése",
+      "mit_lat_mozogni": "Megnyílik a Dosszié fül, ahol látszik a könyvelő zöld jóváhagyása az adott havi anyagon.",
+      "miert_jo_nekem": "Biztos lehetek benne, hogy szakember ellenőrizte a számaimat."
+     }
+    ],
+    "egybefolyik": [
+     {
+      "hol": "3. Kinek szól és 4. Hogyan működik",
+      "mi_a_gond": "Végig azonos fehér alapon kék és fekete betűk sorakoznak, elveszik a folyamat jellege.",
+      "javaslat": "A lépések kapjanak halvány szürke vagy sárgás kártyás hátteret, számozott színes körökkel."
+     },
+     {
+      "hol": "5. Mit kapsz és 6. A könyvelőd",
+      "mi_a_gond": "A telefonos nézetben a funkciólisták és a könyvelői feladatok felsorolása egymásba csúszik.",
+      "javaslat": "A könyvelői rész kapjon eltérő, sötétebb hátteret a technikai funkciók fehér dobozai után."
+     }
+    ],
+    "konyvelo_foto_nelkul": "Mutassátok a hivatalos kamarai regisztrációs jelvényt vagy kamarai tagsági igazolást, mellette egy egyszerű grafikát a dedikált szakemberről és a szakmai felelősségbiztosításról.",
+    "megvennem": "igen",
+    "miert": "Pontosan leveszi a vállamról a NAV-os stresszt, miközben telefonon mindig látom a tiszta pénzemet."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 13446,
+    "completion_tokens": 2008,
+    "total_tokens": 15454,
+    "cost": 0.009607266666666666,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 12643,
+     "cache_write_tokens": 12643,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.009607266666666666,
+     "upstream_inference_prompt_cost": 0.0020772666666666667,
+     "upstream_inference_completions_cost": 0.00753
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.009607266666666666
+  },
+  {
+   "kod": "b",
+   "nev": "Kiss Anna",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Kiss Anna",
+    "ot_masodperc": {
+     "gondolat": "Látom, hogy online könyvelés kisvállalkozóknak, nekem mint katás fodrásznak pont jó lehetne, de drágább, mint a mostani könyvelőm.",
+     "mi_ez": "Online könyvelés telefonos alkalmazással és valódi könyvelővel kiegészítve.",
+     "kinek_szol": "Átalányadózó és katás egyéni vállalkozóknak.",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kap_szerinte": "Hús-vér könyvelőt, aki beköti a NAV-ot, beadja a bevallást és figyel rám, plusz egy appot, ami mutatja a határidőket.",
+     "mit_csinal_az_app_szerinte": "Összegyűjti a számláimat a NAV-ból, kiszámolja a félretenni való adót, és emlékeztet a havi utalásra számlaszámmal.",
+     "ami_homalyos": "Katásként nekem nincs negyedéves SZJA-előleg, mégis folyton azt magyarázza a szöveg, így nem látom tisztán, nekem személy szerint miért éri meg a felárat."
+    },
+    "meggyozne": [
+     {
+      "mi": "Nem kell papírokat hurcolnom, a számlák maguktól bekerülnek a rendszerbe.",
+      "idezet": "A kiállított számláid a NAV Online Számla rendszeréből jönnek."
+     },
+     {
+      "mi": "Figyelmeztet, ha véletlenül céges vevőnek állítanék ki számlát, ami tönkretenné a katámat.",
+      "idezet": "és szólunk, ha cégnek számlázol."
+     },
+     {
+      "mi": "Egy gombnyomással át tudom másolni a NAV-számlaszámot az utaláshoz ahelyett, hogy kockás füzetből keresgélném.",
+      "idezet": "Egy koppintással átmásolod a bankodba, és határidő előtt emlékeztetünk."
+     }
+    ],
+    "visszatart": [
+     {
+      "felelem_vagy_kerdes": "Most 15 000 Ft-ot fizetek, ez meg 20 000 Ft havonta, plusz még az év végi zárásért is kérnek 15 000 Ft-ot, ami nálam eddig ingyen volt.",
+      "idezet": "19 999 Ft / hó",
+      "mi_oldana_fel": "Világos indoklás, hogy egyszerű katásként miért éri meg nekem a havi plusz 5000 Ft és az éves díj."
+     },
+     {
+      "felelem_vagy_kerdes": "Nincs személyes találkozó, és nem hívhatom fel a könyvelőt közvetlenül, amikor pánikba esek egy levél miatt.",
+      "idezet": "A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között."
+     },
+     {
+      "mi_oldana_fel": "Tudjam, hogy baj esetén azonnal elérhető ember válaszol, nem kell napokat várnom visszahívásra."
+     },
+     {
+      "felelem_vagy_kerdes": "Nem tudom, ki dolgozik a számaimon, ha még a nevét és arcát sem láthatom előre az oldalon.",
+      "idezet": "Nyilvántartásba vett könyvelő dolgozik neked, név szerint.",
+      "mi_oldana_fel": "Hivatalos kamarai garancia vagy cégvezetői felelősségvállalás bemutatása konkrét biztosítási összeggel."
+     }
+    ],
+    "erthetetlen_vagy_gyanus": [
+     {
+      "idezet": "A befizetendő összeget negyedévente a könyvelőd hagyja jóvá.",
+      "szakasz": "5. MIT KAPSZ („Mindig tudod, hol tartasz az adóval”)",
+      "miert": "Katásként havonta fizetek fix összeget, a negyedéves jóváhagyás megijeszt, hogy rám is átalányadós szabályok vonatkoznak-e.",
+      "uj_szoveg": "Katásként a havi fix összeget látod, átalányadónál negyedévente ellenőrzi könyvelőd."
+     },
+     {
+      "idezet": "És ha elakadsz, 2026 végéig kérheted, hogy a könyvelőd intézze helyetted, meghatalmazottként (2027-től a nyilvántartást a gazdasági kamara vezeti).",
+      "szakasz": "11. GYIK",
+      "miert": "Felesleges jogi bikkfanyelv, átlagemberként nem értem az évszámokat és kamarai változásokat.",
+      "uj_szoveg": "Ha elakadsz az indulásnál, könyvelőd meghatalmazással mindent elintéz helyetted."
+     },
+     {
+      "idezet": "Jogállás-változás bejelentése helyetted",
+      "szakasz": "8. ÁRAK",
+      "miert": "A 'jogállás-változás' hivatali kifejezés, fodrászként nem tudom kapásból, mit jelent.",
+      "uj_szoveg": "Mellékállásra vagy főállásra váltás bejelentése"
+     }
+    ],
+    "mozgo_bemutato": [
+     {
+      "lepes": "Számla beérkezése",
+      "mit_lat_mozogni": "Megjelenik egy frissen kiállított 12 000 Ft-os fodrász számla, ami azonnal beúszik a listába zöld pipával.",
+      "miert_jo_nekem": "Látom, hogy semmit nem kell gépelnem este munka után."
+     },
+     {
+      "lepes": "Kata-keret csökkenése",
+      "mit_lat_mozogni": "A számla beérkezésekor az éves keretcsík arrébb mozdul, és kiírja: 'Még 11,2 millió Ft kereted maradt'.",
+      "miert_jo_nekem": "Nyugodt vagyok, mert egy pillantásból látom, mennyi van még hátra az adómentes keretemből."
+     },
+     {
+      "lepes": "Havi adófizetés másolása",
+      "mit_lat_mozogni": "A képernyő a határidőkhöz ugrik, felvillan a havi kata összege, és a 'Másolom' gombra koppintva kiírja: 'Számlaszám vágólapra másolva'.",
+      "miert_jo_nekem": "Megnyugtat, hogy nem gépelek el hosszú számsorokat a mobilbankomban."
+     }
+    ],
+    "egybefolyik": [
+     {
+      "hol": "1. Hős és 2. Bizalmi sáv",
+      "mi_a_gond": "Végig fehér alapon kék és sárga gombok váltakoznak, nincs határozott elválasztás a bemutatkozás és a cégadatok között.",
+      "javaslat": "Kapjon a bizalmi sáv halvány szürke vagy pasztell kék háttérszínt különálló kártyákkal."
+     },
+     {
+      "hol": "5. Mit kapsz funkciókártyák",
+      "mi_a_gond": "A telefonos képernyő mellett a kártyák (Számlák maguktól, Fotózás, Keretek) egyhangú fehér dobozok apró ikonokkal.",
+      "javaslat": "Használjatok eltérő színes keretet vagy színes ikonos háttereket a különböző funkciókhoz."
+     },
+     {
+      "hol": "8. Árak és 9. Összevetés",
+      "mi_a_gond": "Túl sok a szöveges felsorolás és a táblázat egymás alatt, a szemem elfárad az olvasásban.",
+      "javaslat": "Az összehasonlító táblázat legyen vizuálisabb, színes pipákkal és kiemelt kártyákkal a sima szövegsorok helyett."
+     }
+    ],
+    "konyvelo_foto_nelkul": "Tegyetek ki hivatalos kamarai regisztrációs pecsétet, a cég szakmai felelősségbiztosításának kötvényszámát és értékét, valamint egy bemutató videót az app valós működéséről.",
+    "megvennem": "nem",
+    "miert": "Katásként a jelenlegi 15 000 Ft-os könyvelőm személyesen elérhető és olcsóbb, az app kényelme pedig nem ér meg nekem havi 5000 Ft pluszköltséget és éves zárási díjat."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 13456,
+    "completion_tokens": 2253,
+    "total_tokens": 15709,
+    "cost": 0.010006725,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 12643,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.010006725,
+     "upstream_inference_prompt_cost": 0.001557975,
+     "upstream_inference_completions_cost": 0.00844875
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.010006725
+  },
+  {
+   "kod": "c",
+   "nev": "Tóth Gábor",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Tóth Gábor",
+    "ot_masodperc": {
+     "gondolat": "Telefonra való könyvelős programnak tűnik, de látom az árat és ki van írva, hogy átalányadósoknak szól.",
+     "mi_ez": "Online könyvelés telefonos alkalmazással és valódi könyvelővel.",
+     "kinek_szol": "Átalányadózó és katás egyéni vállalkozóknak.",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kap_szerinte": "Valódi könyvelő adja be a bevallásaimat és intézi a NAV-os dolgokat havi húszezerért.",
+     "mit_csinal_az_app_szerinte": "Behúzza a számláimat a NAV-tól, kiszámolja a fizetendőt, és megmutatja a pontos számlaszámot meg a határidőt.",
+     "ami_homalyos": "Nem tiszta, hogyan tudok beszélni a könyvelővel, ha baj van, vagy csak gépen pötyöghetek neki."
+    },
+    "meggyozne": [
+     {
+      "mi": "Világosan leírják, hogy nem nyúlnak a pénzemhez és nem utalnak helyettem semmit.",
+      "idezet": "Pénzt nem vonunk le, és nem utalunk helyetted. Csak megmutatjuk."
+     },
+     {
+      "mi": "Nem kérik el a titkos ügyfélkapus jelszavamat, csak hivatalos meghatalmazással dolgoznak.",
+      "idezet": "Az Ügyfélkapu+- vagy DÁP-belépésedet és a jelszavadat soha nem kérjük el."
+     },
+     {
+      "mi": "Látom a céges hátteret és az adószámot rögtön az elején.",
+      "idezet": "Somosi Kft. · Adószám: 32769678-2-43 · Cégadatok"
+     }
+    ],
+    "visszatart": [
+     {
+      "felelem_vagy_kerdes": "Félek, hogy ha a könyvelő hibázik a bevallásnál, a NAV engem büntet meg százezrekre.",
+      "idezet": "Érte úgy felelünk, mintha magunk dolgoznánk.",
+      "mi_oldana_fel": "Írják le feketén-fehéren, hogy van szakmai felelősségbiztosításuk, és állják a bírságot, ha ők rontanak el valamit."
+     },
+     {
+      "felelem_vagy_kerdes": "Gyanús az éves zárás felára, miért nincs benne a húszezres havidíjban, ha egész évben fizetek?",
+      "idezet": "Egy teljes év az éves zárással együtt: 254 987 Ft",
+      "mi_oldana_fel": "Részletes indoklás, miért van külön munkadíja az éves bevallásnak."
+     },
+     {
+      "felelem_vagy_kerdes": "Félek, hogy ha elakadok, napokig nem ér el senki telefonon és lekésem a határidőt.",
+      "idezet": "A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.",
+      "mi_oldana_fel": "Közvetlen telefonszám sürgős esetre, vagy garancia, hogy határidő előtt időben szólnak."
+     }
+    ],
+    "erthetetlen_vagy_gyanus": [
+     {
+      "idezet": "Érte úgy felelünk, mintha magunk dolgoznánk.",
+      "szakasz": "6. A KÖNYVELŐD",
+      "miert": "Mellébeszélésnek hangzik, nem jogi garancia kártérítésre.",
+      "uj_szoveg": "Cégünk teljes anyagi felelősséget és biztosítási garanciát vállal a könyvelő munkájáért."
+     },
+     {
+      "idezet": "Az irataidat titkosítva tároljuk.",
+      "szakasz": "2. BIZALMI SÁV",
+      "miert": "Túl általános informatikai szöveg, nem mond semmit arról, ki fér hozzá.",
+      "uj_szoveg": "Számláidat és adataidat zárt, védett rendszerben őrizzük, csak a könyvelőd láthatja."
+     },
+     {
+      "idezet": "A havidíj helyett ezt fizeted.",
+      "szakasz": "8. ÁRAK",
+      "miert": "Nem értem elsőre, miért kell fizetni havi háromezret akkor is, ha szünetel a vállalkozás és nincs bevétel.",
+      "uj_szoveg": "Szünetelés alatt nem kell a teljes díjat fizetned, csak az alap fenntartást."
+     }
+    ],
+    "mozgo_bemutato": [
+     {
+      "lepes": "Számla megérkezése",
+      "mit_lat_mozogni": "Megjelenik egy friss kiállított számla sora, amit a rendszer magától áthúz a NAV-ból.",
+      "miert_jo_nekem": "Látom, hogy tényleg nem kell kézzel gépelnem semmit meló után."
+     },
+     {
+      "lepes": "Adófélretevése gomb",
+      "mit_lat_mozogni": "Kiszámolódik az összeg, rákattint a gombra, és a tétel zöldre vált.",
+      "miert_jo_nekem": "Megnyugtat, hogy azonnal tudom, mennyi marad tiszta haszon a zsebemben."
+     },
+     {
+      "lepes": "NAV utalás másolása",
+      "mit_lat_mozogni": "A Másolom gombra koppintva kimásolja a NAV adószámlaszámot és az adószámot közleménynek.",
+      "miert_jo_nekem": "Nem rontom el a hosszú számsorokat a banki utalásnál."
+     },
+     {
+      "lepes": "Papírok fotózása",
+      "mit_lat_mozogni": "Kamerával lefotóz egy bejövő költségszámlát vagy NAV-levelet, ami rögtön bekerül a mappába.",
+      "miert_jo_nekem": "Nem kell szaladgálnom a papírokkal a könyvelőirodába hó végén."
+     }
+    ],
+    "egybefolyik": [
+     {
+      "hol": "3. KINEK SZÓL és 4. HOGYAN MŰKÖDIK",
+      "mi_a_gond": "Végig fehér alapon fekete betűk, a szemem csak átugorja a sok szöveget.",
+      "javaslat": "Kapjon a lépések rész halvány szürke vagy kék hátteret, hogy elváljon a szövegtől."
+     },
+     {
+      "hol": "5. MIT KAPSZ kártyák",
+      "mi_a_gond": "A telefonos képek és a felsorolt dobozok (Keretek, Telefonon és gépen) egymás alá ömlesztve egyformák.",
+      "javaslat": "A lényeges funkciók kapjanak sárga vagy kék kiemelő keretet."
+     },
+     {
+      "hol": "7. BIZTONSÁG és 8. ÁRAK",
+      "mi_a_gond": "A biztonsági pontok után rögtön jön az ártáblázat, nincs éles határ a kettő között.",
+      "javaslat": "Erős sötétkék elválasztó sáv vagy háttérszín a biztonsági rész alá."
+     }
+    ],
+    "konyvelo_foto_nelkul": "Helyezzetek el hivatalos kamarai vagy minisztériumi nyilvántartási pecsétet, írjátok ki a cég szakmai felelősségbiztosításának kötvényszámát és a biztosító nevét.",
+    "megvennem": "talán",
+    "miert": "Tetszik, hogy egyszerű és látom előre az adót, de látnom kell a szerződésben a felelősségbiztosítást, mielőtt átadom a NAV-ügyeimet."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 13450,
+    "completion_tokens": 2110,
+    "total_tokens": 15560,
+    "cost": 0.009465975,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 12643,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.009465975,
+     "upstream_inference_prompt_cost": 0.001553475,
+     "upstream_inference_completions_cost": 0.0079125
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.009465975
+  },
+  {
+   "kod": "d",
+   "nev": "Nagy Lili",
+   "kepekkel": true,
+   "valasz": {
+    "perszona": "Nagy Lili",
+    "ot_masodperc": {
+     "gondolat": "Modern adózós appnak tűnik, de a szöveg szerint igazi ember könyvel nekem. Nekem szól, mert épp vállalkozást indítok, bár az átalányadó és kata közti választásban még bizonytalan vagyok.",
+     "mi_ez": "Online könyvelési szolgáltatás egy mobilappal összekötve.",
+     "kinek_szol": "Átalányadózó vagy katás egyéni vállalkozóknak.",
+     "eltalalta": "igen"
+    },
+    "havidij": {
+     "erti": "igen",
+     "mit_kap_szerinte": "Hús-vér könyvelőt, aki beküldi a bevallásaimat és intézi a NAV-os dolgokat helyettem.",
+     "mit_csinal_az_app_szerinte": "Behúzza a számlákat, kiszámolja a félretenni való adót, mutatja a fizetési határidőket és számlaszámokat, de a pénzt nekem kell elutalnom.",
+     "ami_homalyos": "Pontosan mikor és hogyan segít a könyvelő eldönteni az induláskor, hogy kata vagy átalányadó éri-e meg jobban nekem."
+    },
+    "meggyozne": [
+     {
+      "mi": "Segítenek elindítani a vállalkozást, nem kell egyedül kitalálnom a hivatalos lépéseket.",
+      "idezet": "vagy most indítod a vállalkozásodat. Ebben is segítünk."
+     },
+     {
+      "mi": "Nem nekem kell kézzel beírkálnom a számlákat, automatikusan látja az app.",
+      "idezet": "A kiállított számláid a NAV Online Számla rendszeréből jönnek."
+     },
+     {
+      "mi": "Pontosan tudom, mennyi pénzt nem költhetek el a bevételeimből.",
+      "idezet": "Minden számla után látod, mennyit tegyél félre."
+     }
+    ],
+    "visszatart": [
+     {
+      "felelem_vagy_kerdes": "Félek, hogy indulóként azonnal fizetnem kell a havidíjat, miközben még egy fillér bevételem sincs.",
+      "idezet": "Ingyenes időszak nincs: ha kéred, előbb visszahívunk, és csak utána fizetsz.",
+      "mi_oldana_fel": "Világos leírás, hogy az elindulásig nem ketyeg a díj, vagy ingyenes eligazítás még a fizetés előtt."
+     },
+     {
+      "felelem_vagy_kerdes": "Kezdőként nem értem a rejtett költségeket, az éves zárás díja meglepett az 'egy ár' ígéret után.",
+      "idezet": "Egy csomag, egy ár.",
+      "mi_oldana_fel": "Egyértelműbb magyarázat a hős szakaszban, hogy az éves adóbevallásnak van egy egyszeri külön díja."
+     },
+     {
+      "felelem_vagy_kerdes": "Aggódom, hogy ha elakadok, napokig nem ér el senki.",
+      "idezet": "A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.",
+      "mi_oldana_fel": "Megnyugtatás, hogy sürgős esetben az appos üzenetekre mennyi idő alatt kapok útmutatást a könyvelőtől."
+     }
+    ],
+    "erthetetlen_vagy_gyanus": [
+     {
+      "idezet": "Egy célcsoport, egy csomag.",
+      "szakasz": "3. KINEK SZÓL",
+      "miert": "Túl száraz, hivatali kifejezés a 'célcsoport'.",
+      "uj_szoveg": "Csak neked szól, sallangok nélkül."
+     },
+     {
+      "idezet": "Egy csomag, egy ár.",
+      "szakasz": "8. ÁRAK",
+      "miert": "Félrevezető, mert alatta rögtön külön díjak vannak felsorolva (éves zárás, szünetelés stb.).",
+      "uj_szoveg": "Átlátható havidíj, nincsenek rejtett költségek."
+     },
+     {
+      "idezet": "Te adod meg az ONYA-ban.",
+      "szakasz": "7. BIZTONSÁG",
+      "miert": "Kezdőként fogalmam sincs, mi az az ONYA rövidítés.",
+      "uj_szoveg": "A NAV online felületén hagyod jóvá."
+     }
+    ],
+    "mozgo_bemutato": [
+     {
+      "lepes": "Számla beérkezése",
+      "mit_lat_mozogni": "Megjelenik egy új bevételi számla kártyája a NAV-ból.",
+      "miert_jo_nekem": "Látom, hogy semmit nem kell gépelnem, magától frissül a listám."
+     },
+     {
+      "lepes": "Félretenni való összeg frissülése",
+      "mit_lat_mozogni": "A számla után felugrik egy összeg, és átfordul a havi adótartalék számlálója.",
+      "miert_jo_nekem": "Azonnal tudom, mennyi a tiszta hasznom és mit nem költhetek el."
+     },
+     {
+      "lepes": "Adófizetési kártya és másolás",
+      "mit_lat_mozogni": "Megnyílik a negyedéves határidő nézet, egy gombnyomásra 'Másolva' felirat villan a számlaszámnál.",
+      "miert_jo_nekem": "Megnyugtat, hogy nem fogom elgépelni az adóutalás adatait a mobilbankomban."
+     },
+     {
+      "lepes": "Dosszié és fotózás",
+      "mit_lat_mozogni": "Kamera nézet nyílik, bevillan egy lefotózott bizonylat, ami azonnal bekerül a havi dossziéba.",
+      "miert_jo_nekem": "Látom, milyen egyszerű átadni a papírokat anélkül, hogy postázgatnom vagy scannelnem kellene."
+     }
+    ],
+    "egybefolyik": [
+     {
+      "hol": "1. HŐS és 2. BIZALMI SÁV",
+      "mi_a_gond": "Végig fehér háttér, kék-sárga gombokkal, nincs határozott vizuális törés a kezdés és az érvek között.",
+      "javaslat": "Kapjon a bizalmi sáv egy halvány szürke vagy világoskék hátteret, kártyaszerű dobozokkal."
+     },
+     {
+      "hol": "5. MIT KAPSZ alsó kártyái és 6. A KÖNYVELŐD eleje",
+      "mi_a_gond": "A telefonos szeleteken fehér alapon fehér kártyák jönnek sorban, eltűnik a funkciók és a könyvelő közti határ.",
+      "javaslat": "A könyvelői szekciót érdemes sötétebb vagy kontrasztosabb háttérrel elválasztani a funkciólistától."
+     },
+     {
+      "hol": "7. BIZTONSÁG és 8. ÁRAK",
+      "mi_a_gond": "Túl sok szöveges lista egymás alatt fehér blokkokban, unalmassá válik a görgetés.",
+      "javaslat": "Az árak szekciót egy kiemelt, színes kártyás blokkba kell rendezni a folyószöveg helyett."
+     }
+    ],
+    "konyvelo_foto_nelkul": "Mutassák be a szakmai csapat működését egy letisztult folyamatábrán: kamarai regisztrációs pecsétek, Somosi Kft. adatai és a folyamat, ahogy a kijelölt szakember átveszi az anyagomat.",
+    "megvennem": "talán",
+    "miert": "A dizájn és a funkciók nagyon tetszenek, pont ilyet keresek induláshoz, de előbb beszélni akarok velük, hogy tényleg segítenek-e jól kiválasztani az adózási formát a nulladik lépésnél."
+   },
+   "hiba": "",
+   "finish": "stop",
+   "usage": {
+    "prompt_tokens": 13459,
+    "completion_tokens": 2131,
+    "total_tokens": 15590,
+    "cost": 0.009551475,
+    "is_byok": false,
+    "prompt_tokens_details": {
+     "cached_tokens": 12643,
+     "cache_write_tokens": 0,
+     "audio_tokens": 0,
+     "video_tokens": 0
+    },
+    "cost_details": {
+     "upstream_inference_cost": 0.009551475,
+     "upstream_inference_prompt_cost": 0.001560225,
+     "upstream_inference_completions_cost": 0.00799125
+    },
+    "completion_tokens_details": {
+     "reasoning_tokens": 0,
+     "image_tokens": 0,
+     "audio_tokens": 0
+    }
+   },
+   "koltseg": 0.009551475
+  }
+ ],
+ "koltseg_osszes": 0.03863,
+ "keret_utana": {
+  "limit_remaining": 7.945956832999997,
+  "usage": 52.054043167
+ }
+}
