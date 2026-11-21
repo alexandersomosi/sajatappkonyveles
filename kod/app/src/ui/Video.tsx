@@ -23,7 +23,7 @@ export const NEM_ELERHETO = 'A videó most nem érhető el. Minden lépést leí
 /** Kitöltött háromszög (alak, nem ikonkészlet). */
 export function Haromszog({ meret = 14, szinKod = szin.tintakek }: { meret?: number; szinKod?: string }) {
   return (
-    <Svg width={meret} height={meret} viewBox="0 0 14 14" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <Svg width={meret} height={meret} viewBox="0 0 14 14" aria-hidden>
       <Path d="M3 1.6 L12.4 7 L3 12.4 Z" fill={szinKod} />
     </Svg>
   );

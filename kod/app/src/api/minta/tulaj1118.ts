@@ -228,7 +228,7 @@ export function visszahivas(a: Allapot1118, v: { topic: CallbackTopic; window: C
   return {
     id: `cb-${a.szamlalo++}`,
     status: 'uj',
-    statusText: `Megkaptuk. Kollégánk 24–48 órán belül hív a ${maskHuPhone(tel)} számon.`,
+    statusText: `Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: ${maskHuPhone(tel)}.`,
     topic: v.topic,
     topicLabel: CALLBACK_TOPIC_LABELS[v.topic],
     source: v.source,
@@ -251,7 +251,7 @@ export function visszahivas(a: Allapot1118, v: { topic: CallbackTopic; window: C
 }
 export function igeret() {
   return {
-    text: `Kollégánk 24–48 órán belül felhív. Munkanapokon 9 és 17 óra között telefonálunk. Nem feltétlenül ${BENCE.firstName} hív elsőként, hanem valaki a csapatunkból.`,
+    text: `A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül ${BENCE.firstName} hív elsőként, hanem valaki a csapatunkból.`,
     callerIdText: null,
     fraudWarning: 'Telefonon soha nem kérjük a jelszavadat, a belépési kódjaidat vagy a kártyaadataidat. Ha valaki ezt kéri, tedd le, és írj nekünk az alkalmazásban.',
     privacyText: 'A megadott számon ezzel a kéréssel kapcsolatban hívunk. A hívásról rövid jegyzetet írunk, a hívást nem rögzítjük. Részletek az Adatkezelési tájékoztatóban.',

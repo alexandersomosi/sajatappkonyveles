@@ -10,6 +10,7 @@ import { BevezetoSav } from '@/kepernyok/Bevezeto';
 import { szin } from '@/theme/tokens';
 import { GombE, Lap, Szakasz } from '@/ui/alap';
 import { KeszJel } from '@/ui/kepek';
+import { FelpattanoPipa, Konfetti } from '@/ui/mozgas';
 import { Betolt, Hiba, Kepernyo } from '@/ui/keret';
 import { T } from '@/ui/T';
 
@@ -40,7 +41,9 @@ export default function BevezetoKesz() {
     ? fillPlaceholders(G.doneLaterBody, { n: String(tolemMeg.length), lepesek: tolemMeg.map((s) => s.title).join(', '), firstName: fn })
     : fillPlaceholders(G.doneBody, { firstName: fn });
   return (
-    <Kepernyo fejlec={<BevezetoSav kulcs="kesz" vissza={null} kesobb={false} cim={cim} szoveg={szoveg} felett={<View style={{ paddingHorizontal: 16, marginTop: 4 }}><KeszJel pt={56} label="Kész" /></View>} />} dokk={<GombE cim={G.doneButton} tolt={megy} onPress={() => void fooldal()} />}>
+    <Kepernyo fejlec={<BevezetoSav kulcs="kesz" vissza={null} kesobb={false} cim={cim} szoveg={szoveg} felett={<View style={{ paddingHorizontal: 18, marginTop: 10 }}><FelpattanoPipa pt={52} label="Kész" /></View>} />} dokk={<GombE cim={G.doneButton} tolt={megy} onPress={() => void fooldal()} />}>
+      {/* k8 mozgás #6: a bekötés vége – rövid, egyszeri konfetti */}
+      <Konfetti kulcs="bekotes-kesz" />
       {most.length ? (
         <>
           <Szakasz ikon="ora" cim={G.donePendingTitle} />

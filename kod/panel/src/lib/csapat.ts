@@ -245,7 +245,7 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'tarca' },
   // SPEC §29.5 F1: the certificate queue; §29.9 F9: the owner console
   igazolasok: { to: '/igazolasok', felirat: 'Igazolások', ikon: 'igazolvany' },
-  admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'oszlopok' },
+  admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'pajzs' }, // the owner's protected console (step-up)
   admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'szamologep' },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
   // SPEC §31.4: visits, funnel, money and campaigns by source (the referral codes stay on Honnan jöttek)

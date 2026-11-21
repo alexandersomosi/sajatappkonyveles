@@ -701,7 +701,7 @@ ut('PATCH', '/client/callbacks/:id', (_m, _q, t) => {
   if (!S.t.cb) return hiba(404, 'not_found', 'Nincs ilyen kérés.');
   const tel = t.phone ? normalizeHuPhone(String(t.phone)) : null;
   if (t.phone && !tel) return hiba(400, 'validation_failed', 'Nézd át a telefonszámot.', {}, { phone: 'Magyar telefonszámot adj meg, például +36 30 123 4567.' });
-  S.t.cb = { ...S.t.cb, topic: (t.topic as CallbackTopic) ?? S.t.cb.topic, window: (t.window as CallbackWindow) ?? S.t.cb.window, note: 'note' in t ? ((t.note as string) ?? null) : S.t.cb.note, ...(tel ? { phoneMasked: maskHuPhone(tel), needsNewPhone: false, statusText: `Megkaptuk. Kollégánk 24–48 órán belül hív a ${maskHuPhone(tel)} számon.` } : {}) };
+  S.t.cb = { ...S.t.cb, topic: (t.topic as CallbackTopic) ?? S.t.cb.topic, window: (t.window as CallbackWindow) ?? S.t.cb.window, note: 'note' in t ? ((t.note as string) ?? null) : S.t.cb.note, ...(tel ? { phoneMasked: maskHuPhone(tel), needsNewPhone: false, statusText: `Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ezen a számon hívunk: ${maskHuPhone(tel)}.` } : {}) };
   return ok(S.t.cb);
 });
 ut('POST', '/client/callbacks/:id/cancel', () => {

@@ -13,30 +13,17 @@ export function UrlapFej({ vissza, szakasz }: { vissza: () => void; szakasz: str
   const vezetett = useVezetettParam();
   if (vezetett) {
     return (
-      <Fejlec rozX={318} rozY={70} alsoTer={16}>
+      <Fejlec kis alsoTer={18}>
         <VezetettFelsoSor vissza={vissza} kulcs={vezetett} />
-        <VezetettHaladas style={{ marginTop: 8, paddingHorizontal: 16 }} />
+        <VezetettHaladas style={{ marginTop: 10, paddingHorizontal: 18 }} />
       </Fejlec>
     );
   }
   return (
-    <Fejlec rozX={318} rozY={70} alsoTer={12}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16 }}>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel="Vissza"
-          onPress={vissza}
-          hitSlop={4}
-          style={({ pressed }) => [{ height: 36, paddingHorizontal: 14, borderRadius: forma.gomb, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.8)', justifyContent: 'center', zIndex: 1 }, pressed && { backgroundColor: 'rgba(255,255,255,0.1)' }]}
-        >
-          <T m={15.5} s={650} c="#fff">
-            Vissza
-          </T>
-        </Pressable>
-        <T m={16} s={650} c="#fff" kozep numberOfLines={2} lh={1.2} style={{ position: 'absolute', left: 104, right: 104 }}>
-          {szakasz}
-        </T>
-      </View>
+    <Fejlec kis alsoTer={18} vissza={{ cim: 'Vissza', onPress: vissza }}>
+      <T m={14} s={700} lh={1.3} ls={0.04} c={szin.fejlecHalvany} numberOfLines={2} style={{ textTransform: 'uppercase', marginTop: 10, paddingHorizontal: 18 }}>
+        {szakasz}
+      </T>
     </Fejlec>
   );
 }

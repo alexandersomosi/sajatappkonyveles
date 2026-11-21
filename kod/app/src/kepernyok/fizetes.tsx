@@ -22,6 +22,7 @@ import { forma, szin } from '../theme/tokens';
 import { Cimke, GombE, GombM, GombSz, HibaSzoveg, Osszeg, Pipa, jelzoDoboz } from '../ui/alap';
 import { ma } from '../ui/ido';
 import { Arckep, Ikon3d, KeszJel } from '../ui/kepek';
+import { FelpattanoPipa } from '../ui/mozgas';
 import { AlsoLap, useJelzes } from '../ui/keret';
 import { Mezo } from '../ui/Mezo';
 import { T } from '../ui/T';
@@ -427,8 +428,8 @@ function Pecset() {
   }, [o, s]);
   return (
     <View style={{ width: 160, height: 120, alignSelf: 'center', marginBottom: 8 }}>
-      <Animated.View style={{ position: 'absolute', left: 38, top: 18, transform: [{ scale: s }], opacity: o }}>
-        <KeszJel pt={84} label="Befizetve" />
+      <Animated.View style={{ position: 'absolute', left: 44, top: 24, transform: [{ scale: s }], opacity: o }}>
+        <FelpattanoPipa pt={72} label="Befizetve" rezges={false} />
       </Animated.View>
     </View>
   );

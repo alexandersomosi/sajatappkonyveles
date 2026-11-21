@@ -165,11 +165,11 @@ export function ZaroltKapu({ feature, ful, cim, vanKeres = false, children }: { 
     <Kepernyo
       ful={ful}
       fejlec={
-        <Fejlec rozX={140} rozY={90} alsoTer={20}>
-          <T m={29} s={700} lh={1.14} ls={-0.024} c="#fff" style={{ paddingTop: 12, paddingHorizontal: 20 }} accessibilityRole="header">
+        <Fejlec alsoTer={24}>
+          <T m={27} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ paddingTop: 12, paddingHorizontal: 18 }} accessibilityRole="header">
             {cim}
           </T>
-          <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: 20 }}>
+          <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: 18 }}>
             A bekötés után nyílik meg.
           </T>
         </Fejlec>

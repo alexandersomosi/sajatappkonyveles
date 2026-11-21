@@ -12,7 +12,7 @@ import { GombE, GombM, GombSz, Lap, Osszeg, Szakasz } from '@/ui/alap';
 import { FajlKep } from '@/ui/FajlKep';
 import { ma } from '@/ui/ido';
 import { Arckep, Ikon3d, KeszJel } from '@/ui/kepek';
-import { AlsoLap, Betolt, Hiba, Kepernyo, Lepessor, useJelzes, vissza, type Lepes } from '@/ui/keret';
+import { AlsoLap, Betolt, CimSor, Hiba, Kepernyo, Lepessor, useJelzes, vissza, type Lepes } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
@@ -45,15 +45,16 @@ export default function Tetel() {
   const d = q.data;
   const fn = home.data?.accountant.firstName ?? 'A könyvelőd';
   const visszaCim = d ? `Vissza ${/^[aáeéiíoóöőuúüű]/.test(honapMelleknev(d.dossierMonth)) ? 'az' : 'a'} ${honapMelleknev(d.dossierMonth)} dossziéhoz` : 'Vissza';
+  // v2 (k8): aloldal-fejléc kerek vissza-gombbal; a cím az irat neve, alatta az állapota
   const fej = (
-    <View style={{ paddingTop: Platform.OS === 'web' ? 10 : ins.top + 2, paddingHorizontal: 10 }}>
-      <Pressable accessibilityRole="link" onPress={() => (router.canGoBack() ? router.back() : router.replace({ pathname: '/dosszie', params: d ? { honap: d.dossierMonth } : {} }))} style={{ height: 48, justifyContent: 'center', paddingHorizontal: 10, alignSelf: 'flex-start' }}>
-        <T m={16.5} s={500} c={szin.tintakekSzoveg} alahuz>
-          {visszaCim}
-        </T>
-      </Pressable>
-    </View>
+    <CimSor
+      visszaCim={visszaCim}
+      vissza={() => (router.canGoBack() ? router.back() : router.replace({ pathname: '/dosszie', params: d ? { honap: d.dossierMonth } : {} }))}
+      cim={d?.title ?? 'Irat'}
+      al={d ? `${d.statusLabel}, ${mikorIdovel(d.statusAt, ma())}` : undefined}
+    />
   );
+
   if (q.isLoading) return <Kepernyo ful="dosszie" fejlec={fej}><Betolt /></Kepernyo>;
   // Before activation an accountant paper answers 403 locked_until_active: show the locked Dosszié sheet, not a
   // generic error with a pointless "Újra" (SPEC §26.5.3, review k3c2). The client's own uploads still open.
@@ -83,22 +84,7 @@ export default function Tetel() {
   });
 
   return (
-    <Kepernyo ful="dosszie" fejlec={fej} tartalomStilus={{ paddingTop: 0 }}>
-      <View style={{ paddingTop: 6, paddingHorizontal: 4, paddingBottom: 16 }}>
-        <T m={28} s={700} lh={1.15} ls={-0.025} accessibilityRole="header">
-          {d.title}
-        </T>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10 }}>
-          {kesz ? <KeszJel pt={23} /> : null}
-          <T m={16} c={szin.halvany}>
-            <T m={16} s={650}>
-              {d.statusLabel}
-            </T>
-            , {mikorIdovel(d.statusAt, nap)}
-          </T>
-        </View>
-      </View>
-
+    <Kepernyo ful="dosszie" fejlec={fej}>
       <Lap>
         {utolsoVerzio && elonezet ? (
           <Pressable
@@ -107,7 +93,7 @@ export default function Tetel() {
             onPress={() => fajlMegnyit(utolsoVerzio.fileId, utolsoVerzio.pageCount > 1 ? `${d.title}.pdf` : `${d.title}.jpg`).catch((e: unknown) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')))}
           >
             <FajlKep fileId={elonezet} mod="contain" arany={4 / 3} />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 18, backgroundColor: '#F6F8FB' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 18, backgroundColor: szin.csempe }}>
               <T m={14.5} c={szin.halvany}>{utolsoVerzio.pageCount > 1 ? `Fotó, ${utolsoVerzio.pageCount} oldal (PDF-be fűzve)` : 'Fotó'}</T>
               <T m={15} s={600} c={szin.tintakekSzoveg} alahuz>
                 Megnyitom
@@ -118,7 +104,7 @@ export default function Tetel() {
           <Pressable
             accessibilityRole="button"
             onPress={() => fajlMegnyit(utolsoVerzio.fileId, `${d.title}.pdf`).catch((e: unknown) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')))}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, backgroundColor: '#F6F8FB' }}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: 18, backgroundColor: szin.csempe }}
           >
             <Ikon3d nev={d.category === 'bevallas' ? 'bevallas' : d.icon} pt={56} />
             <View style={{ flex: 1 }}>

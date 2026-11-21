@@ -27,6 +27,8 @@ import { PAYMENT_SCREEN_TEXTS as P29 } from '@/_shared/k29';
 import { HAVIDIJ_OK } from '@/lib/fizetes';
 import { szam } from '@/lib/format';
 import { FolytasKartya } from '@/kepernyok/Bevezeto';
+import { Racs } from '@/ui/asztali/Racs';
+import { useAsztali } from '@/lib/elrendezes';
 
 /** S2 – „Van már egyéni vállalkozásod?” két válasszal (a „Még nincs” után a „Hogyan jelentsük be?” lap jön, S3). */
 function ElagazasKartya({ rovid = false }: { rovid?: boolean }) {
@@ -133,6 +135,7 @@ export default function Bekotes() {
   const { kovetkezo } = useLocalSearchParams<{ kovetkezo?: string }>();
   const gorgeto = useRef<ScrollViewInstance>(null);
   const ablak = useWindowDimensions();
+  const asztali = useAsztali();
   const [fejMagas, setFejMagas] = useState<number | null>(null);
   const [kartyaY, setKartyaY] = useState<number | null>(null);
   useEffect(() => {
@@ -240,44 +243,55 @@ export default function Bekotes() {
           {nyitottSegitseg ? <SegitsegAllapot a={nyitottSegitseg} fn={fn} kompakt cb={d.callback ?? null} style={{ marginBottom: 2 }} /> : cbNyitott ? <VisszahivasAllapot cb={cbNyitott} kompakt /> : null}
 
           <View onLayout={(e) => setKartyaY(e.nativeEvent.layout.y)} />
-          {/* k7c2: while the guided run is open, its "Folytasd ott" card is THE next step – no second "Most ez jön" */}
-          {most && !folytas ? (
-            <>
-              {j.waiting ? <VarakozasCsik w={j.waiting} /> : null}
-              <MostEzJonKartya s={most} fn={fn} utvalt={utv.modosit} lab={jovahagyando ? <JovahagytamGomb a={jovahagyando} fn={fn} /> : null} />
-              {kiemelt ? <KiemeltSor cim={kiemelt.cim} szoveg={kiemelt.szoveg} ikon={kiemelt.ikon} onPress={() => router.push(kiemelt.ut)} /> : null}
-            </>
-          ) : j.waiting && !folytas ? (
-            <VarakozasKartya w={j.waiting} />
-          ) : null}
+          {/* gépen (A30): a „Most ez jön” és a videó egymás mellett, alattuk a lépéslista teljes szélességben */}
+          <Racs>
+            {/* k7c2: while the guided run is open, its "Folytasd ott" card is THE next step – no second "Most ez jön" */}
+            {most && !folytas ? (
+              <View>
+                {j.waiting ? <VarakozasCsik w={j.waiting} /> : null}
+                <MostEzJonKartya s={most} fn={fn} utvalt={utv.modosit} lab={jovahagyando ? <JovahagytamGomb a={jovahagyando} fn={fn} /> : null} />
+                {kiemelt ? <KiemeltSor cim={kiemelt.cim} szoveg={kiemelt.szoveg} ikon={kiemelt.ikon} onPress={() => router.push(kiemelt.ut)} /> : null}
+              </View>
+            ) : j.waiting && !folytas ? (
+              <VarakozasKartya w={j.waiting} />
+            ) : null}
+            <View style={{ marginTop: asztali ? 0 : 4 }}>
+              <VideoKartya nev="bekotes" cim="Nézd meg, hogyan működik" magas={200} osszecsukva={latta.latta || adatokKesz} latta={latta.jelol} />
+            </View>
 
-          {keresekNyitott.map((k) => (
-            <Lap key={k.id} style={{ marginTop: 12, padding: 18 }}>
-              <T m={14} s={650} c={szin.halvany}>
-                {fn} kéri
-              </T>
-              <T m={18} s={700} lh={1.3} style={{ marginTop: 2 }}>
-                {k.title}
-              </T>
-              {k.body ? (
-                <T m={15.5} lh={1.5} c={szin.halvany} style={{ marginTop: 4 }}>
-                  {k.body}
-                </T>
-              ) : null}
-              <GombM
-                cim={/kivonat/i.test(k.title) ? 'Feltöltöm a kivonatokat' : 'Feltöltöm'}
-                style={{ marginTop: 12 }}
-                onPress={() => router.push({ pathname: '/feltoltes', params: { keres: k.id, kategoria: /kivonat/i.test(k.title) ? 'bankszamlakivonat' : 'egyeb' } })}
-              />
-            </Lap>
-          ))}
+            {keresekNyitott.map((k) => (
+              <Racs.Szeles key={k.id}>
+                <Lap style={{ padding: 18 }}>
+                  <T m={14} s={650} c={szin.halvany}>
+                    {fn} kéri
+                  </T>
+                  <T m={18} s={700} lh={1.3} style={{ marginTop: 2 }}>
+                    {k.title}
+                  </T>
+                  {k.body ? (
+                    <T m={15.5} lh={1.5} c={szin.halvany} style={{ marginTop: 4 }}>
+                      {k.body}
+                    </T>
+                  ) : null}
+                  <GombM
+                    cim={/kivonat/i.test(k.title) ? 'Feltöltöm a kivonatokat' : 'Feltöltöm'}
+                    ikon="feltoltes"
+                    style={{ marginTop: 12 }}
+                    onPress={() => router.push({ pathname: '/feltoltes', params: { keres: k.id, kategoria: /kivonat/i.test(k.title) ? 'bankszamlakivonat' : 'egyeb' } })}
+                  />
+                </Lap>
+              </Racs.Szeles>
+            ))}
 
-          <UtLista j={j} fn={fn} utvalt={utv.modosit} szamNelkul={!!folytas} />
-
-          <View style={{ marginTop: 16 }}>
-            <VideoKartya nev="bekotes" cim="Nézd meg, hogyan működik" magas={200} osszecsukva={latta.latta || adatokKesz} latta={latta.jelol} />
-          </View>
-          {cbNyitott ? null : <VisszahivasKartya fn={fn} cb={null} />}
+            <Racs.Szeles>
+              <UtLista j={j} fn={fn} utvalt={utv.modosit} szamNelkul={!!folytas} />
+            </Racs.Szeles>
+            {cbNyitott ? null : (
+              <Racs.Szeles>
+                <VisszahivasKartya fn={fn} cb={null} />
+              </Racs.Szeles>
+            )}
+          </Racs>
         </>
       )}
     </Kepernyo>

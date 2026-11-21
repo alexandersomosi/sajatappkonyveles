@@ -26,18 +26,17 @@ export function BevezetoSav({ kulcs, vissza, cim, szoveg, haladas = true, ikon, 
   kesobb?: boolean;
 }) {
   return (
-    <Fejlec rozX={318} rozY={128} alsoTer={22}>
-      {kesobb ? <VezetettFelsoSor vissza={vissza} kulcs={kulcs} /> : <View style={{ minHeight: 44 }} />}
-      {haladas ? <VezetettHaladas style={{ marginTop: 8, paddingHorizontal: 16 }} /> : null}
+    <Fejlec alsoTer={24}>
+      {kesobb ? <VezetettFelsoSor vissza={vissza} kulcs={kulcs} /> : null}
+      {haladas ? <VezetettHaladas style={{ marginTop: 10, paddingHorizontal: 18 }} /> : null}
       {felett}
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 16, paddingHorizontal: 16 }}>
-        {ikon ? <Ikon3d nev={ikon} pt={30} /> : null}
-        <T m={26} maxFontSizeMultiplier={1.4} s={700} lh={1.15} ls={-0.022} c="#fff" style={{ flexShrink: 1 }} accessibilityRole="header">
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 14, paddingHorizontal: 18 }}>
+        <T m={27} maxFontSizeMultiplier={1.4} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ flexShrink: 1 }} accessibilityRole="header">
           {cim}
         </T>
       </View>
       {szoveg ? (
-        <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 6, paddingRight: 16, paddingLeft: ikon ? 54 : 16 }}>
+        <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 8, paddingHorizontal: 18 }}>
           {szoveg}
         </T>
       ) : null}
@@ -48,7 +47,7 @@ export function BevezetoSav({ kulcs, vissza, cim, szoveg, haladas = true, ikon, 
 /** The brand mark of W1: the app's own mark (the "A" with the pen stroke) in a white ring. */
 export function MarkaJel({ pt = 64 }: { pt?: number }) {
   return (
-    <View style={{ width: pt, height: pt, borderRadius: pt / 2, borderWidth: 2, borderColor: 'rgba(255,255,255,0.8)', overflow: 'hidden', marginTop: 8, marginLeft: 16 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View style={{ width: pt, height: pt, borderRadius: pt / 2, borderWidth: 2, borderColor: 'rgba(255,255,255,0.8)', overflow: 'hidden', marginTop: 8, marginLeft: 16 }} aria-hidden>
       <Image source={MARKA} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
     </View>
   );
@@ -57,7 +56,7 @@ export function MarkaJel({ pt = 64 }: { pt?: number }) {
 /** Page dots of the three welcome screens ("1. a 3-ból"). */
 export function LapPontok({ lap, db = 3 }: { lap: number; db?: number }) {
   return (
-    <View style={{ flexDirection: 'row', gap: 6, marginTop: 10, paddingHorizontal: 16 }} accessibilityLabel={`${lap}. oldal a ${db}-ból`}>
+    <View style={{ flexDirection: 'row', gap: 6, marginTop: 12, paddingHorizontal: 18 }} accessibilityLabel={`${lap}. oldal a ${db}-ból`}>
       {Array.from({ length: db }, (_, i) => (
         <View key={i} style={{ width: i + 1 === lap ? 22 : 8, height: 8, borderRadius: 4, backgroundColor: i + 1 === lap ? '#fff' : 'rgba(255,255,255,0.35)' }} />
       ))}

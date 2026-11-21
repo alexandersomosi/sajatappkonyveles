@@ -4,7 +4,7 @@
 // feltételes testvér), így ablak-átméretezéskor a Stack nem mountolódik újra, nem vész el állapot.
 import { useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, View } from 'react-native';
-import { Stack, router, useGlobalSearchParams, useSegments } from 'expo-router';
+import { Stack, router, useGlobalSearchParams, usePathname, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
@@ -25,7 +25,7 @@ import { useConfig } from '@/api/hooks';
 import { ZarKepernyo } from '@/ui/ZarKepernyo';
 import { Oldalsav } from '@/ui/asztali/Oldalsav';
 import { OldalsavCtx, useAsztali } from '@/lib/elrendezes';
-import { oldalsavLathatoE } from '@/lib/elrendezesLogika';
+import { oldalCim, oldalsavLathatoE } from '@/lib/elrendezesLogika';
 import { webStilusBetolt } from '@/lib/webStilus';
 import { GombE, GombSz } from '@/ui/alap';
 import { T } from '@/ui/T';
@@ -114,6 +114,11 @@ function Elrendezes() {
   const p = useGlobalSearchParams<{ vezetett?: string }>();
   const lathato = oldalsavLathatoE({ asztali, bent: allapot === 'bent', elsoSzegmens: szegmensek[0] as string | undefined, vezetett: !!p.vezetett });
   const tartalom = useRef<unknown>(null);
+  const ut = usePathname();
+  useEffect(() => {
+    // weben a böngészőlap címe képernyőnként (képernyőolvasó, lapfülek)
+    if (Platform.OS === 'web' && typeof document !== 'undefined') document.title = oldalCim(ut);
+  }, [ut]);
   useEffect(() => {
     // a tartalomoszlop programból fókuszálható (ugrólink), de a Tab-sorrendben nincs benne
     if (Platform.OS === 'web') (tartalom.current as { setAttribute?: (k: string, v: string) => void } | null)?.setAttribute?.('tabindex', '-1');

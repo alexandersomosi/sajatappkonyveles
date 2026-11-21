@@ -10,6 +10,8 @@ import { MiEz } from '@/ui/Magyarazat';
 import { useDosszie, useDossziek, useHome } from '@/api/hooks';
 import { honapCim, honapEltol, honapMelleknev, honapNev, mikor, mikorIdovel, szam } from '@/lib/format';
 import { forma, szin } from '@/theme/tokens';
+import { KetOszlop } from '@/ui/asztali/Racs';
+import { Csempe } from '@/_shared/v2/rn';
 import { Allapot, Fejlec, GombE, GombM, Lap, Sor, Szakasz, Szegmens } from '@/ui/alap';
 import { ma } from '@/ui/ido';
 import { Arckep, Ikon3d, TalajArnyek } from '@/ui/kepek';
@@ -17,19 +19,13 @@ import { Betolt, Hiba, Kepernyo } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { ZaroltKapu } from '@/ui/Zarolt';
 
-const URES_MAPPA = require('../../../assets/illusztraciok/ures_mappa.png');
 
 function UresHonap({ v, fn }: { v: DossierView; fn: string }) {
   return (
     <>
       <Lap style={{ paddingTop: 18, paddingHorizontal: 22, paddingBottom: 20, alignItems: 'center' }}>
-        <View style={{ width: 160, height: 120, marginBottom: 10 }}>
-          <TalajArnyek szel={126} />
-          <Image source={URES_MAPPA} style={{ position: 'absolute', left: 0, top: 0, width: 160, height: 120 }} />
-          <T m={6.4} s={700} ls={0.09} c={szin.tintakekSzoveg} kozep lh={1} style={{ position: 'absolute', top: 12.6, left: 29, width: 44 }} numberOfLines={1}>
-            {v.label.toLocaleUpperCase('hu-HU')}
-          </T>
-        </View>
+        {/* v2: üres állapot (.ures-allapot) – nagy semleges csempe a mappa-ikonnal */}
+        <Csempe nev="dosszie" meret="nagy" style={{ marginBottom: 14 }} />
         <T m={22} s={700} lh={1.25} ls={-0.02} kozep>
           Fotózd le az első iratot
         </T>
@@ -59,9 +55,13 @@ function HonapNezet({ honap }: { honap: string }) {
   const ures = !v.sentByMe.length && !v.fromNav.invoices.count && !v.fromNav.letters.length && !v.filedByAccountant.length && !szerzodesek.length;
   if (ures) return <UresHonap v={v} fn={fn} />;
   const keres = v.openRequests[0];
+  // gépen (A60): balra a könyvelő összegzése és kérése, jobbra a hónap iratai
   return (
-    <>
-      {v.review || keres ? (
+    <KetOszlop
+      aranyBal={5}
+      aranyJobb={7}
+      bal={
+      v.review || keres ? (
         <Lap style={{ paddingTop: 18, paddingHorizontal: 18, paddingBottom: 14 }}>
           {v.review ? (
             <>
@@ -107,8 +107,10 @@ function HonapNezet({ honap }: { honap: string }) {
             </View>
           ) : null}
         </Lap>
-      ) : null}
-
+      ) : null
+      }
+      jobb={
+    <>
       <Szakasz cim="Amit te küldtél" />
       <Lap>
         {v.sentByMe.map((d, i) => (
@@ -206,6 +208,8 @@ function HonapNezet({ honap }: { honap: string }) {
         </>
       ) : null}
     </>
+      }
+    />
   );
 }
 
@@ -270,12 +274,13 @@ function DosszieTartalom() {
   return (
     <Kepernyo
       ful="dosszie"
+      szeles
       fejlec={
-        <Fejlec rozX={120} rozY={130} alsoTer={22}>
-          <Szegmens elemek={elemek} aktiv={honap} valt={setHonap} />
-          <T m={29} s={700} lh={1.14} ls={-0.024} c="#fff" style={{ paddingTop: 18, paddingHorizontal: 20 }} accessibilityRole="header">
+        <Fejlec alsoTer={22}>
+          <T m={27} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ paddingTop: 10, paddingHorizontal: 18 }} accessibilityRole="header">
             {cim}
           </T>
+          <Szegmens elemek={elemek} aktiv={honap} valt={setHonap} />
         </Fejlec>
       }
     >

@@ -65,3 +65,44 @@ export const MENU_UTAK: Readonly<Record<FulKulcs, string>> = {
 export function menuCel(kulcs: FulKulcs, korlatozott: boolean): string {
   return kulcs === 'fooldal' && korlatozott ? '/bekotes' : MENU_UTAK[kulcs];
 }
+
+/** A böngészőlap címe (document.title) az útvonalból – weben a képernyőolvasó és a lapfülek miatt. */
+const CIMEK: [RegExp, string][] = [
+  [/^\/$/, 'Főoldal'],
+  [/^\/(belepes)/, 'Belépés'],
+  [/^\/regisztracio/, 'Regisztráció'],
+  [/^\/jelszo-elfelejtve/, 'Elfelejtett jelszó'],
+  [/^\/jelszo-uj/, 'Új jelszó'],
+  [/^\/(ketlepcsos|fiok\/ketlepcsos)/, 'Kétlépcsős belépés'],
+  [/^\/(postafiok|email-megerosites)/, 'E-mail-cím megerősítése'],
+  [/^\/bevezeto/, 'Kezdjük'],
+  [/^\/bekotes\/elofizetes/, 'Előfizetés'],
+  [/^\/bekotes/, 'Bekötés'],
+  [/^\/dosszie/, 'Dosszié'],
+  [/^\/szamla/, 'Számla'],
+  [/^\/tetel/, 'Irat'],
+  [/^\/fotozas/, 'Fotózás'],
+  [/^\/feltoltes/, 'Feltöltés'],
+  [/^\/uzenetek/, 'Üzenetek'],
+  [/^\/visszahivas/, 'Visszahívás'],
+  [/^\/hataridok/, 'Határidők'],
+  [/^\/(fizetes|fizesd-ki)/, 'Befizetés'],
+  [/^\/felretesz/, 'Félretenni'],
+  [/^\/igazolas/, 'Igazolások'],
+  [/^\/keresek/, 'Kérések'],
+  [/^\/ertesitesek|^\/fiok\/ertesitesek/, 'Értesítések'],
+  [/^\/fiok\/elofizetes|^\/elofizetes/, 'Előfizetés'],
+  [/^\/fiok\/(dijak|dijszamlak)/, 'Díjak és számlák'],
+  [/^\/fiok/, 'Fiók'],
+  [/^\/gyik/, 'Gyakori kérdések'],
+  [/^\/jogi/, 'Szerződés és adatkezelés'],
+  [/^\/(valtozas|valtozott)/, 'Változás'],
+  [/^\/(kereset|kimutatas)/, 'Bevételed'],
+  [/^\/(eves-zaras|onellenorzes)/, 'Éves zárás'],
+  [/^\/kedvezmenyek/, 'Adókedvezmények'],
+  [/^\/helyettunk/, 'Intézzük helyetted'],
+];
+export function oldalCim(utvonal: string, nev = 'Adózz.hu'): string {
+  const t = CIMEK.find(([re]) => re.test(utvonal));
+  return t ? `${t[1]} – ${nev}` : nev;
+}

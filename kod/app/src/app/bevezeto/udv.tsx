@@ -50,7 +50,7 @@ export default function Udv() {
   if (lap === 1) {
     return (
       <Kepernyo
-        fejlec={<BevezetoSav kulcs="udv" haladas={false} cim={fillPlaceholders(G.w1Title, { keresztnev: v.firstName })} felett={<><MarkaJel /><LapPontok lap={1} /></>} />}
+        fejlec={<BevezetoSav kulcs="udv" haladas={false} cim={fillPlaceholders(G.w1Title, { keresztnev: v.firstName })} felett={<LapPontok lap={1} />} />}
         dokk={<GombE cim={G.next} onPress={() => ugrik(2)} />}
       >
         <Lap style={{ padding: 16 }}>

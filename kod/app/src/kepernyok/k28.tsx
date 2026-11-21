@@ -396,33 +396,22 @@ export function Koppinthato({ cim, onPress }: { cim: string; onPress: () => void
  */
 export function SavFej({ vissza, ikon, cim, mondat, nagy, gyerek }: { vissza: () => void; ikon: Parameters<typeof Ikon3d>[0]['nev']; cim: string; mondat?: string | null; nagy?: string | null; gyerek?: React.ReactNode }) {
   return (
-    <Fejlec rozX={318} rozY={128} alsoTer={20}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16 }}>
-        <Pressable
-          accessibilityRole="link"
-          accessibilityLabel="Vissza"
-          onPress={vissza}
-          hitSlop={4}
-          style={({ pressed }) => [{ height: 36, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.8)', justifyContent: 'center' }, pressed && { backgroundColor: 'rgba(255,255,255,0.1)' }]}
-        >
-          <T m={15.5} s={650} c="#fff">
-            Vissza
-          </T>
-        </Pressable>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 16 }}>
-        <Ikon3d nev={ikon} pt={30} />
-        <T m={26} s={700} lh={1.15} ls={-0.022} c="#fff" style={{ flex: 1 }} accessibilityRole="header">
+    <Fejlec kis alsoTer={20} vissza={{ cim: 'Vissza', onPress: vissza }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10, paddingHorizontal: 18 }}>
+        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.92)', alignItems: 'center', justifyContent: 'center' }}>
+          <Ikon3d nev={ikon} pt={30} />
+        </View>
+        <T m={25} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ flex: 1 }} accessibilityRole="header">
           {cim}
         </T>
       </View>
       {nagy ? (
-        <T m={22} s={700} lh={1.25} c="#fff" szam style={{ marginTop: 6, paddingLeft: 54, paddingRight: 16 }}>
+        <T m={22} s={800} lh={1.25} c={szin.sarga} szam style={{ marginTop: 8, paddingHorizontal: 18 }}>
           {nagy}
         </T>
       ) : null}
       {mondat ? (
-        <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 4, paddingLeft: 54, paddingRight: 16 }}>
+        <T m={15} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 4, paddingHorizontal: 18 }}>
           {mondat}
         </T>
       ) : null}

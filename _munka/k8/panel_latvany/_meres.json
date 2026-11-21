@@ -1,0 +1,5565 @@
+{
+ "a00_belepes_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [
+   {
+    "el": "div#root > div.belepes-oldal > div.belepes-bal",
+    "szoveg": "Könyvelői és tulajdonosi felület Minden ügyfeled egy helyen: iratok, s",
+    "sw": 980,
+    "cw": 720
+   },
+   {
+    "el": "div#root > div.belepes-oldal > div.belepes-bal",
+    "szoveg": "Könyvelői és tulajdonosi felület Minden ügyfeled egy helyen: iratok, s",
+    "sh": 1040,
+    "ch": 900,
+    "fuggoleges": true
+   }
+  ],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div#root > div.belepes-oldal > main.belepes-jobb",
+    "w": 720,
+    "h": 900,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "DEMO – minta adatok Belépés Könyvelőként, ügyfélsz"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Te hagyod jóvá a fizetendőt, az ügyfél azonnal látja a leveleddel együtt. A NAV-nak továbbra is te adod be."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 13
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 720,
+   "width": 720
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Minden ügyfeled egy helyen: iratok, számlák, határidők."
+  ],
+  "url": "/belepes?mock_role=none",
+  "hibak": []
+ },
+ "a01_ugyfelek_1440": {
+  "vizszintes": 0,
+  "magassag": 3330,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 385
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.ugyfel-tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 29
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfeleid"
+  ],
+  "url": "/ugyfelek?mock_role=accountant",
+  "hibak": []
+ },
+ "a02_ugyfel_attekintes_1440": {
+  "vizszintes": 0,
+  "magassag": 2240,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 199
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.lap.k28 > div.szak > p.szam",
+    "t": "kata7q2x@posta.demo.kezjegy.test",
+    "wb": "break-all",
+    "ow": "normal"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata?mock_role=accountant",
+  "hibak": []
+ },
+ "a03_ugyfel_bekotes_1440": {
+  "vizszintes": 0,
+  "magassag": 1390,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 120
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Németh Péter Bekötés alattDEMO"
+  ],
+  "url": "/ugyfelek/c-peter/bekotes?mock_role=accountant",
+  "hibak": []
+ },
+ "a04_ugyfel_dosszie_1440": {
+  "vizszintes": 0,
+  "magassag": 1282,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 160
+  },
+  "tablak": [
+   {
+    "el": "div > div.lap > table.tabla",
+    "w": 679,
+    "szulo": 679,
+    "gorget": false,
+    "sorok": 4
+   },
+   {
+    "el": "div > div.lap > table.tabla",
+    "w": 411,
+    "szulo": 411,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/dosszie?ev=2026&honap=2026-10&mock_role=accountant",
+  "hibak": []
+ },
+ "a05_ugyfel_szamlak_1440": {
+  "vizszintes": 0,
+  "magassag": 2161,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.tartalom > div.sor-flex.ter > div.szegmens",
+    "w": 592,
+    "h": 82,
+    "szin": "rgb(233, 236, 245)",
+    "szoveg": "Egész év jan feb már ápr máj jún júl aug sze okt n"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 414
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 33
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/nav?mock_role=accountant",
+  "hibak": []
+ },
+ "a06_ugyfel_bevetelek_1440": {
+  "vizszintes": 0,
+  "magassag": 3495,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 474
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 34
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/bevetelek?mock_role=accountant",
+  "hibak": []
+ },
+ "a07_ugyfel_kimutatas_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 67
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/kimutatas?mock_role=accountant",
+  "hibak": []
+ },
+ "a08_ugyfel_ado_1440": {
+  "vizszintes": 0,
+  "magassag": 1871,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div > div.lap > div.belso",
+    "w": 411,
+    "h": 540,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "Kedves Kata! Az eddigi bevételeid alapján kiszámol"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 233
+  },
+  "tablak": [
+   {
+    "el": "div > div.lap > table.tabla.tomor",
+    "w": 679,
+    "szulo": 679,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/ado?idoszak=2026-Q4&mock_role=accountant",
+  "hibak": []
+ },
+ "a09_ugyfel_ado_kata_1440": {
+  "vizszintes": 0,
+  "magassag": 1421,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 134
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.belso > table.tabla",
+    "w": 1060,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 12
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Lakatos Gréta Kata: cégnek számlázottKataDEMO"
+  ],
+  "url": "/ugyfelek/c-lakatos-greta/ado?mock_role=accountant",
+  "hibak": []
+ },
+ "a10_ugyfel_kedvezmenyek_1440": {
+  "vizszintes": 0,
+  "magassag": 1969,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 219
+  },
+  "tablak": [
+   {
+    "el": "div > div.tabla-gorgo > table.tabla.tomor.csaladi-tabla",
+    "w": 617,
+    "szulo": 617,
+    "gorget": false,
+    "sorok": 13
+   }
+  ],
+  "toresek": [
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": "most is kap rá családi pótlékot",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": ", saját vagy örökbe fogadott",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": "most is kap rá családi pótlékot",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": ", saját vagy örökbe fogadott",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.szak > dl.adatok.keskeny-adatok > dd",
+    "t": "megosztják, ő kb. 50%",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok > dd > div.halvany.kicsi",
+    "t": "Járulékkedvezmény év közben:",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Eszter DEMO"
+  ],
+  "url": "/ugyfelek/c-szabo-eszter/kedvezmenyek?mock_role=accountant",
+  "hibak": []
+ },
+ "a11_ugyfel_eves_1440": {
+  "vizszintes": 0,
+  "magassag": 1811,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 156
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.szak > dl.adatok.keskeny-adatok > dd",
+    "t": "Decemberben volt egy kis megbízásos munkám is, a papírját fe",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/eves?mock_today=2027-03-20&mock_role=accountant",
+  "hibak": []
+ },
+ "a12_ugyfel_folyoszamla_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 69
+  },
+  "tablak": [
+   {
+    "el": "div.oszlop > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/folyoszamla?mock_role=accountant",
+  "hibak": []
+ },
+ "a13_ugyfel_onellenorzes_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 63
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/onellenorzes?mock_role=accountant",
+  "hibak": []
+ },
+ "a14_ugyfel_uzenetek_1440": {
+  "vizszintes": 0,
+  "magassag": 940,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.racs.fo-mellek > div.lap > div.csevego",
+    "w": 679,
+    "h": 446,
+    "szin": "rgb(248, 249, 253)",
+    "szoveg": "Szia Bence! Megjött a Bodza Kiadós szerződés, felt"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Bence látta, pár napon belül kész"
+   },
+   {
+    "tipus": "idő",
+    "t": "Igazolás: pár nap"
+   },
+   {
+    "tipus": "idő",
+    "t": "Láttam a kérésed. A NAV-tól pár napon belül megjön, és rögtön feltöltöm."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 94
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Szia Bence! Megjött a Bodza Kiadós szerződés, feltöltöttem.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en",
+    "t": "Köszönöm, megnézem. A szerződés miatt nem változik a befizet",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en.kollega",
+    "t": "A hívásunk összefoglalója: megbeszéltük, hogy a jövedelemiga",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Levelet kaptam a NAV-tól, megijedtem. Feltöltöttem a dosszié",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en",
+    "t": "Megnéztem: csak értesítés, nincs vele teendőd. Elteheted.",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/uzenetek?mock_role=accountant",
+  "hibak": []
+ },
+ "a15_ugyfel_keresek_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 92
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/keresek?mock_role=accountant",
+  "hibak": []
+ },
+ "a16_ugyfel_visszahivasok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 85
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/visszahivasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a17_ugyfel_naplo_1440": {
+  "vizszintes": 0,
+  "magassag": 997,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 105
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 9
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/naplo?mock_role=accountant",
+  "hibak": []
+ },
+ "a20_hatarido_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 88
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Határidő-figyelő"
+  ],
+  "url": "/hatarido-figyelo?mock_role=accountant",
+  "hibak": []
+ },
+ "a21_eves_attekinto_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "right": 1474,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "div.lap > table.tabla > thead",
+    "right": 1474,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "table.tabla > thead > tr",
+    "right": 1474,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "thead > tr > th.utolso",
+    "right": 1474,
+    "szoveg": "Mi hiányzik"
+   },
+   {
+    "el": "div.lap > table.tabla > tbody",
+    "right": 1474,
+    "szoveg": "Szabó Kata Átalány Q1 ✓BQ2 ✓BQ3 ✓BQ4 b október 31. · rendben következő"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1474,
+    "szoveg": "Szabó Kata Átalány Q1 ✓BQ2 ✓BQ3 ✓BQ4 b október 31. · rendben következő"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1474,
+    "szoveg": "IV. negyedév: jóváhagyás"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1450,
+    "szoveg": "IV. negyedév: jóváhagyás"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1474,
+    "szoveg": "Varga Réka Átalány Q1 ✓BQ2 jBQ3 !Q4 · szeptember 30. · hátralék követk"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1474,
+    "szoveg": "III. negyedév: eltérés a befizetésben Folyószámla: hátralék Éves kérdő"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1450,
+    "szoveg": "III. negyedév: eltérés a befizetésben"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1450,
+    "szoveg": "Folyószámla: hátralék"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1450,
+    "szoveg": "Éves kérdőív"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1474,
+    "szoveg": "Lakatos Gréta Kata 9 rendben, 1 hiányzik nincs jóváhagyásra vár ügyfél"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1474,
+    "szoveg": "Október: kata-befizetés"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1450,
+    "szoveg": "Október: kata-befizetés"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1474,
+    "szoveg": "Szabó Eszter Átalány Q1 ✓BQ2 ✓BQ3 JBQ4 0 október 31. · rendben kész −1"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1474,
+    "szoveg": ""
+   }
+  ],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 143
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1178,
+    "szulo": 1108,
+    "gorget": true,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Éves áttekintő"
+  ],
+  "url": "/eves-attekinto?mock_role=accountant",
+  "hibak": []
+ },
+ "a22_keresek_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 63
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 4
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Kérések"
+  ],
+  "url": "/keresek?mock_role=accountant",
+  "hibak": []
+ },
+ "a23_visszahivasok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Ezeket a hívásokat a csapat neked adta át. Az ügyfélnek 24–48 órán belüli hívást ígértünk."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 60
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.tomor.visszahivas-tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Visszahívások"
+  ],
+  "url": "/visszahivasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a24_helyettunk_1440": {
+  "vizszintes": 0,
+  "magassag": 1194,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 136
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom.szeles-tartalom > div.lap > table.tabla.tomor.helyettunk-tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 10
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Intézzük helyette"
+  ],
+  "url": "/helyettunk?mock_role=accountant",
+  "hibak": []
+ },
+ "a25_havi_valtozasok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Havi változások"
+  ],
+  "url": "/havi-valtozasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a26_sablonok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Igazolás: pár nap"
+   },
+   {
+    "tipus": "idő",
+    "t": "Láttam a kérésed. A NAV-tól pár napon belül megjön, és rögtön feltöltöm."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 43
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Válaszsablonok"
+  ],
+  "url": "/sablonok?mock_role=accountant",
+  "hibak": []
+ },
+ "a27_export_1440": {
+  "vizszintes": 0,
+  "magassag": 1330,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 77
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Export"
+  ],
+  "url": "/export?mock_role=accountant",
+  "hibak": []
+ },
+ "a28_naplo_1440": {
+  "vizszintes": 0,
+  "magassag": 1362,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 126
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 17
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Napló"
+  ],
+  "url": "/naplo?mock_role=accountant",
+  "hibak": []
+ },
+ "a29_beallitasok_1440": {
+  "vizszintes": 0,
+  "magassag": 1102,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div > div.lap > div.belso",
+    "w": 411,
+    "h": 266,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "Kedves Kata! Kiszámoltam, mennyit kell most befize"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 64
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.belso > table.tabla",
+    "w": 631,
+    "szulo": 679,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Beállítások"
+  ],
+  "url": "/beallitasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a30_igazolasok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 33
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Igazolások"
+  ],
+  "url": "/igazolasok?mock_role=accountant",
+  "hibak": []
+ },
+ "c01_visszahivasok_1440": {
+  "vizszintes": 0,
+  "magassag": 1116,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Az ügyfeleknek 24–48 órán belüli hívást ígérünk, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőjük hív."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 135
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.tomor.visszahivas-tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 8
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Visszahívások"
+  ],
+  "url": "/visszahivasok?mock_role=csapat",
+  "hibak": []
+ },
+ "c02_vallalkozas_inditas_1440": {
+  "vizszintes": 0,
+  "magassag": 973,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 133
+  },
+  "tablak": [
+   {
+    "el": "details.osszevont > div.lap > table.tabla",
+    "w": 1100,
+    "szulo": 1100,
+    "gorget": false,
+    "sorok": 3
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Vállalkozás-indítás"
+  ],
+  "url": "/vallalkozas-inditas?mock_role=csapat",
+  "hibak": []
+ },
+ "c03_regisztracio_1440": {
+  "vizszintes": 0,
+  "magassag": 1476,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 146
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "2026. november 16.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok > dd > span.halvany.kicsi",
+    "t": "(a beküldés napja",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "Kizáró ok nincs, más élő vállalkozása nincs",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "Interneten, Ügyfélkapu+-szal",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.tomor.keskeny-adatok > dd",
+    "t": "levente.toth@​demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "· következik:",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "Vállalkozás bejelentése",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Tóth Levente Ellenőrzésre vár"
+  ],
+  "url": "/vallalkozas-inditas/reg-levente?mock_role=csapat",
+  "hibak": []
+ },
+ "c04_uzenetek_1440": {
+  "vizszintes": 0,
+  "magassag": 936,
+  "levagott": [
+   {
+    "el": "div.lap.szal-lista > a.szal > div.al",
+    "szoveg": "Szia Péter! Köszönöm, holnap megnézem a NAV-nál, és szólok.",
+    "sw": 385,
+    "cw": 284
+   },
+   {
+    "el": "div.lap.szal-lista > a.szal.on > div.al",
+    "szoveg": "Szia! Beküldtem a bejelentést, és feltöltöttem a NAV-os PDF-et. Így jó",
+    "sw": 434,
+    "cw": 284
+   },
+   {
+    "el": "div.lap.szal-lista > a.szal > div.al",
+    "szoveg": "Szia! A költséghányadnál elakadtam, melyiket jelöljem? Használt ruhát ",
+    "sw": 497,
+    "cw": 284
+   }
+  ],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.uzenet-racs > div.lap.szal-lista > a.szal.on",
+    "w": 308,
+    "h": 95,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "Tóth Levente tegnap 18:24 Szia! Beküldtem a bejele"
+   },
+   {
+    "el": "div.uzenet-racs > div.lap > div.csevego",
+    "w": 772,
+    "h": 200,
+    "szin": "rgb(248, 249, 253)",
+    "szoveg": "Szia! Beküldtem a bejelentést, és feltöltöttem a N"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 104
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Szia! Beküldtem a bejelentést, és feltöltöttem a NAV-os PDF-",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Üzenetek"
+  ],
+  "url": "/uzenetek/c-levente?mock_role=csapat",
+  "hibak": []
+ },
+ "c05_helyettunk_reszlet_1440": {
+  "vizszintes": 0,
+  "magassag": 1405,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 141
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok.tomor.keskeny-adatok > dd",
+    "t": "david.molnar@​demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "· következik:",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "Azonosítás",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok.bekuldes-adatok > dd > div.sugo",
+    "t": "Teljes egészében csak a könyvelője látja.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "ul.ugycsoportok > li > span",
+    "t": "ADÓÜGYEK (kivéve egyes jövedéki ügyek)",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok.bekuldes-adatok > dd",
+    "t": "Kezdete: a beküldés napja · Vége: üres",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Molnár Dávid Egyeztetve – UJEGYKE beküldésére vár (változásnál: adatok"
+  ],
+  "url": "/helyettunk/as-david?mock_role=csapat",
+  "hibak": []
+ },
+ "k01_attekintes_1440": {
+  "vizszintes": 0,
+  "magassag": 1178,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 136
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Áttekintés"
+  ],
+  "url": "/admin?mock_role=admin",
+  "hibak": []
+ },
+ "k02_ugyfelek_1440": {
+  "vizszintes": 0,
+  "magassag": 2348,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 248
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 29
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfelek"
+  ],
+  "url": "/admin/ugyfelek?mock_role=admin",
+  "hibak": []
+ },
+ "k03_elofizetesek_1440": {
+  "vizszintes": 0,
+  "magassag": 1704,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 214
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 19
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Előfizetések"
+  ],
+  "url": "/admin/elofizetesek?mock_role=admin",
+  "hibak": []
+ },
+ "k04_fizetesek_1440": {
+  "vizszintes": 0,
+  "magassag": 2187,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 295
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 21
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Fizetések"
+  ],
+  "url": "/admin/fizetesek?szuro=mind&mock_role=admin",
+  "hibak": []
+ },
+ "k05_fizetesek_atutalas_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.szak > div.atutalas-csempek > button.atutalas-csempe.on.kesik",
+    "w": 345,
+    "h": 77,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "1 Késik · 19 999 Ft"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Fizetések"
+  ],
+  "url": "/admin/fizetesek?szuro=atutalas&mock_role=admin",
+  "hibak": []
+ },
+ "k06_dijszamlak_1440": {
+  "vizszintes": 0,
+  "magassag": 1673,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 263
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 20
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Díjszámlák"
+  ],
+  "url": "/admin/dijszamlak?mock_role=admin",
+  "hibak": []
+ },
+ "k07_dijak_1440": {
+  "vizszintes": 0,
+  "magassag": 1742,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 174
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 13
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 4
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Díjak"
+  ],
+  "url": "/admin/dijak?mock_role=admin",
+  "hibak": []
+ },
+ "k08_konyvelok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 56
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Könyvelők"
+  ],
+  "url": "/admin/konyvelok?mock_role=admin",
+  "hibak": []
+ },
+ "k09_csapat_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 71
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 3
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Csapat"
+  ],
+  "url": "/admin/csapat?mock_role=admin",
+  "hibak": []
+ },
+ "k10_marketing_1440": {
+  "vizszintes": 0,
+  "magassag": 1869,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 184
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 8
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Marketing"
+  ],
+  "url": "/admin/marketing?mock_role=admin",
+  "hibak": []
+ },
+ "k11_forrasok_1440": {
+  "vizszintes": 0,
+  "magassag": 1551,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 188
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 6
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 16
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Honnan jöttek az ügyfelek"
+  ],
+  "url": "/admin/forrasok?mock_role=admin",
+  "hibak": []
+ },
+ "k12_szovegek_1440": {
+  "vizszintes": 0,
+  "magassag": 963,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "GYIK és szövegek"
+  ],
+  "url": "/admin/szovegek?mock_role=admin",
+  "hibak": []
+ },
+ "k13_naplo_1440": {
+  "vizszintes": 0,
+  "magassag": 1441,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 138
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 17
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Napló"
+  ],
+  "url": "/admin/naplo?mock_role=admin",
+  "hibak": []
+ },
+ "k14_demo_posta_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 52
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Demo-postafiók"
+  ],
+  "url": "/admin/demo-postafiok?mock_role=admin",
+  "hibak": []
+ },
+ "k15_rendszer_1440": {
+  "vizszintes": 0,
+  "magassag": 1470,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 109
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 5
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 3
+   },
+   {
+    "el": "div.racs.fo-mellek > div.lap > table.tabla",
+    "w": 679,
+    "szulo": 679,
+    "gorget": false,
+    "sorok": 7
+   }
+  ],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok > dd",
+    "t": "ma 5:30 · 6 rendben, 0 hibás",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Rendszer"
+  ],
+  "url": "/admin/rendszer?mock_role=admin",
+  "hibak": []
+ },
+ "k16_igazolasok_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 42
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Igazolások"
+  ],
+  "url": "/igazolasok?mock_role=admin",
+  "hibak": []
+ },
+ "k20_konzol_1440": {
+  "vizszintes": 0,
+  "magassag": 2120,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.szak > div.atutalas-csempek > button.atutalas-csempe.on.kesik",
+    "w": 345,
+    "h": 77,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "1 Késik · 19 999 Ft"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Levonás 7 napon belül · 1 db (30 nap: 59 997 Ft)"
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 231
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 7
+   },
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 3
+   },
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Konzol"
+  ],
+  "url": "/admin/konzol?mock_role=admin",
+  "hibak": []
+ },
+ "k21_konzol_ugyfelek_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 118
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 7
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfelek"
+  ],
+  "url": "/admin/konzol/ugyfelek?mock_role=admin",
+  "hibak": []
+ },
+ "k22_konzol_ugyfelkartya_1440": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 99
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 1108,
+    "szulo": 1108,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [
+   {
+    "el": "div > div > span",
+    "t": "agnes.atutalo@demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div > div > span",
+    "t": "68801234-1-41",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div > div > span",
+    "t": "Budapest XIII. kerület",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1180
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Átutaló Ágnes"
+  ],
+  "url": "/admin/konzol/ugyfelek/cl-tr-2?mock_role=admin",
+  "hibak": []
+ },
+ "a00_belepes_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [
+   {
+    "el": "div#root > div.belepes-oldal > div.belepes-bal",
+    "szoveg": "Könyvelői és tulajdonosi felület Minden ügyfeled egy helyen: iratok, s",
+    "sw": 900,
+    "cw": 640
+   },
+   {
+    "el": "div#root > div.belepes-oldal > div.belepes-bal",
+    "szoveg": "Könyvelői és tulajdonosi felület Minden ügyfeled egy helyen: iratok, s",
+    "sh": 1040,
+    "ch": 900,
+    "fuggoleges": true
+   }
+  ],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div#root > div.belepes-oldal > main.belepes-jobb",
+    "w": 640,
+    "h": 900,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "DEMO – minta adatok Belépés Könyvelőként, ügyfélsz"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Te hagyod jóvá a fizetendőt, az ügyfél azonnal látja a leveleddel együtt. A NAV-nak továbbra is te adod be."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 13
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 640,
+   "width": 640
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Minden ügyfeled egy helyen: iratok, számlák, határidők."
+  ],
+  "url": "/belepes?mock_role=none",
+  "hibak": []
+ },
+ "a01_ugyfelek_1280": {
+  "vizszintes": 0,
+  "magassag": 3107,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 385
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.ugyfel-tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 29
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfeleid"
+  ],
+  "url": "/ugyfelek?mock_role=accountant",
+  "hibak": []
+ },
+ "a02_ugyfel_attekintes_1280": {
+  "vizszintes": 0,
+  "magassag": 2450,
+  "levagott": [
+   {
+    "el": "div.racs.fo-mellek > div > div.lap.k28",
+    "szoveg": "Továbbító e-mail-cím DEMO kata7q2x@posta.demo.kezjegy.test Másolás A s",
+    "sw": 383,
+    "cw": 351
+   }
+  ],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 199
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok > dd",
+    "t": "Grafikai tervezés és illusztráció",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok > dd > span.halvany",
+    "t": "· ÖVTJ-kód",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap.k28 > div.szak > div.nagy-osszeg",
+    "t": "Félretenni most: kb. 335 000 Ft",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap.k28 > div.szak > p.szam",
+    "t": "kata7q2x@posta.demo.kezjegy.test",
+    "wb": "break-all",
+    "ow": "normal"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata?mock_role=accountant",
+  "hibak": []
+ },
+ "a03_ugyfel_bekotes_1280": {
+  "vizszintes": 0,
+  "magassag": 1476,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 120
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Németh Péter Bekötés alattDEMO"
+  ],
+  "url": "/ugyfelek/c-peter/bekotes?mock_role=accountant",
+  "hibak": []
+ },
+ "a04_ugyfel_dosszie_1280": {
+  "vizszintes": 0,
+  "magassag": 1404,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 160
+  },
+  "tablak": [
+   {
+    "el": "div > div.lap > table.tabla",
+    "w": 579,
+    "szulo": 579,
+    "gorget": false,
+    "sorok": 4
+   },
+   {
+    "el": "div > div.lap > table.tabla",
+    "w": 351,
+    "szulo": 351,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/dosszie?ev=2026&honap=2026-10&mock_role=accountant",
+  "hibak": []
+ },
+ "a05_ugyfel_szamlak_1280": {
+  "vizszintes": 0,
+  "magassag": 2844,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.tartalom > div.sor-flex.ter > div.szegmens",
+    "w": 506,
+    "h": 82,
+    "szin": "rgb(233, 236, 245)",
+    "szoveg": "Egész év jan feb már ápr máj jún júl aug sze okt n"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 414
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 33
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/nav?mock_role=accountant",
+  "hibak": []
+ },
+ "a06_ugyfel_bevetelek_1280": {
+  "vizszintes": 0,
+  "magassag": 4236,
+  "levagott": [],
+  "kilogo": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "right": 1307,
+    "szoveg": "Megnevezés Forrás Bevétel napja Teljesítés Összeg Félretenni Beszámít "
+   },
+   {
+    "el": "div.lap > table.tabla > thead",
+    "right": 1307,
+    "szoveg": "Megnevezés Forrás Bevétel napja Teljesítés Összeg Félretenni Beszámít"
+   },
+   {
+    "el": "table.tabla > thead > tr",
+    "right": 1307,
+    "szoveg": "Megnevezés Forrás Bevétel napja Teljesítés Összeg Félretenni Beszámít"
+   },
+   {
+    "el": "thead > tr > th.utolso",
+    "right": 1307,
+    "szoveg": ""
+   },
+   {
+    "el": "div.lap > table.tabla > tbody",
+    "right": 1307,
+    "szoveg": "KSZ-2026-033 · Bodza Kiadó Kft. Kiállított számla nov. 20.becsültvárha"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-033 · Bodza Kiadó Kft. Kiállított számla nov. 20.becsültvárha"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-031 · Csipkebogyó Pékség Bt. Kiállított számla nov. 13.becsül"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-030 · Zöldág Alapítvány Kiállított számla okt. 19.becsült okt"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-029 · Csipkebogyó Pékség Bt. Kiállított számla okt. 18.becsül"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-028 · Zöldág Alapítvány Kiállított számla okt. 15.becsült okt"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "Nyugta, készpénzes eladás (kézi nyugtatömb) Kézi okt. 3. okt. 3. 18 00"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom Törlöm"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-v",
+    "right": 1289,
+    "szoveg": "Törlöm"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-027 · Csipkebogyó Pékség Bt. Kiállított számla szept. 23. sze"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-026 · Bodza Kiadó Kft. Kiállított számla szept. 21. szept. 13"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-025 · Mókusvár Játékbolt Kft. Kiállított számla szept. 16. sz"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-024 · Mókusvár Játékbolt Kft. Kiállított számla aug. 26. aug."
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-023 · Bodza Kiadó Kft. Kiállított számla aug. 25. aug. 17. 29"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-022 · Zöldág Alapítvány Kiállított számla aug. 19. aug. 11. 1"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-021 · Zöldág Alapítvány Kiállított számla júl. 21. júl. 13. 3"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-020 · Mókusvár Játékbolt Kft. Kiállított számla júl. 18. júl."
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-019 · Csipkebogyó Pékség Bt. Kiállított számla júl. 14. júl. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-018 · Fecskefészek Utazási Kft. Kiállított számla jún. 27. jú"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-017 · Csipkebogyó Pékség Bt. Kiállított számla jún. 19. jún. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-016 · Zöldág Alapítvány Kiállított számla jún. 15. jún. 7. 27"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-015 · Zöldág Alapítvány Kiállított számla máj. 27. máj. 19. 3"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-014 · Bodza Kiadó Kft. Kiállított számla máj. 14. máj. 6. 222"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-013 · Csipkebogyó Pékség Bt. Kiállított számla máj. 12. máj. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-012 · Bodza Kiadó Kft. Kiállított számla ápr. 27. ápr. 19. 25"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-011 · Zöldág Alapítvány Kiállított számla ápr. 17. ápr. 9. 31"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-010 · Csipkebogyó Pékség Bt. Kiállított számla ápr. 15. ápr. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-009 · Csipkebogyó Pékség Bt. Kiállított számla márc. 25. márc"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-008 · Zöldág Alapítvány Kiállított számla márc. 15. márc. 7. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-007 · Zöldág Alapítvány Kiállított számla márc. 14. márc. 6. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-006 · Mókusvár Játékbolt Kft. Kiállított számla febr. 21. feb"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-005 · Zöldág Alapítvány Kiállított számla febr. 11. febr. 3. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-004 · Bodza Kiadó Kft. Kiállított számla febr. 10. febr. 2. 1"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-003 · Mókusvár Játékbolt Kft. Kiállított számla jan. 17. jan."
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-002 · Fecskefészek Utazási Kft. Kiállított számla jan. 14. ja"
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1307,
+    "szoveg": "KSZ-2026-001 · Csipkebogyó Pékség Bt. Kiállított számla jan. 10. jan. "
+   },
+   {
+    "el": "tbody > tr > td.utolso.jobb.nt",
+    "right": 1307,
+    "szoveg": "Kizárom"
+   },
+   {
+    "el": "tr > td.utolso.jobb.nt > button.gomb-sz",
+    "right": 1289,
+    "szoveg": "Kizárom"
+   }
+  ],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 474
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1011,
+    "szulo": 948,
+    "gorget": true,
+    "sorok": 34
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/bevetelek?mock_role=accountant",
+  "hibak": []
+ },
+ "a07_ugyfel_kimutatas_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 67
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/kimutatas?mock_role=accountant",
+  "hibak": []
+ },
+ "a08_ugyfel_ado_1280": {
+  "vizszintes": 0,
+  "magassag": 1976,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div > div.lap > div.belso",
+    "w": 351,
+    "h": 579,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "Kedves Kata! Az eddigi bevételeid alapján kiszámol"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 233
+  },
+  "tablak": [
+   {
+    "el": "div > div.lap > table.tabla.tomor",
+    "w": 579,
+    "szulo": 579,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/ado?idoszak=2026-Q4&mock_role=accountant",
+  "hibak": []
+ },
+ "a09_ugyfel_ado_kata_1280": {
+  "vizszintes": 0,
+  "magassag": 1421,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 134
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.belso > table.tabla",
+    "w": 900,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 12
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Lakatos Gréta Kata: cégnek számlázottKataDEMO"
+  ],
+  "url": "/ugyfelek/c-lakatos-greta/ado?mock_role=accountant",
+  "hibak": []
+ },
+ "a10_ugyfel_kedvezmenyek_1280": {
+  "vizszintes": 0,
+  "magassag": 2044,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 219
+  },
+  "tablak": [
+   {
+    "el": "div > div.tabla-gorgo > table.tabla.tomor.csaladi-tabla",
+    "w": 562,
+    "szulo": 519,
+    "gorget": true,
+    "sorok": 13
+   }
+  ],
+  "toresek": [
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": "most is kap rá családi pótlékot",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": ", saját vagy örökbe fogadott",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": "most is kap rá családi pótlékot",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dd > ol.k28-gyerekek > li",
+    "t": ", saját vagy örökbe fogadott",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.szak > dl.adatok.keskeny-adatok > dd",
+    "t": "megosztják, ő kb. 50%",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok > dd > div.halvany.kicsi",
+    "t": "Járulékkedvezmény év közben:",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.szak > dl.adatok.keskeny-adatok > dd",
+    "t": "nem házasodott az elmúlt két évben",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Eszter DEMO"
+  ],
+  "url": "/ugyfelek/c-szabo-eszter/kedvezmenyek?mock_role=accountant",
+  "hibak": []
+ },
+ "a11_ugyfel_eves_1280": {
+  "vizszintes": 0,
+  "magassag": 1943,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 156
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.szak > dl.adatok.keskeny-adatok > dd",
+    "t": "Decemberben volt egy kis megbízásos munkám is, a papírját fe",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/eves?mock_today=2027-03-20&mock_role=accountant",
+  "hibak": []
+ },
+ "a12_ugyfel_folyoszamla_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 69
+  },
+  "tablak": [
+   {
+    "el": "div.oszlop > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/folyoszamla?mock_role=accountant",
+  "hibak": []
+ },
+ "a13_ugyfel_onellenorzes_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 63
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/onellenorzes?mock_role=accountant",
+  "hibak": []
+ },
+ "a14_ugyfel_uzenetek_1280": {
+  "vizszintes": 0,
+  "magassag": 947,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.racs.fo-mellek > div.lap > div.csevego",
+    "w": 579,
+    "h": 401,
+    "szin": "rgb(248, 249, 253)",
+    "szoveg": "Szia Bence! Megjött a Bodza Kiadós szerződés, felt"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Bence látta, pár napon belül kész"
+   },
+   {
+    "tipus": "idő",
+    "t": "Igazolás: pár nap"
+   },
+   {
+    "tipus": "idő",
+    "t": "Láttam a kérésed. A NAV-tól pár napon belül megjön, és rögtön feltöltöm."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 94
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Szia Bence! Megjött a Bodza Kiadós szerződés, feltöltöttem.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en",
+    "t": "Köszönöm, megnézem. A szerződés miatt nem változik a befizet",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en.kollega",
+    "t": "A hívásunk összefoglalója: megbeszéltük, hogy a jövedelemiga",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Levelet kaptam a NAV-tól, megijedtem. Feltöltöttem a dosszié",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.lap > div.csevego > div.buborek.en",
+    "t": "Megnéztem: csak értesítés, nincs vele teendőd. Elteheted.",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/uzenetek?mock_role=accountant",
+  "hibak": []
+ },
+ "a15_ugyfel_keresek_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 92
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/keresek?mock_role=accountant",
+  "hibak": []
+ },
+ "a16_ugyfel_visszahivasok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 85
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/visszahivasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a17_ugyfel_naplo_1280": {
+  "vizszintes": 0,
+  "magassag": 1042,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 105
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 9
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Szabó Kata DEMO"
+  ],
+  "url": "/ugyfelek/c-kata/naplo?mock_role=accountant",
+  "hibak": []
+ },
+ "a20_hatarido_1280": {
+  "vizszintes": 0,
+  "magassag": 944,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 88
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Határidő-figyelő"
+  ],
+  "url": "/hatarido-figyelo?mock_role=accountant",
+  "hibak": []
+ },
+ "a21_eves_attekinto_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "right": 1416,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "div.lap > table.tabla > thead",
+    "right": 1416,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "table.tabla > thead > tr",
+    "right": 1416,
+    "szoveg": "Ügyfél Negyedévek / kata Folyószámla Éves zárás Különbözet HIPA Önelle"
+   },
+   {
+    "el": "thead > tr > th.utolso",
+    "right": 1416,
+    "szoveg": "Mi hiányzik"
+   },
+   {
+    "el": "div.lap > table.tabla > tbody",
+    "right": 1416,
+    "szoveg": "Szabó Kata Átalány Q1 ✓BQ2 ✓BQ3 ✓BQ4 b október 31. · rendben következő"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1416,
+    "szoveg": "Szabó Kata Átalány Q1 ✓BQ2 ✓BQ3 ✓BQ4 b október 31. · rendben következő"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1416,
+    "szoveg": "IV. negyedév: jóváhagyás"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1398,
+    "szoveg": "IV. negyedév: jóváhagyás"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1416,
+    "szoveg": "Varga Réka Átalány Q1 ✓BQ2 jBQ3 !Q4 · szeptember 30. · hátralék követk"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1416,
+    "szoveg": "III. negyedév: eltérés a befizetésben Folyószámla: hátralék Éves kérdő"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1398,
+    "szoveg": "III. negyedév: eltérés a befizetésben"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1398,
+    "szoveg": "Folyószámla: hátralék"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1398,
+    "szoveg": "Éves kérdőív"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1416,
+    "szoveg": "Lakatos Gréta Kata 9 rendben, 1 hiányzik nincs jóváhagyásra vár ügyfél"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1416,
+    "szoveg": "Október: kata-befizetés"
+   },
+   {
+    "el": "tr > td.kicsi.utolso > div",
+    "right": 1398,
+    "szoveg": "Október: kata-befizetés"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1416,
+    "szoveg": "Szabó Eszter Átalány Q1 ✓BQ2 ✓BQ3 JBQ4 0 október 31. · rendben kész −1"
+   },
+   {
+    "el": "tbody > tr > td.kicsi.utolso",
+    "right": 1416,
+    "szoveg": ""
+   }
+  ],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 143
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1120,
+    "szulo": 948,
+    "gorget": true,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Éves áttekintő"
+  ],
+  "url": "/eves-attekinto?mock_role=accountant",
+  "hibak": []
+ },
+ "a22_keresek_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 63
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 4
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Kérések"
+  ],
+  "url": "/keresek?mock_role=accountant",
+  "hibak": []
+ },
+ "a23_visszahivasok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Ezeket a hívásokat a csapat neked adta át. Az ügyfélnek 24–48 órán belüli hívást ígértünk."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 60
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.tomor.visszahivas-tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Visszahívások"
+  ],
+  "url": "/visszahivasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a24_helyettunk_1280": {
+  "vizszintes": 0,
+  "magassag": 1238,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 136
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom.szeles-tartalom > div.lap > table.tabla.tomor.helyettunk-tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 10
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Intézzük helyette"
+  ],
+  "url": "/helyettunk?mock_role=accountant",
+  "hibak": []
+ },
+ "a25_havi_valtozasok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Havi változások"
+  ],
+  "url": "/havi-valtozasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a26_sablonok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Igazolás: pár nap"
+   },
+   {
+    "tipus": "idő",
+    "t": "Láttam a kérésed. A NAV-tól pár napon belül megjön, és rögtön feltöltöm."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 43
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Válaszsablonok"
+  ],
+  "url": "/sablonok?mock_role=accountant",
+  "hibak": []
+ },
+ "a27_export_1280": {
+  "vizszintes": 0,
+  "magassag": 1330,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 77
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Export"
+  ],
+  "url": "/export?mock_role=accountant",
+  "hibak": []
+ },
+ "a28_naplo_1280": {
+  "vizszintes": 0,
+  "magassag": 1370,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 126
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 17
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Napló"
+  ],
+  "url": "/naplo?mock_role=accountant",
+  "hibak": []
+ },
+ "a29_beallitasok_1280": {
+  "vizszintes": 0,
+  "magassag": 1120,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div > div.lap > div.belso",
+    "w": 351,
+    "h": 305,
+    "szin": "rgb(243, 245, 251)",
+    "szoveg": "Kedves Kata! Kiszámoltam, mennyit kell most befize"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 64
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.belso > table.tabla",
+    "w": 531,
+    "szulo": 579,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Beállítások"
+  ],
+  "url": "/beallitasok?mock_role=accountant",
+  "hibak": []
+ },
+ "a30_igazolasok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 33
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Igazolások"
+  ],
+  "url": "/igazolasok?mock_role=accountant",
+  "hibak": []
+ },
+ "c01_visszahivasok_1280": {
+  "vizszintes": 0,
+  "magassag": 1298,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Az ügyfeleknek 24–48 órán belüli hívást ígérünk, munkanapokon 9 és 17 óra között. Nem feltétlenül a könyvelőjük hív."
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 135
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla.tomor.visszahivas-tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 8
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Visszahívások"
+  ],
+  "url": "/visszahivasok?mock_role=csapat",
+  "hibak": []
+ },
+ "c02_vallalkozas_inditas_1280": {
+  "vizszintes": 0,
+  "magassag": 1050,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 133
+  },
+  "tablak": [
+   {
+    "el": "details.osszevont > div.lap > table.tabla",
+    "w": 940,
+    "szulo": 940,
+    "gorget": false,
+    "sorok": 3
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Vállalkozás-indítás"
+  ],
+  "url": "/vallalkozas-inditas?mock_role=csapat",
+  "hibak": []
+ },
+ "c03_regisztracio_1280": {
+  "vizszintes": 0,
+  "magassag": 1707,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 146
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "ul.tevekenysegek > li > span.felkover",
+    "t": "Fotózás, képszerkesztés",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "ul.tevekenysegek > li > div.halvany.kicsi",
+    "t": "A NAV-keresőbe: „",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "ul.tevekenysegek > li > span.felkover",
+    "t": "Videókészítés, vágás",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "ul.tevekenysegek > li > div.halvany.kicsi",
+    "t": "A NAV-keresőbe: „",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "2026. november 16.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok > dd > span.halvany.kicsi",
+    "t": "(a beküldés napja",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "Igen, lesz külön számlája",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "Kizáró ok nincs, más élő vállalkozása nincs",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "2026. november 16.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok > dd",
+    "t": "Interneten, Ügyfélkapu+-szal",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.tomor.keskeny-adatok > dd",
+    "t": "levente.toth@​demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "· következik:",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "Vállalkozás bejelentése",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Tóth Levente Ellenőrzésre vár"
+  ],
+  "url": "/vallalkozas-inditas/reg-levente?mock_role=csapat",
+  "hibak": []
+ },
+ "c04_uzenetek_1280": {
+  "vizszintes": 0,
+  "magassag": 936,
+  "levagott": [
+   {
+    "el": "div.lap.szal-lista > a.szal > div.al",
+    "szoveg": "Szia Péter! Köszönöm, holnap megnézem a NAV-nál, és szólok.",
+    "sw": 385,
+    "cw": 284
+   },
+   {
+    "el": "div.lap.szal-lista > a.szal.on > div.al",
+    "szoveg": "Szia! Beküldtem a bejelentést, és feltöltöttem a NAV-os PDF-et. Így jó",
+    "sw": 434,
+    "cw": 284
+   },
+   {
+    "el": "div.lap.szal-lista > a.szal > div.al",
+    "szoveg": "Szia! A költséghányadnál elakadtam, melyiket jelöljem? Használt ruhát ",
+    "sw": 497,
+    "cw": 284
+   }
+  ],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.uzenet-racs > div.lap.szal-lista > a.szal.on",
+    "w": 308,
+    "h": 95,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "Tóth Levente tegnap 18:26 Szia! Beküldtem a bejele"
+   },
+   {
+    "el": "div.uzenet-racs > div.lap > div.csevego",
+    "w": 612,
+    "h": 200,
+    "szin": "rgb(248, 249, 253)",
+    "szoveg": "Szia! Beküldtem a bejelentést, és feltöltöttem a N"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 104
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.lap > div.csevego > div.buborek.ugyfel",
+    "t": "Szia! Beküldtem a bejelentést, és feltöltöttem a NAV-os PDF-",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Üzenetek"
+  ],
+  "url": "/uzenetek/c-levente?mock_role=csapat",
+  "hibak": []
+ },
+ "c05_helyettunk_reszlet_1280": {
+  "vizszintes": 0,
+  "magassag": 1542,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 141
+  },
+  "tablak": [],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok.tomor.keskeny-adatok > dd",
+    "t": "david.molnar@​demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "· következik:",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > span.halvany",
+    "t": "Azonosítás",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.tomor.keskeny-adatok > dd > b",
+    "t": "Már van vállalkozása",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "dl.adatok.keskeny-adatok.bekuldes-adatok > dd > div.sugo",
+    "t": "Teljes egészében csak a könyvelője látja.",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "ul.ugycsoportok > li > span",
+    "t": "ADÓÜGYEK (kivéve egyes jövedéki ügyek)",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok.keskeny-adatok.bekuldes-adatok > dd",
+    "t": "Kezdete: a beküldés napja · Vége: üres",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Molnár Dávid Egyeztetve – UJEGYKE beküldésére vár (változásnál: adatok"
+  ],
+  "url": "/helyettunk/as-david?mock_role=csapat",
+  "hibak": []
+ },
+ "k01_attekintes_1280": {
+  "vizszintes": 0,
+  "magassag": 1239,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 136
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Áttekintés"
+  ],
+  "url": "/admin?mock_role=admin",
+  "hibak": []
+ },
+ "k02_ugyfelek_1280": {
+  "vizszintes": 0,
+  "magassag": 2348,
+  "levagott": [],
+  "kilogo": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "right": 1331,
+    "szoveg": "Ügyfél Állapot Könyvelő Előfizetés Honnan jött Regisztrált Belépés Sza"
+   },
+   {
+    "el": "div.lap > table.tabla > thead",
+    "right": 1331,
+    "szoveg": "Ügyfél Állapot Könyvelő Előfizetés Honnan jött Regisztrált Belépés"
+   },
+   {
+    "el": "table.tabla > thead > tr",
+    "right": 1331,
+    "szoveg": "Ügyfél Állapot Könyvelő Előfizetés Honnan jött Regisztrált Belépés"
+   },
+   {
+    "el": "thead > tr > th.utolso",
+    "right": 1331,
+    "szoveg": "Belépés"
+   },
+   {
+    "el": "div.lap > table.tabla > tbody",
+    "right": 1331,
+    "szoveg": "Szabó Kata kata.szabo@demo.kezjegy.test Aktív Kovács Bence Aktív faceb"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Szabó Kata kata.szabo@demo.kezjegy.test Aktív Kovács Bence Aktív faceb"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Varga Réka reka.varga@demo.kezjegy.test Aktív Kovács Bence Aktív googl"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Németh Péter peter.nemeth@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Tóth Anna anna.toth@demo.kezjegy.test Aktív Kovács Bence Aktív instagr"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Kiss Gábor gabor.kiss@demo.kezjegy.test Aktív Kovács Bence Elmaradt dí"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Letiltva Engedélyezem"
+   },
+   {
+    "el": "tr > td.utolso > div",
+    "right": 1313,
+    "szoveg": "Engedélyezem"
+   },
+   {
+    "el": "td.utolso > div > button.gomb-sz",
+    "right": 1313,
+    "szoveg": "Engedélyezem"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Molnár Eszter eszter.molnar@demo.kezjegy.test Aktív Kovács Bence Aktív"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Farkas Lili lili.farkas@demo.kezjegy.test Bekötés alatt Kovács Bence M"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Tóth Levente levente.toth@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Fehér Zsófia zsofia.feher@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Balogh Dóra dora.balogh@demo.kezjegy.test Bekötés alatt Kovács Bence –"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Horváth Márk mark.horvath@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Pintér Viktor viktor.pinter@demo.kezjegy.test Bekötés alatt Kovács Ben"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Kertész Nóra nora.kertesz@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Sipos Bálint balint.sipos@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Kiss Marika marika.kiss@demo.kezjegy.test Bekötés alatt Kovács Bence –"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Balogh Ilona ilona.balogh@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Vass Tímea timea.vass@demo.kezjegy.test Bekötés alatt Kovács Bence – g"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Molnár Dávid david.molnar@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Szűcs Gergely gergely.szucs@demo.kezjegy.test Bekötés alatt Kovács Ben"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Szabó Eszter eszter.szabo@demo.kezjegy.test Aktív Kovács Bence Aktív f"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Tóth Bálint balint.toth@demo.kezjegy.test Aktív Kovács Bence Aktív ins"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Kovács Ádám adam.kovacs@demo.kezjegy.test Aktív Kovács Bence Aktív goo"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Varga Réka-Demo reka-demo.varga@demo.kezjegy.test Aktív Kovács Bence A"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Lakatos Gréta greta.lakatos@demo.kezjegy.test Aktív Kovács Bence Aktív"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Kiss Norbert norbert.kiss@demo.kezjegy.test Aktív Kovács Bence Aktív f"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Fazekas Ilona ilona.fazekas@demo.kezjegy.test Felfüggesztve Kovács Ben"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Bárány Tamás tamas.barany@demo.kezjegy.test Bekötés alatt Kovács Bence"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "table.tabla > tbody > tr",
+    "right": 1331,
+    "szoveg": "Molnár Csilla csilla.molnar@demo.kezjegy.test Aktív Kovács Bence Aktív"
+   },
+   {
+    "el": "tbody > tr > td.utolso",
+    "right": 1331,
+    "szoveg": "Fiók letiltása"
+   },
+   {
+    "el": "tr > td.utolso > button.gomb-sz",
+    "right": 1302,
+    "szoveg": "Fiók letiltása"
+   }
+  ],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 248
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 1035,
+    "szulo": 948,
+    "gorget": true,
+    "sorok": 29
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfelek"
+  ],
+  "url": "/admin/ugyfelek?mock_role=admin",
+  "hibak": []
+ },
+ "k03_elofizetesek_1280": {
+  "vizszintes": 0,
+  "magassag": 1712,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 214
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 19
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Előfizetések"
+  ],
+  "url": "/admin/elofizetesek?mock_role=admin",
+  "hibak": []
+ },
+ "k04_fizetesek_1280": {
+  "vizszintes": 0,
+  "magassag": 2581,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.tartalom > div.sor-flex.ter > div.szegmens",
+    "w": 525,
+    "h": 82,
+    "szin": "rgb(233, 236, 245)",
+    "szoveg": "Gond van Megerősítésre vár Sikeres Visszautalt Min"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 295
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 21
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Fizetések"
+  ],
+  "url": "/admin/fizetesek?szuro=mind&mock_role=admin",
+  "hibak": []
+ },
+ "k05_fizetesek_atutalas_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.szak > div.atutalas-csempek > button.atutalas-csempe.on.kesik",
+    "w": 292,
+    "h": 77,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "1 Késik · 19 999 Ft"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Fizetések"
+  ],
+  "url": "/admin/fizetesek?szuro=atutalas&mock_role=admin",
+  "hibak": []
+ },
+ "k06_dijszamlak_1280": {
+  "vizszintes": 0,
+  "magassag": 1645,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 263
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 20
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Díjszámlák"
+  ],
+  "url": "/admin/dijszamlak?mock_role=admin",
+  "hibak": []
+ },
+ "k07_dijak_1280": {
+  "vizszintes": 0,
+  "magassag": 1644,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 174
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla.tomor",
+    "w": 978,
+    "szulo": 948,
+    "gorget": true,
+    "sorok": 13
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 4
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Díjak"
+  ],
+  "url": "/admin/dijak?mock_role=admin",
+  "hibak": []
+ },
+ "k08_konyvelok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 56
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Könyvelők"
+  ],
+  "url": "/admin/konyvelok?mock_role=admin",
+  "hibak": []
+ },
+ "k09_csapat_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 71
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 3
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Csapat"
+  ],
+  "url": "/admin/csapat?mock_role=admin",
+  "hibak": []
+ },
+ "k10_marketing_1280": {
+  "vizszintes": 0,
+  "magassag": 1928,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 184
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 8
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Marketing"
+  ],
+  "url": "/admin/marketing?mock_role=admin",
+  "hibak": []
+ },
+ "k11_forrasok_1280": {
+  "vizszintes": 0,
+  "magassag": 1551,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 188
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 6
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 16
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Honnan jöttek az ügyfelek"
+  ],
+  "url": "/admin/forrasok?mock_role=admin",
+  "hibak": []
+ },
+ "k12_szovegek_1280": {
+  "vizszintes": 0,
+  "magassag": 962,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 83
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "GYIK és szövegek"
+  ],
+  "url": "/admin/szovegek?mock_role=admin",
+  "hibak": []
+ },
+ "k13_naplo_1280": {
+  "vizszintes": 0,
+  "magassag": 1449,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 138
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 17
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Napló"
+  ],
+  "url": "/admin/naplo?mock_role=admin",
+  "hibak": []
+ },
+ "k14_demo_posta_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 52
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 5
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Demo-postafiók"
+  ],
+  "url": "/admin/demo-postafiok?mock_role=admin",
+  "hibak": []
+ },
+ "k15_rendszer_1280": {
+  "vizszintes": 0,
+  "magassag": 1487,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 109
+  },
+  "tablak": [
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 5
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 3
+   },
+   {
+    "el": "div.racs.fo-mellek > div.lap > table.tabla",
+    "w": 579,
+    "szulo": 579,
+    "gorget": false,
+    "sorok": 7
+   }
+  ],
+  "toresek": [
+   {
+    "el": "div.belso > dl.adatok > dd",
+    "t": "november 21. 14:24",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div.belso > dl.adatok > dd",
+    "t": "ma 5:30 · 6 rendben, 0 hibás",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Rendszer"
+  ],
+  "url": "/admin/rendszer?mock_role=admin",
+  "hibak": []
+ },
+ "k16_igazolasok_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 42
+  },
+  "tablak": [],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Igazolások"
+  ],
+  "url": "/igazolasok?mock_role=admin",
+  "hibak": []
+ },
+ "k20_konzol_1280": {
+  "vizszintes": 0,
+  "magassag": 2148,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [
+   {
+    "el": "div.szak > div.atutalas-csempek > button.atutalas-csempe.on.kesik",
+    "w": 292,
+    "h": 77,
+    "szin": "rgb(245, 247, 255)",
+    "szoveg": "1 Késik · 19 999 Ft"
+   }
+  ],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [
+   {
+    "tipus": "idő",
+    "t": "Levonás 7 napon belül · 1 db (30 nap: 59 997 Ft)"
+   }
+  ],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 231
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 7
+   },
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 3
+   },
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   },
+   {
+    "el": "div.tartalom > div.lap > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Konzol"
+  ],
+  "url": "/admin/konzol?mock_role=admin",
+  "hibak": []
+ },
+ "k21_konzol_ugyfelek_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 118
+  },
+  "tablak": [
+   {
+    "el": "div.lap > div.tabla-gorgo > table.tabla",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 7
+   }
+  ],
+  "toresek": [],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Ügyfelek"
+  ],
+  "url": "/admin/konzol/ugyfelek?mock_role=admin",
+  "hibak": []
+ },
+ "k22_konzol_ugyfelkartya_1280": {
+  "vizszintes": 0,
+  "magassag": 900,
+  "levagott": [],
+  "kilogo": [],
+  "pasztell": [],
+  "kontraszt": [],
+  "nevtelen": [],
+  "kepHiba": [],
+  "szovegGond": [],
+  "emoji": [],
+  "ikon3d": [],
+  "betu": {
+   "Geist Variable": 99
+  },
+  "tablak": [
+   {
+    "el": "div.szak > div.tabla-gorgo > table.tabla.tomor",
+    "w": 948,
+    "szulo": 948,
+    "gorget": false,
+    "sorok": 2
+   }
+  ],
+  "toresek": [
+   {
+    "el": "div > div > span",
+    "t": "agnes.atutalo@demo.kezjegy.test",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div > div > span",
+    "t": "68801234-1-41",
+    "wb": "normal",
+    "ow": "anywhere"
+   },
+   {
+    "el": "div > div > span",
+    "t": "Budapest XIII. kerület",
+    "wb": "normal",
+    "ow": "anywhere"
+   }
+  ],
+  "main": {
+   "left": 260,
+   "width": 1020
+  },
+  "cim": "Adózz – könyvelői felület",
+  "h1": [
+   "Átutaló Ágnes"
+  ],
+  "url": "/admin/konzol/ugyfelek/cl-tr-2?mock_role=admin",
+  "hibak": []
+ }
+}

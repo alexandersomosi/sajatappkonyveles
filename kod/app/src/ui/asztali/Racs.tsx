@@ -7,6 +7,7 @@ import { elrendezes } from '../../_shared/v2/tokenek';
 import { useAsztali } from '../../lib/elrendezes';
 import { RacsCellaCtx } from '../alap';
 import { kartyasit } from '../keret';
+import { Beuszo } from '../mozgas';
 
 const KOZ = elrendezes.asztali.racsKoz;
 
@@ -24,12 +25,23 @@ function kibont(children: ReactNode): ReactNode[] {
   return ki;
 }
 
-export function Racs({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+export function Racs({ children, style, beuszo }: { children: ReactNode; style?: StyleProp<ViewStyle>; /** k8 mozgás #1: a kártyák egymás utáni beúszása (munkamenetenként egyszer, ezzel a kulccsal). */ beuszo?: string }) {
   const asztali = useAsztali();
   // a régi szakaszos tartalom (ikonos Szakasz + Lap) előbb egy-egy kártyává áll össze, utána kerül a rácsba
-  const kartyak = kartyasit(children);
+  const nyers = kibont(kartyasit(children));
+  const kartyak = beuszo
+    ? nyers.map((e, i) => {
+        const szeles = isValidElement(e) && (e as ReactElement).type === Szeles;
+        const be = (
+          <Beuszo key={`b${i}`} sorszam={i} kulcs={beuszo} style={asztali ? { flex: 1 } : undefined}>
+            {szeles ? (e as ReactElement<{ children: ReactNode }>).props.children : e}
+          </Beuszo>
+        );
+        return szeles ? <Szeles key={`s${i}`}>{be}</Szeles> : be;
+      })
+    : nyers;
   if (!asztali) return <>{kartyak}</>;
-  const elemek = kibont(kartyak);
+  const elemek = kartyak;
   const sorok: ReactNode[][] = [];
   let par: ReactNode[] = [];
   for (const e of elemek) {

@@ -4,14 +4,14 @@
 // Gépen (≥ 1024 pt, web) nincs alsó sáv: a bal menüt a gyökér-elrendezés rajzolja (ui/asztali/Oldalsav), a tartalom egy
 // középre tett oszlop (max. 760, ill. `szeles` esetén 1120 pt), a fejléc hős sáv, a dokk a tartalom végén áll.
 // A régi C-változat: _regi/elotte_k8_A/src/ui/keret.tsx.
-import { Children, createContext, Fragment, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactElement, type ReactNode, type Ref } from 'react';
+import { Children, cloneElement, createContext, Fragment, isValidElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactElement, type ReactNode, type Ref } from 'react';
 import { AccessibilityInfo, ActivityIndicator, Animated, Easing, Keyboard, Modal, PixelRatio, Platform, Pressable, ScrollView, StyleSheet, useWindowDimensions, View, type ScrollViewInstance, type ScrollViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router, usePathname } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Ikon, NAV_IKONOK } from '../_shared/v2/rn';
 import { KERET_SZELESSEG, keretStilus } from '../lib/webkeret';
-import { mozgasKi } from '../lib/mozgas';
+import { MOZGAS_IDO, mozgasKi } from '../lib/mozgas';
 import { useAsztali, useAsztaliMeretek } from '../lib/elrendezes';
 import { aktivFulUtbol, MINTA_NELKULI_MAX, TARTALOM_MAX } from '../lib/elrendezesLogika';
 import { arnyek, forma, szin } from '../theme/tokens';
@@ -24,7 +24,7 @@ import { useVezetettParam, VezetettFelsoSor, VezetettHaladas } from './Vezetett'
 import { vezetettJelol, vezetettVissza } from '../lib/vezetett';
 import { DemoPirula, demoBeallit as demoBeallitAlap } from './demoAllapot';
 import { fotoCimke, useFotozasNyit, useFulAllapot } from './fulAllapot';
-import { PattanoPont, UgroIkon } from './mozgas';
+import { FelpattanoPipa, PattanoPont, UgroIkon } from './mozgas';
 
 const WEB = Platform.OS === 'web';
 
@@ -215,7 +215,25 @@ export function kartyasit(children: ReactNode): ReactNode[] {
     }
     ki.push(e);
   }
-  return ki;
+  // tömbként rajzoljuk ki: minden elemnek legyen kulcsa (a Fragmentből kibontottaknak nincs)
+  return ki.map((e, i) => (isValidElement(e) && e.key == null ? cloneElement(e, { key: `k${i}` }) : e));
+}
+
+/** k8 mozgás #8: amikor a helykitöltő (Betolt) helyére megjön a tartalom, 200 ms-os áttűnéssel érkezik. */
+function useAttunes(toltes: boolean): Animated.Value {
+  const o = useRef(new Animated.Value(1)).current;
+  const elozo = useRef(toltes);
+  useEffect(() => {
+    if (elozo.current && !toltes) {
+      void mozgasKi().then((ki) => {
+        if (ki) return;
+        o.setValue(0);
+        Animated.timing(o, { toValue: 1, duration: MOZGAS_IDO.attunes, useNativeDriver: !WEB }).start();
+      });
+    }
+    elozo.current = toltes;
+  }, [toltes, o]);
+  return o;
 }
 
 // ---------- képernyő ----------
@@ -256,6 +274,8 @@ export function Kepernyo({
   if (vezetett) ful = undefined;
   void frissul;
   const vanFejlec = !!fejlec;
+  const toltes = kibont(children).some((c) => isValidElement(c) && c.type === Betolt);
+  const attunes = useAttunes(toltes);
   if (asztali) {
     const max = (szeles ? TARTALOM_MAX : MINTA_NELKULI_MAX) + 2 * meret.margo.oldal;
     const tartalom = (
@@ -263,7 +283,7 @@ export function Kepernyo({
         {fejlec}
         {ful ? <ZarolasSav /> : null}
         <TeljesCtx.Provider value>
-          <View style={tartalomStilus}>{kartyasit(children)}</View>
+          <Animated.View style={[tartalomStilus, { opacity: attunes }]}>{kartyasit(children)}</Animated.View>
           {dokk ? <DokkAsztali>{dokk}</DokkAsztali> : null}
         </TeljesCtx.Provider>
       </View>
@@ -288,7 +308,7 @@ export function Kepernyo({
       <TeljesCtx.Provider value>
         <View style={[{ paddingHorizontal: forma.margo, paddingTop: 14, paddingBottom: alsoTer }, tartalomStilus]}>
           {ful ? <ZarolasSav /> : null}
-          {kartyasit(children)}
+          <Animated.View style={{ opacity: attunes }}>{kartyasit(children)}</Animated.View>
         </View>
       </TeljesCtx.Provider>
     </>
@@ -609,7 +629,7 @@ function JelzesDoboz({ j, o, rejt, fent }: { j: Jelzes; o: Animated.Value; rejt?
   return (
     <Animated.View pointerEvents={j.gomb ? 'box-none' : 'none'} style={{ position: 'absolute', left: 16, right: 16, ...hely, alignItems: 'center', opacity: o, zIndex: 1000 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: szin.sotet, borderRadius: 16, paddingVertical: j.gomb ? 6 : 12, paddingLeft: 16, paddingRight: j.gomb ? 6 : 16, maxWidth: 460, ...arnyek.lebego }}>
-        {j.kesz ? <KeszJel pt={22} /> : null}
+        {j.kesz ? <FelpattanoPipa key={j.szoveg} pt={22} rezges={false} /> : null}
         <T m={15} s={600} c="#fff" lh={1.35} style={{ flexShrink: 1, paddingVertical: j.gomb ? 6 : 0 }}>
           {j.szoveg}
         </T>

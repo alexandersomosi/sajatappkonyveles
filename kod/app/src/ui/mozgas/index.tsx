@@ -159,7 +159,7 @@ export function Konfetti({ kulcs, darab = 16 }: { kulcs: string; darab?: number 
   }, [lathato]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!lathato) return null;
   return (
-    <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 260, overflow: 'hidden' }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" aria-hidden>
+    <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 260, overflow: 'hidden' }} aria-hidden>
       {darabok.map((d, i) => (
         <Animated.View
           key={i}

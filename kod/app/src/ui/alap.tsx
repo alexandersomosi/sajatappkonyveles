@@ -27,7 +27,7 @@ const ATMENET = WEB ? ({ transitionProperty: 'background-color, box-shadow, tran
 function FejHatter({ kis }: { kis?: boolean }) {
   const id = useId().replace(/[^a-zA-Z0-9]/g, '');
   return (
-    <View pointerEvents="none" style={StyleSheet.absoluteFill} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View pointerEvents="none" style={StyleSheet.absoluteFill} aria-hidden>
       <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
         <Defs>
           <LinearGradient id={`fg${id}`} x1="0.32" y1="0" x2="0.68" y2="1">
@@ -278,7 +278,10 @@ export function GombE({ cim, tolt, style, magas = 52, disabled, ikon, ...p }: Go
       disabled={tiltva}
       {...p}
       style={style}
+      // gépen a fő gomb nem nyúlik a kártya teljes szélességére (A01/A53: kb. 280–420 pt)
+      alapIgazitas={asztali ? 'flex-start' : 'stretch'}
       alap={({ pressed, hovered }) => [
+        asztali ? { minWidth: 280 } : null,
         { minHeight: m, borderRadius: forma.gomb, backgroundColor: szin.sarga, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 22, paddingVertical: 4, flexDirection: 'row', gap: 8 },
         tiltva ? { backgroundColor: tolt ? szin.sarga : szin.letiltvaAlap } : (arnyek.gomb as ViewStyle),
         ATMENET,

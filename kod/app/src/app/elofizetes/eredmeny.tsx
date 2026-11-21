@@ -22,6 +22,7 @@ import { szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, Lap } from '@/ui/alap';
 import { DemoFizetesJel } from '@/ui/DemoJel';
 import { Ikon3d, KeszJel } from '@/ui/kepek';
+import { FelpattanoPipa, Konfetti } from '@/ui/mozgas';
 import { CimSor, Kepernyo } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { fizetesSzolgaltato } from '@/lib/fizetes';
@@ -73,8 +74,10 @@ function StripeEredmeny({ cs, cel, megszakitva }: { cs: string | null; cel: Host
     <Kepernyo fejlec={<CimSor cim={cim} />} dokk={st === 'sikeres' ? <GombE cim={P.result.next} onPress={tovabb} /> : st === 'sikertelen' || st === 'megszakitva' ? <GombE cim={P.result.retry} onPress={ujra} /> : lejart ? <GombE cim="Rendben" onPress={() => router.replace(bekotesben ? '/bekotes' : '/')} /> : undefined}>
       {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
       <Lap style={{ padding: 16 }}>
+        {/* k8 mozgás #6: első sikeres fizetés – rövid, egyszeri konfetti (csökkentett mozgásnál csak a pipa) */}
+        {st === 'sikeres' ? <Konfetti kulcs={`fizetes-${d?.kind ?? ''}`} /> : null}
         <View style={{ alignItems: 'center', marginBottom: 10, minHeight: 84, justifyContent: 'center' }}>
-          {st === 'sikeres' ? <KeszJel pt={84} label="Sikeres fizetés" /> : st === 'feldolgozas' ? lejart ? <Ikon3d nev="ora" pt={72} /> : <ActivityIndicator color={szin.tintakek} size="large" /> : <Ikon3d nev="szamlaszam" pt={72} />}
+          {st === 'sikeres' ? <FelpattanoPipa pt={72} label="Sikeres fizetés" /> : st === 'feldolgozas' ? lejart ? <Ikon3d nev="ora" pt={72} /> : <ActivityIndicator color={szin.tintakek} size="large" /> : <Ikon3d nev="szamlaszam" pt={72} />}
         </View>
         {st === 'sikeres' ? (
           <>

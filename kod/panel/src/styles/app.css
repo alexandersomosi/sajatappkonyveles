@@ -518,7 +518,9 @@ select.doboz:not(.lenyilo > select) { padding-right: 38px;
   :root { --oldalsav: 76px; }
   .logo { padding: 18px 0 12px; align-items: center; }
   .logo .v2-logo { width: 54px !important; height: auto !important; }
-  .logo .al, .nav-cim, .oldalsav-alj .ki, .nav-felirat { display: none; }
+  .logo .al, .nav-cim, .oldalsav-alj .ki { display: none; }
+  /* the label stays for screen readers (visually hidden, not display: none) */
+  .nav-felirat { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   /* the DEMO marker stays, just shorter */
   .demo-sav { margin: 0 8px 8px; padding: 5px 0; font-size: 0; text-align: center; }
   .demo-sav::after { content: "DEMO"; font-size: 11px; font-weight: 750; letter-spacing: .04em; }
@@ -786,3 +788,4 @@ input[type=checkbox].kapcsolo:checked::after { left: 21px; }
 .sor-muveletek { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 /* names never break inside a table row (k8 readability pass) */
 .visszahivas-tabla .nev, .tabla td.elso > .felkover:first-child { white-space: nowrap; }
+.sor-muveletek .sor-flex { flex-wrap: wrap; row-gap: 2px; }

@@ -34,11 +34,11 @@
   --sarga-hover: #FFC11A;
   --sarga-mely: #F2B705;
   --sotet: #10152B;            /* címek, sötét sáv, lábléc */
-  --szoveg: #2A3247;           /* törzsszöveg */
-  --halvany: #5F687D;          /* másodlagos szöveg: bevezető, lábjegyzet */
+  --szoveg: #10152B;           /* törzsszöveg */
+  --halvany: #1F2638;          /* másodlagos szöveg: bevezető, lábjegyzet */
   --cim-halvany: #7A8295;      /* halvány jel világos alapon (pl. a „nem” lista gondolatjele) */
   --cim-halvany-s: #8C94AD;    /* halványabb szöveg sötét alapon (5,97:1) */
-  --sotet-szoveg: #B9C0D4;     /* törzsszöveg sötét alapon */
+  --sotet-szoveg: #FFFFFF;     /* törzsszöveg sötét alapon */
   --sotet-vonal: rgba(255, 255, 255, .12);
   --vonal: #E6E9F2;
   --keret: #DDE2EC;
@@ -203,7 +203,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 }
 .bongeszo-sav { position: relative; display: flex; align-items: center; gap: 1.1cqw; height: 5.4cqw; padding: 0 2.2cqw; background: #F1F3F8; border-bottom: 1px solid #E3E6EE; }
 .bongeszo-sav i { width: 1.25cqw; height: 1.25cqw; border-radius: 50%; background: #D3D8E3; }
-.bongeszo-sav span { position: absolute; left: 50%; top: 50%; width: 38cqw; margin-left: -19cqw; height: 3.3cqw; margin-top: -1.65cqw; border-radius: 99px; background: #fff; box-shadow: 0 0 0 1px #E3E6EE; display: grid; place-items: center; font-size: 1.75cqw; line-height: 1; font-weight: 500; color: #5F687D; letter-spacing: 0; }
+.bongeszo-sav span { position: absolute; left: 50%; top: 50%; width: 38cqw; margin-left: -19cqw; height: 3.3cqw; margin-top: -1.65cqw; border-radius: 99px; background: #fff; box-shadow: 0 0 0 1px #E3E6EE; display: grid; place-items: center; font-size: 1.75cqw; line-height: 1; font-weight: 500; color: #10152B; letter-spacing: 0; }
 .bongeszo > .valto { position: relative; overflow: hidden; aspect-ratio: 1600 / 1000; background: #F3F5FB; }
 
 /* váltakozó képek (hős telefon + böngésző): egymásra rakva, az .aktiv látszik. JS nélkül az első kép áll.
@@ -450,8 +450,8 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .ert-szoveg { flex: 1; min-width: 0; display: grid; gap: .08em; }
 .ert-szoveg b, .ert-szoveg span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
 .ert-szoveg b { padding-right: 2.2em; font-size: .92em; font-weight: 700; }
-.ert-szoveg span { font-size: .82em; color: #475066; }
-.ertesites small { position: absolute; top: .62em; right: .85em; font-size: .7em; color: #5F687D; }
+.ert-szoveg span { font-size: .82em; color: #10152B; }
+.ertesites small { position: absolute; top: .62em; right: .85em; font-size: .7em; color: #10152B; }
 /* kiemelő keret egy elem körül: mindenhol ugyanaz a sárga */
 .kiemeles { border: .17em solid var(--sarga-mely); border-radius: .9em; box-shadow: 0 0 0 .3em rgba(255, 255, 255, .55), 0 .6em 1.4em -.6em rgba(16, 21, 43, .45); }
 /* maszk: a mozgás előtt eltakarja, ami majd „megérkezik”; kivágás: a képből kivágott, becsúszó sor;
@@ -476,7 +476,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 /* --- 2. félretenni (01_fooldal: gomb x 80–364, y 474–526; az „Idei kereteid” kártya y 640–749-ig látszik, ott a dokk) --- */
 .t-felretesz { left: 0; right: 0; top: 75%; height: 13.74%; }
 .szamlalo { top: 75.85%; padding: .72em 1em .78em; }
-.szamlalo-fej { display: flex; align-items: center; justify-content: space-between; gap: .5em; font-size: .86em; font-weight: 650; color: #475066; }
+.szamlalo-fej { display: flex; align-items: center; justify-content: space-between; gap: .5em; font-size: .86em; font-weight: 650; color: #10152B; }
 .szamlalo-fej em { font-style: normal; font-weight: 750; color: #0A5A38; background: #DFF5E8; border-radius: 99px; padding: .12em .55em; white-space: nowrap; }
 .szamlalo-szam { margin-top: .1em; font-size: 1.6em; font-weight: 800; letter-spacing: -.03em; line-height: 1.2; white-space: nowrap; }
 .szamlalo-szam b { font-weight: 800; font-variant-numeric: tabular-nums; }
@@ -489,11 +489,11 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 
 /* --- 4. fotózás (64_fotozas: keret y 128–514, „Még nincs oldal” y 537–606, exponáló közepe 195,690) --- */
 .papir {
-  left: 26%; top: 21.5%; width: 48%; height: 33%; padding: 1em .9em; border-radius: .3em; background: #FFFEF8; color: #2A3247;
+  left: 26%; top: 21.5%; width: 48%; height: 33%; padding: 1em .9em; border-radius: .3em; background: #FFFEF8; color: #10152B;
   box-shadow: 0 1em 2em -.6em rgba(0, 0, 0, .6); transform: rotate(-3deg); display: flex; flex-direction: column; gap: .5em;
 }
 .papir b { font-size: .95em; letter-spacing: .12em; text-align: center; }
-.papir small { font-size: .78em; text-align: center; color: #5F687D; margin-top: -.3em; }
+.papir small { font-size: .78em; text-align: center; color: #10152B; margin-top: -.3em; }
 .papir i { display: block; height: .32em; border-radius: 99px; background: #DCE0EA; }
 .papir i.rovid { width: 55%; }
 .papir span { margin-top: auto; height: .5em; border-top: .12em dashed #C9CEDA; }
@@ -519,12 +519,12 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .keret-kartya { top: 48.6%; padding: .9em 1em 1em; }
 .keret-fej { display: flex; align-items: center; gap: .6em; }
 .keret-fej > span:last-child { display: grid; }
-.keret-fej small { font-size: .82em; font-weight: 650; color: #475066; }
+.keret-fej small { font-size: .82em; font-weight: 650; color: #10152B; }
 .keret-fej b { font-size: 1.45em; font-weight: 800; letter-spacing: -.03em; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.keret-meg { margin-top: .35em; font-size: .8em; color: #475066; }
+.keret-meg { margin-top: .35em; font-size: .8em; color: #10152B; }
 .csik { display: block; position: relative; margin-top: .6em; height: .55em; border-radius: 99px; background: #E9ECF4; overflow: hidden; }
 .csik i { position: absolute; inset: 0; border-radius: 99px; background: var(--sarga); transform-origin: left center; transform: scaleX(.8158); }
-.keret-sor { margin-top: .45em; display: flex; justify-content: space-between; gap: .4em; font-size: .76em; color: #475066; white-space: nowrap; }
+.keret-sor { margin-top: .45em; display: flex; justify-content: space-between; gap: .4em; font-size: .76em; color: #10152B; white-space: nowrap; }
 .keret-sor b { color: var(--sotet); font-weight: 750; font-variant-numeric: tabular-nums; }
 
 /* ---------- könyvelő: osztott fej + „szerződésmelléklet”-szerű lista ---------- */
@@ -607,32 +607,32 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .zaro { background: var(--kek); color: #fff; padding: 96px 0; }
 .zaro-racs { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; align-items: start; }
 .zaro h2 { color: #fff; }
-.zaro-szoveg > p:not(.zaro-mikro) { margin: 16px 0 32px; font-size: 19px; line-height: 1.55; color: #DCE2FF; max-width: 30em; }
-.zaro-mikro { margin-top: 16px; font-size: 15px; color: #C9D1FF; }
+.zaro-szoveg > p:not(.zaro-mikro) { margin: 16px 0 32px; font-size: 19px; line-height: 1.55; color: #FFFFFF; max-width: 30em; }
+.zaro-mikro { margin-top: 16px; font-size: 15px; color: #FFFFFF; }
 .zaro-visszahivas { padding-left: 48px; border-left: 1px solid rgba(255, 255, 255, .2); }
 .zaro-visszahivas h3 { color: #fff; font-size: 20px; line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 10px; }
-.zaro-visszahivas p { font-size: 15px; color: #DCE2FF; }
+.zaro-visszahivas p { font-size: 15px; color: #FFFFFF; }
 .zaro-email { margin-top: 16px; }
 .zaro a:not(.gomb) { color: #fff; font-weight: 500; }
 .zaro :focus-visible { outline-color: #fff; }
 
 /* ---------- lábléc ---------- */
-.lablec { background: var(--sotet); color: #A9B0C5; padding: 72px 0 32px; font-size: 14px; }
+.lablec { background: var(--sotet); color: #FFFFFF; padding: 72px 0 32px; font-size: 14px; }
 .lablec :focus-visible { outline-color: #fff; }
 .lablec-racs { display: grid; grid-template-columns: minmax(0, 2.2fr) repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr); gap: 40px; }
 .lablec-marka .logo img { height: 34px; }
 .lablec-marka p { margin-top: 16px; max-width: 18em; line-height: 1.55; }
 .lablec-oszlop h2 { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
-.lablec-oszlop a { display: block; color: #C9CFDF; text-decoration: none; margin-bottom: 10px; }
+.lablec-oszlop a { display: block; color: #FFFFFF; text-decoration: none; margin-bottom: 10px; }
 .lablec-oszlop a:hover { color: #fff; text-decoration: underline; }
 .lablec-oszlop p { line-height: 1.5; }
 .impresszum { margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(255, 255, 255, .10); }
 .impresszum h2 { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
 .impresszum dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 40px; }
-.impresszum dt { font-size: 12.5px; color: #9AA2B6; margin-bottom: 2px; }
-.impresszum dd { color: #DDE1EC; font-size: 14px; }
-.impresszum a { color: #DDE1EC; }
-.lablec-also { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .10); display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; font-size: 13px; color: #9AA2B6; }
+.impresszum dt { font-size: 12.5px; color: #FFFFFF; margin-bottom: 2px; }
+.impresszum dd { color: #FFFFFF; font-size: 14px; }
+.impresszum a { color: #FFFFFF; }
+.lablec-also { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .10); display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; font-size: 13px; color: #FFFFFF; }
 
 /* ================= MOZGÁS (csak a telefonok képernyőjén) =================
    Alap (JS nélkül, csökkentett mozgásnál, képernyőképen): minden réteg a végállapotában; a maszkok, kivágások, koppintások,
@@ -1005,7 +1005,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .kinek-racs h3 { margin-bottom: 22px; }
 .kinek-nem h3 { color: var(--sotet); }
 .kinek-nem .lista-nem li::before { color: #B4534B; }
-.kinek-nem .megjegyzes { color: #5A5F70; }
+.kinek-nem .megjegyzes { color: #10152B; }
 
 /* így indul: ikon-csempe, a sarkán a számkarika (kék, az első sárga), köztük kék összekötő vonal */
 .lepes-jel { position: relative; display: inline-block; vertical-align: top; }
@@ -1073,7 +1073,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 /* bizalmi sáv: telt márkakék doboz */
 .bizalom.panel { --panel: #1428DB; --csempe: #fff; background: #1428DB; }
 .bizalom h3 { color: #fff; }
-.bizalom p { color: #D6DEFF; }
+.bizalom p { color: #FFFFFF; }
 .bizalom a { color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .bizalom a:hover { color: #fff; text-decoration-thickness: 2px; }
 .bizalom :focus-visible { outline-color: #fff; }
@@ -1085,20 +1085,20 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .kinek-igen .pipa { color: #fff; }
 
 /* kinek szól: telt, de nem riasztó sötét palaszürke „nem” doboz (piros helyett, ami hibaüzenetnek hatna) */
-.kinek-nem { --csempe: #fff; background: #2A3247; color: #E3E7F0; }
+.kinek-nem { --csempe: #fff; background: #2A3247; color: #FFFFFF; }
 .kinek-nem h3 { color: #fff; }
-.kinek-nem .lista { color: #E3E7F0; }
+.kinek-nem .lista { color: #FFFFFF; }
 .kinek-nem .lista-nem li::before { color: rgba(255, 255, 255, .45); }
-.kinek-nem .megjegyzes { color: #B9C1D4; }
+.kinek-nem .megjegyzes { color: #FFFFFF; }
 
 /* ================= 4f PRÓBA (11-21): telt sárga „Így indul” és „Gyakori kérdések” =================
    A tulaj: „a Gyakori kérdések és az Így indul a könyvelésed szekció is rendes sárga legyen, ne ilyen átlátszó”.
    A halvány #FFF8E8 helyett telt márkasárga #FFC93C, sötét szöveggel. Lekerekítés marad.
    Kontraszt #FFC93C alapon: cím/kérdés #10152B 11,7:1, törzsszöveg #2A3247 8,3:1, kék számkarika helyett sötét #10152B (fehér szám 18:1).
    Benne: fehér ikoncsempék, sötét számkarikák (az első is), sötét összekötő vonal, sötét elválasztók és +/× jelek, sötét aláhúzott linkek. */
-.panel-meleg { --panel: #FFC93C; --panel-vonal: rgba(16, 21, 43, .32); --csempe: #fff; background: #FFC93C; color: #2A3247; }
+.panel-meleg { --panel: #FFC93C; --panel-vonal: rgba(16, 21, 43, .32); --csempe: #fff; background: #FFC93C; color: #10152B; }
 .panel-meleg h2, .panel-meleg h3 { color: #10152B; }
-.panel-meleg .bevezeto, .panel-meleg p { color: #2A3247; }
+.panel-meleg .bevezeto, .panel-meleg p { color: #10152B; }
 .panel-meleg a { color: #10152B; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .panel-meleg a:hover { color: #10152B; text-decoration-thickness: 2px; }
 .panel-meleg :focus-visible { outline-color: #10152B; }
@@ -1111,7 +1111,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .panel-meleg .gyik-oszlop { border-top-color: var(--panel-vonal); }
 .panel-meleg .gyik-lista summary { color: #10152B; }
 .panel-meleg .gyik-lista summary:hover { color: #10152B; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
-.panel-meleg .gyik-lista details p { color: #2A3247; }
+.panel-meleg .gyik-lista details p { color: #10152B; }
 
 /* ================= 4h (11-21): telt „Mennyibe kerül?”, „Miben más” és „Ki könyvel neked?” =================
    A tulaj (11:30, telefonról): „Ezek a részek se átlátszóak legyenek.” A halványkék árpanel, a táblázat halványkék Adózz-cellái
@@ -1125,9 +1125,9 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
    Az ikoncsempék fehérek maradnak, mint az appban. */
 
 /* árak: telt márkakék panel */
-.panel-kek-h { --panel: #1428DB; --panel-vonal: rgba(255, 255, 255, .26); --csempe: #fff; background: #1428DB; color: #D6DEFF; }
+.panel-kek-h { --panel: #1428DB; --panel-vonal: rgba(255, 255, 255, .26); --csempe: #fff; background: #1428DB; color: #FFFFFF; }
 .panel-kek-h .resz-fej h2 { color: #fff; }
-.panel-kek-h .resz-fej .bevezeto, .panel-kek-h .resz-fej p { color: #D6DEFF; }
+.panel-kek-h .resz-fej .bevezeto, .panel-kek-h .resz-fej p { color: #FFFFFF; }
 .panel-kek-h .resz-fej a { color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .panel-kek-h .resz-fej a:hover { color: #fff; text-decoration-thickness: 2px; }
 .panel-kek-h .resz-fej :focus-visible, .panel-kek-h .ar-kulon :focus-visible { outline-color: #fff; }
@@ -1136,11 +1136,11 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .panel-kek-h .arkartya::before { background: var(--sarga); }
 /* külön díjak a kék panelen */
 .panel-kek-h .ar-kulon h3 { color: #fff; }
-.panel-kek-h .ar-kulon-bev, .panel-kek-h .ar-kulon-meg { color: #D6DEFF; }
+.panel-kek-h .ar-kulon-bev, .panel-kek-h .ar-kulon-meg { color: #FFFFFF; }
 .panel-kek-h .dij dt { color: #fff; }
-.panel-kek-h .dij dt span { color: #D6DEFF; }
+.panel-kek-h .dij dt span { color: #FFFFFF; }
 .panel-kek-h .dij dd { color: #fff; }
-.panel-kek-h .dij dd small { color: #D6DEFF; }
+.panel-kek-h .dij dd small { color: #FFFFFF; }
 .panel-kek-h .dij dd.dij-egyedi { color: #fff; }
 .panel-kek-h .dij .cimke { background: #fff; color: var(--szoveg); }
 
@@ -1152,7 +1152,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 /* ki könyvel neked: telt zöld panel */
 .panel-szurke { --panel: #167A45; --panel-vonal: rgba(255, 255, 255, .28); --csempe: #fff; background: #167A45; color: #fff; }
 .panel-szurke h2, .panel-szurke h3 { color: #fff; }
-.panel-szurke .bevezeto, .panel-szurke .resz-meg { color: #EAF5EE; }
+.panel-szurke .bevezeto, .panel-szurke .resz-meg { color: #FFFFFF; }
 .panel-szurke .feladatok dt { color: #fff; }
 .panel-szurke .feladatok dd { color: #fff; }
 .panel-szurke a { color: #fff; }
@@ -1175,10 +1175,10 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .zaro .gomb-vonal + .zaro-email { margin-top: 20px; }
 
 .lablec-meres { display: grid; gap: 2px; max-width: 36em; }
-.szoveg-gomb { background: none; border: 0; padding: 4px 0; margin: 0; font: inherit; font-size: 13px; color: #C9CFDF; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: pointer; }
+.szoveg-gomb { background: none; border: 0; padding: 4px 0; margin: 0; font: inherit; font-size: 13px; color: #FFFFFF; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: pointer; }
 .szoveg-gomb:hover { color: #fff; }
 .szoveg-gomb + .szoveg-gomb { margin-left: 14px; }
-#meres-visszajelzes { margin-left: 10px; color: #C9CFDF; }
+#meres-visszajelzes { margin-left: 10px; color: #FFFFFF; }
 #meres-visszajelzes:empty { display: none; }
 
 .hj-ablak { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 60; max-width: 560px; margin: 0 auto; background: #fff; color: var(--szoveg); border-radius: 16px; box-shadow: 0 0 0 1px rgba(16, 21, 43, .08), 0 12px 36px -8px rgba(16, 21, 43, .35); padding: 20px 20px 18px; font-size: 15px; line-height: 1.5; }
@@ -1221,3 +1221,9 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .fejlec .mobilmenu summary span { background: #fff; }
 .fejlec .mobilmenu-lap a.mobil-belepes { background: var(--kek); color: #fff; }
 .fejlec :focus-visible { outline-color: #fff; }
+
+/* Erősebb kontraszt (tulaj 11-21: szeretem a kontrasztot) – a szürke szövegek feketére, a sötét vagy színes alapon lévő halvány szövegek fehérre. A régi színek a _regi/elotte_kontraszt mappában. */
+
+/* Visszahívás gomb a záró kék panelen (tulaj 11-21: legyen felhívóbb, most beleolvad) – telt fehér, vastag kék felirat, árnyék */
+.zaro .gomb.gomb-vonal { background: #fff; color: var(--kek); font-weight: 700; box-shadow: 0 6px 18px rgba(10, 16, 60, .28); }
+.zaro .gomb.gomb-vonal:hover { background: #E8ECFF; color: var(--kek-sotet); }

@@ -2,13 +2,16 @@
 import { jelzoDoboz } from './alap';
 import { useState } from 'react';
 import { View } from 'react-native';
-import Svg, { ClipPath, Defs, G, Line, Pattern, Rect } from 'react-native-svg';
+import Svg, { Defs, Line, Pattern, Rect } from 'react-native-svg';
+import { ToltoCsik } from './mozgas';
 import type { Meter } from '../_shared/api';
 import { szam } from '../lib/format';
 import { szin } from '../theme/tokens';
 import { KeszJel } from './kepek';
 import { T } from './T';
 
+/** v2 .csik: 9 pt-os sín, a tömör rész sárga (eddig), a csíkozott kék rész a várható év végéig. A tömör rész betöltéskor
+ *  balról feltöltődik (k8 mozgás #3, 400 ms; csökkentett mozgásnál azonnal kitöltve). */
 export function MeroSav({ arany, varhato }: { arany: number; varhato: number }) {
   const [w, setW] = useState(0);
   const a = Math.max(0, Math.min(1, arany));
@@ -16,28 +19,21 @@ export function MeroSav({ arany, varhato }: { arany: number; varhato: number }) 
   return (
     <View
       onLayout={(e) => setW(e.nativeEvent.layout.width)}
-      style={{ height: 10, marginTop: 14, marginBottom: 9 }}
+      style={{ height: 9, marginTop: 14, marginBottom: 9, borderRadius: 5, backgroundColor: szin.csikAlap, overflow: 'hidden' }}
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: 100, now: Math.round(a * 100) }}
     >
-      {w > 0 && (
-        <Svg width={w} height={10}>
+      {w > 0 && v > a ? (
+        <Svg width={w * (v - a)} height={9} style={{ position: 'absolute', left: w * a, top: 0 }}>
           <Defs>
-            <ClipPath id="sav">
-              <Rect x={0} y={0} width={w} height={10} rx={5} />
-            </ClipPath>
             <Pattern id="csik" patternUnits="userSpaceOnUse" width={5} height={5} patternTransform="rotate(45)">
               <Line x1={0} y1={0} x2={0} y2={5} stroke={szin.tintakek} strokeWidth={1.6} />
             </Pattern>
           </Defs>
-          <G clipPath="url(#sav)">
-            <Rect x={0} y={0} width={w} height={10} fill={szin.nyomott} />
-            <Rect x={w * a} y={0} width={Math.max(0, w * (v - a))} height={10} fill="url(#csik)" opacity={0.75} />
-            <Rect x={0} y={0} width={w * a} height={10} rx={5} fill={szin.tintakek} />
-            <Rect x={0.5} y={0.5} width={w - 1} height={9} rx={4.5} fill="none" stroke={szin.hajszal} strokeWidth={1} />
-          </G>
+          <Rect x={0} y={0} width={w * (v - a)} height={9} fill="url(#csik)" opacity={0.55} />
         </Svg>
-      )}
+      ) : null}
+      <ToltoCsik arany={a} magas={9} style={{ position: 'absolute', left: 0, right: 0, top: 0, backgroundColor: 'transparent' }} szinAlap="transparent" />
     </View>
   );
 }
@@ -45,7 +41,7 @@ export function MeroSav({ arany, varhato }: { arany: number; varhato: number }) 
 export function Mero({ meter, mellek, balVeg, jobbVeg }: { meter: Meter; mellek: string; balVeg: string; jobbVeg: string }) {
   return (
     <View style={{ paddingTop: 17, paddingHorizontal: 18, paddingBottom: 16 }}>
-      <T m={17} s={650} lh={1.4} ls={-0.01}>
+      <T m={17} s={750} lh={1.35} ls={-0.01}>
         {meter.sentence}
       </T>
       <T m={15} lh={1.5} c={szin.halvany} style={{ marginTop: 3 }}>

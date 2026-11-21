@@ -21,6 +21,7 @@ import { GombE, GombM, KartyaFej, Lap } from '@/ui/alap';
 import { CimSor, Fulsor, FULSOR_MAGASSAG, Kepernyo } from '@/ui/keret';
 import { BehuzoSav } from '@/ui/asztali/BehuzoSav';
 import { ErkezoElem, RepuloKep, Villanas } from '@/ui/mozgas';
+import { DemoPirula } from '@/ui/demoAllapot';
 import { mozgasKi } from '@/lib/mozgas';
 import { szin } from '@/theme/tokens';
 import { Arckep, KeszJel } from '@/ui/kepek';
@@ -359,7 +360,10 @@ function FotozasTartalom() {
     <View style={{ flex: 1, backgroundColor: szin.kamera }}>
       {/* felső sor: Mégse · {fn} kapja meg */}
       <View style={{ paddingTop: felul + 4, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-        <Kerek cim="Mégse" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Kerek cim="Mégse" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
+          <DemoPirula kicsi />
+        </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
           <View style={{ borderRadius: 17, borderWidth: 2, borderColor: 'rgba(255,255,255,0.7)' }}>
             <Arckep pt={30} />

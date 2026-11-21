@@ -128,17 +128,11 @@ export default function FizesdKi() {
 
 function Sav({ cim, szoveg }: { cim: string; szoveg: string }) {
   return (
-    <Fejlec rozX={318} rozY={110} alsoTer={22}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, paddingRight: 70 }}>
-        <SavVissza onPress={() => vissza('/')} />
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12, paddingHorizontal: 16 }}>
-        <Ikon3d nev="szamlaszam" pt={30} />
-        <T m={26} maxFontSizeMultiplier={1.4} s={700} lh={1.15} ls={-0.022} c="#fff" szam style={{ flexShrink: 1 }} accessibilityRole="header">
-          {cim}
-        </T>
-      </View>
-      <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 6, paddingLeft: 54, paddingRight: 16 }}>
+    <Fejlec kis alsoTer={20} vissza={{ cim: 'Vissza', onPress: () => vissza('/') }}>
+      <T m={25} maxFontSizeMultiplier={1.4} s={800} lh={1.14} ls={-0.025} c="#fff" szam style={{ marginTop: 10, paddingHorizontal: 18 }} accessibilityRole="header">
+        {cim}
+      </T>
+      <T m={15} lh={1.45} c={szin.fejlecHalvany} style={{ marginTop: 6, paddingHorizontal: 18 }}>
         {szoveg}
       </T>
     </Fejlec>

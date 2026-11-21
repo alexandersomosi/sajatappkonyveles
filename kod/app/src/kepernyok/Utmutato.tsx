@@ -406,21 +406,15 @@ export function SavCim({ vissza, visszaCim = 'Vissza', cim, al, jobb, children }
   // SPEC §29.10.3: in the guided run the band gets "Vissza" + "Később folytatom" and the progress bar
   const vezetett = useVezetettParam();
   return (
-    <Fejlec rozX={300} rozY={70} alsoTer={18}>
+    <Fejlec kis alsoTer={20} vissza={vezetett ? null : { cim: visszaCim, onPress: vissza }}>
       {vezetett ? (
         <>
           <VezetettFelsoSor vissza={vissza} kulcs={vezetett} />
-          <VezetettHaladas style={{ marginTop: 8, marginBottom: 6, paddingHorizontal: 20 }} />
+          <VezetettHaladas style={{ marginTop: 10, marginBottom: 6, paddingHorizontal: 18 }} />
         </>
-      ) : (
-        <Pressable accessibilityRole="link" onPress={vissza} hitSlop={6} style={{ minHeight: 40, justifyContent: 'center', paddingHorizontal: 20, alignSelf: 'flex-start' }}>
-          <T m={16} s={500} c="#fff" alahuz>
-            {visszaCim}
-          </T>
-        </Pressable>
-      )}
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10, paddingTop: 4, paddingHorizontal: 20 }}>
-        <T m={keskeny ? 24 : 27} maxFontSizeMultiplier={1.15} s={700} lh={1.17} ls={-0.024} c="#fff" style={{ flex: 1 }} accessibilityRole="header">
+      ) : null}
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10, paddingTop: 10, paddingHorizontal: 18 }}>
+        <T m={keskeny ? 23 : 25} maxFontSizeMultiplier={1.15} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ flex: 1 }} accessibilityRole="header">
           {cim}
         </T>
         {jobb ? (
@@ -430,7 +424,7 @@ export function SavCim({ vissza, visszaCim = 'Vissza', cim, al, jobb, children }
         ) : null}
       </View>
       {al ? (
-        <T m={16} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: 20 }}>
+        <T m={15} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: 18 }}>
           {al}
         </T>
       ) : null}

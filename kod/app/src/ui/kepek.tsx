@@ -67,7 +67,7 @@ export function TalajArnyek(_: { szel: number; top?: number; sotet?: boolean }) 
 export function Targykep({ nev, children, style }: { nev: TargykepNev; arnyek?: number; children?: React.ReactNode; style?: StyleProp<ViewStyle>; sotet?: boolean }) {
   const uj = TARGYKEP_UJ[nev as keyof typeof TARGYKEP_UJ] ?? 'dosszie';
   return (
-    <View style={[{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingTop: 6 }, style, { width: undefined, height: undefined }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View style={[{ alignSelf: 'center', alignItems: 'center', justifyContent: 'center', paddingTop: 6 }, style, { width: undefined, height: undefined }]} aria-hidden>
       <Csempe nev={uj} meret="nagy" />
       {children}
     </View>

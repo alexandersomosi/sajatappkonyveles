@@ -472,7 +472,7 @@ export default function Fooldal() {
           <GombM cim={P29.fizesdKi.homeButton} onPress={() => router.push('/fizesd-ki')} style={{ marginTop: 10, alignSelf: 'flex-start', marginLeft: 38 }} />
         </Lap>
       ) : null}
-      <Racs>
+      <Racs beuszo="fooldal">
       {h.kataRisk?.length ? <Racs.Szeles><KataKockazat items={h.kataRisk} /></Racs.Szeles> : null}
       {h.twoNumbers ? <KetSzam v={h.twoNumbers} /> : null}
       {h.kata?.meter ? <KataKeret k={h.kata} /> : null}
