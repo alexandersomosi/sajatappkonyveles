@@ -54,7 +54,7 @@ function SzamlaTartalom() {
         <>
           {/* k7c2 (SPEC §28.K.11): katásként cégnek számlázni veszélyes – piros sor a számlán */}
           {kataRisk ? (
-            <Lap style={{ padding: 16, backgroundColor: szin.veszelyAlap }}>
+            <Lap style={{ padding: 16, borderLeftWidth: 4, borderLeftColor: szin.veszely }}>
               <T m={16} s={700} lh={1.35} c={szin.veszelySzoveg}>
                 {kataRisk.title}
               </T>

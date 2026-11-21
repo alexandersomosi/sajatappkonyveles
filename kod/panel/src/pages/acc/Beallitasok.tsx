@@ -80,7 +80,7 @@ export default function Beallitasok() {
                     </span>
                   </label>
                   <p className="sugo" style={{ marginTop: 12 }}>
-                    Időpontot az ügyfelek már nem foglalnak: visszahívást kérnek, és a csapat 24–48 órán belül hívja őket. Ha neked adnak át egyet, a Visszahívások oldalon látod.
+                    Időpontot az ügyfelek már nem foglalnak: visszahívást kérnek, és a csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Ha neked adnak át egyet, a Visszahívások oldalon látod.
                   </p>
                   <div className="gombsor" style={{ marginTop: 18 }}>
                     <button className="gomb-e" disabled={ment.isPending || !f.responseTimeText.trim() || valaszidoTilos(f.responseTimeText)} onClick={() => ment.mutate()}>
@@ -98,7 +98,7 @@ export default function Beallitasok() {
                 <div className="lap-fej">
                   <h2>Így írod alá a leveleket</h2>
                 </div>
-                <div className="belso" style={{ paddingTop: 0, background: 'var(--alap)', borderRadius: '0 0 18px 18px', paddingBottom: 18 }}>
+                <div className="belso" style={{ paddingTop: 0, background: 'var(--alap)', borderRadius: '0 0 var(--r-lap) var(--r-lap)', paddingBottom: 18 }}>
                   <div style={{ height: 14 }} />
                   <Level megszolitas="Kedves Kata!" szoveg="Kiszámoltam, mennyit kell most befizetned. Ez már a végleges összeg." alairo={konyvelo.displayName} datumIso={today()} alairas={konyvelo.signatureSvgPath} />
                   <p className="halvany kicsi" style={{ marginTop: 10 }}>

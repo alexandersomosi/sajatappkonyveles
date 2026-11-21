@@ -14,7 +14,7 @@ import { mediaUrl } from '../lib/media';
 import { MASOLAS_HIBA, vagolapra } from '../lib/vagolap';
 import { forma, szin } from '../theme/tokens';
 import { beallitasIr, beallitasOlvas } from '../lib/tarolo';
-import { Fejlec, GombE, GombSz, Lap, Pipa, Szakasz } from '../ui/alap';
+import { Fejlec, GombE, GombSz, Lap, Pipa, Szakasz, jelzoDoboz } from '../ui/alap';
 import { Ikon3d, KeszJel, type Ikon3dNev } from '../ui/kepek';
 import { KepNezo } from '../ui/KepNezo';
 import { useJelzes } from '../ui/keret';
@@ -238,7 +238,7 @@ export function LepesLap({
         {s.text}
       </T>
       {s.hold ? (
-        <View accessibilityRole="alert" style={{ marginTop: 12, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14, flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}>
+        <View accessibilityRole="alert" style={{ marginTop: 12, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14, flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}>
           <Ikon3d nev="ora" pt={32} />
           <T m={16} s={650} lh={1.5} c={szin.borostyanSzoveg} style={{ flex: 1 }}>
             {s.hold}
@@ -253,7 +253,7 @@ export function LepesLap({
         </View>
       ) : null}
       {s.warning ? (
-        <View style={{ marginTop: 10, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14 }}>
+        <View style={{ marginTop: 10, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14 }}>
           <T m={16} s={600} lh={1.5} c={szin.borostyanSzoveg}>
             {s.warning}
           </T>
@@ -351,7 +351,7 @@ export function UtmutatoTorzs({
     <>
       {g.activityPending ? (
         // review k3c2: the hold must be seen BEFORE the client opens the NAV form, not only at step 5
-        <View accessibilityRole="alert" style={{ marginBottom: 12, borderRadius: forma.lap, backgroundColor: szin.borostyanAlap, padding: 16, flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+        <View accessibilityRole="alert" style={{ marginBottom: 12, borderRadius: forma.lap, ...jelzoDoboz('figyelem'), padding: 16, flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
           <Ikon3d nev="ora" pt={36} />
           <T m={16} s={650} lh={1.5} c={szin.borostyanSzoveg} style={{ flex: 1 }}>
             {ACTIVITY_PENDING_BANNER}
@@ -382,7 +382,7 @@ export function UtmutatoTorzs({
         </>
       ) : null}
       {g.outdated && g.outdatedText ? (
-        <View style={{ marginTop: 14, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14 }}>
+        <View style={{ marginTop: 14, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14 }}>
           <T m={16} s={650} lh={1.5} c={szin.borostyanSzoveg}>
             {g.outdatedText}
           </T>
@@ -613,7 +613,7 @@ export function UtmutatoLepesenkent({
     return (
       <>
         {g.activityPending ? (
-          <View accessibilityRole="alert" style={{ marginBottom: 12, borderRadius: forma.lap, backgroundColor: szin.borostyanAlap, padding: 16, flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
+          <View accessibilityRole="alert" style={{ marginBottom: 12, borderRadius: forma.lap, ...jelzoDoboz('figyelem'), padding: 16, flexDirection: 'row', gap: 12, alignItems: 'flex-start' }}>
             <Ikon3d nev="ora" pt={36} />
             <T m={16} s={650} lh={1.5} c={szin.borostyanSzoveg} style={{ flex: 1 }}>
               {ACTIVITY_PENDING_BANNER}
@@ -665,7 +665,7 @@ export function UtmutatoLepesenkent({
           </>
         ) : null}
         {g.outdated && g.outdatedText ? (
-          <View style={{ marginTop: 14, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14 }}>
+          <View style={{ marginTop: 14, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14 }}>
             <T m={16} s={650} lh={1.5} c={szin.borostyanSzoveg}>
               {g.outdatedText}
             </T>

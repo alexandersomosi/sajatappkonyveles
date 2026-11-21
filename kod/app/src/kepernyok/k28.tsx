@@ -13,13 +13,13 @@ import { szam } from '@/lib/format';
 import { szin } from '@/theme/tokens';
 import { Cimke, Fejlec, GombE, GombM, GombSz, Lap, Szakasz } from '@/ui/alap';
 import { Ikon3d } from '@/ui/kepek';
-import { AlsoLap, useJelzes } from '@/ui/keret';
+import { AlsoLap, useJelzes, Kartyak } from '@/ui/keret';
 import { MiEzKor } from '@/ui/Magyarazat';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 
 /** A szakasz tartalma a cím vonalán kezdődik (C: `.beljebb { padding-left: 38px }`). */
-export const BELJEBB = 38;
+export const BELJEBB = 54;
 
 /** Egy nagy szám (22/700, táblázatos), a „Ft” kisebb. */
 export function NagySzam({ huf, elotte, m = 22 }: { huf: number; elotte?: string; m?: number }) {
@@ -112,7 +112,7 @@ function Gyuru({ arany, maradt }: { arany: number; maradt: number }) {
 export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
   const [jelol, setJelol] = useState(false);
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon="szamlaszam" cim={RESERVE_TEXTS.kartya.title} jobbra={<MiEzKor kulcs="felretesz_miert" />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
         <View style={{ paddingLeft: BELJEBB }}>
@@ -152,7 +152,7 @@ export function FelreteszKartya({ c, fn }: { c: ReserveCard; fn: string }) {
         </View>
       </Lap>
       <JelolesLap lathato={jelol} bezar={() => setJelol(false)} ev={c.year} most={c.markedHuf ?? null} />
-    </>
+    </Kartyak>
   );
 }
 
@@ -193,7 +193,7 @@ function JelolesLap({ lathato, bezar, ev, most }: { lathato: boolean; bezar: () 
 // ---------- „Mennyit kerestem?” (SPEC §28.4.4) ----------
 export function KeresetKartya({ e }: { e: EarningsCard }) {
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} jobbra={<MiEzKor kulcs="kereset_miert" />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
         <View style={{ paddingLeft: BELJEBB }}>
@@ -216,7 +216,7 @@ export function KeresetKartya({ e }: { e: EarningsCard }) {
           <GombSz cim={EARNINGS_TEXTS.cardLink} m={16} onPress={() => router.push('/kereset')} style={{ minHeight: 44, justifyContent: 'center' }} />
         </View>
       </Lap>
-    </>
+    </Kartyak>
   );
 }
 
@@ -225,7 +225,7 @@ function TeendoSzakasz({ ikon, cim, szoveg, gomb, onPress, masik }: { ikon: Para
   // 320 px: a long title next to the capsule broke inside the word ("vállalkozás / od") – the capsule goes under the text
   const keskeny = useWindowDimensions().width < 360 && cim.length > 10;
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon={ikon} cim={cim} jobbra={keskeny ? undefined : <GombM cim={gomb} onPress={onPress} />} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: masik ? 4 : 14 }}>
         <View style={{ paddingLeft: BELJEBB }}>
@@ -236,7 +236,7 @@ function TeendoSzakasz({ ikon, cim, szoveg, gomb, onPress, masik }: { ikon: Para
           {masik ? <GombSz cim={masik.cim} m={16} onPress={masik.onPress} style={{ minHeight: 44, justifyContent: 'center' }} /> : null}
         </View>
       </Lap>
-    </>
+    </Kartyak>
   );
 }
 
@@ -292,7 +292,7 @@ export function TartalekBlokk({ r, haviFix, fn }: { r: InvoiceReserveView; haviF
   const [miert, setMiert] = useState(false);
   const line = r.line + (r.nextYear ? RESERVE_TEXTS.jovore : '');
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon="szamlaszam" cim={RESERVE_TEXTS.blockTitle} jobbra={r.zone !== 'nincs_adat' ? <GombM cim={RESERVE_TEXTS.miertLink} onPress={() => setMiert(true)} /> : undefined} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
         <View style={{ paddingLeft: BELJEBB }}>
@@ -322,7 +322,7 @@ export function TartalekBlokk({ r, haviFix, fn }: { r: InvoiceReserveView; haviF
         </View>
       </Lap>
       <MiertLap lathato={miert} bezar={() => setMiert(false)} r={r} fn={fn} />
-    </>
+    </Kartyak>
   );
 }
 

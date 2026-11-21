@@ -25,16 +25,21 @@ export function Ertesitesek() {
   return (
     <>
       <button type="button" className="nav-elem ertesites-gomb" onClick={() => setNyitva(true)} title={olvasatlan ? `${olvasatlan} olvasatlan értesítés` : 'Értesítések'}>
-        <I3 n="ertesites" s={28} />
-        Értesítések
-        {olvasatlan > 0 && <span className="db">{olvasatlan}</span>}
+        <I3 n="csengo" s={26} />
+        <span className="nav-felirat">Értesítések</span>
+        {olvasatlan > 0 && (
+          <span className="db">
+            {olvasatlan}
+            <span className="rejtett"> olvasatlan</span>
+          </span>
+        )}
       </button>
       {/* the sidebar is its own stacking context: the drawer goes to <body>, above the page */}
       {createPortal(
       <Fiok
         nyitva={nyitva}
         bezar={() => setNyitva(false)}
-        ikon="ertesites"
+        ikon="csengo"
         cim="Értesítések"
         bev="Ami nálad történt: új teendő, lejáró határidő, módosított válasz."
         lab={

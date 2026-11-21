@@ -1520,7 +1520,7 @@ export const JOURNEY_STEP_TEXTS: Record<
   | 'alkalmazottak',
   JourneyStepText
 > = {
-  ut: { title: 'Vállalkozásod', explainer: 'vallalkozas_van_e', route: '/bekotes', actionLabel: 'Válaszolok', time: null },
+  ut: { title: 'Vállalkozásod', explainer: 'vallalkozas_van_e', route: '/bekotes', actionLabel: 'Válaszolok', time: '1 koppintás' },
   visszahivas: { title: 'Visszahívás', explainer: 'visszahivas', route: '/visszahivas', actionLabel: '', time: null },
   adatok: { title: 'Adataid', explainer: 'adataid', route: '/bekotes/adatok', actionLabel: 'Kitöltöm', time: null },
   kerdoiv: { title: 'Kérdőív a vállalkozásodról', explainer: 'tevekenyseg', route: '/bekotes/vallalkozas/adatlap', actionLabel: 'Kitöltöm', time: null },

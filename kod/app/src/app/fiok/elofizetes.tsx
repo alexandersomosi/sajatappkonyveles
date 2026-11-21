@@ -3,6 +3,8 @@
 // no money moves while a paid period runs) and "Kártya törlése"; text link "Lemondom". An open payment problem → a red
 // section on top with "Fizesd ki". PAYMENT_PROVIDER=simplepay (or a SimplePay subscription) → the kept SimplePay screen.
 // Előtte: kod/app/_regi/elotte_k7_b3/src/app/fiok/elofizetes.tsx
+// k8 ALAP-B: "Fizetés módja" – kártya / átutalás, the open díjbekérők with their details, "Átváltok kártyára" (the card
+// sheet below) / "Átváltok átutalásra" (from the next period). Előtte: kod/app/_regi/elotte_k8_B/src/app/fiok/elofizetes.tsx
 import { useState } from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
@@ -15,6 +17,7 @@ import { datumEvvel, datumEvvelIg, datumIg, maiNap, nagybetu, szam } from '@/lib
 import { fizetesSzolgaltato, kartyaMentes } from '@/lib/fizetes';
 import { hibaUzenet } from '@/lib/hiba';
 import { engedelyGomb, KartyaEngedely } from '@/kepernyok/KartyaEngedely';
+import { AtutalasFiok } from '@/kepernyok/Atutalas';
 import { SimplePayKezeles } from '@/kepernyok/simplepay/Kezeles';
 import { szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, HibaSzoveg, Lap, Szakasz } from '@/ui/alap';
@@ -111,7 +114,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
     <Kepernyo ful="fiok" fejlec={<CimSor visszaCim="Vissza a fiókhoz" vissza={() => vissza('/fiok')} cim="Előfizetés" al={`Havi ${szam(havi)} Ft, bruttó. Bármikor lemondhatod.`} />}>
       {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
       {e.due ? (
-        <Lap style={{ padding: 16, backgroundColor: szin.veszelyAlap }}>
+        <Lap style={{ padding: 16, borderLeftWidth: 4, borderLeftColor: szin.veszely }}>
           <T m={18} s={700} lh={1.3} c={szin.veszelySzoveg} accessibilityRole="header">
             {fillPlaceholders(P.fizesdKi.homeBanner, { osszeg: szam(e.due.amountHuf) })}
           </T>
@@ -168,6 +171,13 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
           </View>
         ) : null}
       </Lap>
+      <AtutalasFiok
+        kartyara={() => {
+          setBe(false);
+          setHiba(null);
+          setKerdes({ kartya: true });
+        }}
+      />
       {fut && !kartya ? (
         <T m={15} lh={1.45} c={szin.halvanyAlapon} style={{ marginTop: 10, paddingHorizontal: 4 }}>
           {`${nagybetu(vegeIg)} él az előfizetésed, utána csak új kártyával folytatódik.`}
@@ -185,7 +195,7 @@ function Kezeles({ e, demo }: { e: SubscriptionViewK29; demo: boolean }) {
       {e.status !== 'incomplete' && e.status !== 'canceled' ? <Szakasz ikon="kerdezek" cim="Ha mennél" /> : null}
       {e.status !== 'incomplete' && e.status !== 'canceled' ? (
         <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-          <View style={{ paddingLeft: 38 }}>
+          <View style={{ paddingLeft: 54 }}>
             {felmondva ? (
               <T m={16} lh={1.5}>
                 {`Felmondtuk a szerződésedet. ${nagybetu(datumIg(felmondva))} minden marad, utána nem vonunk le többet. A felmondó levelet a dossziédban találod.`}

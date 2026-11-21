@@ -1,11 +1,12 @@
-// Visszahívás (SPEC §26.2): időpontfoglalás helyett. „Elakadtál? Kérj visszahívást” link minden lépésnél, állapotkártya
-// (Kollégánk 24–48 órán belül hív), és a Főoldal alsó kártyája a bekötés alatt. A könyvelőt nem ígérjük elsőnek.
+// Visszahívás (SPEC §26.2): időpontfoglalás helyett. „Elakadtál? Kérj visszahívást” link minden lépésnél, állapotkártya,
+// és a Főoldal alsó kártyája a bekötés alatt. A könyvelőt nem ígérjük elsőnek. k8: időígéret csak az egyetlen engedett
+// mondat (HIVAS_MONDAT), szó szerint.
 import { Pressable, View, type StyleProp, type ViewStyle } from 'react-native';
 import { router } from 'expo-router';
 import type { CallbackPromise, CallbackView } from '../_shared/api';
 import { CALLBACK_TOPIC_LABELS, CALLBACK_TOPICS, CALLBACK_WINDOW_LABELS, CALLBACK_WINDOWS, type CallbackSource, type CallbackTopic } from '../_shared/enums';
 import { forma, szin } from '../theme/tokens';
-import { GombM, Lap } from './alap';
+import { GombM, Lap, jelzoDoboz } from './alap';
 import { Ikon3d } from './kepek';
 import { T } from './T';
 
@@ -14,9 +15,10 @@ export function visszahivasUt(forras: CallbackSource, tema: CallbackTopic = 'egy
 }
 
 /** Az ígéret alapszövege (a szerver a /client/callbacks promise.text-jében adja; ez a tartalék). */
-export const igeretAlap = (fn: string) =>
-  `Kollégánk 24–48 órán belül felhív. Munkanapokon 9 és 17 óra között telefonálunk. Nem feltétlenül ${kisNev(fn)} hív elsőként, hanem valaki a csapatunkból.`;
-export const KONYVELO_SOR = (fn: string) => `Csapatunk 24–48 órán belül hív. Nem feltétlenül ${kisNev(fn)} hív elsőként.`;
+/** Az egyetlen engedett időígéret (k8, tulaj 11-20), szó szerint. */
+export const HIVAS_MONDAT = 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.';
+export const igeretAlap = (fn: string) => `${HIVAS_MONDAT} Nem feltétlenül ${kisNev(fn)} hív elsőként, hanem valaki a csapatunkból.`;
+export const KONYVELO_SOR = (fn: string) => `${HIVAS_MONDAT} Nem feltétlenül ${kisNev(fn)} hív elsőként.`;
 /** Mondat közepén: „A könyvelőd” (még nincs kijelölt könyvelő) → „a könyvelőd”; a valódi név marad. */
 function kisNev(fn: string): string {
   return /^A könyvelőd/.test(fn) ? `a${fn.slice(1)}` : fn;
@@ -118,7 +120,7 @@ export function Igeret({ p }: { p: CallbackPromise }) {
           {p.callerIdText}
         </T>
       ) : null}
-      <View style={{ borderRadius: 10, backgroundColor: szin.borostyanAlap, padding: 12 }}>
+      <View style={{ borderRadius: 10, ...jelzoDoboz('figyelem'), padding: 12 }}>
         <T m={15} s={600} lh={1.45} c={szin.borostyanSzoveg}>
           {p.fraudWarning}
         </T>

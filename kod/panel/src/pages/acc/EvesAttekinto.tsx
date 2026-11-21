@@ -69,28 +69,30 @@ export default function EvesAttekinto() {
             <table className="tabla">
               <thead>
                 <tr>
-                  <th>{T.oszlopok.ugyfel}</th>
+                  <th className="elso">{T.oszlopok.ugyfel}</th>
                   <th>{T.oszlopok.negyedevek}</th>
                   <th>{T.oszlopok.folyoszamla}</th>
                   <th>{T.oszlopok.eves}</th>
                   <th className="jobb">{T.oszlopok.kulonbozet}</th>
                   <th>{T.oszlopok.hipa}</th>
                   <th>{T.oszlopok.onell}</th>
-                  <th style={{ minWidth: 260 }}>{T.oszlopok.hianyzik}</th>
+                  <th className="utolso" style={{ minWidth: 240 }}>{T.oszlopok.hianyzik}</th>
                 </tr>
               </thead>
               <tbody>
                 {q.data.rows.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="halvany">
+                    <td colSpan={8} className="halvany elso">
                       Nincs ilyen ügyfél.
                     </td>
                   </tr>
                 )}
                 {q.data.rows.map((r) => (
                   <tr key={r.clientId}>
-                    <td>
-                      <Link to={`/ugyfelek/${r.clientId}/eves`}>{r.name}</Link>
+                    <td className="elso">
+                      <Link className="nev nt" to={`/ugyfelek/${r.clientId}/eves`}>
+                        {r.name}
+                      </Link>
                       <div className="halvany kicsi">
                         {r.regime === 'kata' ? 'Kata' : 'Átalány'}
                         {r.lifecycle === 'megszunt' ? ' · megszűnt' : ''}
@@ -137,12 +139,11 @@ export default function EvesAttekinto() {
                       )}
                     </td>
                     <td className="kicsi">
-                      előleg: {HIPA_ELOLEG_SZO[r.hipa.advance] ?? r.hipa.advance}
-                      <br />
-                      éves: {HIPA_EVES_SZO[r.hipa.annual] ?? r.hipa.annual}
+                      <div className="nt">előleg: {HIPA_ELOLEG_SZO[r.hipa.advance] ?? r.hipa.advance}</div>
+                      <div className="nt">éves: {HIPA_EVES_SZO[r.hipa.annual] ?? r.hipa.annual}</div>
                     </td>
                     <td className="szam">{r.openCorrections || ''}</td>
-                    <td className="kicsi" style={{ minWidth: 260 }}>
+                    <td className="kicsi utolso" style={{ minWidth: 240 }}>
                       {r.missing.map((m) => (
                         <div key={m}>{m}</div>
                       ))}

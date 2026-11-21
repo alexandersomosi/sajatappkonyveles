@@ -128,14 +128,14 @@ function ValtozasKeremTartalom() {
           <Szakasz ikon="irat" cim={valtozasSor(kind).title} />
           <Lap style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
             {valtozasSorok(kind, a).map((s, n) => (
-              <T key={n} m={16} lh={1.5} style={{ paddingLeft: 38 }}>
+              <T key={n} m={16} lh={1.5} style={{ paddingLeft: 54 }}>
                 {s}
               </T>
             ))}
           </Lap>
           {!p.assist ? (
             <View style={{ marginHorizontal: -16, borderTopWidth: 10, borderTopColor: szin.sav, marginTop: 4 }}>
-              <Kapcsolo be={hivjatok || hivasKell} tilt={hivasKell} valt={setHivjatok} cim={CHANGE_TEXTS.callbackToggle} al={hivasKell ? CHANGE_TEXTS.callbackForced : 'Kollégánk 24–48 órán belül hív, és együtt átnézitek.'} />
+              <Kapcsolo be={hivjatok || hivasKell} tilt={hivasKell} valt={setHivjatok} cim={CHANGE_TEXTS.callbackToggle} al={hivasKell ? CHANGE_TEXTS.callbackForced : 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Együtt átnézitek.'} />
             </View>
           ) : null}
           {fizetendo ? (

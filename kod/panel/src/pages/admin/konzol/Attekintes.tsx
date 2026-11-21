@@ -12,12 +12,13 @@ import { usePirito } from '../../../ui/Pirito';
 import { I3 } from '../../../ui/Icon3d';
 import { honapEv, szam } from '../../../lib/format';
 import { LepcsoProvider, useLepcsos } from './lepcso';
+import { AtutalasSzakasz } from './Atutalas';
 import { kellKetlepcsos } from '../../../api/k29';
 
 function Csempe({ ertek, mi, to, ft, ikon }: { ertek: number; mi: string; to: string; ft?: boolean; ikon: Parameters<typeof I3>[0]['n'] }) {
   return (
     <Link to={to} className="lap kpi" style={{ textDecoration: 'none', color: 'inherit' }}>
-      <I3 n={ikon} />
+      <I3 n={ikon} s={34} />
       <div>
         <div className="ertek">
           {szam(ertek)}
@@ -85,7 +86,7 @@ function KozlemenyFiok({ nyitva, bezar }: { nyitva: boolean; bezar: () => void }
     }
   };
   return (
-    <Fiok nyitva={nyitva} bezar={bezar} ikon="ertesites" cim="Közlemény az ügyfeleknek" bev={`Legfeljebb ${CONSOLE_RULES.announcementsPerDay} naponta. Előbb megszámoljuk a címzetteket, azt erősíted meg.`}>
+    <Fiok nyitva={nyitva} bezar={bezar} ikon="csengo" cim="Közlemény az ügyfeleknek" bev={`Legfeljebb ${CONSOLE_RULES.announcementsPerDay} naponta. Előbb megszámoljuk a címzetteket, azt erősíted meg.`}>
       <div style={{ display: 'grid', gap: 14 }}>
         <label className="mezo">
           <span className="felirat">Cím (legfeljebb {CONSOLE_RULES.announcementTitleMax} karakter)</span>
@@ -148,10 +149,10 @@ function Tartalom() {
         jobb={
           <div style={{ display: 'flex', gap: 10 }}>
             <Link className="gomb-m" to="/admin/konzol/ugyfelek">
-              <I3 n="dosszie" s={22} /> Ügyfelek
+              <I3 n="emberek" s={22} /> Ügyfelek
             </Link>
             <button type="button" className="gomb-m" onClick={() => setKozl(true)}>
-              <I3 n="ertesites" s={22} /> Közlemény
+              <I3 n="csengo" s={22} /> Közlemény
             </button>
           </div>
         }
@@ -172,15 +173,15 @@ function Tartalom() {
           <>
             <h2 className="szakasz">Ügyfelek</h2>
             <div className="racs" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
-              <Csempe ertek={o.clients.active} mi={`${CONSOLE_TEXTS.tiles.active} · átalány ${o.clients.activeAtalany}, kata ${o.clients.activeKata}`} to="/admin/konzol/ugyfelek?status=aktiv" ikon="fooldal" />
-              <Csempe ertek={o.clients.onboarding} mi={CONSOLE_TEXTS.tiles.onboarding} to="/admin/konzol/ugyfelek?status=bekotes_alatt" ikon="bevallas" />
+              <Csempe ertek={o.clients.active} mi={`${CONSOLE_TEXTS.tiles.active} · átalány ${o.clients.activeAtalany}, kata ${o.clients.activeKata}`} to="/admin/konzol/ugyfelek?status=aktiv" ikon="emberek" />
+              <Csempe ertek={o.clients.onboarding} mi={CONSOLE_TEXTS.tiles.onboarding} to="/admin/konzol/ugyfelek?status=bekotes_alatt" ikon="irat-toll" />
               <Csempe ertek={o.clients.suspended} mi={CONSOLE_TEXTS.tiles.suspended} to="/admin/konzol/ugyfelek?status=felfuggesztve" ikon="lakat" />
-              <Csempe ertek={o.clients.terminated} mi={CONSOLE_TEXTS.tiles.terminated} to="/admin/konzol/ugyfelek?terminated=1" ikon="irat" />
+              <Csempe ertek={o.clients.terminated} mi={CONSOLE_TEXTS.tiles.terminated} to="/admin/konzol/ugyfelek?terminated=1" ikon="kilep" />
             </div>
             <div className="lap k28" style={{ marginTop: 16 }}>
               <div className="szak">
                 <div className="szak-fej">
-                  <I3 n="hataridok" />
+                  <I3 n="oszlop" />
                   <h2>Új és lemondott ügyfelek havonta (12 hónap)</h2>
                 </div>
                 <div className="racs k2">
@@ -197,15 +198,15 @@ function Tartalom() {
             </div>
             <h2 className="szakasz">Pénz {o.money.demoPayments ? <span className="megj">· a DEMO fizetések is benne vannak ({o.money.demoPayments})</span> : null}</h2>
             <div className="racs" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
-              <Csempe ertek={o.money.mrrHuf} ft mi={CONSOLE_TEXTS.tiles.mrr} to="/admin/konzol/ugyfelek?status=aktiv" ikon="szamolo" />
-              <Csempe ertek={o.money.overdue.sumHuf} ft mi={`${CONSOLE_TEXTS.tiles.overdue} · ${o.money.overdue.count} ügyfél${o.money.actionNeeded ? `, ${o.money.actionNeeded} megerősítésre vár` : ''}`} to="/admin/konzol/ugyfelek?unpaid=1" ikon="szamlaszam" />
+              <Csempe ertek={o.money.mrrHuf} ft mi={CONSOLE_TEXTS.tiles.mrr} to="/admin/konzol/ugyfelek?status=aktiv" ikon="emelkedes" />
+              <Csempe ertek={o.money.overdue.sumHuf} ft mi={`${CONSOLE_TEXTS.tiles.overdue} · ${o.money.overdue.count} ügyfél${o.money.actionNeeded ? `, ${o.money.actionNeeded} megerősítésre vár` : ''}`} to="/admin/konzol/ugyfelek?unpaid=1" ikon="figyelem" />
               <Csempe ertek={o.money.locked.count} mi={`${CONSOLE_TEXTS.tiles.locked}${Object.keys(o.money.locked.reasons).length ? ` · ${Object.entries(o.money.locked.reasons).map(([r, n]) => `${r}: ${n}`).join(', ')}` : ''}`} to="/admin/konzol/ugyfelek?locked=1" ikon="lakat" />
-              <Csempe ertek={o.money.upcoming7.sumHuf} ft mi={`${CONSOLE_TEXTS.tiles.upcoming7} · ${o.money.upcoming7.count} db (30 nap: ${szam(o.money.upcoming30.sumHuf)} Ft)`} to="/admin/konzol/ugyfelek?status=aktiv" ikon="befizetve" />
+              <Csempe ertek={o.money.upcoming7.sumHuf} ft mi={`${CONSOLE_TEXTS.tiles.upcoming7} · ${o.money.upcoming7.count} db (30 nap: ${szam(o.money.upcoming30.sumHuf)} Ft)`} to="/admin/konzol/ugyfelek?status=aktiv" ikon="naptar" />
             </div>
             <div className="lap k28" style={{ marginTop: 16 }}>
               <div className="szak">
                 <div className="szak-fej">
-                  <I3 n="szamlaszam" />
+                  <I3 n="bank" />
                   <h2>Befolyt bevétel havonta (visszautalások után)</h2>
                 </div>
                 <Oszlop sorok={o.money.collectedPerMonth} ertek={(i) => o.money.collectedPerMonth[i]!.nettoHuf} cimke={(i) => `${Math.round(o.money.collectedPerMonth[i]!.nettoHuf / 1000)}e`} />
@@ -240,7 +241,7 @@ function Tartalom() {
               </div>
               <div className="szak" style={{ padding: 0 }}>
                 <div className="szak-fej" style={{ padding: '16px 22px 0' }}>
-                  <I3 n="szamolo" />
+                  <I3 n="tarca" />
                   <h2>Díjak fajtánként (6 hónap)</h2>
                 </div>
                 {o.money.feesByKind.length ? (
@@ -276,6 +277,11 @@ function Tartalom() {
                   </p>
                 )}
               </div>
+            </div>
+            {/* k8 ALAP-B: díjbekérők – fizetett (e hónap) / vár / késik, kézi rögzítés */}
+            <h2 className="szakasz" id="atutalas">Átutalás</h2>
+            <div className="lap" style={{ marginBottom: 16 }}>
+              <AtutalasSzakasz />
             </div>
             <h2 className="szakasz">Könyvelők</h2>
             <div className="lap">

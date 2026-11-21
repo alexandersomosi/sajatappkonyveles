@@ -17,7 +17,7 @@ import { elo, helyettunkUt, segitsegFajta } from '@/lib/ut';
 import { vezetettKulcs } from '@/lib/vezetett';
 import { ElokeszitLista, SavCim, useElokeszit } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, jelzoDoboz } from '@/ui/alap';
 import { JovahagyasKartya } from '@/ui/Helyettunk';
 import { Ikon3d, KeszJel, Targykep } from '@/ui/kepek';
 import { AlsoLap, Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
@@ -187,7 +187,7 @@ function VallalkozasKozpont() {
             </T>
           )}
           {r?.activityPending ? (
-            <View style={{ marginTop: 14, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14, flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}>
+            <View style={{ marginTop: 14, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14, flexDirection: 'row', gap: 10, alignItems: 'flex-start' }}>
               <Ikon3d nev="ora" pt={32} />
               <T m={15.5} s={600} lh={1.5} c={szin.borostyanSzoveg} style={{ flex: 1 }}>
                 {ACTIVITY_PENDING_BANNER}
@@ -200,7 +200,7 @@ function VallalkozasKozpont() {
         </Lap>
       ) : allapot === 'javitas' ? (
         <>
-          <View style={{ borderRadius: forma.lap, backgroundColor: szin.borostyanAlap, padding: 18 }}>
+          <View style={{ borderRadius: forma.lap, ...jelzoDoboz('figyelem'), padding: 18 }}>
             <T m={14} s={700} ls={0.04} c={szin.borostyanSzoveg}>
               EZT KELL JAVÍTANOD
             </T>

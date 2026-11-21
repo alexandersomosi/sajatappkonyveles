@@ -310,7 +310,8 @@ describe('appszövegek', () => {
       expect(t[`notif.${fajta}.body`], fajta).toBeTruthy();
       expect(pushTiltott(`${t[`notif.${fajta}.title`]} ${t[`notif.${fajta}.body`]}`), fajta).toBe(false);
     }
-    expect(t['notif.assist_mh_reminder.utolso_nap.title']).toBe('Ma van az utolsó nap');
+    // k8 (k7b remnant): the texts the code had already superseded are unified with the code (tulaj 11-20, no time promise)
+    expect(t['notif.assist_mh_reminder.utolso_nap.title']).toBe('Ma hagyd jóvá a meghatalmazást');
     expect(t['notif.assist_consent_needed.ujra.body']).toBe('Módosult a kérdőív, ezért nézd át újra.');
     expect(t['notif.assist_mh_filed.title']).toBe('Hagyd jóvá a meghatalmazást {hatarido}');
     expect(t['visszahivas.csalas']).toMatch(/nem lépünk be helyetted/);

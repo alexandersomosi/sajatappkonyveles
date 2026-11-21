@@ -690,7 +690,7 @@ function JovahagyasIdozito({ d, filedAt, most }: { d: TeamAssistDetailP; filedAt
         {d.status === 'meghatalmazas_jovahagyva' ? (
           <p>
             <b>Az ügyfél jóváhagyta</b>
-            {jovahagyta ? ` (${idopont(jovahagyta, t)})` : ''}. Most nézd meg az ONYA-ban, hogy él-e (kb. 20 perc után látszik).
+            {jovahagyta ? ` (${idopont(jovahagyta, t)})` : ''}. Most nézd meg az ONYA-ban, hogy él-e (a változás kis késéssel látszik).
           </p>
         ) : d.status === 'meghatalmazas_lejart' ? (
           <p>

@@ -220,7 +220,7 @@ export function ValtozasLap({ kind, lap, a, set }: { kind: ChangeKind; lap: VLap
     );
   }
   if (lap === 'tevekenyseg') {
-    return <Mezo felirat={F.activityOwnWords} multiline value={a.ownWords} onChangeText={(t) => set({ ownWords: t.slice(0, 300) })} sugo="A hivatalos ÖVTJ-sort mi írjuk meg hozzá, általában 1 munkanapon belül." />;
+    return <Mezo felirat={F.activityOwnWords} multiline value={a.ownWords} onChangeText={(t) => set({ ownWords: t.slice(0, 300) })} sugo="A hivatalos ÖVTJ-sort mi írjuk meg hozzá." />;
   }
   if (lap === 'szunet') {
     return (

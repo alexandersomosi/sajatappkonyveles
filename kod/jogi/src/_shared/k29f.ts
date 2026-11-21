@@ -521,7 +521,7 @@ export const CLOSING_RULES = {
 export const CLOSING_TEXTS = {
   hubRow: { title: 'A vállalkozás megszüntetése', line: 'Befejeznéd? Megmutatjuk, mi a teendő – vagy intézzük helyetted.' },
   info: {
-    mit: 'Ha végleg befejezed, a vállalkozásodat meg kell szüntetned. Ingyenes, és a Vállalkozói Ügysegédben pár perc.',
+    mit: 'Ha végleg befejezed, a vállalkozásodat meg kell szüntetned. Ingyenes, a Vállalkozói Ügysegédben intézheted.',
     figyelj: [
       'A megszűnés napja legkorábban a bejelentést követő nap. Ezt a napot később nem lehet módosítani.',
       'Postán nem lehet bejelenteni: a Vállalkozói Ügysegédben, a NAV ügyfélszolgálatán vagy telefonon (1819).',
@@ -540,7 +540,9 @@ export const CLOSING_TEXTS = {
   formEmployeesTitle: 'Volt alkalmazottad az idén?',
   formEmployees: { igen: 'Igen', nem: 'Nem' },
   formSubTitle: 'Mi lesz az Adózz-előfizetéseddel?',
-  formSubText: 'A záró bevallásokig folytatjuk, utána magától megszűnik. Az éves zárás díja ({evesDij} Ft) akkor jár, ha az idei SZJA-bevallást is mi adjuk be.',
+  // javító kör 11-21: no annual-closing fee while its switch is off (evesZarasDij, the ÁSZF is fixed first) – the sentence
+  // "Az éves zárás díja ({evesDij} Ft) akkor jár, ha az idei SZJA-bevallást is mi adjuk be." comes back with the switch
+  formSubText: 'A záró bevallásokig folytatjuk, utána magától megszűnik.',
   validationDatePast: 'A megszűnés legkorábban holnap lehet.',
   validationDateFar: 'Legfeljebb 90 nappal előre add meg.',
   summaryDate: 'Megszűnés napja',
@@ -576,7 +578,7 @@ const CLOSING_BELEPES: GuideTemplateStep = {
 export const CLOSING_GUIDE_TEMPLATE: GuideTemplate = {
   title: 'Így szünteted meg a vállalkozásodat',
   intro:
-    'A Vállalkozói Ügysegédben, kb. 10 perc, ingyenes. A megszűnés napját később nem lehet módosítani, ezért előbb beszéld meg {firstNameWith}. Ezekről a NAV-os lapokról még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
+    'A Vállalkozói Ügysegédben, ingyenesen. A megszűnés napját később nem lehet módosítani, ezért előbb beszéld meg {firstNameWith}. Ezekről a NAV-os lapokról még nincs képünk, és a gombok pontos feliratát is ellenőrizzük: ha bizonytalan vagy, intézzük helyetted.',
   validUntil: CLOSING_RULES.ugysegedValidUntil,
   steps: [
     {

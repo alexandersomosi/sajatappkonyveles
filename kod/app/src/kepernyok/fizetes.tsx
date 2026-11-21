@@ -19,7 +19,7 @@ function honapHozzaad(nap: string, n: number): string {
   return x.toISOString().slice(0, 10);
 }
 import { forma, szin } from '../theme/tokens';
-import { Cimke, GombE, GombM, GombSz, HibaSzoveg, Osszeg, Pipa } from '../ui/alap';
+import { Cimke, GombE, GombM, GombSz, HibaSzoveg, Osszeg, Pipa, jelzoDoboz } from '../ui/alap';
 import { ma } from '../ui/ido';
 import { Arckep, Ikon3d, KeszJel } from '../ui/kepek';
 import { AlsoLap, useJelzes } from '../ui/keret';
@@ -115,7 +115,7 @@ export function MagyarazatSor({ e, tetelek }: { e: Explanation; tetelek?: Paymen
       {sorok.map((l, i) => {
         if (l.amountHuf === undefined && MODOSITAS_SOR.test(l.label))
           return (
-            <View key={i} style={{ marginTop: 10, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, paddingVertical: 10, paddingHorizontal: 12 }}>
+            <View key={i} style={{ marginTop: 10, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), paddingVertical: 10, paddingHorizontal: 12 }}>
               <T m={14.5} s={600} c={szin.borostyanSzoveg} lh={1.45}>
                 {`A könyvelőd kézzel módosította az összeget${l.note ? `: „${l.note.trim().replace(/[.]$/, '')}”.` : '.'}`}
               </T>

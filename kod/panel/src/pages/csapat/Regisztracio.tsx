@@ -527,7 +527,7 @@ function BejelentesOszlop({ d, frissit, javitastKer }: { d: TeamRegistrationDeta
           </div>
           <div className="belso oszlop" style={{ paddingTop: 0, gap: 9 }}>
             {d.clientProfile && (
-              <div className="osszevet kicsi" style={{ background: 'var(--alap)', borderRadius: 10, padding: '10px 12px', marginBottom: 4 }}>
+              <div className="osszevet kicsi" style={{ background: 'var(--lap)', boxShadow: 'inset 0 0 0 1px var(--keret)', borderRadius: 12, padding: '10px 12px', marginBottom: 4 }}>
                 <div className="halvany" style={{ marginBottom: 4 }}>Vesd össze a PDF-fel (az ügyfél profiljából):</div>
                 <dl className="adatok keskeny-adatok" style={{ margin: 0 }}>
                   <Sor cim="Név">{d.clientProfile.name || '–'}</Sor>

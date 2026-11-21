@@ -6,7 +6,9 @@
 import { and, eq, gte, inArray, lte, sql } from 'drizzle-orm';
 import type { JobDef } from './jobs.js';
 import type { Deps } from './deps.js';
-import { clients, payments, transferRequests, users } from './db/schema.js';
+import { clients, payments, systemState, transferRequests, users } from './db/schema.js';
+
+const GUIDED_SINCE_KEY = 'k8.guided_continue_since';
 import { budapestParts, todayBudapest, weekdayOf } from './lib/dates.js';
 import { log, safeErr } from './log.js';
 import { fmtHuf } from './payments/huf.js';
@@ -26,15 +28,25 @@ const workingHours2 = (now: Date) => {
   return `${p.date}T${Math.floor(p.hour / 2)}`;
 };
 
-/** JL 16: a client who paused the guided run 2–14 days ago, or signed up 3–14 days ago and never finished it. Once. */
+/**
+ * JL 16: a client who paused the guided run 2–14 days ago, or signed up 3–14 days ago and never finished it. Once.
+ * Only clients who signed up after the first run of this job (system_state 'k8.guided_continue_since'): the clients
+ * already onboarding when k8 went live (the owner's own test accounts among them) get no surprise letter.
+ */
 export async function jobGuidedContinue(deps: Deps): Promise<number> {
   const db = deps.db;
   const now = deps.now().getTime();
+  const [armed] = await db.select().from(systemState).where(eq(systemState.key, GUIDED_SINCE_KEY)).limit(1);
+  if (!armed) {
+    await db.insert(systemState).values({ key: GUIDED_SINCE_KEY, value: { at: deps.now().toISOString() } }).onConflictDoNothing();
+    return 0;
+  }
+  const since = new Date(String((armed.value as { at?: string }).at ?? deps.now().toISOString()));
   const rows = await db
     .select({ id: clients.id, userId: clients.userId, firstName: clients.firstName, accountantId: clients.accountantId, createdAt: clients.createdAt, guided: clients.guided, isTest: clients.isTest })
     .from(clients)
     .innerJoin(users, eq(users.id, clients.userId))
-    .where(and(eq(clients.lifecycle, 'bekotes_alatt'), eq(users.status, 'active'), sql`${clients.terminated} is null`, sql`${clients.anonymizedAt} is null`, gte(clients.createdAt, new Date(now - 14 * 86_400_000))));
+    .where(and(eq(clients.lifecycle, 'bekotes_alatt'), eq(users.status, 'active'), sql`${clients.terminated} is null`, sql`${clients.anonymizedAt} is null`, gte(clients.createdAt, new Date(Math.max(now - 14 * 86_400_000, since.getTime())))));
   const { notifyOnce } = await import('./services/emlekezteto.js');
   const { accountantParams } = await import('./notify/notify.js');
   let n = 0;

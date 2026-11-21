@@ -167,15 +167,15 @@ export default function UgyfelAdatlap() {
         jobb={
           <>
             <button className="gomb-sav" onClick={() => nav(`/ugyfelek/${id}/uzenetek`)}>
-              <I3 n="uzenetek" s={24} />
+              <I3 n="uzenet" s={22} />
               Üzenet
             </button>
             <button className="gomb-sav" onClick={() => nav(`/ugyfelek/${id}/keresek?uj=1`)}>
-              <I3 n="igazolas" s={24} />
+              <I3 n="kerdoiv" s={22} />
               Kérés
             </button>
             <button className="gomb-sav" onClick={() => nav(`/ugyfelek/${id}/ado`)}>
-              <I3 n="szamolo" s={24} />
+              <I3 n="szamologep" s={22} />
               Számolás
             </button>
           </>

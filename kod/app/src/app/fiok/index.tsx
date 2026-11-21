@@ -12,10 +12,12 @@ import { useOnboarding } from '@/api/hooks';
 import { MiEz } from '@/ui/Magyarazat';
 import { useUtvaltas } from '@/ui/Ut';
 import { szin } from '@/theme/tokens';
-import { Fejlec, GombM, GombSz, Lap, Sor, Szakasz } from '@/ui/alap';
+import { Fejlec, GombM, GombV, Lap, Sor, Szakasz } from '@/ui/alap';
+import { KetOszlop } from '@/ui/asztali/Racs';
+import { useAsztali } from '@/lib/elrendezes';
 import { Arckep, Ikon3d } from '@/ui/kepek';
 import { useHozzaferes, useZarolt } from '@/ui/Zarolt';
-import { KONYVELO_SOR, visszahivasUt } from '@/ui/Visszahivas';
+import { HIVAS_MONDAT, KONYVELO_SOR, visszahivasUt } from '@/ui/Visszahivas';
 import { MASOLAS_HIBA, vagolapra } from '@/lib/vagolap';
 import { Betolt, Kepernyo, useJelzes } from '@/ui/keret';
 import { T } from '@/ui/T';
@@ -34,6 +36,7 @@ export default function Fiok() {
   const vh = useVisszahivasok();
   const utv = useUtvaltas();
   const bekotes = hf.korlatozott;
+  const asztali = useAsztali();
   const ob = useOnboarding();
   const ut = ob.data?.path ?? null;
   const valasz = ut === 'van' ? JOURNEY_TEXTS.pathVan : ut === 'inditas' ? (ob.data?.registrationMode === 'segitett' ? JOURNEY_TEXTS.pathInditasSegitett : JOURNEY_TEXTS.pathInditas) : 'Még nem válaszoltál';
@@ -65,17 +68,21 @@ export default function Fiok() {
   return (
     <Kepernyo
       ful="fiok"
+      szeles
       fejlec={
-        <Fejlec rozX={130} rozY={100} alsoTer={20}>
-          <T m={29} s={700} lh={1.14} ls={-0.024} c="#fff" style={{ paddingTop: 14, paddingHorizontal: 20 }} accessibilityRole="header">
+        <Fejlec alsoTer={24}>
+          <T m={asztali ? 30 : 27} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ paddingTop: asztali ? 8 : 14, paddingHorizontal: asztali ? 16 : 18 }} accessibilityRole="header">
             {user?.displayName ?? 'Fiók'}
           </T>
-          <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 4, paddingHorizontal: 20 }}>
+          <T m={15.5} lh={1.45} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: asztali ? 16 : 18 }}>
             {user?.email}
           </T>
         </Fejlec>
       }
     >
+      <KetOszlop
+        bal={
+          <>
       {me.isLoading ? <Betolt /> : null}
       {acc ? (
         <Lap style={{ padding: 16 }}>
@@ -91,8 +98,8 @@ export default function Fiok() {
             </View>
           </View>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
-            <GombM cim="Üzenet neki" ikon="uzenetek" onPress={() => router.push('/uzenetek')} />
-            <GombM cim="Kérj visszahívást" ikon="ora" onPress={() => router.push(visszahivasUt('konyvelo_kartya', 'egyeb'))} />
+            <GombM cim="Üzenet neki" ikon="uzenet" onPress={() => router.push('/uzenetek')} />
+            <GombM cim="Kérj visszahívást" ikon="telefon" onPress={() => router.push(visszahivasUt('konyvelo_kartya', 'egyeb'))} />
           </View>
           <T m={14} c={szin.halvany} lh={1.45} style={{ marginTop: 8 }}>
             {KONYVELO_SOR(acc.firstName)}
@@ -120,24 +127,24 @@ export default function Fiok() {
       {/* SPEC §28.6.1: „Adózás” – kedvezmények, kereset, változások (a kereset a bekötés után nyílik) */}
       <Szakasz ikon="bevallas" cim={ALLOWANCE_TEXTS.fiok.section} />
       <Lap>
-        <Sor elso ikon="igazolas" cim={ALLOWANCE_TEXTS.fiok.row} al={kedvAl} onPress={() => router.push('/kedvezmenyek')} />
+        <Sor elso ikon="cimke" cim={ALLOWANCE_TEXTS.fiok.row} al={kedvAl} onPress={() => router.push('/kedvezmenyek')} />
         {hf.zarva('kereset') ? (
-          <Sor ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} al="A bekötés után nyílik meg." jobbra={lakat} label={EARNINGS_TEXTS.cardTitle} zaroltOk={hf.ok('kereset') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'kereset' })} />
+          <Sor ikon="oszlop" cim={EARNINGS_TEXTS.cardTitle} al="A bekötés után nyílik meg." jobbra={lakat} label={EARNINGS_TEXTS.cardTitle} zaroltOk={hf.ok('kereset') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'kereset' })} />
         ) : (
-          <Sor ikon="kivonat" cim={EARNINGS_TEXTS.cardTitle} al="Mennyi marad a bevételedből az adók után" onPress={() => router.push('/kereset')} />
+          <Sor ikon="oszlop" cim={EARNINGS_TEXTS.cardTitle} al="Mennyi marad a bevételedből az adók után" onPress={() => router.push('/kereset')} />
         )}
-        <Sor ikon="irat" cim={CHANGE_TEXTS.hub.fiokRow} al="Költözés, új tevékenység, szüneteltetés" onPress={() => router.push('/valtozas')} />
+        <Sor ikon="valtozas" cim={CHANGE_TEXTS.hub.fiokRow} al="Költözés, új tevékenység, szüneteltetés" onPress={() => router.push('/valtozas')} />
       </Lap>
 
       <Szakasz ikon="szamlaszam" cim="Szolgáltatás" />
       <Lap>
-        <Sor elso ikon="szamlaszam" cim="Előfizetés" al={eloAl} onPress={() => router.push('/fiok/elofizetes')} />
+        <Sor elso ikon="kartya" cim="Előfizetés" al={eloAl} onPress={() => router.push('/fiok/elofizetes')} />
         {/* k7c2: a díjak és számlák sora a bekötés alatt is látszik – aki már fizetett, itt találja a számláját
             (a fizetés eredménye ide küldi). A határidők a bekötés után jelennek meg (k3_kor2 walkthrough 20). */}
-        <Sor ikon="irat" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />
-        <Sor ikon="igazolas" cim="Igazolások" al="Jövedelem- és adóigazolás, KOMA, kivonat" onPress={() => router.push('/igazolas')} />
-        <Sor ikon="kivonat" cim="Bevételi kimutatás" al="A bevételeid havonta, PDF-ben" onPress={() => router.push('/kimutatas')} />
-        <Sor ikon="kerdezek" cim="Kérések" al="Adatváltozás, kérdés" onPress={() => router.push('/keresek')} />
+        <Sor ikon="nyugta" cim={FEE_TEXTS.fiokRow} al="Mi van a havidíjban, külön díjak, számláid" onPress={() => router.push('/fiok/dijak')} />
+        <Sor ikon="irat" cim="Igazolások" al="Jövedelem- és adóigazolás, KOMA, kivonat" onPress={() => router.push('/igazolas')} />
+        <Sor ikon="emelkedes" cim="Bevételi kimutatás" al="A bevételeid havonta, PDF-ben" onPress={() => router.push('/kimutatas')} />
+        <Sor ikon="kerdoiv" cim="Kérések" al="Adatváltozás, kérdés" onPress={() => router.push('/keresek')} />
         {bekotes ? null : hf.zarva('hataridok') ? (
           <Sor ikon="hataridok" cim="Határidők" al="A bekötés után nyílik meg." jobbra={lakat} label="Határidők" zaroltOk={hf.ok('hataridok') ?? 'A bekötés után nyílik meg.'} onPress={() => zarolt({ feature: 'hataridok' })} />
         ) : (
@@ -145,16 +152,20 @@ export default function Fiok() {
         )}
       </Lap>
 
+          </>
+        }
+        jobb={
+          <>
       <Szakasz ikon="ertesites" cim="Beállítások" />
       <Lap>
         <Sor elso ikon="ertesites" cim="Értesítések" al={ujErt ? `${ujErt} új` : 'Mikről és hogyan szóljunk'} onPress={() => router.push('/ertesitesek')} />
-        <Sor ikon="fiok" cim="Biztonság" al={`Jelszó, kétlépcsős belépés${Platform.OS !== 'web' ? ', ujjlenyomat vagy arc' : ''}`} onPress={() => router.push('/fiok/biztonsag')} />
-        <Sor ikon="dosszie" cim="Adataim" al="Amit rólad tárolunk, és a letöltésük" onPress={() => router.push('/fiok/adataim')} />
+        <Sor ikon="pajzs" cim="Biztonság" al={`Jelszó, kétlépcsős belépés${Platform.OS !== 'web' ? ', ujjlenyomat vagy arc' : ''}`} onPress={() => router.push('/fiok/biztonsag')} />
+        <Sor ikon="fiok" cim="Adataim" al="Amit rólad tárolunk, és a letöltésük" onPress={() => router.push('/fiok/adataim')} />
       </Lap>
 
       {kod && !bekotes ? (
         <>
-          <Szakasz ikon="boritek" cim="Ajánld ismerősnek" megj="Ha ismersz egyéni vállalkozót, akinek jól jönne egy könyvelő." />
+          <Szakasz cim="Ajánld ismerősnek" megj="Ha ismersz egyéni vállalkozót, akinek jól jönne egy könyvelő." />
           <Lap style={{ padding: 18 }}>
             <T m={14} c={szin.halvany}>
               A te ajánlókódod
@@ -164,6 +175,7 @@ export default function Fiok() {
             </T>
             <GombM
               cim="Megosztom"
+              magas={50}
               style={{ marginTop: 12 }}
               onPress={async () => {
                 const szoveg = `Nekem ${nevelo(brand.name)} ${brand.name} intézi a könyvelést, havi ${brand.priceHufMonthlyGross.toLocaleString('hu-HU')} Ft-ért. Ha te is kipróbálnád, ezzel a kóddal regisztrálj: ${kod}`;
@@ -183,18 +195,21 @@ export default function Fiok() {
 
       <Szakasz ikon="kerdezek" cim="Segítség" />
       <Lap>
-        <Sor elso ikon="ora" cim="Visszahívást kérek" al={nyitottVh ? nyitottVh.statusText : 'Csapatunk 24–48 órán belül felhív.'} onPress={() => router.push(visszahivasUt('fiok', 'egyeb'))} />
-        <Sor ikon="kerdezek" cim="Gyakori kérdések" onPress={() => router.push('/gyik')} />
-        <Sor ikon="irat" cim="Szerződés és adatkezelés" onPress={() => router.push('/jogi/aszf')} />
+        <Sor elso ikon="telefon" cim="Visszahívást kérek" al={nyitottVh ? nyitottVh.statusText : HIVAS_MONDAT} onPress={() => router.push(visszahivasUt('fiok', 'egyeb'))} />
+        <Sor ikon="kerdes" cim="Gyakori kérdések" onPress={() => router.push('/gyik')} />
+        <Sor ikon="jogi" cim="Szerződés és adatkezelés" onPress={() => router.push('/jogi/aszf')} />
       </Lap>
 
-      <View style={{ marginTop: 18, paddingHorizontal: 4 }}>
-        <GombSz cim="Kijelentkezés" onPress={() => void kilep().then(() => router.replace('/belepes')).catch((e: unknown) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')))} />
-        <GombSz cim="Fiók törlése" veszely onPress={() => router.push('/fiok/torles')} />
-        <T m={13} c={szin.halvanyAlapon} style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 4, gap: 10 }}>
+        <GombM cim="Kijelentkezés" ikon="kilep" magas={50} onPress={() => void kilep().then(() => router.replace('/belepes')).catch((e: unknown) => jelez(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')))} />
+        <GombV cim="Fiók törlése" onPress={() => router.push('/fiok/torles')} />
+        <T m={13} c={szin.halvanyAlapon} kozep style={{ marginTop: 4 }}>
           {brand.name} {Constants.expoConfig?.version ?? ''} · {brand.provider.legalName}
         </T>
       </View>
+          </>
+        }
+      />
     </Kepernyo>
   );
 }

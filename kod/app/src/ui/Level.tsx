@@ -9,7 +9,8 @@ import { datum } from '../lib/format';
 import { arnyek, forma, szin } from '../theme/tokens';
 import { KeszJel } from './kepek';
 import { T } from './T';
-import { SAV, useTeljes } from './teljes';
+import { useTeljes } from './teljes';
+import { useAsztali } from '../lib/elrendezes';
 
 const PAPIR = require('../../assets/textura/papirszal.png');
 
@@ -45,22 +46,20 @@ export function Alairas({ ut, kulcs, szelesseg = 120 }: { ut: string; kulcs: str
 }
 
 export function Level({ level, alairasUt, befizetve, style }: { level: Letter; alairasUt: string | null; befizetve?: boolean; style?: object }) {
-  // k6c2 (tulaj 11-19 20:20, „csak valami elválasztó köztük”; SPEC §28.K.10): a szakaszos képernyőn a levél is teljes
-  // szélességű szakasz, fölötte a 10 pt-os #D3DAFC sáv – nem egy árnyékos kártya, ami az előző szakaszhoz tapad.
+  // k8 (v2): a levél is fehér kártya (r 20, kártyaárnyék) a szürke háttéren; a papírszál halkan marad, a kék tollas aláírással.
   const teljes = useTeljes();
-  const keret = teljes
-    ? { marginHorizontal: -forma.margo, borderTopWidth: SAV.vastag, borderTopColor: SAV.szin, backgroundColor: szin.levelPapir }
-    : { borderRadius: forma.level, backgroundColor: szin.levelPapir, ...arnyek.papir };
+  const asztali = useAsztali();
+  const keret = { borderRadius: asztali ? 22 : forma.lap, backgroundColor: szin.levelPapir, marginBottom: 12, ...(teljes ? arnyek.kartya : null) };
   return (
     <View style={[keret, style]}>
-      <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: teljes ? 0 : forma.level, overflow: 'hidden' }}>
-        <Image source={PAPIR} resizeMode="repeat" style={{ width: '100%', height: '100%', opacity: 0.5 }} />
+      <View style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, borderRadius: asztali ? 22 : forma.lap, overflow: 'hidden' }}>
+        <Image source={PAPIR} resizeMode="repeat" style={{ width: '100%', height: '100%', opacity: 0.35 }} />
       </View>
       <View style={{ paddingTop: 16, paddingHorizontal: 20, paddingBottom: 10 }}>
-        <T m={26} s={600} lh={1.15} ls={-0.022} accessibilityRole="header" style={{ paddingRight: befizetve ? 52 : 0 }}>
+        <T m={24} s={750} lh={1.15} ls={-0.022} accessibilityRole="header" style={{ paddingRight: befizetve ? 52 : 0 }}>
           {level.greeting}
         </T>
-        <T m={16.5} lh={1.62} style={{ marginTop: 8 }}>
+        <T m={16} lh={1.55} c={szin.szoveg2} style={{ marginTop: 8 }}>
           {level.body}
         </T>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', gap: 10, marginTop: 4 }}>

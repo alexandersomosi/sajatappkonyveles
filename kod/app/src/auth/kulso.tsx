@@ -24,17 +24,17 @@ function GLogo() {
   );
 }
 
-/** Fehér kapszula 1 pt-os sötét kerettel (01 .gomb-k). */
+/** v2 .gomb-masod: fehér, 1,5 pt-os keret, r 14, a cég hivatalos színes logójával (Google „G”). */
 function CegGomb({ cim, logo, onPress, tilt }: { cim: string; logo: React.ReactNode; onPress: () => void; tilt?: boolean }) {
   return (
     <Pressable
       accessibilityRole="button"
       disabled={tilt}
       onPress={onPress}
-      style={({ pressed }) => ({ height: 50, borderRadius: 999, backgroundColor: pressed ? '#F4F5F7' : '#fff', borderWidth: 1, borderColor: '#3C4043', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, opacity: tilt ? 0.6 : 1 })}
+      style={({ pressed }) => ({ minHeight: 50, borderRadius: 14, backgroundColor: pressed ? '#F5F7FC' : '#fff', borderWidth: 1.5, borderColor: '#DCE2F0', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, opacity: tilt ? 0.6 : 1 })}
     >
       {logo}
-      <T m={16} s={600} c="#1F1F1F">
+      <T m={16} s={700} c="#10152B">
         {cim}
       </T>
     </Pressable>

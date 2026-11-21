@@ -1,8 +1,10 @@
 // Gyökér: betűk, adatréteg, belépés-kapu, biometrikus zár, megosztás más appból, értesítés-koppintás.
-// Weben a telefonos elrendezés középre kerül (max. 480 pt széles), asztali gépen is.
-import { useEffect, useState } from 'react';
-import { Platform, View } from 'react-native';
-import { Stack, router, useSegments } from 'expo-router';
+// Weben 1024 pt alatt a telefonos elrendezés középre kerül (max. 480 pt széles); k8: ≥ 1024 pt-tól gépes elrendezés –
+// bal menüsáv (ui/asztali/Oldalsav) + a képernyők a jobb oldalon. A fa szerkezete mindig ugyanaz (a menü csak egy
+// feltételes testvér), így ablak-átméretezéskor a Stack nem mountolódik újra, nem vész el állapot.
+import { useEffect, useRef, useState } from 'react';
+import { Platform, Pressable, View } from 'react-native';
+import { Stack, router, useGlobalSearchParams, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
@@ -21,6 +23,10 @@ import { BETUK, szin } from '@/theme/tokens';
 import { demoBeallit, JelzesProvider } from '@/ui/keret';
 import { useConfig } from '@/api/hooks';
 import { ZarKepernyo } from '@/ui/ZarKepernyo';
+import { Oldalsav } from '@/ui/asztali/Oldalsav';
+import { OldalsavCtx, useAsztali } from '@/lib/elrendezes';
+import { oldalsavLathatoE } from '@/lib/elrendezesLogika';
+import { webStilusBetolt } from '@/lib/webStilus';
 import { GombE, GombSz } from '@/ui/alap';
 import { T } from '@/ui/T';
 import { Betolt } from '@/ui/keret';
@@ -67,7 +73,7 @@ function Kapu() {
     else if (allapot === 'bent' && authCsoport) router.replace('/');
   }, [allapot, authCsoport, nyilvanos, elso, user]);
 
-  if (allapot === 'betolt' && !zarva) return <Betolt szoveg="Egy pillanat…" />;
+  if (allapot === 'betolt' && !zarva) return <Betolt szoveg="Egy pillanat…" kerek />;
   return (
     <>
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: szin.alap }, animation: Platform.OS === 'ios' ? 'default' : 'fade_from_bottom' }}>
@@ -82,7 +88,60 @@ function Kapu() {
   );
 }
 
+/** „Ugrás a tartalomra” (web, gépes menünél): csak fókuszra látszik; a tartalomoszlopra viszi a fókuszt. */
+function Ugrolink({ cel }: { cel: { current: unknown } }) {
+  const [fokusz, setFokusz] = useState(false);
+  return (
+    <Pressable
+      accessibilityRole="link"
+      onFocus={() => setFokusz(true)}
+      onBlur={() => setFokusz(false)}
+      onPress={() => (cel.current as { focus?: () => void } | null)?.focus?.()}
+      style={[{ position: 'absolute', zIndex: 50, top: 8, left: 8, paddingHorizontal: 16, minHeight: 44, justifyContent: 'center', borderRadius: 12, backgroundColor: szin.sarga }, fokusz ? null : { left: -9999 }]}
+    >
+      <T m={15.5} s={750} c={szin.sotet}>
+        Ugrás a tartalomra
+      </T>
+    </Pressable>
+  );
+}
+
+/** Gépen (≥ 1024 pt, web, belépve, nem teljes képernyős út) a bal menü + a tartalom; egyébként csak a tartalom. */
+function Elrendezes() {
+  const asztali = useAsztali();
+  const { allapot } = useAuth();
+  const szegmensek = useSegments();
+  const p = useGlobalSearchParams<{ vezetett?: string }>();
+  const lathato = oldalsavLathatoE({ asztali, bent: allapot === 'bent', elsoSzegmens: szegmensek[0] as string | undefined, vezetett: !!p.vezetett });
+  const tartalom = useRef<unknown>(null);
+  useEffect(() => {
+    // a tartalomoszlop programból fókuszálható (ugrólink), de a Tab-sorrendben nincs benne
+    if (Platform.OS === 'web') (tartalom.current as { setAttribute?: (k: string, v: string) => void } | null)?.setAttribute?.('tabindex', '-1');
+  }, []);
+  return (
+    <OldalsavCtx.Provider value={lathato}>
+      <View style={{ flex: 1, flexDirection: 'row' }}>
+        {lathato ? <Ugrolink cel={tartalom} /> : null}
+        {lathato ? <Oldalsav /> : null}
+        <View ref={tartalom as never} role="main" style={{ flex: 1, minWidth: 0 }}>
+          <Kapu />
+        </View>
+      </View>
+    </OldalsavCtx.Provider>
+  );
+}
+
+function Keret({ children }: { children: React.ReactNode }) {
+  const asztali = useAsztali();
+  return (
+    <View style={{ flex: 1, backgroundColor: Platform.OS === 'web' && !asztali ? '#DCE1EE' : szin.alap, alignItems: 'center' }}>
+      <View style={[{ flex: 1, backgroundColor: szin.alap, overflow: 'hidden' }, asztali ? { width: '100%' } : keretStilus]}>{children}</View>
+    </View>
+  );
+}
+
 export default function Gyoker() {
+  useEffect(() => webStilusBetolt(), []);
   const [betuk, betuHiba] = useFonts(BETUK);
   const [kesz, setKesz] = useState(false);
   useEffect(() => {
@@ -95,8 +154,7 @@ export default function Gyoker() {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={qc}>
-        <View style={{ flex: 1, backgroundColor: Platform.OS === 'web' ? '#CCD2E4' : szin.alap, alignItems: 'center' }}>
-          <View style={[{ flex: 1, backgroundColor: szin.alap, overflow: 'hidden' }, keretStilus]}>
+        <Keret>
             <AuthProvider>
               <JelzesProvider>
                 <ZaroltProvider>
@@ -104,14 +162,13 @@ export default function Gyoker() {
                     <UtvaltasProvider>
                       <StatusBar style="light" />
                       <DemoFigyelo />
-                      <Kapu />
+                      <Elrendezes />
                     </UtvaltasProvider>
                   </MagyarazatProvider>
                 </ZaroltProvider>
               </JelzesProvider>
             </AuthProvider>
-          </View>
-        </View>
+        </Keret>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

@@ -11,7 +11,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { K, useConfig, useElofizetes } from '@/api/hooks';
 import { szin } from '@/theme/tokens';
-import { GombE, GombSz, Lap } from '@/ui/alap';
+import { GombE, GombSz, Lap, jelzoDoboz } from '@/ui/alap';
 import { Ikon3d, KeszJel } from '@/ui/kepek';
 import { CimSor, Kepernyo } from '@/ui/keret';
 import { T } from '@/ui/T';
@@ -49,7 +49,7 @@ export function SimplePayEredmeny() {
   return (
     <Kepernyo ful="fooldal" fejlec={<CimSor cim={cim} />}>
       {demoFizetes ? (
-        <View style={{ borderRadius: 14, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <View style={{ borderRadius: 14, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
           <T m={15} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             DEMO FIZETÉS: ez nem valódi SimplePay-tranzakció, kártyát nem terheltünk, pénz nem mozdult. Az azonosító is kitalált.
           </T>

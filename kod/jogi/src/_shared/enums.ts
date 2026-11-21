@@ -155,13 +155,20 @@ export const DOCUMENT_CATEGORIES = [
   // SPEC §26.1.5: the NAV PDF of the client's own EV bejelentés (értesítés / nyilvántartásba vétel).
   // DB: ALTER TYPE document_category ADD VALUE 'ev_bejelentes'. Shown in DossierView.contracts (no workflow status).
   'ev_bejelentes',
+  // SPEC §32.B (DB: 0024_ev_ciklus_enumok.sql): the NAV folyószámla (adószámla) extract of a reconciliation; default
+  // visibility csak_konyvelo.
+  'adoszamla_kivonat',
 ] as const;
 export type DocumentCategory = (typeof DOCUMENT_CATEGORIES)[number];
 
 export const DOCUMENT_VISIBILITIES = ['kozos', 'csak_konyvelo'] as const;
 export type DocumentVisibility = (typeof DOCUMENT_VISIBILITIES)[number];
 
-export const TAX_PERIOD_KINDS = ['negyedev', 'hipa'] as const;
+// SPEC §32: + 'kata' (one row per KATA month, key 'YYYY-MM-KATA'; tax_periods.kind is text, no DB enum).
+// SPEC §32.B (éves ciklus, F2/F3): + the payments that follow a filed yearly return or an önellenőrzés – 'eves_szja'
+// ('YYYY-SZJA', the szja difference), 'kata_eves' ('YYYY-KATA', the 40 % különadó), 'hipa_eves' ('YYYY-HIPA', the HIPA
+// difference), 'onellenorzes' ('ONELL-<id>'). They are made only by the accountant's "Beadtam" and are always approved.
+export const TAX_PERIOD_KINDS = ['negyedev', 'hipa', 'kata', 'eves_szja', 'kata_eves', 'hipa_eves', 'onellenorzes'] as const;
 export type TaxPeriodKind = (typeof TAX_PERIOD_KINDS)[number];
 
 export const CALC_STATUSES = ['nincs', 'becsles', 'jovahagyva'] as const;
@@ -174,7 +181,9 @@ export const FILING_STATUSES = ['nincs', 'beadva'] as const;
 export type FilingStatus = (typeof FILING_STATUSES)[number];
 
 // SPEC §28.K.11: + the KATA monthly tax (adónem 288) and the 40 % különadó above the keret.
-export const PAYMENT_ITEM_KINDS = ['tb_jarulek', 'szocho', 'szja_eloleg', 'hipa_eloleg', 'hipa_kulonbozet', 'kata_teteles', 'kata_kulonado'] as const;
+// SPEC §32.B (DB: ADD VALUE in 0024_ev_ciklus_enumok.sql, this order): the yearly szja difference, the önellenőrzési pótlék
+// (NAV 215) and any other tax line of an önellenőrzés.
+export const PAYMENT_ITEM_KINDS = ['tb_jarulek', 'szocho', 'szja_eloleg', 'hipa_eloleg', 'hipa_kulonbozet', 'kata_teteles', 'kata_kulonado', 'szja_kulonbozet', 'onellenorzesi_potlek', 'egyeb_ado'] as const;
 export type PaymentItemKind = (typeof PAYMENT_ITEM_KINDS)[number];
 
 export const HERO_STATES = ['bekotes_alatt', 'becsles', 'jovahagyva', 'befizetve', 'nincs_fizetendo'] as const;
@@ -218,7 +227,9 @@ export const NAV_MODES = ['demo', 'test', 'prod'] as const;
 export type NavMode = (typeof NAV_MODES)[number];
 
 // SPEC §28.K: 'zarolva' = service lock (§28.K.5), 'kata_figyelem' = a KATA client invoiced a business (§28.K.11).
-export const CLIENT_FLAGS = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'zarolva', 'kata_figyelem'] as const;
+// SPEC §32.B: + the last NAV folyószámla check shows a backlog / difference not settled yet, and an open önellenőrzés
+// (jsonb clients.next_flags – no migration).
+export const CLIENT_FLAGS = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'zarolva', 'kata_figyelem', 'folyoszamla_elteres', 'onellenorzes_nyitott'] as const;
 export type ClientFlag = (typeof CLIENT_FLAGS)[number];
 export type ClientFilter = ClientFlag | 'mind';
 
@@ -343,6 +354,13 @@ export const NOTIFICATION_KINDS = [
   'profile_changed_by_admin',
   'announcement',
   'guided_continue',
+  // SPEC §32 (DB: ADD VALUE in 0022_kata_enumok.sql): the accountant's tax tasks (KATA year end, free-month notice, backfill, 2027 amount)
+  'tax_task',
+  // SPEC §32.B (DB: ADD VALUE in 0024_ev_ciklus_enumok.sql): the client's önellenőrzés steps (approve, filed, settled)
+  'correction_status',
+  // k8 ALAP-B (DB: ADD VALUE in 0027_k8_enumok.sql, this order): bank transfer – the díjbekérő is out, a late reminder
+  'transfer_request',
+  'transfer_reminder',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 /** Kinds never sent any more and hidden from the client's notification settings (SPEC §26.2.9). */
@@ -418,6 +436,7 @@ export const DOCUMENT_CATEGORY_ICON: Record<DocumentCategory, Icon3d> = {
   szerzodes_alairt: 'irat',
   egyeb: 'irat',
   ev_bejelentes: 'irat',
+  adoszamla_kivonat: 'irat',
 };
 
 // =====================================================================================================================
@@ -456,7 +475,7 @@ export const REGISTRATION_STATUS_LABELS: Record<RegistrationStatus, string> = {
 export const REGISTRATION_STATUS_CLIENT_TEXT: Record<RegistrationStatus, string> = {
   kitoltes: 'Még nem töltötted ki a kérdőívet. Ott folytathatod, ahol abbahagytad.',
   utmutato: 'Kész a személyre szabott útmutatód. Lépésről lépésre megmutatja, mit jelölj be a NAV oldalán.',
-  beadva: 'Megkaptuk a NAV-os értesítést. Átnézzük, általában 1 munkanapon belül.',
+  beadva: 'Megkaptuk a NAV-os értesítést. Átnézzük, és szólunk.',
   javitas: 'Egy dolgot javítanod kell. Megírtuk, mit és hogyan.',
   ellenorizve: 'Rendben van a bejelentésed. Az adószámodat az értesítésről mi rögzítjük. Ha még nincs rajta, a NAV pár napon belül küldi.',
   kesz: 'Elindult a vállalkozásod. Jöhet a következő lépés.',
@@ -1685,15 +1704,16 @@ export const REMINDER_RULES = {
 export const REMINDER_GROUPS = ['befizetes', 'feltoltes', 'ra_var'] as const;
 export type ReminderGroup = (typeof REMINDER_GROUPS)[number];
 export const REMINDER_GROUP_KINDS: Record<ReminderGroup, readonly NotificationKind[]> = {
-  befizetes: ['tax_due_soon', 'annual_due'],
+  // SPEC §32.B: the annual return's steps and the önellenőrzés follow the same group setting (the client may switch them off)
+  befizetes: ['tax_due_soon', 'annual_due', 'annual_status', 'correction_status'],
   feltoltes: ['upload_reminder'],
   ra_var: ['nudge', 'checkin_due', 'request_reminder'],
 };
 /** Cannot be switched off (payment and lock texts). */
-export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated'];
+export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated', 'transfer_request', 'transfer_reminder'];
 /** Variants used by §28.K.4 (content notif.<kind>.<variant>.*). */
 export const REMINDER_VARIANTS = {
-  tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'hipa'],
+  tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'kata_lejart', 'kata_ev_vege', 'hipa'],
   upload_reminder: ['kivonat', 'nyugta'],
   request_reminder: ['nap3', 'nap7'],
   nudge: ['egy', 'tobb', 'szunetel_ket_ev'],
@@ -1704,7 +1724,8 @@ export type NudgeSubject = (typeof NUDGE_SUBJECTS)[number];
 
 // ---------- §28.K.5 D – unpaid fee lock ----------
 // SPEC §29.9.4: 'kezi' = locked by the admin (clients.service_lock_manual mode 'zarolva').
-export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras', 'kezi'] as const;
+// k8: 'atutalas_kesik' = a díjbekérő 8 days late while the switch kapcsolok.fizetes.kesesLeallit is ON (default OFF).
+export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras', 'kezi', 'atutalas_kesik'] as const;
 export type ServiceLockReason = (typeof SERVICE_LOCK_REASONS)[number];
 export const SERVICE_LOCK_ERROR_CODE = 'service_locked';
 /** What stays open, what is read-only and what is locked while clients.service_lock is set (SPEC §28.K.5). */
@@ -1800,7 +1821,8 @@ export const KATA_RULES_2026 = {
   monthlyHuf: 50_000,
   /** Due by the 12th of the following month (next working day). */
   dueDayOfNextMonth: 12,
-  accountName: 'NAV Kisadózó vállalkozások tételes adója bevételi számla',
+  // SPEC §32: the name in the NAV list in force from 2026-11-01 (checked 2026-11-21); the engine's NAV_ACCOUNTS.kata is the source
+  accountName: 'NAV Kisadózó vállalkozások adója bevételi számla',
   accountNumber: '10032000-01076349',
   iban: 'HU27100320000107634900000000',
   adonem: '288',

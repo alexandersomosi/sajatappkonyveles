@@ -12,7 +12,7 @@ import { brand } from '@/config';
 import { szin } from '@/theme/tokens';
 import { GombE, GombM, GombSz, Lap, Szakasz } from '@/ui/alap';
 import { KeszJel } from '@/ui/kepek';
-import { AlsoLap, useJelzes } from '@/ui/keret';
+import { AlsoLap, useJelzes, Kartyak } from '@/ui/keret';
 import { T } from '@/ui/T';
 
 
@@ -78,11 +78,11 @@ export function NaptarSzakasz() {
     else void Linking.openURL(url).catch(() => jelez('Ezt a naptárat nem találjuk a telefonodon. Másold ki a linket.'));
   };
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon="hataridok" cim={CALENDAR_TEXTS.sectionTitle} megj={CALENDAR_TEXTS.sectionSub} />
       <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 14, gap: 10 }}>
         {v?.enabled ? (
-          <T m={14.5} s={600} c={szin.halvany} style={{ paddingLeft: 38 }}>
+          <T m={14.5} s={600} c={szin.halvany} style={{ paddingLeft: 54 }}>
             {CALENDAR_TEXTS.on}
           </T>
         ) : null}
@@ -141,7 +141,7 @@ export function NaptarSzakasz() {
           </View>
         )}
       </AlsoLap>
-    </>
+    </Kartyak>
   );
 }
 

@@ -11,7 +11,7 @@ import { K, useKyc, useOnboarding, useProfil } from '@/api/hooks';
 import { elokeszit, hozzaad, type HelyiFajl } from '@/lib/fajlok';
 import { datumHiba, datumNormal } from '@/lib/validators';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Szakasz, Valaszto } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Szakasz, Valaszto, jelzoDoboz } from '@/ui/alap';
 import { Ikon3d, Targykep } from '@/ui/kepek';
 import { CimSor, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { MiEz } from '@/ui/Magyarazat';
@@ -145,7 +145,7 @@ export default function Azonositas() {
           </T>
           {statusz !== 'elfogadva' ? (
             <T m={15.5} s={600} kozep lh={1.5} style={{ marginTop: 4 }}>
-              Általában 1 munkanapon belül. Ha valamit pótolni kell, szólunk.
+              Ha valamit pótolni kell, szólunk.
             </T>
           ) : null}
           <T m={15.5} c={szin.halvany} kozep lh={1.5} style={{ marginTop: 4 }}>
@@ -234,7 +234,7 @@ export default function Azonositas() {
       }
     >
       {statusz === 'hianyos' && kyc.data?.reviewNote ? (
-        <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
           <T m={15} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             {fn} kéri: {kyc.data.reviewNote}
           </T>

@@ -84,7 +84,7 @@ export default function FizesdKi() {
       {/* k7c2: the band above already says the amount and the month – here only WHY (the bank's answer), once */}
       <Szakasz ikon="szamlaszam" cim="Miért kell?" />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-        <View style={{ paddingLeft: 38 }}>
+        <View style={{ paddingLeft: 54 }}>
           <T m={16} lh={1.5}>
             {HAVIDIJ_OK[d.reason] ?? HAVIDIJ_OK.esedekes}
           </T>
@@ -97,7 +97,7 @@ export default function FizesdKi() {
       </Lap>
       <Szakasz ikon="nyugta" cim={P.account.card} />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-        <View style={{ paddingLeft: 38 }}>
+        <View style={{ paddingLeft: 54 }}>
           <T m={16} s={600} lh={1.45}>
             {d.cardLabel ?? 'Nincs mentett kártyád'}
           </T>

@@ -43,7 +43,7 @@ export default function Gyik() {
           Nem találtad a választ? Kérj visszahívást.
         </T>
         <T m={15.5} c={szin.halvany} lh={1.5} style={{ marginTop: 4, marginBottom: 12 }}>
-          Csapatunk 24–48 órán belül felhív. Írni is tudsz nekünk az Üzenetekben.
+          A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Írni is tudsz nekünk az Üzenetekben.
         </T>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           <GombM cim="Kérj visszahívást" ikon="ora" onPress={() => router.push(visszahivasUt('gyik', 'egyeb'))} />

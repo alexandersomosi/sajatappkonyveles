@@ -1,6 +1,6 @@
 // SPEC §29.9.3–§29.9.6 – /admin/konzol/ugyfelek/:id: the client card with everything we store (one small endpoint per
 // section), "Ügyfél szemével" (read-only phone frame), and the actions: header buttons "Üzenet", "Ár", "Zárolás" and
-// "Műveletek ▾". Every action is a dialog with its fields, the reason, the summary and "Megerősítem" (step-up first).
+// "Műveletek" (with the v2 chevron). Every action is a dialog with its fields, the reason, the summary and "Megerősítem" (step-up first).
 import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,10 +23,12 @@ import {
 import { FEE_KIND_LABELS } from '../../../_shared/bekotes';
 import { Fejlec, Fiok, HibaSav, Toltes } from '../../../ui/kozos';
 import { I3 } from '../../../ui/Icon3d';
+import { VezerloIkon } from '../../../_shared/v2/web';
 import { usePirito } from '../../../ui/Pirito';
 import { szam } from '../../../lib/format';
 import { today } from '../../../lib/today';
 import { LepcsoProvider, MuveletFiok, useLepcsos, type MuveletDef } from './lepcso';
+import { AtutalasSzakasz } from './Atutalas';
 
 const W = k.consoleWrite;
 const DIJ_FAJTAK = ['eves_zaras', 'valtozas_egyszeru', 'valtozas_jogallas', 'megszuntetes', 'igazolas_jovedelem', 'igazolas_ado', 'igazolas_koma', 'igazolas_ev_kivonat', 'igazolas_egyeb'];
@@ -150,7 +152,7 @@ function muveletek(h: ConsoleClientHeader, accs: { id: string; displayName: stri
       mezok: [],
       osszegzes: () => `${h.name} összes adatát kiexportáljuk.`,
       kuld: (v) => W<{ exportId: string }>('POST', `/clients/${id}/export`, { reason: v.reason ?? '' }),
-      siker: () => 'Készül. Pár perc múlva a fejlécben letöltheted.',
+      siker: () => 'Készül. Ha elkészült, a fejlécben letöltheted.',
     },
     forras: {
       cim: 'Forrásadat törlése (tiltakozás)',
@@ -502,16 +504,16 @@ function Tartalom() {
             {!c.anonymizedAt ? (
               <>
                 <button type="button" className="gomb-m" onClick={() => nyit('uzenet')}>
-                  <I3 n="uzenetek" s={22} /> Üzenet
+                  <I3 n="uzenet" s={22} /> Üzenet
                 </button>
                 <button type="button" className="gomb-m" onClick={() => nyit('ar')}>
-                  <I3 n="szamolo" s={22} /> Ár
+                  <I3 n="cimke" s={22} /> Ár
                 </button>
                 <button type="button" className="gomb-m" onClick={() => nyit('zarolas')}>
                   <I3 n="lakat" s={22} /> Zárolás
                 </button>
                 <button type="button" className="gomb-m csak-szoveg" style={{ fontWeight: 750 }} aria-expanded={menu} onClick={() => setMenu((m) => !m)}>
-                  {CONSOLE_TEXTS.actions} ▾
+                  {CONSOLE_TEXTS.actions} <VezerloIkon nev={menu ? 'chev-fel' : 'chev-le'} pt={18} />
                 </button>
               </>
             ) : null}
@@ -560,6 +562,10 @@ function Tartalom() {
           ) : (
             <SzakaszNezet h={c} s={s.data} muvelet={setDef} />
           )}
+        </div>
+        {/* k8 ALAP-B: the client's díjbekérők (only shown when there is one or the server has k8) */}
+        <div className="lap" style={{ marginTop: 16 }}>
+          <AtutalasSzakasz clientId={id} />
         </div>
       </div>
       <MuveletFiok def={def} bezar={() => setDef(null)} kesz={frissit} />

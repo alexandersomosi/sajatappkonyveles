@@ -15,6 +15,8 @@ import { fizetesiHiba } from '../../lib/labels';
 import { idopont } from '../../lib/format';
 import { today } from '../../lib/today';
 import { SimplePayFizetesek } from './FizetesekSimplePay';
+import { AtutalasSzakasz } from './konzol/Atutalas';
+import { LepcsoProvider } from './konzol/lepcso';
 
 /** [key, label, server filter (one status), row filter on the page] */
 const SZURO: [string, string, Record<string, string | undefined>, ((r: AdminPaymentRow) => boolean) | null][] = [
@@ -24,6 +26,8 @@ const SZURO: [string, string, Record<string, string | undefined>, ((r: AdminPaym
   ['visszautalt', 'Visszautalt', {}, (r) => r.refundedHuf > 0],
   ['mind', 'Mind', {}, null],
 ];
+/** k8: the bank-transfer view (díjbekérők: fizetett / vár / késik) – the same section as on the console overview. */
+const ATUTALAS = 'atutalas';
 const HIBAS = ['sikertelen', 'hitelesites_kell', 'bizonytalan', 'duplikalt'];
 
 function Visszaterites({ r, bezar }: { r: AdminPaymentRow | null; bezar: () => void }) {
@@ -96,7 +100,8 @@ export default function Fizetesek() {
   const [vissza, setVissza] = useState<AdminPaymentRow | null>(null);
   const sz = SZURO.find(([k]) => k === szuro) ?? SZURO[0]!;
   const feltetel = sz[2];
-  const q = useQuery({ queryKey: ['admin', 'k29', 'payments', szuro, from, to], queryFn: () => k29Fizetesek({ ...feltetel, from: from || undefined, to: to || undefined }), enabled: nezet !== 'simplepay' });
+  const atutalas = szuro === ATUTALAS;
+  const q = useQuery({ queryKey: ['admin', 'k29', 'payments', szuro, from, to], queryFn: () => k29Fizetesek({ ...feltetel, from: from || undefined, to: to || undefined }), enabled: nezet !== 'simplepay' && !atutalas });
   if (nezet === 'simplepay' || (q.isError && nincsK29(q.error))) return <SimplePayFizetesek />;
   const rows = (q.data ?? []).filter((r) => !sz[3] || sz[3](r));
   return (
@@ -104,25 +109,44 @@ export default function Fizetesek() {
       <Fejlec
         felcim="Tulajdonos"
         cim="Fizetések"
-        mellek={<>Minden kártyás fizetés: első hónap, havidíj, külön díj, „Fizesd ki”. A sikertelen havidíjat +1, +3 és +7 nap múlva újra megpróbáljuk; naponta legfeljebb egyszer. <Link to="?nezet=simplepay" style={{ color: '#fff' }}>Régi SimplePay-tranzakciók</Link></>}
+        mellek={
+          atutalas ? (
+            <>Átutalással fizető ügyfelek díjbekérői: fizetett, vár, késik. A későknek a határidő után 1, 4 és 8 nappal emlékeztetőt küldünk.</>
+          ) : (
+            <>Minden kártyás fizetés: első hónap, havidíj, külön díj, „Fizesd ki”. A sikertelen havidíjat +1, +3 és +7 nap múlva újra megpróbáljuk; naponta legfeljebb egyszer. <Link to="?nezet=simplepay">Régi SimplePay-tranzakciók</Link></>
+          )
+        }
       />
       <div className="tartalom">
         <div className="sor-flex ter" style={{ marginBottom: 16 }}>
           <div className="szegmens">
             {SZURO.map(([k, f]) => (
-              <button key={k} className={szuro === k ? 'on' : ''} onClick={() => setSp({ szuro: k }, { replace: true })}>
+              <button key={k} className={szuro === k ? 'on' : ''} aria-pressed={szuro === k} onClick={() => setSp({ szuro: k }, { replace: true })}>
                 {f}
               </button>
             ))}
+            <button className={atutalas ? 'on' : ''} aria-pressed={atutalas} onClick={() => setSp({ szuro: ATUTALAS }, { replace: true })}>
+              Átutalás
+            </button>
           </div>
+          {!atutalas && (
           <div className="sor-flex">
             <label className="halvany kicsi">Ettől</label>
             <input className="doboz" type="date" style={{ width: 160 }} value={from} onChange={(e) => setFrom(e.target.value)} />
             <label className="halvany kicsi">eddig</label>
             <input className="doboz" type="date" style={{ width: 160 }} value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
+          )}
         </div>
-        {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
+        {atutalas ? (
+          <div className="lap">
+            <LepcsoProvider>
+              <AtutalasSzakasz />
+            </LepcsoProvider>
+          </div>
+        ) : null}
+        {!atutalas && q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
+        {!atutalas && (
         <div className="lap">
           {q.isPending ? (
             <Toltes />
@@ -181,7 +205,7 @@ export default function Fizetesek() {
                           </div>
                         ) : null}
                       </td>
-                      <td>
+                      <td className="nt">
                         {r.cardLabel ?? <span className="halvany">–</span>}
                         {r.stripeUrl ? (
                           <div className="al">
@@ -205,6 +229,7 @@ export default function Fizetesek() {
             </div>
           )}
         </div>
+        )}
       </div>
       <Visszaterites r={vissza} bezar={() => setVissza(null)} />
     </>

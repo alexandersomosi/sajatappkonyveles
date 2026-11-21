@@ -126,7 +126,7 @@ export default function Udv() {
       </Lap>
       <Szakasz ikon="szamolo" cim={G.w3PriceTitle} />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-        <View style={{ paddingLeft: 38 }}>
+        <View style={{ paddingLeft: 54 }}>
           <T m={28} s={750} lh={1.2} ls={-0.02} szam>
             {fillPlaceholders(G.w3Price, { osszeg: szam(v.welcome.priceHuf) })}
           </T>

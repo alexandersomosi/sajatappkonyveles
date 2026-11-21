@@ -7,6 +7,7 @@ import { Fejlec, HibaSav, Toltes } from '../../ui/kozos';
 import { MODE_LABEL } from '../../lib/labels';
 import { idopont } from '../../lib/format';
 import { today } from '../../lib/today';
+import { FizetesKapcsolokLap } from './konzol/Atutalas';
 
 const INTEGRACIOK: { k: 'nav' | 'simplepay' | 'mail' | 'push' | 'invoice'; nev: string; mit: string }[] = [
   { k: 'mail', nev: 'E-mail (SMTP)', mit: 'Kódok, értesítések e-mailben (ZeptoMail)' },
@@ -119,6 +120,8 @@ export default function Rendszer() {
       <div className="tartalom">
         {q.isError && <HibaSav hiba={q.error} ujra={() => q.refetch()} />}
         <FizetesBlokk />
+        {/* k8 ALAP-B: the payment switches (TOTP + step-up) */}
+        <FizetesKapcsolokLap />
         {q.isPending ? (
           <Toltes />
         ) : (

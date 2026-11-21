@@ -154,19 +154,37 @@ test('new design (11-21): own files only, motion script and e-mail logos in the 
   assert.doesNotMatch(html, /átutalással|csak a könyvelőd látja/);
   assert.equal((html.match(/bankkártyával\./g) || []).length, 3);
   assert.match(html, /Gépen az app ma még telefonos elrendezésben nyílik meg\./);
+  // 11-21 text fixes (owner): no liability sentence anywhere on the page (text, FAQ, alt texts, meta), and no phone number yet
+  assert.doesNotMatch(html, /\bfelel(?!őtlen)|felelős|felelünk|megtérít|kártérít|garant|helytáll/i);
+  assert.match(html, /A szerződést a <span class="nowrap">Somosi Kft\.-vel<\/span> kötöd, a könyvelőd a mi megbízásunkból dolgozik neked\./);
+  assert.doesNotMatch(html, /href="tel:|\+36[ -]?\d|[Tt]elefonszámunk/);
+  // the server sentence agrees with the footer's hosting provider (Germany, EU); ONYA is always explained
+  assert.equal((html.match(/Az Európai Unióban (tároljuk őket )?\(a szerverünk Németországban van\)/g) || []).length, 2);
+  assert.match(html, /Tárhelyszolgáltató<\/dt><dd>[^<]*Németország<\/dd>/);
+  assert.doesNotMatch(html, /Európai szerveren/);
+  assert.doesNotMatch(html, /(?<!\()ONYA-n\b/);
+  // the hero says it is for starters too; the price list says what is for whom; the FAQ has the switch question
+  assert.match(html, /<p class="hos-elo">Online könyvelés egyéni vállalkozóknak, akkor is, ha most indulsz<\/p>/);
+  assert.match(html, /Átalányadózóként: a negyedéves adód és járulékaid kiszámítása és bevallása/);
+  assert.match(html, /<p class="ar-szavak">Szja-előleg:/);
+  assert.match(html, /<summary>Hogyan váltok a régi könyvelőmtől\?<\/summary>/);
+  // the VAT-exemption limit is the 2026 one (NAV 2025-12-11, Áfa tv. 188. § (2)) – rewrite before 2027-01-01 (22 millió)
+  assert.match(html, /2026-ban évi 20&nbsp;millió&nbsp;Ft bevételig/);
   assert.doesNotMatch(readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8'), /fetch\(|XMLHttpRequest|sendBeacon|localStorage|document\.cookie/);
   assert.doesNotMatch(html, /\sstyle=|<style|\son[a-z]+=/i);
   assert.doesNotMatch(html, /\s(src|srcset)="[^"]*(https?:)?\/\//i);
   assert.doesNotMatch(html, /<!--/);
   // the mails and the owner's signature link these two (the folder is replaced as a whole on the server)
   for (const f of ['logo_feher@2x.png', 'logo_alairas@2x.png']) assert.ok(statSync(join(DIST, 'email', f)).size > 0, f);
-  // every Regisztrálok / Belépés / Visszahívást kérek / e-mail link sends its event, with the place of the button
+  // every Regisztrálok / Belépés / visszahívás / e-mail link sends its event, with the place of the button
   const helyek = (nev) => [...html.matchAll(new RegExp(`data-kj-esemeny="${nev}" data-kj-hely="([a-z]+)"`, 'g'))].map((m) => m[1]);
   assert.deepEqual(helyek('regisztralok'), ['fejlec', 'hos', 'arak', 'zaro', 'lab']);
   assert.deepEqual(helyek('belepes'), ['fejlec', 'menu', 'lab']);
   assert.deepEqual(helyek('visszahivas'), ['zaro']);
   assert.ok(helyek('email-iras').length >= 4);
-  assert.match(html, /href="https:\/\/app\.adozz\.hu\/regisztracio\?cel=visszahivas" data-kj-esemeny="visszahivas" data-kj-hely="zaro">Visszahívást kérek</);
+  // 11-21 text fixes: the label says that the button leads to the registration first (the link and the event are unchanged)
+  assert.match(html, /href="https:\/\/app\.adozz\.hu\/regisztracio\?cel=visszahivas" data-kj-esemeny="visszahivas" data-kj-hely="zaro">Regisztrálok, és visszahívást kérek</);
+  assert.match(html, /A visszahíváshoz előbb regisztrálsz: a neved, az e-mail-címed és egy jelszó kell, kártya nem\./);
   assert.match(html, /nincs követő süti/); // true here: no ad code can be in this build, the statistics use no cookie
   // every app link (not the legal pages) takes the campaign along
   const p = oldal({ url: 'https://adozz.hu/?utm_source=youtube&utm_campaign=proba', referrer: 'https://www.youtube.com/' });

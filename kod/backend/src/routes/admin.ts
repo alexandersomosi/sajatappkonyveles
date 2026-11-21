@@ -664,15 +664,27 @@ export function adminRoutes(deps: Deps) {
     deps.sessionCache.clear();
   }
 
+  /** k8 JL 19 (LEVEL_LEFEDETTSEG #64): the client hears that the account is blocked / usable again (never blocks it). */
+  async function accessMail(clientId: string, enabled: boolean) {
+    const [row] = await deps.db.select({ email: users.email }).from(clients).innerJoin(users, eq(users.id, clients.userId)).where(eq(clients.id, clientId)).limit(1);
+    if (!row) return;
+    const support = String((brand.provider as { supportEmail?: string }).supportEmail ?? '');
+    const { sendTemplateMail } = await import('../notify/notify.js');
+    const link = `${deps.cfg.appPublicUrl}/belepes`;
+    await sendTemplateMail(deps, { to: row.email, key: enabled ? 'account_enabled' : 'account_disabled', lablec: 'ugyfel', ...(enabled ? { gomb: { szoveg: await deps.content.render('email.account_enabled.gomb', {}), link } } : {}), params: { support, link } });
+  }
+
   r.post('/clients/:id/disable', async (c) => {
     const b = await readJson(c, z.object({ reason: z.string().trim().min(3, { error: 'Írd le röviden, miért.' }).max(500) }));
     await setClientAccess(c, param(c, 'id'), false, b.reason);
+    await accessMail(param(c, 'id'), false).catch(() => undefined);
     return c.body(null, 204);
   });
 
   r.post('/clients/:id/enable', async (c) => {
     const b = await readJson(c, z.object({ reason: z.string().trim().min(3, { error: 'Írd le röviden, miért.' }).max(500) }));
     await setClientAccess(c, param(c, 'id'), true, b.reason);
+    await accessMail(param(c, 'id'), true).catch(() => undefined);
     return c.body(null, 204);
   });
 

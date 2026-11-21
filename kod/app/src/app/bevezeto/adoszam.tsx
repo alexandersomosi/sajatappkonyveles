@@ -16,7 +16,7 @@ import { adoszamFormaz, adoszamHiba, iranyitoszamHiba } from '@/lib/validators';
 import { BevezetoSav } from '@/kepernyok/Bevezeto';
 import { Kapszulak, UrlapKerdes } from '@/kepernyok/Urlap';
 import { forma, szin } from '@/theme/tokens';
-import { Cimke, GombE, GombM, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
+import { Cimke, GombE, GombM, GombSz, HibaSzoveg, Lap, jelzoDoboz } from '@/ui/alap';
 import { Kepernyo } from '@/ui/keret';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
@@ -175,7 +175,7 @@ export default function BevezetoAdoszam() {
                 </T>
               ) : null}
               {r.afaWarning ? (
-                <View style={{ marginTop: 10, borderRadius: 10, backgroundColor: szin.borostyanAlap, padding: 10 }}>
+                <View style={{ marginTop: 10, borderRadius: 10, ...jelzoDoboz('figyelem'), padding: 10 }}>
                   <T m={14.5} s={600} c={szin.borostyanSzoveg} lh={1.4}>
                     {L.notAlanyi}
                   </T>

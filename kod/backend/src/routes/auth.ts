@@ -84,6 +84,13 @@ export function authRoutes(deps: Deps) {
   const authed = requireAuth(deps, { allowWithoutStaffTotp: true });
 
   const k = (s: string) => hmacHex(deps.cfg.auditIpSalt, s).slice(0, 24);
+  /** k8 JL 14: "Üdv az Adózzban!" – once per account (audit marker), after the sign-up address is confirmed. */
+  const welcomeMail = async (userId: string, to: string) => {
+    const [cl] = await deps.db.select({ firstName: clients.firstName }).from(clients).where(eq(clients.userId, userId)).limit(1);
+    if (!cl) return;
+    const link = `${deps.cfg.appPublicUrl}/bevezeto`;
+    await sendTemplateMail(deps, { to, key: 'welcome', lablec: 'ugyfel', gomb: { szoveg: await deps.content.render('email.welcome.gomb', {}), link }, params: { keresztnev: cl.firstName, link } });
+  };
 
   /** Fresh sign-in (≤ 10 min) or the current password; Google/Apple-only accounts need a fresh sign-in. */
   async function requireRecentAuth(u: { passwordHash: string | null }, sessionId: string, currentPassword: string | undefined): Promise<void> {
@@ -259,6 +266,8 @@ export function authRoutes(deps: Deps) {
     // ONE answer for everything – "túl sok próbálkozás" too: only an address with a real code could ever get that one
     if (res !== 'ok' || !u || u.role !== 'client' || u.status !== 'active' || u.emailVerifiedAt) throw E.validation({ code: REGISTER_CODE_MESSAGE });
     await markEmailVerified(c, u.id);
+    // k8 JL 14 (LEVEL_LEFEDETTSEG #2): the welcome letter, once, right after the address is confirmed (never blocks)
+    await welcomeMail(u.id, u.email).catch(() => undefined);
     const kind: ClientKind = b.platform === 'web' ? 'web' : 'native';
     return finishLogin(c, u.id, kind, { isNewUser: true, method: 'register' });
   });
@@ -326,6 +335,8 @@ export function authRoutes(deps: Deps) {
           .set(lockNow ? { failedLogins: 0, lastFailedLoginAt: now, lockedUntil: new Date(now.getTime() + 15 * 60_000) } : { failedLogins: Math.min(failed, 1000), lastFailedLoginAt: now })
           .where(eq(users.id, u.id));
         await auditC(c, deps.db, 'auth.login_failed', { actorUserId: u.id, actorRole: u.role, targetType: 'user', targetId: u.id, details: { locked: lockNow } });
+        // k8 JL 15 (LEVEL_LEFEDETTSEG #4): the owner of the account hears about the lock (the way out: a new password)
+        if (lockNow) await sendTemplateMail(deps, { to: u.email, key: 'account_locked', lablec: 'kod', params: { perc: 15 } }).catch(() => undefined);
       } else if (u) {
         await auditC(c, deps.db, 'auth.login_failed', { actorUserId: u.id, actorRole: u.role, targetType: 'user', targetId: u.id, details: { whileLocked: true, passwordOk: ok, knownAddress: !locked } });
       } else {

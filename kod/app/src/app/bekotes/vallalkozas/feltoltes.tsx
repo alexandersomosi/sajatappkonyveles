@@ -1,6 +1,6 @@
 // S11 – a NAV-os értesítés feltöltése (SPEC §27.4.4): a bejelentés után letöltött értesítés (PDF) vagy egy olvasható
 // fotó. „Mikor küldted be?” (alapból ma), „Hogyan?” (csak az ügyfél csatornái), „Adószám (az értesítésen találod)”.
-// → „Megkaptuk. Átnézzük, általában 1 munkanapon belül.” → vissza a Főoldalra (ott a várakozó kártya).
+// → „Megkaptuk. Átnézzük, és szólunk.” → vissza a Főoldalra (ott a várakozó kártya).
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { router } from 'expo-router';
@@ -87,7 +87,7 @@ function IgazolasFeltoltes() {
       if (evSzam.trim()) form.append('evNyilvantartasiSzam', evSzam.trim());
       setFolyamat(0);
       await kuld.mutateAsync({ form, folyamat: setFolyamat });
-      jelez({ szoveg: 'Megkaptuk. Átnézzük, általában 1 munkanapon belül.', kesz: true });
+      jelez({ szoveg: 'Megkaptuk. Átnézzük, és szólunk.', kesz: true });
       bekotesre();
     } catch (err) {
       if (err instanceof ApiHiba && err.fields) setH(err.fields);

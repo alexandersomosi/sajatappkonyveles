@@ -2,6 +2,9 @@
 // the card consent in full with one checkbox, "Tovább a kártyához ({osszeg} Ft)" → the Stripe page (or the DEMO pay page).
 // No free period: the first month is paid now (§29.4.2). PAYMENT_PROVIDER=simplepay → the kept SimplePay screen.
 // Előtte (SimplePay): kod/app/_regi/elotte_k7_b3/src/app/bekotes/elofizetes.tsx
+// k8 ALAP-B: first the optional callback offer (the payment only after it), then "Hogyan fizetnél?" card / transfer when
+// the server offers the transfer (/config fizetes.atutalas); the transfer path shows the díjbekérő's details.
+// Előtte: kod/app/_regi/elotte_k8_B/src/app/bekotes/elofizetes.tsx
 import { useState } from 'react';
 import { View } from 'react-native';
 import { STEP_LOCK_DEFAULT_TEXTS } from '@/_shared/bekotes';
@@ -10,6 +13,10 @@ import { CARD_CONSENT_UI, PAYMENT_SCREEN_TEXTS as P } from '@/_shared/k29';
 import { ApiHiba } from '@/api/http';
 import { useConfig, useOnboarding } from '@/api/hooks';
 import { useElofizetesK29, useKartyaEngedely } from '@/api/hooks-k29';
+import { useGuided } from '@/api/hooks-k29g';
+import { useSzamlazas } from '@/api/hooks-k8';
+import { AtutalasBekotes, AtutalasValaszto, type FizetesMod } from '@/kepernyok/Atutalas';
+import { VisszahivasAjanlat } from '@/kepernyok/VisszahivasAjanlat';
 import { brand } from '@/config';
 import { szam } from '@/lib/format';
 import { fizetesSzolgaltato, kartyaMentes } from '@/lib/fizetes';
@@ -47,12 +54,20 @@ function KartyaLepes() {
   // step needs a new consent + card (the first payment covers the month after the paid one – never the same month twice)
   const aktiv = elo.data?.status === 'active' && !elo.data?.cancelAtPeriodEnd;
   const kikapcsolva = fizetesSzolgaltato(cfg.data) === 'disabled';
+  // k8: the transfer (switch ON on the server, or already chosen) and the callback offer before any payment
+  const sz = useSzamlazas(!aktiv);
+  const g = useGuided(!aktiv);
+  const [modValasztott, setMod] = useState<FizetesMod | null>(null);
+  const atutalhato = !!(cfg.data?.fizetes?.atutalas || sz.data?.method === 'atutalas' || sz.data?.open.length);
+  const mod: FizetesMod = modValasztott ?? (sz.data?.method === 'atutalas' || sz.data?.open.length ? 'atutalas' : 'kartya');
+  const ajanlat = g.data?.steps.find((x) => x.key === 'visszahivas_ajanlat');
+  const ajanlatKell = !aktiv && !!ajanlat && (ajanlat.state === 'nyitva' || ajanlat.state === 'var');
 
   // SPEC §27.4.2: a kártya mindkét úton a szerződés után jön (a szerver zárja; régebbi szervernél itt is).
   const lepes0 = o.data?.steps.find((x) => x.step === 'elofizetes');
   const szerzodesNincs = !!o.data && o.data.steps.find((x) => x.step === 'szerzodes')?.status !== 'kesz' && lepes0?.status !== 'kesz';
   const lepes = lepes0 && !lepes0.locked && szerzodesNincs ? { ...lepes0, locked: true, lockedReason: STEP_LOCK_DEFAULT_TEXTS[LOCK_ELOFIZETES_SZERZODES_UTAN] } : lepes0;
-  const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva, elo.data?.status === 'canceled' ? 'restart' : 'subscribe');
+  const engedely = useKartyaEngedely(!aktiv && !lepes?.locked && !kikapcsolva && !ajanlatKell && mod === 'kartya', elo.data?.status === 'canceled' ? 'restart' : 'subscribe');
   const c = engedely.data;
   const demo = c?.demo ?? (cfg.data?.demo && fizetesSzolgaltato(cfg.data) === 'demo');
   const fej = <CimSor visszaCim="Vissza a Főoldalra" vissza={() => vissza('/bekotes')} cim={P.cardStep.bandTitle} al={P.cardStep.bandText.replace('{havidij}', szam(ar))} />;
@@ -69,6 +84,25 @@ function KartyaLepes() {
           </View>
           <MiEz kulcs="elofizetes" style={{ alignSelf: 'flex-start', marginTop: 8 }} />
         </Lap>
+        <Elakadtal forras="elofizetes" tema="elofizetes" style={{ marginTop: 6, marginLeft: 4 }} />
+      </Kepernyo>
+    );
+  }
+
+  if (ajanlatKell) {
+    return (
+      <Kepernyo ful="fooldal" fejlec={fej}>
+        <VisszahivasAjanlat nyitott={ajanlat!.state === 'var'} tovabb={() => void g.refetch()} />
+      </Kepernyo>
+    );
+  }
+
+  if (mod === 'atutalas' && atutalhato && !aktiv) {
+    return (
+      <Kepernyo ful="fooldal" fejlec={fej}>
+        {cfg.data?.demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
+        {!sz.data?.open.length ? <AtutalasValaszto mod={mod} valt={setMod} /> : null}
+        <AtutalasBekotes v={sz.data} kesz={() => bekotesre()} />
         <Elakadtal forras="elofizetes" tema="elofizetes" style={{ marginTop: 6, marginLeft: 4 }} />
       </Kepernyo>
     );
@@ -110,10 +144,11 @@ function KartyaLepes() {
   return (
     <Kepernyo ful="fooldal" fejlec={fej} dokk={c && !kikapcsolva ? <GombE cim={engedelyGomb(c)} onPress={() => void tovabb()} tolt={tolt} disabled={!be} /> : undefined}>
       {demo ? <DemoFizetesJel style={{ marginTop: 4 }} /> : null}
+      {atutalhato ? <AtutalasValaszto mod={mod} valt={setMod} /> : null}
       <Szakasz ikon="igazolas" cim="Mit kapsz ezért?" jobbra={<MiEz kulcs="elofizetes" />} />
       <Lap style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         <Felsorolas
-          style={{ paddingLeft: 38 }}
+          style={{ paddingLeft: 54 }}
           elemek={[
             ...szovegLista('ar.mit_kapsz', {}, ['Saját könyvelő, aki név szerint ismer.', 'Kiszámolja, mennyit kell fizetned, és beadja a bevallásaidat.']),
             ...(acc?.responseTimeText ? [`${acc.firstName}: ${acc.responseTimeText.charAt(0).toLowerCase()}${acc.responseTimeText.slice(1)}.`] : []),

@@ -10,7 +10,7 @@ import { hibaUzenet } from '@/lib/hiba';
 import { munkanapotHozzaad } from '@/lib/ut';
 import { SavCim } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, Lap } from '@/ui/alap';
+import { GombE, GombM, GombSz, Lap, jelzoDoboz } from '@/ui/alap';
 import { Ikon3d, KeszJel } from '@/ui/kepek';
 import { Betolt, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { MiEz } from '@/ui/Magyarazat';
@@ -53,7 +53,7 @@ function Kamara() {
           <MiEz kulcs="kamarai_regisztracio" />
         </View>
         {lejart ? (
-          <View style={{ marginTop: 12, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 12 }}>
+          <View style={{ marginTop: 12, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 12 }}>
             <T m={15.5} s={650} lh={1.45} c={szin.borostyanSzoveg}>
               {fillPlaceholders(KAMARA_TEXTS.overdue, { date: datumIg(due!).replace(/-ig$/, '.') })}
             </T>

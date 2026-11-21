@@ -9,7 +9,7 @@ import { get } from '../api/http';
 import { useAuth } from '../auth/AuthProvider';
 import { szin } from '../theme/tokens';
 import { T } from './T';
-import { GombM, GombSz } from './alap';
+import { GombM, GombSz, jelzoDoboz } from './alap';
 
 export function useServiceLock() {
   const bent = useAuth().allapot === 'bent';
@@ -21,7 +21,8 @@ export function ZarolasSav() {
   const { lock, fn } = useServiceLock();
   if (!lock) return null;
   return (
-    <View accessibilityRole="alert" style={{ backgroundColor: szin.borostyanAlap, paddingVertical: 12, paddingHorizontal: 16 }}>
+    // v2 (k8): fehér kártya 4 pt-es telt narancs bal sávval (nem halvány pasztell sáv)
+    <View accessibilityRole="alert" style={[{ borderRadius: 20, paddingVertical: 14, paddingHorizontal: 16, marginBottom: 12, boxShadow: '0 1px 2px rgba(16,21,43,.04), 0 6px 20px rgba(16,21,43,.06)' }, jelzoDoboz('figyelem'), { borderWidth: 0, borderLeftWidth: 4 }]}>
       <T m={15.5} s={600} lh={1.4} c={szin.borostyanSzoveg}>
         {lock.text || fillPlaceholders(LOCK_TEXTS.banner, { firstName: fn, mit: LOCK_TEXTS.mit.havidij, osszeg: String(lock.amountHuf) })}
       </T>

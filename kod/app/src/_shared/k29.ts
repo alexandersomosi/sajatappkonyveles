@@ -394,13 +394,16 @@ export interface AdminSubscriptionRowK29 {
   cancelAtPeriodEnd: boolean;
   openAuthPayment: boolean;
   isTest: boolean;
+  /** k8: 'kartya' | 'atutalas' (old servers: absent = kártya). */
+  billingMethod?: 'kartya' | 'atutalas';
 }
 /** GET /admin/k29/payments?status&kind&provider&clientId&from&to */
 export interface AdminPaymentRow {
   id: string;
   client: { id: string; name: string };
   kind: PaymentKind;
-  provider: PaymentProviderName;
+  /** k8: 'atutalas' = the bank transfer of a díjbekérő. */
+  provider: PaymentProviderName | 'atutalas';
   mode: PaymentProviderMode;
   amountHuf: number;
   status: PaymentStatusK29;

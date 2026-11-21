@@ -10,6 +10,7 @@ import type { MarketingCount, MarketingSummary } from '../../_shared/marketing';
 import { CAMPAIGN_SOURCES, MARKETING_CHANNEL_LABELS, MARKETING_UNKNOWN } from '../../_shared/marketing';
 import { DemoCimke, Fejlec, Fiok, HibaSav, Lenyilo, Masol, Toltes, Ures } from '../../ui/kozos';
 import { usePirito } from '../../ui/Pirito';
+import { I3 } from '../../ui/Icon3d';
 import { datumRovid, ft, szam } from '../../lib/format';
 import { IDOSZAKOK, arany, kampanyLink, latogatoArany, marketingQuery, type Idoszak } from '../../lib/marketing';
 import { today as maIso } from '../../lib/today';
@@ -191,6 +192,7 @@ function Attekintes({ d }: { d: MarketingSummary }) {
     <>
       <div className="racs k4">
         <div className="lap kpi">
+          <I3 n="emberek" s={34} />
           <div>
             <div className="ertek">
               <Szam n={d.visitors ? d.visitors.visitors : null} />
@@ -199,18 +201,21 @@ function Attekintes({ d }: { d: MarketingSummary }) {
           </div>
         </div>
         <div className="lap kpi">
+          <I3 n="irat-toll" s={34} />
           <div>
             <div className="ertek szam">{szam(t.registered)}</div>
             <div className="mi">regisztrált (megerősített e-mail-címmel)</div>
           </div>
         </div>
         <div className="lap kpi">
+          <I3 n="pipa-kor" s={34} />
           <div>
             <div className="ertek szam">{szam(t.paying)}</div>
             <div className="mi">lett fizető ügyfél ezek közül</div>
           </div>
         </div>
         <Link to="/admin/elofizetesek" className="lap kpi" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <I3 n="tarca" s={34} />
           <div>
             <div className="ertek szam">{ft(d.money.mrrHuf)}</div>
             <div className="mi">havi bevétel most ({szam(d.money.payingNow)} fizető ügyfél)</div>

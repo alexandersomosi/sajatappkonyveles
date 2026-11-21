@@ -46,7 +46,7 @@ export default function Kedvezmenyek() {
               <Szakasz ikon="igazolas" cim={`Idei kedvezmények (${v.year})`} jobbra={<MiEzKor kulcs="kedvezmenyek" />} />
               <Lap>
                 {v.items.map((it, i) => (
-                  <View key={it.kind} style={{ paddingVertical: 10, marginHorizontal: 16, paddingLeft: 38, borderTopWidth: i ? 1 : 0, borderTopColor: szin.hajszal }}>
+                  <View key={it.kind} style={{ paddingVertical: 10, marginHorizontal: 16, paddingLeft: 54, borderTopWidth: i ? 1 : 0, borderTopColor: szin.hajszal }}>
                     <T m={16} s={600} lh={1.35}>
                       {it.label}
                     </T>
@@ -67,7 +67,7 @@ export default function Kedvezmenyek() {
               <Szakasz ikon="irat" cim="Ezeket tartsd meg" megj={fillPlaceholders('{firstName} elkérheti, feltölteni nem kell.', { firstName: fn })} />
               <Lap style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
                 {v.documentsToKeep.map((d) => (
-                  <T key={d} m={16} lh={1.5} style={{ paddingLeft: 38 }}>
+                  <T key={d} m={16} lh={1.5} style={{ paddingLeft: 54 }}>
                     {`• ${d}`}
                   </T>
                 ))}

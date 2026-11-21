@@ -250,6 +250,7 @@ export function registerAdminPaymentsK29(r: Hono<Env>, deps: Deps): void {
         lastFailureCode: x.s.lastFailureCode,
         graceUntil: x.s.graceUntil,
         cancelAtPeriodEnd: x.s.cancelAtPeriodEnd,
+        billingMethod: x.s.billingMethod,
         openAuthPayment: open,
         isTest: x.c.isTest,
       });

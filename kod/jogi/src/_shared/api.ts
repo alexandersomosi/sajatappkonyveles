@@ -58,6 +58,7 @@ import type {
   CalcStatus,
   PaymentStatus,
   FilingStatus,
+  TaxPeriodKind,
   UserRole,
   ActivityAnswer,
   ClientKind,
@@ -150,6 +151,8 @@ export interface PublicConfig {
   paymentProvider?: 'stripe' | 'simplepay' | 'demo' | 'disabled';
   paymentMode?: 'test' | 'live' | 'demo' | 'sandbox' | null;
   simplepayEnabled?: boolean;
+  /** k8: a NEW client may choose the bank transfer (switch kapcsolok.fizetes.atutalas; DEMO ON, production OFF until the ÁSZF). */
+  fizetes?: { atutalas: boolean };
 }
 export interface Health {
   ok: boolean;
@@ -411,7 +414,8 @@ export interface Explanation {
 export interface TaxPeriodSummary {
   id: string;
   periodKey: string;
-  kind: 'negyedev' | 'hipa';
+  /** SPEC §32: + 'kata' (one KATA month). */
+  kind: TaxPeriodKind;
   label: string;
   dueDate: ISODate;
   calcStatus: CalcStatus;
@@ -425,6 +429,10 @@ export interface TaxPeriodDetail extends TaxPeriodSummary {
   disclaimer: string | null; // set while not approved
   letter: Letter | null;
   filed: { filedOn: ISODate; documents: DocumentListItem[] } | null;
+  /** SPEC §32 (+): the payment sheet /fizetes/[id] – a free KATA month carries its reason ("táppénz"). */
+  exemptReasonLabel?: string | null;
+  /** SPEC §32 (+): "Kata – november" style title of the sheet (server-built). */
+  sheetTitle?: string;
 }
 export interface Deadline {
   id: string;
@@ -529,6 +537,8 @@ export interface ClientHome {
   paymentCard?: PaymentCardView | null;
   checkin?: CheckinView | null;
   annual?: AnnualView | null;
+  /** Javító kör 11-21: an önellenőrzés waiting for the client's approval (the Főoldal card; any time of the year). */
+  openCorrection?: { id: string; title: string; statusText: string } | null;
   lock?: ServiceLockView | null;
   pause?: PauseView | null;
   kata?: KataHomeView | null;
@@ -1843,6 +1853,37 @@ export interface AccClientDetailK28 {
   adoszamPending?: boolean;
   checkinOpenItems?: number;
   mailboxAddress?: string | null;
+  /** Javító kör 11-21 (kritika 2.1): this year's KATA variant / főfoglalkozás and the next year's mode (the December card). */
+  kataVariant?: 'regi' | 'uj' | null;
+  kataFofoglalkozasu?: boolean | null;
+  nextYearRegime?: NextYearRegimeView | null;
+}
+/** The next year's mode as the accountant recorded it in December (null fields: not decided yet). */
+export interface NextYearRegimeView {
+  year: number;
+  /** The card shows from this day (MM-DD of the current year). */
+  showFrom: ISODate;
+  /** The profile of the next year exists (recorded in advance, or made on 1 January). */
+  recorded: boolean;
+  regime: TaxRegime | null;
+  kataVariant: 'regi' | 'uj' | null;
+  kataFofoglalkozasu: boolean | null;
+  decidedAt: ISODateTime | null;
+  filedOn: ISODate | null;
+  filedBy: 'konyvelo' | 'ugyfel' | 'nem_kell' | null;
+  note: string | null;
+  /** The new KATA (T/928) is not law yet: the switch kata2027 is off. */
+  newKataDraft: boolean;
+}
+/** POST /acc/clients/:id/next-year-regime */
+export interface NextYearRegimeInput {
+  year: number;
+  regime: TaxRegime;
+  kataVariant?: 'regi' | 'uj';
+  kataFofoglalkozasu?: boolean | null;
+  filedOn?: ISODate | null;
+  filedBy?: 'konyvelo' | 'ugyfel' | 'nem_kell' | null;
+  note?: string | null;
 }
 
 // =====================================================================================================================
@@ -2016,6 +2057,25 @@ export interface AnnualView {
   approval: { at: ISODateTime; hash: string } | null;
   nextAction: 'kitoltes' | 'fizetes' | 'jovahagyas' | null;
   canEdit: boolean;
+  /**
+   * SPEC §32 (+): the annual-closing fee charged at submit; null = no fee (the switch evesZarasDij is off until the ÁSZF
+   * is fixed [T1, JOGI]). Absent (older servers / the app's sample data) = the fee of FEE_DEFAULTS.
+   */
+  feeHuf?: number | null;
+  // ---- SPEC §32.B (éves ciklus F2/F3; all optional, filled by servers from 2026-11-21) ----
+  /** The numbers the accountant entered, as the client approves them (null until the accountant saved them). */
+  summary?: import('./eves').AnnualSummary | null;
+  /** The hash the client sends with "Jóváhagyom" (covers the draft document AND the numbers). */
+  approvalHash?: string | null;
+  /** After the filing: the difference, its payment period or the refund card. */
+  settlement?: import('./eves').AnnualSettlementView | null;
+  /** "Mikor mi jön" – the year's to-dos. */
+  timeline?: import('./eves').AnnualTimelineItem[];
+  /** "Következő: {datum} – {mi}" for the Főoldal card (null when everything is done). */
+  timelineNext?: string | null;
+  hipa?: import('./eves').AnnualHipaView | null;
+  /** Önellenőrzések of the client that are open (approve, pay). */
+  corrections?: import('./eves').CorrectionListItem[];
 }
 /** PUT /client/annual/:id/answers (draft save; every field optional). */
 export interface AnnualAnswersInput {
@@ -2030,6 +2090,19 @@ export interface AccAnnualView extends AnnualView {
   documents: DocumentListItem[];
   /** The full refund account – the client's accountant and admins only (audited). */
   refundAccount: string | null;
+  // ---- SPEC §32.B (staff; optional) ----
+  /** The saved amounts (null = not entered yet). */
+  amounts?: import('./eves').AnnualAmounts | null;
+  /** The app's estimate at the time (the "Motor-összevetés" line). */
+  engineEstimate?: { diffHuf: number; szjaHuf: number; advancesHuf: number; byQuarter: { key: string; amountHuf: number; state: 'ellenorizve' | 'jelolve' | 'nincs' }[]; kulonadoHuf?: number; revenueHuf?: number; liableMonths?: number; limitHuf?: number } | null;
+  /** The prefill of the amounts form (from the engine and the approved quarters). */
+  prefill?: Partial<import('./eves').AnnualAmountsInput> | null;
+  /** The panel's warnings ("Előbb egyeztesd a folyószámlát…", "Vegyes év…"). */
+  warnings?: string[];
+  /** The client's service ended / is suspended: whether the accountant may open the closing by hand (switch lemondottEvesZaras). */
+  manualOpen?: { allowed: boolean; reason: string } | null;
+  closedManuallyReason?: string | null;
+  approvedSummary?: import('./eves').AnnualSummary | null;
 }
 /** POST /acc/clients/:id/annual/:aid/check */
 export interface AnnualCheckInput {
@@ -2162,6 +2235,10 @@ export interface TaxRegimeInput {
   regime: TaxRegime;
   kataFrom?: ISODate | null;
   kataTo?: ISODate | null;
+  /** SPEC §32 (javító kör 11-21: the panel sends them too). */
+  year?: number;
+  kataVariant?: 'regi' | 'uj';
+  kataFofoglalkozasu?: boolean | null;
 }
 
 // ---------- §28.K.11 J – KATA ----------
@@ -2176,6 +2253,14 @@ export interface KataHomeView {
   nextPayment: { amountHuf: number; dueDate: ISODate; accountName: string; accountNumber: string; iban: string; reference: string } | null;
   businessInvoices: { navInvoiceId: string; customerName: string | null; amountHuf: number; payerKind: PayerKind; endsOn: ISODate | null; reportBy: ISODate | null }[];
   infoCardSeen: boolean;
+  /** SPEC §32 (+): the keret bar with its lines (KATA_F1_TEXTS), filled by the server. */
+  meter?: import('./kata').KataMeterView;
+  /** SPEC §32 (+): the earliest open KATA month to pay (→ /fizetes/{periodId}), or null. */
+  nextPayable?: import('./kata').KataYearView['nextPayable'];
+  /** SPEC §32 (+): "Most nincs mit fizetned. A következő kata: …" when nothing is open. */
+  nothingToPayLine?: string | null;
+  /** SPEC §32 (+): the year's rules are a draft (T/928): the amount is not confirmed. */
+  draftNote?: string | null;
 }
 
 // ---------- §28.K.12 K – Accountable patterns ----------

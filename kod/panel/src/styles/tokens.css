@@ -1,47 +1,55 @@
-/* Ported from dizajn/C2_modern/app_v2/tokens.css (Kézjegy C2, 2026-11-18). Same token names, desktop scale.
-   Owner rules kept: no line icons, no shape behind icons, capsule = button only, 18 px = sheet, 12 px = field/tile,
-   6 px = status label, 4 px = the letter; shadow only on floating layers (drawer, toast, letter, menus).
-   11-18 17:50 owner decision: brand colour = vivid blue #1428DB (dizajn/C3_zold/kek.css, dizajn/PALETTA.md). The token
-   NAME --tintakek stays for code stability; old values: kod/_regi/szinvaltas_kek_elotte_1817/panel/. */
+/* k8 (FELÜLET-P, tulaj 11-20): the panel and the owner console take the v2 look (dizajn/C5_v2, kod/shared/v2).
+   The token NAMES stay (every page uses them); the values come from the v2 base (src/_shared/v2/web/v2.css, loaded first):
+   grey ground #F3F5FB, white cards (r 20, soft shadow), v2 greys and status colours, capsule labels, 12 px buttons.
+   Accessibility kept on purpose (differs from the phone sample): field and tick-box borders #8A93A8 (3.08:1 on white,
+   WCAG 1.4.11), secondary text #5B6478 (5.93:1), never the 3.08:1 #8A93A8 for text.
+   The C2/C3 values before k8: _regi/elotte_k8_P/src/styles/tokens.css. */
 :root {
-  --tintakek: #1428DB;
-  --tintakek-szoveg: #1226B8;
-  --tollkek: #2546A6;
+  --tintakek: var(--v2-kek);            /* #1428DB */
+  --tintakek-szoveg: var(--v2-kek);     /* link / blue text: 8.4:1 on white, 7.8:1 on the ground */
+  --tollkek: #2546A6;                   /* the signature pen of the letter (unchanged) */
   --tollkek-savon: #C9D2FF;
-  --alap: #E4E8F3;
-  --lap: #FFFFFF;
-  --tinta: #10152B;
-  --halvany: #505873;
-  --halvany-alapon: #4A5270;
-  --fejlec-halvany: #C9D2FF;
-  --keret: #C9D0E4;
-  --hajszal: #E2E6F1;
-  --mezo-keret: #7D879B;
-  --mezo-alap: #F5F7FA;
-  --nyomott: #EEF1F6;
-  --gomb-m-alap: #DFE4FD;
-  --gomb-m-nyomott: #C9D2FB;
+  --alap: var(--v2-hatter);             /* #F3F5FB */
+  --lap: var(--v2-kartya);              /* #FFFFFF */
+  --tinta: var(--v2-sotet);             /* #10152B */
+  --szoveg2: var(--v2-szoveg2);         /* #2A3247 – card paragraph */
+  --halvany: var(--v2-szurke);          /* #5B6478 – secondary text on white */
+  --halvany-alapon: var(--v2-szurke);   /* #5B6478 – on the ground: 5.44:1 */
+  --fejlec-halvany: var(--v2-fej-halvany); /* #D5DCFF on the blue band */
+  --keret: var(--v2-keret);             /* #DCE2F0 – card / secondary button outline (decorative) */
+  --hajszal: var(--v2-vonal);           /* #ECEFF6 – row lines */
+  --mezo-keret: var(--v2-dekor-halvany);/* #8A93A8 – field border, 3.08:1 (non-text contrast) */
+  --mezo-alap: var(--v2-hover-alap);    /* #F5F7FC – hover rows, inner panels */
+  --nyomott: var(--v2-szurke-alap);     /* #EEF0F6 */
+  --gomb-m-alap: var(--v2-kek-vil);     /* #E6EBFF – small light-blue chips (badges) */
+  --gomb-m-nyomott: var(--v2-fej-halvany);
   --papir: #F4EFE4;
   --papir-keret: #E2D9C6;
-  --veszely: #B42318;
-  --veszely-alap: #FBE9E7;
-  --fuggony: rgba(13, 22, 40, .48);
-  --kek: #1428DB;
-  --borostyan: #845300;
-  --borostyan-alap: #F7E8C6;
-  --ful-aktiv: #1428DB;
+  --veszely: var(--v2-piros);           /* #B42318 */
+  --veszely-alap: var(--v2-piros-vil);  /* #FFE4E4 – only small labels */
+  --siker: var(--v2-zold);              /* #157A3E */
+  --siker-alap: var(--v2-zold-vil);
+  --fuggony: rgba(16, 21, 43, .45);
+  --kek: var(--v2-kek);
+  --borostyan: var(--v2-narancs);       /* #9A5B00 */
+  --borostyan-alap: var(--v2-narancs-vil); /* #FFF0DA – only small labels */
+  --ful-aktiv: var(--v2-kek);
+  --sarga: var(--v2-sarga);             /* #FFC93C – the one main button per screen */
+  --sarga-s: var(--v2-sarga-s);
+  --csempe: var(--v2-csempe);           /* #F1F3F9 – the neutral icon tile */
 
   --betu: "Geist Variable", "Geist";
   --betu-szoveg: var(--betu), "Segoe UI", Arial, sans-serif;
 
-  --r-lap: 18px;
+  --r-lap: var(--v2-r-kartya-asztali);  /* 22 px (desktop card) */
   --r-level: 4px;
   --r-sheet: 26px;
   --r-mezo: 12px;
-  --r-cimke: 6px;
-  --r-gomb: 999px;
+  --r-cimke: 999px;                     /* v2: status labels are capsules */
+  --r-gomb: 12px;                       /* v2: buttons are rounded rectangles, not capsules */
+  --arnyek-kartya: var(--v2-arnyek-kartya);
   --arnyek-papir: 0 1px 1px rgba(16,21,60,.06), 0 10px 22px -14px rgba(16,21,60,.42);
-  --arnyek-lebego: 0 0 0 1px rgba(16,21,60,.08), 0 18px 48px -12px rgba(13,22,40,.45);
+  --arnyek-lebego: 0 0 0 1px rgba(16,21,60,.06), 0 18px 48px -12px rgba(16,21,43,.35);
 
-  --oldalsav: 252px;
+  --oldalsav: 260px; /* k8: 252 → 260, so "Vállalkozás-indítás" + badge fits at 15 px */
 }

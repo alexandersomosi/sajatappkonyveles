@@ -20,7 +20,7 @@ export function Buborek({ m, t }: { m: Message; t: string }) {
     return (
       <>
         <div className={`keres-kartya${en ? ' en' : ''}`}>
-          <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'igazolas'} s={40} />
+          <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'kerdoiv'} s={40} />
           <div>
             <div className="halvany kicsi">{r.direction === 'konyvelotol' ? 'Kérésed' : 'Kérése'}</div>
             <div className="felkover" style={{ fontSize: 16 }}>

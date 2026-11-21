@@ -12,7 +12,7 @@ import { hibaUzenet } from '@/lib/hiba';
 import { segitsegFajta } from '@/lib/ut';
 import { SavCim } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, jelzoDoboz } from '@/ui/alap';
 import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { MiEz } from '@/ui/Magyarazat';
 import { T } from '@/ui/T';
@@ -52,7 +52,7 @@ function Engedely() {
   return (
     <Kepernyo ful="fooldal" fejlec={fej}>
       {ev.consent && !ev.consent.valid ? (
-        <View style={{ marginBottom: 12, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 14 }}>
+        <View style={{ marginBottom: 12, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 14 }}>
           <T m={16} s={650} lh={1.45} c={szin.borostyanSzoveg}>
             {ASSIST_TEXTS.consentStale}
           </T>

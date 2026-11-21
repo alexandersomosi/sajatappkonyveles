@@ -49,6 +49,8 @@ import { installCsapat, ANNA } from './csapat';
 import { exportLetiltva, installHelyettunk } from './helyettunk';
 import { installK28, type K28Hooks } from './k28';
 import { installK29 } from './k29';
+import { installK8 } from './k8';
+import { installKonzol } from './konzol';
 /** SPEC §28 / §28.K extras of the list row and the client detail (set by installK28 below). */
 let k28: K28Hooks | null = null;
 
@@ -1181,6 +1183,10 @@ installHelyettunk({
 k28 = installK28({ on, clients, role, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), logAudit, inv, revenue, msgs, fileMeta });
 // SPEC §29.1.14 (B3): payments, fee invoices, the payment block of Rendszer (mock/k29.ts).
 installK29({ on, clients, nev: name, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), logAudit, requireAdmin });
+// k8 ALAP-B: bank transfer – díjbekérők, kézi rögzítés, kapcsolók, a DEMO levél képe (mock/k8.ts)
+installK8({ on, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), requireAdmin });
+// k8 FELÜLET-P: the console's read side (overview, client list, client card) for the v2 screenshots (mock/konzol.ts)
+installKonzol({ on, nowIso, hiba: (status, code, msg, extra) => new MockError(status, code, msg, extra ?? {}), requireAdmin });
 /** SPEC §26.4: the service team gets 404 on accountant and owner endpoints (the API enforces the same). */
 function tiltott(path: string): boolean {
   const r = role();

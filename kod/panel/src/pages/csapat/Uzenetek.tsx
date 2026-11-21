@@ -6,7 +6,6 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import * as ep from '../../api/endpoints';
 import { useAuth } from '../../auth/Auth';
 import { Fejlec, HibaSav, Toltes, Ures } from '../../ui/kozos';
-import { I3 } from '../../ui/Icon3d';
 import { usePirito } from '../../ui/Pirito';
 import { Buborek } from '../kozos/Buborek';
 import { REGISTRATION_STATUS_LABELS } from '../../_shared/enums';
@@ -16,6 +15,7 @@ import { idopont } from '../../lib/format';
 import { today } from '../../lib/today';
 import { fajlHiba } from '../../lib/validate';
 import { useCsevegoMagassag } from '../../ui/useCsevegoMagassag';
+import { VezerloIkon } from '../../_shared/v2/web';
 
 export default function CsapatUzenetek() {
   const { clientId } = useParams();
@@ -213,7 +213,7 @@ function Szal({ clientId, nev }: { clientId: string; nev: string }) {
       {irhat ? (
         <div className="iro-sor">
           <button className="csatol" title="Fájl csatolása" aria-label="Fájl csatolása" disabled={tolt} onClick={() => fajl.current?.click()}>
-            <I3 n="feltoltes" s={32} />
+            <VezerloIkon nev="gemkapocs" pt={24} />
           </button>
           <input
             ref={fajl}

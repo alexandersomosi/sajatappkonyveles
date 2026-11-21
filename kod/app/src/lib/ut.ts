@@ -144,7 +144,7 @@ export function utEpit({ o, reg = null, keresekDb = 0, ma }: UtBemenet): Journey
       case 'visszahivas':
         sorok.push(
           ev?.status === 'visszahivas_kerve'
-            ? { key, allapot: 'var', actor: 'csapat', clientPart: false, var: 'helyettunk_hivas', statusText: 'Kollégánk 24–48 órán belül hív.', eszkalacio: o.callback?.dueAt ? napKulcs(o.callback.dueAt) : null }
+            ? { key, allapot: 'var', actor: 'csapat', clientPart: false, var: 'helyettunk_hivas', statusText: 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.', eszkalacio: o.callback?.dueAt ? napKulcs(o.callback.dueAt) : null }
             : ev
               ? { key, allapot: 'kesz', actor: 'csapat', clientPart: false, statusText: 'Beszéltünk' }
               : { key, allapot: 'kesobb', actor: 'csapat', clientPart: false },
@@ -220,7 +220,7 @@ export function utEpit({ o, reg = null, keresekDb = 0, ma }: UtBemenet): Journey
           if (a.status === 'visszahivas_kerve')
             sorok.push(
               a.kind === 'meghatalmazas'
-                ? { key, allapot: 'var', actor: 'csapat', clientPart: true, var: 'helyettunk_hivas', statusText: 'Kollégánk 24–48 órán belül hív.', eszkalacio: o.callback?.dueAt ? napKulcs(o.callback.dueAt) : null, timeText: ido(key, true) }
+                ? { key, allapot: 'var', actor: 'csapat', clientPart: true, var: 'helyettunk_hivas', statusText: 'A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.', eszkalacio: o.callback?.dueAt ? napKulcs(o.callback.dueAt) : null, timeText: ido(key, true) }
                 : { key, allapot: 'kesobb', actor: 'konyvelo', clientPart: true, lockedReason: `A hívás után ${fn} beküldi, te csak jóváhagyod.`, timeText: ido(key, true) },
             );
           else if (a.status === 'egyeztetve' || a.status === 'meghatalmazas_lejart')

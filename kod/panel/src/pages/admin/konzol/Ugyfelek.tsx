@@ -5,8 +5,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import * as k from '../../../api/k29f';
 import { Fejlec, HibaSav, Toltes, Ures } from '../../../ui/kozos';
-import { I3 } from '../../../ui/Icon3d';
-import { datum, szam } from '../../../lib/format';
+import { datumRovid, szam } from '../../../lib/format';
 
 const ALLAPOT: Record<string, string> = { bekotes_alatt: 'Bekötés alatt', aktiv: 'Aktív', felfuggesztve: 'Felfüggesztve', megszunt: 'Megszűnt' };
 const ELOFIZ: Record<string, string> = { incomplete: 'Nincs fizetve', active: 'Él', past_due: 'Elmaradt', suspended: 'Felfüggesztve', canceled: 'Lezárva' };
@@ -67,10 +66,9 @@ export default function KonzolUgyfelek() {
               setSp(n, { replace: true });
             }}
           >
-            <I3 n="kerdezek" s={20} />
             <input value={kereso} onChange={(e) => setKereso(e.target.value)} placeholder="Név, e-mail, adószám vagy telefon vége" aria-label="Keresés" />
             {/* k7c2: a visible button too (Enter still works) */}
-            <button type="submit" className="gomb-m">
+            <button type="submit" className="gomb-m kicsi">
               Keresés
             </button>
           </form>
@@ -111,7 +109,7 @@ export default function KonzolUgyfelek() {
                         <div className="al">{r.email}</div>
                       </td>
                       <td>{r.regime === 'kata' ? <span className="cimke info">Kata</span> : r.regime === 'atalany' ? <span className="cimke">Átalány</span> : <span className="halvany">–</span>}</td>
-                      <td>{r.accountantName ?? <span className="halvany">nincs</span>}</td>
+                      <td className="nt">{r.accountantName ?? <span className="halvany">nincs</span>}</td>
                       <td>
                         {ALLAPOT[r.lifecycle] ?? r.lifecycle}
                         <div className="cimkek" style={{ marginTop: 3 }}>
@@ -122,9 +120,9 @@ export default function KonzolUgyfelek() {
                         </div>
                       </td>
                       <td>{r.subscriptionStatus ? ELOFIZ[r.subscriptionStatus] ?? r.subscriptionStatus : <span className="halvany">–</span>}</td>
-                      <td className="nt">{r.nextChargeOn ? datum(r.nextChargeOn, { ev: true }) : <span className="halvany">–</span>}</td>
+                      <td className="nt">{r.nextChargeOn ? datumRovid(r.nextChargeOn) : <span className="halvany">–</span>}</td>
                       <td className="jobb nt">{r.unpaidHuf ? <b style={{ color: 'var(--veszely)' }}>{szam(r.unpaidHuf)} Ft</b> : <span className="halvany">0</span>}</td>
-                      <td className="utolso nt">{datum(r.createdAt.slice(0, 10), { ev: true })}</td>
+                      <td className="utolso nt">{datumRovid(r.createdAt.slice(0, 10))}</td>
                     </tr>
                   ))}
                 </tbody>

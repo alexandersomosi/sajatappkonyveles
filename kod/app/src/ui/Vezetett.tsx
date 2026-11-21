@@ -8,7 +8,9 @@ import { fillPlaceholders } from '../_shared/bekotes';
 import { GUIDED_TEXTS } from '../_shared/k29g';
 import { useGuided, useGuidedAction } from '../api/hooks-k29g';
 import { hibaUzenet } from '../lib/hiba';
-import { forma, szin } from '../theme/tokens';
+import { szin } from '../theme/tokens';
+import { VisszaKor } from './alap';
+import { ToltoCsik } from './mozgas';
 import { T } from './T';
 
 /** The guided step of the current route (`?vezetett=<key>`), or null. */
@@ -35,29 +37,17 @@ export function useKesobb(kulcs: string | null) {
   return { kesobb, tolt: a.isPending, hiba };
 }
 
-/** The "Vissza" capsule of the band (white outline). */
+/** The "Vissza" of the band – v2: the round translucent back button (VisszaKor). */
 export function SavVissza({ onPress, cim = GUIDED_TEXTS.back, label }: { onPress: () => void; cim?: string; label?: string }) {
-  return (
-    <Pressable
-      accessibilityRole="link"
-      accessibilityLabel={label ?? cim}
-      onPress={onPress}
-      hitSlop={4}
-      style={({ pressed }) => [{ height: 36, paddingHorizontal: 14, borderRadius: forma.gomb, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.8)', justifyContent: 'center', zIndex: 1 }, pressed && { backgroundColor: 'rgba(255,255,255,0.1)' }]}
-    >
-      <T m={15.5} s={650} c="#fff" numberOfLines={1}>
-        {cim}
-      </T>
-    </Pressable>
-  );
+  return <VisszaKor cim={label ?? cim} onPress={onPress} />;
 }
 
 /** "Később folytatom" on the blue band: white, underlined text button. */
 export function KesobbGomb({ kulcs }: { kulcs: string | null }) {
   const k = useKesobb(kulcs);
   return (
-    <Pressable accessibilityRole="button" onPress={() => void k.kesobb()} disabled={k.tolt} hitSlop={8} style={({ pressed }) => [{ minHeight: 44, justifyContent: 'center', paddingLeft: 8 }, (pressed || k.tolt) && { opacity: 0.6 }]}>
-      <T m={15.5} s={550} c="#fff" alahuz numberOfLines={1}>
+    <Pressable accessibilityRole="button" onPress={() => void k.kesobb()} disabled={k.tolt} hitSlop={6} style={({ pressed }) => [{ minHeight: 40, justifyContent: 'center', paddingHorizontal: 14, borderRadius: 999, backgroundColor: pressed ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.16)' }, k.tolt && { opacity: 0.6 }]}>
+      <T m={14.5} s={650} c="#fff" numberOfLines={1}>
         {GUIDED_TEXTS.later}
       </T>
     </Pressable>
@@ -71,16 +61,14 @@ export function Haladas({ done, total, style, sotet }: { done: number; total: nu
   return (
     <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 28 }, style]} accessible accessibilityRole="progressbar" accessibilityLabel={fillPlaceholders(GUIDED_TEXTS.progress, { done: String(done), total: String(total) })} accessibilityValue={{ min: 0, max: total, now: done }}>
       <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
-        <T m={18} s={750} lh={1.1} ls={-0.01} c={sotet ? szin.tinta : '#fff'} szam>
+        <T m={17} s={800} lh={1.1} ls={-0.01} c={sotet ? szin.tinta : szin.sarga} szam>
           {`${done} / ${total}`}
         </T>
         <T m={15} lh={1.1} c={sotet ? szin.halvany : szin.fejlecHalvany} numberOfLines={1}>
           {szoveg ?? 'lépés kész'}
         </T>
       </View>
-      <View style={{ flex: 1, height: 6, borderRadius: 3, backgroundColor: sotet ? szin.sav : 'rgba(255,255,255,0.26)', overflow: 'hidden' }}>
-        <View style={{ width: `${arany * 100}%`, height: '100%', borderRadius: 3, backgroundColor: sotet ? szin.tintakek : '#fff' }} />
-      </View>
+      <ToltoCsik arany={arany} magas={7} szinTele={sotet ? szin.tintakek : szin.sarga} szinAlap={sotet ? szin.csikAlap : 'rgba(255,255,255,0.25)'} style={{ flex: 1 }} />
     </View>
   );
 }
@@ -108,7 +96,7 @@ export function VezetettHaladas({ style }: { style?: object }) {
 /** The top row of a guided band: Vissza (left) · Később folytatom (right). Native: below the DEMO/MINTA chip. */
 export function VezetettFelsoSor({ vissza, kulcs, kozep }: { vissza?: (() => void) | null; kulcs: string | null; kozep?: ReactNode }) {
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, marginTop: Platform.OS === 'web' ? 6 : 14 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', minHeight: 44, paddingHorizontal: 16, marginTop: Platform.OS === 'web' ? 0 : 8 }}>
       {vissza ? <SavVissza onPress={vissza} /> : null}
       <View style={{ flex: 1, minWidth: 0, paddingHorizontal: 8 }}>{kozep}</View>
       <KesobbGomb kulcs={kulcs} />

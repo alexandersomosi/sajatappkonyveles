@@ -40,5 +40,7 @@ test('a saját szavaival írt tevékenység a listás mellett sem vész el', () 
   const cim = g.steps.find((s) => s.key === 'cimadatok')!;
   assert.ok(cim.fields.some((f) => f.label === 'Levelezési cím'));
   assert.ok(cim.fields.some((f) => f.label === 'Az iratok őrzésének helye'));
-  assert.match(ACTIVITY_PENDING_BANNER, /1 munkanap/);
+  // k8 (k7b remnant, tulaj 11-20): no time promise – the banner says what we do, not how long it takes
+  assert.match(ACTIVITY_PENDING_BANNER, /még megírjuk/);
+  assert.doesNotMatch(ACTIVITY_PENDING_BANNER, /munkanap/);
 });

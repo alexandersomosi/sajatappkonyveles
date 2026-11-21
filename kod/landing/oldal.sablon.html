@@ -24,7 +24,7 @@
 <!-- ============ FEJLÉC ============ -->
 <header class="fejlec">
   <div class="kontener fejlec-sor">
-    <!--logo-->
+    <!--logo-fejlec-->
     <nav class="menu" aria-label="Fő menü">
       <a href="#hogyan">Hogyan működik</a>
       <a href="#mit-kapsz">Mit kapsz</a>
@@ -33,7 +33,7 @@
       <a href="#gyik">GYIK</a>
     </nav>
     <div class="fejlec-jobb">
-      <a class="belepes" href="{{app}}/belepes"{{esemeny:belepes:fejlec}}>Belépés</a>
+      <a class="gomb gomb-kek gomb-kicsi belepes" href="{{app}}/belepes"{{esemeny:belepes:fejlec}}>Belépés</a>
       <a class="gomb gomb-fo gomb-kicsi" href="{{app}}/regisztracio"{{esemeny:regisztralok:fejlec}}>Regisztrálok</a>
       <details class="mobilmenu">
         <summary aria-label="Menü"><span></span><span></span><span></span></summary>
@@ -43,7 +43,7 @@
           <a href="#konyvelo">Könyvelő</a>
           <a href="#arak">Árak</a>
           <a href="#gyik">GYIK</a>
-          <a href="{{app}}/belepes"{{esemeny:belepes:menu}}>Belépés</a>
+          <a class="mobil-belepes" href="{{app}}/belepes"{{esemeny:belepes:menu}}>Belépés</a>
         </nav>
       </details>
     </div>
@@ -56,7 +56,7 @@
 <section class="hos">
   <div class="kontener hos-racs">
     <div class="hos-szoveg">
-      <p class="hos-elo">Online könyvelés egyéni vállalkozóknak</p>
+      <p class="hos-elo">Online könyvelés egyéni vállalkozóknak, akkor is, ha most indulsz</p>
       <h1>Saját könyvelő átalányadózóknak és katásoknak</h1>
       <p class="bevezeto">Nyilvántartásba vett könyvelő intézi a bevallásaidat és a <span class="nowrap">NAV-os</span> ügyeidet. Te közben az appban látod, mennyit tegyél félre adóra, és mikor mit kell befizetned.</p>
       <div class="hos-gombok">
@@ -123,7 +123,7 @@
     <h2 class="rejtett" id="bizalom-cim">Röviden rólunk</h2>
     <ul class="bizalom-racs">
       <li><span class="cs" aria-hidden="true"><!--ikon:igazolvany--></span><h3>Nyilvántartásba vett könyvelő</h3><p>A neve a szerződésedben és az appban is ott van.</p></li>
-      <li><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><h3>NAV-meghatalmazással</h3><p>Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><h3>NAV-meghatalmazással</h3><p>A NAV online felületén (ONYA) adod meg, és ugyanott bármikor visszavonhatod.</p></li>
       <li><span class="cs" aria-hidden="true"><!--ikon:cimke--></span><h3>Előre kiírt árak</h3><p>Havi {{ar:havidij}}&nbsp;Ft bruttó. A külön díjakat is előre látod az appban.</p></li>
       <li><span class="cs" aria-hidden="true"><!--ikon:naptar--></span><h3>Nincs hűségidő</h3><p>Bármikor lemondhatod. A kifizetett hónap végéig minden működik.</p></li>
     </ul>
@@ -143,7 +143,9 @@
         <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:pipa-kor--></span><span>Neked szól, ha</span></h3>
         <ul class="lista lista-pipa">
           <li><!--pipa-->átalányadózó vagy katás egyéni vállalkozó vagy,</li>
-          <li><!--pipa-->alanyi áfamentes vagy,</li>
+          <!-- 11-21 szövegjavítás: az összeg a NAV 2025-12-11-i közleménye szerint (Áfa tv. 188. § (2), 2026: 20 millió Ft; év közbeni
+               indulásnál időarányos – NAV GYIK). 2027-01-01 előtt átírni (2027: 22 millió Ft). -->
+          <li><!--pipa-->alanyi áfamentes vagy, vagyis nem számolsz fel áfát (2026-ban évi 20&nbsp;millió&nbsp;Ft bevételig, ha év közben indulsz, arányosan kevesebbig),</li>
           <li><!--pipa-->alkalmazottad vagy alkalmi munkásod is lehet: a bérszámfejtést felárért vállaljuk,</li>
           <li><!--pipa-->vagy most indítod a vállalkozásodat. Ebben is segítünk.</li>
         </ul>
@@ -417,7 +419,9 @@
     <div class="resz-fej">
       <h2>Ki könyvel neked?</h2>
       <p class="bevezeto">Egy nyilvántartásba vett könyvelő. A neve és a nyilvántartási száma benne van a szerződésedben, és az appban is megtalálod.</p>
-      <p class="resz-meg">A szerződést a <span class="nowrap">{{ceg:legalName}}-vel</span> kötöd. A könyvelőd munkájáért a <span class="nowrap">{{ceg:legalName}}</span> felel.</p>
+      <!-- 11-21 szövegjavítás (tulaj: „Ne vállalj felelősséget, azt se írd, mi vállaljuk a felelősséget.”): felelősség-mondat nincs az
+           oldalon. A könyvelő a cég alvállalkozója / közreműködője (ÁSZF 1.3, Megbízási szerződés 1.). -->
+      <p class="resz-meg">A szerződést a <span class="nowrap">{{ceg:legalName}}-vel</span> kötöd, a könyvelőd a mi megbízásunkból dolgozik neked.</p>
     </div>
     <div>
       <h3 class="feladat-cim">Ezt csinálja a könyvelőd egy negyedévben</h3>
@@ -455,7 +459,7 @@
       <div>
         <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:lakat--></span><span>Az adataid</span></h3>
         <ul class="vonalas">
-          <li>Európai szerveren tároljuk őket, minden fájlt külön titkosítva.</li>
+          <li>Az Európai Unióban tároljuk őket (a szerverünk Németországban van), minden fájlt külön titkosítva.</li>
           <li>A könyvelési irataidat a könyvelőd kezeli. Rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva.</li>
           <li>{{adat_suti_mondat}}</li>
           <li>Bármikor letöltheted őket, és kérheted a törlésüket. Amit a törvény miatt meg kell őriznünk, azt a határidőig elzárva tartjuk.</li>
@@ -485,7 +489,7 @@
         <ul class="lista lista-pipa">
           <li><!--pipa-->Saját, név szerint ismert könyvelő</li>
           <li><!--pipa-->Bevételi nyilvántartás a NAV Online Számlából</li>
-          <li><!--pipa-->A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)</li>
+          <li><!--pipa-->Átalányadózóként: a negyedéves adód és járulékaid kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)</li>
           <li><!--pipa-->Katásként: a havi kata és a kata-keret figyelése</li>
           <li><!--pipa-->Mennyit tegyél félre, számlánként</li>
           <li><!--pipa-->Határidő-figyelés és emlékeztetők</li>
@@ -494,6 +498,7 @@
           <li><!--pipa-->Üzenetek a könyvelődnek, visszahívás igény szerint</li>
           <li><!--pipa-->Ha most indulsz: segítség a vállalkozásod elindításához</li>
         </ul>
+        <p class="ar-szavak">Szja-előleg: a jövedelemadód negyedéves része. Tb-járulék: társadalombiztosítási járulék, ez ad jogot a nyugdíjra és az egészségügyi ellátásra. Szocho: szociális hozzájárulási adó, ezt is a jövedelmed után fizeted. Katásként ezek helyett a havi katát fizeted.</p>
         <a class="gomb gomb-fo gomb-szeles" href="{{app}}/regisztracio"{{esemeny:regisztralok:arak}}>Regisztrálok</a>
         <p class="ar-mikro">Regisztrálni kártya nélkül tudsz.</p>
       </div>
@@ -564,7 +569,7 @@
      A 2. kör helyőrzője: _regi/elotte_kor2_javito_20261120_2205/_eszkoz/index.sablon.html (#velemenyek). -->
 
 <!-- ============ GYIK ============ -->
-<!-- 4. kör próba: gépen a kérdések két oszlopban (5 + 5) -->
+<!-- 4. kör próba: gépen a kérdések két oszlopban (5 + 5; 11-21 szövegjavítás óta 5 + 6: az első oszlop első kérdése nyitva áll) -->
 <section class="szakasz panel panel-meleg" id="gyik">
   <div class="kontener resz">
     <div class="resz-fej">
@@ -597,11 +602,11 @@
       <div class="gyik-oszlop">
         <details>
           <summary>Hol vannak az adataim, és ki látja őket?</summary>
-          <p>Európai szerveren, titkosítva. A könyvelési irataidat a könyvelőd kezeli; rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva. Ügyfélszolgálatunk csak azt látja, ami az induláshoz és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="{{app}}/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
+          <p>Az Európai Unióban (a szerverünk Németországban van), titkosítva. A könyvelési irataidat a könyvelőd kezeli; rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva. Ügyfélszolgálatunk csak azt látja, ami az induláshoz és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="{{app}}/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
         </details>
         <details>
           <summary>Miért nincs próbaidő? Mikor kell fizetni?</summary>
-          <p>A havidíjért egy könyvelő dolgozik a vállalkozásodon, ezért ingyenes időszakot nem tudunk adni. Regisztrálni kártya nélkül tudsz. Ha szeretnéd, előbb visszahívunk, átbeszélünk mindent, és csak utána fizetsz, bankkártyával.</p>
+          <p>A havidíjért egy könyvelő dolgozik a vállalkozásodon, ezért ingyenes időszakot nem tudunk adni. Regisztrálni kártya nélkül tudsz. Ha szeretnéd, előbb visszahívunk, átbeszélünk mindent, és csak utána fizetsz, bankkártyával. A havidíj az első fizetéssel indul, akkor is, ha még nincs bevételed.</p>
         </details>
         <details>
           <summary>Hogyan mondhatom fel?</summary>
@@ -609,7 +614,13 @@
         </details>
         <details>
           <summary>Mi kell az induláshoz?</summary>
-          <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a törvény előírja, hogy azonosítsuk az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.</p>
+          <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a törvény előírja, hogy azonosítsuk az ügyfeleinket), és egy állami belépés: Ügyfélkapu+ (felhasználónév, jelszó és egy egyszer használatos kód) vagy DÁP (a Digitális Állampolgár alkalmazás a telefonodon). Ezzel adod meg vagy hagyod jóvá a NAV-meghatalmazást. Ha még a régi Ügyfélkapud van, előbb válts Ügyfélkapu+-ra az ugyfelkapu.gov.hu oldalon. Ha nincs ilyen belépésed, a visszahívásban megmutatjuk, hogyan szerezhetsz.</p>
+        </details>
+        <!-- 11-21 szövegjavítás: az app valós lépései (kod/shared/src/bekotes.ts elozo_konyvelo + konyvelovaltas; a bekötés adatlapján
+             „Eddigi könyvelőd (ha volt)”, súgó: a könyvelő felveszi vele a kapcsolatot az idei adatokért). -->
+        <details>
+          <summary>Hogyan váltok a régi könyvelőmtől?</summary>
+          <p>Az appban megadod az eddigi könyvelődet, és szólsz neki, hogy váltasz. A könyvelőd felveszi vele a kapcsolatot az idei adatokért, hogy ne maradjon ki semmi, és semmit ne adjunk be kétszer. Azt, hogy melyik negyedévtől viszi a könyvelésedet, megbeszéli veled. A régi meghatalmazást csak akkor vond vissza, ha a könyvelőd szól.</p>
         </details>
         <details>
           <summary>Még nincs vállalkozásom. Segítetek elindítani?</summary>
@@ -631,9 +642,10 @@
     </div>
     <div class="zaro-visszahivas">
       <h3>Előbb beszélnél velünk?</h3>
-      <p>Regisztráció után az appban kérhetsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nem kötelező.</p>
-      <!-- SPEC §31: a „Visszahívást kérek” útvonala (regisztráció, cel=visszahivas) és eseménye az élő oldalról; a mondat fölötte az egyetlen engedett időígéret. -->
-      <a class="gomb gomb-vonal" href="{{app}}/regisztracio?cel=visszahivas"{{esemeny:visszahivas:zaro}}>Visszahívást kérek</a>
+      <p>A visszahíváshoz előbb regisztrálsz: a neved, az e-mail-címed és egy jelszó kell, kártya nem. Az e-mailben kapott kód beírása után a visszahívás lapja nyílik meg. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nélküle is elindulhatsz.</p>
+      <!-- SPEC §31: a visszahívás-gomb útvonala (regisztráció, cel=visszahivas) és eseménye az élő oldalról; a mondat fölötte az egyetlen engedett időígéret.
+           11-21 szövegjavítás: a felirat kimondja, hogy regisztrációra visz (regisztracio.tsx → /postafiok?cel=visszahivas → a kód után /visszahivas). -->
+      <a class="gomb gomb-vonal" href="{{app}}/regisztracio?cel=visszahivas"{{esemeny:visszahivas:zaro}}>Regisztrálok, és visszahívást kérek</a>
       <p class="zaro-email">Kérdésed van a regisztráció előtt? Írj nekünk: <a href="mailto:{{email}}"{{esemeny:email-iras:zaro}}>{{email}}</a></p>
     </div>
   </div>

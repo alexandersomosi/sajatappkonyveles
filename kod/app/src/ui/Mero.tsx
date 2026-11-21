@@ -1,4 +1,5 @@
 // Keret-mérő (03 „Idei kereteid”): a mondat a cím; tömör = eddig, csíkozott = várhatóan év végéig.
+import { jelzoDoboz } from './alap';
 import { useState } from 'react';
 import { View } from 'react-native';
 import Svg, { ClipPath, Defs, G, Line, Pattern, Rect } from 'react-native-svg';
@@ -60,7 +61,7 @@ export function Mero({ meter, mellek, balVeg, jobbVeg }: { meter: Meter; mellek:
         </T>
       </View>
       {meter.warning ? (
-        <View style={{ marginTop: 12, borderRadius: 6, backgroundColor: szin.borostyanAlap, paddingVertical: 8, paddingHorizontal: 10 }}>
+        <View style={{ marginTop: 12, borderRadius: 6, ...jelzoDoboz('figyelem'), paddingVertical: 8, paddingHorizontal: 10 }}>
           <T m={14.5} s={600} c={szin.borostyanSzoveg} lh={1.4}>
             Közel vagy a határhoz. A könyvelőd szól, mielőtt bármit tenned kell.
           </T>

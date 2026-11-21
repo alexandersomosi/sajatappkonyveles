@@ -1,86 +1,53 @@
-// The approved realistic 3D icons (dizajn/C2_modern/assets/ikon3d, copied to public/a/ikon3d).
-// No other pictorial icon exists in the panel (owner decision, SPEC §2.6). Arrows, ×, + and chevrons are
-// NOT used as icons: they are replaced by words (TERV 0: „Vissza”, „Bezár”, „Megnyitom”). The only glyph left
-// is the text tick next to a word (TERV 00: „Sima szöveg pipával”, e.g. „✓ Kimásolva”).
+// k8 (v2, tulaj 11-20): the panel's pictorial icons are the Microsoft Fluent Emoji Flat set (MIT) and the plain
+// Material control icons (Apache-2.0) from kod/shared/v2 – the same drawings as the client app. The old realistic 3D
+// PNGs (public/a/ikon3d) stay on disk but are no longer referenced (before k8: _regi/elotte_k8_P/src/ui/Icon3d.tsx).
+// `I3` keeps its signature, so the ~180 calls switched in one place: an old 3D name goes through the shared table
+// (IKON3D_UJ: e.g. hataridok → naptar, masolas → the "masol" control icon); a v2 emoji name (EmojiNev) is drawn as is.
+// Without `alt` every icon is decoration (aria-hidden, never focusable); with `alt` it is read as an image.
 import type { CSSProperties } from 'react';
+import { Ikon, VezerloIkon, IKON3D_UJ, type EmojiNev, type RegiIkonNev, type UjIkon } from '../_shared/v2/web';
 
+/** The old 3D names (kept for the existing calls and the role menu). */
 export type Icon3dName =
   | 'befizetve' | 'dosszie' | 'ertesites' | 'feltoltes' | 'fiok' | 'fooldal' | 'fotozas' | 'hataridok'
   | 'igazolas' | 'irat' | 'kerdezek' | 'masolas' | 'nyugta' | 'szamlaszam' | 'szamolo' | 'uzenetek'
-  // spare icons from the same approved sheet, already used by the approved 04 PNG
   | 'szamlak' | 'boritek' | 'bevallas'
-  // the small "kész" seal and the shadowless variants (≤ 44 pt)
   | 'befizetve_jel'
   | 'irat_arnyektalan' | 'nyugta_arnyektalan' | 'szamolo_arnyektalan' | 'ertesites_arnyektalan'
   | 'befizetve_arnyektalan' | 'masolas_arnyektalan' | 'szamlaszam_arnyektalan'
-  // the approved 3D tear-off calendar from sheet C (design 02), used for appointments
   | 'tepnaptar'
-  // SPEC §26 (ICON3D_EXTRA, approved sheet C): the orange clock = callbacks (24–48 h), the blue padlock = locked
   | 'ora'
   | 'lakat';
 
-// Sheet B icons have a floor shadow that reads as a stray grey strip at ≤ 44 px (TERV A4): use the cut-out.
-const ARNYEKTALAN = new Set(['irat', 'nyugta', 'szamolo', 'ertesites', 'befizetve', 'masolas', 'szamlaszam']);
+/** Any icon the panel may name: an old 3D name or a v2 content icon. */
+export type IkonNev = Icon3dName | EmojiNev;
 
-const SIZES: Record<string, number[]> = {
-  default: [24, 28, 36, 44, 56, 72],
-  befizetve_jel: [20, 24, 28, 44, 84],
-  arnyektalan: [24, 28, 36, 44],
-};
-
-export function iconSource(name: Icon3dName, displayPx: number): number {
-  const list = name === 'befizetve_jel' ? SIZES.befizetve_jel! : name.endsWith('_arnyektalan') ? SIZES.arnyektalan! : SIZES.default!;
-  // always scale down: the smallest file >= the displayed size, else the largest
-  return list.find((s) => s >= displayPx) ?? list[list.length - 1]!;
+/** The v2 drawing behind a name (old names through the shared table, v2 names directly). */
+export function ujIkon(n: IkonNev): UjIkon {
+  const regi = (IKON3D_UJ as Record<string, UjIkon | undefined>)[n as RegiIkonNev];
+  return regi ?? { fajta: 'emoji', nev: n as EmojiNev };
 }
 
-export function iconName(n: Icon3dName, displayPx: number): Icon3dName {
-  return displayPx <= 44 && ARNYEKTALAN.has(n) ? (`${n}_arnyektalan` as Icon3dName) : n;
-}
-
-export function I3({ n, s = 28, className, style, alt = '' }: { n: Icon3dName; s?: number; className?: string; style?: CSSProperties; alt?: string }) {
-  if (n === 'tepnaptar') {
-    // 79 × 96 object: fit it into the square box like the other icons.
-    return (
-      <img
-        className={`i3${className ? ` ${className}` : ''}`}
-        src="/a/illusztraciok/tepnaptar_3d@2x.png"
-        srcSet="/a/illusztraciok/tepnaptar_3d@2x.png 2x, /a/illusztraciok/tepnaptar_3d@3x.png 3x"
-        width={s}
-        height={s}
-        style={{ width: s, height: s, objectFit: 'contain', ...style }}
-        alt={alt}
-        draggable={false}
-        decoding="async"
-      />
-    );
-  }
-  const nev = iconName(n, s);
-  const src = iconSource(nev, s);
-  const base = `/a/ikon3d/${nev}_${src}`;
-  return (
-    <img
-      className={`i3${className ? ` ${className}` : ''}`}
-      src={`${base}@2x.png`}
-      srcSet={`${base}@2x.png 2x, ${base}@3x.png 3x`}
-      width={s}
-      height={s}
-      style={{ width: s, height: s, ...style }}
-      alt={alt}
-      draggable={false}
-      decoding="async"
-    />
+export function I3({ n, s = 28, className, style, alt = '' }: { n: IkonNev; s?: number; className?: string; style?: CSSProperties; alt?: string }) {
+  const uj = ujIkon(n);
+  const osztaly = `i3${className ? ` ${className}` : ''}`;
+  const st: CSSProperties = { width: s, height: s, ...style };
+  return uj.fajta === 'emoji' ? (
+    <Ikon nev={uj.nev} pt={s} label={alt || undefined} className={osztaly} style={st} />
+  ) : (
+    <VezerloIkon nev={uj.nev} pt={s} label={alt || undefined} className={osztaly} style={st} />
   );
 }
 
-/** A 3D object with the small violet "kész" seal on its top-right corner (design 04). */
-export function IkonJelvennyel({ n, kesz }: { n: Icon3dName; kesz?: boolean }) {
+/** A content icon on the neutral tile with the small green "kész" tick on its top-right corner (Dosszié rows). */
+export function IkonJelvennyel({ n, kesz }: { n: IkonNev; kesz?: boolean }) {
+  const uj = ujIkon(n);
   return (
     <span className="ikonkor">
-      <I3 n={n} s={44} />
+      {uj.fajta === 'emoji' ? <Ikon nev={uj.nev} pt={34} /> : <VezerloIkon nev={uj.nev} pt={26} />}
       {kesz && (
         <span className="jelveny">
-          <I3 n="befizetve_jel" s={19} />
+          <Ikon nev="pipa-kor" pt={18} />
         </span>
       )}
     </span>

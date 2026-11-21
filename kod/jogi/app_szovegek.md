@@ -344,7 +344,7 @@ Ha a könyvelőd küldi be a meghatalmazást, a NAV megkérdezi tőled, hogy ren
 
 Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC §26–§27 tartalomkulcsa. A {kapcsos zárójeles} rész futás közben töltődik ki: {firstName} = a könyvelő keresztneve, {phoneMasked} = a telefonszám takarva (csak az utolsó két számjegy látszik), {when} = időpont (például „ma 14:20”), {staffFirstName} = a hívó munkatárs keresztneve, {callerId} = a szám, amelyről hívunk, {reasonText} = a lezárás oka, {hatarido} = a határidő „-ig” raggal (például „november 22-ig”). Az e-mail tárgya a cím, a szövege a szöveg és egy „Megnyitom” link. A pontozott kulcsvég (például .elso, .utolso_nap, .ujra) ugyanannak az értesítésnek egy változata.
 
-**visszahivas.igeret** – Kollégánk 24–48 órán belül felhív. Munkanapokon 9 és 17 óra között telefonálunk. Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.
+**visszahivas.igeret** – A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. Nem feltétlenül {firstName} hív elsőként, hanem valaki a csapatunkból.
 
 **visszahivas.hivoszam** – Erről a számról hívunk: {callerId}
 
@@ -354,7 +354,7 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.callback_received.title** – Megkaptuk a visszahívási kérésed
 
-**notif.callback_received.body** – Kollégánk 24–48 órán belül hív a {phoneMasked} számon. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.
+**notif.callback_received.body** – A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A {phoneMasked} számon keresünk. Telefonon soha nem kérjük a jelszavadat, a kódjaidat vagy a kártyaadataidat, és nem lépünk be helyetted.
 
 **notif.callback_received.regi_idopont.title** – Időpont helyett visszahívás
 
@@ -386,7 +386,7 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.registration_reminder.title** – Folytasd a vállalkozásod bejelentését
 
-**notif.registration_reminder.body** – Az útmutatód készen áll. Pár perc az egész, és ha elakadsz, kérj visszahívást.
+**notif.registration_reminder.body** – Az útmutatód készen áll. Ha elakadsz, kérj visszahívást.
 
 **notif.registration_reminder.adatlap.title** – Folytasd a kérdőívet
 
@@ -410,31 +410,31 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.assist_started.title** – Beszéltünk – így haladunk
 
-**notif.assist_started.body** – Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a meghatalmazást. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.
+**notif.assist_started.body** – Ha megadtad az adataidat és elfogadtad a szerződést, {firstName} beküldi a NAV-nak a meghatalmazást, hogy a nevedben intézhesse az ügyeidet. Utána értesítést kapsz, és 4 napod lesz jóváhagyni.
 
 **notif.assist_mh_filed.title** – Hagyd jóvá a meghatalmazást {hatarido}
 
-**notif.assist_mh_filed.body** – {firstName} beküldte a NAV-nak. Lépj be az ONYA-ba, és hagyd jóvá. Kb. 3 perc, megmutatjuk, hogyan.
+**notif.assist_mh_filed.body** – {firstName} beküldte a NAV-nak, hogy intézhesse helyetted a NAV-os ügyeidet. Hagyd jóvá a NAV online felületén (ONYA), lépésről lépésre megmutatjuk.
 
 **notif.assist_mh_reminder.title** – Még nem hagytad jóvá a meghatalmazást
 
-**notif.assist_mh_reminder.body** – Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.
+**notif.assist_mh_reminder.body** – Még {hatarido} van időd. A NAV online felületén (ONYA) hagyod jóvá, az appban megmutatjuk, hogyan.
 
 **notif.assist_mh_reminder.elso.title** – Még nem hagytad jóvá a meghatalmazást
 
-**notif.assist_mh_reminder.elso.body** – Még {hatarido} van időd. Kb. 3 perc az ONYA-ban.
+**notif.assist_mh_reminder.elso.body** – Még {hatarido} van időd. A NAV online felületén (ONYA) hagyod jóvá, az appban megmutatjuk, hogyan.
 
-**notif.assist_mh_reminder.utolso_nap.title** – Ma van az utolsó nap
+**notif.assist_mh_reminder.utolso_nap.title** – Ma hagyd jóvá a meghatalmazást
 
-**notif.assist_mh_reminder.utolso_nap.body** – Hagyd jóvá ma a meghatalmazást az ONYA-ban, különben a NAV törli.
+**notif.assist_mh_reminder.utolso_nap.body** – Ma van az utolsó nap: lépj be a NAV online felületére (ONYA), és hagyd jóvá. Ha ma kimarad, a NAV törli a kérést, és újra kell kezdeni.
 
-**notif.assist_mh_expired.title** – Lejárt a 4 nap
+**notif.assist_mh_expired.title** – Újra beküldjük a meghatalmazást
 
-**notif.assist_mh_expired.body** – A NAV törölte a jóvá nem hagyott meghatalmazást. {firstName} újra beküldi, és szólunk.
+**notif.assist_mh_expired.body** – A 4 nap alatt nem érkezett jóváhagyás, ezért a NAV törölte a meghatalmazást. {firstName} újra beküldi, és szólunk, amikor jóváhagyhatod.
 
 **notif.assist_consent_needed.title** – Él a meghatalmazás – nézd át az adataidat
 
-**notif.assist_consent_needed.body** – Ha rendben vannak, engedélyezd a bejelentést. Kb. 2 perc.
+**notif.assist_consent_needed.body** – Ha rendben vannak, engedélyezd a bejelentést.
 
 **notif.assist_consent_needed.ujra.title** – Engedélyezd újra a bejelentést
 
@@ -446,6 +446,6 @@ Ezeket a szerver küldi (értesítés az appban, push, e-mail), a kulcs a SPEC �
 
 **notif.kamara_reminder.title** – Ne felejtsd el: kamarai regisztráció
 
-**notif.kamara_reminder.body** – {hatarido} regisztrálj a kamaránál. Kb. 10 perc.
+**notif.kamara_reminder.body** – {hatarido} regisztrálj a kamaránál.
 
 Eltérés a SPEC szövegétől: notif.callback_received.body: „vagy a kártyaadataidat, és nem lépünk be helyetted” (egyezzen a visszahivas.csalas szöveggel, SPEC §27.3.7). notif.registration_checked.title: „Rendben van a bejelentésed” helyett „Átnéztük a bejelentésedet” (az átnézésünk nem hatósági ellenőrzés, ÁSZF 4/A.3.). notif.assist_ev_filed.title: „Bejelentettük a vállalkozásodat!” helyett „{firstName} beküldte a bejelentésedet!” (a bejelentést a könyvelő küldi be meghatalmazottként, nem a cég – ÁSZF 4/C.6.). notif.registration_done.body: a SPEC §27.8 alapszövege; a kamarai határidőt a kamara_reminder viszi. notif.assist_mh_reminder: az alap kulcs = az „elso” változat (ha a szerver változat nélkül küldi).

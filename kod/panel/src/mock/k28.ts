@@ -8,6 +8,7 @@ import { ts, uid, TODAY } from './data';
 import { today } from '../lib/today';
 import { KATA_EXEMPT_LABELS, type KataBreak, type KataMonthView, type KataYearView } from '../_shared/kata';
 import type { AccClientRow, RevenueItem, Message } from '../_shared/api';
+import type { YearOverviewRow } from '../_shared/eves';
 import type {
   AccAllowanceItem,
   AccAllowanceView,
@@ -881,7 +882,22 @@ export function installK28(x: K28Ctx): K28Hooks {
   on('POST', '/acc/clients/:id/reconciliations', () => {
     throw x.hiba(409, 'conflict', 'MINTA: az egyeztetést itt nem mentjük.');
   });
-  on('GET', '/acc/overview/year', ({ q }) => ({ year: Number(q.get('year') ?? 2026), rows: [], counts: { mind: 0, hianyzik: 0, ram_var: 0, ugyfelre_var: 0, lejart: 0, kata: 0, atalany: 0 } }));
+  // k8 FELÜLET-P: a few fictional rows, so the year overview (SPEC §32.B) can be checked in the v2 look (mock only).
+  on('GET', '/acc/overview/year', ({ q }) => {
+    const ev = Number(q.get('year') ?? 2026);
+    const negyedev = (allapot: YearOverviewRow['quarters'][number]['state'][], beadva = 3) =>
+      allapot.map((state, i) => ({ key: `${ev}-Q${i + 1}`, state, filed: i < beadva, overdue: false }));
+    const sorok: YearOverviewRow[] = [
+      { clientId: 'c-kata', name: 'Szabó Kata', lifecycle: 'aktiv', regime: 'atalany', flags: [], quarters: negyedev(['ellenorizve', 'ellenorizve', 'ellenorizve', 'becsles']), kata: null, reconciliation: { asOf: `${ev}-10-31`, status: 'rendben', nextCheckOn: `${ev + 1}-01-31`, overdue: false, resolved: true }, annual: { status: 'konyvelonel', ball: 'konyvelo' }, difference: null, hipa: { advance: 'jovahagyva', annual: 'nincs' }, openCorrections: 0, missing: ['IV. negyedév: jóváhagyás'], ball: 'konyvelo', overdue: false, waitingOnMe: true },
+      { clientId: 'c-reka', name: 'Varga Réka', lifecycle: 'aktiv', regime: 'atalany', flags: [], quarters: negyedev(['ellenorizve', 'jelolve', 'elteres', 'nincs'], 2), kata: null, reconciliation: { asOf: `${ev}-09-30`, status: 'hatralek', nextCheckOn: `${ev}-11-15`, overdue: true, resolved: false }, annual: { status: 'kerdoiv', ball: 'ugyfel' }, difference: { diffHuf: 41_200, settled: false, label: 'fizetendő' }, hipa: { advance: 'jelolve', annual: 'nincs' }, openCorrections: 1, missing: ['III. negyedév: eltérés a befizetésben', 'Folyószámla: hátralék', 'Éves kérdőív'], ball: 'ugyfel', overdue: true, waitingOnClient: true },
+      { clientId: 'c-lakatos-greta', name: 'Lakatos Gréta', lifecycle: 'aktiv', regime: 'kata', flags: [], quarters: [], kata: { ok: 9, open: 1, unverified: 0, exempt: 0, beforeApp: 0 }, reconciliation: null, annual: { status: 'jovahagyasra_var', ball: 'ugyfel' }, difference: null, hipa: { advance: 'nem_kell', annual: 'nem_kell' }, openCorrections: 0, missing: ['Október: kata-befizetés'], ball: 'ugyfel', overdue: false, waitingOnClient: true },
+      { clientId: 'c-szabo-eszter', name: 'Szabó Eszter', lifecycle: 'aktiv', regime: 'atalany', flags: [], quarters: negyedev(['ellenorizve', 'ellenorizve', 'jovahagyva', 'nincs_fizetendo']), kata: null, reconciliation: { asOf: `${ev}-10-31`, status: 'rendben', nextCheckOn: null, overdue: false, resolved: true }, annual: { status: 'kesz', ball: null }, difference: { diffHuf: -12_800, settled: true, label: 'visszajár' }, hipa: { advance: 'ellenorizve', annual: 'beadva' }, openCorrections: 0, missing: [], ball: null, overdue: false },
+    ];
+    const f = q.get('filter') ?? q.get('szuro') ?? 'mind';
+    const szur: Record<string, (r: YearOverviewRow) => boolean> = { mind: () => true, hianyzik: (r) => r.missing.length > 0, ram_var: (r) => !!r.waitingOnMe, ugyfelre_var: (r) => !!r.waitingOnClient, lejart: (r) => r.overdue, kata: (r) => r.regime === 'kata', atalany: (r) => r.regime === 'atalany' };
+    const counts = Object.fromEntries(Object.entries(szur).map(([k, fn]) => [k, sorok.filter(fn).length])) as Record<string, number>;
+    return { year: ev, rows: sorok.filter(szur[f] ?? szur.mind!), counts };
+  });
 
   // ---------- employer / adószám / regime ----------
   on('POST', '/acc/clients/:id/employer', ({ p, body }) => {

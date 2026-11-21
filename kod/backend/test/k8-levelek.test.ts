@@ -137,3 +137,44 @@ describe('mailer, notifications, DEMO outbox', () => {
     expect(u).toBeTruthy();
   });
 });
+
+describe('JL letters (LEVEL_LEFEDETTSEG 3. pont 14–19)', () => {
+  let h: Harness;
+  beforeAll(async () => {
+    h = await setup({ now: '2026-11-21T09:00:00Z' });
+  });
+  afterAll(async () => h.close());
+
+  it('14 welcome after the confirmed sign-up (once); 16 "Folytasd" once after 3 days; 19 disabled / enabled', async () => {
+    const { newClient } = await import('./helpers.js');
+    // 16 is armed by its first run: clients onboarding before k8 went live get no surprise letter
+    const { jobGuidedContinue: arm } = await import('../src/jobs-k8.js');
+    h.clock.set('2026-11-21T08:00:00Z');
+    expect(await arm(h.deps)).toBe(0);
+    h.clock.set('2026-11-21T09:00:00Z');
+    const c = await newClient(h, 'udv.k8@demo.kezjegy.test', { first: 'Zoé' });
+    const udv = h.mails.filter((m) => m.to === 'udv.k8@demo.kezjegy.test' && m.template === 'welcome');
+    expect(udv).toHaveLength(1);
+    expect(udv[0]!.text).toContain('Szia, Zoé!');
+    expect(udv[0]!.text).toContain('A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.');
+    expect(htmlOfMail(udv[0]!)).toContain('Folytatom a bekötést');
+    // 16: three days later, once (the row's created_at is the DB clock – pinned to the test clock here)
+    const { clients } = await import('../src/db/schema.js');
+    await h.deps.db.update(clients).set({ createdAt: new Date('2026-11-21T09:00:00Z') }).where(eq(clients.id, c.clientId));
+    const { jobGuidedContinue } = await import('../src/jobs-k8.js');
+    h.clock.set('2026-11-22T09:00:00Z');
+    expect(await jobGuidedContinue(h.deps)).toBe(0);
+    h.clock.set('2026-11-24T10:00:00Z');
+    expect(await jobGuidedContinue(h.deps)).toBe(1);
+    expect(await jobGuidedContinue(h.deps)).toBe(0);
+    await dispatchPending(h.deps);
+    expect(h.mails.filter((m) => m.to === 'udv.k8@demo.kezjegy.test' && m.template === 'guided_continue')).toHaveLength(1);
+    // 19
+    const admin = await staff(h, 'admin', 'admin.jl@demo.kezjegy.test');
+    expect((await h.json('POST', `/admin/clients/${c.clientId}/disable`, { token: admin.token, body: { reason: 'próba tiltás' } })).status).toBe(204);
+    expect((await h.json('POST', `/admin/clients/${c.clientId}/enable`, { token: admin.token, body: { reason: 'próba feloldás' } })).status).toBe(204);
+    const t = h.mails.filter((m) => m.to === 'udv.k8@demo.kezjegy.test').map((m) => m.template);
+    expect(t).toContain('account_disabled');
+    expect(t).toContain('account_enabled');
+  });
+});

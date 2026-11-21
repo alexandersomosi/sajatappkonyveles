@@ -262,7 +262,7 @@ export function KeresKezeloFiok({ r, ugyfel, clientId, bezar }: { r: RequestSumm
               maxLength={1000}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder={tole ? (r.certificate ? 'Pl. „A NAV a tárhelyedre küldte, az Ügyfélkapu+-ban megtalálod.”' : 'Pl. „Pár napon belül kész.”') : ''}
+              placeholder={tole ? (r.certificate ? 'Pl. „A NAV a tárhelyedre küldte, az Ügyfélkapu+-ban megtalálod.”' : 'Pl. „Elkészítem, és szólok, ha kész.”') : ''}
             />
             {igazolasHianyzik && <span className="sugo">A „Kész, elküldöm” akkor él, ha csatolod az igazolást, vagy megírod, hol találja.</span>}
           </label>

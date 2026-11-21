@@ -92,7 +92,7 @@ export function FolytasKartya({ v, elso }: { v: GuidedView; elso?: boolean }) {
           {kezdo ? GUIDED_TEXTS.startTitle : GUIDED_TEXTS.pausedTitle}
         </T>
       </View>
-      <View style={{ paddingLeft: 38 }}>
+      <View style={{ paddingLeft: 54 }}>
         {kezdo ? (
           <T m={16} lh={1.45} style={{ marginTop: 4 }}>
             {GUIDED_TEXTS.startBody}

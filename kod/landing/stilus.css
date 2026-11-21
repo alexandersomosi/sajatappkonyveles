@@ -398,18 +398,20 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
      „Mit kapsz” linkje visz).
    - A gyökér görgetője csak akkor „mandatory” (html.beakad), amikor a helyzet a két szélső pont KÖZÖTT van; a szakasz előtt és után,
      és a két szélső ponton is szabad a görgetés (így sehol nem ragad be, és a menü linkjei is oda visznek, ahová kell).
-   - Gépen (≥ 981 px) nincs beakadás, a pontok nem látszanak. JS nélkül nincs .szinpad-mod: a lépések egymás alatt állnak.
+   - Csak érintőképernyőn (hover: none, pointer: coarse): egérrel – keskeny asztali ablakban is – a görgő egy-egy kattanása a
+     legközelebbi lépésre ugrana vissza, ezért ott marad a szabad görgetés. Gépen (≥ 981 px) nincs beakadás, a pontok nem
+     látszanak. JS nélkül nincs .szinpad-mod: a lépések egymás alatt állnak (a mostani tartalék).
    - A nyíl: két sárga chevron a ragadós telefon mellett jobbra, az alsó részénél (a telefon és a képernyő széle közötti sávban,
      nem takar szöveget); finoman le-fel pattog (csak transform, csak .mozog alatt: csökkentett mozgásnál áll); az utolsó lépésnél
      eltűnik (.vegen). Csak látvány (aria-hidden), nem fókuszálható, nem kattintható. Konténer-egység nélküli böngészőben nincs nyíl. */
 .beakado, .szinpad-nyil { display: none; }
 @media (max-width: 980px) {
-  html.beakad { scroll-snap-type: y mandatory; }
   .beakado { display: block; position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; scroll-snap-align: start; scroll-margin-top: var(--fej); }
   .blepes > .beakado { scroll-snap-stop: always; }
   .blepes > .beakado-ki { top: 100%; scroll-snap-stop: normal; }
   .beakado-be { scroll-margin-top: calc(var(--fej) + 8px); }
 }
+@media (max-width: 980px) and (hover: none) and (pointer: coarse) { html.beakad { scroll-snap-type: y mandatory; } }
 @supports (width: 1cqw) {
   @media (max-width: 980px) {
     .szinpad-nyil {
@@ -1192,3 +1194,30 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .hj-beall-cim { font-size: 16px; margin-bottom: 4px; }
 .hj-kicsi { font-size: 14px; margin-bottom: 8px; }
 .hj-szukseges { color: var(--halvany); }
+
+/* ================= SZÖVEGJAVÍTÁS (11-21): a külső átnézés javításai =================
+   - .ar-szavak: az árkártya „Benne van” listája alatt egy kis szürke sor a szakszavakról (szja-előleg, tb-járulék, szocho);
+     a fehér árkártyán (var(--halvany) fehéren kb. 5,6:1, mint az .ar-afa).
+   - .gomb-vonal: a záró panel gombja („Regisztrálok, és visszahívást kérek”) hosszabb lett: telefonon két sorba törhet,
+     nem lóg ki (a .gomb alapból nowrap). */
+.ar-szavak { margin-top: 16px; font-size: 13.5px; line-height: 1.5; color: var(--halvany); }
+.gomb-vonal { white-space: normal; height: auto; min-height: 48px; padding-top: 12px; padding-bottom: 12px; line-height: 1.25; text-align: center; }
+
+/* Belépés gomb (tulaj 11-21: "a belépésnek is kéne szín") – telt márkakék, fehér felirat; a Regisztrálok sárga marad (fő gomb) */
+.gomb.gomb-kek { background: var(--kek); color: #fff; font-weight: 600; }
+.gomb.gomb-kek:hover { background: var(--kek-sotet); color: #fff; }
+.fejlec-jobb { gap: 12px; }
+.mobilmenu-lap a.mobil-belepes { margin-top: 6px; background: var(--kek); color: #fff; text-align: center; font-weight: 600; }
+.mobilmenu-lap a.mobil-belepes:hover { background: var(--kek-sotet); color: #fff; }
+
+/* Kék fejléc (tulaj 11-21: "a navbarnak is szín, olyanba, mint a bizalmi doboz") – telt márkakék, fehér logó és menü,
+   a Belépés fehér gomb kék felirattal, a Regisztrálok sárga marad. A lenyíló mobilmenü fehér lap marad. */
+.fejlec { background: var(--kek); border-bottom: 1px solid var(--kek-sotet); }
+.menu a { color: #fff; }
+.menu a:hover { color: var(--sarga); }
+.fejlec .gomb.gomb-kek { background: #fff; color: var(--kek); }
+.fejlec .gomb.gomb-kek:hover { background: #E8ECFF; color: var(--kek-sotet); }
+.fejlec .mobilmenu summary { border-color: #6B79F0; }
+.fejlec .mobilmenu summary span { background: #fff; }
+.fejlec .mobilmenu-lap a.mobil-belepes { background: var(--kek); color: #fff; }
+.fejlec :focus-visible { outline-color: #fff; }

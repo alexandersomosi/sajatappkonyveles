@@ -10,3 +10,9 @@ export * from './k29f';
 export * from './k29g';
 // SPEC §31 (marketing): the source rules shared by the landing, the app, the backend and the panel.
 export * from './marketing';
+// SPEC §32 (éves ciklus és KATA, F0 + F1a): KATA months, payment sheet, switches.
+export * from './kata';
+// SPEC §32.B (éves ciklus, F2/F3): annual amounts and approval, settlement, timeline, önellenőrzés, folyószámla, overview.
+export * from './eves';
+// k8 ALAP-B: bank transfer with díjbekérő, payment switches, the callback offer before the card, the mail template.
+export * from './k8';

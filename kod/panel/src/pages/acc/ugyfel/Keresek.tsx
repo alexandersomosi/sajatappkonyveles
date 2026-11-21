@@ -25,7 +25,7 @@ export default function Keresek({ c }: FulProps) {
   const lezartak = items.filter((r) => !(r.status === 'nyitott' || r.status === 'folyamatban'));
   const Sor = ({ r }: { r: RequestSummary }) => (
     <button className="ikonsor" style={{ width: '100%', textAlign: 'left' }} onClick={() => setNyitott(r)}>
-      <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'igazolas'} s={44} />
+      <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'kerdoiv'} s={44} />
       <div className="l">
         <div className="cim">{keresCim(r)}</div>
         <div className="al">

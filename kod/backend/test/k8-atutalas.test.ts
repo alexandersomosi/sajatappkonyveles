@@ -346,6 +346,35 @@ describe('DEMO: choose → díjbekérő → manual mark → active → monthly �
     expect(sub!.nextChargeAt).not.toBeNull();
   });
 
+  it('k7b remnant: two parallel admin card deletions send ONE mail to the client', async () => {
+    const [cl] = await h.deps.db.select().from(clients).innerJoin(users, eq(users.id, clients.userId)).where(eq(users.email, 'kartya.utana@demo.kezjegy.test'));
+    const [sub] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, cl!.clients.id));
+    await adminLogin();
+    const before = mailsTo('kartya.utana@demo.kezjegy.test', 'card_deleted_by_admin').length;
+    const [a, b] = await Promise.all([
+      h.json('POST', `/admin/subscriptions/${sub!.id}/card/delete`, { token: admin.token }),
+      h.json('POST', `/admin/subscriptions/${sub!.id}/card/delete`, { token: admin.token }),
+    ]);
+    expect([a.status, b.status]).toEqual([200, 200]);
+    expect(mailsTo('kartya.utana@demo.kezjegy.test', 'card_deleted_by_admin').length - before).toBe(1);
+  });
+
+  it('B12 DEMO data step: two fictional transfer clients (paid / late), once', async () => {
+    const { runDataStepK8 } = await import('../src/services/datastep-k8.js');
+    await staff(h, 'accountant', 'bence.kovacs@demo.kezjegy.test');
+    const r = await runDataStepK8(h.deps);
+    expect(r).toEqual({ clients: 2, transfers: 3 });
+    expect(await runDataStepK8(h.deps)).toBe('already');
+    const [agnes] = await h.deps.db.select().from(clients).innerJoin(users, eq(users.id, clients.userId)).where(eq(users.email, 'atutalo.agnes.k8@demo.kezjegy.test'));
+    expect(agnes!.users.passwordHash).toBeNull();
+    const rows = await h.deps.db.select().from(transferRequests).where(eq(transferRequests.clientId, agnes!.clients.id));
+    expect(rows.map((x) => x.status).sort()).toEqual(['fizetve', 'kesik']);
+    // the late one is the subscription's next unpaid month: the monthly job never makes a second one
+    const [sub] = await h.deps.db.select().from(subscriptions).where(eq(subscriptions.clientId, agnes!.clients.id));
+    expect(rows.find((x) => x.status === 'kesik')!.periodStart).toBe(sub!.currentPeriodEnd);
+    expect((await jobTransferIssue(h.deps)).kiallitva).toBe(0);
+  });
+
   it('B5: an open callback during the onboarding waits the payment (card and transfer); the guided offer step', async () => {
     const c = await onboardingClient('visszahiv@demo.kezjegy.test');
     const g0 = await h.json('GET', '/client/guided', { token: c.token });

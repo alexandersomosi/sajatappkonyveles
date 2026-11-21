@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import type { AssistView } from '../_shared/api';
 import { useSegitsegJovahagytam } from '../api/hooks';
 import { hibaUzenet } from '../lib/hiba';
-import { GombE, GombM, GombSz } from './alap';
+import { GombE, GombM, GombSz, jelzoDoboz } from './alap';
 import { useJelzes } from './keret';
 import { ASSIST_STEP_LIST, ASSIST_TEXTS, CHANGE_STEP_LIST, fillPlaceholders } from '../_shared/bekotes';
 import { JOURNEY_ACTOR_LABELS, type AssistKind } from '../_shared/enums';
@@ -93,7 +93,7 @@ export function JovahagyasKartya({ a, fn }: { a: AssistView; fn: string }) {
       </T>
       {ap ? (
         ap.lastDay ? (
-          <View style={{ marginTop: 8, borderRadius: forma.mezo, backgroundColor: szin.borostyanAlap, padding: 12 }}>
+          <View style={{ marginTop: 8, borderRadius: forma.mezo, ...jelzoDoboz('figyelem'), padding: 12 }}>
             <T m={16} s={650} lh={1.45} c={szin.borostyanSzoveg}>
               {ap.afterDue ? ASSIST_TEXTS.approveAfterDue : ASSIST_TEXTS.approveLastDay}
             </T>

@@ -14,11 +14,12 @@
      mellette (gépen) vagy alatta (telefonon) a lépés szövege; lépésenként egy részes haladásjelző. Az utolsó lépés („Gépen is
      ugyanez”): a telefon kisebb lesz és félrehúzódik, mögötte beúszik a böngészőablak a gépes nézettel. Csökkentett mozgásnál
      ugyanez, átúszás és animáció nélkül (a rétegek a végállapotukban).
-     Telefonon (keskeny nézet, ≤ 980 px; tulaj 11-21): minden görgetési mozdulat pontosan EGY lépés. A lépések egy-egy színpadnyi
+     Telefonon (keskeny nézet, ≤ 980 px, érintőképernyő; tulaj 11-21): minden görgetési mozdulat pontosan EGY lépés. A lépések egy-egy színpadnyi
      magasak, mindegyik elején egy láthatatlan beakadási pont (.beakado, CSS scroll-snap, scroll-snap-stop: always), és egy-egy a
      szakasz tetején (.beakado-be) és a lista végén (.beakado-ki). A gyökér görgetője (html.beakad: scroll-snap-type: y mandatory)
      CSAK a két szélső pont között kapcsol be: a szakasz előtt és után, és a két szélső ponton is szabad a görgetés, így sehol nem
      ragad be. Horgony-linkre (menü) és fókuszváltásra a beakadás rövid időre kikapcsol, hogy a link oda vigyen, ahová kell.
+     Egérrel (keskeny asztali ablakban is) nincs beakadás: ott a görgő a legközelebbi lépésre ugrana vissza.
      A telefon mellett egy szöveg nélküli, pattogó nyíl (.szinpad-nyil) jelzi, hogy lefelé kell görgetni; az utolsó lépésnél eltűnik.
    Csak transform/opacity mozog (CSS); a telefonon belüli számokat requestAnimationFrame lépteti. */
 (function () {
@@ -132,6 +133,8 @@
     var n = lepesek.length;
     if (!n) return;
     var szeles = window.matchMedia('(min-width: 981px)');
+    // a beakadás csak érintőképernyőn (telefon, tablet): egérrel (keskeny asztali ablakban is) marad a szabad görgetés
+    var erintos = window.matchMedia('(hover: none) and (pointer: coarse)');
 
     // a színpad: egy telefon a lépések képernyőiből + haladásjelző + (keskeny kijelzőn) a lépések szövege. Csak látvány: aria-hidden.
     var szinpad = d.createElement('div'); szinpad.className = 'szinpad'; szinpad.setAttribute('aria-hidden', 'true');
@@ -168,7 +171,8 @@
     b.insertBefore(szinpad, b.firstChild);
     b.classList.add('szinpad-mod');
 
-    // beakadási pontok (csak keskeny nézetben számítanak, ld. stilus.css): lépésenként egy, a lista végén és a szakasz tetején egy-egy
+    // beakadási pontok (csak keskeny nézetben, érintőképernyőn számítanak, ld. stilus.css): lépésenként egy, a lista végén és a
+    // szakasz tetején egy-egy
     function pont(szulo, nev) {
       var p = d.createElement('i'); p.className = 'beakado' + (nev ? ' ' + nev : ''); p.setAttribute('aria-hidden', 'true');
       szulo.appendChild(p); return p;
@@ -234,7 +238,7 @@
         k = Math.max(0, Math.min(n - 1, Math.round(x)));
         for (var j = 0; j < n; j++) toltes.push(korlat(x + 1 - j));
         // beakadás csak a szakasz teteje és a lista vége KÖZÖTT (a két szélső ponton már nem: onnan szabadon tovább lehet menni)
-        kell = tav(pontBe) < -3 && tav(pontKi) > 3;
+        kell = erintos.matches && tav(pontBe) < -3 && tav(pontKi) > 3;
       }
       beallit(kell && !szabad);
       szinpad.classList.toggle('vegen', k === n - 1);
@@ -257,9 +261,25 @@
       if (a) szabadit();
     }, true);
     d.addEventListener('focusin', function () { szabadit(); });
+    // érintésnél a szélső pontról (szakasz teteje, lista vége) a szakasz FELÉ induló húzás első mozdulatára már bekapcsol a
+    // beakadás (ne csak az első görgetési kockán), hogy a legyintés végén biztosan a szomszéd lépésen álljon meg; a szakaszból
+    // KIFELÉ induló húzásnál nem kapcsol be (ott szabad a görgetés). Csak passzív figyelők: a görgetést nem tartják fel.
+    var erintY = null;
+    d.addEventListener('touchstart', function (e) { erintY = e.touches.length === 1 ? e.touches[0].clientY : null; }, { passive: true });
+    d.addEventListener('touchmove', function (e) {
+      if (erintY === null || beakad || szabad || szeles.matches || !erintos.matches || e.touches.length !== 1) return;
+      var dy = erintY - e.touches[0].clientY;   // > 0: lefelé görgetne
+      if (Math.abs(dy) < 4) return;
+      erintY = null;
+      var be = tav(pontBe), ki = tav(pontKi);
+      if ((dy > 0 && Math.abs(be) <= 3) || (dy < 0 && Math.abs(ki) <= 3)) beallit(true);
+    }, { passive: true });
+    d.addEventListener('touchend', function () { erintY = null; kerj(); }, { passive: true });
     window.addEventListener('hashchange', function () { szabadit(); });
     window.addEventListener('resize', kerj);
-    if (szeles.addEventListener) szeles.addEventListener('change', kerj); else if (szeles.addListener) szeles.addListener(kerj);
+    [szeles, erintos].forEach(function (mq) {
+      if (mq.addEventListener) mq.addEventListener('change', kerj); else if (mq.addListener) mq.addListener(kerj);
+    });
     jelol(0);
     szamol();
   }

@@ -176,40 +176,35 @@ export default function Bekotes() {
   return (
     <Kepernyo
       ful="fooldal"
+      szeles
       gorgetoRef={gorgeto}
       fejlec={
         <View onLayout={(e) => setFejMagas(e.nativeEvent.layout.height)}>
-          <Fejlec rozX={110} rozY={96} alsoTer={18}>
-            <T m={alacsony ? 25 : 29} s={700} lh={1.14} ls={-0.024} c="#fff" style={{ paddingTop: alacsony ? 6 : 12, paddingHorizontal: 20 }} accessibilityRole="header">
-              {j.bandTitle}
-            </T>
-            {alacsony ? (
-              <T m={15} lh={1.4} c={szin.fejlecHalvany} style={{ paddingTop: 6, paddingHorizontal: 20 }}>
-                {acc.displayName}, a könyvelőd
-              </T>
-            ) : (
-            <View style={{ marginTop: 16, marginHorizontal: 16, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.08)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-                <Arckep pt={48} />
-                <View style={{ flex: 1 }}>
-                  <T m={16.5} s={650} lh={1.3} c="#fff">
-                    {acc.displayName}, a könyvelőd
-                  </T>
-                  <T m={14} lh={1.4} c={szin.fejlecHalvany}>
-                    {acc.title}, nyilvántartási szám: {acc.registrationNumber}
-                  </T>
+          <Fejlec alsoTer={22}>
+            <View style={{ paddingHorizontal: asztali ? 16 : 18 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9, marginTop: asztali ? 0 : 8 }}>
+                <View style={{ borderRadius: 18, borderWidth: 2, borderColor: 'rgba(255,255,255,0.7)' }}>
+                  <Arckep pt={32} />
                 </View>
+                <T m={15} lh={1.3} c={szin.fejlecHalvany} style={{ flex: 1 }} numberOfLines={1}>
+                  <T m={15} s={650} c="#fff">
+                    {acc.displayName}
+                  </T>
+                  , a könyvelőd
+                </T>
               </View>
-              <GombSav cim="Kérj visszahívást" ikon="ora" accessibilityLabel="Kérj visszahívást. Csapatunk 24–48 órán belül hív." onPress={() => router.push(visszahivasUt('konyvelo_kartya', temaSorbol(j.currentKey)))} style={{ marginTop: 10 }} />
+              <T m={asztali ? 33 : alacsony ? 24 : 27} s={800} lh={1.14} ls={-0.025} c="#fff" style={{ marginTop: alacsony ? 8 : 12 }} accessibilityRole="header">
+                {j.bandTitle}
+              </T>
+              <GombSav cim="Kérj visszahívást" ikon="telefon" accessibilityLabel="Kérj visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között." onPress={() => router.push(visszahivasUt('konyvelo_kartya', temaSorbol(j.currentKey)))} style={{ marginTop: 14 }} />
             </View>
-            )}
           </Fejlec>
         </View>
       }
       tartalomStilus={{ paddingTop: 14 }}
     >
       {due ? (
-        <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, marginBottom: 12, backgroundColor: szin.veszelyAlap }}>
+        <Lap style={{ paddingHorizontal: 16, paddingVertical: 14, marginBottom: 12, borderLeftWidth: 4, borderLeftColor: szin.veszely }}>
           <Pressable accessibilityRole="link" onPress={() => router.push('/fizesd-ki')} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Ikon3d nev="szamlaszam" pt={28} />
             <View style={{ flex: 1 }}>

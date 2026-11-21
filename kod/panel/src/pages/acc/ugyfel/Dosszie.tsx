@@ -236,7 +236,7 @@ export default function Dosszie({ c }: FulProps) {
                   </div>
                   {d.openRequests.map((r) => (
                     <div className="ikonsor" key={r.id}>
-                      <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'igazolas'} s={36} />
+                      <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'kerdoiv'} s={36} />
                       <div className="l">
                         <div className="cim">{r.title}</div>
                         <div className="al">

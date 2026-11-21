@@ -358,6 +358,9 @@ export const NOTIFICATION_KINDS = [
   'tax_task',
   // SPEC §32.B (DB: ADD VALUE in 0024_ev_ciklus_enumok.sql): the client's önellenőrzés steps (approve, filed, settled)
   'correction_status',
+  // k8 ALAP-B (DB: ADD VALUE in 0027_k8_enumok.sql, this order): bank transfer – the díjbekérő is out, a late reminder
+  'transfer_request',
+  'transfer_reminder',
 ] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 /** Kinds never sent any more and hidden from the client's notification settings (SPEC §26.2.9). */
@@ -472,7 +475,7 @@ export const REGISTRATION_STATUS_LABELS: Record<RegistrationStatus, string> = {
 export const REGISTRATION_STATUS_CLIENT_TEXT: Record<RegistrationStatus, string> = {
   kitoltes: 'Még nem töltötted ki a kérdőívet. Ott folytathatod, ahol abbahagytad.',
   utmutato: 'Kész a személyre szabott útmutatód. Lépésről lépésre megmutatja, mit jelölj be a NAV oldalán.',
-  beadva: 'Megkaptuk a NAV-os értesítést. Átnézzük, általában 1 munkanapon belül.',
+  beadva: 'Megkaptuk a NAV-os értesítést. Átnézzük, és szólunk.',
   javitas: 'Egy dolgot javítanod kell. Megírtuk, mit és hogyan.',
   ellenorizve: 'Rendben van a bejelentésed. Az adószámodat az értesítésről mi rögzítjük. Ha még nincs rajta, a NAV pár napon belül küldi.',
   kesz: 'Elindult a vállalkozásod. Jöhet a következő lépés.',
@@ -1707,7 +1710,7 @@ export const REMINDER_GROUP_KINDS: Record<ReminderGroup, readonly NotificationKi
   ra_var: ['nudge', 'checkin_due', 'request_reminder'],
 };
 /** Cannot be switched off (payment and lock texts). */
-export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated'];
+export const ALWAYS_ON_KINDS: readonly NotificationKind[] = ['fee_due', 'service_locked', 'charge_upcoming', 'payment_action_needed', 'payment_refunded', 'contract_terminated', 'transfer_request', 'transfer_reminder'];
 /** Variants used by §28.K.4 (content notif.<kind>.<variant>.*). */
 export const REMINDER_VARIANTS = {
   tax_due_soon: ['ma', 'lejart', 'kata', 'kata_ma', 'kata_lejart', 'kata_ev_vege', 'hipa'],
@@ -1721,7 +1724,8 @@ export type NudgeSubject = (typeof NUDGE_SUBJECTS)[number];
 
 // ---------- §28.K.5 D – unpaid fee lock ----------
 // SPEC §29.9.4: 'kezi' = locked by the admin (clients.service_lock_manual mode 'zarolva').
-export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras', 'kezi'] as const;
+// k8: 'atutalas_kesik' = a díjbekérő 8 days late while the switch kapcsolok.fizetes.kesesLeallit is ON (default OFF).
+export const SERVICE_LOCK_REASONS = ['havidij', 'eves_zaras', 'kezi', 'atutalas_kesik'] as const;
 export type ServiceLockReason = (typeof SERVICE_LOCK_REASONS)[number];
 export const SERVICE_LOCK_ERROR_CODE = 'service_locked';
 /** What stays open, what is read-only and what is locked while clients.service_lock is set (SPEC §28.K.5). */

@@ -8,7 +8,7 @@ import type { AccountantPublic, WaitingCardView } from './api';
 import type { JourneyRowState, JourneyStepKey, JourneyVariant } from './enums';
 
 /** A guided step = a journey row, or the pseudo-step 'adoszam' (§28.K.9 lookup) on the 'van' path. */
-export type GuidedStepKey = JourneyStepKey | 'adoszam';
+export type GuidedStepKey = JourneyStepKey | 'adoszam' | 'visszahivas_ajanlat';
 
 /**
  * The order of the guided run per variant (SPEC §29.10.2). Rows that are not the client's own task (atnezes, nav_bekotes,
@@ -18,8 +18,10 @@ export type GuidedStepKey = JourneyStepKey | 'adoszam';
  */
 export const GUIDED_ORDER: Record<JourneyVariant, readonly GuidedStepKey[]> = {
   nincs: ['ut'],
-  van: ['ut', 'adoszam', 'adatok', 'kedvezmenyek', 'szerzodes', 'meghatalmazas', 'azonositas', 'elofizetes'],
-  inditas_onallo: ['ut', 'adatok', 'kedvezmenyek', 'kerdoiv', 'bejelentes', 'ertesites', 'szerzodes', 'azonositas', 'elofizetes', 'meghatalmazas'],
+  // k8 (owner 11-20): the card / transfer is asked only AFTER the optional callback offer ('visszahivas_ajanlat', a
+  // guided-only pseudo-step like 'adoszam'; the 'inditas_segitett' path already starts with its own callback).
+  van: ['ut', 'adoszam', 'adatok', 'kedvezmenyek', 'szerzodes', 'meghatalmazas', 'azonositas', 'visszahivas_ajanlat', 'elofizetes'],
+  inditas_onallo: ['ut', 'adatok', 'kedvezmenyek', 'kerdoiv', 'bejelentes', 'ertesites', 'szerzodes', 'azonositas', 'visszahivas_ajanlat', 'elofizetes', 'meghatalmazas'],
   inditas_segitett: ['ut', 'visszahivas', 'adatok', 'kedvezmenyek', 'kerdoiv', 'szerzodes', 'meghatalmazas', 'vegso_jovahagyas', 'azonositas', 'elofizetes'],
 };
 
@@ -27,6 +29,7 @@ export const GUIDED_ORDER: Record<JourneyVariant, readonly GuidedStepKey[]> = {
 export const GUIDED_OWN_ROUTES: Partial<Record<GuidedStepKey, string>> = {
   ut: '/bevezeto/ut',
   adoszam: '/bevezeto/adoszam',
+  visszahivas_ajanlat: '/bekotes/visszahivas-ajanlat',
 };
 
 /** Step screens of the guided run (route without query). The server sends the journey's own action route when it has one. */
@@ -42,10 +45,12 @@ export const GUIDED_STEP_ROUTES: Partial<Record<GuidedStepKey, string>> = {
   meghatalmazas: '/bekotes/meghatalmazas',
   vegso_jovahagyas: '/bekotes/vallalkozas/engedely',
   azonositas: '/bekotes/azonositas',
+  visszahivas_ajanlat: '/bekotes/visszahivas-ajanlat',
   elofizetes: '/bekotes/elofizetes',
 };
 
-export const GUIDED_ACTIONS = ['welcome_seen', 'later', 'resume', 'step_seen', 'done_seen'] as const;
+/** k8: 'callback_offer_skip' = "Nem kell, mehetünk tovább" on the callback offer (GuidedState.callbackOfferSkippedAt). */
+export const GUIDED_ACTIONS = ['welcome_seen', 'later', 'resume', 'step_seen', 'done_seen', 'callback_offer_skip'] as const;
 export type GuidedAction = (typeof GUIDED_ACTIONS)[number];
 
 /** clients.guided (jsonb; null = never started). */
@@ -55,6 +60,8 @@ export interface GuidedState {
   finishedAt?: string | null;
   lastKey?: string | null;
   doneSeenAt?: string | null;
+  /** k8: the client answered the callback offer with "Nem kell, mehetünk tovább". */
+  callbackOfferSkippedAt?: string | null;
 }
 
 export interface GuidedStepView {
@@ -125,14 +132,15 @@ export const GUIDED_TEXTS = {
   w2NoneBody: 'A beállítás közben kijelöljük. Addig csapatunk segít.',
   w3Title: 'Így indulunk',
   w3Rows: [
-    { title: 'Pár kérdés rólad és a vállalkozásodról', time: 'kb. 5 perc' },
-    { title: 'Szerződés és engedély a NAV-nál', time: 'kb. 10 perc' },
-    { title: 'A kártyád megadása', time: 'kb. 2 perc' },
+    // k8: no time estimates (owner rule); the payment row names no card – the transfer may be chosen too
+    { title: 'Pár kérdés rólad és a vállalkozásodról', time: '' },
+    { title: 'Szerződés és engedély a NAV-nál', time: '' },
+    { title: 'Az előfizetés elindítása', time: '' },
     { title: '{firstName} bekapcsolja a könyvelést', time: 'a NAV-tól függ' },
   ],
   w3PriceTitle: 'Mennyibe kerül?',
   w3Price: '{osszeg} Ft / hó',
-  w3PriceBody: 'Minden benne van, amit az app tud. Az első hónapot a kártyád megadásakor fizeted. Bármikor lemondhatod.',
+  w3PriceBody: 'Minden benne van, amit az app tud. Az első hónapot az előfizetés elindításakor fizeted. Bármikor lemondhatod.',
   w3Start: 'Kezdjük',
   utTitle: 'Van már egyéni vállalkozásod?',
   utSub: 'Ha rosszat választasz, később módosíthatod.',
@@ -143,7 +151,7 @@ export const GUIDED_TEXTS = {
   utHowTitle: 'Hogyan jelentsük be?',
   utHowSub: 'A vállalkozásodat a NAV-nál kell bejelenteni. Választhatsz.',
   utOnallo: 'Magam jelentem be',
-  utOnalloSub: 'Megmutatjuk, mit hova jelölj. Kb. 10–15 perc.',
+  utOnalloSub: 'Megmutatjuk, mit hova jelölj.',
   utSegitett: 'Intézzétek helyettem',
   utSegitettSub: 'Felhívunk, és {firstName} bejelenti helyetted. Neked: pár adat és két jóváhagyás.',
   varTitle: 'Most {ki} jön',
@@ -168,8 +176,8 @@ export const GUIDED_TEXTS = {
   startBody: 'Egyszerre egy lépés, mindig látod, mi jön. Bármikor abbahagyhatod, és később ott folytatod.',
   startButton: 'Kezdjük',
   adoszamStep: 'Adószámod',
-  adoszamTime: 'kb. 1 perc',
+  adoszamTime: '',
   adoszamManual: 'Kitöltöm kézzel',
   adoszamTimeout: 'Most nem érjük el a NAV-ot. Töltsd ki kézzel – ugyanúgy jó.',
-  firstMonth: 'Az első hónapot a kártyád megadásakor fizeted. Bármikor lemondhatod.',
+  firstMonth: 'Az első hónapot az előfizetés elindításakor fizeted. Bármikor lemondhatod.',
 } as const;

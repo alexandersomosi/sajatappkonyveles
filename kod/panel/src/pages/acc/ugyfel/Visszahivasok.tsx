@@ -35,7 +35,7 @@ export default function Visszahivasok({ c }: FulProps) {
           <div className="lap-fej">
             <I3 n="ora" s={36} />
             <h2>Visszahívások</h2>
-            <span className="megj">Kollégáink 24–48 órán belül hívják vissza.</span>
+            <span className="megj">A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.</span>
             <div className="jobbra">
               <button className="gomb-m kicsi csak-szoveg" disabled={!!nyitott} title={nyitott ? 'Már van nyitott kérése.' : undefined} onClick={() => setUj(true)}>
                 Visszahívás felvétele
@@ -112,7 +112,7 @@ export default function Visszahivasok({ c }: FulProps) {
           <h2>Hogyan működik?</h2>
         </div>
         <div className="belso oszlop" style={{ paddingTop: 0, gap: 10, fontSize: 14.5 }}>
-          <p>Az ügyfél az appban kér visszahívást. Kollégáink 24–48 órán belül hívják, munkanapokon 9 és 17 óra között.</p>
+          <p>Az ügyfél az appban kér visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.</p>
           <p>Ha adó- vagy könyvelési kérdés, neked adják át. Ilyenkor értesítést kapsz, és a menüben megjelenik a Visszahívások oldal.</p>
           <p className="halvany">A teljes telefonszámot csak az látja, akinél a kérés van. A hívást nem rögzítjük.</p>
         </div>

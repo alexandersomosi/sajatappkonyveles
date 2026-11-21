@@ -46,7 +46,7 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "shared": "node ../shared/scripts/sync-shared.mjs src/_shared && node scripts/jogi-szovegek.mjs",
+    "shared": "node ../shared/scripts/sync-shared.mjs src/_shared && node ../shared/v2/scripts/sync-v2.mjs src/_shared/v2 --rn && node scripts/jogi-szovegek.mjs",
     "eszkozok": "node scripts/eszkozok.mjs && python scripts/fontok.py",
     "start": "npm run shared && expo start",
     "android": "npm run shared && expo start --android",

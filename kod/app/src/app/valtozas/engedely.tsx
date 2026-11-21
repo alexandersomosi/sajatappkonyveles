@@ -64,7 +64,7 @@ export default function ValtozasEngedely() {
               <Szakasz ikon="irat" cim={b.title} jobbra={b.editRoute ? <GombM cim={C.edit} onPress={() => router.push(b.editRoute as never)} /> : undefined} />
               <Lap kotott style={{ paddingHorizontal: 16, paddingBottom: 12 }}>
                 {b.lines.map((l, i) => (
-                  <T key={i} m={16} lh={1.5} style={{ paddingLeft: 38 }}>
+                  <T key={i} m={16} lh={1.5} style={{ paddingLeft: 54 }}>
                     {l}
                   </T>
                 ))}

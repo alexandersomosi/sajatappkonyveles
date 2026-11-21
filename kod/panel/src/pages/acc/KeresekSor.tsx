@@ -81,7 +81,7 @@ export default function KeresekSor() {
                   <tr key={r.id} className="kattinthato" onClick={() => setNyitott(r)}>
                     <td className="elso">
                       <div className="sor-flex">
-                        <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'igazolas'} s={36} />
+                        <I3 n={r.direction === 'konyvelotol' ? 'feltoltes' : 'kerdoiv'} s={36} />
                         <div>
                           <div style={{ fontWeight: 600 }}>{keresCim(r)}</div>
                           <div className="al">{r.certificate?.purpose ? `Cél: ${r.certificate.purpose}` : r.body.slice(0, 80)}</div>

@@ -14,13 +14,22 @@ A régi (C kinézetű) oldal forrása és utolsó dist-je: `_regi/elotte_uj_diza
 kezeli. Rajta kívül csak a cégünk vezetése férhet hozzájuk, naplózva.”; a bemutató alatti jegy kiegészült (új kinézet, gépen ma
 még telefonos elrendezés).
 
+**11-21 13:12 szövegjavítás (MÉG NINCS KINT, a tulaj jóváhagyására vár):** a külső átnézés jogos javaslatai
+(`_munka/WEBOLDAL_KULSO_ATNEZES_2026-11-21.md`) és a tulaj két döntése: felelősség-mondat nincs az oldalon („A könyvelőd
+munkájáért … felel” helyett: „a könyvelőd a mi megbízásunkból dolgozik neked”), telefonszám nincs. Új: ONYA magyarázva, a
+visszahívás-gomb felirata „Regisztrálok, és visszahívást kérek” (a link és az esemény változatlan), „Átalányadózóként” jelölés és
+szakszó-sor (`.ar-szavak`) az árkártyán, „alanyi áfamentes” magyarázata (2026: 20 millió Ft – **2027-01-01 előtt átírni**),
+Ügyfélkapu+/DÁP a GYIK-ben, „akkor is, ha most indulsz” a hősben, a havidíj kezdete a GYIK-ben, „az Európai Unióban (a szerverünk
+Németországban van)”, új GYIK: „Hogyan váltok a régi könyvelőmtől?”. Részletes lista: `_munka/WEBOLDAL_SZOVEGJAVITAS_2026-11-21.md`.
+Mentés: `_regi/elotte_szovegjavitas_20261121_1312/`.
+
 ## Fájlok
 
 | Fájl | Mi ez |
 |---|---|
 | `oldal.sablon.html` | a dizájn sablonja (`dizajn/landing_v2_proba4/_eszkoz/index.sablon.html` másolata) a build jelölőivel: `{{ar:…}}`, `{{ceg:…}}`, `{{email}}`, `{{esemeny:név:hely}}`, `{{meres_lablec}}` stb. A `<!--logo-->`, `<!--pipa-->`, `<!--ikon:név-->` jelölőket és a megjegyzés-szűrést a dizájn `epit.cjs`-éből vettük át (a KOZEPRE ikon-javítással együtt). |
-| `stilus.css` | a dizájn CSS-e változatlanul (a 4. kör, 4b, 4e, 4f blokkokkal; 11-21 11:40: 4h – telt kék „Mennyibe kerül?” és „Miben más” Adózz-oszlop, telt zöld „Ki könyvel neked?”), a végén az élő oldal mérés-elemeinek stílusa („Visszahívást kérek”, lábléc mérés-sora, süti-ablak `.hj-*`). |
-| `mozgas.js` | a dizájn mozgása változatlanul → `dist/js/mozgas.js` megjegyzések nélkül (mobilmenü, kattintható hős-telefon, ragadós bemutató). Nem kér semmit a hálózatról, nem tárol semmit. |
+| `stilus.css` | a dizájn CSS-e változatlanul (a 4. kör, 4b, 4e, 4f blokkokkal; 11-21 11:40: 4h – telt kék „Mennyibe kerül?” és „Miben más” Adózz-oszlop, telt zöld „Ki könyvel neked?”), a végén az élő oldal mérés-elemeinek stílusa (visszahívás-gomb, lábléc mérés-sora, süti-ablak `.hj-*`), és a 11-21-i szövegjavítás két szabálya (`.ar-szavak`; a hosszabb `.gomb-vonal` telefonon két sorba törhet). |
+| `mozgas.js` | a dizájn mozgása → `dist/js/mozgas.js` megjegyzések nélkül (mobilmenü, kattintható hős-telefon, ragadós bemutató). Nem kér semmit a hálózatról, nem tárol semmit. **11-21 13:10 (MÉG NINCS KINT):** telefonon (≤ 980 px, érintőképernyő) a bemutató görgetésenként pontosan egy lépést lép (CSS scroll-snap: lépésenként egy színpadnyi magas lista, `.beakado` pontok, `html.beakad` csak a szakasz teteje és a lista vége között; horgony-linkre/fókuszra rövid időre ki), mellette szöveg nélküli, pattogó sárga nyíl (`.szinpad-nyil`, az utolsó lépésnél eltűnik); gépen és egérrel nincs beakadás. Mentés: `_regi/elotte_gorgetes_lepes_20261121_1240/`; próba és videó: `dizajn/landing_v2_proba4/_eszkoz/proba_gorgetes_lepes.cjs`, `video_gorgetes_lepes.cjs`. |
 | `megjegyzes.mjs` | a `stilus.css` és a `mozgas.js` megjegyzés-szűrője a buildhez (sztringet, `url()`-t, regexet nem bánt; kódhoz tapadó megjegyzésnél megáll). |
 | `kepek/` | a dizájn képei: app-képernyők bemutató adatokkal (`app_*.webp`, a gépesekből 800w változat is), `telefon_keret.svg` (saját rajz; az eredet-jegyzet `LICENC_telefon_keret.txt` csak itt, a dist-be nem megy), `logo.png`, `logo_feher.png`, `favicon.png`. A régi névvel készült `app_asztali*.webp` NINCS itt. |
 | `fontok/` | Geist (OFL-1.1), szűkített woff + teljes ttf. |
@@ -32,13 +41,13 @@ még telefonos elrendezés).
 ## Mérés és linkek (SPEC §31 – változatlanul átvéve)
 
 - A `js/meres.js`-t a `build.mjs` állítja elő a `meres-sablon.js`-ből és a közös csatornaszabályból
-  (`kod/shared/src/marketing.ts`). Minden `https://app.adozz.hu/…` link (Regisztrálok, Belépés, Visszahívást kérek) továbbviszi az
+  (`kod/shared/src/marketing.ts`). Minden `https://app.adozz.hu/…` link (Regisztrálok, Belépés, a visszahívás-gomb) továbbviszi az
   `utm_*`-ot, a hivatkozó oldal nevét és az érkezési oldalt; a `/jogi/` linkek tiszták maradnak. Ha az `umamiWebsiteId` ki van
   töltve, a `meres.js` maga tölti be a saját statisztika szkriptjét (`/m/script.js`, süti nélkül, szűrővel, DNT).
 - Események (`data-kj-esemeny` + `data-kj-hely`, nem `data-umami-event`): `regisztralok` (fejlec, hos, arak, zaro, lab),
   `belepes` (fejlec, menu, lab), `visszahivas` (zaro), `email-iras` (biztonsag, gyik, zaro, lab, impresszum); az árak szakasz
   `id="arak"` („Görgetett az árakig”).
-- „Visszahívást kérek” → `https://app.adozz.hu/regisztracio?cel=visszahivas`, a kék záró panelen, az egyetlen engedett
+- „Regisztrálok, és visszahívást kérek” (11-21-ig: „Visszahívást kérek”) → `https://app.adozz.hu/regisztracio?cel=visszahivas`, a kék záró panelen, az egyetlen engedett
   időígéret alatt: „A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.”
 - Lábléc: ÁSZF, Adatkezelés, Süti-tájékoztató (`…/jogi/suti`), Impresszum; `#meres-lablec` (statisztikával a jogász
   `meres.lablec` szövege), a látogató kikapcsolója (`#meres-kapcsolo`), hirdetési buildben `#suti-beallitasok`.

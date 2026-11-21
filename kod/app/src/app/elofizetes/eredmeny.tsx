@@ -2,6 +2,8 @@
 // path on the web). The money state comes ONLY from the server: GET /client/payments/checkout/:cs is polled (≤ 30 s,
 // then "Még ellenőrizzük a fizetést. Szólunk, ha kész."). An URL saying "success" decides nothing.
 // A SimplePay return (?e=SUCCESS&t=…) keeps the kept SimplePay screen.
+// k8 ALAP-B: a failed card month offers "Inkább átutalom" when the server offers the transfer (díjbekérő instead).
+// Előtte: kod/app/_regi/elotte_k8_B/src/app/elofizetes/eredmeny.tsx
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -11,6 +13,9 @@ import { PAYMENT_RULES, PAYMENT_SCREEN_TEXTS as P, type HostedCel } from '@/_sha
 import { K, useConfig } from '@/api/hooks';
 import { K29, useFizetesEredmeny } from '@/api/hooks-k29';
 import { KG, useGuided } from '@/api/hooks-k29g';
+import { useAtutalasValasztas } from '@/api/hooks-k8';
+import { TRANSFER_TEXTS } from '@/_shared/k8';
+import { hibaUzenet } from '@/lib/hiba';
 import { datumAn, szam } from '@/lib/format';
 import { SimplePayEredmeny } from '@/kepernyok/simplepay/Eredmeny';
 import { szin } from '@/theme/tokens';
@@ -31,6 +36,8 @@ function StripeEredmeny({ cs, cel, megszakitva }: { cs: string | null; cel: Host
   const qc = useQueryClient();
   const cfg = useConfig();
   const g = useGuided();
+  const atutal = useAtutalasValasztas();
+  const [atutalHiba, setAtutalHiba] = useState<string | null>(null);
   const [lejart, setLejart] = useState(false);
   const r = useFizetesEredmeny(megszakitva && !cs ? null : cs, !lejart, megszakitva);
   const st = megszakitva && !r.data ? 'megszakitva' : (r.data?.status ?? (cs ? 'feldolgozas' : 'megszakitva'));
@@ -101,6 +108,24 @@ function StripeEredmeny({ cs, cel, megszakitva }: { cs: string | null; cel: Host
               {d?.message ?? 'A bankod nem engedte a fizetést. Nem vontunk le semmit.'}
             </T>
             <GombM cim={P.result.otherCard} onPress={ujra} style={{ alignSelf: 'center', marginTop: 14 }} />
+            {cfg.data?.fizetes?.atutalas && (cel === 'elofizetes' || cel === 'fizesd-ki') && !kartya ? (
+              <GombM
+                cim={TRANSFER_TEXTS.insteadTransfer}
+                tolt={atutal.isPending}
+                style={{ alignSelf: 'center', marginTop: 10 }}
+                onPress={() =>
+                  atutal.mutate(
+                    { purpose: bekotesben ? 'subscribe' : 'switch' },
+                    { onSuccess: () => router.replace(bekotesben ? '/bekotes/elofizetes' : '/fiok/elofizetes'), onError: (e) => setAtutalHiba(hibaUzenet(e, 'Nem sikerült. Próbáld újra.')) },
+                  )
+                }
+              />
+            ) : null}
+            {atutalHiba ? (
+              <T m={15} c={szin.veszely} kozep style={{ marginTop: 8 }}>
+                {atutalHiba}
+              </T>
+            ) : null}
           </>
         ) : (
           <T m={16} lh={1.55} kozep>

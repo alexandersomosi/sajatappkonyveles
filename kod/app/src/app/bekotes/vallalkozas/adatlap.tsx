@@ -23,7 +23,7 @@ import { jarulekSzoveg, koltseghanyadSzoveg, tevekenysegKeres } from '@/lib/teve
 import { adoszamFormaz, adoszamHiba, datumHiba, datumNormal } from '@/lib/validators';
 import { SavCim } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Valaszto } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, Pipa, Valaszto, jelzoDoboz } from '@/ui/alap';
 import { Ikon3d } from '@/ui/kepek';
 import { AlsoLap, Betolt, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { HolTalalom, MiEz } from '@/ui/Magyarazat';
@@ -164,7 +164,7 @@ function Kerdes({ cim, kulcs, children, hiba }: { cim: string; kulcs?: string; c
 
 function Tipp({ children, sarga }: { children: React.ReactNode; sarga?: boolean }) {
   return (
-    <View style={{ borderRadius: forma.mezo, backgroundColor: sarga ? szin.borostyanAlap : szin.nyomott, padding: 14 }}>
+    <View style={[{ borderRadius: forma.mezo, padding: 14 }, sarga ? jelzoDoboz('figyelem') : { backgroundColor: szin.nyomott }]}>
       {typeof children === 'string' ? (
         <T m={15.5} s={sarga ? 600 : 400} lh={1.5} c={sarga ? szin.borostyanSzoveg : szin.tinta}>
           {children}
@@ -391,7 +391,7 @@ function Adatlap() {
                 <Valaszto elemek={REVENUE_BANDS.map((b) => ({ kulcs: b, cim: REVENUE_BAND_LABELS[b] }))} ertek={u.revenueBand} valt={al('revenueBand')} />
               </Kerdes>
               {stop ? (
-                <View style={{ borderRadius: forma.mezo, backgroundColor: szin.veszelyAlap, padding: 14 }} accessibilityLiveRegion="polite">
+                <View style={{ borderRadius: forma.mezo, ...jelzoDoboz('hiba'), padding: 14 }} accessibilityLiveRegion="polite">
                   <T m={16} s={650} lh={1.5} c={szin.veszelySzoveg}>
                     {typeof stop === 'object' ? stop.text : 'Ennyi bevétel mellett nem lehetsz alanyi ÁFA-mentes. Szolgáltatásunk most az ÁFA-mentes egyéni vállalkozóknak szól. Ha kérdésed van, kérj visszahívást.'}
                   </T>

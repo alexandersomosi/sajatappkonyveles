@@ -17,7 +17,7 @@ import { forma, szin } from '@/theme/tokens';
 import { GombE, GombM, HibaSzoveg, Lap, Szakasz } from '@/ui/alap';
 import { IgyMegy, SohaBelepes } from '@/ui/Helyettunk';
 import { Ikon3d } from '@/ui/kepek';
-import { Kepernyo, useJelzes, vissza } from '@/ui/keret';
+import { Kepernyo, useJelzes, vissza, Kartyak } from '@/ui/keret';
 import { Mezo } from '@/ui/Mezo';
 import { T } from '@/ui/T';
 import { Elakadtal, visszahivasUt } from '@/ui/Visszahivas';
@@ -45,7 +45,7 @@ export function MegszuntetesInfo() {
           </T>
         </Lap>
       ) : nyitott ? (
-        <>
+        <Kartyak>
           <Szakasz ikon="ora" cim="Folyamatban" />
           <Lap style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
             <View style={{ paddingLeft: BELJEBB, gap: 10 }}>
@@ -56,7 +56,7 @@ export function MegszuntetesInfo() {
               {nyitott.status === 'dijra_var' && nyitott.feeCharge ? <GombM cim={fillPlaceholders(FEE_TEXTS.payButtonAmount, { dij: szam(nyitott.feeCharge.amountHuf) })} onPress={() => router.push('/fiok/dijak')} /> : null}
             </View>
           </Lap>
-        </>
+        </Kartyak>
       ) : (
         <View style={{ paddingTop: 4 }}>
           <View style={{ borderRadius: forma.lap, borderWidth: 2, borderColor: szin.tintakek, padding: 16 }}>

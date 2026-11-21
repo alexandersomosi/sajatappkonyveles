@@ -13,7 +13,7 @@ import { useElofizetes, useElofizetesFolytat, useElofizetesLemond, useKartyaTorl
 import { datum, datumEvvel, datumEvvelIg, datumIg, maiNap, nagybetu, szam } from '@/lib/format';
 import { kartyasFizetes } from '@/lib/simplepay';
 import { szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap, Szakasz } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, Szakasz, jelzoDoboz } from '@/ui/alap';
 import { AlsoLap, Betolt, CimSor, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { szoveg, szovegLista } from '@/lib/szovegek';
@@ -149,7 +149,7 @@ export function SimplePayKezeles() {
     <Kepernyo ful="fiok" fejlec={<CimSor visszaCim="Vissza a fiókhoz" vissza={() => vissza('/fiok')} cim="Előfizetés" al={`Havi ${szam(e.priceHuf)} Ft, bruttó.`} />}>
       {e.mode === 'demo' ? <DemoFizetesJel /> : null}
       {e.status === 'past_due' || e.status === 'suspended' ? (
-        <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
           <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             {e.status === 'past_due' ? 'Nem sikerült levonni a havidíjat.' : 'Az előfizetésed szünetel, mert nem sikerült levonni a havidíjat.'}
           </T>
@@ -159,14 +159,14 @@ export function SimplePayKezeles() {
         </View>
       ) : null}
       {e.status === 'canceled' || lemondva ? (
-        <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
           <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             {e.currentPeriodEnd && e.currentPeriodEnd > ma ? `${vegeIg} intézzük a könyvelésed, utána leáll.` : 'Az előfizetésed lejárt, a könyvelőd már nem dolgozik rajta.'}
           </T>
         </View>
       ) : null}
       {fut && !e.card ? (
-        <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }} accessibilityLiveRegion="polite">
+        <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }} accessibilityLiveRegion="polite">
           <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             Nincs mentett kártyád.
           </T>

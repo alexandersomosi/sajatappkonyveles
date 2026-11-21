@@ -19,6 +19,7 @@ import { utmutatoEpit } from '../../lib/utmutato';
 import { munkanapotHozzaad, napKulcs } from '../../lib/ut';
 import { k28CsendBeallit, k28Home, k28Kezdo, k28Me, k28SzamlaTartalek, k28Utak, type K28Allapot } from './k28';
 import { k29Kezdo, k29Utak, type K29Allapot } from './k29';
+import { k8Utak } from './k8';
 
 const tarolt = (k: string, v?: string | null): string | null => {
   try {
@@ -281,6 +282,8 @@ ut('GET', '/config', () =>
     simplepayMode: 'demo',
     // SPEC §29.14: the payment provider of the server (MINTA: the DEMO pay page)
     ...({ paymentProvider: 'demo', paymentMode: 'demo' } as object),
+    // k8: the bank transfer may be chosen (DEMO default of the switch)
+    fizetes: { atutalas: true },
   } satisfies PublicConfig),
 );
 ut('POST', '/auth/login', (_m, _q, t) => {
@@ -806,6 +809,13 @@ ut('POST', '/client/business-registration/chamber', (_m, _q, t) => {
     hiba: (st, c, m, e = {}, f) => hiba(st, c, m, e, f),
     kell,
   });
+  utak.unshift(...utak.splice(elotte));
+}
+
+// k8 ALAP-B: bank transfer (/client/billing) – a legelejére, mint a §29-es utak
+{
+  const elotte = utak.length;
+  k8Utak(ut, { ma: () => S.ma, aktiv: () => !S.onboarding && S.belepve, ok, hiba: (st, c, m, e = {}, f) => hiba(st, c, m, e, f), kell });
   utak.unshift(...utak.splice(elotte));
 }
 

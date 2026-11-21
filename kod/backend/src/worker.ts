@@ -15,6 +15,7 @@ import { runDataStepK7b } from './services/datastep-k7b.js';
 import { runDataStepK29 } from './services/dijak.js';
 import { runDataStepKataF1 } from './services/datastep-kata.js';
 import { runDataStepEvJavitas } from './services/datastep-evjav.js';
+import { runDataStepK8 } from './services/datastep-k8.js';
 
 async function migrationsReady(db: ReturnType<typeof buildDeps>['db']): Promise<boolean> {
   try {
@@ -113,6 +114,13 @@ async function main(): Promise<void> {
     log().info(r, 'data step ev_javitas');
   } catch (err) {
     log().error({ err: safeErr(err) }, 'data step ev_javitas failed');
+  }
+  // k8 ALAP-B (B12): two fictional DEMO clients paying by bank transfer (paid / late) for the console (DEMO only, once).
+  try {
+    const r = await runDataStepK8(deps);
+    log().info({ result: r }, 'data step k8');
+  } catch (err) {
+    log().error({ err: safeErr(err) }, 'data step k8 failed');
   }
   const jobs = jobDefs(deps);
   log().info({ jobs: jobs.map((j) => j.name) }, 'kezjegy worker started');

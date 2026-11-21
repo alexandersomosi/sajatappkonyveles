@@ -1,6 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/geist';
+// k8 (v2): the shared design base first (--v2-* tokens, .v2-* classes, no reset), then the panel's own tokens and styles.
+import './_shared/v2/web/v2.css';
 import './styles/tokens.css';
 import './styles/app.css';
 import brand from './_shared/brand.json';

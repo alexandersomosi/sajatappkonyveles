@@ -436,6 +436,8 @@ export async function waiveCharge(deps: Deps, db: DbOrTx, id: string, reason: st
   await audit(db, { action: 'fee.waived', actorUserId: by, actorRole: 'admin', targetType: 'fee_charge', targetId: id, clientId: ch.clientId, details: { kind: ch.kind } });
   const [cl] = await db.select().from(clients).where(eq(clients.id, ch.clientId)).limit(1);
   if (cl) await runPurpose(deps, cl, u!);
+  // k8 JL 18 (LEVEL_LEFEDETTSEG #34): the client hears that the fee is waived (never blocks the waiver)
+  if (cl) await feeWaivedMail(deps, cl, ch).catch(() => undefined);
   return u!;
 }
 
@@ -453,3 +455,18 @@ export async function openChargesOf(db: DbOrTx, clientId: string): Promise<FeeCh
 }
 
 export { ONE_OFF_FEE_KINDS };
+
+/** k8 JL 18 (LEVEL_LEFEDETTSEG #34): "Elengedtük a díjat" – a direct mail (the in-app fee list already shows it). */
+async function feeWaivedMail(deps: Deps, cl: typeof clients.$inferSelect, ch: FeeChargeRow): Promise<void> {
+  const [u] = await deps.db.select({ email: users.email, status: users.status }).from(users).where(eq(users.id, cl.userId)).limit(1);
+  if (!u || u.status !== 'active' || cl.anonymizedAt) return;
+  const { sendTemplateMail } = await import('../notify/notify.js');
+  const link = `${deps.cfg.appPublicUrl}/fiok/dijak`;
+  await sendTemplateMail(deps, {
+    to: u.email,
+    key: 'fee_waived',
+    lablec: 'ugyfel',
+    gomb: { szoveg: await deps.content.render('email.fee_waived.gomb', {}), link },
+    params: { keresztnev: cl.firstName, label: FEE_KIND_LABELS[ch.kind as keyof typeof FEE_KIND_LABELS] ?? 'díj', osszeg: fmt(ch.amountHuf), link },
+  });
+}

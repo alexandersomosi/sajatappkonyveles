@@ -150,12 +150,14 @@ function ikon(n) {
   return `<svg class="ikon" viewBox="${vb}" aria-hidden="true" focusable="false">${body}</svg>`;
 }
 const LOGO = `<a class="logo" href="#top"><img src="kepek/logo.png" width="138" height="38" alt="${esc(brand.webName)} – az oldal teteje"></a>`;
+const LOGO_FEJLEC = `<a class="logo logo-fejlec" href="#top"><img src="kepek/logo_feher.png" width="138" height="38" alt="${esc(brand.webName)} – az oldal teteje"></a>`; // kék fejlécen fehér logó (tulaj 11-21), nem lusta: a hajtás fölött van
 const LOGO_FEHER = `<a class="logo logo-feher" href="#top"><img src="kepek/logo_feher.png" width="138" height="38" loading="lazy" alt="${esc(brand.webName)} – az oldal teteje"></a>`;
 const PIPA = '<svg class="pipa" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.3 8.5l2.9 2.9 6.5-6.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const NEM = '<svg class="pipa nem" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 8h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
 let html = readFileSync(join(ITT, 'oldal.sablon.html'), 'utf8').split('\r\n').join('\n');
 html = html
+  .replace(/<!--logo-fejlec-->/g, LOGO_FEJLEC)
   .replace(/<!--logo-feher-->/g, LOGO_FEHER)
   .replace(/<!--logo-->/g, LOGO)
   .replace(/<!--pipa-->/g, PIPA)

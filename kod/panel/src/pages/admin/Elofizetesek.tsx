@@ -76,7 +76,7 @@ export default function Elofizetesek() {
                     <th className="elso">Ügyfél</th>
                     <th>Állapot</th>
                     <th className="tor">Következő levonás</th>
-                    <th>Kártya</th>
+                    <th>Kártya / átutalás</th>
                     <th>Hiba</th>
                     <th className="utolso" />
                   </tr>
@@ -108,7 +108,10 @@ export default function Elofizetesek() {
                           <span className="halvany">–</span>
                         )}
                       </td>
-                      <td>{r.cardLabel ? <span className="szam">{r.cardLabel}</span> : <span className="halvany">nincs kártya</span>}</td>
+                      <td>
+                        {/* k8: a transfer subscription pays by díjbekérő – no card needed */}
+                        {r.billingMethod === 'atutalas' ? <span className="cimke info">átutalás</span> : r.cardLabel ? <span className="szam">{r.cardLabel}</span> : <span className="halvany">nincs kártya</span>}
+                      </td>
                       <td>
                         {r.failedAttempts > 0 ? (
                           <>

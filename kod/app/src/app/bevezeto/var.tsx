@@ -43,7 +43,7 @@ export default function BevezetoVar() {
             {w?.title ?? s?.waitText ?? s?.title ?? ''}
           </T>
         </View>
-        <View style={{ paddingLeft: 38 }}>
+        <View style={{ paddingLeft: 54 }}>
           {w?.body ? (
             <T m={16} lh={1.45} style={{ marginTop: 4 }}>
               {w.body}

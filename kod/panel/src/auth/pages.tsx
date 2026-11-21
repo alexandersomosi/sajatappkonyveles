@@ -10,25 +10,23 @@ import { useAuth } from './Auth';
 import { Logo, DemoCimke } from '../ui/kozos';
 import { emailOk } from '../lib/validate';
 
+// k8 (v2, A10 split page, simplified): the blue brand half with the white word mark, the form card on the grey ground.
 function BelepesKeret({ children }: { children: React.ReactNode }) {
   const { demo } = useAuth();
   return (
     <div className="belepes-oldal">
       <div className="belepes-bal">
-        <div className="sor-flex" style={{ gap: 14 }}>
-          <Logo size={48} />
-          <div>
-            <div style={{ fontWeight: 750, fontSize: 22, letterSpacing: '-.02em' }}>{brand.name}</div>
-            <div style={{ color: 'var(--fejlec-halvany)', fontSize: 14.5 }}>Könyvelői és tulajdonosi felület</div>
-          </div>
-          {demo && <DemoCimke>DEMO – minta adatok</DemoCimke>}
-        </div>
-        <h1>Minden ügyfeled egy helyen: iratok, számlák, határidők.</h1>
+        <Logo meret={34} feher />
+        <div className="al-cim">Könyvelői és tulajdonosi felület</div>
+        <h1>
+          Minden ügyfeled <em>egy helyen</em>: iratok, számlák, határidők.
+        </h1>
         <p>Te hagyod jóvá a fizetendőt, az ügyfél azonnal látja a leveleddel együtt. A NAV-nak továbbra is te adod be.</p>
       </div>
-      <div className="belepes-jobb">
+      <main className="belepes-jobb">
+        {demo && <DemoCimke>DEMO – minta adatok</DemoCimke>}
         <div className="belepes-lap">{children}</div>
-      </div>
+      </main>
     </div>
   );
 }

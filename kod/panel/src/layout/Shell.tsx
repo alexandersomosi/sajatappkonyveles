@@ -1,8 +1,10 @@
-// App shell: white left navigation with 3D icons, content on the tinted ground. The menu depends on the role
-// (SPEC §26.3.1): the service team (csapat) sees only its queues, the accountant no longer has Időpontok.
+// App shell: white left navigation, content on the grey ground. The menu depends on the role (SPEC §26.3.1): the
+// service team (csapat) sees only its queues, the accountant no longer has Időpontok.
+// k8 (v2, tulaj 11-20): the same menu language as the app's desktop view (dizajn/C5_v2/asztali): the "Adózz.hu" word
+// mark, group titles, a colourful Fluent icon per item, the active item on light blue with a 4 px blue bar and blue
+// label (aria-current="page" from NavLink), capsule badges, the person's card at the bottom. No motion (only hover).
 import { NavLink, Outlet } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
-import brand from '../_shared/brand.json';
 import { useAuth } from '../auth/Auth';
 import { I3 } from '../ui/Icon3d';
 import { Avatar, Logo } from '../ui/kozos';
@@ -14,17 +16,26 @@ import { Ertesitesek } from './Ertesitesek';
 
 type Szamlalo = Partial<Record<MenuKulcs, { n: number; hiba?: boolean; cim?: string }>>;
 
-function Csoport({ cs, db }: { cs: MenuCsoport; db: Szamlalo }) {
+/** One menu group: title + items. Exported for the test (aria-current, decorative icons, badges). */
+export function Csoport({ cs, db }: { cs: MenuCsoport; db: Szamlalo }) {
+  const cimId = `nav-${cs.cim.replace(/\s+/g, '-').toLowerCase()}`;
   return (
-    <div className="nav-csoport">
-      <div className="nav-cim">{cs.cim}</div>
+    <div className="nav-csoport" role="group" aria-labelledby={cimId}>
+      <div className="nav-cim" id={cimId}>
+        {cs.cim}
+      </div>
       {cs.elemek.map((e) => {
         const d = db[e.kulcs];
         return (
           <NavLink key={e.to} to={e.to} end={e.end} className={({ isActive }) => `nav-elem${isActive ? ' on' : ''}`} title={d?.cim ?? e.felirat}>
-            {e.karakter ? <img className="i3" src="/a/avatar/karakter_1_lapos@2x.png" srcSet="/a/avatar/karakter_1_lapos@2x.png 2x, /a/avatar/karakter_1_lapos@3x.png 3x" width={28} height={28} style={{ width: 28, height: 28, borderRadius: 14, objectFit: 'cover', background: '#E6ECF4' }} alt="" /> : <I3 n={e.ikon} s={28} />}
-            {e.felirat}
-            {!!d?.n && <span className={`db${d.hiba ? ' hiba' : ''}`}>{d.n}</span>}
+            <I3 n={e.ikon} s={26} />
+            <span className="nav-felirat">{e.felirat}</span>
+            {!!d?.n && (
+              <span className={`db${d.hiba ? ' hiba' : ''}`}>
+                {d.n}
+                <span className="rejtett"> {d.hiba ? 'lejárt is van' : 'vár'}</span>
+              </span>
+            )}
           </NavLink>
         );
       })}
@@ -99,13 +110,10 @@ export function Shell() {
 
   return (
     <div className="keret">
-      <aside className="oldalsav" aria-label="Menü">
+      <nav className="oldalsav" aria-label="Menü">
         <div className="logo">
-          <Logo />
-          <div>
-            <div className="nev">{brand.name}</div>
-            <div className="al">{al}</div>
-          </div>
+          <Logo meret={25} />
+          <div className="al">{al}</div>
         </div>
         {import.meta.env.VITE_MOCK_API === '1' ? (
           <div className="demo-sav">HELYI MINTA – nincs szerver, minden adat kitalált</div>
@@ -123,20 +131,20 @@ export function Shell() {
           <Ertesitesek />
         </div>
         <div className="oldalsav-alj">
-          {isAccountant && !isCsapat ? <Avatar avatarKey={konyvelo?.avatarKey} /> : <I3 n="fiok" s={36} />}
+          {isAccountant && !isCsapat ? <Avatar avatarKey={konyvelo?.avatarKey} /> : <I3 n="fiok" s={34} className="csempe-ikon" />}
           <div className="ki">
             <b>{nev}</b>
-            <span style={{ display: 'flex', gap: 12 }}>
-              <NavLink className="gomb-sz" style={{ fontSize: 13 }} to={beallitas}>
+            <span className="ki-gombok">
+              <NavLink className="gomb-sz" to={beallitas}>
                 Beállítások
               </NavLink>
-              <button className="gomb-sz" style={{ fontSize: 13 }} onClick={() => void kilep()}>
+              <button type="button" className="gomb-sz" onClick={() => void kilep()}>
                 Kilépés
               </button>
             </span>
           </div>
         </div>
-      </aside>
+      </nav>
       <main className="fo">
         <Outlet />
       </main>

@@ -9,6 +9,7 @@ import { keretSzin, savKitoltes } from '../lib/kata';
 import { datumIg, szam } from '../lib/format';
 import { szin } from '../theme/tokens';
 import { GombM, Lap, Szakasz } from '../ui/alap';
+import { Kartyak } from '../ui/keret';
 import { T } from '../ui/T';
 
 const SZIN = { zold: szin.tintakek, borostyan: szin.borostyan, piros: szin.veszely } as const;
@@ -19,7 +20,7 @@ export function KataKeret({ k }: { k: KataHomeView }) {
   const sz = keretSzin(m.level);
   const kitoltes = savKitoltes(m.pct);
   return (
-    <>
+    <Kartyak>
       <Szakasz ikon="szamolo" cim={K.keretCim} />
       <Lap style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 14 }}>
         <T m={22} s={750} lh={1.2} szam>
@@ -53,7 +54,7 @@ export function KataKeret({ k }: { k: KataHomeView }) {
           </T>
         ) : null}
       </Lap>
-    </>
+    </Kartyak>
   );
 }
 

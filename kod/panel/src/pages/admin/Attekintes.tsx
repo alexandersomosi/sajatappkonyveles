@@ -3,13 +3,13 @@ import { Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import { Fejlec, HibaSav, NagyFt, Oszlopok, Toltes } from '../../ui/kozos';
-import { I3, type Icon3dName } from '../../ui/Icon3d';
+import { I3, type IkonNev } from '../../ui/Icon3d';
 import { HONAPOK_ROVID, ft, szam } from '../../lib/format';
 
-function Kpi({ ikon, ertek, mi, to }: { ikon: Icon3dName; ertek: React.ReactNode; mi: string; to?: string }) {
+function Kpi({ ikon, ertek, mi, to }: { ikon: IkonNev; ertek: React.ReactNode; mi: string; to?: string }) {
   const tartalom = (
     <>
-      <I3 n={ikon} s={44} />
+      <I3 n={ikon} s={34} />
       <div>
         <div className="ertek">{ertek}</div>
         <div className="mi">{mi}</div>
@@ -54,15 +54,15 @@ export default function Attekintes() {
           d && (
             <>
               <div className="racs k4">
-                <Kpi ikon="fiok" ertek={szam(d.clients.byLifecycle.aktiv ?? 0)} mi="aktív ügyfél" to="/admin/ugyfelek" />
+                <Kpi ikon="emberek" ertek={szam(d.clients.byLifecycle.aktiv ?? 0)} mi="aktív ügyfél" to="/admin/ugyfelek" />
                 <Kpi ikon="dosszie" ertek={szam(d.clients.byLifecycle.bekotes_alatt ?? 0)} mi="bekötés alatt" to="/admin/ugyfelek?status=bekotes_alatt" />
-                <Kpi ikon="szamlaszam" ertek={szam(d.failedPayments)} mi="sikertelen fizetés" to="/admin/fizetesek?status=failed" />
+                <Kpi ikon="kartya" ertek={szam(d.failedPayments)} mi="sikertelen fizetés" to="/admin/fizetesek?status=failed" />
                 <Kpi ikon="boritek" ertek={szam(d.cancellationsThisMonth)} mi="lemondás ebben a hónapban" to="/admin/elofizetesek?status=canceled" />
               </div>
               {d.service && (
                 <div className="racs k2" style={{ marginTop: 16 }}>
                   <Link to="/visszahivasok" className="lap kpi szolg" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <I3 n="ora" s={44} />
+                    <I3 n="telefon" s={34} />
                     <div style={{ flex: 1 }}>
                       <div className="sor-flex" style={{ gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
                         <span className="ertek">{szam(d.service.callbacks.open)}</span>
@@ -78,7 +78,7 @@ export default function Attekintes() {
                     </div>
                   </Link>
                   <Link to="/vallalkozas-inditas" className="lap kpi szolg" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <I3 n="bevallas" s={44} />
+                    <I3 n="epulet" s={34} />
                     <div style={{ flex: 1 }}>
                       <div className="sor-flex" style={{ gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
                         <span className="ertek">{szam(d.service.registrations.inPipeline)}</span>
@@ -96,7 +96,7 @@ export default function Attekintes() {
                 <div className="racs k2" style={{ marginTop: 16 }}>
                   {/* SPEC §27.6.4: the assisted path ("Intézzük helyette") */}
                   <Link to="/helyettunk" className="lap kpi szolg kiemelt-csempe" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <I3 n="igazolas" s={44} />
+                    <I3 n="irat-toll" s={34} />
                     <div style={{ flex: 1 }}>
                       <div className="sor-flex" style={{ gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
                         <span className="ertek">{szam(d.service.assists.open)}</span>

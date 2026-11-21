@@ -1,24 +1,16 @@
 // Shared visual pieces of the C2 language at desktop scale.
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import brand from '../_shared/brand.json';
-import { PEN_STROKE_ICON } from './kezvonas';
-import { I3, type Icon3dName } from './Icon3d';
+import { I3, type IkonNev } from './Icon3d';
+import { Csempe, Logo as V2Logo, TARGYKEP_UJ, VezerloIkon, type EmojiNev } from '../_shared/v2/web';
 import { ft, szam } from '../lib/format';
 import type { Meter } from '../_shared/api';
 import { ApiError } from '../api/client';
 
-/** App icon: flat brand-blue (#1428DB) square, Geist Black initial of the brand name, the blue pen stroke (SPEC §17.1). */
-export function Logo({ size = 38 }: { size?: number }) {
-  const initial = brand.name.trim().charAt(0).toUpperCase();
-  return (
-    <svg viewBox="0 0 120 120" width={size} height={size} aria-hidden="true">
-      <rect width="120" height="120" rx="27" fill="#1428DB" />
-      <text x="60" y="83" textAnchor="middle" fill="#fff" style={{ fontFamily: 'var(--betu-szoveg)', fontWeight: 900, fontSize: 76, letterSpacing: '-.02em' }}>
-        {initial}
-      </text>
-      <path d={PEN_STROKE_ICON} fill="#C9D2FF" />
-    </svg>
-  );
+/** k8 (v2): the word mark "Adózz.hu" (Poppins 800, yellow "zz", swoosh) from kod/shared/v2 – an image, read as "Adózz.hu".
+ *  `feher`: white letters for the blue band. Before k8: a blue square with the initial (_regi/elotte_k8_P/src/ui/kozos.tsx). */
+export function Logo({ meret = 26, feher = false, alt }: { meret?: number; feher?: boolean; alt?: string }) {
+  return <V2Logo meret={meret} feher={feher} alt={alt ?? brand.webName} />;
 }
 
 export function Avatar({ avatarKey = 'karakter_1_lapos', size = 'normal', alt = '' }: { avatarKey?: string; size?: 'kicsi' | 'normal' | 'nagy'; alt?: string }) {
@@ -34,28 +26,21 @@ export function Avatar({ avatarKey = 'karakter_1_lapos', size = 'normal', alt = 
   );
 }
 
-// Approved object visuals only (TERV 0/8): the retired full folder, laptop and stamp object are not listed,
-// so they cannot come back. ures_mappa = empty lists, tepnaptar_3d = appointments, befizetve_jel = done.
+// k8 (v2): the empty-state objects are the big neutral tile with a Fluent icon (64 / 50), not the 3D PNGs.
+// The names stay (every page uses them); the drawings come from the shared table TARGYKEP_UJ.
 export type IllustrationName = 'ures_mappa' | 'hatarido_naptar' | 'level_boritek' | 'meghatalmazas_alairva' | 'tepnaptar_3d' | 'befizetve_jel';
-const TARGY: Record<IllustrationName, { src: string; w: number; h: number; top: number; arnyek: number }> = {
-  ures_mappa: { src: 'illusztraciok/ures_mappa', w: 160, h: 120, top: 0, arnyek: 126 },
-  hatarido_naptar: { src: 'illusztraciok/hatarido_naptar', w: 160, h: 120, top: 0, arnyek: 100 },
-  level_boritek: { src: 'illusztraciok/level_boritek', w: 160, h: 120, top: 0, arnyek: 100 },
-  meghatalmazas_alairva: { src: 'illusztraciok/meghatalmazas_alairva', w: 160, h: 120, top: 0, arnyek: 100 },
-  tepnaptar_3d: { src: 'illusztraciok/tepnaptar_3d', w: 79, h: 96, top: 12, arnyek: 84 },
-  // The shadowless violet seal: no floor shadow (it would read as a stray underline).
-  befizetve_jel: { src: 'ikon3d/befizetve_jel_84', w: 84, h: 84, top: 18, arnyek: 0 },
+const TARGY: Record<IllustrationName, EmojiNev> = {
+  ures_mappa: TARGYKEP_UJ.ures_mappa,
+  hatarido_naptar: TARGYKEP_UJ.hatarido_naptar,
+  level_boritek: TARGYKEP_UJ.level_boritek,
+  meghatalmazas_alairva: TARGYKEP_UJ.meghatalmazas_alairva,
+  tepnaptar_3d: TARGYKEP_UJ.tepnaptar_3d,
+  befizetve_jel: 'pipa-kor',
 };
 export function Targy({ n }: { n: IllustrationName }) {
-  const t = TARGY[n];
   return (
-    <div className="targy" style={{ ['--arnyek' as string]: `${t.arnyek}px` } as React.CSSProperties} data-arnyek={t.arnyek > 0 ? undefined : 'nincs'}>
-      <img
-        src={`/a/${t.src}@2x.png`}
-        srcSet={`/a/${t.src}@2x.png 2x, /a/${t.src}@3x.png 3x`}
-        alt=""
-        style={{ width: t.w, height: t.h, left: (160 - t.w) / 2, top: t.top }}
-      />
+    <div className="targy">
+      <Csempe nev={TARGY[n]} meret="nagy" />
     </div>
   );
 }
@@ -71,7 +56,8 @@ export function Ures({ n, cim, children, gombok }: { n: IllustrationName; cim: s
   );
 }
 
-/** Ink-blue page band with the guilloche rosette, the title and an optional big number. */
+/** k8 (v2): the blue hero card on top of the page (gradient, r 24, soft circles) – title, optional big number and tabs.
+ *  `rozR` is kept for the old calls (it moved the retired guilloche rosette); it has no effect now. */
 export function Fejlec({
   felcim,
   cim,
@@ -139,7 +125,7 @@ export function Fiok({
   bezar: () => void;
   cim: ReactNode;
   bev?: ReactNode;
-  ikon?: Icon3dName;
+  ikon?: IkonNev;
   szeles?: boolean;
   /** 480 px (the callback detail, SPEC §26.3.2). */
   keskeny?: boolean;
@@ -191,7 +177,7 @@ export function Fiok({
       <div className="fuggony" onClick={probalBezar} />
       <div className={`fiok-lap${szeles ? ' szeles' : keskeny ? ' keskeny' : ''}`} role="dialog" aria-modal="true" aria-labelledby={id} tabIndex={-1} ref={ref}>
         <div className="fej">
-          {ikon && <I3 n={ikon} s={44} />}
+          {ikon && <I3 n={ikon} s={34} className="csempe-ikon" />}
           <div style={{ flex: 1, minWidth: 0 }}>
             <h2 id={id}>{cim}</h2>
             {bev && <div className="bev">{bev}</div>}
@@ -318,7 +304,7 @@ export function Masol({ ertek, felirat = 'Másolás' }: { ertek: string; felirat
         }
       }}
     >
-      <I3 n="masolas_arnyektalan" s={22} />
+      <I3 n="masolas_arnyektalan" s={20} />
       {kesz ? 'Kimásolva' : felirat}
     </button>
   );
@@ -328,7 +314,8 @@ export function DemoCimke({ children = 'DEMO' }: { children?: ReactNode }) {
   return <span className="cimke demo">{children}</span>;
 }
 
-/** Select without the browser's line chevron: a text hint "Válassz" at the right. Width/height styles go on the wrapper. */
+/** Select with the v2 chevron (Material-style control icon, k8) instead of the browser's arrow. Width/height styles go on the wrapper.
+ *  Before k8 a text hint "Válassz" stood there (the old "no line icons" rule; v2 allows the control icons). */
 export function Lenyilo({ style, className, children, ...rest }: React.SelectHTMLAttributes<HTMLSelectElement>) {
   const { width, ...selectStyle } = style ?? {};
   return (
@@ -337,7 +324,7 @@ export function Lenyilo({ style, className, children, ...rest }: React.SelectHTM
         {children}
       </select>
       <span className="jel" aria-hidden="true">
-        Válassz
+        <VezerloIkon nev="chev-le" pt={18} />
       </span>
     </span>
   );

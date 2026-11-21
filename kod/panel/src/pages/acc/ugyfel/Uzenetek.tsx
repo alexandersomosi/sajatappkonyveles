@@ -12,6 +12,7 @@ import { today } from '../../../lib/today';
 import { fajlHiba } from '../../../lib/validate';
 import { Buborek } from '../../kozos/Buborek';
 import { useCsevegoMagassag } from '../../../ui/useCsevegoMagassag';
+import { VezerloIkon } from '../../../_shared/v2/web';
 
 export default function Uzenetek({ c }: FulProps) {
   const t = today();
@@ -99,7 +100,7 @@ export default function Uzenetek({ c }: FulProps) {
         </div>
         <div className="iro-sor">
           <button className="csatol" title="Fájl csatolása" aria-label="Fájl csatolása" disabled={tolt} onClick={() => fajl.current?.click()}>
-            <I3 n="feltoltes" s={32} />
+            <VezerloIkon nev="gemkapocs" pt={24} />
           </button>
           <input ref={fajl} type="file" hidden multiple accept="application/pdf,image/jpeg,image/png" onChange={(e) => { void csatol(e.target.files); e.target.value = ''; }} />
           <div style={{ flex: 1 }}>
@@ -144,7 +145,7 @@ export default function Uzenetek({ c }: FulProps) {
           {sablonok.isPending && <Toltes />}
           <div className="oszlop" style={{ gap: 8 }}>
             {(sablonok.data?.items ?? []).map((s) => (
-              <button key={s.id} className="negyedev-kartya" style={{ background: 'var(--mezo-alap)', padding: '12px 14px' }} onClick={() => setSzoveg((x) => (x ? `${x}\n${tolteniKell(s.body)}` : tolteniKell(s.body)))}>
+              <button key={s.id} className="negyedev-kartya" style={{ padding: '12px 14px', boxShadow: 'inset 0 0 0 1px var(--keret)' }} onClick={() => setSzoveg((x) => (x ? `${x}\n${tolteniKell(s.body)}` : tolteniKell(s.body)))}>
                 <div className="cim">{s.title}</div>
                 <div className="halvany kicsi" style={{ marginTop: 3, whiteSpace: 'pre-wrap' }}>
                   {tolteniKell(s.body).slice(0, 140)}

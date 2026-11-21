@@ -13,7 +13,7 @@ import {
 } from '../_shared/enums';
 import type { Message } from '../_shared/api';
 import { ACTIVITY_PENDING_DEADLINE_WORKDAYS } from '../_shared/bekotes';
-import type { Icon3dName } from '../ui/Icon3d';
+import type { EmojiNev } from '../_shared/v2/ikon/emoji-adat';
 import { datum } from './format';
 import { torzsszamOk } from './validate';
 
@@ -209,50 +209,52 @@ export interface MenuElem {
   kulcs: MenuKulcs;
   to: string;
   felirat: string;
-  ikon: Icon3dName;
+  /** k8 (v2): a Fluent Emoji Flat content icon, the same set as the client app's menu. */
+  ikon: EmojiNev;
   end?: boolean;
-  karakter?: boolean;
 }
 export interface MenuCsoport {
   cim: string;
   elemek: MenuElem[];
 }
+// k8 (v2, tulaj 11-20): one icon language with the app – every item has its own Fluent Emoji Flat icon (before k8 the
+// realistic 3D set, several items sharing one picture: _regi/elotte_k8_P/src/lib/csapat.ts).
 const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
-  ugyfelek: { to: '/ugyfelek', felirat: 'Ügyfelek', ikon: 'dosszie' },
-  hatarido: { to: '/hatarido-figyelo', felirat: 'Határidő-figyelő', ikon: 'hataridok' },
-  eves_attekinto: { to: '/eves-attekinto', felirat: 'Éves áttekintő', ikon: 'bevallas' },
-  keresek: { to: '/keresek', felirat: 'Kérések', ikon: 'igazolas' },
-  visszahivasok: { to: '/visszahivasok', felirat: 'Visszahívások', ikon: 'ora' },
+  ugyfelek: { to: '/ugyfelek', felirat: 'Ügyfelek', ikon: 'emberek' },
+  hatarido: { to: '/hatarido-figyelo', felirat: 'Határidő-figyelő', ikon: 'naptar' },
+  eves_attekinto: { to: '/eves-attekinto', felirat: 'Éves áttekintő', ikon: 'oszlop' },
+  keresek: { to: '/keresek', felirat: 'Kérések', ikon: 'kerdoiv' },
+  visszahivasok: { to: '/visszahivasok', felirat: 'Visszahívások', ikon: 'telefon' },
   // SPEC §27.6.1: the assisted path ("Intézzük helyette"), between Visszahívások and Vállalkozás-indítás.
-  helyettunk: { to: '/helyettunk', felirat: 'Intézzük helyette', ikon: 'igazolas' },
-  vallalkozas: { to: '/vallalkozas-inditas', felirat: 'Vállalkozás-indítás', ikon: 'bevallas' },
-  uzenetek: { to: '/uzenetek', felirat: 'Üzenetek', ikon: 'uzenetek' },
+  helyettunk: { to: '/helyettunk', felirat: 'Intézzük helyette', ikon: 'irat-toll' },
+  vallalkozas: { to: '/vallalkozas-inditas', felirat: 'Vállalkozás-indítás', ikon: 'epulet' },
+  uzenetek: { to: '/uzenetek', felirat: 'Üzenetek', ikon: 'uzenet' },
   // SPEC §28.K.2: the monthly check-in queue (accountant: own clients; admin: all; csapat: items with an assist)
-  havi: { to: '/havi-valtozasok', felirat: 'Havi változások', ikon: 'kerdezek' },
-  sablonok: { to: '/sablonok', felirat: 'Válaszsablonok', ikon: 'uzenetek' },
+  havi: { to: '/havi-valtozasok', felirat: 'Havi változások', ikon: 'valtozas' },
+  sablonok: { to: '/sablonok', felirat: 'Válaszsablonok', ikon: 'buborek' },
   export: { to: '/export', felirat: 'Export', ikon: 'irat' },
   naplo: { to: '/naplo', felirat: 'Napló', ikon: 'nyugta' },
-  beallitasok: { to: '/beallitasok', felirat: 'Beállítások', ikon: 'fiok' },
+  beallitasok: { to: '/beallitasok', felirat: 'Beállítások', ikon: 'beallitas' },
   admin: { to: '/admin', felirat: 'Áttekintés', ikon: 'fooldal', end: true },
-  admin_ugyfelek: { to: '/admin/ugyfelek', felirat: 'Ügyfelek', ikon: 'dosszie' },
-  admin_elofizetesek: { to: '/admin/elofizetesek', felirat: 'Előfizetések', ikon: 'szamlak' },
-  admin_fizetesek: { to: '/admin/fizetesek', felirat: 'Fizetések', ikon: 'szamlaszam' },
+  admin_ugyfelek: { to: '/admin/ugyfelek', felirat: 'Ügyfelek', ikon: 'emberek' },
+  admin_elofizetesek: { to: '/admin/elofizetesek', felirat: 'Előfizetések', ikon: 'kartya' },
+  admin_fizetesek: { to: '/admin/fizetesek', felirat: 'Fizetések', ikon: 'bank' },
   // SPEC §29.1.14: fee invoices (Számlázz.hu)
-  admin_dijszamlak: { to: '/admin/dijszamlak', felirat: 'Díjszámlák', ikon: 'irat' },
+  admin_dijszamlak: { to: '/admin/dijszamlak', felirat: 'Díjszámlák', ikon: 'nyugta' },
   // SPEC §28.K.1: admin-editable fees (DEMO until confirmed)
-  admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'szamolo' },
+  admin_dijak: { to: '/admin/dijak', felirat: 'Díjak', ikon: 'tarca' },
   // SPEC §29.5 F1: the certificate queue; §29.9 F9: the owner console
-  igazolasok: { to: '/igazolasok', felirat: 'Igazolások', ikon: 'igazolas' },
-  admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'szamolo' },
-  admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'fiok', karakter: true },
+  igazolasok: { to: '/igazolasok', felirat: 'Igazolások', ikon: 'igazolvany' },
+  admin_konzol: { to: '/admin/konzol', felirat: 'Konzol', ikon: 'oszlopok' },
+  admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'szamologep' },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
   // SPEC §31.4: visits, funnel, money and campaigns by source (the referral codes stay on Honnan jöttek)
-  admin_marketing: { to: '/admin/marketing', felirat: 'Marketing', ikon: 'ertesites' },
-  admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'fiok' },
-  admin_szovegek: { to: '/admin/szovegek', felirat: 'GYIK és szövegek', ikon: 'uzenetek' },
+  admin_marketing: { to: '/admin/marketing', felirat: 'Marketing', ikon: 'emelkedes' },
+  admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'cimke' },
+  admin_szovegek: { to: '/admin/szovegek', felirat: 'GYIK és szövegek', ikon: 'kerdes' },
   admin_naplo: { to: '/admin/naplo', felirat: 'Napló', ikon: 'nyugta' },
-  admin_demo: { to: '/admin/demo-postafiok', felirat: 'Demo-postafiók', ikon: 'boritek' },
-  admin_rendszer: { to: '/admin/rendszer', felirat: 'Rendszer', ikon: 'feltoltes' },
+  admin_demo: { to: '/admin/demo-postafiok', felirat: 'Demo-postafiók', ikon: 'level' },
+  admin_rendszer: { to: '/admin/rendszer', felirat: 'Rendszer', ikon: 'beallitas' },
 };
 const el = (k: MenuKulcs): MenuElem => ({ kulcs: k, ...E[k] });
 

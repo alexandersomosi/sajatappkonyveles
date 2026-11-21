@@ -1,6 +1,6 @@
-// SPEC §28.K.10 (C változat + elválasztó, tulaj 11-19 20:10 / 20:20): a képernyő tartalmában a lapok és a szakaszcímek
-// teljes szélességű fehér szakaszok, köztük egy 10 pt-os világoskék sáv (#D3DAFC, C_VEGLEGES). Árnyék, egymásra rakott lap, sötétítés nincs.
-// Ezt a környezetet a Kepernyo adja; az alsó lapon (sheet) belül kikapcsol, ott a lap marad lekerekített kártya.
+// k8 (v2): a Kepernyo tartalmában a lapok fehér kártyák a szürke háttéren (árnyékkal, gépen egér fölött megemelkednek);
+// az alsó lapon (sheet) belül a környezet hamis: ott a kártya árnyék nélküli. (A régi C-dizájn teljes szélességű
+// szakaszai és a 10 pt-os sáv megszűnt; a SAV csak a régi hívók miatt marad.)
 import { createContext, useContext } from 'react';
 
 export const TeljesCtx = createContext(false);

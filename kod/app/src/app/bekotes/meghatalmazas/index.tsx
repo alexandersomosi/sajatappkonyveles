@@ -19,7 +19,7 @@ import { elo, helyettunkUt, segitsegFajta, segitsegSzoveg } from '@/lib/ut';
 import { utmutatoEpit } from '@/lib/utmutato';
 import { SavCim, SegitsegCsik, useHaladas, useLepesParam, UtmutatoLepesenkent, UtmutatoTorzs } from '@/kepernyok/Utmutato';
 import { forma, szin } from '@/theme/tokens';
-import { GombE, GombM, GombSz, HibaSzoveg, Lap } from '@/ui/alap';
+import { GombE, GombM, GombSz, HibaSzoveg, Lap, jelzoDoboz } from '@/ui/alap';
 import { IgyMegy, JovahagyasKartya, SohaBelepes } from '@/ui/Helyettunk';
 import { Ikon3d, Targykep } from '@/ui/kepek';
 import { Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
@@ -191,7 +191,7 @@ export default function Meghatalmazas() {
         ) : j?.waiting?.key === 'meghatalmazas_ellenorzes' ? (
           <VarakozasKartya w={j.waiting} forras="meghatalmazas_utmutato" />
         ) : (
-          <Kesz cim={`${fn} ellenőrzi a NAV-nál.`} szoveg="Általában 1 munkanapon belül. Ha valamit pótolni kell, szólunk." />
+          <Kesz cim={`${fn} ellenőrzi a NAV-nál.`} szoveg="Ha valamit pótolni kell, szólunk." />
         )}
         {elakadtal}
       </Kepernyo>
@@ -202,7 +202,7 @@ export default function Meghatalmazas() {
   if (magam) {
     if (!g) {
       return (
-        <Kepernyo ful="fooldal" fejlec={fej('Így add meg a NAV-meghatalmazást – kb. 5 perc')}>
+        <Kepernyo ful="fooldal" fejlec={fej('Így add meg a NAV-meghatalmazást')}>
           {utmutato.isLoading ? <Betolt /> : <Hiba hiba={utmutato.error} ujra={() => void utmutato.refetch()} />}
           {elakadtal}
         </Kepernyo>
@@ -211,7 +211,7 @@ export default function Meghatalmazas() {
     const masikMod = <GombSz cim="Másik módot választok" onPress={() => router.setParams({ mod: undefined, lepes: undefined, egyben: undefined })} style={{ marginLeft: 4 }} />;
     if (p.egyben === '1') {
       return (
-        <Kepernyo ful="fooldal" fejlec={fej('Így add meg a NAV-meghatalmazást – kb. 5 perc')}>
+        <Kepernyo ful="fooldal" fejlec={fej('Így add meg a NAV-meghatalmazást')}>
           {/* 11-19 javító kör 2: a kiemelt „Megcsináljuk helyetted” az egyben (nyomtatható) nézet tetején is ott van. */}
           <SegitsegCsik fajta="mh" fn={fn} onPress={() => router.push(helyettunkUt('meghatalmazas', 'meghatalmazas_utmutato', vezetettKulcs()))} style={{ marginBottom: 12 }} />
           <UtmutatoTorzs g={g} kepek={kepek.data} valaszok={{}} kesz={haladas.kesz} valt={haladas.valt} fn={fn} />
@@ -223,9 +223,9 @@ export default function Meghatalmazas() {
       );
     }
     return (
-      <Kepernyo ful="fooldal" gorgetoRef={lp.gorgeto} fejlec={fej('Így add meg a NAV-meghatalmazást – kb. 5 perc')}>
+      <Kepernyo ful="fooldal" gorgetoRef={lp.gorgeto} fejlec={fej('Így add meg a NAV-meghatalmazást')}>
         {lepes?.status === 'hianyos' && lepes.note ? (
-          <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+          <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
             <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
               {fn} kéri: {lepes.note}
             </T>
@@ -292,7 +292,7 @@ export default function Meghatalmazas() {
   return (
     <Kepernyo ful="fooldal" fejlec={fej(`Így ${fn} intézheti helyetted az adóügyeidet a NAV-nál.`)}>
       {lepes?.status === 'hianyos' && lepes.note ? (
-        <View style={{ borderRadius: 12, backgroundColor: szin.borostyanAlap, padding: 14, marginBottom: 12 }}>
+        <View style={{ borderRadius: 12, ...jelzoDoboz('figyelem'), padding: 14, marginBottom: 12 }}>
           <T m={15.5} s={650} c={szin.borostyanSzoveg} lh={1.45}>
             {fn} kéri: {lepes.note}
           </T>

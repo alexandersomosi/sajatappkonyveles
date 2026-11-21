@@ -5,6 +5,7 @@ import type { JourneyView, NavAddress, OnboardingState, SubscriptionView, Taxpay
 import { fillPlaceholders } from '../../_shared/bekotes';
 import { CARD_CONSENT_TEXT, CARD_CONSENT_UI, CARD_CONSENT_VERSION, PAYMENT_FAIL_TEXTS, type CardInfoView, type CheckoutResultView, type ClientPaymentItem, type DuePaymentView, type FeeInvoiceItemK29, type SubscriptionViewK29 } from '../../_shared/k29';
 import { GUIDED_ORDER, GUIDED_OWN_ROUTES, GUIDED_STEP_ROUTES, GUIDED_TEXTS, type GuidedState, type GuidedStepKey, type GuidedStepView, type GuidedView } from '../../_shared/k29g';
+import { CALLBACK_OFFER_TEXTS } from '../../_shared/k8';
 import type { Keres, Valasz } from '../http';
 import { BENCE, dijszamlak } from './adatok';
 
@@ -60,6 +61,12 @@ function vezetett(st: K29Allapot, j: JourneyView | null, o: OnboardingState | nu
   for (const key of GUIDED_ORDER[variant].filter((k) => !(k === 'kedvezmenyek' && st.kata))) {
     if (key === 'adoszam') {
       steps.push({ key, title: GUIDED_TEXTS.adoszamStep, state: st.adoszamKesz ? 'kesz' : 'nyitva', route: GUIDED_STEP_ROUTES.adoszam!, timeText: st.adoszamKesz ? null : GUIDED_TEXTS.adoszamTime, actorLabel: 'Te', doneForClient: st.adoszamKesz });
+      continue;
+    }
+    if (key === 'visszahivas_ajanlat') {
+      // k8: the callback offer before the payment (the server: services/guided.ts)
+      const kesz = !!st.guided.callbackOfferSkippedAt || byKey.get('elofizetes')?.state === 'kesz';
+      steps.push({ key, title: CALLBACK_OFFER_TEXTS.stepTitle, state: kesz ? 'kesz' : 'nyitva', route: GUIDED_OWN_ROUTES.visszahivas_ajanlat!, timeText: null, actorLabel: 'Te', doneForClient: kesz });
       continue;
     }
     const js = byKey.get(key);
@@ -144,6 +151,7 @@ export function k29Utak(ut: (method: string, minta: string, f: Kezelo) => void, 
     else if (t.action === 'resume') Object.assign(g, { pausedAt: null, welcomeSeenAt: g.welcomeSeenAt ?? most });
     else if (t.action === 'step_seen' && key) g.lastKey = key;
     else if (t.action === 'done_seen') Object.assign(g, { doneSeenAt: most, pausedAt: null });
+    else if (t.action === 'callback_offer_skip') Object.assign(g, { callbackOfferSkippedAt: g.callbackOfferSkippedAt ?? most, lastKey: 'visszahivas_ajanlat' });
     else return hiba(400, 'validation_failed', 'Ismeretlen művelet.');
     return ok(nezet());
   });

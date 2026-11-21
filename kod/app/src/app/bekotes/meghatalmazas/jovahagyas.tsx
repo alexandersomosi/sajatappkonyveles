@@ -89,7 +89,7 @@ export default function JovahagyasUtmutato() {
 
   const due = g.approvalDue ?? (a?.approval ? { dueOn: a.approval.dueOn, dueText: a.approval.dueText, daysLeft: a.approval.daysLeft, lastDay: a.approval.lastDay, afterDue: a.approval.afterDue } : null);
   const hataridoSav = due ? (
-    <View style={{ marginBottom: 12, borderRadius: forma.lap, backgroundColor: due.lastDay ? szin.borostyanAlap : szin.lap, padding: 14, borderWidth: due.lastDay ? 0 : 2, borderColor: szin.tintakek }}>
+    <View style={{ marginBottom: 12, borderRadius: forma.lap, backgroundColor: szin.lap, padding: 14, borderWidth: due.lastDay ? 0 : 2, borderColor: szin.tintakek, borderLeftWidth: 4, borderLeftColor: due.lastDay ? szin.narancs : szin.tintakek }}>
       <T m={16.5} s={700} lh={1.4} c={due.lastDay ? szin.borostyanSzoveg : szin.tinta}>
         {due.lastDay ? ('afterDue' in due && due.afterDue ? ASSIST_TEXTS.approveAfterDue : ASSIST_TEXTS.approveLastDay) : fillPlaceholders(ASSIST_TEXTS.approveSub, { hatarido: due.dueText, days: String(due.daysLeft) })}
       </T>
