@@ -3462,7 +3462,7 @@ export const OTHER_INCOME_LABELS: Record<'munkaber' | 'nyugdij' | 'ingatlan_berb
 };
 export const ANNUAL_STATUS_CLIENT_TEXT: Record<_AnnualStatus, string> = {
   nem_indult: 'Január 5-én nyílik. Szólunk, ha kitöltheted.',
-  kerdoiv: 'Töltsd ki a kérdőívet {hatarido}. Kb. 5 perc.',
+  kerdoiv: 'Töltsd ki a kérdőívet {hatarido}.',
   dijra_var: 'Elküldted a kérdőívet. Fizesd ki az éves zárás díját ({dij} Ft), és {firstName} nekilát.',
   konyvelonel: '{firstName} dolgozik rajta. Szól, ha kérdése van.',
   jovahagyasra_var: 'Kész a bevallásod tervezete. Nézd át, és hagyd jóvá.',
@@ -3495,7 +3495,7 @@ export const REMINDER_TEXTS = {
     ra_var: 'Ha 3 és 7 nap után is rád vár valami.',
   },
   tax_due_soon: {
-    ma: { title: 'Ma van a befizetés napja: {osszeg} Ft', body: 'Utald el ma. Ha már elutaltad, koppints az „Elutaltam” gombra.' },
+    ma: { title: 'Ma van a befizetés napja: {osszeg} Ft', body: 'Utald el ma. Ha már elutaltad, koppints a „Megjelölöm, hogy befizettem” gombra.' },
     lejart: { title: 'Lejárt a befizetés: {osszeg} Ft', body: 'Tegnap volt a határidő. Utald el minél előbb. Ha már elutaltad, jelezd az appban.' },
     kata: { title: 'Utald el a katát: 50 000 Ft', body: 'A {honap} havi kata határideje: {hatarido}.' },
     kata_ma: { title: 'Ma van a kata határideje', body: 'Utald el ma az 50 000 Ft-ot ({honap} havi kata). Az utalási adatokat az appban látod.' },
@@ -3525,9 +3525,9 @@ export const REMINDER_TEXTS = {
     eves_jovahagyas: 'A bevallásod jóváhagyása',
   },
   annual_due: {
-    kerdoiv: { title: 'Éves zárás: töltsd ki a kérdőívet {hatarido}', body: 'Kb. 5 perc. Ebből készül a bevallásod.' },
+    kerdoiv: { title: 'Éves zárás: töltsd ki a kérdőívet {hatarido}', body: 'Pár kérdés az évedről. Ebből készül a bevallásod.' },
     fizetes: { title: 'Fizesd ki az éves zárás díját', body: '{dij} Ft. Utána {firstName} nekilát.' },
-    jovahagyas: { title: 'Hagyd jóvá a bevallásodat {hatarido}', body: 'Kész a tervezet. Kb. 2 perc.' },
+    jovahagyas: { title: 'Hagyd jóvá a bevallásodat {hatarido}', body: 'Kész a tervezet. Nézd át az appban.' },
   },
   staffDigest: 'Ügyfélre vár 7 napja: {n}',
 } as const;
@@ -3720,6 +3720,8 @@ export const KATA_TEXTS = {
   infoCard: 'Katásként a nyugdíjad és a táppénzed alapja havi 108 000 Ft. Egy katás év kb. 122 nap szolgálati időt ér.',
   infoCardButton: 'Értem',
   switchRule: 'Kilépés után az év végéig és még 12 hónapig nem lehetsz újra katás.',
+  /** Javító kör 11-21: the panel's wording (the accountant reads it). */
+  switchRuleStaff: 'Kilépés után az év végéig és még 12 hónapig az ügyfél nem lehet újra katás.',
   accountRow: 'Kata (tételes adó)',
   earningsLine: 'A kata mindent fedez: nincs külön SZJA, TB és szocho.',
   panelChip: 'Kata',
@@ -3738,7 +3740,7 @@ export const HOME_K_TEXTS = {
   adomentesAllowanceLess: 'Az első {limit} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, de a kedvezményed csökkenti.',
   /** k6c: KATA clients – until the KATA view is built no átalány number is shown. */
   kataTaxes: 'Kata',
-  kataTaxesSub: 'havi 50 000 Ft, {firstName} számolja.',
+  kataTaxesSub: 'havi 50 000 Ft, minden megkezdett hónapra.',
   kataHeroTitle: '{firstName} számolja a katádat',
   kataHeroNote: 'Katás vagy: a havi 50 000 Ft-ot és a keretedet {firstName} figyeli. Szól, ha utalnod kell.',
   payTitle: 'Utalj {osszeg} Ft-ot {hatarido}',
@@ -3804,7 +3806,7 @@ export const K28_NOTIFICATION_TEXTS = {
     eves_zaras: { title: 'Fizesd ki az éves zárás díját', body: '{dij} Ft. Utána {firstName} nekilát.' },
   },
   annual_status: {
-    jovahagyasra_var: { title: 'Kész a bevallásod tervezete', body: 'Nézd át, és hagyd jóvá. Kb. 2 perc.' },
+    jovahagyasra_var: { title: 'Kész a bevallásod tervezete', body: 'Nézd át, és hagyd jóvá.' },
     beadva: { title: 'Beadtuk a bevallásodat', body: 'A visszaigazolást a dossziédban találod.' },
     kesz: { title: 'Kész az éves zárás', body: 'Minden bevallásodat beadtuk. Köszönjük!' },
   },

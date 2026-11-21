@@ -76,9 +76,10 @@ function Zaras({ c, a }: FulProps & { a: AccAnnualView }) {
     onError: pir.hiba,
   });
   const g = evesGombok(a.status, a.regime);
-  const st = ALLAPOT[a.status];
+  // javító kör 11-21: the client approved → it is the accountant's turn (the status stays 'jovahagyasra_var' until filed)
+  const st = a.status === 'jovahagyasra_var' && a.approval ? { szo: 'Jóváhagyta – beadhatod', cls: 'figyel' } : ALLAPOT[a.status];
   const ans = a.answers;
-  const nalam = ANNUAL_BALL[a.status] === 'konyvelo';
+  const nalam = ANNUAL_BALL[a.status] === 'konyvelo' || (a.status === 'jovahagyasra_var' && Boolean(a.approval));
   return (
     <div className="racs fo-mellek">
       <div className="oszlop" style={{ gap: 16 }}>
@@ -116,8 +117,10 @@ function Zaras({ c, a }: FulProps & { a: AccAnnualView }) {
                   <>
                     {ft(a.feeCharge.amountHuf)} – {FEE_CHARGE_STATUS_LABELS[a.feeCharge.status].toLowerCase()}
                   </>
-                ) : (
+                ) : a.feeHuf ? (
                   <span className="halvany">a kérdőív elküldésekor terheljük</span>
+                ) : (
+                  <span className="halvany">most nincs</span>
                 )}
               </dd>
               {a.approval && (

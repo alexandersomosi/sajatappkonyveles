@@ -11,6 +11,7 @@ import { I3 } from '../../../ui/Icon3d';
 import { usePirito } from '../../../ui/Pirito';
 import { ApiError } from '../../../api/client';
 import { isValidOvtjKod } from '../../../_shared/bekotes';
+import { KATA_EXEMPT_LABELS, type KataExemptKind } from '../../../_shared/kata';
 import { MODE_LABEL, SUB_LABEL, TAX_STATUS_LABEL } from '../../../lib/labels';
 import { datum, telefonFormaz, datumRovid, ft, idopont, parseFt } from '../../../lib/format';
 import { today, currentYear } from '../../../lib/today';
@@ -350,10 +351,15 @@ function Szunetek({ p, set, elotolt }: { p: TaxProfile; set: (x: Partial<TaxProf
           <span className="szam">
             {datumRovid(b.from)} – {datumRovid(b.to)}
           </span>
-          <span className="cimke">{b.kind === 'szunetel' ? 'szünetel' : 'kieső idő'}</span>
-          <button className="gomb-v" onClick={() => set({ insuranceBreaks: p.insuranceBreaks.filter((_, j) => j !== i) })}>
-            Eltávolítom
-          </button>
+          {/* javító kör 11-21: a KATA free month (its own form on the Adó tab) shows its reason, and is not removed here */}
+          <span className="cimke">{b.kind === 'szunetel' ? 'szünetel' : b.kind === 'kieso' ? 'kieső idő' : `kata: ${KATA_EXEMPT_LABELS[b.kind as KataExemptKind] ?? b.kind}`}</span>
+          {b.kind === 'szunetel' || b.kind === 'kieso' ? (
+            <button className="gomb-v" onClick={() => set({ insuranceBreaks: p.insuranceBreaks.filter((_, j) => j !== i) })}>
+              Eltávolítom
+            </button>
+          ) : (
+            <span className="sugo" style={{ marginTop: 0 }}>az Adó fülön szerkeszted</span>
+          )}
         </div>
       ))}
       <div className="sor-flex" style={{ marginTop: 6, flexWrap: 'wrap' }}>

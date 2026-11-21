@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { fillPlaceholders, RESERVE_TEXTS } from '@/_shared/bekotes';
 import { useFelretesz, useMe } from '@/api/hooks';
+import { ApiHiba } from '@/api/http';
 import { maiNap, nagybetu, szam } from '@/lib/format';
 import { SavFej, TartalekAlsor } from '@/kepernyok/k28';
 import { szin } from '@/theme/tokens';
@@ -27,6 +28,13 @@ function FelreteszTartalom() {
     >
       {q.isLoading ? (
         <Betolt />
+      ) : q.error instanceof ApiHiba && q.error.code === 'kata_no_reserve' ? (
+        // javító kör 11-21: a KATA client has no átalány reserve – the KATA sentence, no "Újra" that could never work
+        <Lap style={{ padding: 16 }}>
+          <T m={16} lh={1.5}>
+            {q.error.message}
+          </T>
+        </Lap>
       ) : q.error || !v ? (
         <Hiba hiba={q.error} ujra={() => void q.refetch()} />
       ) : (

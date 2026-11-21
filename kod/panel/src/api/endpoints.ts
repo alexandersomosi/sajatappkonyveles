@@ -405,6 +405,8 @@ export const accAnnualCheck = (id: string, aid: string, body: AnnualCheckInput) 
 export const accEmployerDecision = (id: string, body: EmployerDecisionInput) => api.post<unknown>(`/acc/clients/${e(id)}/employer`, body);
 export const accSetAdoszam = (id: string, adoszam: string) => api.post<unknown>(`/acc/clients/${e(id)}/adoszam`, { adoszam });
 export const accSetTaxRegime = (id: string, body: TaxRegimeInput) => api.post<unknown>(`/acc/clients/${e(id)}/tax-regime`, body);
+/** Javító kör 11-21 (kritika 2.1): the next year's mode, recorded in December. */
+export const accNextYearRegime = (id: string, body: import('../_shared/api').NextYearRegimeInput) => api.post<import('../_shared/api').NextYearRegimeView>(`/acc/clients/${e(id)}/next-year-regime`, body);
 /** PANEL CONTRACT ADDITION (README §28 builder notes): the client's notification log. */
 export const accNotifications = (id: string, cursor?: string) => api.get<AccNotificationLog>(`/acc/clients/${e(id)}/notifications${q({ cursor })}`);
 /** §28.5.5 change kinds */

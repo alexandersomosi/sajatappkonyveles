@@ -436,6 +436,10 @@ export async function augmentHome(deps: Deps, cl: ClientRow, home: ClientHome, t
     const ann = await annualView(deps, db, cl, year - 1).catch(() => null);
     home.annual = ann && ann.status !== 'nem_indult' && ann.status !== 'kesz' ? ann : null;
   }
+  // javító kör 11-21: an önellenőrzés to approve shows on the Főoldal (not only on the Éves zárás page)
+  const { clientCorrectionList } = await import('../services/onellenorzes.js');
+  const corr = (await clientCorrectionList(deps, db, cl).catch(() => [])).find((x) => x.needsAction);
+  home.openCorrection = corr ? { id: corr.id, title: corr.title, statusText: corr.statusText } : null;
   void answersRow;
 }
 

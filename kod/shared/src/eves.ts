@@ -179,6 +179,8 @@ export interface AnnualSettlementView {
   } | null;
   /** The card text after filing (to pay / refund / nothing). */
   text: string | null;
+  /** Javító kör 11-21: the same for the accountant (not tegező; the panel shows this, not the client's sentence). */
+  staffText?: string | null;
 }
 export type AnnualTimelineStatus = 'kesz' | 'most' | 'kovetkezik' | 'lejart';
 export interface AnnualTimelineItem {
@@ -419,7 +421,8 @@ export interface YearOverviewRow {
   regime: TaxRegime;
   flags: ClientFlag[];
   quarters: { key: string; state: 'nincs' | 'becsles' | 'jovahagyva' | 'jelolve' | 'ellenorizve' | 'elteres' | 'nincs_fizetendo'; filed: boolean; overdue: boolean }[];
-  kata: { ok: number; open: number; unverified: number; exempt: number } | null;
+  /** beforeApp: backfilled months not checked yet (javító kör 11-21: shown as "ellenőrizetlen (app előtti)", not missing). */
+  kata: { ok: number; open: number; unverified: number; exempt: number; beforeApp?: number } | null;
   reconciliation: { asOf: ISODate; status: ReconStatus; nextCheckOn: ISODate | null; overdue: boolean; resolved: boolean } | null;
   annual: { status: AnnualStatus; ball: 'ugyfel' | 'konyvelo' | null } | null;
   difference: { diffHuf: number; settled: boolean; label: string } | null;
@@ -429,6 +432,9 @@ export interface YearOverviewRow {
   missing: string[];
   ball: 'ugyfel' | 'konyvelo' | null;
   overdue: boolean;
+  /** Javító kör 11-21: something waits on the accountant / on the client (both can be true; the filters use these). */
+  waitingOnMe?: boolean;
+  waitingOnClient?: boolean;
 }
 export interface YearOverview {
   year: number;

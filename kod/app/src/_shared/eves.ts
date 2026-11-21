@@ -180,6 +180,8 @@ export interface AnnualSettlementView {
   } | null;
   /** The card text after filing (to pay / refund / nothing). */
   text: string | null;
+  /** Javító kör 11-21: the same for the accountant (not tegező; the panel shows this, not the client's sentence). */
+  staffText?: string | null;
 }
 export type AnnualTimelineStatus = 'kesz' | 'most' | 'kovetkezik' | 'lejart';
 export interface AnnualTimelineItem {
@@ -202,6 +204,10 @@ export interface AnnualHipaView {
   filedOn: ISODate | null;
   filingRef: string | null;
   periodId: string | null;
+  /** Javító kör 11-21: the year's HIPA advances the client marked / the accountant verified (prefill of E). */
+  advancesPaidHuf?: number | null;
+  /** The HIPA method of the year ('savos' | 'altalanos' | 'nincs'). */
+  method?: 'savos' | 'altalanos' | 'nincs' | null;
 }
 /** The open önellenőrzés items of the client (the annual screen links them). */
 export interface CorrectionListItem {
@@ -325,6 +331,8 @@ export interface TaxCorrectionView {
   approvedAt: ISODateTime | null;
   filedOn: ISODate | null;
   paymentPeriodId: string | null;
+  /** Art. 212. § (2): the tax was paid in full originally – only the pótlék is to pay (javító kör 11-21). */
+  diffsAlreadyPaid?: boolean;
 }
 
 // ---------- DTOs: folyószámla ----------
@@ -414,7 +422,8 @@ export interface YearOverviewRow {
   regime: TaxRegime;
   flags: ClientFlag[];
   quarters: { key: string; state: 'nincs' | 'becsles' | 'jovahagyva' | 'jelolve' | 'ellenorizve' | 'elteres' | 'nincs_fizetendo'; filed: boolean; overdue: boolean }[];
-  kata: { ok: number; open: number; unverified: number; exempt: number } | null;
+  /** beforeApp: backfilled months not checked yet (javító kör 11-21: shown as "ellenőrizetlen (app előtti)", not missing). */
+  kata: { ok: number; open: number; unverified: number; exempt: number; beforeApp?: number } | null;
   reconciliation: { asOf: ISODate; status: ReconStatus; nextCheckOn: ISODate | null; overdue: boolean; resolved: boolean } | null;
   annual: { status: AnnualStatus; ball: 'ugyfel' | 'konyvelo' | null } | null;
   difference: { diffHuf: number; settled: boolean; label: string } | null;
@@ -424,6 +433,9 @@ export interface YearOverviewRow {
   missing: string[];
   ball: 'ugyfel' | 'konyvelo' | null;
   overdue: boolean;
+  /** Javító kör 11-21: something waits on the accountant / on the client (both can be true; the filters use these). */
+  waitingOnMe?: boolean;
+  waitingOnClient?: boolean;
 }
 export interface YearOverview {
   year: number;
@@ -436,8 +448,16 @@ export const EVES_TEXTS = {
   idovonalCim: 'Mikor mi jön',
   kovetkezo: 'Következő: {datum} – {mi}',
   allapot: { kesz: 'Kész', most: 'Most', lejart: 'Lejárt', kovetkezik: '' },
+  /** The status line once the client approved (the status stays 'jovahagyasra_var' until the filing). */
+  allapotJovahagyva: 'Jóváhagytad a bevallásodat. {firstName} beadja, és szól.',
+  allapotJovahagyvaKata: 'Jóváhagytad a kata-nyilatkozatodat. {firstName} beadja, és szól.',
+  /** The timeline row of the filing once it is filed and there is a difference to pay. */
+  beadvaUtald: 'Utald el a különbözetet',
+  beadvaUtaldKata: 'Utald el a különadót',
+  /** The deadline row of the refund (Határidők). */
+  hataridoVisszajaro: 'Visszajáró szja: {osszeg} Ft – a NAV utalja',
   idovonal: {
-    nyitas: { title: 'Megnyílik az éves zárás', sub: 'Pár kérdés az évedről, kb. 5 perc.' },
+    nyitas: { title: 'Megnyílik az éves zárás', sub: 'Pár kérdés az évedről.' },
     q4: { title: 'IV. negyedévi befizetés', sub: 'Szja-előleg, TB-járulék, szocho.' },
     q4Nyugdijas: { title: 'IV. negyedévi befizetés', sub: 'Szja-előleg.' },
     kerdoiv: { title: 'Eddig töltsd ki az éves kérdőívet', sub: null },
@@ -446,7 +466,7 @@ export const EVES_TEXTS = {
     jovahagyas: { title: 'Eddig hagyd jóvá a tervezetet', sub: null },
     beadas: { title: 'Beadjuk az szja-bevallásodat', sub: 'Eddig kell befizetned a különbözetet, ha van.' },
     beadasKata: { title: 'Beadjuk a kata-nyilatkozatodat', sub: 'Ha túllépted a keretedet, eddig kell befizetned a különadót.' },
-    visszajar: { title: 'A NAV utalja vissza a visszajáró adót', sub: 'A beadástól számított 30 napon belül, de legkorábban március 1-jén.' },
+    visszajar: { title: 'A NAV utalja vissza a visszajáró adót', sub: 'A törvény szerint a beadástól számított 30 napon belül, de legkorábban március 1-jén.' },
     hipa: { title: 'Iparűzési adó: éves bevallás és különbözet', sub: 'A következő évi előleg is ekkor esedékes.' },
     evVegeKata: { title: 'Ne maradjon 100 000 Ft-nál nagyobb adótartozásod', sub: 'Különben megszűnik a katád.' },
   },
@@ -456,13 +476,17 @@ export const EVES_TEXTS = {
     bevetelCim: 'Bevételed és jövedelmed',
     szjaCim: 'Szja',
     eloleg: 'Eddig befizetett szja-előleg',
+    elolegNegyedev: 'ebből {negyedev} – {allapot}',
+    fejFizetendo: 'Fizetendő: {osszeg} Ft, {hatarido}',
+    fejVisszajar: 'Visszajár: {osszeg} Ft',
+    fejNulla: 'Nincs különbözet',
     elolegAllapot: { ellenorizve: 'ellenőrizve', jelolve: 'jelölted', nincs: 'nincs jelölve' },
     fizetendo: 'Fizetendő: {osszeg} Ft',
     fizetendoAl: 'Utald el {hatarido} a NAV szja-számlájára.',
     visszajar: 'Visszajár: {osszeg} Ft',
     visszajarAl: 'A NAV utalja vissza a bankszámládra: {szamla}.',
     visszajarAlNincsSzamla: 'A NAV utalja vissza arra a bankszámládra, amelyet a bevallásban megadunk.',
-    visszajarSzabaly: 'A beadástól számított 30 napon belül, de legkorábban {ev}. március 1-jén utalja.',
+    visszajarSzabaly: 'A törvény szerint a beadástól számított 30 napon belül utalja, de legkorábban {ev}. március 1-jén.',
     nulla: 'Nincs különbözet',
     nullaAl: 'Az előlegeid pontosan kiadták az adódat.',
     jarulekCim: 'Járulékok',
@@ -538,6 +562,7 @@ export const EVES_TEXTS = {
     potlek: 'Önellenőrzési pótlék',
     potlekAl: 'A késve bevallott adó után jár, naponta a jegybanki alapkamat 365-öd része.',
     potlekIroda: 'A pótlékot mi álljuk.',
+    marBefizetve: 'Ezt az adót korábban már befizetted: most csak a pótlék esedékes.',
     javaradCimke: 'a javadra',
     osszesen: 'Összesen fizetendő: {osszeg} Ft',
     osszesenAl: 'A beadással egy időben esedékes. Az utalási adatokat a beadás után a Határidők között látod.',
@@ -613,15 +638,18 @@ export const EVES_PANEL_TEXTS = {
 export const ONELL_PANEL_TEXTS = {
   cim: 'Önellenőrzések',
   uj: 'Új önellenőrzés',
-  kuszob: '1000 Ft-ig nem önellenőrzés: elég a következő bevallásban javítani.',
+  kuszob: 'Önellenőrzéssel adónként csak 1 000 Ft fölötti különbözet javítható (Art. 56. § (3)). Az ennél kisebb sort hagyd ki: elég a következő bevallásban javítani.',
   nincsKamat: 'Erre az időszakra nincs kamatadatunk. Írd be a pótlékot a NAV pótlékkalkulátorából.',
-  kamatForras: 'Jegybanki alapkamat: {szazalek}% {tol}-tól (mnb.hu, ellenőrizve {ellenorizve}). Új kamatdöntésnél a táblát bővíteni kell.',
+  kamatForras: 'Jegybanki alapkamat: {szazalek}% ({tol}-tól). Ha azóta változott, a pótlékot a NAV kalkulátorából írd be.',
   ismetelt: 'Ismételt önellenőrzés – a pótlék másfélszeres.',
   igazolasHiba: 'A munkáltató vagy kifizető igazolásának hibája miatt (Art. 211. § (3) a)) – nincs pótlék',
   hianytalan: 'Az adót eredetileg hiánytalanul megfizette (Art. 212. § (2): legfeljebb 5000 Ft)',
   kesobbiBevallas: 'A következő bevallásban már pótolta (Art. 212. § (3)) – a pótlékot kézzel add meg',
-  lancolt: 'Több egymást követő időszakot javítok (Art. 212. § (5)) – a pótlékot kézzel add meg [Dávid K6]',
-  hipaPotlek: 'A HIPA-önellenőrzés pótléka az önkormányzathoz megy, nem a NAV-hoz: az app nem tesz rá tételt [Dávid K7].',
+  lancolt: 'Göngyölített ÁFA-javítás több egymást követő időszakra (Art. 212. § (5)) – a pótlékot kézzel add meg',
+  hipaPotlek: 'A HIPA-önellenőrzés pótléka az önkormányzaté, nem a NAV-é: az app nem számol, nem tesz rá tételt, és nem kér rá jóváhagyást (még egyeztetjük).',
+  potlekUjraszamolva: 'A pótlékot a beadás napjára számoltuk újra: {regi} Ft helyett {uj} Ft.',
+  potlekDatum: 'A pótlék a beadás napjáig jár. Ha később adod be, mint {datum}, beadáskor újraszámoljuk.',
+  hianytalanSor: 'Az adót eredetileg hiánytalanul megfizette: a különbözetre nem teszünk tételt, csak a pótlékra.',
   potlekJovahagy: 'Jóváhagyom a pótlékot',
   potlekIndok: 'Miért tér el a javaslattól?',
   kiFizeti: 'Ki fizeti a pótlékot?',
@@ -681,14 +709,16 @@ export const EVES_NOTIFICATION_TEXTS = {
     kata_beadva: { title: 'Beadtuk a kata-nyilatkozatodat', body: 'Nem léptél túl a kereteden, különadó nincs.' },
     hipa_fizetendo: { title: 'Iparűzési adó: {osszeg} Ft különbözetet kell befizetned', body: 'Utald el {hatarido} az önkormányzat számlájára. Az utalási adatokat az appban látod.' },
     valtozott: { title: 'Változott a bevallásod tervezete', body: '{firstName} módosította. Nézd át újra, és hagyd jóvá.' },
-    megnyitva: { title: 'Megnyílt az éves zárásod', body: 'Pár kérdés az évedről, kb. 5 perc. Ebből készül a bevallásod.' },
+    megnyitva: { title: 'Megnyílt az éves zárásod', body: 'Pár kérdés az évedről. Ebből készül a bevallásod.' },
   },
   correction_status: {
     jovahagyasra_var: { title: 'Javítani kell egy beadott bevallásodat', body: '{firstName} önellenőrzést készített: {mit}. Nézd át, és hagyd jóvá.' },
     jovahagyasra_var_javara: { title: 'Javítunk egy bevallásodat, a javadra', body: '{firstName} önellenőrzést készített: {mit}. Nézd át, és hagyd jóvá.' },
     beadva_fizetendo: { title: 'Beadtuk az önellenőrzést: {osszeg} Ft-ot kell befizetned', body: 'A különbözet és a pótlék most esedékes. Az utalási adatokat az appban látod.' },
     beadva_javara: { title: 'Beadtuk az önellenőrzést', body: 'A javadra javítottunk: {osszeg} Ft. {firstName} figyeli, mikor írja jóvá a NAV.' },
-    beadva: { title: 'Beadtuk az önellenőrzést', body: 'A pótlékot mi álljuk, neked nincs teendőd.' },
+    beadva: { title: 'Beadtuk az önellenőrzést', body: 'Neked most nincs teendőd.' },
+    beadva_iroda: { title: 'Beadtuk az önellenőrzést', body: 'A pótlékot mi álljuk, neked nincs teendőd.' },
+    beadva_potlek: { title: 'Beadtuk az önellenőrzést: {osszeg} Ft pótlékot kell befizetned', body: 'Az adót korábban már befizetted, most csak a pótlék esedékes. Az utalási adatokat az appban látod.' },
     rendezve: { title: 'Lezártuk az önellenőrzést', body: 'Minden befizetés rendben.' },
   },
   tax_due_soon: {
@@ -713,7 +743,9 @@ export const EVES_NOTIFICATION_TEXTS = {
 } as const;
 /** E-mail bodies (the in-app text + one line; the link to the app is added by the dispatcher). */
 export const EVES_EMAIL_TEXTS = {
-  'annual_status.fizetendo': 'Utald el {hatarido} a NAV szja-számlájára. Az utalási adatokat az appban látod.\n\nA bevallás és a NAV visszaigazolása a dossziédban van. Ha egyszerre nem tudod kifizetni, írj nekünk, mielőtt lejár a határidő.',
+  'annual_status.fizetendo': 'Utald el {hatarido} a NAV szja-számlájára. Az utalási adatokat az appban látod.\n\nA bevallás és a NAV visszaigazolása a dossziédban van.',
+  /** Only with the switch reszletfizetesSzoveg on [TULAJ T6]. */
+  'annual_status.fizetendo_reszlet': 'Utald el {hatarido} a NAV szja-számlájára. Az utalási adatokat az appban látod.\n\nA bevallás és a NAV visszaigazolása a dossziédban van. Ha egyszerre nem tudod kifizetni, írj nekünk, mielőtt lejár a határidő.',
   'annual_status.visszajar': 'A NAV utalja vissza a bankszámládra. Ha megérkezett, jelöld meg az appban.\n\nA bevallás és a NAV visszaigazolása a dossziédban van.',
   'annual_status.kata_kulonado': 'Utald el {hatarido} a NAV kata-számlájára. Az utalási adatokat az appban látod.\n\nA nyilatkozat és a NAV visszaigazolása a dossziédban van.',
   'correction_status.jovahagyasra_var': '{firstName} önellenőrzést készített: {mit}. Nézd át, és hagyd jóvá.\n\nAz önellenőrzést csak a jóváhagyásod után adjuk be.',

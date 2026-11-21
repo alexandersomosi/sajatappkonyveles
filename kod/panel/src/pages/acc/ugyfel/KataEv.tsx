@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
 import type { FulProps } from '../UgyfelAdatlap';
 import { KATA_EXEMPT_KINDS, KATA_EXEMPT_PANEL_LABELS, KATA_PANEL_TEXTS as K, type KataBreak, type KataExemptKind } from '../../../_shared/kata';
-import { bejelentesKell, kataHonapCimke, kataSavSzin, kataSzunetHiba, kijelolheto } from '../../../lib/kata';
+import { bejelentesKell, honapban, kataHonapCimke, kataSavSzin, kataSzunetHiba, kijelolheto } from '../../../lib/kata';
 import { datum, datumIg, szam } from '../../../lib/format';
 import { today } from '../../../lib/today';
 import { HibaSav, Toltes } from '../../../ui/kozos';
@@ -32,7 +32,8 @@ export default function KataEv({ c, ev }: FulProps & { ev: number }) {
     void qc.invalidateQueries({ queryKey: ['acc', 'client', c.id] });
   };
   const rendben = useMutation({
-    mutationFn: () => ep.accKataVerify(c.id, { periodIds: [...jelolt], ...(megj.trim() ? { note: megj.trim() } : {}) }),
+    // javító kör 11-21 [DÁVID K11]: "Rendben" only from the statement row – its day and amount are the required note
+    mutationFn: () => ep.accKataVerify(c.id, { periodIds: [...jelolt], note: megj.trim() }),
     onSuccess: () => {
       pir.ok(`Rendben. ${c.firstName} látja, hogy ellenőrizted.`);
       setJelolt(new Set());
@@ -85,6 +86,18 @@ export default function KataEv({ c, ev }: FulProps & { ev: number }) {
             <div>{v.draftNote}</div>
           </div>
         )}
+        {/* javító kör 11-21: a KATA that ended during the year – the declaration and the különadó are due 30 days after */}
+        {v.kataTo && v.kataTo < `${ev}-12-31` && (
+          <div className="uzenet-sav figyel" style={{ marginBottom: 12 }}>
+            <div>{fill(K.megszunt, { datum: datum(v.kataTo, { ev: true }), hatarido: m.kulonadoDue ? datum(m.kulonadoDue, { ev: true }) : 'a megszűnéstől 30 nap' })}</div>
+          </div>
+        )}
+        {/* the months before the app: one line, not one per row */}
+        {v.months.some((x) => x.status === 'ellenorizetlen') && (
+          <div className="uzenet-sav figyel" style={{ marginBottom: 12 }}>
+            <div>{K.ellenorizetlen}</div>
+          </div>
+        )}
         {/* the keret bar (Kata tv. 7. § (4)–(5)) */}
         <div style={{ marginBottom: 14 }}>
           <b className="szam">{fill(K.keretSor, { bevetel: szam(m.usedHuf), keret: szam(m.limitHuf), pct: m.pct })}</b>
@@ -135,9 +148,8 @@ export default function KataEv({ c, ev }: FulProps & { ev: number }) {
                   </td>
                   <td>
                     {x.label}
-                    {x.exemptLostByRevenue && <div className="kicsi" style={{ color: 'var(--borostyan)' }}>{fill(K.bevetelMentesben, { honap: x.label })}</div>}
+                    {x.exemptLostByRevenue && <div className="kicsi" style={{ color: 'var(--borostyan)' }}>{fill(K.bevetelMentesben, { honapban: honapban(x.label) })}</div>}
                     {x.paidButExempt && <div className="kicsi" style={{ color: 'var(--veszely)' }}>{K.befizetettMentes}</div>}
-                    {x.status === 'ellenorizetlen' && <div className="kicsi halvany">{K.ellenorizetlen}</div>}
                     {x.reportDue && <div className="kicsi" style={{ color: 'var(--borostyan)' }}>Mentesség bejelentése: {datumIg(x.reportDue)} (7. § (10))</div>}
                   </td>
                   <td>
@@ -184,10 +196,16 @@ export default function KataEv({ c, ev }: FulProps & { ev: number }) {
             <span className="felirat">{K.csoportosMegjegyzes}</span>
             <input className="doboz" value={megj} maxLength={500} onChange={(e) => setMegj(e.target.value)} />
           </label>
-          <button className="gomb-e kicsi" disabled={!jelolt.size || rendben.isPending || zarolt} title={zarolt ? LOCK_TEXTS.panelDisabled : undefined} onClick={() => rendben.mutate()}>
+          <button
+            className="gomb-e kicsi"
+            disabled={!jelolt.size || megj.trim().length < 5 || rendben.isPending || zarolt}
+            title={zarolt ? LOCK_TEXTS.panelDisabled : megj.trim().length < 5 ? K.csoportosMegjegyzesKell : undefined}
+            onClick={() => rendben.mutate()}
+          >
             {K.csoportosRendben} ({jelolt.size})
           </button>
         </div>
+        {jelolt.size > 0 && megj.trim().length < 5 && <div className="sugo" style={{ marginTop: 4 }}>{K.csoportosMegjegyzesKell}</div>}
 
         {/* free months (Kata tv. 7. § (8)–(10)); only the accountant records them [D21] */}
         <div style={{ marginTop: 18 }}>

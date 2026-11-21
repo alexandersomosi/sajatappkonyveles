@@ -244,7 +244,7 @@ function UrlapTartalom({ c, asOf, setAsOf, exp, bezar, qcFrissit, pir }: FulProp
                     }
                   />
                   <span>
-                    {it.periodLabel} · {it.label} · {ft(it.amountHuf)} · határidő {datum(it.dueDate)}
+                    {it.periodLabel.startsWith(it.label) ? it.periodLabel : `${it.periodLabel} · ${it.label}`} · {ft(it.amountHuf)} · határidő {datum(it.dueDate)}
                     {it.markedPaidOn ? ` · az ügyfél jelölte: ${datum(it.markedPaidOn)}` : ''}
                   </span>
                 </label>
@@ -312,7 +312,7 @@ function UrlapTartalom({ c, asOf, setAsOf, exp, bezar, qcFrissit, pir }: FulProp
             Mentés
           </button>
           <button className="gomb-sz" onClick={bezar}>
-            Mégse
+            Mégsem
           </button>
         </div>
       </div>

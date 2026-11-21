@@ -3719,6 +3719,8 @@ export const KATA_TEXTS = {
   infoCard: 'Katásként a nyugdíjad és a táppénzed alapja havi 108 000 Ft. Egy katás év kb. 122 nap szolgálati időt ér.',
   infoCardButton: 'Értem',
   switchRule: 'Kilépés után az év végéig és még 12 hónapig nem lehetsz újra katás.',
+  /** Javító kör 11-21: the panel's wording (the accountant reads it). */
+  switchRuleStaff: 'Kilépés után az év végéig és még 12 hónapig az ügyfél nem lehet újra katás.',
   accountRow: 'Kata (tételes adó)',
   earningsLine: 'A kata mindent fedez: nincs külön SZJA, TB és szocho.',
   panelChip: 'Kata',
@@ -3737,7 +3739,7 @@ export const HOME_K_TEXTS = {
   adomentesAllowanceLess: 'Az első {limit} Ft jövedelmed adómentes volt. Azóta fizetsz SZJA-előleget, de a kedvezményed csökkenti.',
   /** k6c: KATA clients – until the KATA view is built no átalány number is shown. */
   kataTaxes: 'Kata',
-  kataTaxesSub: 'havi 50 000 Ft, {firstName} számolja.',
+  kataTaxesSub: 'havi 50 000 Ft, minden megkezdett hónapra.',
   kataHeroTitle: '{firstName} számolja a katádat',
   kataHeroNote: 'Katás vagy: a havi 50 000 Ft-ot és a keretedet {firstName} figyeli. Szól, ha utalnod kell.',
   payTitle: 'Utalj {osszeg} Ft-ot {hatarido}',

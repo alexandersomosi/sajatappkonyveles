@@ -34,11 +34,11 @@ export const KATA_EXEMPT_LABELS: Record<KataExemptKind, string> = {
 export const KATA_EXEMPT_PANEL_LABELS: Record<KataExemptKind, string> = {
   tappenz: 'Táppénz, baleseti táppénz – 7. § (8) a)',
   csed: 'CSED – 7. § (8) a)',
-  orokbefogadoi_dij: 'Örökbefogadói díj – 7. § (8) a) [Dávid erősítse meg]',
+  orokbefogadoi_dij: 'Örökbefogadói díj – 7. § (8) a) (még egyeztetjük)',
   gyed: 'GYED – 7. § (8) a)',
   gyes: 'GYES – 7. § (8) a)',
   gyet: 'GYET – 7. § (8) a)',
-  gyod: 'Gyermekek otthongondozási díja – 7. § (8) a) [Dávid erősítse meg]',
+  gyod: 'Gyermekek otthongondozási díja – 7. § (8) a) (még egyeztetjük)',
   apolasi_dij: 'Ápolási díj – 7. § (8) a)',
   tartalekos: 'Önkéntes tartalékos katonai szolgálat – 7. § (8) b)',
   fogvatartott: 'Fogvatartás – 7. § (8) c)',
@@ -80,6 +80,9 @@ export const KATA_F1_RULES = {
  *  - refundDatumUgyfelnek: the "Ha {datum} után sem érkezett meg, írj nekünk" sentence of the refund card (Art. 64. § (1)).
  *  - reszletfizetesSzoveg: "Ha egyszerre nem tudod kifizetni, írj nekünk…" under the amount to pay [T6] – off.
  *  - csjkBirsagTetel: the 12 % különbözeti bírság as its own payment item [DÁVID D4] – off (it stays in the difference).
+ * Javító kör 11-21:
+ *  - kata2027Osszeg: the confirmed 2027 monthly amount of the (old) KATA in Ft (e.g. 50000 if the T/928 fails, 75000 if it
+ *    is published) – used only with kata2027 on; null = the draft rule's amount. So the amount needs no code change [D24].
  */
 export const EVES_KAPCSOLOK_DEFAULT = {
   kata2027: false,
@@ -90,6 +93,7 @@ export const EVES_KAPCSOLOK_DEFAULT = {
   refundDatumUgyfelnek: true,
   reszletfizetesSzoveg: false,
   csjkBirsagTetel: false,
+  kata2027Osszeg: null as number | null,
 };
 export type EvesKapcsolok = typeof EVES_KAPCSOLOK_DEFAULT;
 export const EVES_KAPCSOLOK_KEY = 'kapcsolok.ev_ciklus';
@@ -222,11 +226,11 @@ export const PAYMENT_SHEET_TEXTS = {
 
 /** Főoldal + Határidők of a KATA client (content kata.*). */
 export const KATA_F1_TEXTS = {
-  keretCim: 'Idei kereted',
+  keretCim: 'Kata-kereted',
   keretSav: '{bevetel} / {keret} Ft',
   keretSor: 'Idén eddig a kereted {pct}%-át használtad.',
-  keretHonapok: 'Kereted: {n} hónap × {havi} Ft',
-  keretTeljes: 'Kereted: {keret} Ft',
+  keretHonapok: 'Kereted: {n} hónap × {havi} Ft.',
+  keretTeljes: 'Kereted: {keret} Ft.',
   keretMaradek: 'Még {maradek} Ft fér bele.',
   keretKozel: 'Közel vagy a keretedhez. Ami fölé megy, annak 40%-át különadóként kell befizetned.',
   keretTullepve: '{tobblet} Ft-tal túlléptél a kereteden. Erre kb. {kulonado} Ft különadó jár, {hatarido} kell befizetni. Tegyél félre ennyit.',
@@ -255,7 +259,11 @@ export const KATA_PANEL_TEXTS = {
   rendben: 'Rendben',
   elteres: 'Eltérés',
   csoportosRendben: 'Rendben (folyószámla alapján)',
-  csoportosMegjegyzes: 'Megjegyzés (pl. „folyószámla 12-15”)',
+  csoportosMegjegyzes: 'A kivonat sora (dátum és összeg), pl. „2026.12.10. 50 000 Ft”',
+  csoportosMegjegyzesKell: 'Írd be, melyik kivonatsor alapján jelölöd „Rendben”-re (dátum és összeg).',
+  keretHonapokPanel: 'Keret: {n} hónap × {havi} Ft.',
+  keretTeljesPanel: 'Keret: {keret} Ft.',
+  megszunt: 'A kata {datum} megszűnt. A nyilatkozat és a különadó határideje: {hatarido} (Kata tv. 7. § (6), 10. § (2)).',
   mentesHozzaad: 'Mentes időszak hozzáadása',
   mentesKezdet: 'Kezdet',
   mentesVeg: 'Vég',
@@ -265,8 +273,8 @@ export const KATA_PANEL_TEXTS = {
   mentesTorles: 'Eltávolítom',
   mentesSzabaly: 'Egész hónap mentes (Kata tv. 7. § (8)); a táppénz, CSED, GYED… végének hónapja is, ha az állapot legalább 30 napig tartott (7. § (9)). Ha a hónapban bevétel volt, mégis fizetni kell. Bejelentés a következő hónap 12-éig (7. § (10)), szünetelésnél nem kell.',
   befizetettMentes: 'Befizette, de mentes hónap: túlfizetés. Rendezd a folyószámlán.',
-  bevetelMentesben: '{honap}: bevétel volt, ezért mégis fizetni kell (Kata tv. 7. § (8)).',
-  ellenorizetlen: 'Az app előtti hónap: ellenőrizd a folyószámlán, és jelöld „Rendben”-re. Addig az ügyfél nem látja.',
+  bevetelMentesben: '{honapban} bevétel volt, ezért erre a hónapra mégis fizetni kell (Kata tv. 7. § (8)).',
+  ellenorizetlen: 'Az app előtti hónapok: ellenőrizd a folyószámlán, és jelöld „Rendben”-re. Addig az ügyfél nem látja őket.',
   allapot: {
     fizetendo: 'Fizetendő',
     befizetve_jelezve: 'Ügyfél jelölte',

@@ -162,6 +162,8 @@ img.i3 { display: block; flex: none; object-fit: contain; -webkit-user-drag: non
   font-size: 12.5px; font-weight: 650; line-height: 1; white-space: nowrap; background: var(--nyomott); color: var(--tinta); }
 .cimke.ido, .cimke.figyel { background: var(--borostyan-alap); color: #5E3B00; }
 .cimke.hiba { background: var(--veszely-alap); color: #8A1C12; }
+/* javító kör 11-21: a "Rendben" / ellenőrizve chip (was grey without its own rule) */
+.cimke.ok { background: #E3F4E8; color: #1C5B2E; }
 .cimke.info { background: var(--nyomott); color: var(--tintakek-szoveg); box-shadow: inset 0 0 0 1px #C9D0E4; } /* G1: light blue only for secondary buttons */
 .cimke.demo { background: var(--borostyan-alap); color: #5E3B00; letter-spacing: .04em; }
 .cimke img.i3 { width: 16px; height: 16px; }

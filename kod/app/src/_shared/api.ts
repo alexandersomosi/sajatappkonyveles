@@ -535,6 +535,8 @@ export interface ClientHome {
   paymentCard?: PaymentCardView | null;
   checkin?: CheckinView | null;
   annual?: AnnualView | null;
+  /** Javító kör 11-21: an önellenőrzés waiting for the client's approval (the Főoldal card; any time of the year). */
+  openCorrection?: { id: string; title: string; statusText: string } | null;
   lock?: ServiceLockView | null;
   pause?: PauseView | null;
   kata?: KataHomeView | null;
@@ -1849,6 +1851,37 @@ export interface AccClientDetailK28 {
   adoszamPending?: boolean;
   checkinOpenItems?: number;
   mailboxAddress?: string | null;
+  /** Javító kör 11-21 (kritika 2.1): this year's KATA variant / főfoglalkozás and the next year's mode (the December card). */
+  kataVariant?: 'regi' | 'uj' | null;
+  kataFofoglalkozasu?: boolean | null;
+  nextYearRegime?: NextYearRegimeView | null;
+}
+/** The next year's mode as the accountant recorded it in December (null fields: not decided yet). */
+export interface NextYearRegimeView {
+  year: number;
+  /** The card shows from this day (MM-DD of the current year). */
+  showFrom: ISODate;
+  /** The profile of the next year exists (recorded in advance, or made on 1 January). */
+  recorded: boolean;
+  regime: TaxRegime | null;
+  kataVariant: 'regi' | 'uj' | null;
+  kataFofoglalkozasu: boolean | null;
+  decidedAt: ISODateTime | null;
+  filedOn: ISODate | null;
+  filedBy: 'konyvelo' | 'ugyfel' | 'nem_kell' | null;
+  note: string | null;
+  /** The new KATA (T/928) is not law yet: the switch kata2027 is off. */
+  newKataDraft: boolean;
+}
+/** POST /acc/clients/:id/next-year-regime */
+export interface NextYearRegimeInput {
+  year: number;
+  regime: TaxRegime;
+  kataVariant?: 'regi' | 'uj';
+  kataFofoglalkozasu?: boolean | null;
+  filedOn?: ISODate | null;
+  filedBy?: 'konyvelo' | 'ugyfel' | 'nem_kell' | null;
+  note?: string | null;
 }
 
 // =====================================================================================================================
@@ -2200,6 +2233,10 @@ export interface TaxRegimeInput {
   regime: TaxRegime;
   kataFrom?: ISODate | null;
   kataTo?: ISODate | null;
+  /** SPEC §32 (javító kör 11-21: the panel sends them too). */
+  year?: number;
+  kataVariant?: 'regi' | 'uj';
+  kataFofoglalkozasu?: boolean | null;
 }
 
 // ---------- §28.K.11 J – KATA ----------

@@ -149,7 +149,7 @@ describe('KATA: no átalány numbers', () => {
     expect(home.reserve).toBeNull();
     expect(home.earnings).toBeNull();
     expect(home.twoNumbers.taxesHuf).toBeNull();
-    expect(home.twoNumbers.taxesSub).toContain('Bence számolja');
+    expect(home.twoNumbers.taxesSub).toContain('minden megkezdett hónapra');
     expect(home.limits.kata).toBe(true);
     expect((await h.json('GET', '/client/reserve?year=2026', { token: c.token })).status).toBe(404);
     expect((await h.json('GET', '/client/earnings?year=2026', { token: c.token })).status).toBe(404);

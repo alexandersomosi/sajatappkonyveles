@@ -122,7 +122,13 @@ function FizetesTartalom() {
 
   const dokk =
     allapot === 'fizetendo' ? (
-      <GombE cim={P.jeloles} onPress={() => setLap(true)} />
+      // javító kör 11-21: "Ez csak jelölés…" right above the button it explains
+      <View style={{ gap: 4 }}>
+        <T m={13.5} lh={1.35} c={szin.halvany} style={{ textAlign: 'center' }}>
+          {P.jelolesAl}
+        </T>
+        <GombE cim={P.jeloles} onPress={() => setLap(true)} />
+      </View>
     ) : allapot === 'elteres' ? (
       <GombE cim={P.elteresGomb} onPress={() => router.push('/uzenetek')} />
     ) : undefined;
@@ -162,11 +168,6 @@ function FizetesTartalom() {
           {(allapot === 'fizetendo' ? nyitott : d.items).map((t) => (
             <Tetel key={t.id} t={t} />
           ))}
-          {allapot === 'fizetendo' ? (
-            <T m={14.5} lh={1.45} c={szin.halvany} style={{ paddingHorizontal: 4 }}>
-              {P.jelolesAl}
-            </T>
-          ) : null}
         </>
       ) : null}
       <AlsoLap lathato={lap} bezar={() => setLap(false)}>

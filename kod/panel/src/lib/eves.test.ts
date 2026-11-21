@@ -53,6 +53,7 @@ describe('Éves áttekintő CSV', () => {
     };
     const csv = attekintoCsv([row]).split('\r\n');
     expect(csv[0]!.split(';')[0]).toBe('Ügyfél');
-    expect(csv[1]).toContain('Évesné Éva;Átalány;Q1: ellenorizve (beadva);nincs;beadva;50000 (fizetendő)');
+    // javító kör 11-21: words, not internal codes
+    expect(csv[1]).toContain('Évesné Éva;Átalány;Q1: ellenőrizve (beadva);nincs;beadva;50000 (fizetendő);előleg: ellenőrizve, éves: nincs beadva');
   });
 });

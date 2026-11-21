@@ -54,6 +54,10 @@ export default function Onellenorzes({ c }: FulProps) {
   );
 }
 
+/** NAV taxes with a pótlék (a HIPA pótlék is the municipality's: no pótlék in the app – kritika 2.3). */
+const NAV_POTLEK = new Set(['103', '406', '258', '288']);
+const vanNavPotlek = (diffs: CorrectionDiff[]) => diffs.some((d) => NAV_POTLEK.has(d.adonem) && d.amountHuf > 0);
+
 const szamE = (s: string) => {
   const t = s.replace(/[\s.]/g, '').replace('−', '-');
   const n = Number(t);
@@ -74,9 +78,20 @@ function Urlap({ c, kezdo, k, bezar }: FulProps & { kezdo?: { form: CorrectionFo
   const [payer, setPayer] = useState<'ugyfel' | 'iroda'>(k?.potlek.payer ?? 'ugyfel');
   const [ugyfel, setUgyfel] = useState(k?.needsClientApproval ?? true);
   const [telefon, setTelefon] = useState('');
+  const [tervNap, setTervNap] = useState(today());
   const ev = new Date().getFullYear();
-  const negyedevek = useQuery({ queryKey: ['acc', 'tax', c.id, Number(targy.slice(0, 4)) || ev - 1], queryFn: () => ep.accTaxPeriods(c.id, Number(targy.slice(0, 4)) || ev - 1), enabled: form === '2658' });
+  // javító kör 11-21: the year field asks the server only for a full 4-digit year (no request per keystroke)
+  const evSzoveg = targy.slice(0, 4);
+  const lekertEv = /^\d{4}$/.test(evSzoveg) && Number(evSzoveg) >= 2024 && Number(evSzoveg) <= 2100 ? Number(evSzoveg) : ev - 1;
+  const negyedevek = useQuery({ queryKey: ['acc', 'tax', c.id, lekertEv], queryFn: () => ep.accTaxPeriods(c.id, lekertEv), enabled: form === '2658' });
   const beadott = (negyedevek.data?.items ?? []).filter((p) => p.kind === 'negyedev' && p.filingStatus === 'beadva');
+  // the original due date of the chosen quarter fills the empty rows
+  const valaszt = (id: string) => {
+    setIdoszak(id);
+    const p = beadott.find((x) => x.id === id);
+    if (p) setSorok((x) => x.map((y) => (y.originalDueDate ? y : { ...y, originalDueDate: p.dueDate })));
+  };
+  const navPotlek = vanNavPotlek(sorok);
   const input: CorrectionInput = {
     form,
     subjectKey: form === '2658' ? (beadott.find((p) => p.id === idoszak)?.periodKey ?? targy) : targy,
@@ -89,6 +104,7 @@ function Urlap({ c, kezdo, k, bezar }: FulProps & { kezdo?: { form: CorrectionFo
     potlekPayer: payer,
     needsClientApproval: ugyfel,
     noApprovalNote: ugyfel ? null : telefon.trim() || null,
+    plannedFiledOn: tervNap || null,
   };
   const m = useMutation({
     mutationFn: () => (k ? ep.accCorrectionUpdate(k.id, input) : ep.accCorrectionCreate(c.id, input)),
@@ -100,7 +116,9 @@ function Urlap({ c, kezdo, k, bezar }: FulProps & { kezdo?: { form: CorrectionFo
     },
     onError: pir.hiba,
   });
-  const kuszob = sorok.length > 0 && sorok.every((s) => Math.abs(s.amountHuf) <= 1000);
+  // Art. 56. § (3): per tax – a row of at most 1 000 Ft cannot be corrected (javító kör 11-21)
+  const kuszob = sorok.some((s) => s.amountHuf !== 0 && Math.abs(s.amountHuf) <= 1000) || sorok.every((s) => s.amountHuf === 0);
+  const nincsDatum = sorok.some((s) => !/^\d{4}-\d{2}-\d{2}$/.test(s.originalDueDate));
   return (
     <div className="lap k28">
       <div className="szak">
@@ -127,7 +145,7 @@ function Urlap({ c, kezdo, k, bezar }: FulProps & { kezdo?: { form: CorrectionFo
               </label>
               <label className="oszlop" style={{ gap: 4 }}>
                 <span className="felirat">Beadott negyedév</span>
-                <select className="doboz" value={idoszak} onChange={(e) => setIdoszak(e.target.value)}>
+                <select className="doboz" value={idoszak} onChange={(e) => valaszt(e.target.value)}>
                   <option value="">– válaszd ki –</option>
                   {beadott.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -186,27 +204,37 @@ function Urlap({ c, kezdo, k, bezar }: FulProps & { kezdo?: { form: CorrectionFo
           </button>
         )}
         {kuszob && <div className="uzenet-sav figyel" style={{ marginTop: 8 }}><div>{O.kuszob}</div></div>}
+        {nincsDatum && <div className="sugo" style={{ marginTop: 6 }}>Add meg minden sorban az eredeti esedékességet.</div>}
         {sorok.some((s) => s.adonem === 'HIPA' && s.amountHuf > 0) && <div className="halvany kicsi" style={{ marginTop: 6 }}>{O.hipaPotlek}</div>}
         <div className="oszlop" style={{ gap: 6, marginTop: 12 }}>
-          <span className="felirat">Pótlék</span>
-          <label className="jelolo"><input type="checkbox" checked={flag.certificateError} onChange={(e) => setFlag((f) => ({ ...f, certificateError: e.target.checked }))} /><span>{O.igazolasHiba}</span></label>
-          <label className="jelolo"><input type="checkbox" checked={flag.paidInFull} onChange={(e) => setFlag((f) => ({ ...f, paidInFull: e.target.checked }))} /><span>{O.hianytalan}</span></label>
-          <label className="jelolo"><input type="checkbox" checked={flag.laterReturn} onChange={(e) => setFlag((f) => ({ ...f, laterReturn: e.target.checked }))} /><span>{O.kesobbiBevallas}</span></label>
-          <label className="jelolo"><input type="checkbox" checked={flag.chained} onChange={(e) => setFlag((f) => ({ ...f, chained: e.target.checked }))} /><span>{O.lancolt}</span></label>
-          <div className="sor-flex" style={{ gap: 12 }}>
-            <span>{O.kiFizeti}</span>
-            <label className="jelolo"><input type="radio" checked={payer === 'ugyfel'} onChange={() => setPayer('ugyfel')} /> az ügyfél</label>
-            <label className="jelolo"><input type="radio" checked={payer === 'iroda'} onChange={() => setPayer('iroda')} /> az iroda [Tulaj T3]</label>
-          </div>
+          <label className="oszlop" style={{ gap: 4, maxWidth: 220 }}>
+            <span className="felirat">Tervezett beadás napja</span>
+            <input className="doboz" type="date" min={today()} value={tervNap} onChange={(e) => setTervNap(e.target.value)} />
+          </label>
+          {navPotlek && (
+            <>
+              <span className="felirat">Pótlék</span>
+              <span className="sugo">A pótlék a beadás napjáig jár: ha később adod be, beadáskor újraszámoljuk.</span>
+              <label className="jelolo"><input type="checkbox" checked={flag.certificateError} onChange={(e) => setFlag((f) => ({ ...f, certificateError: e.target.checked }))} /><span>{O.igazolasHiba}</span></label>
+              <label className="jelolo"><input type="checkbox" checked={flag.paidInFull} onChange={(e) => setFlag((f) => ({ ...f, paidInFull: e.target.checked }))} /><span>{O.hianytalan}</span></label>
+              <label className="jelolo"><input type="checkbox" checked={flag.laterReturn} onChange={(e) => setFlag((f) => ({ ...f, laterReturn: e.target.checked }))} /><span>{O.kesobbiBevallas}</span></label>
+              <label className="jelolo"><input type="checkbox" checked={flag.chained} onChange={(e) => setFlag((f) => ({ ...f, chained: e.target.checked }))} /><span>{O.lancolt}</span></label>
+              <div className="sor-flex" style={{ gap: 12 }}>
+                <span>{O.kiFizeti}</span>
+                <label className="jelolo"><input type="radio" checked={payer === 'ugyfel'} onChange={() => setPayer('ugyfel')} /> az ügyfél</label>
+                <label className="jelolo"><input type="radio" checked={payer === 'iroda'} onChange={() => setPayer('iroda')} /> az iroda</label>
+              </div>
+            </>
+          )}
           <label className="jelolo"><input type="checkbox" checked={ugyfel} onChange={(e) => setUgyfel(e.target.checked)} /><span>Ügyfél-jóváhagyást kérek</span></label>
           {!ugyfel && <input className="doboz" placeholder="A telefonos egyeztetés: mikor, mit beszéltetek?" value={telefon} onChange={(e) => setTelefon(e.target.value)} />}
         </div>
         <div className="sor-flex" style={{ gap: 8, marginTop: 12 }}>
-          <button className="gomb-e kicsi" disabled={m.isPending || kuszob || !miert.trim()} onClick={() => m.mutate()}>
+          <button className="gomb-e kicsi" disabled={m.isPending || kuszob || nincsDatum || !miert.trim()} onClick={() => m.mutate()}>
             Mentés tervezetként
           </button>
           <button className="gomb-sz" onClick={bezar}>
-            Mégse
+            Mégsem
           </button>
         </div>
       </div>
@@ -225,6 +253,8 @@ function Kartya({ c, k }: FulProps & { k: AccTaxCorrection }) {
   const [fajl, setFajl] = useState<File | null>(null);
   const [nyugta, setNyugta] = useState<File | null>(null);
   const [vissza, setVissza] = useState('');
+  const [visszaNyit, setVisszaNyit] = useState(false);
+  const navPotlek = vanNavPotlek(k.diffs);
   const r1 = useRef<HTMLInputElement>(null);
   const r2 = useRef<HTMLInputElement>(null);
   const frissit = () => {
@@ -272,18 +302,30 @@ function Kartya({ c, k }: FulProps & { k: AccTaxCorrection }) {
                 <td className="halvany kicsi">eredeti esedékesség: {datum(d.originalDueDate, { ev: true })}</td>
               </tr>
             ))}
-            <tr>
-              <td>Önellenőrzési pótlék {k.potlek.payer === 'iroda' ? '(az iroda állja)' : ''}</td>
-              <td className="jobb szam">{ft(k.potlek.huf)}</td>
-              <td className="halvany kicsi">{k.potlek.approvedAt ? `jóváhagyva${k.potlek.approvedBy ? `: ${k.potlek.approvedBy.firstName}` : ''}` : 'nincs jóváhagyva'}</td>
-            </tr>
+            {navPotlek && (
+              <tr>
+                <td>Önellenőrzési pótlék {k.potlek.payer === 'iroda' ? '(az iroda állja)' : ''}</td>
+                <td className="jobb szam">{ft(k.potlek.huf)}</td>
+                <td className="halvany kicsi">{k.potlek.approvedAt ? `jóváhagyva${k.potlek.approvedBy ? `: ${k.potlek.approvedBy.firstName}` : ''}` : 'nincs jóváhagyva'}</td>
+              </tr>
+            )}
           </tbody>
         </table>
         <div className="halvany kicsi" style={{ marginTop: 6 }}>
           Összesen fizetendő: <b>{ft(k.totalToPayHuf)}</b>
           {k.inFavourHuf > 0 ? ` · a javára: ${ft(k.inFavourHuf)} (a folyószámlán követed)` : ''}
         </div>
-        {k.status === 'tervezet' && (
+        {k.status === 'tervezet' && !navPotlek && (
+          <div className="sor-flex" style={{ gap: 8, marginTop: 10 }}>
+            <button className="gomb-e kicsi" disabled={kuld.isPending} onClick={() => kuld.mutate()}>
+              {O.ugyfelreVar}
+            </button>
+            <button className="gomb-sz" onClick={() => setSzerk(true)}>
+              Szerkesztem
+            </button>
+          </div>
+        )}
+        {k.status === 'tervezet' && navPotlek && (
           <div className="eves-lepes" style={{ marginTop: 10 }}>
             <span className="felirat">Pótlék-javaslat: {k.potlek.suggestedHuf === null ? 'nincs' : ft(k.potlek.suggestedHuf)}</span>
             {k.potlek.basis.map((b) => (
@@ -337,14 +379,22 @@ function Kartya({ c, k }: FulProps & { k: AccTaxCorrection }) {
           </div>
         )}
         {k.filedOn && <div className="halvany kicsi" style={{ marginTop: 6 }}>Beadva: {datum(k.filedOn, { ev: true })} · {k.filingRef}{k.paymentStatus ? ` · befizetés: ${k.paymentStatus}` : ''}</div>}
-        {(k.status === 'tervezet' || k.status === 'ugyfelre_var' || k.status === 'jovahagyva') && (
-          <div className="sor-flex" style={{ gap: 8, marginTop: 10 }}>
-            <input className="doboz" style={{ flex: 1 }} placeholder="Miért vonod vissza?" value={vissza} onChange={(e) => setVissza(e.target.value)} />
-            <button className="gomb-sz" disabled={vissza.trim().length < 3 || visszavon.isPending} onClick={() => visszavon.mutate()}>
-              {O.visszavonom}
+        {(k.status === 'tervezet' || k.status === 'ugyfelre_var' || k.status === 'jovahagyva') &&
+          (visszaNyit ? (
+            <div className="sor-flex" style={{ gap: 8, marginTop: 10 }}>
+              <input className="doboz" style={{ flex: 1 }} placeholder="Miért vonod vissza?" value={vissza} onChange={(e) => setVissza(e.target.value)} />
+              <button className="gomb-sz" disabled={vissza.trim().length < 3 || visszavon.isPending} onClick={() => visszavon.mutate()}>
+                {O.visszavonom}
+              </button>
+              <button className="gomb-sz" onClick={() => setVisszaNyit(false)}>
+                Mégsem
+              </button>
+            </div>
+          ) : (
+            <button className="gomb-sz" style={{ marginTop: 10 }} onClick={() => setVisszaNyit(true)}>
+              Visszavonom…
             </button>
-          </div>
-        )}
+          ))}
         {k.cancelledReason && <div className="halvany kicsi">Visszavonva: {k.cancelledReason}</div>}
       </div>
     </div>

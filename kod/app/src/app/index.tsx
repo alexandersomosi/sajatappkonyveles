@@ -13,7 +13,7 @@ import { szin } from '@/theme/tokens';
 import { Allapot, Cimke, Fejlec, GombE, GombM, GombSav, GombSz, Lap, Osszeg, Sor, Szakasz } from '@/ui/alap';
 import { maBeallit } from '@/ui/ido';
 import { Arckep, Ikon3d, KeszJel, type Ikon3dNev } from '@/ui/kepek';
-import { EvesKartya, FelreteszKartya, HaviKartya, KedvezmenyTipp, KeresetKartya, KetSzam, SzunetelKartya } from '@/kepernyok/k28';
+import { EvesKartya, FelreteszKartya, HaviKartya, KedvezmenyTipp, KeresetKartya, KetSzam, OnellKartya, SzunetelKartya } from '@/kepernyok/k28';
 import { HOME_K_TEXTS } from '@/_shared/bekotes';
 import { Betolt, demoBeallit, Hiba, Kepernyo, useJelzes } from '@/ui/keret';
 import { Level } from '@/ui/Level';
@@ -132,7 +132,16 @@ function Sav({ h, lap }: { h: ClientHome; lap: (l: LapNev) => void }) {
                 : (hero.note ?? `${fn} szól, amikor legközelebb fizetni kell.`),
           }
         : hero.state === 'jovahagyva'
-          ? { ikon: 'szamlaszam', cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(), mondat: hero.dueDate ? `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.` : null }
+          ? {
+              ikon: 'szamlaszam',
+              cim: fillPlaceholders(HOME_K_TEXTS.payTitle, { osszeg, hatarido: '' }).trim(),
+              // javító kör 11-21: a KATA month or a yearly difference is no quarter the accountant computed ("jóváhagyta")
+              mondat: hero.dueDate
+                ? hero.periodKey && !/-Q[1-4]$/.test(hero.periodKey)
+                  ? `${hataridoSav(hero.dueDate)}.${hero.periodLabel ? ` ${nagybetu(hero.periodLabel)}.` : ''}`
+                  : `${hataridoSav(hero.dueDate)}. ${fn} jóváhagyta${hero.periodLabel ? `: ${hero.periodLabel}` : ''}.`
+                : null,
+            }
           : { ikon: 'szamolo', cim: hero.futureFixedMonths?.length ? `Kb. ${kerek} Ft` : `Eddig kb. ${kerek} Ft`, mondat: `${hero.periodLabel ? `${nagybetu(hero.periodLabel)}, becslés. ` : 'Becslés. '}${hero.dueDate ? `Befizetés ${datumIg(hero.dueDate)}. ` : ''}${hero.note ?? `${fn} a negyedév végén véglegesíti.`}` };
   return (
     <Fejlec rozX={318} rozY={128} alsoTer={20}>
@@ -447,6 +456,7 @@ export default function Fooldal() {
       {h.pause ? <SzunetelKartya p={h.pause} /> : null}
       {h.checkin ? <HaviKartya c={h.checkin} /> : null}
       {h.annual && h.annual.status !== 'nem_indult' && h.annual.status !== 'kesz' ? <EvesKartya a={h.annual} fn={fn} /> : null}
+      {h.openCorrection ? <OnellKartya k={h.openCorrection} /> : null}
       {/* k6c2 (tulaj 11-19 20:20 „csak valami elválasztó köztük”): a levél saját szakasz, fölötte a 10 pt-os sáv */}
       {h.letter ? <Level level={h.letter} alairasUt={h.accountant.signatureSvgPath} befizetve={h.hero.state === 'befizetve' && lap !== 'befizettem'} /> : null}
       <FizetesLap h={h} lap={setLap} />
@@ -486,7 +496,8 @@ export default function Fooldal() {
 
       {h.reserve ? <FelreteszKartya c={h.reserve} fn={fn} /> : null}
 
-      <Szakasz ikon="hataridok" cim="Idei kereteid" />
+      {/* javító kör 11-21: a KATA client has its own Kata-kereted card above – this one is the ÁFA limit only */}
+      <Szakasz ikon="hataridok" cim={h.limits.kata ? 'ÁFA-mentes kereted' : 'Idei kereteid'} />
       <Lap>
         {h.pause ? (
           // k6c2: szüneteltetés alatt nem számlázhat – nincs „Még … Ft-ot számlázhatsz ÁFA nélkül”

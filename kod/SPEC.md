@@ -5097,7 +5097,7 @@ Supersedes the lines above where they differ.
   (`utana_marketing_20261121_013515`), all 8 hosts 200/301, demo logins 200, live visit + DEMO registration checked (see
   deploy/README.md "Marketing (SPEC §31)").
 
-## 32. Éves ciklus és KATA – F0 + F1a (ÉPÍTŐ A, 2026-11-21; NOT deployed)
+## 32. Éves ciklus és KATA – F0 + F1a (ÉPÍTŐ A, 2026-11-21; deployed to DEMO 2026-11-21 05:00, see §32.C)
 
 Source plans: `_munka/TERV_EVES_CIKLUS_KATA.md` and `_munka/TERV_KRITIKA_2026-11-21.md` (the critique wins). This section is
 the contract of what was built; F1b (folyószámla, HIPA history, Éves áttekintő), F2 and F3 are NOT in it. The supervision
@@ -5184,7 +5184,7 @@ shows no fee (`AnnualView.feeHuf` null) until the ÁSZF is fixed [T1, JOGI].
 `notif.tax_due_soon.kata*`, `notif.limit_warning.kata*`, `notif.tax_task.*`, `notif.tax_payment_(verified|mismatch).kata`,
 `email.tax_due_soon.kata_ev_vege.body` (`backend/src/content/kata.ts`; editable in /admin/szovegek).
 
-## 32.B Éves ciklus – F2/F3 build (ÉPÍTŐ B, 2026-11-21; NOT deployed)
+## 32.B Éves ciklus – F2/F3 build (ÉPÍTŐ B, 2026-11-21; deployed to DEMO 2026-11-21 05:00, see §32.C)
 
 Builds on §32 (ÉPÍTŐ A). Plans: `_munka/TERV_EVES_CIKLUS_KATA.md` (3.1–3.7, 4.1–4.6, 5.x, 6.x, 7) and the critique (2.2–2.5,
 which wins). The app never files and never pays: the accountant enters the final numbers from the return, files as
@@ -5302,3 +5302,42 @@ screen and the questionnaire now ask the server's default year – the closing i
 `notif.tax_due_soon.*`, `notif.tax_payment_verified.*`, `notif.tax_task.*`, `email.(annual_status|correction_status).*.body`
 (`backend/src/content/eves.ts`). Switches (§32.5 + `lemondottEvesZaras`, `refundDatumUgyfelnek`, `reszletfizetesSzoveg`,
 `csjkBirsagTetel`).
+
+## 32.C Javító kör (2026-11-21; deployed to DEMO 05:00–05:11, migration 0026)
+
+The fixes of the four reviews (tax rules, code / security, UI) on top of §32 and §32.B. Contract changes only:
+- **Data (0026, additive):** `annual_closings.draft_document_id` (the draft the client approves – a later quarterly or
+  önellenőrzés `bevallas` document is never taken for it; older rows fall back to the latest draft), `client_tax_profiles.
+  regime_decision` jsonb (the next year's mode recorded in December). Worker step `data.ev_javitas` (once): old default
+  texts in unedited overrides → new; `annual_due` prefs equal to the old default (push on, e-mail off) → e-mail on.
+- **Annual closing:** approved → the status line „Jóváhagytad…”, `nextAction` null, panel chip „Jóváhagyta – beadhatod”;
+  a second approve with the same hash is a no-op; a new draft clears the approval tick. After filing the status line is the
+  difference / refund sentence (the panel's card has its own staff line, `settlement.staffText`). The home hero includes
+  open `eves_szja` / `kata_eves` / `hipa_eves` / `onellenorzes` payments; the timeline row says „Utald el a különbözetet”;
+  the refund row is „…-ig”. The prefill has the adómentes rész. The installment sentence of the e-mail only with
+  `reszletfizetesSzoveg`.
+- **HIPA (Htv. 39/A. § (8)):** „no return” only with the sávos method and H ≤ E; then next year's base is max(H, E). The
+  panel prefills E with the paid advances and ticks „Bevallás kell” by the rule until touched.
+- **Önellenőrzés:** paid in full (Art. 212. § (2)) → only the pótlék is an item; the pótlék is recomputed for the real filing
+  day (a hand-entered one for another day → 409); no pótlék approval / item for a correction without a NAV line (HIPA);
+  the 1 000 Ft threshold per tax (Art. 56. § (3)); „ismételt” counts only filed corrections; the „A pótlékot mi álljuk”
+  notice only when the office pays one (variants `beadva_iroda`, `beadva_potlek`).
+- **KATA:** the panel card counts the backfilled months; the next-month line skips a marked / free month; no remaining-keret
+  line after the KATA ended; no new month row for a client who is not active; free months carried into the new year
+  (also on 1 January for every state); the group „Rendben” requires the statement row as a note and notifies the client
+  once; a folyószámla „eltérés” never notifies the client by itself; backfilled months are due for the accountant on 10
+  December (not „lejárt”) and do not count as overdue anywhere. T/928 new KATA draft: the keret is 22 M / 12 per month
+  (rounded), declaration 25 February. New switch `kata2027Osszeg` (the confirmed 2027 amount, used only with `kata2027`).
+- **Next year's mode:** `POST /acc/clients/:id/next-year-regime` (only next year; the new KATA from 2027; makes the next
+  year's profile as a copy, no period before 1 January; `jobNewYear` keeps it) and `nextYearRegime` in the client detail
+  (card from 15 November). The Adózási mód card sends the variant and the főfoglalkozás. The app recommends no mode.
+- **Platform:** the annual filings, the önellenőrzés filing and the folyószámla POST are upload routes (60 MB, upload slot;
+  Caddy mirrors it); a KATA client's tax-profile card can be saved (the KATA free months are kept); no reserve / earnings
+  for a KATA client (the reserve 404 carries the KATA sentence, code `kata_no_reserve`); the fee list hides the annual
+  fee while `evesZarasDij` is off; the GDPR export has the annual closings, the önellenőrzések and the folyószámla checks;
+  the year overview filters by „waiting on me / on the client” separately.
+- **Texts:** no time promise in the annual texts („kb. 5 perc”, „Kb. 2 perc” removed), no internal markers on the panel,
+  the refund rule said as the law's, „Megjelölöm, hogy befizettem” instead of „Elutaltam”.
+- **Open (not built):** the „Kata megszűnése” action; the early recording of a mid-year KATA end's declaration; the general
+  e-mail fallback for web clients (HIANYLISTA 1.9); the demo seed of the new fields; the [DÁVID] answers
+  (`_munka/DAVID_KERDESEK_OSSZEFESULT_2026-11-21.md`).

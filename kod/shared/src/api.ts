@@ -534,6 +534,8 @@ export interface ClientHome {
   paymentCard?: PaymentCardView | null;
   checkin?: CheckinView | null;
   annual?: AnnualView | null;
+  /** Javító kör 11-21: an önellenőrzés waiting for the client's approval (the Főoldal card; any time of the year). */
+  openCorrection?: { id: string; title: string; statusText: string } | null;
   lock?: ServiceLockView | null;
   pause?: PauseView | null;
   kata?: KataHomeView | null;
@@ -2230,6 +2232,10 @@ export interface TaxRegimeInput {
   regime: TaxRegime;
   kataFrom?: ISODate | null;
   kataTo?: ISODate | null;
+  /** SPEC §32 (javító kör 11-21: the panel sends them too). */
+  year?: number;
+  kataVariant?: 'regi' | 'uj';
+  kataFofoglalkozasu?: boolean | null;
 }
 
 // ---------- §28.K.11 J – KATA ----------

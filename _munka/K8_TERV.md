@@ -125,3 +125,21 @@ A mostani nyitóoldal (`kod/landing`) így fut élesben (DEMO szerver, statiszti
 - **Telepítés és próba:** a mappa egészben cserélődik; legyen benne `email/` (két logó) és `js/meres.js` (a `feltolt.sh` megáll
   nélkülük). Teszt: `node --test kod/landing/meres.test.mjs`. **Gépi böngészős próbához normál User-Agent kell** (az Umami a
   „HeadlessChrome”-ot botnak veszi, és nem számolja). Élesítés után a Marketing fülön (7 nap) meg kell jelennie a próbalátogatásnak.
+
+## Éves ciklus + KATA (SPEC §32, §32.B, §32.C) – mi maradt nyitva (2026-11-21, a DEMO-ra élesítés után)
+Élesítve a DEMO-ra 11-21 05:00 (migráció 0022–0026). A k8 (landing_v2) ezekhez nem nyúl, de ezek még nyitottak:
+- **Dávid válaszai:** `_munka/DAVID_KERDESEK_OSSZEFESULT_2026-11-21.md` (56 kérdés, az első 10 sürgős – köztük a 2027-es
+  kata és a 30 napos záróhónap). A [DÁVID]-függő pontok óvatos alapértéken állnak.
+- **T/928 (2027-es kata):** amíg nincs kihirdetve, a `kata2027` KI (a 2027-es hónapok összeg nélkül). Kihirdetés után: a
+  végleges szöveg ellenőrzése, `ado-motor/src/rules/2027.ts` `draft: false`, `kata2027` BE, `kata2027Osszeg` (75 000 vagy
+  50 000). Az új kata NAV-számlája és nyomtatványa még ismeretlen – addig rá sem tétel, sem emlékeztető nem készül.
+  Decemberben minden ügyfélnél rögzíteni kell a 2027-es módot (panel: „2027. évi adózási mód” kártya).
+- **Éves zárás díja (14 999 Ft):** `evesZarasDij` KI, amíg az ÁSZF-et a jogász nem javítja (T1, T-K5); a díjfolyamat kész.
+- **Nem készült el:** a „Kata megszűnése” művelet (ok, 15 napos bejelentési feladat, a jövőbeli tételek érvénytelenítése, a
+  nyilatkozat rögzítése még a tárgyévben); a webes ügyfelek általános e-mail-tartaléka push helyett (HIANYLISTA 1.9 – az
+  éves és a kata-értesítések már mennek e-mailben); az új mezők demo-adata (a DEMO-n nincs éves zárás folyamatban, nincs
+  önellenőrzés és folyószámla-egyeztetés); a mellékállású / nyugdíjas járulékszöveg (Dávid K2).
+- **Tulaj-döntések:** T4 (a megszűnt ügyfél éves zárása: `lemondottEvesZaras` most 'ki'), T3 (az iroda fizeti-e a hibájából
+  eredő pótlékot – a mező kész), T6 (részletfizetés-szöveg KI).
+- **Karbantartás:** új MNB-kamatdöntésnél az `ado-motor/src/engine/potlek.ts` `BASE_RATES` táblát kézzel bővíteni (addig a pótlékot a
+  NAV-kalkulátorból írja be a könyvelő).

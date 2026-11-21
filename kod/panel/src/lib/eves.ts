@@ -42,6 +42,16 @@ export function lattamRendbenLehet(itemHuf: number, kivonatHuf: number | null): 
   return kivonatHuf !== null && kivonatHuf === itemHuf;
 }
 
+/** Javító kör 11-21: the overview's words instead of the internal codes ("előleg: ellenorizve" → "előleg: ellenőrizve"). */
+export const HIPA_ELOLEG_SZO: Record<string, string> = { nincs: 'nincs', jovahagyva: 'jóváhagyva', jelolve: 'jelölte', ellenorizve: 'ellenőrizve', nem_kell: 'nem kell' };
+export const HIPA_EVES_SZO: Record<string, string> = { nincs: 'nincs beadva', beadva: 'beadva', nem_kell: 'nem kell' };
+export const RECON_SZO: Record<string, string> = { rendben: 'rendben', hatralek: 'hátralék', tulfizetes: 'túlfizetés', elteres: 'eltérés' };
+export const NEGYEDEV_SZO: Record<string, string> = { nincs: 'nincs számolva', becsles: 'becslés', jovahagyva: 'jóváhagyva', jelolve: 'az ügyfél jelölte', ellenorizve: 'ellenőrizve', elteres: 'eltérés', nincs_fizetendo: 'nincs fizetendő' };
+/** The KATA cell: "10 rendben, 2 hiányzik, 7 ellenőrizetlen (app előtti)". */
+export function kataCella(k: NonNullable<YearOverviewRow['kata']>): string {
+  return [`${k.ok} rendben`, k.open ? `${k.open} hiányzik` : '', k.unverified ? `${k.unverified} ellenőrizetlen befizetés` : '', k.beforeApp ? `${k.beforeApp} ellenőrizetlen (app előtti)` : ''].filter(Boolean).join(', ');
+}
+
 /** The year overview as CSV (";" separated, Excel-safe cells). */
 export function attekintoCsv(rows: YearOverviewRow[]): string {
   const head = ['Ügyfél', 'Adózási mód', 'Negyedévek / kata', 'Folyószámla', 'Éves zárás', 'Különbözet', 'HIPA', 'Nyitott önellenőrzés', 'Mi hiányzik'];
@@ -49,11 +59,11 @@ export function attekintoCsv(rows: YearOverviewRow[]): string {
     [
       r.name,
       r.regime === 'kata' ? 'Kata' : 'Átalány',
-      r.kata ? `${r.kata.ok} rendben, ${r.kata.open} hiányzik, ${r.kata.unverified} ellenőrizetlen` : r.quarters.map((q) => `${q.key.slice(5)}: ${q.state}${q.filed ? ' (beadva)' : ''}`).join(', '),
-      r.reconciliation ? `${r.reconciliation.asOf} ${r.reconciliation.status}${r.reconciliation.nextCheckOn ? `, következő: ${r.reconciliation.nextCheckOn}` : ''}` : 'nincs',
+      r.kata ? kataCella(r.kata) : r.quarters.map((q) => `${q.key.slice(5)}: ${NEGYEDEV_SZO[q.state] ?? q.state}${q.filed ? ' (beadva)' : ''}`).join(', '),
+      r.reconciliation ? `${r.reconciliation.asOf} ${RECON_SZO[r.reconciliation.status] ?? r.reconciliation.status}${r.reconciliation.nextCheckOn ? `, következő: ${r.reconciliation.nextCheckOn}` : ''}` : 'nincs',
       r.annual ? r.annual.status : '',
       r.difference ? `${r.difference.diffHuf} (${r.difference.label})` : '',
-      `előleg: ${r.hipa.advance}, éves: ${r.hipa.annual}`,
+      `előleg: ${HIPA_ELOLEG_SZO[r.hipa.advance] ?? r.hipa.advance}, éves: ${HIPA_EVES_SZO[r.hipa.annual] ?? r.hipa.annual}`,
       r.openCorrections,
       r.missing.join(' · '),
     ]

@@ -94,8 +94,19 @@ export async function nextCheckDefault(db: DbOrTx, clientId: string, asOf: strin
     .limit(1);
   // KATA in November: 15 December (the year-end rule, Kata tv. 5. § (1) e))
   if (kata && asOf.slice(5, 7) === '11') return nextWorkingDay(`${asOf.slice(0, 4)}-12-15`);
-  if (next) return addWorkingDays(next.d, kata ? EV_RULES.nextCheckWorkingDays.kata : EV_RULES.nextCheckWorkingDays.atalany);
-  return addDays(asOf, kata ? 35 : 95);
+  // javító kör 11-21: a refund the NAV still has to pay → the day after its expected date (terv 4.4); always a working day
+  const { annualClosings } = await import('../db/schema.js');
+  const [refund] = await db
+    .select({ d: annualClosings.refundExpectedBy })
+    .from(annualClosings)
+    .where(and(eq(annualClosings.clientId, clientId), eq(annualClosings.refundStatus, 'var'), sql`${annualClosings.refundExpectedBy} >= ${asOf}`))
+    .orderBy(asc(annualClosings.refundExpectedBy))
+    .limit(1);
+  const byRefund = refund?.d ? nextWorkingDay(addDays(refund.d, 1)) : null;
+  const byPayment = next ? addWorkingDays(next.d, kata ? EV_RULES.nextCheckWorkingDays.kata : EV_RULES.nextCheckWorkingDays.atalany) : null;
+  const cands = [byRefund, byPayment].filter((x): x is string => Boolean(x)).sort();
+  if (cands.length) return cands[0]!;
+  return nextWorkingDay(addDays(asOf, kata ? 35 : 95));
 }
 
 /** GET /acc/clients/:id/reconciliations/expected?asOf= */

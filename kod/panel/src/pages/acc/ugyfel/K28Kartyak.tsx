@@ -25,7 +25,8 @@ import {
   RESERVE_PANEL_TEXTS,
 } from '../../../_shared/bekotes';
 import { EMPLOYER_DECISIONS, EMPLOYER_RULES, KATA_RULES_2026, type EmployerDecision } from '../../../_shared/enums';
-import { datum, datumRovid, ft, idopont, szam } from '../../../lib/format';
+import { KATA_PANEL_TEXTS } from '../../../_shared/kata';
+import { datum, datumIg, datumRovid, ft, idopont, szam } from '../../../lib/format';
 import { felreteszErtek, felreteszTipp, zarolasCimke } from '../../../lib/k28';
 import { adoszamEllenor } from '../../../lib/csapat';
 import { today } from '../../../lib/today';
@@ -54,6 +55,7 @@ export function K28Kartyak({ c }: FulProps) {
       {c.employer && <Alkalmazottak c={c} />}
       {c.taxRegime === 'kata' && c.kata && <KataKartya c={c} />}
       {c.lifecycle !== 'bekotes_alatt' && <AdozasiMod c={c} />}
+      {c.lifecycle !== 'bekotes_alatt' && c.nextYearRegime && <KovetkezoEvMod c={c} />}
       {c.pause && <SzunetelKartya c={c} />}
       {(c.reserve || c.earnings) && <EztLatja c={c} />}
       {(c.checkinOpenItems ?? 0) > 0 && (
@@ -288,7 +290,7 @@ function KataKartya({ c }: FulProps) {
         {k.meter ? (
           // SPEC §32: the server's lines (keret by liable months, remaining, warning; the projection only here)
           <p className="halvany">
-            Az idei keret {k.usedPct}%-a. {k.meter.limitLine} {k.meter.remainingLine ?? ''} Adóköteles hónap: {k.liableMonths.length}.
+            Az idei keret {k.usedPct}%-a. {k.meter.limitLine} {k.meter.remainingLine ?? ''} Adóköteles hónap eddig: {k.liableMonths.length}.
             {k.kulonadoEstimateHuf > 0 ? ` Különadó-becslés: ${ft(k.kulonadoEstimateHuf)}.` : ''}
             {k.meter.projectedOverHuf > 0 ? ` Év végére kb. ${ft(k.meter.projectedHuf)} (csak te látod).` : ''}
             {k.draftNote ? ` ${k.draftNote}` : ''}
@@ -319,7 +321,7 @@ function KataKartya({ c }: FulProps) {
                 </b>
                 <div className="kicsi">
                   {b.endsOn
-                    ? `Kifizette: a kata ${datum(b.endsOn, { ev: true })}-jén megszűnt. Bejelentés a NAV-nak ${datum(b.reportBy, { ev: true })}-ig.`
+                    ? `Kifizette: a kata ${datum(b.endsOn, { ev: true })} napjával megszűnt. Bejelentés a NAV-nak: ${datumIg(b.reportBy)}. A bejelentés után állítsd át az adózási módot (a kata utolsó napja: ${datum(b.endsOn, { ev: true })}).`
                     : 'Még nem fizette ki. Ha kifizeti, a kata a fizetés előtti nappal megszűnik – beszéljetek előtte.'}
                 </div>
               </div>
@@ -468,6 +470,118 @@ function Alkalmazottak({ c }: FulProps) {
   );
 }
 
+// ---------- javító kör 11-21 (kritika 2.1): the next year's mode, recorded in December ----------
+/**
+ * "2027-es adózási mód": what the accountant and the client decided and filed for next year (átalány / régi kata / új
+ * kata – T/928). The app never recommends a mode; this only records the decision so 1 January starts with it.
+ */
+function KovetkezoEvMod({ c }: FulProps) {
+  const pir = usePirito();
+  const qc = useQueryClient();
+  const n = c.nextYearRegime!;
+  const [nyit, setNyit] = useState(false);
+  const [mod, setMod] = useState<'atalany' | 'kata_regi' | 'kata_uj'>(n.regime === 'kata' ? (n.kataVariant === 'uj' ? 'kata_uj' : 'kata_regi') : (c.taxRegime === 'kata' ? 'kata_regi' : 'atalany'));
+  const [fofog, setFofog] = useState<boolean | null>(n.kataFofoglalkozasu ?? null);
+  const [nap, setNap] = useState(n.filedOn ?? '');
+  const [ki, setKi] = useState<'konyvelo' | 'ugyfel' | 'nem_kell'>(n.filedBy ?? 'konyvelo');
+  const [megj, setMegj] = useState(n.note ?? '');
+  const m = useMutation({
+    mutationFn: () =>
+      ep.accNextYearRegime(c.id, {
+        year: n.year,
+        regime: mod === 'atalany' ? 'atalany' : 'kata',
+        ...(mod === 'atalany' ? {} : { kataVariant: mod === 'kata_uj' ? 'uj' : 'regi', kataFofoglalkozasu: mod === 'kata_uj' ? fofog : true }),
+        filedOn: nap || null,
+        filedBy: ki,
+        note: megj.trim() || null,
+      }),
+    onSuccess: () => {
+      pir.ok(`Rögzítetted a ${n.year}. évi adózási módot.`);
+      setNyit(false);
+      void qc.invalidateQueries({ queryKey: ['acc', 'client', c.id] });
+    },
+    onError: pir.hiba,
+  });
+  const most = n.regime === null ? 'még nincs rögzítve' : n.regime === 'atalany' ? 'átalányadó' : `${KATA_PANEL_TEXTS.valtozat[n.kataVariant ?? 'regi']}${n.kataVariant === 'uj' ? (n.kataFofoglalkozasu ? `, ${KATA_PANEL_TEXTS.fofoglalkozasu.toLowerCase()}` : n.kataFofoglalkozasu === false ? `, ${KATA_PANEL_TEXTS.nemFofoglalkozasu.toLowerCase()}` : '') : ''}`;
+  return (
+    <div className="lap k28" style={{ marginTop: 16 }}>
+      <div className="szak">
+        <div className="szak-fej">
+          <I3 n="tepnaptar" s={28} />
+          <h2>{n.year}. évi adózási mód</h2>
+          {!nyit && (
+            <button className="gomb-m kicsi csak-szoveg" disabled={!!c.serviceLock} title={c.serviceLock ? LOCK_TEXTS.panelDisabled : undefined} onClick={() => setNyit(true)}>
+              {n.decidedAt ? 'Módosítom' : 'Rögzítem'}
+            </button>
+          )}
+        </div>
+        <p>
+          {n.decidedAt ? <b>{most}</b> : <span className="halvany">{n.recorded ? `A ${n.year}. évi profil már megvan: ${most}.` : 'Még nincs rögzítve: január 1-jén az idei mód folytatódik.'}</span>}
+          {n.decidedAt && (
+            <span className="halvany kicsi">
+              {' '}
+              · rögzítve {datum(n.decidedAt.slice(0, 10))}
+              {n.filedOn ? `, bejelentve ${datum(n.filedOn)}` : ''}
+              {n.filedBy ? ` (${n.filedBy === 'konyvelo' ? 'te adtad be' : n.filedBy === 'ugyfel' ? 'az ügyfél adta be' : 'nem kell bejelentés'})` : ''}
+            </span>
+          )}
+        </p>
+        <p className="halvany kicsi">
+          Itt csak azt rögzíted, amit az ügyféllel megbeszéltetek és a NAV-nál bejelentettetek. Az app nem javasol adózási módot.
+          {n.newKataDraft ? ' Az új kata (T/928) még nincs kihirdetve: rögzítheted, de a havi tételei addig összeg nélkül állnak.' : ''}
+        </p>
+        {nyit && (
+          <div className="oszlop" style={{ gap: 10, marginTop: 8 }}>
+            <div className="szegmens egysor" role="group" aria-label={`${n.year}. évi adózási mód`}>
+              {(['atalany', 'kata_regi', 'kata_uj'] as const).map((x) => (
+                <button key={x} type="button" className={mod === x ? 'on' : ''} aria-pressed={mod === x} onClick={() => setMod(x)}>
+                  {x === 'atalany' ? 'Átalányadó' : x === 'kata_regi' ? KATA_PANEL_TEXTS.valtozat.regi : KATA_PANEL_TEXTS.valtozat.uj}
+                </button>
+              ))}
+            </div>
+            {mod === 'kata_uj' && (
+              <div className="sor-flex" style={{ gap: 12 }}>
+                <label className="jelolo">
+                  <input type="radio" checked={fofog === true} onChange={() => setFofog(true)} /> {KATA_PANEL_TEXTS.fofoglalkozasu}
+                </label>
+                <label className="jelolo">
+                  <input type="radio" checked={fofog === false} onChange={() => setFofog(false)} /> {KATA_PANEL_TEXTS.nemFofoglalkozasu}
+                </label>
+              </div>
+            )}
+            <div className="sor-flex" style={{ flexWrap: 'wrap', gap: 10, alignItems: 'flex-end' }}>
+              <label className="mezo" style={{ width: 180 }}>
+                <span className="felirat">Bejelentés napja</span>
+                <input className="doboz" type="date" max={today()} value={nap} onChange={(e) => setNap(e.target.value)} />
+              </label>
+              <label className="mezo" style={{ width: 220 }}>
+                <span className="felirat">Ki jelentette be?</span>
+                <select className="doboz" value={ki} onChange={(e) => setKi(e.target.value as typeof ki)}>
+                  <option value="konyvelo">én (meghatalmazottként)</option>
+                  <option value="ugyfel">az ügyfél</option>
+                  <option value="nem_kell">nem kell bejelentés</option>
+                </select>
+              </label>
+              <label className="mezo" style={{ flex: 1, minWidth: 200 }}>
+                <span className="felirat">Megjegyzés (nem kötelező)</span>
+                <input className="doboz" value={megj} maxLength={500} onChange={(e) => setMegj(e.target.value)} />
+              </label>
+            </div>
+            <div className="sor-flex" style={{ gap: 8 }}>
+              <button className="gomb-e kicsi" disabled={m.isPending || (mod === 'kata_uj' && fofog === null)} onClick={() => m.mutate()}>
+                Rögzítem
+              </button>
+              <button className="gomb-sz" onClick={() => setNyit(false)}>
+                Mégsem
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ---------- tax regime (SPEC §28.K.11 / §28.K.18 POST /acc/clients/:id/tax-regime) ----------
 function AdozasiMod({ c }: FulProps) {
   const pir = usePirito();
@@ -476,8 +590,16 @@ function AdozasiMod({ c }: FulProps) {
   const [nyit, setNyit] = useState(false);
   const [uj, setUj] = useState<'atalany' | 'kata'>(most === 'kata' ? 'atalany' : 'kata');
   const [tol, setTol] = useState('');
+  // javító kör 11-21 (kritika 2.1): the KATA variant (the new one only from 2027, T/928) and the főfoglalkozás
+  const ev = Number(today().slice(0, 4));
+  const [valtozat, setValtozat] = useState<'regi' | 'uj'>(c.kataVariant ?? 'regi');
+  const [fofog, setFofog] = useState<boolean>(c.kataFofoglalkozasu ?? true);
   const m = useMutation({
-    mutationFn: () => ep.accSetTaxRegime(c.id, uj === 'kata' ? { regime: 'kata', kataFrom: tol || null } : { regime: 'atalany', kataTo: tol || null }),
+    mutationFn: () =>
+      ep.accSetTaxRegime(
+        c.id,
+        uj === 'kata' ? { regime: 'kata', kataFrom: tol || null, kataVariant: valtozat, kataFofoglalkozasu: valtozat === 'regi' ? true : fofog } : { regime: 'atalany', kataTo: tol || null },
+      ),
     onSuccess: () => {
       pir.ok('Átállítottad. Az adóbecslés és az ügyfél Főoldala frissül.');
       setNyit(false);
@@ -490,7 +612,10 @@ function AdozasiMod({ c }: FulProps) {
       <div className="szak">
         <div className="szak-fej">
           <I3 n="szamolo" s={28} />
-          <h2>Adózási mód: {most === 'kata' ? 'kata' : 'átalányadó'}</h2>
+          <h2>
+            Adózási mód: {most === 'kata' ? 'kata' : 'átalányadó'}
+            {most === 'kata' && c.kataVariant ? ` (${c.kataVariant === 'uj' ? 'új kata, T/928' : 'Kata tv.'}${c.kataFofoglalkozasu === false ? `, ${KATA_PANEL_TEXTS.nemFofoglalkozasu.toLowerCase()}` : ''})` : ''}
+          </h2>
           {!nyit && (
             <button className="gomb-m kicsi csak-szoveg" disabled={!!c.serviceLock} title={c.serviceLock ? LOCK_TEXTS.panelDisabled : undefined} onClick={() => setNyit(true)}>
               Átállítom
@@ -498,7 +623,7 @@ function AdozasiMod({ c }: FulProps) {
           )}
         </div>
         <p className="halvany kicsi">
-          Csak akkor állítsd át, ha a NAV-nál is megtörtént (a változás bejelentése után). {KATA_TEXTS.switchRule}
+          Csak akkor állítsd át, ha a NAV-nál is megtörtént (a változás bejelentése után). {KATA_TEXTS.switchRuleStaff}
         </p>
         {nyit && (
           <div className="sor-flex" style={{ marginTop: 10, flexWrap: 'wrap', alignItems: 'flex-end' }}>
@@ -513,6 +638,21 @@ function AdozasiMod({ c }: FulProps) {
               <span className="felirat">{uj === 'kata' ? 'Kata ettől a naptól' : 'A kata utolsó napja'}</span>
               <input className="doboz" type="date" value={tol} onChange={(e) => setTol(e.target.value)} />
             </label>
+            {uj === 'kata' && (
+              <label className="mezo" style={{ width: 200 }}>
+                <span className="felirat">Változat</span>
+                <select className="doboz" value={valtozat} onChange={(e) => setValtozat(e.target.value as 'regi' | 'uj')}>
+                  <option value="regi">{KATA_PANEL_TEXTS.valtozat.regi}</option>
+                  {ev >= 2027 && <option value="uj">{KATA_PANEL_TEXTS.valtozat.uj}</option>}
+                </select>
+              </label>
+            )}
+            {uj === 'kata' && valtozat === 'uj' && (
+              <label className="jelolo">
+                <input type="checkbox" checked={fofog} onChange={(e) => setFofog(e.target.checked)} />
+                <span>{KATA_PANEL_TEXTS.fofoglalkozasu}</span>
+              </label>
+            )}
             <button className="gomb-e kicsi" disabled={m.isPending || !tol || uj === most} onClick={() => m.mutate()}>
               Átállítom
             </button>

@@ -784,7 +784,18 @@ export async function settlementView(deps: Deps, db: DbOrTx, cl: ClientRow, r: A
       canMark: st === 'var',
     };
   }
-  return { diffHuf: r.diffHuf, filedOn: r.filedSzjaOn ?? null, filingRef: r.szjaFilingRef ?? null, periodId: p?.id ?? null, paymentStatus: p?.paymentStatus ?? null, refund, text };
+  // the accountant's line (the panel card): what is due and where it stands, not the client's tegező sentence
+  const ps = p?.paymentStatus ?? null;
+  const what = r.regime === 'kata' ? 'Fizetendő különadó' : 'Fizetendő különbözet';
+  const staffText =
+    r.diffHuf > 0
+      ? `${what}: ${fmt(r.diffHuf)} Ft, határidő: ${huDayMonth(due)}. ${ps === 'ellenorizve' ? 'Ellenőrizve.' : ps === 'befizetve_jelezve' ? 'Az ügyfél befizetettnek jelölte: ellenőrizd a folyószámlán.' : ps === 'elteres' ? 'Eltérést jelöltél.' : 'Még nem jelölte befizetettnek.'}`
+      : r.diffHuf < 0 && r.regime === 'atalany'
+        ? `Visszajár: ${fmt(-r.diffHuf)} Ft${r.refundExpectedBy ? `, várható: ${huDayMonthIg(r.refundExpectedBy)}` : ''} (a NAV utalja). ${r.refundStatus === 'var' ? (r.refundMarkedBy === 'ugyfel' ? 'Az ügyfél jelölte, hogy megérkezett.' : 'Még nem érkezett meg.') : 'Rögzítve.'}`
+        : r.regime === 'kata'
+          ? 'Nincs különadó.'
+          : 'Nincs különbözet.';
+  return { diffHuf: r.diffHuf, filedOn: r.filedSzjaOn ?? null, filingRef: r.szjaFilingRef ?? null, periodId: p?.id ?? null, paymentStatus: ps, refund, text, staffText };
 }
 
 /** Σ the year's HIPA advance items the client marked or the accountant verified (the prefill of E). */

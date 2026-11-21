@@ -46,7 +46,9 @@ test('a szövegek: nincs „a(z)”, nincs beégetett név; a visszajáró szab�
   const all = JSON.stringify(EVES_TEXTS);
   assert.doesNotMatch(all, /a\(z\)/i);
   assert.doesNotMatch(all, /\bBence\b/);
-  assert.match(EVES_TEXTS.osszesito.visszajarSzabaly, /30 napon belül, de legkorábban \{ev\}\. március 1-jén/);
+  // javító kör 11-21: the legal rule, said as the law's (no time promise of our own)
+  assert.match(EVES_TEXTS.osszesito.visszajarSzabaly, /^A törvény szerint .*30 napon belül utalja, de legkorábban \{ev\}\. március 1-jén/);
+  assert.doesNotMatch(all, /kb\. \d+ perc/i);
   for (const f of ['../src/app/eves-zaras/index.tsx', '../src/app/eves-zaras/jovahagyas.tsx', '../src/app/onellenorzes/[id].tsx']) {
     const src = readFileSync(join(import.meta.dirname, f), 'utf8');
     assert.doesNotMatch(src, /\bBence\b/, f);

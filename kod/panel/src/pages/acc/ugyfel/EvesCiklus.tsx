@@ -22,7 +22,8 @@ const szamE = (s: string): number | null => {
   const n = Number(t);
   return Number.isFinite(n) ? Math.round(n) : null;
 };
-const szovegE = (n: number | null | undefined) => (n === null || n === undefined ? '' : String(n));
+// javító kör 11-21: the number fields show thousands separators ("8 460 000"); szamE reads them back
+const szovegE = (n: number | null | undefined) => (n === null || n === undefined ? '' : szam(n));
 
 type Props = { c: AccClientDetail; a: AccAnnualView; frissit: (r: AccAnnualView) => void; zarolt: string | null };
 
@@ -30,7 +31,17 @@ function Mezo({ cim, ertek, set, sugo, disabled }: { cim: string; ertek: string;
   return (
     <label className="oszlop" style={{ gap: 4 }}>
       <span className="felirat">{cim}</span>
-      <input className="doboz szam" inputMode="numeric" value={ertek} disabled={disabled} onChange={(e) => set(e.target.value)} />
+      <input
+        className="doboz szam"
+        inputMode="numeric"
+        value={ertek}
+        disabled={disabled}
+        onChange={(e) => set(e.target.value)}
+        onBlur={() => {
+          const n = szamE(ertek);
+          if (n !== null) set(szam(n));
+        }}
+      />
       {sugo && <span className="sugo">{sugo}</span>}
     </label>
   );
@@ -78,7 +89,7 @@ export function OsszegekKartya({ c, a, frissit, zarolt }: Props) {
         <div className="szak-fej">
           <I3 n="szamolo" s={28} />
           <h2>{P.osszegek}</h2>
-          <span className={`cimke ${kul > 0 ? 'figyel' : 'info'}`}>{kul > 0 ? `Fizetendő: ${ft(kul)}` : kul < 0 ? `Visszajár: ${ft(-kul)}` : 'Nincs különbözet'}</span>
+          <span className={`cimke ${kul > 0 ? 'figyel' : 'info'}`}>{!a.amounts && kul === 0 ? 'Még nincs mentve' : kul > 0 ? `Fizetendő: ${ft(kul)}` : kul < 0 ? `Visszajár: ${ft(-kul)}` : 'Nincs különbözet'}</span>
         </div>
         {(a.warnings ?? []).map((w) => (
           <div key={w} className="uzenet-sav figyel" style={{ marginBottom: 8 }}>
@@ -102,7 +113,7 @@ export function OsszegekKartya({ c, a, frissit, zarolt }: Props) {
               <Mezo cim="Adóköteles jövedelem" ertek={v.taxableHuf!} set={set('taxableHuf')} sugo={elotolt('taxableHuf')} disabled={!szerk} />
               <Mezo cim="Éves szja (A)" ertek={v.szjaHuf!} set={set('szjaHuf')} sugo={elotolt('szjaHuf')} disabled={!szerk} />
               <Mezo cim="Elszámolt szja-előleg (B)" ertek={v.advancesHuf!} set={set('advancesHuf')} sugo={elotolt('advancesHuf')} disabled={!szerk} />
-              <Mezo cim="Csjk elszámolása (C, ±)" ertek={v.csjkHuf!} set={set('csjkHuf')} sugo="+ fizetendő / − visszajár [Dávid D4]" disabled={!szerk} />
+              <Mezo cim="Csjk elszámolása (C, ±)" ertek={v.csjkHuf!} set={set('csjkHuf')} sugo="+ fizetendő / − visszajár" disabled={!szerk} />
             </>
           )}
         </div>
@@ -125,7 +136,7 @@ export function OsszegekKartya({ c, a, frissit, zarolt }: Props) {
             )}
             {kul < 0 && (
               <div className="sor-flex" style={{ gap: 12, marginTop: 10 }}>
-                <span className="felirat">Visszajáró módja [Dávid D5]</span>
+                <span className="felirat">Visszajáró módja</span>
                 <label className="jelolo">
                   <input type="radio" checked={visszajaro === 'kiutalas'} disabled={!szerk} onChange={() => setVisszajaro('kiutalas')} /> kiutalás
                 </label>
@@ -199,6 +210,8 @@ export function BeadasKartya({ c, a, frissit, zarolt }: Props) {
   });
   const jovahagyta = Boolean(a.approval);
   const kesz = Boolean(nap && ikt.trim() && fajl && nyugta && (jovahagyta || (telefon && megj.trim().length >= 10)));
+  // javító kör 11-21: say why "Beadtam" is grey
+  const hianyzik = [!a.amounts && 'az összegek', !ikt.trim() && 'a NAV-iktatószám', !fajl && 'a bevallás', !nyugta && 'a NAV-visszaigazolás', !jovahagyta && !(telefon && megj.trim().length >= 10) && 'az ügyfél jóváhagyása (vagy a telefonos egyeztetés)'].filter(Boolean) as string[];
   return (
     <div className="eves-lepes">
       <span className="felirat">{a.regime === 'kata' ? 'Beadtam a kata-nyilatkozatot' : 'Beadtam az szja-bevallást'}</span>
@@ -229,6 +242,7 @@ export function BeadasKartya({ c, a, frissit, zarolt }: Props) {
       <button className="gomb-e kicsi" style={{ marginTop: 10 }} disabled={!!zarolt || !a.amounts || !kesz || m.isPending} onClick={() => m.mutate()}>
         {P.beadtam}
       </button>
+      {hianyzik.length > 0 && <span className="sugo" style={{ display: 'block', marginTop: 4 }}>Még kell: {hianyzik.join(', ')}.</span>}
     </div>
   );
 }
@@ -241,6 +255,7 @@ export function KulonbozetKartya({ c, a, frissit, zarolt }: Props) {
   const [nap, setNap] = useState(today());
   const [osszeg, setOsszeg] = useState('');
   const [megj, setMegj] = useState('');
+  const [kivonat, setKivonat] = useState('');
   const refund = useMutation({
     mutationFn: (status: 'megerkezett' | 'beszamitva' | 'atvezetve') => ep.accAnnualRefund(c.id, a.id, { status, on: nap, amountHuf: szamE(osszeg), note: megj.trim() || null }),
     onSuccess: (r) => {
@@ -250,7 +265,8 @@ export function KulonbozetKartya({ c, a, frissit, zarolt }: Props) {
     onError: pir.hiba,
   });
   const ver = useMutation({
-    mutationFn: (verification: 'rendben' | 'elteres') => ep.accVerifyPayment(s!.periodId!, [{ kind: a.regime === 'kata' ? 'kata_kulonado' : 'szja_kulonbozet', verification, ...(verification === 'elteres' ? { note: megj.trim() || 'Nem látom a befizetést a folyószámlán.' } : {}) }]),
+    // javító kör 11-21 [DÁVID K11]: "Rendben" only from the statement row (its day and amount go into the note)
+    mutationFn: (verification: 'rendben' | 'elteres') => ep.accVerifyPayment(s!.periodId!, [{ kind: a.regime === 'kata' ? 'kata_kulonado' : 'szja_kulonbozet', verification, note: verification === 'elteres' ? megj.trim() || 'Nem látom a befizetést a folyószámlán.' : `Kivonat: ${kivonat.trim()}` }]),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ['acc', 'annual', c.id] });
       pir.ok('Rögzítetted.');
@@ -267,13 +283,14 @@ export function KulonbozetKartya({ c, a, frissit, zarolt }: Props) {
           <h2>{r ? P.visszajaroCim : P.kulonbozetCim}</h2>
           {s.filingRef && <span className="cimke">{`${P.iktatoszam}: ${s.filingRef}`}</span>}
         </div>
-        <p className="halvany">{s.text}</p>
+        <p className="halvany">{s.staffText ?? s.text}</p>
         {s.periodId && (
-          <div className="sor-flex" style={{ gap: 8, flexWrap: 'wrap' }}>
-            <span className="cimke">{s.paymentStatus === 'ellenorizve' ? 'Ellenőrizve' : s.paymentStatus === 'befizetve_jelezve' ? 'Az ügyfél jelölte – ellenőrizd' : s.paymentStatus === 'elteres' ? 'Eltérés' : 'Fizetendő'}</span>
+          <div className="sor-flex" style={{ gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className={`cimke ${s.paymentStatus === 'ellenorizve' ? 'ok' : ''}`}>{s.paymentStatus === 'ellenorizve' ? 'Ellenőrizve' : s.paymentStatus === 'befizetve_jelezve' ? 'Az ügyfél jelölte – ellenőrizd' : s.paymentStatus === 'elteres' ? 'Eltérés' : 'Fizetendő'}</span>
             {s.paymentStatus !== 'ellenorizve' && (
               <>
-                <button className="gomb-m kicsi" disabled={!!zarolt || ver.isPending} onClick={() => ver.mutate('rendben')}>
+                <input className="doboz" style={{ minWidth: 220, flex: 1 }} placeholder="A kivonat sora: dátum, összeg" value={kivonat} maxLength={200} onChange={(e) => setKivonat(e.target.value)} />
+                <button className="gomb-m kicsi" disabled={!!zarolt || ver.isPending || kivonat.trim().length < 5} title={kivonat.trim().length < 5 ? 'Írd be a kivonat sorát (dátum, összeg).' : undefined} onClick={() => ver.mutate('rendben')}>
                   Rendben
                 </button>
                 <button className="gomb-sz" disabled={!!zarolt || ver.isPending} onClick={() => ver.mutate('elteres')}>
@@ -319,8 +336,11 @@ export function HipaKartya({ c, a, frissit, zarolt }: Props) {
   const pir = usePirito();
   const h = a.hipa;
   const [ado, setAdo] = useState(szovegE(h?.taxHuf));
-  const [eloleg, setEloleg] = useState(szovegE(h?.advancesHuf));
-  const [kell, setKell] = useState(h?.returnNeeded ?? true);
+  // javító kör 11-21: E is prefilled with the advances the client paid; "Bevallás kell" follows Htv. 39/A. § (8) until touched
+  const [eloleg, setEloleg] = useState(szovegE(h?.advancesHuf ?? h?.advancesPaidHuf ?? null));
+  const [kellKezi, setKellKezi] = useState<boolean | null>(h?.returnNeeded ?? null);
+  const kell = kellKezi ?? (h?.method === 'altalanos' ? true : (szamE(ado) ?? 0) > (szamE(eloleg) ?? 0));
+  const setKell = (x: boolean) => setKellKezi(x);
   const [nap, setNap] = useState(today());
   const [ikt, setIkt] = useState('');
   const [fajl, setFajl] = useState<File | null>(null);

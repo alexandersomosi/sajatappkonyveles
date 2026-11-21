@@ -254,6 +254,11 @@ export function EvesKartya({ a, fn }: { a: AnnualView; fn: string }) {
   return <TeendoSzakasz ikon="bevallas" cim={fillPlaceholders(ANNUAL_TEXTS.card.title, { ev: String(a.year) })} szoveg={szoveg} gomb={gomb} onPress={() => router.push(ut as never)} />;
 }
 
+/** Javító kör 11-21: an önellenőrzés waiting for the client's approval – on the Főoldal too. */
+export function OnellKartya({ k }: { k: { id: string; title: string; statusText: string } }) {
+  return <TeendoSzakasz ikon="bevallas" cim={k.title} szoveg={k.statusText} gomb="Átnézem" onPress={() => router.push(`/onellenorzes/${k.id}` as never)} />;
+}
+
 export function SzunetelKartya({ p }: { p: PauseView }) {
   return <TeendoSzakasz ikon="tepnaptar" cim={PAUSE_TEXTS.cardTitle} szoveg={p.text} gomb={PAUSE_TEXTS.cardButton} onPress={() => router.push('/valtozas/valtozas_folytatas')} />;
 }

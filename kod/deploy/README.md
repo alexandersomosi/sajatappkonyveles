@@ -13,7 +13,36 @@
 > A tulaj gépén át futó „Adozz mentes kulso” feladat KIKAPCSOLVA (Disabled, nem törölve).
 
 
-## Éves ciklus F2/F3 (SPEC §32.B) – ÉPÍTŐ B, 2026-11-21: KÉSZ HELYBEN, **MÉG NINCS TELEPÍTVE** (az F0 + F1a-val együtt megy)
+
+## Éves ciklus + KATA javító kör (SPEC §32.C) – ÉLESÍTVE a DEMO-ra 2026-11-21 04:56–05:11 (F0 + F1a + F2/F3 + javítások együtt)
+
+Ahogy ment:
+```bash
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh                                    # 41 felhasználó / 38 ügyfél / migráció 22
+ssh appok-1 'bash -s ment elotte_evjav_20261121_045652' < kod/deploy/tulaj-fiokok-allapot.sh
+# kézi, titkosított mentés: backups/pg_dump_elotte_evjav_20261121_045652.dump.gpg (476 885 bájt; pg_restore -l: 579 sor)
+cd kod/app && npm run export:web; cd kod/panel && npm run build
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'           # _regi/db_elotte_up_20261121_045932; migráció 22 → 27
+bash kod/deploy/feltolt.sh --web-only && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh' # panel apró szövegjavítás (_regi/db_elotte_up_20261121_050956)
+ssh appok-1 'bash -s hasonlit elotte_evjav_20261121_045652 utana_evjav_20261121_050056' < kod/deploy/tulaj-fiokok-allapot.sh   # VÁLTOZATLAN
+```
+- **Migrációk:** 0022–0026 (csak hozzáadó; a 0026: `annual_closings.draft_document_id`, `client_tax_profiles.regime_decision`).
+  Adatlépések: `data.kata_f1` `{profiles: 1, variants: 1, kataCreated: 11, backfilled: 10, adonem: 42, annual: 0}`,
+  `data.ev_javitas` `{content: 0, annualPrefs: 0}` (a szerveren nem volt felülírt szöveg és `annual_due`-beállítás).
+- **Proxy:** az `adozz.caddy` feltöltős útvonalai bővültek (éves beadás, önellenőrzés beadása, folyószámla: 60 MB); az up.sh
+  érvényesítette és újratöltötte. Régi: `deploy/_regi/adozz_elotte_ev_javitas_1121.caddy`.
+- **Utána:** mind a 8 cím 200/301; API/worker naplóban 0 figyelmeztetés/hiba; a demo belépések (admin, könyvelő, csapat, 17
+  ügyfél) 200; alex@ és tulaj@ VÁLTOZATLAN; a Google-os tesztfiók aktív, 3 élő munkamenet; a `backup.sh` 05:05-kor lefutott.
+- **Élő próba (DEMO):** képek `kod/_qa/eles_ev_1121/` (Lakatos Gréta – kata, Varga Réka – átalány, panel + app). Levelek a
+  DEMO-postafiókban: „Javítani kell egy beadott bevallásodat” (Réka; egy próba-önellenőrzés, utána **visszavonva**, nem törölve)
+  és „Utald el a katát: 50 000 Ft” (Gréta; egyszeri próba-emlékeztető saját dedupe-kulccsal, a december 8-i valódi is kimegy).
+- **Kapcsolók (mind KI):** `kata2027`, `kata2027Osszeg` (null), `evesZarasDij`, `kataElorejelzesUgyfelnek`,
+  `lemondottEvesZaras` ('ki'), `reszletfizetesSzoveg`, `csjkBirsagTetel`. Bekapcsolás: a lenti SQL, `system_state.value ||`
+  összefésüléssel.
+- **Visszaállás:** `_regi/db_elotte_up_20261121_045932.dump.gpg` (a 0022–0026 csak új oszlopokat / táblákat hoz); a régi
+  kód a `_regi/src_*`-ban, a webes buildek a `_regi/web_*`-ban.
+
+## Éves ciklus F2/F3 (SPEC §32.B) – ÉPÍTŐ B, 2026-11-21 – ÉLESÍTVE a DEMO-ra 11-21 05:00 (lent: „Javító kör”)
 
 - **Migráció (csak hozzáadó), sorrendben az F1a után:** `0024_ev_ciklus_enumok.sql` (enumértékek: `payment_item_kind` +
   `szja_kulonbozet`, `onellenorzesi_potlek`, `egyeb_ado`; `document_category` + `adoszamla_kivonat`; `notification_kind` +
@@ -32,8 +61,8 @@
   (`ki` = alapérték, a mostani viselkedés: megszűnt / felfüggesztett ügyfélnek nem nyílik éves zárás; `kezi` = a könyvelő a
   panelen megnyithatja; `automatikus` = január 5-én magától megnyílik) – **tulaj-döntés (T4)**; `refundDatumUgyfelnek`
   (igaz), `reszletfizetesSzoveg` (hamis), `csjkBirsagTetel` (hamis). Bekapcsolás pl.:
-  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"lemondottEvesZaras": "kezi"}') on conflict (key) do update set value = excluded.value;`
-  (A kulcsok egy JSON-ban élnek: ha már van benne más kapcsoló, azt is írd bele.)
+  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"lemondottEvesZaras": "kezi"}') on conflict (key) do update set value = system_state.value || excluded.value;`
+  (A kulcsok egy JSON-ban élnek; a `||` a többi, már beállított kapcsolót megtartja – javító kör 11-21.)
 - **Viselkedésváltozás a DEMO-n:** a tervezet csak elmentett összegekkel és „egyeznek” jelöléssel mehet ki jóváhagyásra;
   a „Beadtam” (szja / kata) NAV-iktatószámot, bevallást és NAV-visszaigazolást kér; a `beadva → kesz` automatikus (a
   különbözet rendezése és a HIPA után); a panel Adó füle nem mutatja az éves különbözet és az önellenőrzés befizetéseit
@@ -41,7 +70,7 @@
   (javítás: eddig a naptári év üres zárását nyitotta meg januárban).
 
 
-## Éves ciklus és KATA, F0 + F1a (SPEC §32) – ÉPÍTŐ A, 2026-11-21: KÉSZ HELYBEN, **MÉG NINCS TELEPÍTVE**
+## Éves ciklus és KATA, F0 + F1a (SPEC §32) – ÉPÍTŐ A, 2026-11-21 – ÉLESÍTVE a DEMO-ra 11-21 05:00 (lent: „Javító kör”)
 
 - **Migráció (csak hozzáadó):** `0022_kata_enumok.sql` (enumértékek: `payment_item_kind` + `kata_teteles`, `kata_kulonado`;
   `notification_kind` + `tax_task` – ebben a futásban semmi nem használja őket) és `0023_kata.sql` (`tax_periods` +
@@ -58,7 +87,8 @@
 - **Kapcsolók** (`system_state['kapcsolok.ev_ciklus']`, JSON; kódbeli alapérték mind KI): `kata2027` (a T/928 szerinti
   2027-es kata – csak a törvény kihirdetése után), `kataElorejelzesUgyfelnek`, `kataEvVegeUgyfelnek` (`jeloletlen`|`ki`),
   `evesZarasDij` (a 14 999 Ft-os éves zárási díj – az ÁSZF javításáig KI). Bekapcsolás pl.:
-  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"evesZarasDij": true}') on conflict (key) do update set value = excluded.value;`
+  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"evesZarasDij": true}') on conflict (key) do update set value = system_state.value || excluded.value;`
+  (a `||` a többi, már beállított kapcsolót megtartja)
 - **Viselkedésváltozás a DEMO-n:** az éves zárás kérdőíve díj nélkül megy a könyvelőhöz (`evesZarasDij` KI); a
   `annual_due` értesítés e-mailben is megy (az ügyfél beállítása szerint); a novemberi kata határideje 2026-12-14.
 - **Ellenőrzés telepítés után:** `select key, value from system_state where key = 'data.kata_f1';`, a katás ügyfél

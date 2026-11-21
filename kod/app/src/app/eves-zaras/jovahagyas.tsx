@@ -9,7 +9,7 @@ import { fillPlaceholders } from '@/_shared/bekotes';
 import { EVES_TEXTS as V } from '@/_shared/eves';
 import { useEvesJovahagy, useEvesZaras, useMe } from '@/api/hooks';
 import { jovahagyhato, osszegSor } from '@/lib/eves';
-import { datum, datumIg } from '@/lib/format';
+import { datum, datumIg, szam } from '@/lib/format';
 import { hibaUzenet } from '@/lib/hiba';
 import { BELJEBB, OsszegSor, SavFej } from '@/kepernyok/k28';
 import { szin } from '@/theme/tokens';
@@ -18,12 +18,26 @@ import { AlsoLap, Betolt, Hiba, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import type { AnnualSummaryLine } from '@/_shared/eves';
 
-function Sorok({ sorok }: { sorok: AnnualSummaryLine[] }) {
+/** A quarter of the advance, under the advance line: indented, dim, never read as a deduction (javító kör 11-21). */
+function NegyedevSor({ cim, huf }: { cim: string; huf: number }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 3, paddingLeft: 14 }}>
+      <T m={14.5} lh={1.35} c={szin.halvany} style={{ flex: 1, minWidth: 0 }}>
+        {cim}
+      </T>
+      <T m={14.5} c={szin.halvany} szam style={{ flexShrink: 0 }}>
+        {szam(huf)} Ft
+      </T>
+    </View>
+  );
+}
+
+function Sorok({ sorok, folytatas }: { sorok: AnnualSummaryLine[]; folytatas?: boolean }) {
   return (
     <>
       {sorok.map((l, i) => {
         const s = osszegSor(l);
-        return <OsszegSor key={`${l.label}-${i}`} elso={i === 0} cim={s.elotte ? `${s.elotte} ${s.cim}` : s.cim} al={s.al} huf={s.huf} />;
+        return <OsszegSor key={`${l.label}-${i}`} elso={!folytatas && i === 0} cim={s.elotte ? `${s.elotte} ${s.cim}` : s.cim} al={s.al} huf={s.huf} />;
       })}
     </>
   );
@@ -41,7 +55,15 @@ export default function EvesJovahagyas() {
   const kata = z?.regime === 'kata';
   const mehet = z ? jovahagyhato(z) : false;
   const dokk = mehet ? <GombE cim={kata ? V.osszesito.kata.gomb : V.osszesito.gomb} onPress={() => setLap(true)} /> : undefined;
-  const mondat = z?.approval ? fillPlaceholders(V.osszesito.jovahagyva, { datum: datum(z.approval.at.slice(0, 10)), firstName: fn }) : s?.formLabel ?? null;
+  // javító kör 11-21: the result is in the band at once ("Fizetendő: 23 925 Ft, május 20-ig"), not two screens down
+  const eredmeny = s
+    ? s.result.kind === 'fizetendo'
+      ? fillPlaceholders(V.osszesito.fejFizetendo, { osszeg: szam(s.result.amountHuf), hatarido: s.payment ? datumIg(s.payment.dueDate) : '' }).replace(/, $/, '')
+      : s.result.kind === 'visszajar'
+        ? fillPlaceholders(V.osszesito.fejVisszajar, { osszeg: szam(s.result.amountHuf) })
+        : V.osszesito.fejNulla
+    : null;
+  const mondat = z?.approval ? fillPlaceholders(V.osszesito.jovahagyva, { datum: datum(z.approval.at.slice(0, 10)), firstName: fn }) : s ? `${s.formLabel}. ${eredmeny}.` : null;
   return (
     <Kepernyo ful="fooldal" fejlec={<SavFej vissza={() => vissza('/eves-zaras')} ikon="bevallas" cim={V.osszesito.cim} mondat={mondat} />} dokk={dokk}>
       {q.isLoading ? (
@@ -79,10 +101,12 @@ export default function EvesJovahagyas() {
               <Szakasz ikon="bevallas" cim={V.osszesito.szjaCim} />
               <Lap style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
                 <View style={{ paddingLeft: BELJEBB }}>
-                  <Sorok sorok={s.szja} />
-                  {s.advancesByQuarter.map((a, i) => (
-                    <OsszegSor key={a.label} elso={false} cim={`${a.label} – ${V.osszesito.elolegAllapot[a.state]}`} huf={a.amountHuf} al={i === 0 ? V.osszesito.eloleg : null} />
+                  {/* the szja, the advance line with its quarters right under it (indented, dim), then the rest */}
+                  <Sorok sorok={s.szja.slice(0, 2)} />
+                  {s.advancesByQuarter.map((a) => (
+                    <NegyedevSor key={a.label} cim={fillPlaceholders(V.osszesito.elolegNegyedev, { negyedev: a.label, allapot: V.osszesito.elolegAllapot[a.state] })} huf={a.amountHuf} />
                   ))}
+                  {s.szja.length > 2 ? <Sorok sorok={s.szja.slice(2)} folytatas /> : null}
                 </View>
               </Lap>
             </>

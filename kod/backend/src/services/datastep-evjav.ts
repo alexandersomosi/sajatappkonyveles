@@ -24,6 +24,7 @@ export const EVJAV_REGI: Record<string, string> = {
   'notif.annual_due.jovahagyas.body': 'Kész a tervezet. Kb. 2 perc.',
   'notif.annual_status.jovahagyasra_var.body': 'Nézd át, és hagyd jóvá. Kb. 2 perc.',
   'notif.annual_status.body': 'Nézd át, és hagyd jóvá. Kb. 2 perc.',
+  'fooldal.kata_taxes_sub': 'havi 50 000 Ft, {firstName} számolja.',
 };
 
 export async function runDataStepEvJavitas(deps: Deps): Promise<{ content: number; annualPrefs: number } | 'already'> {

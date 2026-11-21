@@ -48,6 +48,13 @@ export function bejelentesKell(kind: KataBreak['kind']): boolean {
   return kataExemptNeedsReport(kind);
 }
 
+/** "szeptember" → "Szeptemberben" (the inessive of a month name, capitalised – javító kör 11-21). */
+const BAN = new Set(['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus']);
+export function honapban(honap: string): string {
+  const h = honap.toLocaleLowerCase('hu-HU');
+  return `${h.charAt(0).toLocaleUpperCase('hu-HU')}${h.slice(1)}${BAN.has(h) ? 'ban' : 'ben'}`;
+}
+
 /** The bar colour by level (panel CSS variables). */
 export function kataSavSzin(level: 'rendben' | 'figyelem' | 'tullepve'): string {
   return level === 'tullepve' ? 'var(--veszely)' : level === 'figyelem' ? 'var(--borostyan)' : 'var(--tintakek)';

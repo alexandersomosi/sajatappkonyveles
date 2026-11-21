@@ -89,6 +89,8 @@ export interface KataComputation {
   months: KataMonth[];
   meter: ReturnType<typeof kataLimitMeter>;
   breaks: KataBreak[];
+  /** Javító kör 11-21: the KATA ended before asOf (kataTo) – no "Még … fér bele" line. */
+  ended: boolean;
 }
 
 /**
@@ -114,7 +116,7 @@ export async function kataCompute(db: DbOrTx, clientId: string, year: number, as
   const breaks = kataBreaksOf(profile);
   const months = kataMonths({ year, kataFrom: range.from, kataTo: range.to, breaks, revenue, monthlyHuf }, rules);
   const meter = kataLimitMeter(months, { year, kataFrom: range.from, kataTo: range.to, revenue, asOf }, rules);
-  return { profile, rules, monthlyHuf, months, meter, breaks };
+  return { profile, rules, monthlyHuf, months, meter, breaks, ended: Boolean(range.to && range.to < asOf) };
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -303,7 +305,7 @@ export function meterView(c: KataComputation, o: { staff: boolean; k: EvesKapcso
     level: m.level,
     liableMonths: m.liableMonths,
     limitLine,
-    remainingLine: m.level === 'tullepve' ? null : fill(T.keretMaradek, { maradek: fmt(m.remainingHuf) }),
+    remainingLine: m.level === 'tullepve' || c.ended ? null : fill(T.keretMaradek, { maradek: fmt(m.remainingHuf) }),
     warningLine,
     remainingHuf: m.remainingHuf,
     overHuf: m.overHuf,

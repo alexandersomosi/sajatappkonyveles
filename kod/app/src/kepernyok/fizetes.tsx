@@ -167,6 +167,9 @@ export function HogyanJottKi({ lathato, bezar, idoszak, konyvelo }: { lathato: b
   const e = idoszak?.explanation;
   const q = idoszak?.periodKey.slice(-2) ?? '';
   const becsles = idoszak?.calcStatus !== 'jovahagyva';
+  // javító kör 11-21: a KATA month or a yearly difference is no quarter the accountant computes
+  const negyedeves = !idoszak || /-Q[1-4]$/.test(idoszak.periodKey);
+  const kataHo = Boolean(idoszak && /^\d{4}-\d{2}-KATA$/.test(idoszak.periodKey));
   // Az „Összesen” és a „Bence számolta · Kérdezek róla” sor rögzített lábléc: a hosszú (2026-os) bontásnál is
   // ezek zárják a lapot, mint a jóváhagyott 07-en.
   const lab = (
@@ -188,7 +191,13 @@ export function HogyanJottKi({ lathato, bezar, idoszak, konyvelo }: { lathato: b
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
           <Arckep pt={34} gyuru />
           <T m={14} c={szin.halvany} lh={1.35} style={{ flexShrink: 1 }}>
-            {becsles ? `${konyvelo.firstName} a negyedév végén véglegesíti.` : `${konyvelo.firstName} számolta${idoszak?.letter ? `,\n${datum(idoszak.letter.date)}` : '.'}`}
+            {becsles && negyedeves
+              ? `${konyvelo.firstName} a negyedév végén véglegesíti.`
+              : negyedeves
+                ? `${konyvelo.firstName} számolta${idoszak?.letter ? `,\n${datum(idoszak.letter.date)}` : '.'}`
+                : kataHo
+                  ? 'A kata összegét a törvény adja.'
+                  : 'Az összeg a beadott bevallásból való.'}
           </T>
         </View>
         <GombM
@@ -232,7 +241,11 @@ export function HogyanJottKi({ lathato, bezar, idoszak, konyvelo }: { lathato: b
         </>
       ) : (
         <T m={15.5} c={szin.halvany} lh={1.5} style={{ marginTop: 8 }}>
-          A részletes számítás akkor látszik, amikor {konyvelo.firstName} kiszámolta a negyedévet.
+          {kataHo
+            ? 'A kata havonta fix 50 000 Ft. Minden megkezdett hónapra ennyit fizetsz.'
+            : !negyedeves
+              ? 'Az összeg a beadott bevallásból való. A bevallást a dossziédban találod.'
+              : `A részletes számítás akkor látszik, amikor ${konyvelo.firstName} kiszámolta a negyedévet.`}
         </T>
       )}
     </AlsoLap>

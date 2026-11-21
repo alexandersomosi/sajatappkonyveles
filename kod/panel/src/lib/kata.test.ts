@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { bejelentesKell, kataHonapCimke, kataSavSzin, kataSzunetHiba, kijelolheto } from './kata';
+import { bejelentesKell, honapban, kataHonapCimke, kataSavSzin, kataSzunetHiba, kijelolheto } from './kata';
 import { KATA_EXEMPT_KINDS, KATA_EXEMPT_PANEL_LABELS, KATA_PANEL_TEXTS, type KataMonthView } from '../_shared/kata';
 
 const honap = (o: Partial<KataMonthView> = {}): KataMonthView => ({
@@ -59,8 +59,10 @@ describe('free months (Kata tv. 7. § (8)–(10))', () => {
     expect(bejelentesKell('szunetel')).toBe(false);
     expect(bejelentesKell('tappenz')).toBe(true);
     for (const k of KATA_EXEMPT_KINDS) expect(KATA_EXEMPT_PANEL_LABELS[k]).toMatch(/7\. § \(8\)/);
-    expect(KATA_EXEMPT_PANEL_LABELS.orokbefogadoi_dij).toContain('Dávid erősítse meg');
-    expect(KATA_EXEMPT_PANEL_LABELS.gyod).toContain('Dávid erősítse meg');
+    // javító kör 11-21: no internal marker on the panel – "(még egyeztetjük)"
+    expect(KATA_EXEMPT_PANEL_LABELS.orokbefogadoi_dij).toContain('(még egyeztetjük)');
+    expect(KATA_EXEMPT_PANEL_LABELS.gyod).toContain('(még egyeztetjük)');
+    expect(Object.values(KATA_EXEMPT_PANEL_LABELS).join(' ')).not.toContain('Dávid');
   });
 });
 
@@ -80,5 +82,16 @@ describe('the bar and the texts', () => {
   it('H8: the panel does not put a fixed accountant name into the client texts', () => {
     const src = readFileSync(join(__dirname, '../pages/acc/ugyfel/K28Kartyak.tsx'), 'utf8');
     expect(src).not.toMatch(/replace\('\{firstName\}', 'Bence'\)/);
+  });
+});
+
+describe('honapban (javító kör 11-21)', () => {
+  it('the inessive of a month name, capitalised', () => {
+    expect(honapban('szeptember')).toBe('Szeptemberben');
+    expect(honapban('január')).toBe('Januárban');
+    expect(honapban('március')).toBe('Márciusban');
+    expect(honapban('október')).toBe('Októberben');
+    expect(honapban('április')).toBe('Áprilisban');
+    expect(honapban('november')).toBe('Novemberben');
   });
 });

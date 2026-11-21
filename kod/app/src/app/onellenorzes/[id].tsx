@@ -59,6 +59,12 @@ function Tartalom() {
                 <OsszegSor key={`${d.label}-${i}`} elso={i === 0} cim={d.inFavour ? `${d.label} (${V.onell.javaradCimke})` : d.label} huf={d.amountHuf} />
               ))}
               {v.potlekHuf > 0 ? <OsszegSor cim={V.onell.potlek} al={v.potlekPaidByUs ? V.onell.potlekIroda : V.onell.potlekAl} huf={v.potlekHuf} /> : null}
+              {/* javító kör 11-21 (Art. 212. § (2)): the tax was paid in full – only the pótlék is due */}
+              {v.diffsAlreadyPaid ? (
+                <T m={15} lh={1.45} c={szin.halvany} style={{ paddingVertical: 8 }}>
+                  {V.onell.marBefizetve}
+                </T>
+              ) : null}
             </View>
           </Lap>
           {eredmeny ? (

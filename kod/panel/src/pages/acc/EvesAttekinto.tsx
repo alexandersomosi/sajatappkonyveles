@@ -5,7 +5,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import { EV_ATTEKINTO_TEXTS as T, type YearOverviewFilter, type YearOverviewRow } from '../../_shared/eves';
-import { attekintoCsv } from '../../lib/eves';
+import { attekintoCsv, HIPA_ELOLEG_SZO, HIPA_EVES_SZO, kataCella, NEGYEDEV_SZO, RECON_SZO } from '../../lib/eves';
 import { datum, ft } from '../../lib/format';
 import { today } from '../../lib/today';
 import { Fejlec, HibaSav, Toltes } from '../../ui/kozos';
@@ -56,6 +56,10 @@ export default function EvesAttekinto() {
             </button>
           )}
         </div>
+        {/* javító kör 11-21: the legend of the quarter marks */}
+        <p className="halvany kicsi" style={{ margin: '0 0 10px' }}>
+          Jelek: · nincs számolva · b becslés · J jóváhagyva · j az ügyfél jelölte · ✓ ellenőrizve · ! eltérés · 0 nincs fizetendő · B beadva
+        </p>
         {q.isPending ? (
           <Toltes />
         ) : q.isError ? (
@@ -72,7 +76,7 @@ export default function EvesAttekinto() {
                   <th className="jobb">{T.oszlopok.kulonbozet}</th>
                   <th>{T.oszlopok.hipa}</th>
                   <th>{T.oszlopok.onell}</th>
-                  <th>{T.oszlopok.hianyzik}</th>
+                  <th style={{ minWidth: 260 }}>{T.oszlopok.hianyzik}</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,13 +98,10 @@ export default function EvesAttekinto() {
                     </td>
                     <td className="szam">
                       {r.kata ? (
-                        <>
-                          {r.kata.ok} rendben{r.kata.open ? `, ${r.kata.open} hiányzik` : ''}
-                          {r.kata.unverified ? `, ${r.kata.unverified} ellenőrizetlen` : ''}
-                        </>
+                        kataCella(r.kata)
                       ) : (
                         r.quarters.map((x) => (
-                          <span key={x.key} title={`${x.key}: ${x.state}${x.filed ? ', beadva' : ''}`} style={{ marginRight: 6, color: x.overdue ? 'var(--veszely)' : undefined }}>
+                          <span key={x.key} title={`${x.key.slice(5)}: ${NEGYEDEV_SZO[x.state] ?? x.state}${x.filed ? ', beadva' : ''}`} style={{ marginRight: 6, color: x.overdue ? 'var(--veszely)' : undefined }}>
                             {x.key.slice(5)} {Q[x.state] ?? x.state}
                             {x.filed ? 'B' : ''}
                           </span>
@@ -110,7 +111,7 @@ export default function EvesAttekinto() {
                     <td>
                       {r.reconciliation ? (
                         <>
-                          {datum(r.reconciliation.asOf)} · {r.reconciliation.status}
+                          {datum(r.reconciliation.asOf)} · {RECON_SZO[r.reconciliation.status] ?? r.reconciliation.status}
                           {r.reconciliation.nextCheckOn && (
                             <div className="kicsi" style={{ color: r.reconciliation.overdue ? 'var(--veszely)' : undefined }}>
                               következő: {datum(r.reconciliation.nextCheckOn)}
@@ -136,12 +137,12 @@ export default function EvesAttekinto() {
                       )}
                     </td>
                     <td className="kicsi">
-                      előleg: {r.hipa.advance}
+                      előleg: {HIPA_ELOLEG_SZO[r.hipa.advance] ?? r.hipa.advance}
                       <br />
-                      éves: {r.hipa.annual}
+                      éves: {HIPA_EVES_SZO[r.hipa.annual] ?? r.hipa.annual}
                     </td>
                     <td className="szam">{r.openCorrections || ''}</td>
-                    <td className="kicsi">
+                    <td className="kicsi" style={{ minWidth: 260 }}>
                       {r.missing.map((m) => (
                         <div key={m}>{m}</div>
                       ))}

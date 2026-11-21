@@ -90,20 +90,24 @@ export async function yearOverview(deps: Deps, db: DbOrTx, o: { accountantId: st
     let kata: YearOverviewRow['kata'] = null;
     const km = ps.filter((x) => x.kind === 'kata');
     if (km.length) {
-      kata = { ok: 0, open: 0, unverified: 0, exempt: 0 };
+      kata = { ok: 0, open: 0, unverified: 0, exempt: 0, beforeApp: 0 };
       for (const p of km) {
         const st = payState(p, itemsOf.get(p.id) ?? []);
         if (p.exemptReason && st === 'nincs_fizetendo') kata.exempt++;
         else if (st === 'ellenorizve') kata.ok++;
         else if (st === 'jelolve') kata.unverified++;
-        else if (st === 'jovahagyva' || st === 'elteres') {
-          if (p.dueDate < today || p.backfilled) kata.open++;
-        }
+        else if (p.backfilled && (st === 'jovahagyva' || st === 'elteres')) kata.beforeApp!++;
+        else if ((st === 'jovahagyva' || st === 'elteres') && p.dueDate < today) kata.open++;
       }
       if (kata.open) {
-        missing.push(`Kata: ${kata.open} hónap nincs rendben (${km.filter((p) => payState(p, itemsOf.get(p.id) ?? []) === 'jovahagyva' && p.dueDate < today).map((p) => monthName(Number(p.periodKey.slice(5, 7)))).join(', ') || 'app előtti hónapok'})`);
+        missing.push(`Kata: ${kata.open} hónap nincs rendben (${km.filter((p) => !p.backfilled && payState(p, itemsOf.get(p.id) ?? []) === 'jovahagyva' && p.dueDate < today).map((p) => monthName(Number(p.periodKey.slice(5, 7)))).join(', ')})`);
         ramVar = true;
         overdue = true;
+      }
+      // the months before the app: the accountant checks them on the folyószámla by 10 December (kritika 2.4)
+      if (kata.beforeApp) {
+        missing.push(`Kata: ${kata.beforeApp} ellenőrizetlen hónap (app előtti)`);
+        ramVar = true;
       }
       if (kata.unverified) {
         missing.push(`Kata: ${kata.unverified} ellenőrizetlen befizetés`);
@@ -128,11 +132,22 @@ export async function yearOverview(deps: Deps, db: DbOrTx, o: { accountantId: st
     let annual: YearOverviewRow['annual'] = null;
     let difference: YearOverviewRow['difference'] = null;
     if (a) {
-      annual = { status: a.status, ball: ANNUAL_BALL[a.status] };
-      if (annual.ball === 'konyvelo') {
-        missing.push('Éves zárás: rád vár');
+      // javító kör 11-21: whose turn it really is – an approved draft is the accountant's ("beadhatod"); after the filing the
+      // difference (the client pays), the refund (the NAV pays) and the HIPA return (the accountant) decide
+      const approvedWaiting = a.status === 'jovahagyasra_var' && Boolean(a.approvedAt);
+      const ball = approvedWaiting ? 'konyvelo' : a.status === 'beadva' ? null : ANNUAL_BALL[a.status];
+      annual = { status: a.status, ball };
+      if (ball === 'konyvelo') {
+        missing.push(approvedWaiting ? 'Éves zárás: jóváhagyta, beadhatod' : 'Éves zárás: rád vár');
         ramVar = true;
-      } else if (annual.ball === 'ugyfel') ugyfelreVar = true;
+      } else if (ball === 'ugyfel') {
+        missing.push(a.status === 'jovahagyasra_var' ? 'Éves zárás: jóváhagyásra vár' : 'Éves zárás: ügyfélre vár');
+        ugyfelreVar = true;
+      }
+      if (a.status === 'beadva' && a.hipaNeeded && !a.filedHipaAt && a.hipaAmounts?.returnNeeded !== false && prof?.hipaMethod !== 'nincs') {
+        missing.push('Iparűzési adó: a bevallás még nincs beadva');
+        ramVar = true;
+      }
       if (a.diffHuf != null && a.filedSzjaAt) {
         const sp = a.settlementPeriodId ? ps.find((p) => p.id === a.settlementPeriodId) : undefined;
         const spState = sp ? payState(sp, itemsOf.get(sp.id) ?? []) : null;
@@ -146,15 +161,15 @@ export async function yearOverview(deps: Deps, db: DbOrTx, o: { accountantId: st
           missing.push('Különbözet: ellenőrizetlen befizetés');
           ramVar = true;
         }
-        if (a.diffHuf > 0 && sp && sp.dueDate < today && spState === 'jovahagyva') {
-          missing.push('Különbözet: lejárt, nincs jelölve');
+        if (a.diffHuf > 0 && sp && spState === 'jovahagyva') {
+          missing.push(sp.dueDate < today ? 'Különbözet: lejárt, nincs jelölve' : 'Különbözet: az ügyfél még nem jelölte befizetettnek');
           ugyfelreVar = true;
-          overdue = true;
+          if (sp.dueDate < today) overdue = true;
         }
         if (a.diffHuf < 0 && a.refundStatus === 'var' && a.refundExpectedBy && a.refundExpectedBy < today) {
           missing.push('A visszajáró adó késik');
           ramVar = true;
-        }
+        } else if (a.diffHuf < 0 && a.refundStatus === 'var') missing.push('Visszajáró: a NAV utalja');
       }
     }
     const adv = ps.filter((x) => x.kind === 'hipa');
@@ -191,11 +206,13 @@ export async function yearOverview(deps: Deps, db: DbOrTx, o: { accountantId: st
       missing,
       ball: ramVar ? 'konyvelo' : ugyfelreVar ? 'ugyfel' : null,
       overdue,
+      waitingOnMe: ramVar,
+      waitingOnClient: ugyfelreVar,
     });
   }
   rows.sort((a, b) => a.name.localeCompare(b.name, 'hu'));
   const test = (r: YearOverviewRow, f: YearOverviewFilter) =>
-    f === 'mind' || (f === 'hianyzik' && r.missing.length > 0) || (f === 'ram_var' && r.ball === 'konyvelo') || (f === 'ugyfelre_var' && r.ball === 'ugyfel') || (f === 'lejart' && r.overdue) || (f === 'kata' && r.regime === 'kata') || (f === 'atalany' && r.regime === 'atalany');
+    f === 'mind' || (f === 'hianyzik' && r.missing.length > 0) || (f === 'ram_var' && Boolean(r.waitingOnMe)) || (f === 'ugyfelre_var' && Boolean(r.waitingOnClient)) || (f === 'lejart' && r.overdue) || (f === 'kata' && r.regime === 'kata') || (f === 'atalany' && r.regime === 'atalany');
   const filters: YearOverviewFilter[] = ['mind', 'hianyzik', 'ram_var', 'ugyfelre_var', 'lejart', 'kata', 'atalany'];
   const counts = Object.fromEntries(filters.map((f) => [f, rows.filter((r) => test(r, f)).length])) as YearOverview['counts'];
   const f = o.filter ?? 'mind';
