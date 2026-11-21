@@ -1046,3 +1046,25 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .kinek-nem .lista { color: #E3E7F0; }
 .kinek-nem .lista-nem li::before { color: rgba(255, 255, 255, .45); }
 .kinek-nem .megjegyzes { color: #B9C1D4; }
+
+/* ================= 4f PRÓBA (11-21): telt sárga „Így indul” és „Gyakori kérdések” =================
+   A tulaj: „a Gyakori kérdések és az Így indul a könyvelésed szekció is rendes sárga legyen, ne ilyen átlátszó”.
+   A halvány #FFF8E8 helyett telt márkasárga #FFC93C, sötét szöveggel. Lekerekítés marad.
+   Kontraszt #FFC93C alapon: cím/kérdés #10152B 11,7:1, törzsszöveg #2A3247 8,3:1, kék számkarika helyett sötét #10152B (fehér szám 18:1).
+   Benne: fehér ikoncsempék, sötét számkarikák (az első is), sötét összekötő vonal, sötét elválasztók és +/× jelek, sötét aláhúzott linkek. */
+.panel-meleg { --panel: #FFC93C; --panel-vonal: rgba(16, 21, 43, .32); --csempe: #fff; background: #FFC93C; color: #2A3247; }
+.panel-meleg h2, .panel-meleg h3 { color: #10152B; }
+.panel-meleg .bevezeto, .panel-meleg p { color: #2A3247; }
+.panel-meleg a { color: #10152B; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.panel-meleg a:hover { color: #10152B; text-decoration-thickness: 2px; }
+.panel-meleg :focus-visible { outline-color: #10152B; }
+
+/* így indul: sötét számkarikák fehér számmal (az első is, különben eltűnne a sárgán), sötét összekötő vonal */
+.panel-meleg .lepes-szam, .panel-meleg .lepesek li:first-child .lepes-szam { background: #10152B; color: #fff; }
+.panel-meleg .lepesek li:not(:last-child)::after { background: #10152B; opacity: .55; }
+
+/* GYIK: sötét elválasztók, sötét kérdés és +/× jel, sötét válasz */
+.panel-meleg .gyik-oszlop { border-top-color: var(--panel-vonal); }
+.panel-meleg .gyik-lista summary { color: #10152B; }
+.panel-meleg .gyik-lista summary:hover { color: #10152B; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.panel-meleg .gyik-lista details p { color: #2A3247; }

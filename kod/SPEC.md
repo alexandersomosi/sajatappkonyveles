@@ -4512,6 +4512,8 @@ Automatic HTTPS (Let's Encrypt) for all hosts. HSTS `max-age=31536000` (no `incl
 
 #### 29.3.6 Landing page `adozz.hu` (B3; `kod/landing/`)
 
+**2026-11-21 (owner approved: „Jó lesz így a weboldal, kiteheted”):** the page is the landing_v2 design (`dizajn/landing_v2_proba4`) moved into `kod/landing` – `oldal.sablon.html` + `stilus.css` + a second own script `js/mozgas.js` (mobile menu, clickable hero phone, sticky demo; no request, no storage, no tracking) + its own `kepek/`, `fontok/`, `vendor/`. Prices still only from `arak.json` (FEE_DEFAULTS, now with `megszuntetes`), company data from `brand.json`, and the §31 wiring (meres.js, events, UTM hand-over, footer switch, cookie banner only in the ad build, „Visszahívást kérek” → `…/regisztracio?cel=visszahivas`) is unchanged. The bullets below describe the earlier page; details: `kod/landing/README.md`. The old source: `kod/landing/_regi/elotte_uj_dizajn_20261121_1005/`.
+
 Plain static page (HTML + CSS, Geist from `kod/app` assets, no cookie, no AI wording; **§31 supersedes "no script, no tracking": one own script `js/meres.js` and the cookie-less own statistics `/m/script.js`, CSP `script-src 'self'`**), C look (blue band, 10 px `#D3DAFC` separators), mobile first (390 / 320 px) and desktop:
 - Band: brand name, `brand.tagline` "Saját könyvelő, aki név szerint ismer.", line "Átalányadós és katás egyéni vállalkozóknak. Havi 19 999 Ft, minden benne van." Buttons "Regisztrálok" → `https://app.adozz.hu/regisztracio`, capsule "Belépés" → `https://app.adozz.hu/belepes`.
 - Section "Mit kapsz?": saját könyvelő név szerint; kiszámolja és beadja az adódat; a kiállított számláid maguktól bejönnek (NAV Online Számla); emlékeztetők a határidőkre; mennyit tegyél félre; üzenet a könyvelődnek az appban.

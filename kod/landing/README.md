@@ -1,31 +1,57 @@
 # kod/landing – az adozz.hu nyitóoldala (SPEC §29.3.6, §31)
 
-Egyetlen statikus oldal: HTML + CSS + **egy saját szkript** (`js/meres.js`), **süti nélkül**, a C kinézetben (kék sáv
-rozettával, fehér szakaszok, köztük 10 px-es `#D3DAFC` sáv), mobil először (390 / 320 px), asztalon középre. A Geist betűk az
-app `assets/fonts` mappájából, a 3D tárgyak az app `assets/ikon3d` mappájából jönnek; a CSP (`default-src 'self'`,
-`script-src 'self'`) mellett is működik, mert nincs inline stílus, inline szkript és külső betöltés.
+**2026-11-21 óta a tulaj által jóváhagyott új értékesítő oldal** („Jó lesz így a weboldal, kiteheted”), a
+`dizajn/landing_v2_proba4` végleges dizájnja átültetve ide. Egyetlen statikus oldal: HTML + CSS + **két saját szkript**
+(`js/meres.js`, `js/mozgas.js`), követő süti nélkül, minden saját forrásból (CSP `default-src 'self'; script-src 'self';
+style-src 'self'`): nincs inline stílus, inline szkript, inline eseménykezelő és külső betöltés (a build ellenőrzi).
+A régi (C kinézetű) oldal forrása és utolsó dist-je: `_regi/elotte_uj_dizajn_20261121_1005/`.
 
-- **Mérés (SPEC §31, 2026-11-20):** a `meres.json` nyilvános beállításaiból. A `js/meres.js`-t a `build.mjs` állítja elő a
-  `meres-sablon.js`-ből és a közös csatornaszabályból (`kod/shared/src/marketing.ts`): a Regisztrálok / Belépés / Visszahívást
-  kérek link továbbviszi az `utm_*`-ot, a hivatkozó oldal nevét és az érkezési oldalt (csak a linkben). Ha az
-  `umamiWebsiteId` ki van töltve (a `deploy/umami-beallit.sh` írja ki), a saját statisztika-szerverünk szkriptje is az
-  oldalra kerül (`/m/script.js`, süti nélkül, kattintás-azonosító és más paraméter nélkül, „Ne kövess” jelzést tiszteletben
-  tartva, a láblécben kikapcsolható). A lábléc szövegét a build igazítja („nem követ” csak statisztika nélkül marad).
-- **Hirdetési mérés:** a süti-ablak és a Meta/Google betöltő kód (`hirdetes-sablon.js`) csak `"hirdetes": true` esetén kerül
-  az oldalba, és akkor is csak a szerver kapcsolójával (`ADS_TRACKING_ENABLED`) fut. Bekapcsolás: `kod/MARKETING.md`.
-- **Teszt:** `node --test kod/landing/meres.test.mjs` (jsdom a `kod/panel`-ből; a hirdetési változatot ideiglenes mappába építi).
-- **Árak:** soha nincsenek kézzel beírva. A `build.mjs` a `kod/shared` `FEE_DEFAULTS`-ából generálja az `arak.json`-t, és abból
-  az oldalt (havidíj, éves zárás, változás bejelentése helyetted, jogállás-változás, szünetelés alatt, magad bejelentve 0 Ft).
-- **Cégadatok:** `kod/shared/brand.json` → `provider` (név, székhely, adószám, cégjegyzékszám). Telefonszám nincs.
-- **Ügyfélszolgálat:** amíg a `supportEmail` `[CÉGADAT…]` helyőrző, az oldal ezt írja: „Ügyfélszolgálat: az appban, az
-  Üzenetek fülön.” [TULAJ/JOGI: az Ekertv. miatt e-mail-cím kell az oldalra, mielőtt valódi ügyfél jön.]
-- **Linkek:** Regisztrálok → `https://app.adozz.hu/regisztracio`, Belépés → `…/belepes`, Visszahívást kérek →
-  `…/regisztracio?cel=visszahivas`, ÁSZF / Adatkezelés / Sütik → `…/jogi/aszf`, `…/jogi/adatkezeles`, `…/jogi/suti`. Kalkulátor-link csak akkor kerül rá, ha a `/kalkulator` útvonal elkészül (k6 után még nincs).
+## Fájlok
+
+| Fájl | Mi ez |
+|---|---|
+| `oldal.sablon.html` | a dizájn sablonja (`dizajn/landing_v2_proba4/_eszkoz/index.sablon.html` másolata) a build jelölőivel: `{{ar:…}}`, `{{ceg:…}}`, `{{email}}`, `{{esemeny:név:hely}}`, `{{meres_lablec}}` stb. A `<!--logo-->`, `<!--pipa-->`, `<!--ikon:név-->` jelölőket és a megjegyzés-szűrést a dizájn `epit.cjs`-éből vettük át (a KOZEPRE ikon-javítással együtt). |
+| `stilus.css` | a dizájn CSS-e változatlanul (a 4. kör, 4b, 4e, 4f blokkokkal), a végén az élő oldal mérés-elemeinek stílusa („Visszahívást kérek”, lábléc mérés-sora, süti-ablak `.hj-*`). |
+| `mozgas.js` | a dizájn mozgása változatlanul → `dist/js/mozgas.js` (mobilmenü, kattintható hős-telefon, ragadós bemutató). Nem kér semmit a hálózatról, nem tárol semmit. |
+| `kepek/` | a dizájn képei: app-képernyők bemutató adatokkal (`app_*.webp`, a gépesekből 800w változat is), `telefon_keret.svg` (saját rajz, `LICENC_telefon_keret.txt`), `logo.png`, `logo_feher.png`, `favicon.png`. A régi névvel készült `app_asztali*.webp` NINCS itt. |
+| `fontok/` | Geist (OFL-1.1), szűkített woff + teljes ttf. |
+| `vendor/` | az átvett nyílt forrású elemek licencei (`LICENCEK.md`). |
+| `ikonok.json` | a sablon Fluent Emoji Flat ikonjai (MIT), a `dizajn/C5_v2/v2.js`-ből: `node kod/landing/ikonok.mjs` (csak új ikonnál kell újra). |
+| `meres-sablon.js`, `hirdetes-sablon.js`, `meres.json` | SPEC §31 mérés (változatlan). |
+| `email/` | a rendszerlevelek és a tulaj aláírásának logói → `dist/email/` (a szerveren nem veszhet el). |
+
+## Mérés és linkek (SPEC §31 – változatlanul átvéve)
+
+- A `js/meres.js`-t a `build.mjs` állítja elő a `meres-sablon.js`-ből és a közös csatornaszabályból
+  (`kod/shared/src/marketing.ts`). Minden `https://app.adozz.hu/…` link (Regisztrálok, Belépés, Visszahívást kérek) továbbviszi az
+  `utm_*`-ot, a hivatkozó oldal nevét és az érkezési oldalt; a `/jogi/` linkek tiszták maradnak. Ha az `umamiWebsiteId` ki van
+  töltve, a `meres.js` maga tölti be a saját statisztika szkriptjét (`/m/script.js`, süti nélkül, szűrővel, DNT).
+- Események (`data-kj-esemeny` + `data-kj-hely`, nem `data-umami-event`): `regisztralok` (fejlec, hos, arak, zaro, lab),
+  `belepes` (fejlec, menu, lab), `visszahivas` (zaro), `email-iras` (biztonsag, gyik, zaro, lab, impresszum); az árak szakasz
+  `id="arak"` („Görgetett az árakig”).
+- „Visszahívást kérek” → `https://app.adozz.hu/regisztracio?cel=visszahivas`, a kék záró panelen, az egyetlen engedett
+  időígéret alatt: „A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.”
+- Lábléc: ÁSZF, Adatkezelés, Süti-tájékoztató (`…/jogi/suti`), Impresszum; `#meres-lablec` (statisztikával a jogász
+  `meres.lablec` szövege), a látogató kikapcsolója (`#meres-kapcsolo`), hirdetési buildben `#suti-beallitasok`.
+- **Hirdetési mérés:** a süti-ablak és a Meta/Google kód csak `"hirdetes": true` esetén kerül az oldalba, és akkor is csak a
+  szerver kapcsolójával (`ADS_TRACKING_ENABLED`) fut. Most KI. A „nincs követő süti” mondat (Biztonság rész) csak a hirdetési
+  kód nélküli buildben áll; `"hirdetes": true` mellett a build kiveszi. Bekapcsolás: `kod/MARKETING.md`.
+
+## Adatok
+
+- **Árak:** soha nincsenek kézzel beírva. A `build.mjs` a `kod/shared` `FEE_DEFAULTS`-ából generálja az `arak.json`-t
+  (havidíj, éves zárás, változás, jogállás-változás, szünetelés, megszüntetés; csak megerősített ár), és abból tölti ki az oldal
+  minden árát, az éves összeget is (12 × havidíj + éves zárás).
+- **Cégadatok:** `kod/shared/brand.json` → `provider` (név, székhely, adószám, cégjegyzékszám, ügyfélszolgálati e-mail).
+- **Gyorsítótár:** a szerver minden landing-fájlt `Cache-Control: no-cache`-sel ad (`deploy/web.Caddyfile`), ezért nincs
+  fájlnév-hash: egy új telepítés a következő betöltéskor látszik.
 
 ```bash
-node kod/landing/build.mjs     # → kod/landing/dist/ (ezt tölti fel a deploy a /srv/kezjegy/web/landing mappába)
-node kod/landing/kepek.mjs     # képek: kod/_qa/k7_landing_{390,320,1280}.png (fej nélküli Chrome)
+node kod/landing/build.mjs              # → kod/landing/dist/ (ezt tölti fel a deploy a /srv/kezjegy/web/landing mappába)
+node --test kod/landing/meres.test.mjs  # jsdom a kod/panel-ből; a statisztikás és a hirdetési változatot ideiglenes mappába építi
+node kod/landing/ikonok.mjs             # csak ha a sablon új ikont kap
 ```
 
 A kiszolgálás (B1, `kod/deploy`): `kezjegy-web` `:8082 { root * /srv/landing }`, a proxy `adozz.hu` → `kezjegy-web:8082`,
-`www.adozz.hu` → 301 `https://adozz.hu`.
+`www.adozz.hu` → 301 `https://adozz.hu`. A landing mappa cseréje után a `kezjegy-web`-et újra kell létrehozni (`up.sh`), és a
+`dist/email/` mappa nem veszhet el.

@@ -143,3 +143,6 @@ A mostani nyitóoldal (`kod/landing`) így fut élesben (DEMO szerver, statiszti
   eredő pótlékot – a mező kész), T6 (részletfizetés-szöveg KI).
 - **Karbantartás:** új MNB-kamatdöntésnél az `ado-motor/src/engine/potlek.ts` `BASE_RATES` táblát kézzel bővíteni (addig a pótlékot a
   NAV-kalkulátorból írja be a könyvelő).
+
+## Ikonok középre igazítása (11-21, tulaj észrevétele)
+- Néhány Fluent-ikon rajza nincs a 32x32-es mező közepén (getBBox-mérés): igazolvany (5 egységgel lejjebb), kamera (4,5), emberek (~3), cimke (~2), irat-toll (vízszintesen ~2). A landing_v2_proba4 epit.cjs-ében KOZEPRE térképpel javítva (viewBox eltolás). Az appban (v2-dizájn, k8) és a végleges landingon is így kell: egy közös KOZEPRE-táblázat a v2 ikon-építőben. Mérőszkript: scratchpad/ikon_bbox.cjs.

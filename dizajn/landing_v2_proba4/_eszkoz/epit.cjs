@@ -9,9 +9,13 @@ const v2 = fs.readFileSync(path.join(GYOKER, '../C5_v2/v2.js'), 'utf8');
 const i = v2.indexOf('var EMOJI = ') + 12, j = v2.indexOf('\n', i);
 let t = v2.slice(i, j).trim(); if (t.endsWith(';')) t = t.slice(0, -1);
 const EMOJI = JSON.parse(t);
+// Néhány Fluent-ikon rajza nincs a 32x32-es mező közepén (getBBox-szal mérve, 11-21) – a tulaj észrevette, hogy a
+// „Nyilvántartásba vett könyvelő” igazolvány-ikonja lejjebb ül a csempében. A viewBoxot a rajz közepére toljuk (méret marad).
+const KOZEPRE = { igazolvany: '0 5 32 32', kamera: '0 4.5 32 32', emberek: '0 2.96 32 32', cimke: '0.03 2.11 32 32', 'irat-toll': '2.1 0 32 32' };
 function ikon(n) {
   if (!EMOJI[n]) throw new Error('Nincs ilyen ikon: ' + n);
   let [vb, body] = EMOJI[n];
+  if (KOZEPRE[n] && vb === '0 0 32 32') vb = KOZEPRE[n];
   body = body.replace(/id="([^"]+)"/g, (m, a) => `id="${n}-${a}"`).replace(/url\(#([^)]+)\)/g, (m, a) => `url(#${n}-${a})`);
   return `<svg class="ikon" viewBox="${vb}" aria-hidden="true" focusable="false">${body}</svg>`;
 }

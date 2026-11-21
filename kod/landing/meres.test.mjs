@@ -10,7 +10,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -64,19 +64,24 @@ function oldal(o = {}) {
   return { w, d: w.document, hivasok, tar };
 }
 const varj = () => new Promise((r) => setTimeout(r, 30));
+/** The hero's Regisztrálok button. 11-21, new design: the buttons carry the design's classes (gomb gomb-fo) and the header
+ *  button comes first in the page, so the hero one is picked by its event place (it was `a.gomb-e`, the first such link). */
+const HOS_REG = 'a[data-kj-esemeny="regisztralok"][data-kj-hely="hos"]';
 
 test('normal build: one own script, no ad code, footer says the truth, events on the buttons', () => {
   assert.match(html, /<script defer src="js\/meres\.js"><\/script>/);
   assert.doesNotMatch(html, /\/m\/script\.js/); // never a tag in the page: meres.js loads it (with the website id)
   assert.doesNotMatch(js, /\/m\/script\.js"|websiteId":"[0-9a-f]/); // no website id yet → nothing to load
   assert.doesNotMatch(js, /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/);
-  assert.match(html, /<p class="halvany" id="meres-lablec">Ez az oldal nem használ sütit\.<\/p>/);
+  // 11-21, new design: the footer line has no class of its own (the dark footer styles it; it was class="halvany")
+  assert.match(html, /<p id="meres-lablec">Ez az oldal nem használ sütit\.<\/p>/);
   assert.doesNotMatch(html, /nem követ/);
   assert.match(html, /href="https:\/\/app\.adozz\.hu\/jogi\/suti">Süti-tájékoztató</);
   assert.match(html, /data-kj-esemeny="regisztralok" data-kj-hely="hos"/);
   assert.match(html, /data-kj-esemeny="visszahivas"/);
   assert.doesNotMatch(html, /data-umami-event/); // the Umami tracker would hold the link until its request ends
-  assert.match(html, /<section class="szak" id="arak">/);
+  // 11-21, new design: the section has the design's classes (was class="szak"); the id is what the "arak-lathato" event needs
+  assert.match(html, /<section class="[^"]*" id="arak">/);
   assert.match(html, /A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között\./);
   assert.doesNotMatch(html, /a\(z\)/);
   assert.doesNotMatch(html, /<script>(?!<)/); // nothing inline (CSP script-src 'self')
@@ -100,7 +105,7 @@ test('channel = the shared rule; the statistics filter keeps utm_* only and cuts
 test('app links carry utm_*, the referring domain and the landing path; legal links stay clean; nothing stored or fetched', async () => {
   const p = oldal({ url: 'https://adozz.hu/?utm_source=youtube&utm_medium=video&utm_campaign=atalanyado-2027&gclid=nem-megy-at', referrer: 'https://www.youtube.com/' });
   await varj();
-  const reg = new URL(p.d.querySelector('a.gomb-e').href);
+  const reg = new URL(p.d.querySelector(HOS_REG).href);
   assert.equal(reg.origin + reg.pathname, 'https://app.adozz.hu/regisztracio');
   assert.equal(reg.searchParams.get('utm_source'), 'youtube');
   assert.equal(reg.searchParams.get('utm_campaign'), 'atalanyado-2027');
@@ -115,6 +120,46 @@ test('app links carry utm_*, the referring domain and the landing path; legal li
   assert.deepEqual(p.tar, []); // the off switch reads storage only when the statistics are on
   assert.equal(p.d.cookie, '');
   assert.equal(p.d.querySelectorAll('script[src*="facebook"], script[src*="google"]').length, 0);
+});
+
+test('new design (11-21): own files only, motion script and e-mail logos in the build, every app link and button wired, prices from arak.json', async () => {
+  // the two own scripts, nothing inline, nothing from another server (CSP default-src 'self'; script-src 'self'; style-src 'self')
+  assert.match(html, /<script defer src="js\/mozgas\.js"><\/script>/);
+  assert.equal(readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8'), readFileSync(join(ITT, 'mozgas.js'), 'utf8'));
+  assert.doesNotMatch(readFileSync(join(DIST, 'js', 'mozgas.js'), 'utf8'), /fetch\(|XMLHttpRequest|sendBeacon|localStorage|document\.cookie/);
+  assert.doesNotMatch(html, /\sstyle=|<style|\son[a-z]+=/i);
+  assert.doesNotMatch(html, /\s(src|srcset)="[^"]*(https?:)?\/\//i);
+  assert.doesNotMatch(html, /<!--/);
+  // the mails and the owner's signature link these two (the folder is replaced as a whole on the server)
+  for (const f of ['logo_feher@2x.png', 'logo_alairas@2x.png']) assert.ok(statSync(join(DIST, 'email', f)).size > 0, f);
+  // every Regisztrálok / Belépés / Visszahívást kérek / e-mail link sends its event, with the place of the button
+  const helyek = (nev) => [...html.matchAll(new RegExp(`data-kj-esemeny="${nev}" data-kj-hely="([a-z]+)"`, 'g'))].map((m) => m[1]);
+  assert.deepEqual(helyek('regisztralok'), ['fejlec', 'hos', 'arak', 'zaro', 'lab']);
+  assert.deepEqual(helyek('belepes'), ['fejlec', 'menu', 'lab']);
+  assert.deepEqual(helyek('visszahivas'), ['zaro']);
+  assert.ok(helyek('email-iras').length >= 4);
+  assert.match(html, /href="https:\/\/app\.adozz\.hu\/regisztracio\?cel=visszahivas" data-kj-esemeny="visszahivas" data-kj-hely="zaro">Visszahívást kérek</);
+  assert.match(html, /nincs követő süti/); // true here: no ad code can be in this build, the statistics use no cookie
+  // every app link (not the legal pages) takes the campaign along
+  const p = oldal({ url: 'https://adozz.hu/?utm_source=youtube&utm_campaign=proba', referrer: 'https://www.youtube.com/' });
+  await varj();
+  const app = [...p.d.querySelectorAll('a[href^="https://app.adozz.hu/"]')];
+  const jogi = app.filter((a) => /\/jogi\//.test(a.getAttribute('data-alap-href') || a.href));
+  assert.deepEqual([...new Set(jogi.map((a) => new URL(a.href).pathname))].sort(), ['/jogi/adatkezeles', '/jogi/aszf', '/jogi/suti']);
+  const tobbi = app.filter((a) => !jogi.includes(a));
+  assert.ok(tobbi.length >= 9, `app links: ${tobbi.length}`);
+  for (const a of tobbi) {
+    const u = new URL(a.href);
+    assert.equal(u.searchParams.get('utm_source'), 'youtube', a.href);
+    assert.equal(u.searchParams.get('utm_campaign'), 'proba', a.href);
+    assert.equal(u.searchParams.get('hivatkozo'), 'youtube.com', a.href);
+  }
+  // the prices of the page are the generated ones (FEE_DEFAULTS → arak.json), with the yearly total
+  const arak = JSON.parse(readFileSync(join(ITT, 'arak.json'), 'utf8'));
+  const nb = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '&nbsp;');
+  for (const s of arak.sorok) assert.ok(html.includes(`${nb(s.osszegHuf)}&nbsp;Ft`), s.kind);
+  const ar = Object.fromEntries(arak.sorok.map((s) => [s.kind, s.osszegHuf]));
+  assert.ok(html.includes(`<b>${nb(ar.havidij * 12 + ar.eves_zaras)}&nbsp;Ft</b>`));
 });
 
 test('statistics on: meres.js loads the Umami script with the tag, DNT and the filter; clicks never wait; the off switch writes only when clicked', async () => {
@@ -139,7 +184,7 @@ test('statistics on: meres.js loads the Umami script with the tag, DNT and the f
   // a click: the event goes without holding the link (no preventDefault), with the place of the button
   const kuldott = [];
   p.w.umami = { track: (nev, adat) => (kuldott.push([nev, adat]), new Promise(() => {})) };
-  const reg = p.d.querySelector('a[data-kj-esemeny="regisztralok"]');
+  const reg = p.d.querySelector(HOS_REG); // 11-21: the header's Regisztrálok (hely: fejlec) comes first in the new design
   const ev = new p.w.MouseEvent('click', { bubbles: true, cancelable: true });
   reg.dispatchEvent(ev);
   assert.equal(ev.defaultPrevented, false);
@@ -163,6 +208,9 @@ test('ad build: server off → nothing; server on → banner first, nothing load
   const h3 = readFileSync(join(dir, 'dist', 'index.html'), 'utf8');
   const j3 = readFileSync(join(dir, 'dist', 'js', 'meres.js'), 'utf8');
   assert.match(h3, /id="suti-beallitasok" hidden/);
+  // 11-21: „nincs követő süti” only in a build that cannot hold ad code
+  assert.doesNotMatch(h3, /nincs követő süti/);
+  assert.match(h3, /Nem adjuk el az adataidat, és nem mutatunk hirdetést\./);
   const kulso = (d) => d.querySelectorAll('script[src*="facebook"], script[src*="googletagmanager"]').length;
 
   // the server switch is off
@@ -194,7 +242,7 @@ test('ad build: server off → nothing; server on → banner first, nothing load
   assert.equal(kulso(p.d), 0);
   assert.equal(p.d.querySelector('.hj-ablak'), null);
   assert.match(p.d.cookie, /kj_hozzajarulas=/);
-  assert.equal(new URL(p.d.querySelector('a.gomb-e').href).searchParams.get('gclid'), null);
+  assert.equal(new URL(p.d.querySelector(HOS_REG).href).searchParams.get('gclid'), null);
 
   // "Elfogadom": the decision is recorded, the two scripts load, the app link gets the decision id + click ids
   p = oldal({ html: h3, js: j3, url: 'https://adozz.hu/?gclid=G1&fbclid=F1', valasz: (u) => (u.endsWith('/marketing-config') ? be : { id: '6a1f0d6e-2a7e-4a8e-9a39-6f3c1c8a1b11' }) });
@@ -204,7 +252,7 @@ test('ad build: server off → nothing; server on → banner first, nothing load
   const post = p.hivasok.find((x) => x.url === '/api/v1/public/hozzajarulas');
   assert.deepEqual(JSON.parse(post.body), { meta: true, google: true });
   assert.equal(kulso(p.d), 2);
-  const reg = new URL(p.d.querySelector('a.gomb-e').href);
+  const reg = new URL(p.d.querySelector(HOS_REG).href);
   assert.equal(reg.searchParams.get('hid'), '6a1f0d6e-2a7e-4a8e-9a39-6f3c1c8a1b11');
   assert.equal(reg.searchParams.get('gclid'), 'G1');
   assert.equal(reg.searchParams.get('fbclid'), 'F1');

@@ -35,6 +35,13 @@
       "osszegHuf": 2999,
       "egyseg": "hó",
       "al": "A havidíj helyett."
+    },
+    {
+      "kind": "megszuntetes",
+      "cim": "A vállalkozásod megszüntetése helyetted",
+      "osszegHuf": 7999,
+      "egyseg": "alkalom",
+      "al": "Ha magad jelented be az útmutatónkkal: 0 Ft."
     }
   ],
   "magad": {

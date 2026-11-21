@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{web_nev}} – Könyvelés átalányadózó és katás egyéni vállalkozóknak</title>
+<meta name="description" content="Saját, nyilvántartásba vett könyvelő átalányadózó és katás, alanyi áfamentes egyéni vállalkozóknak. Havi {{ar_sz:havidij}} Ft bruttó, hűségidő nélkül. Az appban látod, mennyit tegyél félre adóra.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="kepek/favicon.png">
+<!-- ÉLŐ SABLON (kod/landing/build.mjs): a jóváhagyott dizájn (dizajn/landing_v2_proba4, tulaj 11-21: „Jó lesz így a weboldal”).
+     Minden saját forrásból jön (betű, logó, képek, telefonkeret, js/meres.js, js/mozgas.js): a CSP default-src 'self'; script-src 'self'
+     mellett működik. Inline script, inline stílus (style=) és inline eseménykezelő (onclick=) nincs. A mozgás csak ráadás.
+     Kapcsos jelölők: a build tölti ki (árak: FEE_DEFAULTS → arak.json, cégadatok: kod/shared/brand.json, mérés: meres.json +
+     kod/jogi/app_szovegek.json). A logo / pipa / nem / ikon:név megjegyzés-jelölőket a build égeti be (ikonok: ikonok.json).
+     A megjegyzések nem kerülnek a kész oldalba. -->
+<link rel="stylesheet" href="stilus.css">
+<script defer src="js/meres.js"></script>
+<script defer src="js/mozgas.js"></script>
+</head>
+<body id="top">
+
+<a class="ugras" href="#tartalom">Ugrás a tartalomra</a>
+
+<!-- ============ FEJLÉC ============ -->
+<header class="fejlec">
+  <div class="kontener fejlec-sor">
+    <!--logo-->
+    <nav class="menu" aria-label="Fő menü">
+      <a href="#hogyan">Hogyan működik</a>
+      <a href="#mit-kapsz">Mit kapsz</a>
+      <a href="#konyvelo">Könyvelő</a>
+      <a href="#arak">Árak</a>
+      <a href="#gyik">GYIK</a>
+    </nav>
+    <div class="fejlec-jobb">
+      <a class="belepes" href="{{app}}/belepes"{{esemeny:belepes:fejlec}}>Belépés</a>
+      <a class="gomb gomb-fo gomb-kicsi" href="{{app}}/regisztracio"{{esemeny:regisztralok:fejlec}}>Regisztrálok</a>
+      <details class="mobilmenu">
+        <summary aria-label="Menü"><span></span><span></span><span></span></summary>
+        <nav class="mobilmenu-lap" aria-label="Mobil menü">
+          <a href="#hogyan">Hogyan működik</a>
+          <a href="#mit-kapsz">Mit kapsz</a>
+          <a href="#konyvelo">Könyvelő</a>
+          <a href="#arak">Árak</a>
+          <a href="#gyik">GYIK</a>
+          <a href="{{app}}/belepes"{{esemeny:belepes:menu}}>Belépés</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="tartalom">
+
+<!-- ============ HŐS ============ -->
+<section class="hos">
+  <div class="kontener hos-racs">
+    <div class="hos-szoveg">
+      <p class="hos-elo">Online könyvelés egyéni vállalkozóknak</p>
+      <h1>Saját könyvelő átalányadózóknak és katásoknak</h1>
+      <p class="bevezeto">Nyilvántartásba vett könyvelő intézi a bevallásaidat és a <span class="nowrap">NAV-os</span> ügyeidet. Te közben az appban látod, mennyit tegyél félre adóra, és mikor mit kell befizetned.</p>
+      <div class="hos-gombok">
+        <a class="gomb gomb-fo" href="{{app}}/regisztracio"{{esemeny:regisztralok:hos}}>Regisztrálok</a>
+        <a class="szoveglink" href="#hogyan">Így indul a könyvelésed</a>
+      </div>
+      <p class="hos-ar"><b>{{ar:havidij}}&nbsp;Ft/hó</b> bruttó · éves zárás {{ar:eves_zaras}}&nbsp;Ft/év · <a href="#arak">a&nbsp;többi díj</a></p>
+      <p class="hos-mikro">Regisztrálni kártya nélkül tudsz. Hűségidő nincs.</p>
+    </div>
+    <!-- 3. kör (tulaj, 11-20 23:38): a telefon NEM vált magától; a képernyőjén lévő alsó menü 4 pontja (Főoldal, Dosszié, Fotózás,
+         Üzenetek) valódi, átlátszó <button>, a képen látható ikonok fölött (a helyük százalékban: _eszkoz/app_minta/hatarok.json, .nav).
+         Mögötte a gépes (böngészős) nézet, ugyanarra a képernyőre vált (gépen a Fotózás = papír beküldése, a fájlt a gépről választod ki).
+         A böngészőablak oldalsávjának 4 menüpontja is kattintható (.gep-menu, egérrel és koppintással). A billentyűzet és a képernyőolvasó
+         a telefon gombjait használja, ezért ezek tabindex=-1 és aria-hidden (nincsenek kétszer a sorrendben).
+         3. kör javító (tulaj, 11-20 23:50): NINCS „Próbáld ki / koppints” felirat. Csak egy szöveg nélküli, egyszeri, vékony gyűrű a
+         Dosszié ikonján (.hos-kopp); az első kattintás után és csökkentett mozgásnál nincs.
+         JS nélkül: a Főoldal áll (telefon + gép), a gombok nem látszanak. Csökkentett mozgásnál a váltás azonnali. -->
+    <div class="hos-kep">
+      <figure class="kompo kompo-hos" data-hos aria-label="Az Adózz.hu app telefonon és gépen, böngészőben. A képek bemutató adatokkal készültek.">
+        <div class="bongeszo">
+          <div class="bongeszo-sav" aria-hidden="true"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
+          <div class="valto">
+            <img class="aktiv" src="kepek/app_gep_fooldal.webp" srcset="kepek/app_gep_fooldal_800.webp 800w, kepek/app_gep_fooldal.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="high" alt="Az app főoldala gépen, böngészőben, oldalt a menüvel">
+            <img src="kepek/app_gep_dosszie.webp" srcset="kepek/app_gep_dosszie_800.webp 800w, kepek/app_gep_dosszie.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: a novemberi dosszié, a beküldött iratok listája">
+            <img src="kepek/app_gep_feltoltes.webp" srcset="kepek/app_gep_feltoltes_800.webp 800w, kepek/app_gep_feltoltes.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: papír beküldése, a fájlt a gépedről választod ki, vagy a telefonodon lefotózod">
+            <img src="kepek/app_gep_uzenetek.webp" srcset="kepek/app_gep_uzenetek_800.webp 800w, kepek/app_gep_uzenetek.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: üzenetek a könyvelődnek és igazoláskérés">
+            <div class="gep-menu" aria-hidden="true">
+              <button type="button" class="g0" tabindex="-1"></button>
+              <button type="button" class="g1" tabindex="-1"></button>
+              <button type="button" class="g2" tabindex="-1"></button>
+              <button type="button" class="g3" tabindex="-1"></button>
+            </div>
+          </div>
+        </div>
+        <div class="kompo-tel">
+          <div class="telefon">
+            <div class="valto">
+              <img class="aktiv" src="kepek/app_fooldal.webp" width="780" height="1688" alt="Az app főoldala telefonon: most kb. 250 000 Ft legyen félretéve az adóra">
+              <img src="kepek/app_dosszie.webp" width="780" height="1688" fetchpriority="low" alt="A novemberi dosszié telefonon: a könyvelőd átnézte az iratokat, 5 irat rendben">
+              <img src="kepek/app_fotozas.webp" width="780" height="1688" fetchpriority="low" alt="Fotózás az appban: a papírt lefotózod, vagy a galériából, fájlból választod ki">
+              <img src="kepek/app_uzenetek.webp" width="780" height="1688" fetchpriority="low" alt="Üzenetek az appban: igazolást kérsz egy gombnyomással, vagy írsz a könyvelődnek">
+              <div class="hos-menu" role="group" aria-label="Az app képernyői">
+                <button type="button" class="m0" aria-label="Főoldal" aria-pressed="true"></button>
+                <button type="button" class="m1" aria-label="Dosszié" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
+                <button type="button" class="m2" aria-label="Fotózás" aria-pressed="false"></button>
+                <button type="button" class="m3" aria-label="Üzenetek" aria-pressed="false"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIZALMI SOR (ellenőrizhető tények) ============
+     4. kör próba (11-21): egy halvány panelben 4 oszlop, mindegyiknél egy kis, egységes kék vonalikon (saját rajz, 24x24, 1,6 px vonal).
+     4b (11-21, tulaj: „ikonok, színek, kiemelések”): a vonalikonok helyett az app Fluent Emoji Flat ikonjai, semleges csempén, mint az appban.
+     4f (11-21, tulaj): az „Európai szerveren” és a „Somosi Kft.” elem helyett két, az oldalon már szereplő előny (Árak: „Hűségidő nincs: ha lemondod,
+       a kifizetett hónap végéig minden működik.”, Összevetés: „bármikor lemondhatod”, Kinek szól: „előre kiírt ár”, Külön díjak: „Mindet előre látod
+       az appban”). A cégadatok az impresszumban és a láblécben vannak. -->
+<section class="bizalom panel panel-kicsi panel-kek-h" aria-labelledby="bizalom-cim">
+  <div class="kontener">
+    <h2 class="rejtett" id="bizalom-cim">Röviden rólunk</h2>
+    <ul class="bizalom-racs">
+      <li><span class="cs" aria-hidden="true"><!--ikon:igazolvany--></span><h3>Nyilvántartásba vett könyvelő</h3><p>A neve a szerződésedben és az appban is ott van.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><h3>NAV-meghatalmazással</h3><p>Az ONYA-n adod meg, és ugyanott bármikor visszavonhatod.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:cimke--></span><h3>Előre kiírt árak</h3><p>Havi {{ar:havidij}}&nbsp;Ft bruttó. A külön díjakat is előre látod az appban.</p></li>
+      <li><span class="cs" aria-hidden="true"><!--ikon:naptar--></span><h3>Nincs hűségidő</h3><p>Bármikor lemondhatod. A kifizetett hónap végéig minden működik.</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ KINEK SZÓL ============ -->
+<!-- 4. kör próba: minden fő rész ugyanazzal a ritmussal: balra cím + rövid mondat (kb. 1/3, gépen ragadós), jobbra a tartalom (kb. 2/3). -->
+<section class="szakasz" id="kinek">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2><span class="kiem">Átalányadózó és katás</span> egyéni vállalkozókat könyvelünk</h2>
+      <p class="bevezeto">Csak alanyi áfamentes vállalkozókkal dolgozunk. Ezért lehet mindenkinek ugyanaz az előre kiírt ár.</p>
+    </div>
+    <div class="kinek-racs">
+      <div class="kinek-igen">
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:pipa-kor--></span><span>Neked szól, ha</span></h3>
+        <ul class="lista lista-pipa">
+          <li><!--pipa-->átalányadózó vagy katás egyéni vállalkozó vagy,</li>
+          <li><!--pipa-->alanyi áfamentes vagy,</li>
+          <li><!--pipa-->alkalmazottad vagy alkalmi munkásod is lehet: a bérszámfejtést felárért vállaljuk,</li>
+          <li><!--pipa-->vagy most indítod a vállalkozásodat. Ebben is segítünk.</li>
+        </ul>
+      </div>
+      <div class="kinek-nem">
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:info--></span><span>Most nem neked szól, ha</span></h3>
+        <ul class="lista lista-nem">
+          <li>tételes költségelszámolással (vállalkozói szja-val) adózol,</li>
+          <li>áfakörbe tartozol,</li>
+          <li>Kft.-d vagy Bt.-d van.</li>
+        </ul>
+        <p class="megjegyzes">Ha év közben ide kerülsz, szólunk, és megbeszéljük, mi legyen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOGYAN MŰKÖDIK ============ -->
+<section class="szakasz panel panel-meleg" id="hogyan">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2>Így indul a könyvelésed</h2>
+      <p class="bevezeto">Regisztrálni kártya nélkül tudsz. Hűségidő nincs.</p>
+    </div>
+    <!-- 4. kör próba: 4 rövid lépés egy sorban (a 3. kör szövegeiből rövidítve) -->
+    <ol class="lepesek">
+      <li>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:kerdoiv--></span><span class="lepes-szam">1</span></span>
+        <h3>Regisztrálsz</h3>
+        <p>Megadod az e-mail-címedet, és válaszolsz pár kérdésre a vállalkozásodról.</p>
+      </li>
+      <li>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:irat-toll--></span><span class="lepes-szam">2</span></span>
+        <h3>Szerződés és NAV-meghatalmazás</h3>
+        <p>Elfogadod a szerződést. A meghatalmazást a könyvelőd is beküldheti, neked csak jóvá kell hagynod.</p>
+      </li>
+      <li>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:telefon--></span><span class="lepes-szam">3</span></span>
+        <h3>Átbeszéljük, ha szeretnéd</h3>
+        <p>Az appban kérhetsz visszahívást. Fizetni csak utána kell, kártyával vagy átutalással.</p>
+      </li>
+      <li>
+        <span class="lepes-jel"><span class="cs cs-l" aria-hidden="true"><!--ikon:dosszie--></span><span class="lepes-szam">4</span></span>
+        <h3>Indul a könyvelés</h3>
+        <p>A könyvelőd elkezdi a könyvelésedet. Innentől a számláid az appban vannak.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ MIT KAPSZ (ragadós bemutató, sötét sáv) ============
+     JS nélkül: lépésenként szöveg + telefon egymás alatt, a rétegek a végállapotukban (minden látszik).
+     JS-sel (gépen és telefonon is): a mozgas.js a lépések képernyőiből EGY ragadós telefont épít (.szinpad), és görgetésre lépésenként vált.
+       Gépen: balra a lépések szövege görög (az aktív kiemelt), jobbra áll a telefon, alatta 8 részes haladásjelző (lépésenként egy).
+       Telefonon: a telefon fent áll, alatta a haladásjelző és az aktív lépés címe + szövege cserélődik.
+       Zárólépés (3. kör): „Gépen is ugyanez” – a telefon kisebb lesz és a böngészőablak jobb alsó sarkára húzódik, mögötte beúszik
+         a böngészőablak a gépes nézettel; a kettő együtt középen áll (3. kör javító).
+       Az eredeti szövegek és képleírások a helyükön maradnak (képernyőolvasónak), a színpad aria-hidden.
+     Csökkentett mozgásnál ugyanez, csak animáció nélkül: a képernyő és a szöveg átúszás nélkül vált, a rétegek a végállapotukban.
+     Képernyőnként legfeljebb két réteg. Az értesítés tömör, a státuszsor alatt áll, és csak a fejléc felső sorát takarja.
+     A takarók (.takaro) az app háttérszínével fedik, ami egy réteg alól kilógna. Név a rétegekben nincs, csak „a könyvelőd”. -->
+<section class="szakasz szakasz-sotet" id="mit-kapsz">
+  <div class="kontener">
+    <div class="fej fej-szeles">
+      <h2>Mindig látod, mennyit tegyél félre adóra</h2>
+      <p class="bevezeto">A számolást és a bevallást a könyvelőd csinálja helyetted.</p>
+    </div>
+
+    <div class="bemutato" data-bemutato>
+      <ol class="blepesek">
+
+        <!-- SZÁMLÁK: értesítés + a beérkező számlasor „Új” címkével -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:nyugta--></span><span>Számlák</span></p>
+            <h3>A kiállított számláid maguktól bejönnek</h3>
+            <p>Az app a NAV Online Számla rendszeréből hozza be őket, nem kell begépelned. Minden számla mellett látod, nagyjából mennyit tegyél félre belőle adóra.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_szamlak.webp" width="780" height="1688" loading="lazy" alt="Kiállított számlák az appban: Napfény Étterem Kft., 418 000 Ft-os számla, ebből kb. 29 000 Ft-ot tegyél félre">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-szamla"></span>
+                  <span class="kivagas kv-szamla a-csuszik k2"></span>
+                  <span class="cimke-uj cu-szamla a-pop k4">Új</span>
+                  <div class="ertesites a-le k0"><span class="ert-app"></span><span class="ert-szoveg"><b>Új kiállított számla</b><span>Napfény Étterem Kft. · 418&nbsp;000&nbsp;Ft</span></span><small>most</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- FÉLRETENNI: a frissülő összeg kártyája (a „Keretek” kártya helyén) + koppintás a gombra -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:tarca--></span><span>Félretenni</span></p>
+            <h3>Egy szám mutatja, mennyit tegyél félre</h3>
+            <p>A főoldalon látod, mennyit tegyél félre adóra és járulékra, és ez minden új számlával frissül. Ha félretetted, megjelölöd. A pénz közben nálad marad.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_fooldal.webp" width="780" height="1688" loading="lazy" alt="Az app főoldala: most kb. 250 000 Ft legyen félretéve az adóra, gomb a félretett összeg megjelöléséhez">
+                <div class="reteg" aria-hidden="true">
+                  <span class="takaro t-felretesz"></span>
+                  <div class="szamlalo a-be k0">
+                    <div class="szamlalo-fej"><span>Most legyen félretéve</span><em class="a-pop k1">+29&nbsp;000&nbsp;Ft</em></div>
+                    <p class="szamlalo-szam">kb. <b data-szamlal="250000" data-tol="221000" data-kesik="550" data-ido="1300">250&nbsp;000</b>&nbsp;Ft</p>
+                  </div>
+                  <span class="koppintas kop-felretesz k5"></span>
+                  <span class="kesz-gomb kg-felretesz a-pop k6"><!--pipa-->Megjelölve</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- HATÁRIDŐK: értesítés + a számlaszám kimásolása -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:csengo--></span><span>Határidők</span></p>
+            <h3>Határidő előtt szólunk</h3>
+            <p>Az appban ott az összeg, a NAV-számlaszám és a közlemény. Egy koppintással kimásolod őket a bankodba, az utalást te indítod. Katásként ugyanígy a havi katát.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_hataridok.webp" width="780" height="1688" loading="lazy" alt="Szja-előleg a IV. negyedévre: kb. 49 680 Ft, NAV-számlaszám és közlemény Másolom gombbal">
+                <div class="reteg" aria-hidden="true">
+                  <span class="koppintas kop-masol k4"></span>
+                  <span class="kesz-gomb kg-masol a-pop k5"><!--pipa-->Kimásolva</span>
+                  <div class="ertesites a-le k0"><span class="ert-app"></span><span class="ert-szoveg"><b>Közeleg egy határidő</b><span>Szja-előleg, IV. negyedév: jan.&nbsp;12.</span></span><small>most</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- FOTÓZÁS: a papír a keretben, exponálás, a „Még nincs oldal” helyén „1 oldal”, értesítés -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:kamera--></span><span>Fotózás</span></p>
+            <h3>A papírszámlát elég lefotóznod</h3>
+            <p>A nyugtát vagy a kézzel írt számlát lefotózod, vagy feltöltöd PDF-ben. Egyenesen a könyvelődhöz kerül, nem kell papírt hordanod.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_fotozas.webp" width="780" height="1688" loading="lazy" alt="Fotózás az appban: kameranézet, Galéria és Fájl, PDF gomb">
+                <div class="reteg" aria-hidden="true">
+                  <div class="papir a-papir k0"><b>PAPÍRBOLT</b><small>nyomtatópapír</small><i></i><i></i><i></i><i class="rovid"></i><span></span></div>
+                  <span class="koppintas kop-expo k3"></span>
+                  <span class="villanas k3"></span>
+                  <span class="takaro t-tipp a-fade k3">1 oldal</span>
+                  <div class="ertesites a-le k5"><span class="ert-app"></span><span class="ert-szoveg"><b>Elküldve a könyvelődnek</b><span>Papírbolt, nyomtatópapír</span></span><small>most</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- DOSSZIÉ: a beküldött papír megjelenik a listában, értesítés -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:dosszie--></span><span>Dosszié</span></p>
+            <h3>Amit küldesz, a könyvelőd átnézi</h3>
+            <p>A havi dossziéban egy helyen van minden irat. Látod, mit nézett már át a könyvelőd, és mit kér még tőled.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_dosszie.webp" width="780" height="1688" loading="lazy" alt="A novemberi dosszié: a könyvelő átnézte az iratokat, 5 irat rendben, a beküldött papírok listája">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-papir"></span>
+                  <span class="kivagas kv-papir a-csuszik k1"></span>
+                  <span class="cimke-uj a-pop k3">Új</span>
+                  <div class="ertesites a-le k4"><span class="ert-app"></span><span class="ert-szoveg"><b>A könyvelőd átnézte</b><span>Papírbolt, nyomtatópapír</span></span><small>most</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- ÜZENETEK: a kérdés, a gépelés és a válasz egymás után; a „Ma” alatti, az írómezőnél félbevágott sort egy takaró végig fedi (a beszélgetés a válasszal ér véget) -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:uzenet--></span><span>Üzenetek</span></p>
+            <h3>Bármikor írhatsz a könyvelődnek</h3>
+            <p>Üzenetet küldesz neki az appban, igazolást pedig egy gombbal kérsz. Ha elakadsz, visszahívást is kérhetsz.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_uzenetek_chat.webp" width="780" height="1688" loading="lazy" alt="Beszélgetés a könyvelővel az appban: mennyit fizettem be eddig az adóból? Eddig 317 000 Ft-ot">
+                <div class="reteg" aria-hidden="true">
+                  <span class="maszk m-kerdes a-ki k1"></span>
+                  <span class="maszk m-valasz a-ki k5"></span>
+                  <span class="takaro m-ma"></span>
+                  <span class="gepel k2"><i></i><i></i><i></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- KERETEK: a „Hónaponként” lista helyén a keret kártyája + a kereset kiemelve -->
+        <li class="blepes">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:oszlop--></span><span>Keretek</span></p>
+            <h3>Nem csúszol bele véletlenül az áfába</h3>
+            <p>Az app mutatja, mennyit számlázhatsz még idén áfa nélkül, katásként a kata-keretedet is. Azt is látod, mennyi maradt neked az adók és járulékok után.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="telefon">
+              <div class="kepernyo">
+                <img src="kepek/app_kereset.webp" width="780" height="1688" loading="lazy" alt="Mennyit kerestem? Idén eddig kb. 14 527 000 Ft maradt neked az adók és járulékok után">
+                <div class="reteg" aria-hidden="true">
+                  <span class="takaro t-kereset"></span>
+                  <div class="keret-kartya a-be k0">
+                    <div class="keret-fej"><span class="ert-ikon"><!--ikon:irat-toll--></span><span><small>Idei kereteid</small><b>Még <span data-szamlal="3685000" data-tol="20000000" data-kesik="500" data-ido="1500">3&nbsp;685&nbsp;000</span>&nbsp;Ft</b></span></div>
+                    <p class="keret-meg">ennyit számlázhatsz még áfa nélkül</p>
+                    <span class="csik"><i></i></span>
+                    <p class="keret-sor"><span>eddig <b data-szamlal="16315000" data-tol="0" data-kesik="500" data-ido="1500">16&nbsp;315&nbsp;000</b>&nbsp;Ft</span><span>keret <b>20&nbsp;000&nbsp;000</b>&nbsp;Ft</span></p>
+                  </div>
+                  <span class="kiemeles ki-kereset a-pop k6"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- GÉPEN IS (zárólépés, 3. kör): a 2. kör „Az appot gépen, böngészőből is megnyithatod…” mondata ebbe olvadt.
+             JS nélkül: szöveg + böngészőablak, előtte a telefon (mindkettőn a Főoldal). JS-sel a ragadós telefon kisebb lesz és a
+             böngészőablak jobb alsó sarkára húzódik, mögötte beúszik a böngészőablak (.szinpad.gep-mod). -->
+        <li class="blepes blepes-gep">
+          <div class="blepes-szoveg">
+            <p class="blepes-cimke"><span class="cs cs-s" aria-hidden="true"><!--ikon:fooldal--></span><span>Böngészőben</span></p>
+            <h3>Gépen is ugyanez</h3>
+            <p>Böngészőből is megnyitod, ugyanazzal a belépéssel. Ugyanazt látod, mint a telefonodon, és a papírokat a gépedről is feltöltheted.</p>
+          </div>
+          <div class="blepes-kep">
+            <div class="kompo kompo-zaro">
+              <div class="bongeszo">
+                <div class="bongeszo-sav" aria-hidden="true"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
+                <div class="valto">
+                  <img class="aktiv" src="kepek/app_gep_fooldal.webp" width="1600" height="1000" loading="lazy" alt="Az app főoldala gépen, böngészőben: ugyanaz, mint a telefonon, oldalt a menüvel">
+                </div>
+              </div>
+              <div class="kompo-tel">
+                <div class="telefon">
+                  <div class="kepernyo">
+                    <img src="kepek/app_fooldal.webp" width="780" height="1688" loading="lazy" alt="Ugyanez a főoldal telefonon">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+
+    <p class="bemutato-jegy">Az app képei bemutató adatokkal készültek.</p>
+  </div>
+</section>
+
+<!-- ============ KÖNYVELŐ (fotó és név nélkül: ki ő, és mit csinál egy negyedévben) ============ -->
+<section class="szakasz panel panel-szurke" id="konyvelo">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2>Ki könyvel neked?</h2>
+      <p class="bevezeto">Egy nyilvántartásba vett könyvelő. A neve és a nyilvántartási száma benne van a szerződésedben, és az appban is megtalálod.</p>
+      <p class="resz-meg">A szerződést a <span class="nowrap">{{ceg:legalName}}-vel</span> kötöd. A könyvelőd munkájáért a <span class="nowrap">{{ceg:legalName}}</span> felel.</p>
+    </div>
+    <div>
+      <h3 class="feladat-cim">Ezt csinálja a könyvelőd egy negyedévben</h3>
+      <dl class="feladatok">
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:naptar--></span><span>Minden hónapban</span></dt><dd>Vezeti a bevételi nyilvántartásodat, és átnézi a számláidat. Ha valami hiányzik, szól. A bankszámlakivonatodat is elkéri, mert abból látja, mikor érkezett meg a pénz.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:szamologep--></span><span>A negyedév végén</span></dt><dd>Kiszámolja és bevallja a negyedéves adódat és járulékaidat, és az appban megírja, mennyit utalj.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:bank--></span><span>Amikor utaltál</span></dt><dd>A feltöltött kivonatodon látja, hogy megérkezett a befizetésed, és az appban jelzi neked.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:level--></span><span>Ha NAV-levél jön</span></dt><dd>Elmondja, mit jelent, és a meghatalmazásod alapján elintézi.</dd></div>
+        <div><dt><span class="cs cs-s" aria-hidden="true"><!--ikon:oszlop--></span><span>Katásként</span></dt><dd>A havi katát és a kata-keretedet is figyeli.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BIZTONSÁG ============ -->
+<section class="szakasz" id="biztonsag">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2>Mit jelent a meghatalmazás, és hol vannak az <span class="kiem">adataid</span>?</h2>
+      <div class="figyelmeztetes">
+        <h3>Ha valaki a nevünkben keres</h3>
+        <p>Telefonon soha nem kérjük el a kártyaadataidat, és sehol nem kérjük el a jelszavadat, az Ügyfélkapu+- vagy DÁP-belépésedet vagy a kódjaidat. Ha valaki a nevünkben mégis ilyet kér, tedd le, és írj nekünk: <a href="mailto:{{email}}"{{esemeny:email-iras:biztonsag}}>{{email}}</a></p>
+      </div>
+    </div>
+    <div class="ket-hasab">
+      <div>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:irat-toll--></span><span>A NAV-meghatalmazás</span></h3>
+        <ul class="vonalas">
+          <li>Ezzel a könyvelőd a nevedben beadhatja a bevallásaidat, és intézheti az adóügyeidet a NAV-nál.</li>
+          <li>A NAV online felületén (ONYA) adod meg. A könyvelőd is beküldheti, ilyenkor te hagyod jóvá.</li>
+          <li>Bármikor visszavonhatod, ugyanott.</li>
+          <li>Az app semmit nem küld be a NAV-nak. A bevallást a könyvelőd adja be, miután átnézte.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ikon-fej"><span class="cs" aria-hidden="true"><!--ikon:lakat--></span><span>Az adataid</span></h3>
+        <ul class="vonalas">
+          <li>Európai szerveren tároljuk őket, minden fájlt külön titkosítva.</li>
+          <li>A könyvelési irataidat csak a könyvelőd látja.</li>
+          <li>{{adat_suti_mondat}}</li>
+          <li>Bármikor letöltheted őket, és kérheted a törlésüket. Amit a törvény miatt meg kell őriznünk, azt a határidőig elzárva tartjuk.</li>
+        </ul>
+        <a class="nyil-link" href="{{app}}/jogi/adatkezeles">Adatkezelési tájékoztató</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÁRAK ============ -->
+<!-- 4. kör próba: gépen három oszlop: cím | árkártya (benne foglaltak + Regisztrálok) | külön díjak (doboz nélkül, a panelen) -->
+<section class="szakasz panel panel-kek-h" id="arak">
+  <div class="kontener ar-racs">
+    <div class="resz-fej">
+      <h2>Mennyibe kerül?</h2>
+      <p class="bevezeto">A havidíjhoz évente egyszer jön hozzá az éves zárás. A többi díj is itt van. Ami egyedi, arra előre, írásban adunk ajánlatot.</p>
+      <p class="ar-jegy">Havonta előre fizetsz, kártyával vagy átutalással. Hűségidő nincs: ha lemondod, a kifizetett hónap végéig minden működik. Minden ár bruttó, 27% áfával, a részleteket az <a href="{{app}}/jogi/aszf">ÁSZF-ben</a> találod.</p>
+    </div>
+    <div class="arkartya">
+      <div class="ar-fo">
+        <p class="ar-cimke">Havidíj</p>
+        <p class="ar-osszeg">{{ar:havidij}}&nbsp;Ft<small>&nbsp;/&nbsp;hó</small></p>
+        <p class="ar-afa">bruttó, 27% áfával</p>
+        <p class="ar-ev">Egy teljes év az éves zárással együtt: <b>{{ev_osszesen}}&nbsp;Ft</b></p>
+        <h3 class="ar-alcim"><span>Benne van</span></h3>
+        <ul class="lista lista-pipa">
+          <li><!--pipa-->Saját, név szerint ismert könyvelő</li>
+          <li><!--pipa-->Bevételi nyilvántartás a NAV Online Számlából</li>
+          <li><!--pipa-->A negyedéves adó és járulékok kiszámítása és bevallása (szja-előleg, tb-járulék, szocho)</li>
+          <li><!--pipa-->Katásként: a havi kata és a kata-keret figyelése</li>
+          <li><!--pipa-->Mennyit tegyél félre, számlánként</li>
+          <li><!--pipa-->Határidő-figyelés és emlékeztetők</li>
+          <li><!--pipa-->NAV-ügyek meghatalmazással, NAV-levelek értelmezése</li>
+          <li><!--pipa-->Igazolások kérése</li>
+          <li><!--pipa-->Üzenetek a könyvelődnek, visszahívás igény szerint</li>
+          <li><!--pipa-->Ha most indulsz: segítség a vállalkozásod elindításához</li>
+        </ul>
+        <a class="gomb gomb-fo gomb-szeles" href="{{app}}/regisztracio"{{esemeny:regisztralok:arak}}>Regisztrálok</a>
+        <p class="ar-mikro">Regisztrálni kártya nélkül tudsz.</p>
+      </div>
+    </div>
+      <div class="ar-kulon">
+        <h3>Külön díjak</h3>
+        <p class="ar-kulon-bev">Az éves zárást akkor fizeted, ha az éves bevallásodat mi adjuk be. A többi díj csak akkor jár, ha te kéred a munkát. Mindet előre látod az appban, és a jóváhagyásod nélkül nem kérjük.</p>
+        <dl class="dijlista">
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:irat--></span><b>Éves zárás</b> <em class="cimke">évente egyszer</em><span>Az éves adóbevallások: szja vagy kata, és iparűzési adó.</span></dt>
+            <dd>{{ar:eves_zaras}}&nbsp;Ft<small>/ {{egyseg:eves_zaras}}</small></dd>
+          </div>
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:valtozas--></span><b>Változás bejelentése helyetted</b><span>Költözés, új tevékenység, telephely. Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dd>{{ar:valtozas_egyszeru}}&nbsp;Ft<small>/ {{egyseg:valtozas_egyszeru}}</small></dd>
+          </div>
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:jogi--></span><b>Jogállás-változás bejelentése helyetted</b><span>Ha főállásból mellékállásba váltasz, vagy fordítva.</span></dt>
+            <dd>{{ar:valtozas_jogallas}}&nbsp;Ft<small>/ {{egyseg:valtozas_jogallas}}</small></dd>
+          </div>
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:ora--></span><b>Amíg szünetel a vállalkozásod</b><span>Ilyenkor a havidíj helyett csak ennyit fizetsz.</span></dt>
+            <dd>{{ar:szuneteltetesi_dij}}&nbsp;Ft<small>/ {{egyseg:szuneteltetesi_dij}}</small></dd>
+          </div>
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:kilep--></span><b>A vállalkozásod megszüntetése helyetted</b><span>Ha magad jelented be az útmutatónkkal: 0&nbsp;Ft.</span></dt>
+            <dd>{{ar:megszuntetes}}&nbsp;Ft<small>/ {{egyseg:megszuntetes}}</small></dd>
+          </div>
+          <div class="dij">
+            <dt><span class="cs cs-s" aria-hidden="true"><!--ikon:emberek--></span><b>Bérszámfejtés</b><span>Ha alkalmazottat vagy alkalmi munkást foglalkoztatsz.</span></dt>
+            <dd class="dij-egyedi">egyedi ajánlat</dd>
+          </div>
+        </dl>
+        <p class="ar-kulon-meg">Szintén egyedi ajánlattal, előre és írásban: áfabevallás, képviselet NAV-ellenőrzésnél, korábbi évek rendbetétele.</p>
+      </div>
+  </div>
+</section>
+
+<!-- ============ ÖSSZEVETÉS ============ -->
+<section class="szakasz" id="osszevetes">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2><span class="kiem">Miben más</span>, mint egy hagyományos könyvelőiroda?</h2>
+      <p class="bevezeto">Ha személyesen szeretnél leülni a könyvelőddel, egy hagyományos iroda jobb neked. Ha inkább a telefonodról intéznéd, nézd meg, miben más nálunk.</p>
+    </div>
+    <div>
+    <table class="tabla">
+      <thead>
+        <tr><th scope="col"><span class="rejtett">Szempont</span></th><th scope="col" class="oszlop-adozz">Adózz</th><th scope="col">Hagyományos iroda</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Ár</th><td class="oszlop-adozz" data-cim="Adózz">{{ar:havidij}}&nbsp;Ft/hó bruttó, a díjak kiírva ezen az oldalon</td><td data-cim="Hagyományos iroda">Irodánként eltér, sokszor egyedi ajánlat alapján</td></tr>
+        <tr><th scope="row">Könyvelő</th><td class="oszlop-adozz" data-cim="Adózz">Nyilvántartásba vett könyvelő, név szerint</td><td data-cim="Hagyományos iroda">Nyilvántartásba vett könyvelő</td></tr>
+        <tr><th scope="row">Mennyit tegyél félre</th><td class="oszlop-adozz" data-cim="Adózz">Az appban, számlánként, folyamatosan látod</td><td data-cim="Hagyományos iroda">Általában akkor tudod meg, amikor a könyvelő kiszámolja</td></tr>
+        <tr><th scope="row">Iratok</th><td class="oszlop-adozz" data-cim="Adózz">A kiállított számláid a NAV Online Számlából jönnek, a többit lefotózod</td><td data-cim="Hagyományos iroda">Irodánként eltér: papíron, e-mailben vagy online</td></tr>
+        <tr><th scope="row">Kapcsolat</th><td class="oszlop-adozz" data-cim="Adózz">Üzenet az appban és visszahívás</td><td data-cim="Hagyományos iroda">E-mail, telefon, sokszor személyesen is</td></tr>
+        <tr><th scope="row">Személyes találkozó</th><td class="oszlop-adozz" data-cim="Adózz">Nincs, minden online megy</td><td data-cim="Hagyományos iroda">Általában lehetséges</td></tr>
+        <tr><th scope="row">Hűségidő</th><td class="oszlop-adozz" data-cim="Adózz">Nincs, bármikor lemondhatod</td><td data-cim="Hagyományos iroda">Szerződéstől függ</td></tr>
+      </tbody>
+    </table>
+    <p class="labjegyzet">A hagyományos irodák gyakorlata eltérő. A jobb oszlop általános tapasztalatot mutat, nem egy konkrét irodát.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VÉLEMÉNYEK: ide kerülnek majd, a GYIK elé ============
+     Csak valódi ügyfél véleménye kerülhet ide, névvel és írásos engedéllyel. Amíg nincs ilyen, a szakasz nincs az oldalon.
+     A 2. kör helyőrzője: _regi/elotte_kor2_javito_20261120_2205/_eszkoz/index.sablon.html (#velemenyek). -->
+
+<!-- ============ GYIK ============ -->
+<!-- 4. kör próba: gépen a kérdések két oszlopban (5 + 5) -->
+<section class="szakasz panel panel-meleg" id="gyik">
+  <div class="kontener resz">
+    <div class="resz-fej">
+      <h2>Gyakori kérdések</h2>
+      <p class="bevezeto">Nem találod a választ? Írj nekünk: <a href="mailto:{{email}}"{{esemeny:email-iras:gyik}}>{{email}}</a></p>
+    </div>
+    <div class="gyik-lista">
+      <div class="gyik-oszlop">
+        <details open>
+          <summary>Kinek szól az Adózz?</summary>
+          <p>Magyarországon nyilvántartott, alanyi áfamentes egyéni vállalkozóknak, akik átalányadóval vagy katával adóznak. Ha alkalmazottad vagy alkalmi munkásod is van, a bérszámfejtést felárért, egyedi ajánlat alapján vállaljuk. Ha év közben megváltozik az adózásod, vagy elveszíted az áfamentességet, szólunk, és együtt megnézzük, mi a teendő.</p>
+        </details>
+        <details>
+          <summary>Katás vagyok. Nekem is jó?</summary>
+          <p>Igen, ugyanennyiért. Az app figyeli a kata-keretedet, és szól, ha cégnek számlázol, mert ha egy cég fizet neked, megszűnhet a katád. Ha át kell állnod átalányadóra, ebben is segítünk.</p>
+        </details>
+        <details>
+          <summary>Mi van benne a havidíjban, és mi kerül külön?</summary>
+          <p>A havidíjban benne van a könyvelőd munkája, a negyedéves bevallások, a határidők figyelése, az igazolások kérése és az app minden funkciója. Külön díjas az éves zárás (évente egyszer), a helyetted intézett változás vagy megszüntetés, és a szünetelés idejére járó kisebb díj. A pontos lista az <a href="#arak">Árak</a> résznél van.</p>
+        </details>
+        <details>
+          <summary>Az adót is ti fizetitek be?</summary>
+          <p>Nem, az utalást mindig te indítod, a saját bankodból. Mi megmondjuk, mennyit, mikorra és melyik NAV-számlára utalj. A számládról pénzt nem vonunk le.</p>
+        </details>
+        <details>
+          <summary>Mi az a NAV-meghatalmazás, és visszavonható?</summary>
+          <p>Ezzel a könyvelőd a nevedben adhatja be a bevallásaidat, és intézheti az adóügyeidet a NAV-nál. A NAV online felületén (ONYA) adod meg, vagy a könyvelőd küldi be, és te jóváhagyod. Ugyanott bármikor visszavonhatod. A belépési adataidat ehhez sem kérjük el.</p>
+        </details>
+      </div>
+      <div class="gyik-oszlop">
+        <details>
+          <summary>Hol vannak az adataim, és ki látja őket?</summary>
+          <p>Európai szerveren, titkosítva. A könyvelési irataidat csak a könyvelőd látja. Ügyfélszolgálatunk csak azt látja, ami az induláshoz és a visszahíváshoz kell. Az adataidat nem adjuk el. Részletek az <a href="{{app}}/jogi/adatkezeles">Adatkezelési tájékoztatóban</a>.</p>
+        </details>
+        <details>
+          <summary>Miért nincs próbaidő? Mikor kell fizetni?</summary>
+          <p>A havidíjért egy könyvelő dolgozik a vállalkozásodon, ezért ingyenes időszakot nem tudunk adni. Regisztrálni kártya nélkül tudsz. Ha szeretnéd, előbb visszahívunk, átbeszélünk mindent, és csak utána fizetsz, kártyával vagy átutalással.</p>
+        </details>
+        <details>
+          <summary>Hogyan mondhatom fel?</summary>
+          <p>Bármikor, az appban (Fiók &gt; Előfizetés &gt; Lemondás) vagy e-mailben. A lemondás a kifizetett hónap végén lép életbe, addig minden ugyanúgy működik, utána több díjat nem kérünk.</p>
+        </details>
+        <details>
+          <summary>Mi kell az induláshoz?</summary>
+          <p>Egy e-mail-cím, a vállalkozásod adatai, egy személyazonosító okmány (a törvény előírja, hogy azonosítsuk az ügyfeleinket), és Ügyfélkapu+ vagy DÁP, hogy megadd vagy jóváhagyd a NAV-meghatalmazást.</p>
+        </details>
+        <details>
+          <summary>Még nincs vállalkozásom. Segítetek elindítani?</summary>
+          <p>Igen. Olyan útmutatót kapsz, ami a te helyzetedre szól, képekkel és videóval. A bejelentést te küldöd be, és mi átnézzük a NAV-os értesítést. Ha elakadsz, 2026 végéig kérheted, hogy a könyvelőd intézze helyetted, meghatalmazottként (2027-től a nyilvántartást a gazdasági kamara vezeti). Ez is benne van a havidíjban.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ZÁRÓ CTA + VISSZAHÍVÁS (az oldal egyetlen kék sávja) ============ -->
+<section class="zaro panel-kek" id="visszahivas">
+  <div class="kontener zaro-racs">
+    <div class="zaro-szoveg">
+      <h2>Legyen saját könyvelőd</h2>
+      <p>Regisztrálj, és válaszolj pár kérdésre a vállalkozásodról.</p>
+      <a class="gomb gomb-fo" href="{{app}}/regisztracio"{{esemeny:regisztralok:zaro}}>Regisztrálok</a>
+      <p class="zaro-mikro">Havi {{ar:havidij}}&nbsp;Ft bruttó, hűségidő nélkül.</p>
+    </div>
+    <div class="zaro-visszahivas">
+      <h3>Előbb beszélnél velünk?</h3>
+      <p>Regisztráció után az appban kérhetsz visszahívást. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között. A visszahívás ingyenes, és nem kötelező.</p>
+      <!-- SPEC §31: a „Visszahívást kérek” útvonala (regisztráció, cel=visszahivas) és eseménye az élő oldalról; a mondat fölötte az egyetlen engedett időígéret. -->
+      <a class="gomb gomb-vonal" href="{{app}}/regisztracio?cel=visszahivas"{{esemeny:visszahivas:zaro}}>Visszahívást kérek</a>
+      <p class="zaro-email">Kérdésed van a regisztráció előtt? Írj nekünk: <a href="mailto:{{email}}"{{esemeny:email-iras:zaro}}>{{email}}</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ LÁBLÉC ============ -->
+<footer class="lablec">
+  <div class="kontener">
+    <div class="lablec-racs">
+      <div class="lablec-marka">
+        <!--logo-feher-->
+        <p>Online könyvelés átalányadózó és katás egyéni vállalkozóknak.</p>
+      </div>
+      <nav class="lablec-oszlop" aria-label="Szolgáltatás">
+        <h2>Szolgáltatás</h2>
+        <a href="#hogyan">Hogyan működik</a>
+        <a href="#mit-kapsz">Mit kapsz</a>
+        <a href="#konyvelo">Könyvelő</a>
+        <a href="#arak">Árak</a>
+        <a href="#gyik">GYIK</a>
+      </nav>
+      <nav class="lablec-oszlop" aria-label="Fiók">
+        <h2>Fiók</h2>
+        <a href="{{app}}/regisztracio"{{esemeny:regisztralok:lab}}>Regisztráció</a>
+        <a href="{{app}}/belepes"{{esemeny:belepes:lab}}>Belépés</a>
+      </nav>
+      <nav class="lablec-oszlop" aria-label="Jogi információk">
+        <h2>Jogi</h2>
+        <a href="{{app}}/jogi/aszf">ÁSZF</a>
+        <a href="{{app}}/jogi/adatkezeles">Adatkezelés</a>
+        <a href="{{app}}/jogi/suti">{{suti_link}}</a>
+        <a href="#impresszum">Impresszum</a>
+      </nav>
+      <div class="lablec-oszlop">
+        <h2>Ügyfélszolgálat</h2>
+        <a href="mailto:{{email}}"{{esemeny:email-iras:lab}}>{{email}}</a>
+        <p>Visszahívás munkanapokon 9 és 17 óra között.</p>
+      </div>
+    </div>
+    <div class="impresszum" id="impresszum">
+      <h2>Impresszum</h2>
+      <dl>
+        <div><dt>Szolgáltató</dt><dd>{{ceg:legalName}}</dd></div>
+        <div><dt>Székhely</dt><dd>{{ceg:seat}}</dd></div>
+        <div><dt>Adószám</dt><dd>{{ceg:taxNumber}}</dd></div>
+        <div><dt>Cégjegyzékszám</dt><dd>{{ceg:registryNumber}} (Fővárosi Törvényszék Cégbírósága)</dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:{{email}}"{{esemeny:email-iras:impresszum}}>{{email}}</a></dd></div>
+        <div><dt>Tárhelyszolgáltató</dt><dd>Contabo GmbH, Aschauer Straße 32a, 81549 München, Németország</dd></div>
+      </dl>
+    </div>
+    <div class="lablec-also">
+      <p>© {{ev}} {{ceg:legalName}}</p>
+      <p>Az app képei bemutató adatokkal készültek.</p>
+      <!-- SPEC §31: a mérés lábléce (statisztikával a jogász meres.lablec szövege), a látogató kikapcsolója, hirdetési buildben
+           a süti-beállítások gombja. A meres.js teszi láthatóvá a gombokat, ha kellenek. -->
+      <div class="lablec-meres">
+        <p id="meres-lablec">{{meres_lablec}}</p>
+        <p class="meres-gombok"><button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>{{suti_beallitasok_gomb}} <span id="meres-visszajelzes" role="status" aria-live="polite"></span></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
