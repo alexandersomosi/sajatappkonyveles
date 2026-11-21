@@ -93,3 +93,35 @@ forrás és a statisztika elvész, vagy a lábléc valótlant állít:
 - **CSP:** a proxy `kezjegy_csp_landing`-je már `script-src 'self'` (a v2 `mozgas.js`-e is fut vele). Hirdetéskor `kezjegy_csp_landing_hirdetes`.
 - **Telepítés:** a landing mappája egészben cserélődik: legyen benne az `email/` (két logó) és a `js/meres.js` – a `feltolt.sh` most megáll
   nélkülük, az `up.sh` pedig ellenőrzi és újralétrehozza a `kezjegy-web`-et. A teszt: `node --test kod/landing/meres.test.mjs`.
+
+## Átvétel a marketing-munkából – JAVÍTVA ÉS ÉLES (11-21 01:36) – EZ AZ ÉRVÉNYES, a fenti szakasz helyett
+A mostani nyitóoldal (`kod/landing`) így fut élesben (DEMO szerver, statisztika BE, hirdetés KI). A landing_v2-nek ugyanez kell:
+- **A `<head>`-ben csak** `<script defer src="js/meres.js"></script>`. **NE legyen `/m/script.js` tag a HTML-ben:** a statisztika
+  szkriptjét a `meres.js` maga tölti be (website id, domains, before-send szűrő, tag = csatorna, Do Not Track), és csak azután, hogy a
+  szűrő kész – így a statisztika soha nem fut szűretlenül. A `js/meres.js`-t a `kod/landing/build.mjs` generálja a
+  `kod/landing/meres.json`-ból (website id már benne: `4b205eb2-faaa-4512-928a-b94d14fad444`) és a közös csatornaszabályból:
+  a v2 buildje hívja ugyanazt a generálást, vagy másolja a `kod/landing/dist/js/meres.js`-t. Inline szkript nem lehet (CSP).
+- **Események: `data-kj-esemeny` + `data-kj-hely`, NEM `data-umami-event`** (az Umami-tracker az ilyen linket addig visszatartja,
+  amíg a kérése le nem fut – lassú statisztika-szervernél a gomb megfagy). Értékek: `regisztralok` (hely: `hos|arak|zaro|fejlec|lab`),
+  `belepes`, `email-iras` (mailto), `visszahivas` (`https://app.adozz.hu/regisztracio?cel=visszahivas`). A `meres.js` várakozás
+  nélkül küldi őket. Az árak szakasz: **`id="arak"`** („görgetett az árakig”).
+- **UTM-továbbadás:** minden app-link `https://app.adozz.hu/…` alakú; a `meres.js` fűzi hozzá az `utm_*`, `hivatkozo` (csak a webhely
+  neve), `erkezes` paramétert; a `/jogi/` linkek tiszták maradnak. Kattintás-azonosító (gclid, fbclid) csak bekapcsolt hirdetési
+  mérésnél és „Elfogadom” után megy át.
+- **Lábléc:** `<p id="meres-lablec">` a `kod/jogi/app_szovegek.json` `meres.lablec` szövegével („Ez az oldal nem használ sütit. A
+  látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.”); a link felirata `lablec.suti` = „Süti-tájékoztató” →
+  `https://app.adozz.hu/jogi/suti`; a látogató kikapcsolója `<button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>`
+  és mellette `<span id="meres-visszajelzes" role="status" aria-live="polite"></span>`; hirdetési buildben `id="suti-beallitasok"`.
+  **A landing_v2 „nincs követő süti” / „nem követ” mondata (359. és 575. sor) már MOST sem igaz a statisztika miatt → a fenti
+  `meres.lablec` szövegre kell cserélni. A hirdetési mérés bekapcsolásakor ez újra módosul:** a `meres.js` a szerver `{ads:true}`
+  válaszára magától a hirdetési mondatra cseréli a `#meres-lablec` szövegét, a jogi szövegek pedig a
+  `kod/jogi/bekapcsolaskor/valtozatok.md` A) része szerint változnak.
+- **Süti-ablak (csak hirdetési build + bekapcsolt szerver):** a `meres.js` rendereli, a szövegei buildkor az `app_szovegek.json`
+  `suti_ablak.*` kulcsaiból jönnek (nincs beégetett szöveg, nincs „személyre szabott” jelölő). A v2 adja hozzá a stílust: `.hj-ablak`,
+  `.hj-gomb`, `.hj-szoveg-gomb`, `.hj-beallitasok`, `.hj-beall-cim`, `.hj-kicsi`, `.hj-szukseges`, `.hj-doboz` – az „Elfogadom” és
+  az „Elutasítom” egyforma, előre fókusz nélkül.
+- **CSP / proxy:** változatlan (`kezjegy_csp_landing`, `script-src 'self'`; a `/m/script.js`, `/m/api/send` és a hirdetési végpontok
+  útvonalai az `adozz.caddy`-ben).
+- **Telepítés és próba:** a mappa egészben cserélődik; legyen benne `email/` (két logó) és `js/meres.js` (a `feltolt.sh` megáll
+  nélkülük). Teszt: `node --test kod/landing/meres.test.mjs`. **Gépi böngészős próbához normál User-Agent kell** (az Umami a
+  „HeadlessChrome”-ot botnak veszi, és nem számolja). Élesítés után a Marketing fülön (7 nap) meg kell jelennie a próbalátogatásnak.

@@ -22,6 +22,15 @@ export function arany(resz: number, egesz: number | null | undefined): string {
   return `${Math.round((resz / egesz) * 100)}%`;
 }
 
+/**
+ * Visitor → registered: only when it can be true (the visits are measured since the statistics server runs, the
+ * registrations may be older – then more registered than visitors, which is no rate at all).
+ */
+export function latogatoArany(regisztralt: number, latogato: number | null | undefined): string {
+  if (latogato === null || latogato === undefined || regisztralt > latogato) return '–';
+  return arany(regisztralt, latogato);
+}
+
 export interface LinkUrlap {
   forras: string;
   kampany: string;

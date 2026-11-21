@@ -12,6 +12,7 @@ import { ma } from '@/ui/ido';
 import { Betolt, CimSor, Kepernyo, useJelzes, vissza } from '@/ui/keret';
 import { T } from '@/ui/T';
 import { hibaUzenet } from '@/lib/hiba';
+import { szoveg } from '@/lib/szovegek';
 
 const STATUSZ: Record<string, string> = { tb: 'Főállású', fofoglalkozasu: 'Főállású', mellekallasu: 'Mellékállású', nyugdijas: 'Nyugdíjas' };
 
@@ -101,21 +102,22 @@ function HirdetesiMeres() {
   const jelez = useJelzes();
   const h = q.data;
   if (!h?.enabled || !h.given) return null;
-  const kinek = [h.meta ? 'a Metának (Facebook, Instagram)' : '', h.google ? 'a Google-nek' : ''].filter(Boolean).join(' és ');
+  // the texts are the lawyer's (kod/jogi/app_szovegek.json fiok.hirdetes_*)
+  const kinek = [h.meta ? 'a Meta (Facebook, Instagram)' : '', h.google ? 'a Google' : ''].filter(Boolean).join(' és ');
   return (
     <Lap style={{ padding: 18, marginTop: 14 }}>
       <T m={16} s={650}>
-        Hirdetési mérés
+        {szoveg('fiok.hirdetes_cim', {}, 'Hirdetések mérése (Meta, Google)')}
       </T>
       <T m={14.5} c={szin.halvany} lh={1.45} style={{ marginTop: 6 }}>
-        {`Hozzájárultál, hogy a regisztrációdat és az első fizetésedet jelezzük ${kinek}, álnevesített (hash-elt) e-mail-címmel. Adóadatot soha nem küldünk. Bármikor visszavonhatod.`}
+        {szoveg('fiok.hirdetes_leiras', { kinek })}
       </T>
       <GombM
-        cim="Visszavonom"
+        cim={szoveg('fiok.hirdetes_visszavonom', {}, 'Visszavonom')}
         onPress={async () => {
           try {
             await vissza.mutateAsync(undefined);
-            jelez({ szoveg: 'Visszavontad. Mostantól nem küldünk semmit.', kesz: true });
+            jelez({ szoveg: szoveg('fiok.hirdetes_kikapcsolva'), kesz: true });
           } catch (e) {
             jelez(hibaUzenet(e, 'Nem sikerült.'));
           }

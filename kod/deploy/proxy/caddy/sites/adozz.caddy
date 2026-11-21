@@ -49,8 +49,13 @@
 
 # SPEC §31.1 – our own statistics server (Umami 3.5.0, container kezjegy-umami, never public): only the tracker script and
 # the collect call pass, under the neutral path /m/; everything else under /m/ (login, UI, API) is 404. No cookie in or
-# out. The client address goes in a header of our own (Umami: CLIENT_IP_HEADER) – set here from the connection, so a
-# visitor cannot forge it; Umami uses it for the session hash and the local country/city lookup and never stores it.
+# out. The client address goes in a header of our own (Umami: CLIENT_IP_HEADER), set here from the connection; Umami uses
+# it for the daily visitor code (SALT_ROTATION=day) and the local country/city lookup and never stores it. NOTE: this is
+# NOT forge-proof – Umami 3.5.0 prefers an "ip" field in the request body over the headers, so a visitor who crafts the
+# request can fake his place or split his visits. That only touches the quality of the numbers, never anybody's data.
+# The CDN location headers a client may send (cf-ipcountry, x-vercel-ip-*) are ignored (SKIP_LOCATION_HEADERS=1).
+# The collect call has short time limits: the landing never waits for it, and a stuck statistics server must not tie up
+# the proxy.
 (kezjegy_statisztika) {
 	@kj_stat_js {
 		path /m/script.js
@@ -77,6 +82,10 @@
 			header_up -Cookie
 			header_up X-Kj-Client-Ip {remote_host}
 			header_down -Set-Cookie
+			transport http {
+				dial_timeout 2s
+				response_header_timeout 5s
+			}
 		}
 	}
 	# named matchers only: Caddy keeps named handles in this order (a bare path matcher would sort before them)
@@ -84,9 +93,10 @@
 	handle @kj_stat_tobbi {
 		respond "Not found" 404
 	}
-	# SPEC §31.6: the two public ends of the (switched-off) ad measurement – same origin for the landing script.
-	# Switched off the API answers { ads: false } and 404; the landing build has no code that calls them.
-	@kj_hirdetes path /api/v1/public/marketing-config /api/v1/public/hozzajarulas
+	# SPEC §31.6: the public ends of the (switched-off) ad measurement – same origin for the landing script (the config,
+	# the banner's decision, and the check of a stored decision). Switched off the API answers { ads: false } and 404; the
+	# landing build has no code that calls them.
+	@kj_hirdetes path /api/v1/public/marketing-config /api/v1/public/hozzajarulas /api/v1/public/hozzajarulas/*
 	handle @kj_hirdetes {
 		request_body {
 			max_size 4KB

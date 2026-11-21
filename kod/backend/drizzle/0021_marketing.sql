@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "marketing_touches" (
   "entry_source" text,
   "entry_goal" text,
   "inherited" boolean DEFAULT false NOT NULL,
+  "before_tracking" boolean DEFAULT false NOT NULL,
   "click_ids" jsonb,
   "consent_id" uuid,
   "created_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -92,8 +93,9 @@ CREATE INDEX IF NOT EXISTS "ad_spend_day_idx" ON "ad_spend" ("day");
 --> statement-breakpoint
 -- The registrations before this release get their row from signup_attribution (channel from utm_source by the rule of
 -- shared/src/marketing.ts channelOf; no referrer was ever stored, so "kozvetlen" without a source). Only accounts that
--- have no row yet; nothing existing is changed.
-INSERT INTO "marketing_touches" ("kind", "user_id", "client_id", "channel", "utm_source", "utm_medium", "utm_campaign", "utm_content", "platform", "created_at")
+-- have no row yet; nothing existing is changed. before_tracking = true: the Marketing tab shows these without a campaign
+-- link as "Ismeretlen (a mérés előtt)", not as "Közvetlen".
+INSERT INTO "marketing_touches" ("kind", "user_id", "client_id", "channel", "utm_source", "utm_medium", "utm_campaign", "utm_content", "platform", "before_tracking", "created_at")
 SELECT 'regisztracio', sa."user_id", cl."id",
   CASE
     WHEN coalesce(btrim(sa."utm_source"), '') = '' THEN 'kozvetlen'
@@ -107,6 +109,7 @@ SELECT 'regisztracio', sa."user_id", cl."id",
   END,
   sa."utm_source", sa."utm_medium", sa."utm_campaign", sa."utm_content",
   CASE WHEN sa."landing" IN ('web', 'android', 'ios') THEN sa."landing" ELSE NULL END,
+  true,
   sa."first_seen_at"
 FROM "signup_attribution" sa
 LEFT JOIN "clients" cl ON cl."user_id" = sa."user_id"

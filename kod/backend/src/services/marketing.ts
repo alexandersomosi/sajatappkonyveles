@@ -3,16 +3,20 @@
 // Numbers: our own database for everything after the visit (registered → data → contract → paying, money, callbacks);
 // Umami (our own server) only for the visits, devices, places and page events – aggregates, never a person. When Umami
 // does not answer, the visit numbers are null ("nem érhető el") and never made up. Test clients (is_test) are left out.
-import { and, asc, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, isNotNull, lt, lte, or, sql } from 'drizzle-orm';
 import {
   AD_CLICK_ID_PARAMS,
   MARKETING_CHANNEL_LABELS,
   MARKETING_CHANNELS,
   MARKETING_EVENT_LABELS,
+  MARKETING_UNKNOWN,
   channelOf,
   cleanUtmValue,
+  isPaidTouch,
+  marketingRowLabel,
   normalizeDomain,
   type AdClickIdKey,
+  type MarketingRowChannel,
   type MarketingAdsPlatformRow,
   type MarketingCampaignRow,
   type MarketingChannel,
@@ -24,7 +28,7 @@ import {
 } from '../_shared/marketing.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
-import { adConversionEvents, adSpend, callbackRequests, clients, marketingTouches, onboardingSteps, subscriptions } from '../db/schema.js';
+import { adConversionEvents, adSpend, callbackRequests, clients, marketingConsents, marketingTouches, onboardingSteps, signupAttribution, subscriptions } from '../db/schema.js';
 import { addDays, budapestLocalToUtc, todayBudapest } from '../lib/dates.js';
 import { linkLandingConsent } from './hirdetes.js';
 import { UmamiUnavailable, type UmamiPoint, type UmamiSummary } from './umami.js';
@@ -234,7 +238,12 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
   // ---- visits (Umami) ----
   let stats: MarketingSummary['stats'];
   let um: UmamiSummary | null = null;
-  if (!deps.umami) stats = { available: false, configured: false, reason: 'A látogatottság-mérés még nincs beállítva a szerveren.' };
+  if (!deps.umami)
+    stats = {
+      available: false,
+      configured: false,
+      reason: 'A látogatók száma még nem látszik: a statisztika-szervert egyszer be kell állítani a szerveren (ezt a telepítő végzi, neked nincs vele dolgod). A regisztrációk, a tölcsér és a pénz már most pontos, mert a saját adatbázisunkból jön.',
+    };
   else {
     try {
       um = await deps.umami.summary({ startAt: range.start.getTime(), endAt: range.end.getTime() - 1 });
@@ -246,7 +255,8 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
   const visitorsByChannel = new Map<MarketingChannel, number>();
   if (um) for (const t of um.tags) visitorsByChannel.set(isChannel(t.x) ? t.x : 'egyeb', (visitorsByChannel.get(isChannel(t.x) ? t.x : 'egyeb') ?? 0) + t.y);
 
-  // ---- every real client's registration channel (first registration row; none = közvetlen) ----
+  // ---- every real client's registration channel (first registration row). No row, or a backfilled row without a campaign
+  // link (before the source was recorded) = "Ismeretlen (a mérés előtt)", never "Közvetlen" ----
   const allClients = await db.select({ id: clients.id, userId: clients.userId }).from(clients).where(eq(clients.isTest, false));
   const userOfClient = new Map(allClients.map((c) => [c.id, c.userId]));
   const regTouches = await db
@@ -256,10 +266,12 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
     .orderBy(asc(marketingTouches.createdAt));
   const firstTouch = new Map<string, typeof marketingTouches.$inferSelect>();
   for (const t of regTouches) if (!firstTouch.has(t.userId)) firstTouch.set(t.userId, t);
-  const channelOfClient = (clientId: string): MarketingChannel => {
-    const ch = firstTouch.get(userOfClient.get(clientId) ?? '')?.channel ?? 'kozvetlen';
-    return isChannel(ch) ? ch : 'egyeb';
+  const channelOfClient = (clientId: string): MarketingRowChannel => {
+    const t = firstTouch.get(userOfClient.get(clientId) ?? '');
+    if (!t || (t.beforeTracking && t.channel === 'kozvetlen')) return MARKETING_UNKNOWN;
+    return isChannel(t.channel) ? t.channel : 'egyeb';
   };
+  const rowChannels = (has: (ch: MarketingRowChannel) => boolean): MarketingRowChannel[] => [...MARKETING_CHANNELS, ...(has(MARKETING_UNKNOWN) ? [MARKETING_UNKNOWN] : [])];
 
   // ---- registrations in the range (cohort: the day of the sign-up) ----
   const inRange = allClients.filter((c) => {
@@ -283,7 +295,9 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
   };
   const zero = () => ({ registered: 0, dataDone: 0, contractAccepted: 0, paying: 0 });
   const total = zero();
-  const per = new Map<MarketingChannel, ReturnType<typeof zero>>();
+  const per = new Map<MarketingRowChannel, ReturnType<typeof zero>>();
+  // §31.5 the cost per registration counts only the registrations of a PAID ad (utm_medium cpc / paid_social … or a click id)
+  const paidPer = new Map<MarketingChannel, { registered: number; paying: number }>();
   for (const c of inRange) {
     const d = done.get(c.id);
     if (!d?.has('fiok')) continue; // an unconfirmed sign-up is not a registration yet
@@ -296,12 +310,24 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
       if (everPaid(c.id)) x.paying++;
     }
     per.set(ch, e);
+    const t = firstTouch.get(c.userId)!;
+    if (ch !== MARKETING_UNKNOWN && isPaidTouch(t)) {
+      const p = paidPer.get(ch) ?? { registered: 0, paying: 0 };
+      p.registered++;
+      if (everPaid(c.id)) p.paying++;
+      paidPer.set(ch, p);
+    }
   }
-  const byChannel: MarketingFunnelRow[] = MARKETING_CHANNELS.map((ch) => ({ channel: ch, label: MARKETING_CHANNEL_LABELS[ch], visitors: um ? (visitorsByChannel.get(ch) ?? 0) : null, ...(per.get(ch) ?? zero()) }));
+  const byChannel: MarketingFunnelRow[] = rowChannels((ch) => per.has(ch)).map((ch) => ({
+    channel: ch,
+    label: marketingRowLabel(ch),
+    visitors: um && ch !== MARKETING_UNKNOWN ? (visitorsByChannel.get(ch) ?? 0) : null,
+    ...(per.get(ch) ?? zero()),
+  }));
 
   // ---- money now (MRR by channel; the per-subscription amount, as the console counts it) ----
   const realIds = new Set(allClients.map((c) => c.id));
-  const money = new Map<MarketingChannel, { payingNow: number; mrrHuf: number; everPaid: number }>();
+  const money = new Map<MarketingRowChannel, { payingNow: number; mrrHuf: number; everPaid: number }>();
   const mrrOfClient = new Map<string, number>();
   let dashboardActive = 0;
   for (const s of allSubs) {
@@ -318,7 +344,8 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
     }
     money.set(ch, e);
   }
-  const moneyRows: MarketingMoneyRow[] = MARKETING_CHANNELS.map((ch) => ({ channel: ch, label: MARKETING_CHANNEL_LABELS[ch], ...(money.get(ch) ?? { payingNow: 0, mrrHuf: 0, everPaid: 0 }) }));
+  const moneyRows: MarketingMoneyRow[] = rowChannels((ch) => money.has(ch)).map((ch) => ({ channel: ch, label: marketingRowLabel(ch), ...(money.get(ch) ?? { payingNow: 0, mrrHuf: 0, everPaid: 0 }) }));
+  const unknownClients = allClients.filter((c) => channelOfClient(c.id) === MARKETING_UNKNOWN).length;
   const mrrHuf = moneyRows.reduce((a, r) => a + r.mrrHuf, 0);
   const dashboardMrrHuf = dashboardActive * (await (await import('./dijak.js')).monthlyPriceHuf(deps));
 
@@ -329,7 +356,8 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
     if (!t.utmSource && !t.utmMedium && !t.utmCampaign) continue;
     if (!done.get(c.id)?.has('fiok')) continue;
     const key = [t.utmSource ?? '', t.utmMedium ?? '', t.utmCampaign ?? ''].join('|').toLowerCase();
-    const e = camp.get(key) ?? { source: t.utmSource, medium: t.utmMedium, campaign: t.utmCampaign, channel: channelOfClient(c.id), visitors: null, registered: 0, paying: 0, mrrHuf: 0, clientIds: [] };
+    const chc = channelOfClient(c.id);
+    const e = camp.get(key) ?? { source: t.utmSource, medium: t.utmMedium, campaign: t.utmCampaign, channel: chc === MARKETING_UNKNOWN ? 'egyeb' : chc, visitors: null, registered: 0, paying: 0, mrrHuf: 0, clientIds: [] };
     e.registered++;
     if (everPaid(c.id)) e.paying++;
     e.mrrHuf += mrrOfClient.get(c.id) ?? 0;
@@ -342,8 +370,16 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
       const has = [...camp.values()].some((r) => (r.campaign ?? '').toLowerCase() === p.x.toLowerCase());
       if (!has && p.x) camp.set(`||${p.x.toLowerCase()}`, { source: null, medium: null, campaign: p.x, channel: 'egyeb', visitors: null, registered: 0, paying: 0, mrrHuf: 0, clientIds: [] });
     }
+  // Umami counts the visitors by campaign NAME only: a name used by two sources would give both rows the full number, so
+  // such rows show no visitor number (sharedName) and the panel says why.
+  const nameUses = new Map<string, number>();
+  for (const r of camp.values()) if (r.campaign) nameUses.set(r.campaign.toLowerCase(), (nameUses.get(r.campaign.toLowerCase()) ?? 0) + 1);
   const campaigns: MarketingCampaignRow[] = [...camp.values()]
-    .map(({ clientIds: _ids, ...r }) => ({ ...r, visitors: um ? um.campaigns.filter((p) => r.campaign && p.x.toLowerCase() === r.campaign.toLowerCase()).reduce((a, p) => a + p.y, 0) : null }))
+    .map(({ clientIds: _ids, ...r }) => {
+      const shared = Boolean(r.campaign && (nameUses.get(r.campaign.toLowerCase()) ?? 0) > 1);
+      const v = um ? um.campaigns.filter((p) => r.campaign && p.x.toLowerCase() === r.campaign.toLowerCase()).reduce((a, p) => a + p.y, 0) : null;
+      return { ...r, visitors: shared ? null : v, ...(shared ? { sharedName: true } : {}) };
+    })
     .sort((a, b) => b.registered - a.registered || (b.visitors ?? 0) - (a.visitors ?? 0));
 
   // ---- callback requests of the range (asked by the client) by source ----
@@ -352,15 +388,19 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
     .from(callbackRequests)
     .where(and(eq(callbackRequests.createdByRole, 'client'), gte(callbackRequests.createdAt, range.start), lt(callbackRequests.createdAt, range.end)));
   const cbTouches = cbs.length
-    ? await db.select({ cb: marketingTouches.callbackRequestId, channel: marketingTouches.channel }).from(marketingTouches).where(and(eq(marketingTouches.kind, 'visszahivas'), inArray(marketingTouches.callbackRequestId, cbs.map((x) => x.id))))
+    ? await db
+        .select({ cb: marketingTouches.callbackRequestId, channel: marketingTouches.channel, inherited: marketingTouches.inherited })
+        .from(marketingTouches)
+        .where(and(eq(marketingTouches.kind, 'visszahivas'), inArray(marketingTouches.callbackRequestId, cbs.map((x) => x.id))))
     : [];
-  const cbChannel = new Map(cbTouches.map((t) => [t.cb, t.channel]));
-  const cbCount = new Map<MarketingChannel, number>();
+  // a request with its own source counts by it; an inherited one by the registration (so "Ismeretlen" stays apart)
+  const cbChannel = new Map(cbTouches.filter((t) => !t.inherited).map((t) => [t.cb, t.channel]));
+  const cbCount = new Map<MarketingRowChannel, number>();
   let cbTotal = 0;
   for (const cb of cbs) {
     if (!realIds.has(cb.clientId)) continue;
-    const raw = cbChannel.get(cb.id) ?? channelOfClient(cb.clientId);
-    const ch = isChannel(raw) ? raw : 'egyeb';
+    const own = cbChannel.get(cb.id);
+    const ch: MarketingRowChannel = own ? (isChannel(own) ? own : 'egyeb') : channelOfClient(cb.clientId);
     cbCount.set(ch, (cbCount.get(ch) ?? 0) + 1);
     cbTotal++;
   }
@@ -375,8 +415,8 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
   const adsRows: MarketingAdsPlatformRow[] = (['meta', 'google', 'egyeb'] as const).map((p) => {
     const spendHuf = live.filter((s) => s.platform === p).reduce((a, s) => a + s.amountHuf, 0);
     const chans = PLATFORM_CHANNELS[p];
-    const registered = chans.reduce((a, ch) => a + (per.get(ch)?.registered ?? 0), 0);
-    const paying = chans.reduce((a, ch) => a + (per.get(ch)?.paying ?? 0), 0);
+    const registered = chans.reduce((a, ch) => a + (paidPer.get(ch)?.registered ?? 0), 0);
+    const paying = chans.reduce((a, ch) => a + (paidPer.get(ch)?.paying ?? 0), 0);
     return {
       platform: p,
       label: PLATFORM_LABELS[p],
@@ -394,6 +434,7 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
     range: { days: range.days, from: range.from, to: range.to },
     demo: deps.cfg.appEnv === 'demo',
     stats,
+    unknownClients,
     visitors: um ? { visitors: um.visitors, visits: um.visits, pageviews: um.pageviews } : null,
     channels: um ? MARKETING_CHANNELS.map((ch) => ({ key: ch, label: MARKETING_CHANNEL_LABELS[ch], n: visitorsByChannel.get(ch) ?? 0 })) : null,
     devices: um ? grouped(um.devices, (x) => DEVICE_LABELS[x] ?? 'Egyéb') : null,
@@ -412,7 +453,7 @@ export async function marketingSummary(deps: Deps, q: MarketingRangeInput): Prom
           ? 'Ugyanannyi, mint az Áttekintés havi bevétele.'
           : 'Itt minden előfizetés a saját havidíjával számít (egyedi ár, kedvezmény, ingyenes hónap, szünetelés), ahogy a Konzol is számolja. Az Áttekintés a fizető ügyfelek számát szorozza a havidíjjal, ezért a kettő eltérhet.',
     },
-    callbacks: { total: cbTotal, rows: MARKETING_CHANNELS.map((ch) => ({ key: ch, label: channelLabel(ch), n: cbCount.get(ch) ?? 0 })).filter((r) => r.n > 0) },
+    callbacks: { total: cbTotal, rows: rowChannels((ch) => cbCount.has(ch)).map((ch) => ({ key: ch, label: ch === MARKETING_UNKNOWN ? marketingRowLabel(ch) : channelLabel(ch), n: cbCount.get(ch) ?? 0 })).filter((r) => r.n > 0) },
     ads: {
       enabled: deps.cfg.ads.enabled,
       meta: Boolean(deps.cfg.ads.meta),
@@ -441,10 +482,41 @@ export async function touchesOfUser(db: DbOrTx, userId: string) {
       utmTerm: marketingTouches.utmTerm,
       hivatkozo: marketingTouches.referrerDomain,
       erkezes: marketingTouches.landingPath,
+      platform: marketingTouches.platform,
+      belepesiForras: marketingTouches.entrySource,
+      cel: marketingTouches.entryGoal,
+      aRegisztraciobolOrokolt: marketingTouches.inherited,
+      aMeresElottiRegisztracio: marketingTouches.beforeTracking,
+      hirdetesiKattintasAzonositok: marketingTouches.clickIds,
+      hozzajarulasAzonosito: marketingTouches.consentId,
       ido: marketingTouches.createdAt,
     })
     .from(marketingTouches)
     .where(eq(marketingTouches.userId, userId));
+}
+
+/** GDPR export: the ad-measurement consents of the account (hirdetesi_hozzajarulasok.json). */
+export async function adConsentsOfUser(db: DbOrTx, userId: string) {
+  return db
+    .select({
+      meta: marketingConsents.meta,
+      google: marketingConsents.google,
+      szovegValtozat: marketingConsents.noticeVersion,
+      honnan: marketingConsents.source,
+      megadva: marketingConsents.createdAt,
+      fiokhozKotve: marketingConsents.linkedAt,
+      visszavonva: marketingConsents.withdrawnAt,
+    })
+    .from(marketingConsents)
+    .where(eq(marketingConsents.userId, userId));
+}
+
+/** GDPR export: the ad conversion signals of the account (hirdetesi_jelzesek.json) – what, to whom, when; no hash. */
+export async function adSignalsOfUser(db: DbOrTx, userId: string) {
+  return db
+    .select({ kinek: adConversionEvents.provider, esemeny: adConversionEvents.event, ido: adConversionEvents.eventTime, allapot: adConversionEvents.status, elkuldve: adConversionEvents.sentAt })
+    .from(adConversionEvents)
+    .where(eq(adConversionEvents.userId, userId));
 }
 
 /** Erasure / anonymisation: only the channel stays (for the totals), every detail of the source goes. */
@@ -453,5 +525,59 @@ export async function anonymizeTouches(db: DbOrTx, userId: string): Promise<void
     .update(marketingTouches)
     .set({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null, utmTerm: null, referrerDomain: null, landingPath: null, entrySource: null, entryGoal: null, clickIds: null })
     .where(eq(marketingTouches.userId, userId));
+}
+
+/**
+ * Adatkezelési tájékoztató 2.11. (objection / erasure): every source detail of the account goes – the marketing rows keep
+ * only the channel, the older signup_attribution row loses its campaign values. The referral code link stays (it is the
+ * referral, not the source). Returns the number of changed rows.
+ */
+export async function eraseSourceDetails(db: DbOrTx, userId: string): Promise<{ touches: number; attribution: number }> {
+  const t = await db
+    .update(marketingTouches)
+    .set({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null, utmTerm: null, referrerDomain: null, landingPath: null, entrySource: null, entryGoal: null, clickIds: null })
+    .where(eq(marketingTouches.userId, userId))
+    .returning({ id: marketingTouches.id });
+  const a = await db
+    .update(signupAttribution)
+    .set({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null })
+    .where(eq(signupAttribution.userId, userId))
+    .returning({ id: signupAttribution.userId });
+  return { touches: t.length, attribution: a.length };
+}
+
+/** The retention promised in the privacy notice (2.11., 8.): days. */
+export const MARKETING_RETENTION = { clickIdDays: 90, sourceDays: 2 * 365 + 1 } as const;
+
+/**
+ * Daily worker job (Adatkezelési tájékoztató 2.11. és 8. pont): ad click ids go after 90 days; the source details (campaign
+ * values, referring site, landing path, entry) after 2 years – only the channel stays for the totals. Nothing is deleted,
+ * the rows stay; the job only empties fields, so it is safe to run again.
+ */
+export async function jobMarketingRetention(deps: Deps): Promise<{ clickIds: number; touches: number; attribution: number }> {
+  const now = deps.now().getTime();
+  const clickBefore = new Date(now - MARKETING_RETENTION.clickIdDays * 86_400_000);
+  const sourceBefore = new Date(now - MARKETING_RETENTION.sourceDays * 86_400_000);
+  const c = await deps.db
+    .update(marketingTouches)
+    .set({ clickIds: null })
+    .where(and(isNotNull(marketingTouches.clickIds), lt(marketingTouches.createdAt, clickBefore)))
+    .returning({ id: marketingTouches.id });
+  const t = await deps.db
+    .update(marketingTouches)
+    .set({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null, utmTerm: null, referrerDomain: null, landingPath: null, entrySource: null, entryGoal: null })
+    .where(
+      and(
+        lt(marketingTouches.createdAt, sourceBefore),
+        or(isNotNull(marketingTouches.utmSource), isNotNull(marketingTouches.utmMedium), isNotNull(marketingTouches.utmCampaign), isNotNull(marketingTouches.utmContent), isNotNull(marketingTouches.utmTerm), isNotNull(marketingTouches.referrerDomain), isNotNull(marketingTouches.landingPath), isNotNull(marketingTouches.entrySource), isNotNull(marketingTouches.entryGoal)),
+      ),
+    )
+    .returning({ id: marketingTouches.id });
+  const a = await deps.db
+    .update(signupAttribution)
+    .set({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null })
+    .where(and(lt(signupAttribution.firstSeenAt, sourceBefore), or(isNotNull(signupAttribution.utmSource), isNotNull(signupAttribution.utmMedium), isNotNull(signupAttribution.utmCampaign), isNotNull(signupAttribution.utmContent))))
+    .returning({ id: signupAttribution.userId });
+  return { clickIds: c.length, touches: t.length, attribution: a.length };
 }
 

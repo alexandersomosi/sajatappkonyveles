@@ -6,8 +6,10 @@
    - mobilmenü: menüpontra koppintva, Escape-re és a menün kívül koppintva bezárul (csökkentett mozgásnál is);
    - hős (3. kör, tulaj 11-20 23:38): a telefon NEM vált magától. A képernyőn látható alsó menü 4 pontja (Főoldal, Dosszié, Fotózás,
      Üzenetek) fölött 4 átlátszó <button> van; koppintásra/kattintásra (billentyűzettel Enter/Szóköz) a telefon ÉS a mögötte álló
-     böngészőablak is arra a nézetre vált (finom áttűnés; csökkentett mozgásnál azonnal). Betöltéskor egyszeri koppintás-jel a menün,
-     „Próbáld ki” felirat; az első kattintás után mindkettő eltűnik. JS nélkül a Főoldal áll, a gombok nem látszanak;
+     böngészőablak is arra a nézetre vált (finom áttűnés; csökkentett mozgásnál azonnal). A böngészőablak oldalsávjának menüpontjai
+     is kattinthatók (egérrel/koppintással; aria-hidden, tabindex=-1, mert a telefon gombjai ugyanezt tudják). Felirat NINCS
+     (tulaj, 11-20 23:50); betöltés után egyetlen, szöveg nélküli gyűrű a Dosszié ikonján, ami az első kattintás után és csökkentett
+     mozgásnál nem jelenik meg. JS nélkül a Főoldal áll, a gombok nem látszanak;
    - #mit-kapsz: ragadós bemutató gépen és telefonon is. Egyetlen telefon áll, görgetésre lépésenként vált benne a képernyő,
      mellette (gépen) vagy alatta (telefonon) a lépés szövege; lépésenként egy részes haladásjelző. Az utolsó lépés („Gépen is
      ugyanez”): a telefon kisebb lesz és félrehúzódik, mögötte beúszik a böngészőablak a gépes nézettel. Csökkentett mozgásnál
@@ -19,12 +21,15 @@
   var csendes = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var vanIO = 'IntersectionObserver' in window;
 
+  // egy rész hibája ne vigye magával a többit (pl. a hős gombjai akkor is működjenek, ha a bemutató elhasal)
+  function biztos(f) { try { f(); } catch (e) { if (window.console && console.error) console.error(e); } }
+
   function indul() {
     html.classList.add('js');
-    mobilmenu();
+    biztos(mobilmenu);
     if (!csendes) html.classList.add('mozog');
-    bemutato();
-    hos();   // a menü csökkentett mozgásnál is működik (ott azonnal, áttűnés nélkül vált)
+    biztos(hos);   // a menü csökkentett mozgásnál is működik (ott azonnal, áttűnés nélkül vált)
+    biztos(bemutato);
   }
 
   function tomb(lista) { return Array.prototype.slice.call(lista); }
@@ -78,6 +83,7 @@
     var k = d.querySelector('[data-hos]');
     if (!k) return;
     var gombok = tomb(k.querySelectorAll('.hos-menu button'));
+    var gepGombok = tomb(k.querySelectorAll('.gep-menu button'));   // a böngészőablak oldalsávja (csak egér/érintés)
     // minden .valto (telefon, böngésző) képei, sorrendben: Főoldal, Dosszié, Fotózás (gépen: papír beküldése), Üzenetek
     var sorok = tomb(k.querySelectorAll('.valto')).map(function (v) {
       return tomb(v.children).filter(function (el) { return el.tagName === 'IMG'; });
@@ -92,14 +98,18 @@
         kepek[i].classList.add('aktiv');
       });
       gombok.forEach(function (g, j) { g.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+      gepGombok.forEach(function (g, j) { g.classList.toggle('on', j === i); });
       akt = i;
     }
-    gombok.forEach(function (g, j) {
-      g.addEventListener('click', function () { k.classList.add('kiprobalta'); mutat(j); });
+    function kattint(j) { return function () { k.classList.add('kiprobalta'); mutat(j); }; }
+    gombok.forEach(function (g, j) { g.addEventListener('click', kattint(j)); });
+    gepGombok.forEach(function (g, j) {
+      g.addEventListener('click', kattint(j));
+      g.addEventListener('mousedown', function (e) { e.preventDefault(); });   // ne kerüljön fókusz az aria-hidden gombra
     });
-    // a többi képernyő előtöltése, hogy az első koppintás se villanjon
-    sorok.forEach(function (kepek) { kepek.forEach(function (img) { img.loading = 'eager'; }); });
-    // egyszeri koppintás-jel a menün, amikor a hős először látszik (csak mozgással; a CSS rejti, ha már kipróbálta)
+    if (gepGombok[0]) gepGombok[0].classList.add('on');
+    k.classList.add('hos-kesz');   // csak most jelennek meg a gombok (ha valami elhasal, nem maradnak halott gombok)
+    // egyszeri, szöveg nélküli jel (gyűrű a Dosszié ikonján), amikor a hős először látszik (csak mozgással; a CSS rejti, ha már kipróbálta)
     if (csendes) return;
     if (!vanIO) { k.classList.add('kopp'); return; }
     var io = new IntersectionObserver(function (es) {
@@ -149,6 +159,7 @@
     b.insertBefore(szinpad, b.firstChild);
     b.classList.add('szinpad-mod');
 
+    var lista = b.querySelector('.blepesek');
     var aktiv = -1, fut = false, keres = 0;
     function jelol(k) {
       [lepesek, lapok, cimek].forEach(function (sor) {
@@ -181,6 +192,11 @@
           if (r.top <= vonal) k = j;
           toltes.push(korlat((vonal - r.top) / Math.max(1, r.height)));
         });
+        // az utolsó szakasz akkor teljen be, amikor a színpad elenged (a lista alja eléri a színpad alját), ne csak a lépés végén:
+        // eddig görgetett (a) + még hátralévő ragadás (m) = állandó, amíg a színpad ragad
+        var a = vonal - tops[n - 1].top;
+        var m = Math.max(0, lista.getBoundingClientRect().bottom - szinpad.getBoundingClientRect().bottom);
+        toltes[n - 1] = a <= 0 ? 0 : korlat(a / Math.max(1, a + m));
       } else {
         // telefonon: a ragadós szakasz görgetési hosszát egyenlően osztjuk el a lépések között
         var fent = parseFloat(window.getComputedStyle(szinpad).top) || 0;

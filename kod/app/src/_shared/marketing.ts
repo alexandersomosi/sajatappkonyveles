@@ -18,6 +18,28 @@ export const MARKETING_CHANNEL_LABELS: Record<MarketingChannel, string> = {
   egyeb: 'Egyéb',
 };
 
+/**
+ * Display only (never stored): a client who registered before the source was recorded (the backfill without a campaign
+ * link, or no row at all). Shown apart, so the old clients do not look like "came directly".
+ */
+export const MARKETING_UNKNOWN = 'ismeretlen' as const;
+export type MarketingRowChannel = MarketingChannel | typeof MARKETING_UNKNOWN;
+export const MARKETING_UNKNOWN_LABEL = 'Ismeretlen (a mérés előtt)';
+export function marketingRowLabel(c: MarketingRowChannel): string {
+  return c === MARKETING_UNKNOWN ? MARKETING_UNKNOWN_LABEL : MARKETING_CHANNEL_LABELS[c];
+}
+
+/**
+ * utm_medium values that mean a PAID ad (lower case). The Hirdetések tab counts cost per registration only with these
+ * (or with an ad click id), so the organic Google search and the free Facebook posts never lower the cost.
+ */
+export const PAID_MEDIUMS = ['cpc', 'ppc', 'paid', 'paid_social', 'paid-social', 'paidsocial', 'cpm', 'display', 'hirdetes', 'fizetett', 'fizetett-poszt'] as const;
+export function isPaidTouch(t: { utmMedium?: string | null; clickIds?: Partial<Record<string, string>> | null }): boolean {
+  const m = (t.utmMedium ?? '').trim().toLowerCase();
+  if (m && (PAID_MEDIUMS as readonly string[]).includes(m)) return true;
+  return Boolean(t.clickIds && Object.keys(t.clickIds).length);
+}
+
 /** The UTM parameters we keep (everything else in the address is dropped before it is stored or measured). */
 export const UTM_KEYS = ['source', 'medium', 'campaign', 'content', 'term'] as const;
 export type UtmKey = (typeof UTM_KEYS)[number];
@@ -51,7 +73,7 @@ export const MARKETING_EVENT_LABELS: Record<MarketingEvent, string> = {
   regisztralok: 'Regisztrálok gomb',
   belepes: 'Belépés gomb',
   visszahivas: 'Visszahívást kérek gomb',
-  'email-iras': 'E-mail-cím (levelet írna)',
+  'email-iras': 'Kattintott az e-mail-címre',
   'arak-lathato': 'Görgetett az árakig',
 };
 
@@ -59,7 +81,8 @@ export const MARKETING_EVENT_LABELS: Record<MarketingEvent, string> = {
 export const MARKETING_RANGES = [1, 7, 30, 90] as const;
 export type MarketingRange = (typeof MARKETING_RANGES)[number];
 
-const SOURCE_ALIASES: Record<string, MarketingChannel> = {
+/** utm_source values that name a channel (lower case). Exported for the landing script generator. */
+export const SOURCE_ALIASES: Record<string, MarketingChannel> = {
   youtube: 'youtube',
   yt: 'youtube',
   'youtube-video': 'youtube',
@@ -92,17 +115,23 @@ export function normalizeDomain(raw: string | null | undefined): string | null {
   return s;
 }
 
-const endsWithDomain = (d: string, base: string) => d === base || d.endsWith(`.${base}`);
+/** d is base or one of its subdomains. */
+export function endsWithDomain(d: string, base: string): boolean {
+  return d === base || d.endsWith(`.${base}`);
+}
 
 /** The channel of a referring domain, or null when it is none of the named platforms. */
 export function domainChannel(raw: string | null | undefined): MarketingChannel | null {
   const d = normalizeDomain(raw);
   if (!d) return null;
   if (endsWithDomain(d, 'youtube.com') || d === 'youtu.be' || endsWithDomain(d, 'youtube-nocookie.com')) return 'youtube';
-  if (/(^|\.)google\.[a-z]{2,3}(\.[a-z]{2})?$/.test(d) || d.startsWith('com.google.android.')) return 'google';
-  if (endsWithDomain(d, 'facebook.com') || d === 'fb.com' || d === 'fb.me' || endsWithDomain(d, 'messenger.com')) return 'facebook';
-  if (endsWithDomain(d, 'instagram.com')) return 'instagram';
-  if (endsWithDomain(d, 'tiktok.com')) return 'tiktok';
+  // Android apps send android-app://<package>: the YouTube app is YouTube, only the Google search app is Google
+  // (Gmail, Chrome and the other Google apps are not a source of their own)
+  if (d === 'com.google.android.youtube' || d === 'com.google.android.apps.youtube.music') return 'youtube';
+  if (/(^|\.)google\.[a-z]{2,3}(\.[a-z]{2})?$/.test(d) || d === 'com.google.android.googlequicksearchbox') return 'google';
+  if (endsWithDomain(d, 'facebook.com') || d === 'fb.com' || d === 'fb.me' || endsWithDomain(d, 'messenger.com') || d === 'com.facebook.katana' || d === 'com.facebook.lite' || d === 'com.facebook.orca') return 'facebook';
+  if (endsWithDomain(d, 'instagram.com') || d === 'com.instagram.android') return 'instagram';
+  if (endsWithDomain(d, 'tiktok.com') || d === 'com.zhiliaoapp.musically' || d === 'com.ss.android.ugc.trill') return 'tiktok';
   return null;
 }
 
@@ -206,7 +235,8 @@ export const CAMPAIGN_SOURCES: { source: string; label: string; medium: string }
   { source: 'facebook', label: 'Facebook-bejegyzés', medium: 'social' },
   { source: 'instagram', label: 'Instagram (bio vagy történet)', medium: 'social' },
   { source: 'tiktok', label: 'TikTok', medium: 'social' },
-  { source: 'google', label: 'Google-hirdetés', medium: 'cpc' },
+  { source: 'meta', label: 'Facebook- vagy Instagram-hirdetés (fizetett)', medium: 'paid_social' },
+  { source: 'google', label: 'Google-hirdetés (fizetett)', medium: 'cpc' },
   { source: 'hirlevel', label: 'Hírlevél vagy e-mail', medium: 'email' },
 ];
 
@@ -225,7 +255,7 @@ export interface MarketingFunnelSteps {
   paying: number;
 }
 export interface MarketingFunnelRow extends MarketingFunnelSteps {
-  channel: MarketingChannel;
+  channel: MarketingRowChannel;
   label: string;
   /** Visitors of this channel in the same range (Umami); null when the statistics are not available. */
   visitors: number | null;
@@ -235,13 +265,16 @@ export interface MarketingCampaignRow {
   medium: string | null;
   campaign: string | null;
   channel: MarketingChannel;
+  /** Visitors of this campaign name (Umami counts by name only); null when unknown or when the name is used by two sources. */
   visitors: number | null;
+  /** The campaign name is used by more than one source: the visitors are shown once, on the campaign total. */
+  sharedName?: boolean;
   registered: number;
   paying: number;
   mrrHuf: number;
 }
 export interface MarketingMoneyRow {
-  channel: MarketingChannel;
+  channel: MarketingRowChannel;
   label: string;
   payingNow: number;
   mrrHuf: number;
@@ -251,6 +284,7 @@ export interface MarketingAdsPlatformRow {
   platform: 'meta' | 'google' | 'egyeb';
   label: string;
   spendHuf: number;
+  /** Registrations that came from a PAID ad of this platform (isPaidTouch: utm_medium cpc/paid_social… or a click id). */
   registered: number;
   paying: number;
   costPerRegistrationHuf: number | null;
@@ -271,6 +305,8 @@ export interface MarketingSummary {
   demo: boolean;
   /** The statistics server (Umami) answered; false = only our own database numbers are shown. */
   stats: { available: boolean; configured: boolean; reason: string | null };
+  /** Clients who registered before the source was recorded (shown as "Ismeretlen (a mérés előtt)"). */
+  unknownClients?: number;
   visitors: { visitors: number; visits: number; pageviews: number } | null;
   channels: MarketingCount[] | null;
   devices: MarketingCount[] | null;

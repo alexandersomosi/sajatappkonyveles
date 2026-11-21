@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // SPEC §29.3.6 – the adozz.hu landing page: static HTML + CSS, no cookie. SPEC §31 (2026-11-20): one own script
-// (js/meres.js, generated below from kod/shared/src/marketing.ts) passes the source to the app links and feeds our own
-// cookie-less statistics server (Umami, /m/…) when meres.json has its website id; the ad code and the cookie banner are
+// (js/meres.js, generated below from kod/shared/src/marketing.ts) passes the source to the app links and – when meres.json
+// has the website id – loads our own cookie-less statistics script (Umami, /m/script.js) ITSELF, after its filter is set
+// (so the statistics never run without the filter). The button events are sent by meres.js without waiting (no
+// data-umami-event: the Umami tracker would hold the navigation until its request ends). The visible texts of the footer
+// switch and of the cookie banner come from kod/jogi/app_szovegek.json (the lawyer's copy). The ad code and the banner are
 // in the page only with "hirdetes": true (and then still only run with the server switch on).
 // Prices come from ONE generated file (arak.json, made here from FEE_DEFAULTS of kod/shared – no hand-typed prices);
 // the company data from kod/shared/brand.json. Output: kod/landing/dist/ (what feltolt.sh uploads to /srv/kezjegy/web/landing).
@@ -25,6 +28,15 @@ const MERES = JSON.parse(readFileSync(process.env.LANDING_MERES ? resolve(proces
 if (MERES.umamiWebsiteId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(MERES.umamiWebsiteId)) throw new Error('meres.json: az umamiWebsiteId UUID legyen (vagy üres).');
 const STAT = Boolean(MERES.umamiWebsiteId);
 const HIRDETES = MERES.hirdetes === true;
+// the texts the lawyer reviews (kod/jogi/app_szovegek.json → szovegek.meres / lablec / suti_ablak)
+const JOGI = JSON.parse(readFileSync(join(KOD, 'jogi/app_szovegek.json'), 'utf8')).szovegek;
+const kell = (k) => {
+  if (typeof JOGI[k] !== 'string' || !JOGI[k]) throw new Error(`app_szovegek.json: hiányzik ez a szöveg: ${k}`);
+  return JOGI[k];
+};
+const MERES_SZ = { neMerjetek: kell('meres.ne_merjetek'), ujraMerheto: kell('meres.ujra_merheto'), kesz: kell('meres.ne_merjetek_kesz') };
+const SUTI_LINK = kell('lablec.suti');
+const SUTI_ABLAK = Object.fromEntries(['cim', 'szoveg', 'link_suti', 'link_adatkezeles', 'elfogadom', 'elutasitom', 'beallitasok', 'beallitasok_cim', 'beallitasok_bevezeto', 'szukseges', 'meta', 'google', 'mentes', 'mentve', 'lablec_link'].map((k) => [k, kell(`suti_ablak.${k}`)]));
 
 // ---------- arak.json (generated, never hand-typed) ----------
 const ARAK_SOROK = [
@@ -48,8 +60,8 @@ const APP = 'https://app.adozz.hu';
 const havidij = arak.sorok.find((s) => s.kind === 'havidij').osszegHuf;
 const supportHelyorzo = /^\[CÉGADAT/.test(brand.provider.supportEmail ?? '');
 const EV = M.MARKETING_EVENTS;
-/** data-umami-event attributes (counted by the statistics script itself; ignored when it is not on the page). */
-const esemeny = (nev, hely) => ` data-umami-event="${nev}"${hely ? ` data-umami-event-hely="${hely}"` : ''}`;
+/** The click events of the page: meres.js sends them to the statistics without holding the navigation. */
+const esemeny = (nev, hely) => ` data-kj-esemeny="${nev}"${hely ? ` data-kj-hely="${hely}"` : ''}`;
 
 // ---------- js/meres.js: the template + the shared channel rule (one definition, kod/shared/src/marketing.ts) ----------
 const kozos = [
@@ -62,7 +74,14 @@ const kozos = [
   // Node strips the TypeScript types to blanks; the function sources are plain JavaScript
   ...[M.normalizeDomain, M.endsWithDomain, M.domainChannel, M.isOwnDomain, M.channelOf, M.statisticsUrl].map((f) => f.toString().replace(/[ \t]{2,}/g, ' ')),
 ].join('\n');
-const cfg = { app: APP, own: [...new Set(['adozz.hu', ...MERES.domains])], stat: STAT, esemenyArak: EV.arak };
+const cfg = {
+  app: APP,
+  own: [...new Set(['adozz.hu', ...MERES.domains])],
+  stat: STAT ? { websiteId: MERES.umamiWebsiteId, domains: MERES.domains.join(','), dnt: Boolean(MERES.doNotTrack) } : null,
+  esemenyArak: EV.arak,
+  szoveg: MERES_SZ,
+  ...(HIRDETES ? { sutiAblak: SUTI_ABLAK, hirdetesLablec: 'A döntésedet egy sütiben (kj_hozzajarulas) jegyezzük meg; hirdetési sütit csak akkor használunk, ha elfogadod. A látogatottságot saját szerverünkön, süti nélkül mérjük.' } : {}),
+};
 let meresJs = readFileSync(join(ITT, 'meres-sablon.js'), 'utf8')
   .replace('/*__CFG__*/ {}', JSON.stringify(cfg))
   .replace('/*__SHARED__*/', kozos)
@@ -71,14 +90,9 @@ if (/__CFG__|__SHARED__|__HIRDETES__/.test(meresJs)) throw new Error('meres.js: 
 if (!HIRDETES && /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/.test(meresJs)) throw new Error('meres.js: hirdetési kód került a kikapcsolt buildbe.');
 mkdirSync(join(KI, 'js'), { recursive: true });
 writeFileSync(join(KI, 'js', 'meres.js'), meresJs, 'utf8');
-const statTag = STAT
-  ? `<script defer src="/m/script.js" data-website-id="${esc(MERES.umamiWebsiteId)}" data-domains="${esc(MERES.domains.join(','))}" data-before-send="adozzStatSzuro"${MERES.doNotTrack ? ' data-do-not-track="true"' : ''}></script>\n`
-  : '';
-const labSzoveg = HIRDETES
-  ? 'Hirdetési sütit csak akkor használunk, ha elfogadod. A látogatottságot a saját szerverünkön mérjük, süti nélkül.'
-  : STAT
-    ? 'Ez az oldal nem használ sütit. A látogatottságot a saját szerverünkön mérjük, süti nélkül, összesítve.'
-    : 'Ez az oldal nem használ sütit, és nem követ.';
+// the footer line: with the statistics the lawyer's text (meres.lablec); without them only the cookie fact. In the ad
+// build meres.js replaces it only when the server answers { ads: true }.
+const labSzoveg = STAT ? kell('meres.lablec') : 'Ez az oldal nem használ sütit.';
 
 // fonts (Geist from the app) and the few images (3D objects of the approved set, the mark)
 for (const s of [400, 600, 650, 700]) copyFileSync(join(KOD, `app/assets/fonts/Geist-W${s}.ttf`), join(KI, 'fonts', `Geist-W${s}.ttf`));
@@ -120,7 +134,7 @@ const html = `<!doctype html>
 <link rel="icon" href="favicon.png">
 <link rel="stylesheet" href="stilus.css">
 <script defer src="js/meres.js"></script>
-${statTag}</head>
+</head>
 <body>
 <header class="sav">
   <div class="belso">
@@ -178,9 +192,9 @@ ${arak.sorok.map((s) => `          <tr><th scope="row">${esc(s.cim)}<span>${esc(
   <div class="belso">
     <p><b>${esc(brand.provider.legalName)}</b> · ${esc(brand.provider.seat)}</p>
     <p>Adószám: <span class="nw">${esc(brand.provider.taxNumber)}</span> · Cégjegyzékszám: <span class="nw">${esc(brand.provider.registryNumber)}</span></p>
-    <p><a href="${APP}/jogi/aszf">ÁSZF</a> · <a href="${APP}/jogi/adatkezeles">Adatkezelés</a> · <a href="${APP}/jogi/suti">Sütik</a></p>
-    <p class="halvany">${esc(labSzoveg)}</p>
-    <p><button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>${HIRDETES ? ' <button type="button" class="szoveg-gomb" id="suti-beallitasok" hidden>Süti-beállítások</button>' : ''}</p>
+    <p><a href="${APP}/jogi/aszf">ÁSZF</a> · <a href="${APP}/jogi/adatkezeles">Adatkezelés</a> · <a href="${APP}/jogi/suti">${esc(SUTI_LINK)}</a></p>
+    <p class="halvany" id="meres-lablec">${esc(labSzoveg)}</p>
+    <p><button type="button" class="szoveg-gomb" id="meres-kapcsolo" hidden></button>${HIRDETES ? ` <button type="button" class="szoveg-gomb" id="suti-beallitasok" hidden>${esc(SUTI_ABLAK.lablec_link)}</button>` : ''} <span class="halvany" id="meres-visszajelzes" role="status" aria-live="polite"></span></p>
   </div>
 </footer>
 </body>

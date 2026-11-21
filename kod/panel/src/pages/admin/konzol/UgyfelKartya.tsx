@@ -152,6 +152,15 @@ function muveletek(h: ConsoleClientHeader, accs: { id: string; displayName: stri
       kuld: (v) => W<{ exportId: string }>('POST', `/clients/${id}/export`, { reason: v.reason ?? '' }),
       siker: () => 'Készül. Pár perc múlva a fejlécben letöltheted.',
     },
+    forras: {
+      cim: 'Forrásadat törlése (tiltakozás)',
+      bev: 'Ha az ügyfél tiltakozik az ellen, hogy megjegyezzük, honnan jött (Adatkezelési tájékoztató 2.11.): a kampányjelölések, a webhely neve, a kezdőoldal és a hirdetési azonosítók törlődnek. Az összesítéshez csak a csatorna marad meg (például „YouTube”). Más nem változik.',
+      indok: true,
+      mezok: [],
+      osszegzes: () => `${h.name} forrásadatának részleteit töröljük; csak a csatorna marad meg.`,
+      kuld: (v) => W('POST', `/clients/${id}/source-erase`, { reason: v.reason ?? '' }),
+      siker: () => 'Kész: a forrás részletei törölve, csak a csatorna maradt meg.',
+    },
     felmondas: {
       cim: 'Felmondás',
       bev: 'ÁSZF 8.5: rendesen 30 nappal; azonnal csak 30 napnál régebbi tartozás vagy más 8.5. ok miatt. Az ügyfél felmondó levelet kap (PDF + e-mail).',
@@ -454,6 +463,7 @@ function Tartalom() {
     ['megerosito', 'Megerősítő levél'],
     ['jelszo', 'Jelszó-visszaállító levél'],
     ['export', 'Adatexport'],
+    ...(c.anonymizedAt ? [] : [['forras', 'Forrásadat törlése'] as [string, string]]),
     ...(c.terminated ? (c.canReactivate ? [['ujra', 'Újraaktiválás'] as [string, string]] : []) : [['felmondas', 'Felmondás'] as [string, string]]),
     ...(c.anonymizedAt ? [] : [['anonim', 'Törlés (anonimizálás)'] as [string, string]]),
   ];

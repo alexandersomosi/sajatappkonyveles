@@ -170,7 +170,11 @@ export async function buildExport(deps: Deps, exportId: string): Promise<void> {
     entries.push(json('belepesek.json', await db.select({ eszkoz: sessions.clientKind, bongeszo: sessions.userAgent, letrehozva: sessions.createdAt, utoljara: sessions.lastUsedAt }).from(sessions).where(eq(sessions.userId, u.id))));
     entries.push(json('forras.json', await db.select().from(signupAttribution).where(eq(signupAttribution.userId, u.id))));
     // SPEC §31.3: the sources of the sign-up and of the callback requests
-    entries.push(json('forras_reszletek.json', await (await import('./marketing.js')).touchesOfUser(db, u.id)));
+    const mk = await import('./marketing.js');
+    entries.push(json('forras_reszletek.json', await mk.touchesOfUser(db, u.id)));
+    // SPEC §31.6: the ad-measurement consents and the signals sent about the account (empty while ads are off)
+    entries.push(json('hirdetesi_hozzajarulasok.json', await mk.adConsentsOfUser(db, u.id)));
+    entries.push(json('hirdetesi_jelzesek.json', await mk.adSignalsOfUser(db, u.id)));
     const [cl] = await db.select().from(clients).where(eq(clients.userId, u.id)).limit(1);
     const fileIds = new Set<string>();
     if (cl) {

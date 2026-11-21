@@ -103,7 +103,7 @@ ${(cfg.data as { newBusinessChargePolicy?: string } | undefined)?.newBusinessCha
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 16 }}>
           <GombSz cim="Szerződési feltételek" m={14.5} onPress={() => router.push('/jogi/aszf')} />
           <GombSz cim="Adatkezelés" m={14.5} onPress={() => router.push('/jogi/adatkezeles')} />
-          <GombSz cim="Sütik" m={14.5} onPress={() => router.push('/jogi/suti')} />
+          <GombSz cim="Süti-tájékoztató" m={14.5} onPress={() => router.push('/jogi/suti')} />
         </View>
         <HibaSzoveg szoveg={hiba} style={{ marginBottom: 6 }} />
         <GombE cim="Regisztrálok" onPress={kuld} tolt={tolt} style={{ marginTop: 8 }} />

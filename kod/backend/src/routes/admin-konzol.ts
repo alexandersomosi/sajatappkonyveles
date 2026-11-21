@@ -19,6 +19,7 @@ import {
   anonymizeFromConsole,
   chargeFeeNow,
   consoleExport,
+  eraseSourceFromConsole,
   consolePause,
   consolePauseClose,
   messageClient,
@@ -234,6 +235,12 @@ export function registerAdminConsoleRoutes(r: Hono<Env>, deps: Deps): void {
     const b = await readJson(c, z.object({ reason }));
     await reactivateClient(deps, c, param(c, 'id'), b.reason);
     return c.json({ ok: true });
+  });
+  // Adatkezelési tájékoztató 2.11. / 6.: objection to the source data → its details go (the channel stays)
+  r.post('/console/clients/:id/source-erase', async (c) => {
+    await write(c);
+    const b = await readJson(c, z.object({ reason }));
+    return c.json({ ok: true, counts: await eraseSourceFromConsole(deps, c, param(c, 'id'), b.reason) });
   });
   r.post('/console/clients/:id/anonymize', async (c) => {
     await write(c);

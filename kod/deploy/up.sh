@@ -106,6 +106,11 @@ for i in $(seq 1 60); do
   sleep 3
 done
 echo "kezjegy-api: $st"
+# SPEC §31.1: until umami-beallit.sh ran, the statistics server still has Umami's factory admin password (only reachable on
+# the internal network – the proxy passes nothing but the tracker and the collect call – but it must not stay like that)
+if docker ps --format '{{.Names}}' | grep -qx kezjegy-umami && [ ! -s /srv/kezjegy/.umami_beallitas ]; then
+  echo "FIGYELEM: a statisztika-szerver még a gyári jelszóval fut. Most futtasd: bash /srv/kezjegy/deploy/umami-beallit.sh"
+fi
 "${DC[@]}" ps
 [ "$st" = healthy ]
 

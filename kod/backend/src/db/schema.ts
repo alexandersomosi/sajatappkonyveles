@@ -2059,6 +2059,8 @@ export const marketingTouches = pgTable(
     entryGoal: text(),
     /** A callback row whose source was copied from the registration (the request itself came without one). */
     inherited: boolean().notNull().default(false),
+    /** Filled by the 0021 backfill from signup_attribution: the registration was before the source was recorded. */
+    beforeTracking: boolean().notNull().default(false),
     clickIds: jsonb().$type<Partial<Record<'gclid' | 'gbraid' | 'wbraid' | 'fbclid', string>>>(),
     consentId: uuid(),
     createdAt: createdAt(),

@@ -15,6 +15,16 @@
   font-weight: 100 900;
   font-display: swap;
 }
+/* 3. kör javító (11-21): tartalék betű a Geist méreteire hangolva, hogy a betűcsere (swap) ne tolja el a sorokat (CLS).
+   Mérés (fontTools): Geist upm 1000, ascent 1005, descent 295, line gap 0; egy magyar mintamondat szélessége Geist / Arial = 1,060. */
+@font-face {
+  font-family: "Geist tartalék";
+  src: local("Arial"), local("ArialMT"), local("Helvetica");
+  size-adjust: 106%;
+  ascent-override: 94.8%;
+  descent-override: 27.8%;
+  line-gap-override: 0%;
+}
 
 :root {
   --kek: #1428DB;
@@ -35,7 +45,7 @@
   --papir: #F6F7FA;
   --zold: #15803D;
 
-  --betu: "Geist", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --betu: "Geist", "Geist tartalék", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
   --kontener: 1200px;
   --oldalso: 40px;
   --szakasz: 112px;
@@ -176,8 +186,10 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 /* ================= KOMPOZÍCIÓ: böngészőablak hátul, telefon elöl (hős és a bemutató zárólépése) =================
    A .kompo konténer (container-type), a méretek a szélességéhez igazodnak (cqw), így minden méretben ugyanúgy áll össze.
    --bw: a böngészőablak szélessége; --tw: a telefon külső szélessége; --tx: a telefon távolsága a jobb széltől; --ty: a telefon teteje.
-   A telefon a folyamban van (ő adja a magasságot), a böngészőablak abszolút, mögötte. Árnyék: a telefoné erősebb (elöl van). */
-.kompo { --bw: 100cqw; --tw: 42cqw; --tx: 8cqw; --ty: 9cqw; position: relative; width: 100%; margin: 0; container-type: inline-size; }
+   A telefon a folyamban van (ő adja a magasságot), a böngészőablak abszolút, mögötte. Árnyék: a telefoné erősebb (elöl van).
+   3. kör javító (11-21): a telefon a kompozíció jobb szélén áll, és a böngészőablak jobb szélén kb. 4 cqw-vel (gépen kb. 20 px) TÚLLÓG,
+   így a telefontól jobbra nem marad keskeny csík levágott szövegdarabokkal. */
+.kompo { --bw: 96cqw; --tw: 42cqw; --tx: 0cqw; --ty: 9cqw; position: relative; width: 100%; margin: 0; container-type: inline-size; }
 .kompo-tel { position: relative; z-index: 1; width: fit-content; margin: var(--ty) var(--tx) 0 auto; }
 .kompo-tel .telefon { --w: var(--tw); }
 .kompo-tel::after { content: ""; position: absolute; z-index: -1; left: 15%; right: 15%; top: calc(var(--tw) * 2.046 - 8px); height: 24px; background: radial-gradient(closest-side, rgba(16, 21, 43, .28), rgba(16, 21, 43, 0)); }
@@ -207,7 +219,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
    Mérés (app_minta/hatarok.json, 390x844-es nézet): .nav y 759–844, vízszintes belső margó 6 px, 5 egyforma gomb (75,6 px).
    Százalékban: bal = 1,538% + i × 19,385%, szélesség 19,385%, teteje 89,929%, magassága 10,071% (a Fiók gombja nem kell). */
 .hos-menu { display: none; position: absolute; z-index: 3; left: 0; right: 0; top: 89.929%; bottom: 0; }
-.js .hos-menu { display: block; }
+.kompo-hos.hos-kesz .hos-menu { display: block; }   /* a mozgas.js hos() teszi ki, miután a gombok működnek */
 .hos-menu button {
   position: absolute; top: 0; bottom: 0; width: 19.385%; margin: 0; padding: 0;
   border: 0; border-radius: calc(var(--k) * .04); background: transparent; color: inherit; cursor: pointer;
@@ -216,23 +228,29 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .hos-menu .m0 { left: 1.538%; } .hos-menu .m1 { left: 20.923%; } .hos-menu .m2 { left: 40.308%; } .hos-menu .m3 { left: 59.692%; }
 .hos-menu button:focus-visible { outline: 2px solid var(--kek); outline-offset: -3px; }
 @media (hover: hover) { .hos-menu button:hover { background: rgba(20, 40, 219, .05); } .hos-menu button[aria-pressed="true"]:hover { background: transparent; cursor: default; } }
-/* egyszeri koppintás-jel a betöltéskor (Dosszié, Fotózás, Üzenetek egymás után); az első kattintás után, és mozgás nélkül nincs */
-.hos-kopp { display: none; position: absolute; left: 50%; top: 31%; width: 62%; aspect-ratio: 1; margin: -31% 0 0 -31%; border-radius: 50%; background: rgba(20, 40, 219, .2); box-shadow: 0 0 0 .2em rgba(255, 255, 255, .85); opacity: 0; pointer-events: none; }
+/* egyszeri, szöveg nélküli jel (tulaj, 11-20 23:50: felirat NEM kell): egy vékony gyűrű a Dosszié ikonja körül, egyszer tágul és elhalványul,
+   kb. 1,6 s-mal azután, hogy a telefon látszik. Kitöltés és fehér szegély nincs. Az ikon közepe a gomb magasságának 31%-án van
+   (app-kép, 780x1688: .nav y 1518–1688, ikon 1549–1593, felirat 1613-tól), a gyűrű a legnagyobb méretén sem ér a feliratra.
+   Az első kattintás után (.kiprobalta) és csökkentett mozgásnál (nincs .mozog) nem jelenik meg. Csak transform/opacity. */
+.hos-kopp { display: none; position: absolute; left: 50%; top: 31%; width: 46%; aspect-ratio: 1; margin: -23% 0 0 -23%; border-radius: 50%; border: 1.5px solid var(--kek); opacity: 0; pointer-events: none; }
 .mozog .kompo-hos .hos-kopp { display: block; }
-.mozog .kompo-hos.kopp .hos-kopp { animation: aKoppint .8s var(--kd, .5s) ease-out both; }
-.hos-menu .m2 .hos-kopp { --kd: 1.05s; } .hos-menu .m3 .hos-kopp { --kd: 1.6s; }
+.mozog .kompo-hos.kopp .hos-kopp { animation: aGyuru 1.4s 1.6s var(--mozgas) both; }
 .kompo-hos.kiprobalta .hos-kopp { display: none; }
-/* „Próbáld ki” felirat: gépen a telefon bal oldalán, a menü magasságában, nyíllal a menüre; telefonon a telefon alatt */
-.hos-tipp { display: none; }
-.js .hos-tipp {
-  display: flex; align-items: center; gap: 8px; position: absolute; z-index: 2; right: calc(var(--tx) + var(--tw) + 18px); bottom: calc(var(--tw) * .149 - 11px);
-  white-space: nowrap; font-size: 14px; line-height: 22px; font-weight: 500; color: var(--halvany);
+@keyframes aGyuru { 0% { opacity: 0; transform: scale(.55); } 22% { opacity: .85; } 100% { opacity: 0; transform: scale(1.2); } }
+
+/* a böngészőablak oldalsávjának menüpontjai is kattinthatók (egérrel, koppintással), ugyanúgy váltanak, mint a telefon gombjai.
+   Billentyűzettel és képernyőolvasóval a telefon gombjai használhatók, ezért ezek aria-hidden + tabindex=-1 (nincsenek kétszer).
+   Mérés (app_minta_gep/A01, 1280x800-as nézet): .oldalsav .menu a: x 14, szélesség 203, y 98,8 / 152,8 / 206,8 / 260,8, magasság 50, sarok 12 px.
+   Százalékban: bal 1,094%, szélesség 15,859%, teteje 12,35% + i × 6,75%, magassága 6,25%. A Fiók fölött nincs gomb. */
+.gep-menu { display: none; position: absolute; z-index: 3; inset: 0; pointer-events: none; }
+.kompo-hos.hos-kesz .gep-menu { display: block; }
+.gep-menu button {
+  position: absolute; left: 1.094%; width: 15.859%; height: 6.25%; margin: 0; padding: 0; pointer-events: auto;
+  border: 0; border-radius: .94cqw; background: transparent; color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none;
 }
-.hos-tipp svg { width: 18px; height: 18px; flex: none; color: var(--kek); }
-.szo-eger { display: none; }   /* egérrel „kattints”, érintéssel „koppints” */
-@media (hover: hover) and (pointer: fine) { .szo-eger { display: inline; } .szo-erintes { display: none; } }
-.mozog .hos-tipp { transition: opacity .4s var(--mozgas); }
-.kompo-hos.kiprobalta .hos-tipp { opacity: 0; }
+.gep-menu .g0 { top: 12.35%; } .gep-menu .g1 { top: 19.1%; } .gep-menu .g2 { top: 25.85%; } .gep-menu .g3 { top: 32.6%; }
+@media (hover: hover) { .gep-menu button:hover { background: rgba(20, 40, 219, .05); } .gep-menu button.on:hover { background: transparent; cursor: default; } }
 
 /* ---------- bizalmi sor: fehér, vonalakkal, ikon nélkül ---------- */
 .bizalom { border-top: 1px solid var(--vonal); border-bottom: 1px solid var(--vonal); }
@@ -271,7 +289,10 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 .blepesek { list-style: none; }
 .blepes { position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px; align-items: start; padding: 56px 0; border-top: 1px solid var(--sotet-vonal); }
 .blepes:first-child { padding-top: 48px; }
-.blepes-szoveg { position: sticky; top: calc(var(--fej) + 48px); padding-top: 32px; }
+.blepes-szoveg { padding-top: 32px; }
+/* gépen JS nélkül a szöveg a telefon mellett ragad. Csak (scripting: none) alatt: ha a JS fut, a sticky -> static váltás
+   a betöltéskor elrendezés-ugrásnak számított (CLS 0,047 1440 px-en, 3. kör javító, 11-21) */
+@media (scripting: none) { .blepes-szoveg { position: sticky; top: calc(var(--fej) + 48px); } }
 .blepes-kep { display: flex; justify-content: center; }
 .blepes-kep .telefon { --w: 300px; }
 .blepes-cimke { margin-bottom: 12px; font-size: 14px; font-weight: 500; color: var(--cim-halvany-s); }
@@ -288,21 +309,24 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
    Az eredeti lépés-képek a helyükön maradnak, csak láthatatlanul (képernyőolvasónak megvan a képleírásuk). */
 .szinpad { display: none; }
 .szinpad-mod .blepes-kep { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
-.szinpad .telefon { --w: var(--szw); align-self: center; }
+.szinpad .telefon { --w: var(--w0, var(--szw)); align-self: center; }
 .szinpad-tarto { aspect-ratio: 780 / 1688; }
 /* az új képernyő a régi FÖLÉ úszik be; a régi teljesen látszik, amíg az új be nem ért (nincs szellemkép), csak utána tűnik el */
 .szinpad-tarto > .kepernyo { position: absolute; inset: 0; opacity: 0; transition: opacity 0s .3s; }
 .szinpad-tarto > .kepernyo.aktiv { z-index: 1; opacity: 1; transition: opacity .3s var(--mozgas); }
-/* haladásjelző: 7 vékony szakasz, a sárga kitöltés görgetésre nő (transform) */
+/* haladásjelző: lépésenként egy vékony szakasz (8), a sárga kitöltés görgetésre nő (transform) */
 .halado { display: flex; gap: 5px; }
 .halado > span { position: relative; flex: 1; height: 3px; border-radius: 2px; overflow: hidden; background: rgba(255, 255, 255, .16); }
 .halado > span > i { position: absolute; inset: 0; background: var(--sarga); transform-origin: left center; transform: scaleX(0); }
 .szinpad-szovegek { display: none; }
-/* zárólépés („Gépen is ugyanez”, .szinpad.gep-mod): a telefon kisebb lesz és jobbra lent félrehúzódik (transform),
-   mögötte beúszik a böngészőablak a gépes Főoldallal (opacity + transform). --bw: a böngészőablak szélessége (lásd a töréspontoknál). */
+/* zárólépés („Gépen is ugyanez”, .szinpad.gep-mod): a telefon kisebb lesz (--zs) és a böngészőablak jobb alsó sarkára húzódik (transform),
+   mögötte beúszik a böngészőablak a gépes Főoldallal (opacity + transform). 3. kör javító (11-21): a böngészőablak + telefon csoport
+   vízszintesen ÉS függőlegesen is a színpad közepén áll (nem ragad le, nem marad nagy üres folt); a telefon a böngészőablak jobb szélén
+   3 cqw-vel túllóg, mint a hősben. --bw: a böngészőablak szélessége, --w0: a telefon (nagy) szélessége, a böngészőablak magassága
+   = --bw × 0,679 (sáv 5,4% + 1600x1000-es kép). A képletek a töréspontoknál. */
 .szinpad-kep { position: relative; }
 .szinpad .telefon { position: relative; z-index: 1; transform-origin: 50% 100%; }
-.szinpad-bongeszo { left: 50%; margin-left: calc(var(--bw) / -2); opacity: 0; transform: translateY(5%) scale(.96); pointer-events: none; }
+.szinpad-bongeszo { left: 50%; margin-left: calc(var(--bw) / -2 - 1.5cqw); opacity: 0; transform: translateY(5%) scale(.96); pointer-events: none; }
 .szinpad.gep-mod .szinpad-bongeszo { opacity: 1; transform: none; }
 .mozog .szinpad .telefon { transition: transform .6s var(--mozgas); }
 .mozog .szinpad-bongeszo { transition: opacity .25s var(--mozgas), transform .4s var(--mozgas); }
@@ -322,9 +346,10 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
     grid-column: 2; grid-row: 1; align-self: start; position: sticky;
     top: max(calc(var(--fej) + 20px), calc(50vh + var(--fej) / 2 - (var(--szw) * 2.046 + 27px) / 2));
   }
-  .szinpad-kep { display: flex; justify-content: center; width: 100%; container-type: inline-size; --bw: min(92cqw, 640px, calc(var(--szw) * 2.2)); }
-  .szinpad-bongeszo { top: calc(var(--szw) * 2.046 * .15); }
-  .szinpad.gep-mod .telefon { transform: translateX(calc(var(--bw) / 2 - var(--w) * .3 + 3cqw)) scale(.6); }
+  .szinpad-kep { display: flex; justify-content: center; width: 100%; container-type: inline-size; --bw: min(92cqw, 640px, calc(var(--szw) * 2.2)); --zs: .56; }
+  /* csoport magassága G = böngészőablak + 10% (a telefon ennyivel lóg alá) = --bw × .747; a telefon dobozának (H = --szw × 2,046) közepén áll */
+  .szinpad-bongeszo { top: calc((var(--szw) * 2.046 - var(--bw) * .747) / 2); }
+  .szinpad.gep-mod .telefon { transform: translate(calc(var(--bw) / 2 + 1.5cqw - var(--w) * var(--zs) / 2), calc((var(--bw) * .747 - var(--w) * 2.046) / 2)) scale(var(--zs)); }
   .szinpad .halado { width: calc(var(--szw) * .72); margin-top: 24px; }
 }
 
@@ -344,11 +369,13 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   /* a telefon a megmaradó magasságot tölti ki (a szöveg és a jelző alatta mindig elfér) */
   .szinpad-kep { flex: 1 1 0; min-height: 0; width: 100%; display: flex; justify-content: center; align-items: center; container-type: size; }
   .szinpad-mod { --szw: min(252px, calc((100svh - var(--fej) - 310px) / 2.046)); }
-  @supports (width: 1cqh) { .szinpad-kep .telefon { --w: min(var(--szmax, 252px), calc(100cqh / 2.046)); } }
+  @supports (width: 1cqh) { .szinpad-kep { --w0: min(var(--szmax, 252px), calc(100cqh / 2.046)); } }
   .szinpad .halado { flex: none; width: 100%; max-width: 560px; margin: 24px 0 14px; }
-  .szinpad-kep { --bw: min(100cqw, 560px, 130cqh); }
-  .szinpad-bongeszo { top: 4cqh; }
-  .szinpad.gep-mod .telefon { transform: translate(calc(var(--bw) / 2 - var(--w) * .35), calc(50cqh - var(--w) * 1.023)) scale(.7); }
+  /* a böngészőablak fent, a telefon (--zs) a jobb alsó sarkára áll: a teteje a böngészőablak magasságának 32%-ánál (--bw × .217),
+     a csoport magassága G = --bw × .217 + a kicsinyített telefon; a csoport a színpad (100cqh) közepén áll */
+  .szinpad-kep { --bw: min(86cqw, 520px, 118cqh); --zs: .64; }
+  .szinpad-bongeszo { top: calc((100cqh - var(--bw) * .217 - var(--w0, var(--szw)) * 2.046 * var(--zs)) / 2); }
+  .szinpad.gep-mod .telefon { transform: translate(calc(var(--bw) / 2 + 1.5cqw - var(--w) * var(--zs) / 2), calc((var(--bw) * .217 - var(--w) * 2.046 * (1 - var(--zs))) / 2)) scale(var(--zs)); }
   .szinpad-szovegek { display: grid; flex: none; width: 100%; max-width: 560px; }
   /* egymás utáni váltás: a régi szöveg gyorsan eltűnik, és csak utána úszik be az új (nem csúsznak egymásra) */
   .szinpad-szovegek > .blepes-szoveg { grid-area: 1 / 1; position: static; padding: 0; opacity: 0; transform: translateY(10px); transition: opacity .12s linear, transform .12s linear; }
@@ -612,7 +639,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .menu { gap: 20px; }
   .hos h1 { font-size: 48px; }
   .hos-racs { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
-  .kompo-hos { --tw: 46cqw; --tx: 5cqw; --ty: 10cqw; }
+  .kompo-hos { --tw: 50cqw; --ty: 10cqw; }   /* 981–1180 px (iPad fekvő): a menügomb így legalább 40x45 px */
   .lablec-racs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .lablec-marka { grid-column: 1 / -1; }
   .szinpad-mod, .blepes { column-gap: 48px; }
@@ -625,7 +652,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .hos { padding: 48px 0 72px; }
   .hos-racs { grid-template-columns: minmax(0, 1fr); gap: 56px; }
   .hos-szoveg { max-width: 640px; }
-  .kompo-hos { max-width: 600px; margin: 0 auto; }
+  .kompo-hos { max-width: 600px; margin: 0 auto; --tw: 46cqw; }
 
   .bizalom-racs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bizalom-racs li:nth-child(odd) { border-left: 0; padding-left: 0; }
@@ -667,10 +694,8 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
   .hos-ar { margin-top: 16px; font-size: 14px; }
   .hos-mikro { font-size: 14px; }
   .hos-racs { gap: 40px; }
-  /* telefonon a telefon a fő: nagyobb és középen, a böngészőablak mögötte fent és két oldalt látszik; a felirat a telefon alatt */
-  .kompo-hos { --tw: 72cqw; --tx: 14cqw; --ty: 13cqw; }
-  .js .hos-tipp { position: static; justify-content: center; margin-top: 20px; }
-  .hos-tipp svg { transform: rotate(-90deg); }
+  /* telefonon a telefon a fő: nagy, jobbra áll és a böngészőablak jobb szélén túllóg; a böngészőablak fent és balra látszik (oldalsáv) */
+  .kompo-hos { --tw: 72cqw; --bw: 94cqw; --ty: 13cqw; }
 
   .bizalom-racs { grid-template-columns: minmax(0, 1fr); }
   .bizalom-racs li, .bizalom-racs li:nth-child(n) { padding: 18px 0; border-left: 0; }
@@ -733,6 +758,7 @@ section[id], footer [id] { scroll-margin-top: calc(var(--fej) + 8px); }
 
 @media (max-width: 380px) {
   .blepes-kep .telefon { --w: 250px; }
+  .kompo-hos { --tw: 80cqw; }   /* keskeny telefonon (320–380 px) is legalább kb. 40x45 px-es menügomb */
 }
 
 /* egér nélküli eszközön nincs hover-hatás */

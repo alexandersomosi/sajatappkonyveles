@@ -1,7 +1,8 @@
 // Jogi iratok (SPEC §21): a szerverről (kod/jogi) jövő Markdown – #, ##, -, **félkövér** – olvasható lapon.
-import { View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { Platform, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useJogi } from '@/api/hooks';
+import { useAuth } from '@/auth/AuthProvider';
 import { szin } from '@/theme/tokens';
 import { Lap } from '@/ui/alap';
 import { Betolt, CimSor, Hiba, Kepernyo, vissza } from '@/ui/keret';
@@ -57,8 +58,22 @@ export default function Jogi() {
   const { tipus, honnan } = useLocalSearchParams<{ tipus: string; honnan?: string }>();
   const szerzodesbol = honnan === 'szerzodes';
   const q = useJogi(tipus);
+  const { user } = useAuth();
+  // Kijelentkezve: az appon belülről jött (pl. a regisztrációról) → vissza oda; közvetlenül nyitva (a weboldal láblécéből,
+  // a weboldal nem ad át hivatkozót) → a weboldalra az app.adozz.hu-ról, máshol a regisztrációhoz – nem a belépéshez.
+  const kintrolVissza = () => {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+    if (Platform.OS === 'web' && typeof window !== 'undefined' && window.location.hostname === 'app.adozz.hu') {
+      window.location.href = 'https://adozz.hu/';
+      return;
+    }
+    router.replace('/regisztracio' as never);
+  };
   return (
-    <Kepernyo ful={szerzodesbol ? 'fooldal' : 'fiok'} fejlec={<CimSor visszaCim="Vissza" vissza={() => vissza(szerzodesbol ? '/bekotes/szerzodes' : '/fiok')} cim={q.data?.title ?? 'Jogi irat'} al={q.data ? `Változat: ${q.data.version}` : undefined} />}>
+    <Kepernyo ful={szerzodesbol ? 'fooldal' : 'fiok'} fejlec={<CimSor visszaCim="Vissza" vissza={() => (user ? vissza(szerzodesbol ? '/bekotes/szerzodes' : '/fiok') : kintrolVissza())} cim={q.data?.title ?? 'Jogi irat'} al={q.data ? `Változat: ${q.data.version}` : undefined} />}>
       {q.isLoading ? <Betolt /> : q.error || !q.data ? <Hiba hiba={q.error} ujra={() => void q.refetch()} /> : (
         <Lap style={{ padding: 18 }}>
           <Markdown md={q.data.markdown.replace(/^# .*\n+/, '')} />

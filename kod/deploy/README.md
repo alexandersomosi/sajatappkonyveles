@@ -13,7 +13,40 @@
 > A tulaj gépén át futó „Adozz mentes kulso” feladat KIKAPCSOLVA (Disabled, nem törölve).
 
 
-## Marketing (SPEC §31) – telepítési terv, MÉG NEM ÉL (építő, 2026-11-21)
+## Marketing (SPEC §31) – ÉLESÍTVE 2026-11-21 01:19–01:36 (javító + telepítő)
+
+Ahogy ment (a lépések lent, a „telepítési terv” szerint):
+```bash
+ssh appok-1 'bash -s' < kod/deploy/fiok-szamok.sh                                              # 40 felhasználó / 37 ügyfél / migráció 20
+ssh appok-1 'bash -s ment elotte_marketing_20261121_011908' < kod/deploy/tulaj-fiokok-allapot.sh
+# kézi, titkosított mentés: backups/pg_dump_elotte_marketing_20261121_011908.dump.gpg (468 382 bájt; pg_restore -l: 554 sor)
+cd kod/app && npm run export:web; cd kod/panel && npm run build; node kod/landing/build.mjs
+bash kod/deploy/feltolt.sh && ssh appok-1 'bash /srv/kezjegy/deploy/up.sh'                     # _regi/db_elotte_up_20261121_012238; migráció 20 → 22; Umami indul
+ssh appok-1 'bash /srv/kezjegy/deploy/umami-beallit.sh'                                         # .env-mentés _regi/env_20261121_012422; website id 4b205eb2-…
+# meres.json umamiWebsiteId → node kod/landing/build.mjs → feltolt.sh --web-only → up.sh (2×; a 2. a panel apró javításával)
+ssh appok-1 'bash -s hasonlit elotte_marketing_20261121_011908 utana_marketing_20261121_013515' < kod/deploy/tulaj-fiokok-allapot.sh   # VÁLTOZATLAN
+```
+- **Eredmény:** a 0021 22 forrássort töltött vissza (mind `before_tracking`); a `.env` csak az `umami-beallit.sh`-tól változott
+  (4 `UMAMI_*` kulcs, előtte mentés); új 600-as fájlok: `.env.umami`, `.env.umami-db`, `.umami_beallitas`. A gyári Umami-admin
+  belépés 401. A kezjegy-umami env: `SALT_ROTATION=day`, `SKIP_LOCATION_HEADERS=1`. A restic 01:35-ös futása már az `umami`
+  pillanatképpel és a bővített `config` listával ment (OK).
+- **Élő ellenőrzés:** mind a 8 cím 200/301; `adozz.hu` CSP `script-src 'self'`, sütit nem tesz; `/js/meres.js` és `/m/script.js`
+  200, `/m/x` és `/m/api/x` 404; `/api/v1/public/marketing-config` → `{"ads":false}`, `/api/v1/public/hozzajarulas/<id>` 404.
+  Headless látogatás `?utm_source=youtube&utm_medium=video&utm_campaign=proba-1121&gclid=…` (hivatkozó youtube.com): 3 küldés
+  (oldal, arak-lathato, regisztralok), a webcímben csak az utm_, a hivatkozó csak a webhely, Meta/Google kérés 0; a Regisztrálok
+  azonnal (0,5–0,8 s) az `app.adozz.hu/regisztracio?utm_…&hivatkozo=youtube.com&erkezes=/` címre visz. **Figyelem: az Umami a
+  „HeadlessChrome” böngészőt botnak veszi és eldobja – gépi próbához normál User-Agent kell.** A pult végpontja (7 nap):
+  1 látogató, YouTube 1, Gép 1, Magyarország 1, események „Görgetett az árakig” 1, „Regisztrálok gomb” 1, kampány
+  `proba-1121` 1 látogató / 1 regisztrált. DEMO-regisztráció a böngészőben (kitalált cím `marketing.proba.<idő>@demo.kezjegy.test`,
+  a DEMO-postafiók kódjával): forrássor `regisztracio | youtube | video | proba-1121 | youtube.com | / | web`, kattintás-azonosító
+  nincs; utána `clients.is_test = true` (nem töröltük). Az app `/jogi/suti` és `/jogi/adatkezeles` kijelentkezve megnyílik
+  (2026-11-21, belső jelölő nem látszik). Demo belépések (admin, könyvelő, csapat, ügyfelek, a tulaj demo ügyfele) 200; a
+  Google-os tesztfiók aktív, 3 élő munkamenete megmaradt. Naplók: API/worker/proxy/web 0 hiba- és figyelmeztetéssor.
+  Képek: a javító scratchpadjének `kepek_eles/` mappája (a jelentésben).
+- **Az Umami nyers adatainak törlése (2 év):** `deploy/umami-megorzes.sh` – próbafutás rendben (a 3.5.0 táblanevei egyeznek),
+  **nincs időzítve** (házirend: semmit nem törlünk; a cron-sor a szkript fejében, a tulaj dönt).
+
+### A telepítési terv (az építő írta; így is ment)
 Új: saját statisztika-szerver (Umami 3.5.0 + saját Postgres), a Marketing fül, a források mentése, a nyitóoldal szkriptje, a
 kikapcsolt hirdetési mérés. Tulaj-leírás: `kod/MARKETING.md`. Migráció: **0020** (`legal_doc_type += 'suti'`, csak enum) és
 **0021** (4 új tábla + a `marketing_touches` feltöltése a `signup_attribution`-ből; meglévő sort nem módosít). A régi fájlok:
@@ -563,7 +596,7 @@ node kod/_qa/k3_eles_video.mjs                                                  
 - **Migrations** (`kod/backend/drizzle/`): `0011_tulaj1119_enumok.sql` (only `ALTER TYPE notification_kind ADD VALUE IF NOT EXISTS` × 10), `0013_tulaj1119_tiltas.sql` (`clients.disabled_at/disabled_reason`, S9) and `0012_tulaj1119.sql` (new table `assist_requests`; `business_registrations.mode/chamber_due_on/chamber_done_at/chamber_reminders`; `clients.business_status_changed_at`; `users.totp_locked_until`; three CHECK constraints widened = drop + re-add with the old values plus the new ones). Additive only. SPEC §27.7.1 calls them 0010/0011 – the number 0010 was already taken by `0010_kor1_1119`. Order: pg_dump → `feltolt.sh` → `up.sh` (runs all three) → the worker runs the one-time data step `data.tulaj1119` at start → `bash /srv/kezjegy/deploy/seed-tulaj1119.sh` (Marika, Dávid, Ilona; two lines appended to `demo_belepesek.txt`, nothing printed).
 - **New env (all optional, defaults in brackets)**: `ASSIST_EV_ENABLED` [true] – kill switch of "Intézzük helyetted" for the EV part; `ASSIST_EV_VALID_UNTIL` [2026-12-31]; `ASSIST_UJEGYKE_JOGCIM` [9 | 60]; `QUOTA_BEFORE_ACTIVATION_MB` [300], `QUOTA_AFTER_ACTIVATION_MB` [4096], `MIN_FREE_DISK_MB` [5120] and `MIN_FREE_DISK_PCT` [0 = off] (§27.11 S6: uploads answer 413 `quota_exceeded` / 507 `storage_full` – an absolute floor, because the developer PCs run at 95 % full and a % rule would stop their local harnesses; the admin Rendszer page shows `filesFreeDiskPct`). Add them to `env.example` when the integrator touches it.
 - **Uploads (§27.11 S5)**: the API now keys the upload slot on the user (not the token) and answers 408 after 120 s. Caddy still streams bodies: `request_buffers` on the three upload matchers of `kezjegy.caddy` would stop a slow sender before the API – a change of the SHARED Caddy file, so only with the copy to `/srv/appok/_regi/` and the Gardoko health check before/after (integrator's call; not required).
-- **Containers (§27.11 S15)**: `pids_limit` added to migrate/api/worker/web (no other effect). The dedicated uid is OPT-IN, never by default (a wrong owner would stop file writes): 1) `sudo groupadd -g 10001 kezjegy && sudo useradd -u 10001 -g 10001 -M -s /usr/sbin/nologin kezjegy`; 2) `sudo chown -R 10001:10001 /srv/kezjegy/data/files /srv/kezjegy/_seed` (the only write mounts; `web/` is mounted read-only and must stay world-readable); 3) `KEZJEGY_UID=10001` and `KEZJEGY_GID=10001` into `/srv/kezjegy/.env`; 4) `up.sh`; 5) upload one file on the DEMO and check the health of both apps. Run `seed-tulaj1119.sh` BEFORE switching (its credentials copy is owned by the deploy user and the container appends to it).
+- **Containers (§27.11 S15)**: `pids_limit` added to migrate/api/worker/web (no other effect). The dedicated uid is OPT-IN, never by default (a wrong owner would stop file writes): 1) `sudo groupadd -g 10001 kezjegy && sudo useradd -u 10001 -g 10001 -M -s /usr/sbin/nologin kezjegy`; 2) `sudo chown -R 10001:10001 /srv/kezjegy/data/files /srv/kezjegy/_seed /srv/kezjegy/hirdetes` (the write mounts, plus the read-only Google ad key folder of SPEC §31.6 – its `google.json` is 600, so the container user must own it; `web/` is mounted read-only and must stay world-readable); 3) `KEZJEGY_UID=10001` and `KEZJEGY_GID=10001` into `/srv/kezjegy/.env`; 4) `up.sh`; 5) upload one file on the DEMO and check the health of both apps. Run `seed-tulaj1119.sh` BEFORE switching (its credentials copy is owned by the deploy user and the container appends to it).
 - **Sign-in routes (§27.11 S3)**: every JSON body must carry `Content-Type: application/json` (415 otherwise); POSTs to `/auth/*` from another site (`Sec-Fetch-Site: cross-site`, or an `Origin` that is neither the request's own host nor APP/PANEL/API_PUBLIC_URL) answer 403. Our app and panel already send JSON; native apps send no Origin. Live check after deploy: `curl -s -o /dev/null -w '%{http_code}' -X POST -H 'content-type: text/plain' --data '{}' https://api.45-94-65-74.sslip.io/api/v1/auth/login` → 415 (no password typed).
 
 ## SPEC §27 – élesítve 2026-11-19 13:18–13:23 (integrátor)

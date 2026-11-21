@@ -349,6 +349,8 @@ export function jobDefs(deps: Deps): JobDef[] {
         ]
       : []),
     { name: 'gdpr', slot: at(3, 30), run: (d) => runGdprJob(d) },
+    // SPEC §31 / Adatkezelési tájékoztató 2.11., 8.: click ids after 90 days, source details after 2 years (fields emptied)
+    { name: 'marketing_retention', slot: at(3, 40), run: async (d) => (await import('./services/marketing.js')).jobMarketingRetention(d) },
     {
       name: 'gdpr_export',
       slot: (now) => {

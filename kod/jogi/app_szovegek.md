@@ -218,9 +218,11 @@ Verzió: 2026-11-21. Ez a fájl az app_szovegek.json-ból készül (npm run app-
 
 **fiok.hirdetes_cim** – Hirdetések mérése (Meta, Google)
 
-**fiok.hirdetes_leiras** – Ha bekapcsolod, a regisztrációdról és az első fizetésedről a Meta és a Google jelzést kap a hirdetéseik méréséhez. Az e-mail-címedet kódolva kapják meg; adóadatot, könyvelési adatot soha nem küldünk. Bármikor kikapcsolhatod.
+**fiok.hirdetes_leiras** – Hozzájárultál, hogy a regisztrációdról és az első fizetésedről jelzést kapjon {{kinek}} a hirdetései méréséhez, az e-mail-címedet kódolva. Adóadatot, könyvelési adatot soha nem küldünk. Bármikor visszavonhatod.
 
-**fiok.hirdetes_kikapcsolva** – Kikapcsoltad. Ettől kezdve nem küldünk rólad jelzést a Metának és a Google-nek.
+**fiok.hirdetes_visszavonom** – Visszavonom
+
+**fiok.hirdetes_kikapcsolva** – Visszavontad. Ettől kezdve nem küldünk rólad jelzést a Metának és a Google-nek, és a weboldal is újra megkérdez.
 
 ## Süti-ablak (csak bekapcsolt hirdetési mérésnél)
 

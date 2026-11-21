@@ -72,3 +72,7 @@ for nev, f in (GEP2.items() if '--gep' in __import__('sys').argv else []):
     a = Image.open(os.path.join(os.path.dirname(__file__), 'app_minta_gep', f)).convert('RGB')
     a.save(os.path.join(CEL, nev + '.webp'), 'WEBP', quality=82, method=6)
     print(nev, a.size)
+    # 3. kör javító (11-21): kisebb változat a srcset-hez (telefonon és 1x kijelzőn ez is elég éles), 800x500
+    k = a.resize((800, 500), Image.LANCZOS)
+    k.save(os.path.join(CEL, nev + '_800.webp'), 'WEBP', quality=84, method=6)
+    print(nev + '_800', k.size)

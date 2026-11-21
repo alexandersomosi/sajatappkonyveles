@@ -5,7 +5,7 @@
 // (hashed e-mail, optionally the hashed phone, the event, its time and value, the click id) – never tax data, never a
 // name or an address. The consent is checked again when the row is sent; a withdrawal stops everything not yet sent.
 import { readFile } from 'node:fs/promises';
-import { and, desc, eq, inArray, isNull, lt, sql } from 'drizzle-orm';
+import { and, desc, eq, gte, inArray, isNull, lt, sql } from 'drizzle-orm';
 import { importPKCS8, SignJWT } from 'jose';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
@@ -51,13 +51,27 @@ export const sha = (s: string) => sha256Hex(s);
 // ---------------------------------------------------------------------------------------------------------------------
 // consent
 // ---------------------------------------------------------------------------------------------------------------------
-/** The valid (not withdrawn) consent linked to the account, newest first; null when there is none or ads are off. */
+/** Süti-tájékoztató 6. pont: a decision is valid for 6 months (180 days), then we ask again. */
+export const AD_CONSENT_MAX_AGE_DAYS = 180;
+
+/**
+ * The valid consent linked to the account, newest first: not withdrawn, of the current notice version, at most 180 days
+ * old (then the landing asks again). Null when there is none or ads are off.
+ */
 export async function consentOfUser(deps: Deps, db: DbOrTx, userId: string): Promise<ConsentRow | null> {
   if (!deps.cfg.ads.enabled) return null;
+  const since = new Date(deps.now().getTime() - AD_CONSENT_MAX_AGE_DAYS * 86_400_000);
   const [row] = await db
     .select()
     .from(marketingConsents)
-    .where(and(eq(marketingConsents.userId, userId), isNull(marketingConsents.withdrawnAt), eq(marketingConsents.noticeVersion, deps.cfg.ads.noticeVersion)))
+    .where(
+      and(
+        eq(marketingConsents.userId, userId),
+        isNull(marketingConsents.withdrawnAt),
+        eq(marketingConsents.noticeVersion, deps.cfg.ads.noticeVersion),
+        gte(marketingConsents.createdAt, since),
+      ),
+    )
     .orderBy(desc(marketingConsents.createdAt))
     .limit(1);
   return row ?? null;
@@ -124,6 +138,15 @@ export async function queueAdConversion(deps: Deps, db: DbOrTx, i: QueueInput): 
   const googleConv = i.event === 'regisztracio' ? ads.google?.conversionRegistration : ads.google?.conversionPayment;
   const googleOn = Boolean(ads.google && ads.google.serviceAccountFile && ads.google.customerId && googleConv && consent.google);
   if (!metaOn && !googleOn) return 0;
+  // Adatkezelési tájékoztató 2.18.: only the FIRST payment is signalled (a restart after a cancellation is not)
+  if (i.event === 'fizetes') {
+    const [prev] = await db
+      .select({ id: adConversionEvents.id })
+      .from(adConversionEvents)
+      .where(and(eq(adConversionEvents.userId, i.userId), eq(adConversionEvents.event, 'fizetes')))
+      .limit(1);
+    if (prev) return 0;
+  }
   const [u] = await db.select({ email: users.email }).from(users).where(eq(users.id, i.userId)).limit(1);
   if (!u) return 0;
   const [cl] = await db.select({ phoneEnc: clients.phoneEnc }).from(clients).where(eq(clients.userId, i.userId)).limit(1);
@@ -155,7 +178,8 @@ export async function queueAdConversion(deps: Deps, db: DbOrTx, i: QueueInput): 
     fbc: clickIds?.fbclid && touch ? `fb.1.${touch.createdAt.getTime()}.${clickIds.fbclid}` : null,
     eventSourceUrl: `${deps.cfg.appPublicUrl}${i.event === 'regisztracio' ? '/regisztracio' : '/elofizetes'}`,
     clientUserAgent: i.userAgent ? i.userAgent.slice(0, 400) : null,
-    personalization: consent.personalization,
+    // no remarketing / personalised ads (2.18.: "nem használunk") – never granted, whatever an old row says
+    personalization: false,
   };
   const eventId = `${i.event === 'regisztracio' ? 'reg' : 'fiz'}_${i.ref}`;
   const providers: ('meta' | 'google')[] = [];
@@ -171,6 +195,20 @@ export async function queueAdConversion(deps: Deps, db: DbOrTx, i: QueueInput): 
     n += res.length;
   }
   return n;
+}
+
+/**
+ * queueAdConversion inside the caller's transaction, but in its OWN savepoint: an error here (ads on) is logged and
+ * rolled back alone – it never undoes the e-mail confirmation or the booking of a payment around it.
+ */
+export async function queueAdConversionSafe(deps: Deps, db: DbOrTx, i: QueueInput): Promise<number> {
+  if (!deps.cfg.ads.enabled) return 0;
+  try {
+    return await db.transaction(async (sp) => queueAdConversion(deps, sp, i));
+  } catch (e) {
+    log().warn({ err: safeErr(e), event: i.event }, 'ad conversion not queued');
+    return 0;
+  }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -276,7 +314,8 @@ async function sendGoogle(deps: Deps, row: OutboxRow): Promise<void> {
   const body = {
     destinations: [destination],
     encoding: 'HEX',
-    consent: { adUserData: 'CONSENT_GRANTED', adPersonalization: row.payload.personalization ? 'CONSENT_GRANTED' : 'CONSENT_DENIED' },
+    // no remarketing / personalised ads (Adatkezelési tájékoztató 2.18.) – always denied
+    consent: { adUserData: 'CONSENT_GRANTED', adPersonalization: 'CONSENT_DENIED' },
     validateOnly: g.validateOnly,
     events: [googleEventOf(row)],
   };
@@ -309,7 +348,8 @@ export async function jobAdConversions(deps: Deps): Promise<{ sent: number; fail
     .limit(100);
   for (const row of rows) {
     const [consent] = await deps.db.select().from(marketingConsents).where(eq(marketingConsents.id, row.consentId)).limit(1);
-    const allowed = consent && !consent.withdrawnAt && consent.userId === row.userId && (row.provider === 'meta' ? consent.meta : consent.google);
+    const fresh = consent && consent.createdAt.getTime() >= now.getTime() - AD_CONSENT_MAX_AGE_DAYS * 86_400_000;
+    const allowed = consent && fresh && !consent.withdrawnAt && consent.userId === row.userId && (row.provider === 'meta' ? consent.meta : consent.google);
     const configured = row.provider === 'meta' ? Boolean(deps.cfg.ads.meta?.capiToken) : Boolean(deps.cfg.ads.google);
     if (!allowed || !configured || tooOld(row, now)) {
       await deps.db.update(adConversionEvents).set({ status: 'elvetve', lastError: !allowed ? 'nincs érvényes hozzájárulás' : !configured ? 'a szolgáltató nincs beállítva' : 'túl régi esemény' }).where(eq(adConversionEvents.id, row.id));

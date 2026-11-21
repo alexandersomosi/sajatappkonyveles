@@ -3,6 +3,7 @@
 //  - the channel of the visit (= the Umami tag) by the shared rule; the statistics get no click id and no other parameter;
 //  - the app links take utm_*, the referring domain and the landing path along; the legal links stay clean;
 //  - nothing is stored and nothing is fetched in the normal build; no ad code at all in it;
+//  - the statistics script is loaded by meres.js itself (never unfiltered); the button clicks never wait for it;
 //  - the ad build: still nothing while the server says ads:false; with ads:true the banner comes first, no Meta/Google
 //    script before "Elfogadom", none after "Elutasítom"; "Elfogadom" loads them and the links get the decision id.
 //   node --test kod/landing/meres.test.mjs   (builds the page itself; the ad variant goes to a temporary folder)
@@ -23,10 +24,23 @@ function epit(env = {}) {
   execFileSync(process.execPath, [join(ITT, 'build.mjs')], { env: { ...process.env, ...env }, stdio: 'pipe' });
 }
 
+// the real build (kod/landing/dist, with the real meres.json) – what feltolt.sh uploads
 epit();
-const DIST = join(ITT, 'dist');
+const VALOS = JSON.parse(readFileSync(join(ITT, 'meres.json'), 'utf8'));
+const valosJs = readFileSync(join(ITT, 'dist', 'js', 'meres.js'), 'utf8');
+// the build WITHOUT statistics (an empty website id) for the first tests, in a temporary folder
+const D0 = mkdtempSync(join(tmpdir(), 'kj-landing-0-'));
+writeFileSync(join(D0, 'meres.json'), JSON.stringify({ ...VALOS, umamiWebsiteId: '', hirdetes: false }));
+epit({ LANDING_KI: join(D0, 'dist'), LANDING_MERES: join(D0, 'meres.json') });
+const DIST = join(D0, 'dist');
 const html = readFileSync(join(DIST, 'index.html'), 'utf8');
 const js = readFileSync(join(DIST, 'js', 'meres.js'), 'utf8');
+
+test('the real build follows meres.json (statistics on only with the website id; never ad code with hirdetes:false)', () => {
+  if (VALOS.umamiWebsiteId) assert.ok(valosJs.includes(`"websiteId":"${VALOS.umamiWebsiteId}"`));
+  else assert.doesNotMatch(valosJs, /"websiteId"/);
+  if (VALOS.hirdetes !== true) assert.doesNotMatch(valosJs, /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/);
+});
 
 /** The page in jsdom at `url` with `referrer`; the script runs once; fetch and storage are spied. */
 function oldal(o = {}) {
@@ -53,12 +67,15 @@ const varj = () => new Promise((r) => setTimeout(r, 30));
 
 test('normal build: one own script, no ad code, footer says the truth, events on the buttons', () => {
   assert.match(html, /<script defer src="js\/meres\.js"><\/script>/);
-  assert.doesNotMatch(html, /\/m\/script\.js/); // no website id yet → no statistics script
+  assert.doesNotMatch(html, /\/m\/script\.js/); // never a tag in the page: meres.js loads it (with the website id)
+  assert.doesNotMatch(js, /\/m\/script\.js"|websiteId":"[0-9a-f]/); // no website id yet → nothing to load
   assert.doesNotMatch(js, /connect\.facebook\.net|googletagmanager|fbq\(|gtag\(|hozzajarulas/);
-  assert.match(html, /Ez az oldal nem használ sütit, és nem követ\./);
-  assert.match(html, /href="https:\/\/app\.adozz\.hu\/jogi\/suti">Sütik</);
-  assert.match(html, /data-umami-event="regisztralok" data-umami-event-hely="hos"/);
-  assert.match(html, /data-umami-event="visszahivas"/);
+  assert.match(html, /<p class="halvany" id="meres-lablec">Ez az oldal nem használ sütit\.<\/p>/);
+  assert.doesNotMatch(html, /nem követ/);
+  assert.match(html, /href="https:\/\/app\.adozz\.hu\/jogi\/suti">Süti-tájékoztató</);
+  assert.match(html, /data-kj-esemeny="regisztralok" data-kj-hely="hos"/);
+  assert.match(html, /data-kj-esemeny="visszahivas"/);
+  assert.doesNotMatch(html, /data-umami-event/); // the Umami tracker would hold the link until its request ends
   assert.match(html, /<section class="szak" id="arak">/);
   assert.match(html, /A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között\./);
   assert.doesNotMatch(html, /a\(z\)/);
@@ -90,7 +107,7 @@ test('app links carry utm_*, the referring domain and the landing path; legal li
   assert.equal(reg.searchParams.get('hivatkozo'), 'youtube.com');
   assert.equal(reg.searchParams.get('erkezes'), '/');
   assert.equal(reg.searchParams.get('gclid'), null); // click ids only with ad consent
-  const vissza = new URL(p.d.querySelector('a[data-umami-event="visszahivas"]').href);
+  const vissza = new URL(p.d.querySelector('a[data-kj-esemeny="visszahivas"]').href);
   assert.equal(vissza.searchParams.get('cel'), 'visszahivas');
   assert.equal(vissza.searchParams.get('utm_source'), 'youtube');
   for (const a of p.d.querySelectorAll('a[href*="/jogi/"]')) assert.equal(new URL(a.href).search, '');
@@ -100,24 +117,40 @@ test('app links carry utm_*, the referring domain and the landing path; legal li
   assert.equal(p.d.querySelectorAll('script[src*="facebook"], script[src*="google"]').length, 0);
 });
 
-test('statistics on: the Umami tag with DNT and the filter; the off switch writes only when clicked', async () => {
+test('statistics on: meres.js loads the Umami script with the tag, DNT and the filter; clicks never wait; the off switch writes only when clicked', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'kj-landing-'));
   const meres = join(dir, 'meres.json');
   writeFileSync(meres, JSON.stringify({ umamiWebsiteId: '0b7a4a52-6c55-4a1e-9a0e-2a1b3c4d5e6f', domains: ['adozz.hu'], doNotTrack: true, hirdetes: false }));
   epit({ LANDING_KI: join(dir, 'dist'), LANDING_MERES: meres });
   const h2 = readFileSync(join(dir, 'dist', 'index.html'), 'utf8');
   const j2 = readFileSync(join(dir, 'dist', 'js', 'meres.js'), 'utf8');
-  assert.match(h2, /<script defer src="\/m\/script\.js" data-website-id="0b7a4a52-6c55-4a1e-9a0e-2a1b3c4d5e6f" data-domains="adozz\.hu" data-before-send="adozzStatSzuro" data-do-not-track="true"><\/script>/);
-  assert.ok(h2.indexOf('js/meres.js') < h2.indexOf('/m/script.js'), 'meres.js runs first (it sets the tag)');
-  assert.match(h2, /A látogatottságot a saját szerverünkön mérjük, süti nélkül, összesítve\./);
-  const p = oldal({ html: h2, js: j2 });
+  assert.doesNotMatch(h2, /\/m\/script\.js/); // not in the page: if meres.js does not run, the statistics do not run either
+  assert.match(h2, /Ez az oldal nem használ sütit\. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük\./);
+  const p = oldal({ html: h2, js: j2, url: 'https://adozz.hu/?utm_source=youtube&utm_campaign=proba', referrer: 'https://www.youtube.com/' });
   await varj();
+  const s = p.d.querySelector('script[src="/m/script.js"]');
+  assert.ok(s, 'meres.js added the statistics script');
+  assert.equal(s.getAttribute('data-website-id'), '0b7a4a52-6c55-4a1e-9a0e-2a1b3c4d5e6f');
+  assert.equal(s.getAttribute('data-domains'), 'adozz.hu');
+  assert.equal(s.getAttribute('data-before-send'), 'adozzStatSzuro');
+  assert.equal(s.getAttribute('data-do-not-track'), 'true');
+  assert.equal(s.getAttribute('data-tag'), 'youtube');
+  assert.equal(typeof p.w.adozzStatSzuro, 'function', 'the filter exists before the script can run');
+  // a click: the event goes without holding the link (no preventDefault), with the place of the button
+  const kuldott = [];
+  p.w.umami = { track: (nev, adat) => (kuldott.push([nev, adat]), new Promise(() => {})) };
+  const reg = p.d.querySelector('a[data-kj-esemeny="regisztralok"]');
+  const ev = new p.w.MouseEvent('click', { bubbles: true, cancelable: true });
+  reg.dispatchEvent(ev);
+  assert.equal(ev.defaultPrevented, false);
+  assert.equal(JSON.stringify(kuldott), JSON.stringify([['regisztralok', { hely: 'hos' }]]));
   const gomb = p.d.getElementById('meres-kapcsolo');
   assert.equal(gomb.hidden, false);
   assert.match(gomb.textContent, /Ne mérjétek/);
   gomb.click();
   assert.equal(p.w.localStorage.getItem('umami.disabled'), '1');
-  assert.match(gomb.textContent, /Újra mérhetitek/);
+  assert.equal(gomb.textContent, 'Újra mérhetitek');
+  assert.match(p.d.getElementById('meres-visszajelzes').textContent, /ezen a böngészőn nem mérjük/);
   gomb.click();
   assert.equal(p.w.localStorage.getItem('umami.disabled'), null);
 });
@@ -149,6 +182,12 @@ test('ad build: server off → nothing; server on → banner first, nothing load
   const gombok = [...ablak.querySelectorAll('.hj-gombok button')].map((b) => [b.textContent, b.className]);
   assert.deepEqual(gombok.slice(0, 2), [['Elfogadom', 'hj-gomb'], ['Elutasítom', 'hj-gomb']]);
   assert.ok([...ablak.querySelectorAll('input[type=checkbox]')].every((c) => !c.checked));
+  // the lawyer's texts; no "personalised ads" choice (2.18.: no remarketing)
+  assert.match(ablak.textContent, /az első fizetésedről is jelzést kapnak/);
+  assert.match(ablak.textContent, /Feltétlenül szükséges/);
+  assert.deepEqual([...ablak.querySelectorAll('input[type=checkbox]')].map((c) => c.getAttribute('data-kulcs')), ['m', 'g']);
+  assert.doesNotMatch(ablak.textContent, /személyre szabott|hash/);
+  assert.match(p.d.getElementById('meres-lablec').textContent, /kj_hozzajarulas/);
   assert.equal(kulso(p.d), 0);
   [...ablak.querySelectorAll('button')].find((b) => b.textContent === 'Elutasítom').click();
   await varj();
@@ -163,10 +202,30 @@ test('ad build: server off → nothing; server on → banner first, nothing load
   [...p.d.querySelectorAll('.hj-ablak button')].find((b) => b.textContent === 'Elfogadom').click();
   await varj();
   const post = p.hivasok.find((x) => x.url === '/api/v1/public/hozzajarulas');
-  assert.deepEqual(JSON.parse(post.body), { meta: true, google: true, personalization: false });
+  assert.deepEqual(JSON.parse(post.body), { meta: true, google: true });
   assert.equal(kulso(p.d), 2);
   const reg = new URL(p.d.querySelector('a.gomb-e').href);
   assert.equal(reg.searchParams.get('hid'), '6a1f0d6e-2a7e-4a8e-9a39-6f3c1c8a1b11');
   assert.equal(reg.searchParams.get('gclid'), 'G1');
   assert.equal(reg.searchParams.get('fbclid'), 'F1');
+  assert.doesNotMatch(JSON.stringify(p.w.dataLayer.map((x) => [...x])), /"ad_personalization":"granted"/);
+
+  // next visit with that decision: the server says it was withdrawn in the app → ad cookies go, the banner asks again
+  const suti = p.d.cookie.match(/kj_hozzajarulas=[^;]*/)[0];
+  p = oldal({ html: h3, js: j3, valasz: (u) => (u.endsWith('/marketing-config') ? be : u.includes('/hozzajarulas/') ? { ervenyes: false } : { id: null }) });
+  p.d.cookie = suti + '; Path=/';
+  p.d.cookie = '_fbp=fb.1.1.1; Path=/';
+  await varj();
+  await varj();
+  assert.ok(p.hivasok.some((x) => x.url === '/api/v1/public/hozzajarulas/6a1f0d6e-2a7e-4a8e-9a39-6f3c1c8a1b11'));
+  assert.ok(p.d.querySelector('.hj-ablak'), 'asks again');
+  assert.equal(kulso(p.d), 0);
+  assert.doesNotMatch(p.d.cookie, /_fbp=/);
+  // still valid → loads without asking
+  p = oldal({ html: h3, js: j3, valasz: (u) => (u.endsWith('/marketing-config') ? be : u.includes('/hozzajarulas/') ? { ervenyes: true } : { id: null }) });
+  p.d.cookie = suti + '; Path=/';
+  await varj();
+  await varj();
+  assert.equal(p.d.querySelector('.hj-ablak'), null);
+  assert.equal(kulso(p.d), 2);
 });

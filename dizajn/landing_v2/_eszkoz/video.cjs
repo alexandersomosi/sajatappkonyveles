@@ -8,6 +8,12 @@
 // setTimeout/requestAnimationFrame), és sima képernyőképeket gyűjtünk; a kockák hossza a lassított (oldal-)idő szerint számít,
 // így a videó valós sebességű. Ablakot nem nyit (headless), nem veszi el a fókuszt.
 // 11-20 késő este: átírva a ragadós bemutatóhoz (a régi változat: _regi/elotte_kor2_ragados_20261120_2215/_eszkoz/video.cjs).
+// 11-21 (3. kör javító): új forgatókönyv a kattintható hőshöz (a régi: _regi/elotte_kor3_javito_20261121_0034/_eszkoz/video.cjs).
+//   betöltés -> a hős (telefonon odagörget), az egyszeri gyűrű a Dosszién -> koppintás/kattintás a telefon menüjének 4 pontjára
+//   egymás után (Dosszié, Fotózás, Üzenetek, Főoldal; a böngészőablak is vált) -> lassú görgetés a ragadós bemutatón végig,
+//   a „Gépen is ugyanez” zárólépésnél megállva. A koppintást/kattintást egy rárajzolt ujj-, ill. egérmutató jelzi
+//   (csak a felvételen, az oldalnak nem része). Telefonon érintéses eszközt emulál (koppintás, nincs hover).
+//   Kimenet: _kepek_tulajnak/kor3/mozgas_telefon.mp4 (390x844 @2) és mozgas_gep.mp4 (1440x900 @1), kb. 40 s.
 const path = require('path'), fs = require('fs'), os = require('os');
 const { pathToFileURL } = require('url');
 const { execFileSync } = require('child_process');
@@ -17,10 +23,10 @@ const FFMPEG = 'D:/Programs/ffmpeg/bin/ffmpeg.exe';
 const GYOKER = path.join(__dirname, '..');
 const OLDAL = pathToFileURL(path.join(GYOKER, 'index.html')).href;
 const NEZETEK = {
-  telefon: { ki: path.join(GYOKER, '_kepek_tulajnak/kor2/mozgas_telefon.mp4'), w: 390, h: 844, dpr: 2, K: 0.2 },
-  asztali: { ki: path.join(GYOKER, '_kepek_tulajnak/kor2/mozgas_asztali.mp4'), w: 1440, h: 900, dpr: 1, K: 0.25 },
-  // gépen rövidebb: a hős két váltása, a bemutató lépésenként (a rétegek a következő görgetés közben fejeződnek be), elengedés
-  gep: { ki: path.join(GYOKER, '_kepek_tulajnak/kor2/mozgas_gep.mp4'), w: 1440, h: 900, dpr: 1, K: 0.25, hos: 7800, lepesGorget: 800, lepesVar: 1900, vege: 'elenged' },
+  telefon: { ki: path.join(GYOKER, '_kepek_tulajnak/kor3/mozgas_telefon.mp4'), w: 390, h: 844, dpr: 2, K: 0.2, erintes: true, lepesGorget: 800, lepesVar: 1700, utana: 1300, vegVar: 2600, gyuruVar: 3000 },
+  asztali: { ki: path.join(GYOKER, '_kepek_tulajnak/kor3/mozgas_asztali.mp4'), w: 1440, h: 900, dpr: 1, K: 0.25 },
+  // gépen: a bemutató lépésenként (a rétegek a következő görgetés közben fejeződnek be), a zárólépésnél megáll
+  gep: { ki: path.join(GYOKER, '_kepek_tulajnak/kor3/mozgas_gep.mp4'), w: 1440, h: 900, dpr: 1, K: 0.25, lepesGorget: 850, lepesVar: 2000 },
 };
 const melyik = process.argv[2] || 'telefon';
 const n = { ...NEZETEK[melyik] };
@@ -54,7 +60,8 @@ function lassit(K) {
   await cdp.send('Animation.enable');
   await cdp.send('Animation.setPlaybackRate', { playbackRate: n.K });
   const varj = ms => varjValos(ms / n.K); // oldal-időben várunk
-  await page.setViewport({ width: n.w, height: n.h, deviceScaleFactor: n.dpr });
+  await page.emulate({ viewport: { width: n.w, height: n.h, deviceScaleFactor: n.dpr, isMobile: !!n.erintes, hasTouch: !!n.erintes },
+    userAgent: n.erintes ? 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Mobile Safari/537.36' : await browser.userAgent() });
   await page.goto(OLDAL, { waitUntil: 'networkidle0', timeout: 60000 });
   await page.evaluate(async () => {
     await document.fonts.ready;
@@ -69,6 +76,23 @@ function lassit(K) {
         if (x < 1) requestAnimationFrame(f); else res();
       })();
     });
+    // a felvételre rajzolt mutató: telefonon ujjnyom (kör), gépen egérnyíl; csak transform/opacity, pointer-events: none
+    const m = document.createElement('div');
+    m.setAttribute('aria-hidden', 'true');
+    m.style.cssText = 'position:fixed;left:0;top:0;z-index:2147483647;pointer-events:none;opacity:0;transition:opacity .25s,transform .9s cubic-bezier(.3,.7,.2,1);will-change:transform';
+    window.__ujj = matchMedia('(pointer: coarse)').matches;
+    m.innerHTML = window.__ujj
+      ? '<div style="width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(16,21,43,.28);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 4px 14px rgba(16,21,43,.35);transition:transform .18s"></div>'
+      : '<svg width="26" height="30" viewBox="0 0 26 30" style="display:block;margin:-2px 0 0 -3px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));transition:transform .15s"><path d="M3 2l19 16.5-8.6.8 5 9.2-3.6 1.9-5-9.3L3 27z" fill="#10152B" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    document.body.appendChild(m);
+    window.__mutato = m;
+    window.__mozgat = (x, y, ms) => new Promise(res => {
+      m.style.transitionDuration = '.25s,' + (ms / 1000) + 's';
+      m.style.opacity = '1'; m.style.transform = `translate(${x}px,${y}px)`;
+      setTimeout(res, ms + 30);
+    });
+    window.__nyom = (le) => { m.firstChild.style.transform = le ? 'scale(.82)' : 'none'; };
+    window.__elrejt = () => { m.style.opacity = '0'; };
     // a ragadós bemutató i. lépésének görgetési helye (ugyanaz a számítás, mint a mozgas.js-ben)
     window.__lepes = (i) => {
       const l = [...document.querySelectorAll('.bemutato .blepes')], sp = document.querySelector('.szinpad');
@@ -97,28 +121,39 @@ function lassit(K) {
   })();
   const kezdValos = Date.now();
 
-  // 1) hős: váltakozó képernyők
-  await varj(1000);
-  if (n.w < 760) await page.evaluate(ms => { const r = document.querySelector('.hos-kep').getBoundingClientRect(); return window.__gorget(scrollY + r.top + r.height / 2 - innerHeight / 2 + 20, ms); }, 1100);
-  await varj(n.hos || 6000);
-  // 2) a ragadós bemutató: a szakasz eleje, aztán lépésenként
-  await page.evaluate(ms => { const r = document.querySelector('#mit-kapsz').getBoundingClientRect(); return window.__gorget(scrollY + r.top - 40, ms); }, 1500);
-  await varj(900);
+  // 1) betöltés, aztán a hős: telefonon odagörgetünk (ekkor fut le a Dosszién az egyszeri gyűrű)
+  await varj(1100);
+  if (n.w < 760) await page.evaluate(ms => { const r = document.querySelector('.kompo-hos').getBoundingClientRect(), fej = document.querySelector('.fejlec').offsetHeight; return window.__gorget(scrollY + r.top - fej - (innerHeight - fej - r.height) / 2, ms); }, 1100);
+  // kivárjuk a gyűrűt (a telefon látszódásától 1,6 s + 1,4 s), aztán a mutató megjelenik a telefon mellett
+  const gombok = await page.evaluate(() => [...document.querySelectorAll('.hos-menu button')].map(g => { const r = g.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height * 0.45]; }));
+  const kezd = n.erintes ? [gombok[1][0] + 40, gombok[1][1] - 160] : [gombok[1][0] - 260, gombok[1][1] - 220];
+  await page.evaluate(([x, y]) => { window.__mutato.style.transitionDuration = '0s'; window.__mutato.style.transform = `translate(${x}px,${y}px)`; }, kezd);
+  await varj(n.gyuruVar || 2300);   // a gyűrű lefut, csak utána jelenik meg a mutató
+  await page.evaluate(([x, y]) => window.__mozgat(x, y, 10), kezd);
+  await varj(500);
+  // 2) koppintás/kattintás a telefon menüjének 4 pontjára egymás után; a telefon ÉS a böngészőablak is vált
+  for (const i of [1, 2, 3, 0]) {
+    const [x, y] = gombok[i];
+    await page.evaluate(([x, y], ms) => window.__mozgat(x, y, ms), [x, y], 700);   // (megvárja, amíg a mutató odaér)
+    await page.evaluate(() => window.__nyom(true));
+    if (n.erintes) await page.touchscreen.tap(x, y); else await page.mouse.click(x, y);
+    // a felvétel közbeni képernyőképek (eszközméret-felülírás) olykor elnyelik az érintést: ha nem váltott, ugyanoda kattintunk JS-ből
+    await varj(120);
+    const valtott = await page.evaluate(i => document.querySelectorAll('.hos-menu button')[i].getAttribute('aria-pressed') === 'true', i);
+    if (!valtott) { await page.evaluate(([x, y]) => { const e = document.elementFromPoint(x, y); if (e) e.click(); }, [x, y]); console.log('  (koppintás JS-ből pótolva: ' + i + ')'); }
+    await varj(60);
+    await page.evaluate(() => window.__nyom(false));
+    await varj(n.utana || 1500);
+  }
+  await page.evaluate(() => window.__elrejt());
+  await varj(500);
+  // 3) a ragadós bemutató: a szakasz eleje, aztán lépésenként, végül a „Gépen is ugyanez” zárólépésnél megállunk
+  await page.evaluate(ms => { const r = document.querySelector('#mit-kapsz').getBoundingClientRect(); return window.__gorget(scrollY + r.top - 40, ms); }, n.erintes ? 1200 : 1500);
+  await varj(n.erintes ? 700 : 900);
   const db = await page.evaluate(() => document.querySelectorAll('.bemutato .blepes').length);
   for (let i = 0; i < db; i++) {
     await page.evaluate((i, ms) => window.__gorget(window.__lepes(i), ms), i, i === 0 ? 1200 : (n.lepesGorget || 900));
-    await varj(n.lepesVar || 2200);
-  }
-  if (n.vege === 'elenged') {
-    // 3) a bemutató vége: a telefon elenged, látszik a záró mondat és a következő szakasz eleje
-    await page.evaluate(ms => { const r = document.querySelector('.bemutato-jegy').getBoundingClientRect(); return window.__gorget(scrollY + r.top - innerHeight * 0.55, ms); }, 1300);
-    await varj(1400);
-  } else {
-    // 3) a könyvelő-szakasz: a fej, aztán a negyedéves lista
-    await page.evaluate(ms => { const r = document.querySelector('#konyvelo').getBoundingClientRect(); return window.__gorget(scrollY + r.top - 70, ms); }, 1400);
-    await varj(1600);
-    await page.evaluate(ms => { const r = document.querySelector('.feladat-cim').getBoundingClientRect(); return window.__gorget(scrollY + r.top - 90, ms); }, 1300);
-    await varj(2200);
+    await varj(i === db - 1 ? (n.vegVar || 3000) : (n.lepesVar || 2200));
   }
 
   const hosszValos = (Date.now() - kezdValos) / 1000;

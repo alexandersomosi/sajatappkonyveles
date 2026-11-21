@@ -92,7 +92,11 @@ if ($Kikapcsol) {
   Write-Host ''
   Write-Host 'A mérés BEKAPCSOLÁSA csak az ügyvéd jóváhagyása és a süti-ablakos nyitóoldal élesítése után (MARKETING.md)!' -ForegroundColor Yellow
   if (Igen 'Bekapcsoljam most a hirdetési mérést (ADS_TRACKING_ENABLED=true)?') { $e['ADS_TRACKING_ENABLED'] = 'true' }
-  else { Write-Host '  A kulcsok felkerülnek, a mérés KIKAPCSOLVA marad.' -ForegroundColor DarkGray }
+  else {
+    # a "nem" mindig kikapcsolt állapotot ír (akkor is, ha korábban be volt kapcsolva)
+    $e['ADS_TRACKING_ENABLED'] = 'false'
+    Write-Host '  A kulcsok felkerülnek, a mérés KIKAPCSOLVA marad.' -ForegroundColor DarkGray
+  }
 }
 
 $sorok = ($e.Keys | ForEach-Object { "$_=$($e[$_])" }) -join "`n"
@@ -132,7 +136,9 @@ chmod 600 .env
 rm -f "$uj"
 cd /srv/kezjegy/deploy
 DC="docker compose --env-file /srv/kezjegy/.env -f docker-compose.yml"
-$DC up -d --force-recreate kezjegy-api kezjegy-worker >/dev/null 2>&1
+# a hibás indulás se hagyja ki a visszaállítást (set -e mellett is)
+$DC up -d --force-recreate kezjegy-api kezjegy-worker >/dev/null 2>&1 || true
+st=none
 for i in $(seq 1 40); do st=$(docker inspect -f '{{.State.Health.Status}}' kezjegy-api 2>/dev/null || echo none); [ "$st" = healthy ] && break; sleep 3; done
 if [ "$st" = healthy ]; then
   echo 'API restarted: OK'
@@ -141,7 +147,7 @@ else
   echo "API NOT healthy ($st) - restoring the previous .env"
   cp -p "/srv/kezjegy/_regi/env_$TS" /srv/kezjegy/.env
   chmod 600 /srv/kezjegy/.env
-  $DC up -d --force-recreate kezjegy-api kezjegy-worker >/dev/null 2>&1
+  $DC up -d --force-recreate kezjegy-api kezjegy-worker >/dev/null 2>&1 || true
   echo "Restored from /srv/kezjegy/_regi/env_$TS (nothing else changed)"
 fi
 '@

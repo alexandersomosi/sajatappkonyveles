@@ -18,7 +18,7 @@ import { base32Decode, newRecoveryCodes, newTotpSecret, otpauthUrl, verifyTotp }
 import { isPlausibleEmail, normalizeEmail } from '../lib/validators.js';
 import { sendCodeEmail, sendTemplateMail } from '../notify/notify.js';
 import { createClientAccount, issueAuth, type IssuedAuth } from '../services/accounts.js';
-import { queueAdConversion } from '../services/hirdetes.js';
+import { queueAdConversionSafe } from '../services/hirdetes.js';
 import type { TouchInput } from '../services/marketing.js';
 import { cancelDeletion } from '../services/gdpr.js';
 import brand from '../_shared/brand.json' with { type: 'json' };
@@ -233,7 +233,7 @@ export function authRoutes(deps: Deps) {
       // signed in: the session's user; the sign-up code step has no session yet – the account itself
       await auditC(c, tx, 'auth.email_verified', { ...(c.get('auth') ? {} : { actorUserId: userId, actorRole: 'client' }), targetType: 'user', targetId: userId, clientId: cl?.id ?? null });
       // SPEC §31.6: the "regisztrált" conversion – nothing unless ads are on AND the account has a granted consent
-      if (cl) await queueAdConversion(deps, tx, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
+      if (cl) await queueAdConversionSafe(deps, tx, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
     });
     deps.sessionCache.clear();
   }
@@ -516,7 +516,7 @@ export function authRoutes(deps: Deps) {
       }),
     );
     // SPEC §31.6: a Google / Apple sign-up is confirmed at once – the "regisztrált" conversion (only ads on + consent)
-    await queueAdConversion(deps, deps.db, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
+    await queueAdConversionSafe(deps, deps.db, { event: 'regisztracio', userId, ref: userId, userAgent: c.get('ua') });
     return finishLogin(c, userId, kind, { method: p, isNewUser: true });
   }
 

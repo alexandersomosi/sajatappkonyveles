@@ -647,6 +647,22 @@ export async function reactivateClient(deps: Deps, c: C, id: string, reasonIn: s
   deps.sessionCache.clear();
 }
 
+/**
+ * Adatkezelési tájékoztató 2.11. / 6.: the client objected to the source data (or asked for its erasure) – every source
+ * detail of the account goes (campaign values, referring site, landing path, entry, click ids); the channel stays for the
+ * totals. Audited with the reason; nothing else of the client changes.
+ */
+export async function eraseSourceFromConsole(deps: Deps, c: C, id: string, reasonIn: string): Promise<{ touches: number; attribution: number }> {
+  const cl = await consoleClientRow(deps.db, id);
+  const reason = needReason(reasonIn);
+  const { eraseSourceDetails } = await import('./marketing.js');
+  return deps.db.transaction(async (tx) => {
+    const n = await eraseSourceDetails(tx, cl.userId);
+    await auditAdmin(c, tx, 'admin.client.source_erased', id, { reason, after: n });
+    return n;
+  });
+}
+
 export async function anonymizeFromConsole(deps: Deps, c: C, id: string, b: { reason: string; confirmName: string }): Promise<unknown> {
   const cl = await consoleClientRow(deps.db, id);
   const reason = needReason(b.reason);

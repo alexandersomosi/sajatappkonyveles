@@ -12,7 +12,11 @@ Előfeltétel: a jogász az `UGYVED_KERDESEK_marketing.md` M5–M10 kérdéseire
 
 - „Röviden”, a 3. hirdetési sor helyett: „Hirdetési mérést (Meta, Google) csak a hozzájárulásoddal végzünk: ha a weboldalon elfogadod, és onnan regisztrálsz (2.18. pont). Ha elutasítod, semmi nem változik.”
 - 2.14., az „Elemző és hirdetési süti” sor helyett: „**Elemző és hirdetési süti:** elemző sütit nem használunk; a weboldal látogatottságát süti nélkül mérjük (2.17. pont). Hirdetési sütit (Meta, Google) csak akkor teszünk a böngésződbe, ha a süti-ablakban elfogadod (2.18. pont, Süti-tájékoztató).”
-- 2.18. címe: „## 2.18. Hirdetéseink mérése (Meta és Google)”. Az első két bekezdés („Most nincs bekapcsolva.” és „Ha bekapcsoljuk, …”) helyére: „**Csak a hozzájárulásoddal.** <a bekapcsolás napja, szövegként, például: 2027. február 1.> óta a weboldalunkon a Meta és a Google hirdetési kódja csak akkor töltődik be, ha a süti-ablakban elfogadod, és a regisztrációdról vagy a fizetésedről csak akkor küldünk jelzést, ha a döntésedet a fiókodhoz kötöttük. Hozzájárulás nélkül is ugyanúgy regisztrálhatsz, és ugyanúgy használhatod a szolgáltatást.”- 3.2., a „Meta és Google, hirdetési mérés” sor helyett: „**Meta és Google, hirdetési mérés:** csak ha hozzájárulsz (2.18. pont); a Metával a gyűjtésre és a továbbításra közös adatkezelők vagyunk.”
+- 2.18. címe: „## 2.18. Hirdetéseink mérése (Meta és Google)”. Az első két bekezdés („Most nincs bekapcsolva.” és „Ha bekapcsoljuk, …”) helyére: „**Csak a hozzájárulásoddal.** <a bekapcsolás napja, szövegként, például: 2027. február 1.> óta a weboldalunkon a Meta és a Google hirdetési kódja csak akkor töltődik be, ha a süti-ablakban elfogadod, és a regisztrációdról vagy a fizetésedről csak akkor küldünk jelzést, ha a döntésedet a fiókodhoz kötöttük. Hozzájárulás nélkül is ugyanúgy regisztrálhatsz, és ugyanúgy használhatod a szolgáltatást.”
+- 3.2., a „Meta és Google, hirdetési mérés” sor helyett: „**Meta és Google, hirdetési mérés:** csak ha hozzájárulsz (2.18. pont); a Metával a gyűjtésre és a továbbításra közös adatkezelők vagyunk.”
+- „Röviden”, a „Követő sütit nem használunk.” mondat helyére: „Követő (hirdetési) sütit csak a hozzájárulásoddal használunk (2.18. pont).”
+- 2.14., az „Amit most használunk” sorban a „A weboldalunk nem tesz sütit a böngésződbe;” rész helyére: „A weboldalunk egy sütiben megjegyzi, mit választottál a süti-ablakban (kj_hozzajarulas); hirdetési sütit csak akkor tesz, ha elfogadod;”
+- 2.11., a „Kinek adjuk át” sor helyett: „**Kinek adjuk át:** senkinek; kivétel a hirdetési kattintás azonosítója, ha hozzájárultál (2.18. pont).”
 - 9. pont: a változásról az e-mailes és appbeli előzetes értesítést a jogász döntése szerint (M14).
 
 **suti.md**
@@ -21,13 +25,16 @@ Előfeltétel: a jogász az `UGYVED_KERDESEK_marketing.md` M5–M10 kérdéseire
 - A 4. pont („Miért nincs most süti-ablak”) helyére: „## 4. A süti-ablak” + „Az első látogatáskor megkérdezünk, hogy hozzájárulsz-e a hirdetéseink méréséhez (6. pont). Amíg nem döntesz, hirdetési kód nem töltődik be.”
 - Az 5. pont címe: „## 5. Hirdetési mérés (csak ha elfogadod)”; a „**Ez a rész most nem érvényes.** …” bekezdés helyére: „Ezek a sütik csak akkor kerülnek a böngésződbe, ha a süti-ablakban elfogadod. A részleteket az Adatkezelési tájékoztató 2.18. pontja írja le.”
 - A 6. pont címéből kikerül „(ha a hirdetési mérést bekapcsoljuk)”.
+- A `kj_hozzajarulas` tétel az 5. pontból a 2. pontba kerül (a bekapcsolás után bármely döntés után ott van a böngészőben).
 
 **app_szovegek.json**
 
 - `meres.lablec`: „Ez az oldal hirdetési sütit csak akkor használ, ha elfogadod. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.”
 - A GYIK „Biztonságban vannak az adataim?” válasza igaz marad („Nem adjuk el az adataidat, és nem mutatunk hirdetést.”); ha mégis változik, `elozo_valasz` kell (README, SPEC §27.7.3).
 
-## B) Ha a jogász szerint a látogatottság-méréshez is hozzájárulás kell (M1; UMAMI_CONSENT_REQUIRED=true)
+## B) Ha a jogász szerint a látogatottság-méréshez is hozzájárulás kell (M1)
+
+**Előfeltétel: a kapcsolót előbb el kell készíteni – most NINCS a kódban.** (Javasolt név: `meres.json` → `"statisztikaHozzajarulassal": true`; a `meres.js` ekkor a mérőkódot csak „Elfogadom” után tölti be, és a süti-ablak kikapcsolt hirdetési mérés mellett is megjelenik.) Amíg ez nincs meg, az alábbi szöveg nem élesíthető.
 
 Ekkor a süti-ablak kikapcsolt hirdetési mérés mellett is megjelenik, egyetlen „Statisztika” kategóriával (`suti_ablak.statisztika`), és a mérőkód csak elfogadás után töltődik be.
 

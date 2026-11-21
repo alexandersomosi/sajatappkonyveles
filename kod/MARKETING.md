@@ -5,14 +5,18 @@ hogyan kapcsolod be később a Facebook/Instagram (Meta) és a Google hirdetési
 
 ## 1. Mi fut, és mi nem
 
-**Fut (a telepítés után):**
+**Fut – ÉLES 2026-11-21 01:25 óta (DEMO szerver):**
 
 - **Saját statisztika-szerver (Umami).** Nyílt forrású (MIT licenc), a saját szerverünkön fut (`kezjegy-umami`, saját
   adatbázissal). Az adat nálunk marad, senkinek nem adjuk tovább. **Nem használ sütit**, és a böngészőben sem tárol semmit.
   Csak az adozz.hu nyitóoldalon mér; az appban (app.adozz.hu) nincs követőszkript.
 - **A nyitóoldal saját szkriptje** (`js/meres.js`): a Regisztrálok, Belépés és Visszahívást kérek gomb továbbviszi az appba,
   honnan jött a látogató (a hirdetési link `utm_*` adatai, a hivatkozó oldal neve, az érkezési oldal). Csak a linkben, az
-  eszközön semmit nem tárol. A statisztikába sem kattintás-azonosító (gclid, fbclid…), sem más paraméter nem kerül, csak az `utm_*`.
+  eszközön semmit nem tárol. A statisztika szkriptjét (`/m/script.js`) is ez tölti be, és csak azután, hogy a szűrő kész: a
+  statisztikába sem kattintás-azonosító (gclid, fbclid…), sem más paraméter nem kerül, csak az `utm_*`. A gombkattintásokat
+  várakozás nélkül küldi (egy lassú statisztika-szerver sosem fogja meg a Regisztrálok gombot).
+- **A látogatói kód naponta cserélődik** (`SALT_ROTATION=day` a compose-ban), a hely csak a szerveren lévő földrajzi
+  adatbázisból jön (`SKIP_LOCATION_HEADERS=1`), a proxy a statisztika-hívást 2 / 5 mp után elengedi.
 - **Marketing fül** a vezérlőpultodban (konyvelo.adozz.hu → Tulajdonos → Marketing). Csak te (admin) látod.
 
 **Elő van készítve, de KI VAN KAPCSOLVA:** a Meta Pixel + Conversions API és a Google Ads címke + szerveroldali
@@ -31,12 +35,20 @@ Négy rész, felül időszakválasztóval (Ma, 7 nap, 30 nap, 90 nap vagy egyén
 - **Pénz forrásonként:** most fizető ügyfelek és a havi bevételük (MRR) aszerint, honnan jöttek. Minden előfizetés a saját
   havidíjával számít (egyedi ár, kedvezmény, ingyenes hónap), ahogy a Konzol is számolja; ha ez eltér az Áttekintés
   számától, a fül kiírja, miért.
-- **Hirdetések:** a hirdetési mérés állapota, és a **kézzel rögzített hirdetési költés** → költség/regisztráció,
-  költség/fizető. A költést már most is beírhatod (a Meta vagy a Google felületéről), ehhez nem kell kulcs.
+- **Hirdetések:** a hirdetési mérés állapota, és a **kézzel rögzített hirdetési költés** → költés / hirdetésből jött
+  regisztráció, költés / fizető (becslés). Csak a **fizetett** hirdetésből jöttek számítanak: a kampánylink-készítő
+  „Facebook- vagy Instagram-hirdetés (fizetett)” és „Google-hirdetés (fizetett)” linkje (utm_medium `paid_social` / `cpc`),
+  vagy bekapcsolt mérésnél a hirdetés saját azonosítója. Az organikus Google-keresés és a nem fizetett poszt nem számít bele.
+  A költést már most is beírhatod (a Meta vagy a Google felületéről), ehhez nem kell kulcs; elírásnál „Visszavonom”
+  (megerősítés után; a sor áthúzva megmarad).
 
 Jó tudni:
 
 - A regisztrációk a regisztráció napja, a látogatók a látogatás napja szerint számítanak.
+- **„Ismeretlen (a mérés előtt)”**: akik még a forrás mentése (11-21) előtt regisztráltak, kampánylink nélkül. Ők nem
+  „Közvetlen”-ként jelennek meg, és a látogató → regisztrált arányba sem számítanak bele.
+- Ha egy kampánynevet két helyen is használsz (például YouTube és Facebook), a látogatók számát ott nem írjuk ki („közös
+  név”), mert a statisztika csak név szerint számol: adj minden helynek saját kampánynevet.
 - A tesztfiókok (a saját próbaszkriptjeink) sehol nem számítanak bele.
 - A DEMO szerveren a regisztrációk kitalált adatok: az arányokból ott ne vonj le következtetést.
 - Az Instagram és a TikTok beépített böngészője gyakran nem árulja el, honnan jött a látogató (ilyenkor „Közvetlen”).
@@ -54,9 +66,10 @@ Jó tudni:
 
 A nevekből kisbetűs, ékezet nélküli változat lesz, hogy ugyanaz a kampány mindenhol egy sorban jelenjen meg.
 
-## 4. A statisztika bekapcsolása (a telepítés után egyszer)
+## 4. A statisztika bekapcsolása (a telepítés után egyszer) – KÉSZ 2026-11-21 01:24
 
-A telepítés (up.sh) elindítja a `kezjegy-umami` és `kezjegy-umami-db` konténert. Utána egyszer, a szerveren:
+Lefutott: a website id `4b205eb2-faaa-4512-928a-b94d14fad444` (nyilvános) a `kod/landing/meres.json`-ban van, a gyári
+admin jelszó már nem működik (401). Új szerveren ugyanígy, egyszer:
 
 ```bash
 ssh appok-1 'bash /srv/kezjegy/deploy/umami-beallit.sh'
@@ -66,8 +79,9 @@ Ez a gyári admin jelszót azonnal véletlenre cseréli, létrehoz egy csak olva
 adozz.hu oldalt, és a hozzáférést a `.env`-be írja (előtte mentés: `_regi/env_<idő>`). Semmi titkot nem ír ki, csak az oldal
 nyilvános azonosítóját. Ezt az azonosítót kell beírni a `kod/landing/meres.json` `umamiWebsiteId` mezőjébe, majd:
 `node kod/landing/build.mjs` → `feltolt.sh` → `up.sh`. Ettől kezdve a nyitóoldal lábléce ezt írja: „Ez az oldal nem használ
-sütit. A látogatottságot a saját szerverünkön mérjük, süti nélkül, összesítve.” (A korábbi „és nem követ” mondatot a build
-magától cseréli.)
+sütit. A látogatottságot saját szerverünkön, süti nélkül, összesítve mérjük.” (a szöveg a `kod/jogi/app_szovegek.json`
+`meres.lablec` kulcsából jön). Statisztika nélkül: „Ez az oldal nem használ sütit.” Az up.sh FIGYELEM-et ír, amíg ez a
+lépés nem futott le (gyári jelszó).
 
 A látogató a láblécben ki is kapcsolhatja a mérést a saját gépén („Ne mérjétek a látogatásomat”), és
 ha a böngészőjében be van kapcsolva a „Ne kövess” (Do Not Track) jelzés, nem mérjük.
@@ -132,7 +146,9 @@ kéred, a gépeden (HKCU) is megőrzi őket. A szerveren előbb menti a `.env`-e
 
 1. A jogi szövegek bekapcsoláskori változatát (`kod/jogi/bekapcsolaskor/`) az ügyvéd jóváhagyása után be kell vezetni az
    adatkezelési és a süti-tájékoztatóba (új verzió az `index.json`-ban), és az `ADS_NOTICE_VERSION` értékét emelni kell
-   (a süti-ablak ettől mindenkit újra megkérdez).
+   (a süti-ablak ettől mindenkit újra megkérdez). **A partnerek listájának változásakor (például csak Meta helyett Meta +
+   Google) is emelni kell** – ezt a kód magától nem teszi. A süti-ablak szövegei a `kod/jogi/app_szovegek.json`
+   `suti_ablak.*` kulcsaiból kerülnek a nyitóoldalba (buildkor), a kódban nincs beégetett szöveg.
 2. Próba: a szkriptet futtasd a Meta Test Events kóddal, a Google-höz állítsd `GOOGLE_DM_VALIDATE_ONLY=true`-ra; regisztrálj
    egy tesztfiókkal „Elfogadom” után, és nézd meg a Meta Események tesztelése oldalát és a Google Ads konverziós
    diagnosztikáját. A vezérlőpult Hirdetések része mutatja: elküldve / várakozik / hibás.
@@ -141,8 +157,14 @@ kéred, a gépeden (HKCU) is megőrzi őket. A szerveren előbb menti a `.env`-e
 ### 5.6 Mi megy ki, és mi nem
 
 - Csak annak a látogatónak az adata, aki a süti-ablakban elfogadta (partnerenként külön). A döntést a szerver naplózza
-  (`marketing_consents`, álnevesítve), a regisztrációkor a fiókhoz kapcsolja, és minden küldés előtt újra ellenőrzi.
-- Esemény: „regisztrált” (CompleteRegistration) és „első fizetés” (Subscribe, összeggel). Adat: SHA-256-tal hash-elt (álnevesített, nem titkosított)
+  (`marketing_consents`, álnevesítve), a regisztrációkor a fiókhoz kapcsolja, és minden küldés előtt újra ellenőrzi
+  (visszavonás, verzió, 180 napos érvényesség). Személyre szabott hirdetést (remarketing) nem kínál fel: a Google felé az
+  `ad_personalization` mindig „denied”.
+- A nyitóoldal minden látogatáskor megkérdezi a szervert, érvényes-e még a tárolt „Elfogadom”
+  (`GET /api/v1/public/hozzajarulas/<id>`); ha az appban visszavonták vagy lejárt, törli a hirdetési sütiket és újra kérdez.
+  A „Süti-beállítások → Elutasítom” a fiókhoz már kötött döntést is visszavonja.
+- Esemény: „regisztrált” (CompleteRegistration) és csak az **első** fizetés (Subscribe, összeggel; egy lemondás utáni újraindítás nem).
+  A sorba állítás saját mentőpontban fut: egy hiba itt soha nem görgeti vissza az e-mail-megerősítést vagy a fizetést. Adat: SHA-256-tal hash-elt (álnevesített, nem titkosított)
   e-mail-cím, a kattintás-azonosító (gclid / fbclid), a regisztráció böngészőjének adata (a Meta weboldali eseményhez
   kötelező), az esemény ideje és összege. Telefonszám csak `ADS_SEND_PHONE=true` esetén (alapból nem).
 - **Adóadat, név, cím, adóazonosító soha.**
@@ -163,14 +185,22 @@ Ettől a szerver azonnal „kikapcsolva” állapotba kerül: a süti-ablak nem 
 
 - **[TULAJ]** Melyik havi bevétel a mérvadó (a Marketing fül az előfizetésenkénti összeget mutatja, az Áttekintés a
   fizetők száma × havidíj).
-- **[TULAJ/JOGI]** Mennyi ideig őrizzük a statisztika nyers adatait (az Umami magától nem töröl), a forrásadatokat, a
-  kattintás-azonosítókat és a hozzájárulási naplót.
-- **[TULAJ/JOGI]** Napi vagy havi „só” a látogatói kódhoz (`SALT_ROTATION` az `.env.umami`-ban; most a gyári havi).
+- **[TULAJ/JOGI]** Megőrzés. A saját adatbázisban **már fut** a napi `marketing_retention` feladat (03:40): a kattintás-
+  azonosító 90, a forrás részletei 2 év után kiürülnek (csak a csatorna marad; sort nem töröl). A statisztika nyers adatai
+  (az Umami magától nem töröl): a törlő szkript kész, de **nincs időzítve** – `deploy/umami-megorzes.sh` (alapból csak számol;
+  `--torol` titkosított mentés után töröl). A cron-sora a szkript fejében; csak a te jóváhagyásoddal (az első 2 évnél
+  régebbi adat 2028 novemberében lesz). A titkosított mentésekben az adatok ennél tovább is megmaradnak (a „nem törlünk”
+  házirend miatt) – ezt a 4. pont most így írja, az ügyvéd M18-ként kapta meg.
+- **[TULAJ/JOGI]** Napi vagy havi „só” a látogatói kódhoz: most NAPI (`SALT_ROTATION: day` a compose-ban; a jogi szöveg is ezt írja).
 - **[TULAJ]** Kell-e városszintű adat, vagy elég az ország.
 - **[TULAJ/JOGI]** Telefonszám is menjen-e a hirdetési partnereknek (alapból nem).
 - **[JOGI]** Kell-e hozzájárulás a süti nélküli mérésre (Eht. 155. § (4), EDPB 2/2023) – ha igen, a süti-ablak a statisztikát
   is kérdezi; a kérdéslista: `kod/jogi/UGYVED_KERDESEK_marketing.md`.
 - **[JOGI]** A Google-belépés szkriptje a belépő és regisztrációs oldalon kattintás előtt töltődik be.
+
+- **Tiltakozás a forrásadat ellen** (Adatkezelési tájékoztató 2.11.): Konzol → az ügyfél kártyája → Műveletek →
+  „Forrásadat törlése” (indokkal, naplózva): a forrás részletei törlődnek, csak a csatorna marad meg. Fióktörléskor és a
+  konzolos anonimizáláskor ugyanez magától történik.
 
 ## 7. Fájlok
 
@@ -181,5 +211,6 @@ Ettől a szerver azonnal „kikapcsolva” állapotba kerül: a süti-ablak nem 
 - App: `app/src/lib/forras.ts` (a regisztráció, a Google/Apple-gomb, a belépés és a visszahívás küldi)
 - Nyitóoldal: `landing/meres.json`, `landing/meres-sablon.js`, `landing/hirdetes-sablon.js`, `landing/build.mjs`, teszt `landing/meres.test.mjs`
 - Telepítés: `deploy/docker-compose.yml` (kezjegy-umami, kezjegy-umami-db), `deploy/umami-beallit.sh`, `deploy/gen-env.sh`,
-  `deploy/proxy/caddy/sites/adozz.caddy`, `deploy/up.sh`, `deploy/backup.sh`
+  `deploy/proxy/caddy/sites/adozz.caddy`, `deploy/up.sh`, `deploy/backup.sh`, `deploy/restic-mentes.sh` (a `.env.umami*`,
+  `.umami_beallitas` és `hirdetes/` is a külső mentésbe kerül), `deploy/umami-megorzes.sh` (előkészítve, nincs időzítve)
 - Kulcsok: `C:\Users\UpgradePC\konyvelo_app\hirdetes_kulcsok.ps1`

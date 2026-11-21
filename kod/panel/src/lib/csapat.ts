@@ -244,7 +244,7 @@ const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   admin_konyvelok: { to: '/admin/konyvelok', felirat: 'Könyvelők', ikon: 'fiok', karakter: true },
   admin_csapat: { to: '/admin/csapat', felirat: 'Csapat', ikon: 'fiok' },
   // SPEC §31.4: visits, funnel, money and campaigns by source (the referral codes stay on Honnan jöttek)
-  admin_marketing: { to: '/admin/marketing', felirat: 'Marketing', ikon: 'kerdezek' },
+  admin_marketing: { to: '/admin/marketing', felirat: 'Marketing', ikon: 'ertesites' },
   admin_forrasok: { to: '/admin/forrasok', felirat: 'Honnan jöttek', ikon: 'fiok' },
   admin_szovegek: { to: '/admin/szovegek', felirat: 'GYIK és szövegek', ikon: 'uzenetek' },
   admin_naplo: { to: '/admin/naplo', felirat: 'Napló', ikon: 'nyugta' },

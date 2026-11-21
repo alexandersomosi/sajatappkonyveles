@@ -109,7 +109,7 @@ export default function Visszahivas() {
       const f = Platform.OS === 'web' ? forrasAdat(webKereses()) : {};
       const marketing = f.utm || f.forras ? { utm: f.utm, hivatkozo: f.forras?.hivatkozo, erkezes: f.forras?.erkezes } : undefined;
       await ker.mutateAsync({ ...(norm ? { phone: norm, savePhoneToProfile: mentsd } : {}), topic: tema, window: sav, note: megj.trim() || undefined, source: forras, ...(marketing ? { marketing } : {}) });
-      jelez({ szoveg: 'Megkaptuk. Kollégánk 24–48 órán belül hív.', kesz: true });
+      jelez({ szoveg: 'Megkaptuk. A csapatunk 24–48 órán belül visszahív, munkanapokon 9 és 17 óra között.', kesz: true });
       vissza('/');
     } catch (err) {
       if (err instanceof ApiHiba && err.code === 'callback_already_open') {

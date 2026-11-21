@@ -1,7 +1,7 @@
 // SPEC §31.4: the Marketing tab – only the admin's menu has it; the link builder; the range query; the channel labels.
 import { describe, expect, it } from 'vitest';
 import { menuCsoportok, type MenuKulcs } from './csapat';
-import { arany, kampanyLink, marketingQuery } from './marketing';
+import { arany, kampanyLink, latogatoArany, marketingQuery } from './marketing';
 import { MARKETING_CHANNEL_LABELS, MARKETING_CHANNELS, campaignSlug, channelOf } from '../_shared/marketing';
 
 const kulcsok = (o: Parameters<typeof menuCsoportok>[0]): MenuKulcs[] => menuCsoportok(o).flatMap((c) => c.elemek.map((e) => e.kulcs));
@@ -53,6 +53,9 @@ describe('range query and ratios', () => {
     expect(arany(3, 12)).toBe('25%');
     expect(arany(1, 0)).toBe('–');
     expect(arany(1, null)).toBe('–');
+    expect(latogatoArany(1, 4)).toBe('25%');
+    expect(latogatoArany(5, 1)).toBe('–'); // registrations older than the visit measuring: no rate
+    expect(latogatoArany(0, null)).toBe('–');
   });
 });
 

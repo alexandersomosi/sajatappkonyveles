@@ -7,11 +7,11 @@ import { Link, useSearchParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../api/endpoints';
 import type { MarketingCount, MarketingSummary } from '../../_shared/marketing';
-import { CAMPAIGN_SOURCES, MARKETING_CHANNEL_LABELS } from '../../_shared/marketing';
+import { CAMPAIGN_SOURCES, MARKETING_CHANNEL_LABELS, MARKETING_UNKNOWN } from '../../_shared/marketing';
 import { DemoCimke, Fejlec, Fiok, HibaSav, Lenyilo, Masol, Toltes, Ures } from '../../ui/kozos';
 import { usePirito } from '../../ui/Pirito';
 import { datumRovid, ft, szam } from '../../lib/format';
-import { IDOSZAKOK, arany, kampanyLink, marketingQuery, type Idoszak } from '../../lib/marketing';
+import { IDOSZAKOK, arany, kampanyLink, latogatoArany, marketingQuery, type Idoszak } from '../../lib/marketing';
 import { today as maIso } from '../../lib/today';
 
 type Ful = 'attekintes' | 'kampanyok' | 'penz' | 'hirdetesek';
@@ -71,6 +71,24 @@ export default function Marketing() {
   const query = marketingQuery(idoszak, tol, ig);
   const q = useQuery({ queryKey: ['admin', 'marketing', query], queryFn: () => ep.adminMarketing(query) });
   const d = q.data;
+  // the money is the state of today: the range does not change it, so the selector is not shown there
+  const idoszakKell = ful !== 'penz';
+  const egyeni = () => {
+    // the fields start with the range on the screen (never empty)
+    if (!tol || !ig) {
+      setTol(d?.range.from ?? maIso());
+      setIg(d?.range.to ?? maIso());
+    }
+    setIdoszak('egyeni');
+  };
+  const tolValt = (v: string) => {
+    setTol(v);
+    if (v && ig && v > ig) setIg(v);
+  };
+  const igValt = (v: string) => {
+    setIg(v);
+    if (v && tol && v < tol) setTol(v);
+  };
   return (
     <>
       <Fejlec
@@ -89,27 +107,33 @@ export default function Marketing() {
       />
       <div className="tartalom">
         <div className="sor-flex" style={{ marginBottom: 14, flexWrap: 'wrap', gap: 12 }}>
+          {idoszakKell ? (
+          <>
           <div className="szegmens" role="group" aria-label="Időszak">
             {IDOSZAKOK.map((i) => (
               <button key={i.kulcs} type="button" className={idoszak === i.kulcs ? 'on' : ''} aria-pressed={idoszak === i.kulcs} onClick={() => setIdoszak(i.kulcs)}>
                 {i.felirat}
               </button>
             ))}
-            <button type="button" className={idoszak === 'egyeni' ? 'on' : ''} aria-pressed={idoszak === 'egyeni'} onClick={() => setIdoszak('egyeni')}>
+            <button type="button" className={idoszak === 'egyeni' ? 'on' : ''} aria-pressed={idoszak === 'egyeni'} onClick={egyeni}>
               Egyéni
             </button>
           </div>
           {idoszak === 'egyeni' && (
             <>
-              <input className="doboz" type="date" aria-label="Ettől" style={{ width: 160 }} max={maIso()} value={tol} onChange={(e) => setTol(e.target.value)} />
+              <input className="doboz" type="date" aria-label="Ettől" style={{ width: 160 }} max={ig || maIso()} value={tol} onChange={(e) => tolValt(e.target.value)} />
               <span className="halvany kicsi">–</span>
-              <input className="doboz" type="date" aria-label="Eddig" style={{ width: 160 }} max={maIso()} value={ig} onChange={(e) => setIg(e.target.value)} />
+              <input className="doboz" type="date" aria-label="Eddig" style={{ width: 160 }} min={tol || undefined} max={maIso()} value={ig} onChange={(e) => igValt(e.target.value)} />
             </>
           )}
           {d && (
             <span className="halvany kicsi">
               {datumRovid(d.range.from)} – {datumRovid(d.range.to)}
             </span>
+          )}
+          </>
+          ) : (
+            <span className="halvany kicsi">Mostani állapot (nem függ az időszaktól)</span>
           )}
           {d?.demo && <DemoCimke>DEMO</DemoCimke>}
         </div>
@@ -124,7 +148,7 @@ export default function Marketing() {
                   DEMO szerver: a regisztrációk és a fizetések kitalált adatok, a látogatók között valódiak is lehetnek. Az arányokból most ne vonj le következtetést.
                 </div>
               )}
-              {!d.stats.available && d.stats.reason && (
+              {!d.stats.available && d.stats.reason && (ful === 'attekintes' || ful === 'kampanyok') && (
                 <div className="uzenet-sav info" style={{ marginBottom: 16 }}>
                   {d.stats.reason}
                 </div>
@@ -141,17 +165,28 @@ export default function Marketing() {
   );
 }
 
+const LEPES = { reg: 'Regisztrált', adatok: 'Kitöltötte az adatait', szerzodes: 'Elfogadta a szerződést', fizeto: 'Fizető lett' };
+
 function Attekintes({ d }: { d: MarketingSummary }) {
   const t = d.funnel.total;
+  // the steps after the registration are measured against the registered (a visitor count of hundreds would make them dots)
   const lepcsok = [
-    { k: 'Látogató', n: t.visitors },
-    { k: 'Regisztrált', n: t.registered },
-    { k: 'Adatok kész', n: t.dataDone },
-    { k: 'Szerződés elfogadva', n: t.contractAccepted },
-    { k: 'Fizető', n: t.paying },
+    { k: LEPES.reg, n: t.registered },
+    { k: LEPES.adatok, n: t.dataDone },
+    { k: LEPES.szerzodes, n: t.contractAccepted },
+    { k: LEPES.fizeto, n: t.paying },
   ];
-  const max = Math.max(1, ...lepcsok.map((l) => l.n ?? 0));
+  const max = Math.max(1, t.registered);
   const semmi = !t.registered && !(d.visitors?.visitors ?? 0);
+  // the registrations from before the source was recorded have no visit behind them: left out of the visitor rate
+  const ismeretlen = d.funnel.byChannel.find((x) => x.channel === MARKETING_UNKNOWN)?.registered ?? 0;
+  const merve = t.registered - ismeretlen;
+  const latogatoSor =
+    t.visitors === null
+      ? 'A látogatók száma most nem ismert.'
+      : merve <= t.visitors
+        ? `${szam(t.visitors)} látogatóból ${szam(merve)} regisztrált (${arany(merve, t.visitors)}).${ismeretlen ? ` A mérés előtt regisztrált ${szam(ismeretlen)} ügyfél ebben nincs benne.` : ''}`
+        : `${szam(t.visitors)} látogató, ${szam(merve)} regisztrált. Arányt itt nem számolunk: a látogatók mérése később indult, mint ezek a regisztrációk.`;
   return (
     <>
       <div className="racs k4">
@@ -183,15 +218,44 @@ function Attekintes({ d }: { d: MarketingSummary }) {
         </Link>
       </div>
       {semmi ? (
-        <div className="lap" style={{ marginTop: 16 }}>
-          <Ures n="ures_mappa" cim="Ebben az időszakban még nem jött senki">
-            Ha egy videó leírásába vagy egy bejegyzésbe kampánylinket teszel, itt látod majd, hányan jöttek rajta, és kikből lett ügyfél. A linket a „Kampányok és linkek” fülön készítheted el.
-          </Ures>
+        <div className="uzenet-sav info" style={{ marginTop: 16 }}>
+          {d.stats.available
+            ? 'Ebben az időszakban még nem jött senki. Ha egy videó leírásába vagy egy bejegyzésbe kampánylinket teszel, itt látod majd, hányan jöttek rajta, és kikből lett ügyfél (a link a „Kampányok és linkek” fülön készül).'
+            : 'Ebben az időszakban nem volt regisztráció. A látogatók száma a statisztika beállítása után jelenik meg itt.'}
         </div>
       ) : null}
+      <div className="racs k2" style={{ marginTop: 16 }}>
+        <Kartya cim="Tölcsér" megj="az ebben az időszakban regisztráltak">
+          <div className="belso" style={{ paddingTop: 0 }}>
+            <p className="kicsi" style={{ marginBottom: 12 }}>
+              {latogatoSor}
+            </p>
+            {lepcsok.map((l, i) => (
+              <div key={l.k} style={{ marginBottom: 12 }}>
+                <div className="sor-flex ter" style={{ fontSize: 14.5 }}>
+                  <span>{l.k}</span>
+                  <span className="szam felkover">
+                    {szam(l.n)}
+                    {i > 0 && t.registered ? <span className="halvany" style={{ fontWeight: 400 }}> · {arany(l.n, t.registered)}</span> : null}
+                  </span>
+                </div>
+                <div className="sav" style={{ margin: '6px 0 0' }}>
+                  <i style={{ width: `${(l.n / max) * 100}%` }} />
+                </div>
+              </div>
+            ))}
+            <p className="halvany kicsi">
+              A százalék a regisztráltakhoz képest értendő. Itt csak az ebben az időszakban regisztráltak számítanak; az <Link to="/admin">Áttekintés</Link> bekötési tölcsére minden ügyfelet mutat.
+            </p>
+          </div>
+        </Kartya>
+        <Kartya cim="Az oldal részei" megj="hányszor kattintottak az adozz.hu gombjaira, és hányszor görgettek az árakig">
+          <Lista sorok={d.events} ures="Ebben az időszakban még nem kattintott senki." />
+        </Kartya>
+      </div>
       <div className="lap" style={{ marginTop: 16 }}>
         <div className="lap-fej">
-          <h2>Honnan jöttek</h2>
+          <h2>Források</h2>
           <span className="megj">A regisztrációk a regisztráció napja szerint, a látogatók a látogatás napja szerint számítanak.</span>
         </div>
         <table className="tabla">
@@ -199,17 +263,17 @@ function Attekintes({ d }: { d: MarketingSummary }) {
             <tr>
               <th className="elso">Forrás</th>
               <th className="jobb">Látogató</th>
-              <th className="jobb">Regisztrált</th>
-              <th className="jobb">Adatok kész</th>
-              <th className="jobb">Szerződés</th>
-              <th className="jobb">Fizető</th>
+              <th className="jobb">{LEPES.reg}</th>
+              <th className="jobb">{LEPES.adatok}</th>
+              <th className="jobb">{LEPES.szerzodes}</th>
+              <th className="jobb">{LEPES.fizeto}</th>
               <th className="jobb utolso">Látogatóból regisztrált</th>
             </tr>
           </thead>
           <tbody>
             {d.funnel.byChannel.map((r) => (
               <tr key={r.channel} style={!r.registered && !r.visitors ? { opacity: 0.55 } : undefined}>
-                <td className="elso felkover">{r.label}</td>
+                <td className={`elso felkover${r.channel === MARKETING_UNKNOWN ? ' halvany' : ''}`}>{r.label}</td>
                 <td className="jobb">
                   <Szam n={r.visitors} />
                 </td>
@@ -217,40 +281,15 @@ function Attekintes({ d }: { d: MarketingSummary }) {
                 <td className="jobb szam">{r.dataDone}</td>
                 <td className="jobb szam">{r.contractAccepted}</td>
                 <td className="jobb szam">{r.paying}</td>
-                <td className="jobb szam utolso">{arany(r.registered, r.visitors)}</td>
+                <td className="jobb szam utolso">{latogatoArany(r.registered, r.visitors)}</td>
               </tr>
             ))}
           </tbody>
         </table>
         <p className="halvany kicsi" style={{ padding: '10px 22px 16px' }}>
           Az Instagram és a TikTok beépített böngészője gyakran nem árulja el, honnan jött a látogató: ilyenkor „Közvetlen” lesz. Ezért érdemes kampánylinket használni. A hirdetésblokkolók miatt a látogatók száma kevesebb lehet a valóságosnál.
+          {d.unknownClients ? ' Az „Ismeretlen (a mérés előtt)” azok az ügyfelek, akik még a forrás mentése előtt regisztráltak.' : ''}
         </p>
-      </div>
-      <div className="racs k2" style={{ marginTop: 16 }}>
-        <Kartya cim="Tölcsér" megj="ebben az időszakban">
-          <div className="belso" style={{ paddingTop: 0 }}>
-            {lepcsok.map((l, i) => (
-              <div key={l.k} style={{ marginBottom: 12 }}>
-                <div className="sor-flex ter" style={{ fontSize: 14.5 }}>
-                  <span>{l.k}</span>
-                  <span className="szam felkover">
-                    {l.n === null ? '–' : szam(l.n)}
-                    {i > 1 && l.n !== null && lepcsok[1]!.n ? <span className="halvany" style={{ fontWeight: 400 }}> · {arany(l.n, lepcsok[1]!.n)}</span> : null}
-                  </span>
-                </div>
-                <div className="sav" style={{ margin: '6px 0 0' }}>
-                  <i style={{ width: `${((l.n ?? 0) / max) * 100}%` }} />
-                </div>
-              </div>
-            ))}
-            <p className="halvany kicsi">
-              A százalék a regisztráltakhoz képest értendő. A bekötés részletei az <Link to="/admin">Áttekintésen</Link> vannak.
-            </p>
-          </div>
-        </Kartya>
-        <Kartya cim="Az oldal részei" megj="kattintások és görgetés az adozz.hu-n">
-          <Lista sorok={d.events} ures="Ebben az időszakban még nem kattintott senki." />
-        </Kartya>
       </div>
       <div className="racs k3" style={{ marginTop: 16 }}>
         <Kartya cim="Telefon vagy gép">
@@ -295,7 +334,7 @@ function Kampanyok({ d }: { d: MarketingSummary }) {
           <span className="megj">Például egy YouTube-videó leírásába: így látod, melyik videó hozza az ügyfeleket.</span>
         </div>
         <div className="belso" style={{ paddingTop: 0 }}>
-          <div className="mezosor k3">
+          <div className="mezosor k2">
             <label className="mezo">
               <span className="felirat">Hova teszed?</span>
               <Lenyilo value={u.forras} onChange={(e) => setU({ ...u, forras: e.target.value, medium: '' })}>
@@ -310,19 +349,28 @@ function Kampanyok({ d }: { d: MarketingSummary }) {
               <span className="felirat">Kampány (például a videó címe)</span>
               <input className="doboz" value={u.kampany} maxLength={120} onChange={(e) => setU({ ...u, kampany: e.target.value })} placeholder="Átalányadó 2027 – röviden" />
             </label>
-            <label className="mezo">
-              <span className="felirat">Részlet (ha kell)</span>
-              <input className="doboz" value={u.tartalom} maxLength={60} onChange={(e) => setU({ ...u, tartalom: e.target.value })} placeholder="leiras vagy komment" />
-            </label>
           </div>
-          <label className="mezo" style={{ marginTop: 14, maxWidth: 320 }}>
-            <span className="felirat">Csatorna típusa</span>
-            <input className="doboz" value={u.medium} maxLength={30} onChange={(e) => setU({ ...u, medium: e.target.value })} placeholder={javasolt} />
-          </label>
+          <details style={{ marginTop: 14 }}>
+            <summary className="kicsi" style={{ cursor: 'pointer' }}>
+              Haladó (nem kötelező, nyugodtan hagyd üresen)
+            </summary>
+            <div className="mezosor k2" style={{ marginTop: 10 }}>
+              <label className="mezo">
+                <span className="felirat">Részlet</span>
+                <input className="doboz" value={u.tartalom} maxLength={60} onChange={(e) => setU({ ...u, tartalom: e.target.value })} placeholder="leiras" />
+                <span className="halvany kicsi">Ha egy videóban több link is van, így választod szét őket: például „leiras” és „komment”.</span>
+              </label>
+              <label className="mezo">
+                <span className="felirat">Fajta</span>
+                <input className="doboz" value={u.medium} maxLength={30} onChange={(e) => setU({ ...u, medium: e.target.value })} placeholder={javasolt} />
+                <span className="halvany kicsi">Magától kitöltjük ({javasolt || 'nincs'}). A fizetett hirdetésnél maradjon így: ebből tudjuk, mi jött hirdetésből.</span>
+              </label>
+            </div>
+          </details>
           <div className="uzenet-sav info" style={{ marginTop: 16, alignItems: 'center', flexWrap: 'wrap' }}>
             {link ? (
               <>
-                <code style={{ flex: 1, wordBreak: 'break-all', fontSize: 14 }}>{link}</code>
+                <code style={{ flex: 1, overflowWrap: 'anywhere', fontSize: 14 }}>{link}</code>
                 <Masol ertek={link} felirat="Link másolása" />
               </>
             ) : (
@@ -352,7 +400,6 @@ function Kampanyok({ d }: { d: MarketingSummary }) {
               <tr>
                 <th className="elso">Kampány</th>
                 <th>Forrás</th>
-                <th>Típus</th>
                 <th className="jobb">Látogató</th>
                 <th className="jobb">Regisztrált</th>
                 <th className="jobb">Fizető</th>
@@ -363,10 +410,9 @@ function Kampanyok({ d }: { d: MarketingSummary }) {
               {d.campaigns.map((c, i) => (
                 <tr key={i}>
                   <td className="elso felkover">{c.campaign ?? '–'}</td>
-                  <td>{c.source ?? '–'}</td>
-                  <td>{c.medium ?? '–'}</td>
-                  <td className="jobb">
-                    <Szam n={c.visitors} />
+                  <td>{c.source ? MARKETING_CHANNEL_LABELS[c.channel] : '–'}</td>
+                  <td className="jobb" title={c.sharedName ? 'Ezt a kampánynevet több forrás is használja, a látogatókat a statisztika csak név szerint számolja.' : undefined}>
+                    {c.sharedName ? <span className="halvany">közös név</span> : <Szam n={c.visitors} />}
                   </td>
                   <td className="jobb szam">{c.registered}</td>
                   <td className="jobb szam">{c.paying}</td>
@@ -375,6 +421,11 @@ function Kampanyok({ d }: { d: MarketingSummary }) {
               ))}
             </tbody>
           </table>
+        )}
+        {d.campaigns.some((c) => c.sharedName) && (
+          <p className="halvany kicsi" style={{ padding: '10px 22px 16px' }}>
+            „közös név”: ugyanazt a kampánynevet több helyen is használtad. A statisztika a látogatókat csak név szerint számolja, ezért ott nem írunk számot. Adj minden helynek saját kampánynevet.
+          </p>
         )}
       </div>
     </>
@@ -419,7 +470,7 @@ function Penz({ d }: { d: MarketingSummary }) {
         </tbody>
       </table>
       <p className="halvany kicsi" style={{ padding: '10px 22px 16px' }}>
-        {m.note} Az Áttekintés havi bevétele: {ft(m.dashboardMrrHuf)}. A pénz nem függ a fenti időszaktól: ez a mostani állapot. A forrás a regisztrációé; aki a mérés bevezetése előtt regisztrált, annál csak a hirdetési link adatai (ha voltak) ismertek.
+        {m.note} Az Áttekintés havi bevétele: {ft(m.dashboardMrrHuf)}. A pénz nem függ az időszaktól: ez a mostani állapot. A forrás a regisztrációé; aki a forrás mentése előtt regisztrált, az „Ismeretlen (a mérés előtt)” sorban van (ha kampánylinkkel jött, annak a forrásánál).
       </p>
     </div>
   );
@@ -435,7 +486,7 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
   const add = useMutation({
     mutationFn: () => ep.adminMarketingSpendAdd({ day: f.day, platform: f.platform, campaign: f.campaign.trim() || undefined, amountHuf: osszeg, note: f.note.trim() || undefined }),
     onSuccess: () => {
-      pir.ok('Rögzítettem a költést.');
+      pir.ok(f.day < d.range.from || f.day > d.range.to ? 'Rögzítettem. Ez a nap kívül esik a kiválasztott időszakon, ezért a listában akkor látod, ha arra az időszakra váltasz.' : 'Rögzítettem a költést.');
       setUj(false);
       setF({ ...f, campaign: '', amount: '', note: '' });
       void qc.invalidateQueries({ queryKey: ['admin', 'marketing'] });
@@ -460,7 +511,7 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
         <div className="belso" style={{ paddingTop: 0 }}>
           {a.enabled ? (
             <p>
-              Csak annál a látogatónál mérünk, aki a süti-ablakban elfogadta. A szerver a regisztrációt és az első fizetést küldi el, álnevesített (hash-elt) e-mail-címmel; adóadatot soha. Elküldve: {szam(a.sent)}, várakozik: {szam(a.queued)}
+              Csak annál a látogatónál mérünk, aki a süti-ablakban elfogadta. A szerver a regisztrációt és az első fizetést jelzi, az e-mail-címet kódolva; adóadatot soha. Elküldve: {szam(a.sent)}, várakozik: {szam(a.queued)}
               {a.failed ? `, hibás: ${szam(a.failed)}` : ''}.
             </p>
           ) : (
@@ -469,13 +520,13 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
                 Elő van készítve, de ki van kapcsolva. Most az oldal nem tölt be hirdetési kódot, nem jelenik meg süti-ablak, és semmilyen adat nem megy a Metának vagy a Google-nek.
               </p>
               <ol style={{ margin: '10px 0 0 20px', lineHeight: 1.6 }}>
-                <li>A Meta Business-fiókodban létrehozod a pixelt, és kérsz hozzá Conversions API-kulcsot; a Google Ads-fiókodban létrehozod a konverziós műveleteket.</li>
+                <li>A Meta (Facebook) hirdetési fiókodban létrehozod a mérőkódot, és kérsz hozzá egy kulcsot; a Google Ads-fiókodban beállítod, mit számoljon (regisztráció, első fizetés).</li>
                 <li>A gépeden lefuttatod a hirdetes_kulcsok.ps1 szkriptet: titkosan felviszi a kulcsokat a szerverre.</li>
                 <li>Az ügyvéd jóváhagyja az adatkezelési és a süti-tájékoztató hirdetési részét, és élesítjük őket.</li>
-                <li>Újraépítjük a nyitóoldalt a hirdetési kapcsolóval: ekkor jelenik meg a süti-ablak („Elfogadom” és „Elutasítom”).</li>
+                <li>Bekapcsoljuk a nyitóoldalon a süti-ablakot („Elfogadom” és „Elutasítom”); csak ezután mérünk, és csak annál, aki elfogadta.</li>
               </ol>
               <p className="halvany kicsi" style={{ marginTop: 8 }}>
-                A lépések részletesen: kod/MARKETING.md.
+                A lépések részletesen a gépeden: konyvelo_app/kod/MARKETING.md.
               </p>
             </>
           )}
@@ -484,6 +535,7 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
       <div className="lap" style={{ marginTop: 16 }}>
         <div className="lap-fej">
           <h2>Költés és megtérülés</h2>
+          <span className="cimke">becslés</span>
           <span className="megj">a kézzel rögzített hirdetési költés ebben az időszakban: {ft(a.spendHuf)}</span>
           <span className="jobbra">
             <button className="gomb-m kicsi csak-szoveg" onClick={() => setUj(true)}>
@@ -496,10 +548,10 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
             <tr>
               <th className="elso">Hirdetési felület</th>
               <th className="jobb">Költés</th>
-              <th className="jobb">Regisztrált</th>
-              <th className="jobb">Költség / regisztráció</th>
-              <th className="jobb">Fizető</th>
-              <th className="jobb utolso">Költség / fizető</th>
+              <th className="jobb">Hirdetésből regisztrált</th>
+              <th className="jobb">Költés / hirdetésből regisztrált</th>
+              <th className="jobb">Ebből fizető</th>
+              <th className="jobb utolso">Költés / fizető</th>
             </tr>
           </thead>
           <tbody>
@@ -518,9 +570,14 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
           </tbody>
         </table>
         <p className="halvany kicsi" style={{ padding: '10px 22px 16px' }}>
-          A regisztráltak a csatorna összes regisztrációja (Meta: {MARKETING_CHANNEL_LABELS.facebook} és {MARKETING_CHANNEL_LABELS.instagram}; Google: {MARKETING_CHANNEL_LABELS.google}), a hirdetésből és a nem fizetett megjelenésből együtt. Pontosabb képet a kampánylinkek adnak.
+          Csak a fizetett hirdetésből jött regisztrációk számítanak: amelyik a kampánylink-készítő „hirdetés (fizetett)” linkjével jött, vagy a hirdetés saját azonosítójával (ez csak bekapcsolt mérésnél van). A Google-keresésből és a nem fizetett {MARKETING_CHANNEL_LABELS.facebook}-, {MARKETING_CHANNEL_LABELS.instagram}-bejegyzésből jöttek nem számítanak bele. Becslés: a hirdetési felület saját számai eltérhetnek.
         </p>
         {a.spend.length > 0 && (
+          <>
+          <div className="lap-fej" style={{ borderTop: '1px solid var(--hajszal)' }}>
+            <h2>Rögzített költések</h2>
+            <span className="megj">ebben az időszakban; a visszavont sor áthúzva megmarad</span>
+          </div>
           <table className="tabla">
             <thead>
               <tr>
@@ -534,15 +591,23 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
             </thead>
             <tbody>
               {a.spend.map((s) => (
-                <tr key={s.id} style={s.revokedAt ? { opacity: 0.55, textDecoration: 'line-through' } : undefined}>
-                  <td className="elso nt">{datumRovid(s.day)}</td>
-                  <td>{s.platform === 'meta' ? 'Meta' : s.platform === 'google' ? 'Google' : 'Egyéb'}</td>
-                  <td>{s.campaign ?? '–'}</td>
+                <tr key={s.id} style={s.revokedAt ? { opacity: 0.55 } : undefined}>
+                  <td className="elso nt" style={s.revokedAt ? { textDecoration: 'line-through' } : undefined}>{datumRovid(s.day)}</td>
+                  <td style={s.revokedAt ? { textDecoration: 'line-through' } : undefined}>{s.platform === 'meta' ? 'Meta' : s.platform === 'google' ? 'Google' : 'Egyéb'}</td>
+                  <td style={s.revokedAt ? { textDecoration: 'line-through' } : undefined}>{s.campaign ?? '–'}</td>
                   <td className="halvany">{s.note ?? ''}</td>
-                  <td className="jobb szam">{ft(s.amountHuf)}</td>
+                  <td className="jobb szam" style={s.revokedAt ? { textDecoration: 'line-through' } : undefined}>{ft(s.amountHuf)}</td>
                   <td className="utolso jobb">
-                    {!s.revokedAt && (
-                      <button className="gomb-v" disabled={vissza.isPending} onClick={() => vissza.mutate(s.id)}>
+                    {s.revokedAt ? (
+                      <span className="cimke">visszavonva</span>
+                    ) : (
+                      <button
+                        className="gomb-v"
+                        disabled={vissza.isPending}
+                        onClick={() => {
+                          if (window.confirm(`Visszavonod ezt a költést (${datumRovid(s.day)}, ${ft(s.amountHuf)})? A sor áthúzva megmarad.`)) vissza.mutate(s.id);
+                        }}
+                      >
                         Visszavonom
                       </button>
                     )}
@@ -551,6 +616,7 @@ function Hirdetesek({ d }: { d: MarketingSummary }) {
               ))}
             </tbody>
           </table>
+          </>
         )}
       </div>
       <Fiok

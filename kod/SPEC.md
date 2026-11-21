@@ -5050,3 +5050,46 @@ switch (`localStorage umami.disabled`, written only on click). CSP `script-src '
 `LEGAL_DOC_TYPES` + `'suti'` (enum value in `0020_marketing_enumok.sql`), title "Süti-tájékoztató"; never in `consentsNeeded`.
 Until `jogi/index.json` lists `suti.md`, `/legal/suti` serves the marked placeholder. Links: app registration ("Sütik"),
 Fiók → Adataim ("Süti-tájékoztató"), landing footer ("Sütik").
+
+### 31.8 Fixes after the review, and the release (2026-11-21, LIVE on the DEMO server since 01:25)
+Supersedes the lines above where they differ.
+- **Umami:** `SALT_ROTATION: day` (the visitor code changes daily, as Adatkezelési tájékoztató 2.17. says),
+  `SKIP_LOCATION_HEADERS: "1"`; the collect call has `dial_timeout 2s` / `response_header_timeout 5s` in the proxy. The landing
+  has NO Umami tag in the HTML: `js/meres.js` adds `/m/script.js` itself (with `data-website-id`, `data-domains`,
+  `data-before-send`, `data-tag`, `data-do-not-track`) after its filter exists, so the statistics never run unfiltered. Events
+  are `data-kj-esemeny` / `data-kj-hely` (not `data-umami-event`: the tracker held the link until its request ended); meres.js
+  sends them with `umami.track` without waiting (keepalive). Website id `4b205eb2-faaa-4512-928a-b94d14fad444` in meres.json.
+- **Landing texts** come from `kod/jogi/app_szovegek.json` at build time (`meres.*`, `lablec.suti`, `suti_ablak.*`); footer
+  without statistics: "Ez az oldal nem használ sütit." Link label "Süti-tájékoztató" (landing, app registration).
+- **Unknown source:** `marketing_touches.before_tracking` (in 0021, true for the back-filled rows). A client with no row, or a
+  back-filled row without a campaign link, is shown as the pseudo channel `ismeretlen` "Ismeretlen (a mérés előtt)"
+  (`MarketingRowChannel`; never stored), in funnel, money and callbacks; `unknownClients` in the summary.
+- **Paid only:** the ads cost per registration / paying counts `isPaidTouch` registrations (utm_medium in `PAID_MEDIUMS`:
+  cpc, paid_social, … or a click id). Link builder sources + `meta` "Facebook- vagy Instagram-hirdetés (fizetett)" (paid_social).
+- **Campaign visitors:** a campaign name used by two sources gets `visitors: null`, `sharedName: true`.
+- **Channel rule:** Android apps – `com.google.android.youtube` = youtube; only `…googlequicksearchbox` = google (Gmail etc. =
+  egyeb); `com.facebook.katana/lite/orca` = facebook, `com.instagram.android` = instagram, TikTok packages = tiktok.
+- **Erasure / objection / retention:** `eraseSourceDetails()` (touch details AND signup_attribution utm values; the channel
+  stays) runs in the console anonymisation and the self-service erasure; new console action
+  `POST /admin/console/clients/:id/source-erase` (step-up, reason, audit `admin.client.source_erased`; panel: Műveletek →
+  "Forrásadat törlése"); daily job `marketing_retention` 03:40: click ids after 90 days, source details after 2 years (fields
+  emptied, rows kept). Export: `forras_reszletek.json` with every field + `hirdetesi_hozzajarulasok.json` +
+  `hirdetesi_jelzesek.json`. Umami raw data: `deploy/umami-megorzes.sh` (dry run by default; NOT scheduled – owner decides).
+- **Ads (still OFF):** no personalisation anywhere (`personalization` always false, Google `adPersonalization` always DENIED,
+  no "személyre szabott" checkbox); `previous` on the banner withdraws a decision even when it is linked to an account; new
+  `GET /public/hozzajarulas/:id` → `{ervenyes}` (404 when off; the landing checks a stored "Elfogadom" at every visit and asks
+  again when it is withdrawn / older than 180 days / of an older version); `consentOfUser` and the sender accept a consent for
+  180 days only; only the FIRST `fizetes` is queued; `queueAdConversionSafe()` runs the queueing in its own savepoint (an error
+  never rolls back the e-mail confirmation or the payment). Banner texts from app_szovegek.json; `kj_hozzajarulas` holds
+  v, id, m, g (no p, no time).
+- **Panel:** funnel bars scaled to the registered, visitor → registered rate without the "ismeretlen" registrations (no rate
+  when registrations are older than the visit measuring), steps "Regisztrált / Kitöltötte az adatait / Elfogadta a szerződést /
+  Fizető lett", card "Források", honest empty state, the range selector hidden on the money tab ("Mostani állapot"), custom
+  range prefilled and never reversed, link builder "Haladó" part, readable source names, "becslés" label, recorded spend list
+  with title / "visszavonva" / confirmation, menu icon `ertesites`.
+- **Release:** `fiok-szamok` + `tulaj-fiokok-allapot ment elotte_marketing_20261121_011908`; manual encrypted dump
+  `backups/pg_dump_elotte_marketing_20261121_011908.dump.gpg` (pg_restore -l 554 lines); up.sh ×3 (own dumps
+  `_regi/db_elotte_up_20261121_012238/012526/013330`, Umami `_regi/umami_elotte_up_20261121_012528/013331`); migrations 20 → 22;
+  `umami-beallit.sh` 01:24 (`.env` copy `_regi/env_20261121_012422`). After: owner accounts VÁLTOZATLAN
+  (`utana_marketing_20261121_013515`), all 8 hosts 200/301, demo logins 200, live visit + DEMO registration checked (see
+  deploy/README.md "Marketing (SPEC §31)").

@@ -6,14 +6,14 @@ Ez a tájékoztató felsorolja, milyen sütiket és hasonló technológiákat ha
 
 ## Röviden
 
-- Most csak olyan sütit és tárolást használunk, amely nélkül a kért szolgáltatás nem működne (például hogy belépve maradj). Ehhez nem kell hozzájárulás, ezért nem jelenik meg süti-ablak.
-- A weboldalunk látogatottságát süti nélkül, saját szerverünkön mérjük (3. pont).
+- A belépéshez és a felület működéséhez csak olyan sütit és tárolást használunk, amely nélkül a kért szolgáltatás nem működne (például hogy belépve maradj).
+- A weboldalunk látogatottságát süti nélkül, saját szerverünkön mérjük, és a weboldal saját kódja a forrásodat a regisztrációs linkhez fűzi (3. pont). Ezekhez jogos érdekünk alapján nem kérünk hozzájárulást, ezért most nem jelenik meg süti-ablak (4. pont).
 - Elemző sütit (például Google Analytics) nem használunk.
 - Hirdetési sütit (Meta, Google) most nem használunk. Ha a hirdetési mérést bekapcsoljuk, ezek csak akkor kerülnek a böngésződbe, ha elfogadod (5. és 6. pont).
 
 ## 1. Mi a süti, és mi a hasonló technológia
 
-A süti (cookie) egy kis szöveges adat, amelyet egy webhely a böngésződben tárol, és a böngésződ a következő kéréseknél visszaküld neki. Hasonló technológia a böngésző helyi tára (localStorage) és munkamenet-tára (sessionStorage), a telefonos app tárhelye, és minden olyan kód, amely a böngésződből vagy a telefonodról adatot olvas ki vagy küld el. Ezekre ugyanaz a szabály vonatkozik, mint a sütikre: a hozzájárulásod nélkül csak akkor használhatjuk őket, ha a kifejezetten kért szolgáltatáshoz feltétlenül szükségesek (az elektronikus hírközlésről szóló 2003. évi C. törvény 155. § (4) bekezdése, a 2002/58/EK irányelv 5. cikk (3) bekezdése szerint értelmezve). [JOGI: M3 – a helyes hivatkozás, mint az Adatkezelési tájékoztató 2.14. pontjában]
+A süti (cookie) egy kis szöveges adat, amelyet egy webhely a böngésződben tárol, és a böngésződ a következő kéréseknél visszaküld neki. Hasonló technológia a böngésző helyi tára (localStorage) és munkamenet-tára (sessionStorage), a telefonos app tárhelye, és minden olyan kód, amely a böngésződből vagy a telefonodról adatot olvas ki vagy küld el. A sütikre és a hasonló technológiákra az elektronikus hírközlésről szóló 2003. évi C. törvény 155. § (4) bekezdése vonatkozik (a 2002/58/EK irányelv 5. cikk (3) bekezdése szerint értelmezve). Hogy melyiket milyen alapon használjuk, tételenként írjuk. [JOGI: M3 – a helyes hivatkozás, mint az Adatkezelési tájékoztató 2.14. pontjában; M1 – a 3. pont tételeihez kell-e hozzájárulás]
 
 Minden tételnél megadjuk: kié (saját, vagy egy másik cégé, azaz harmadik félé), hol él, mire való, meddig marad meg, és melyik csoportba tartozik:
 
@@ -72,8 +72,17 @@ Minden tételnél megadjuk: kié (saját, vagy egy másik cégé, azaz harmadik 
 
 ## 3. A weboldal látogatottságának mérése (süti nélkül)
 
+**A weboldal saját kódja (js/meres.js)**
+
+- **Kié, hol:** saját, a weboldalunkon (adozz.hu).
+- **Mire:** ha a weboldalról az appba lépsz (Regisztrálok, Belépés, Visszahívást kérek), a linkhez hozzáfűzi a kampányjelöléseket (utm_), annak a webhelynek a nevét, ahonnan jöttél, és a weboldal oldalát, ahol beléptél; ezeket a regisztrációkor eltároljuk (Adatkezelési tájékoztató 2.11. pont). Ha a látogatottság mérése be van kapcsolva, ez a kód tölti be a mérőkódot (lent), és előtte a webcímből a kampányjelöléseken kívül mindent levág. A gombokra kattintást a mérőkódnak küldi el, várakozás nélkül.
+- **Meddig:** nem tesz sütit, és magától nem ír semmit a böngésződbe (csak ha a „Ne mérjétek a látogatásomat” kapcsolót használod, lent).
+- **Csoport és jogalap:** a regisztráció forrásának megjegyzése; jogos érdek (Adatkezelési tájékoztató 2.11. pont).
+
+**A mérőkód (Umami)**
+
 - **Mi ez:** a bemutató weboldalunkon egy, a saját szerverünkről betöltött mérőkód fut (a nyílt forráskódú Umami). Nem tesz sütit, és nem ír semmit a böngésződbe. A webes és a telefonos appban nincs ilyen mérőkód.
-- **Mit olvas ki a böngésződből:** a képernyő méretét, a böngésző nyelvét, és azt, hogy bekapcsoltad-e a „Ne mérjétek a látogatásomat” beállítást.
+- **Mit olvas ki a böngésződből:** a képernyő méretét, a böngésző nyelvét, a „Ne kövessenek” (Do Not Track) beállítást, és azt, hogy bekapcsoltad-e a „Ne mérjétek a látogatásomat” beállítást.
 - **Mit küld a szerverünknek:** a meglátogatott oldal címét és webcímét (csak a kampányjelölésekkel, az utm_ kezdetűekkel; minden mást még a böngésződben levágunk), az oldalt, ahonnan jöttél, a kattintásokat (például a Regisztrálok gombra) és azt, hogy elgörgettél-e az árakig. A szerver ezen felül, mint minden webes kérésnél, látja az IP-címedet és a böngésződ típusát; az IP-címedet nem tároljuk.
 - **Hova kerül:** csak a saját szerverünkre. Senki más nem kapja meg, a Meta és a Google sem, és a fiókoddal nem kötjük össze.
 - **Csoport és jogalap:** statisztika; jogos érdek (Adatkezelési tájékoztató 2.17. pont). [JOGI: M1 – kell-e hozzájárulás; ha igen, a mérés a süti-ablakba kerül „Statisztika” néven, lásd bekapcsolaskor/valtozatok.md]
@@ -88,7 +97,7 @@ Ha a böngésződben bekapcsoltad a „Ne kövessenek” (Do Not Track) jelzést
 
 ## 4. Miért nincs most süti-ablak
 
-Amíg a hirdetési mérés ki van kapcsolva, nincs mihez hozzájárulást kérnünk, ezért nem jelenik meg süti-ablak. A weboldalon és az appban most nincs hirdetési kód, és hirdetési sütit nem teszünk a böngésződbe.
+A 2. pont tételei feltétlenül szükségesek, a 3. pont tételeit pedig jogos érdekünk alapján, süti nélkül használjuk, és tiltakozhatsz ellenük (Adatkezelési tájékoztató 2.11. és 2.17. pont). Amíg a hirdetési mérés ki van kapcsolva, nincs mihez hozzájárulást kérnünk, ezért nem jelenik meg süti-ablak. A weboldalon és az appban most nincs hirdetési kód, és hirdetési sütit nem teszünk a böngésződbe. [JOGI: M1 – ha a 3. ponthoz hozzájárulás kell, a süti-ablak „Statisztika” csoporttal már most megjelenik (bekapcsolaskor/valtozatok.md B)]
 
 ## 5. Ha bekapcsoljuk a hirdetési mérést (most nincs bekapcsolva)
 
@@ -97,8 +106,8 @@ Amíg a hirdetési mérés ki van kapcsolva, nincs mihez hozzájárulást kérn�
 **kj_hozzajarulas – a döntésedet tároló süti**
 
 - **Kié, hol:** saját, a weboldalunk címén.
-- **Mire:** megjegyzi, mit választottál a süti-ablakban (partnerenként), melyik szövegváltozatra és mikor, hogy ne kérdezzünk minden oldalon újra; ha elfogadtad, a döntésed véletlen azonosítóját is, amellyel a regisztrációkor a döntésedet a fiókodhoz kötjük (Adatkezelési tájékoztató 2.18. pont). Mást nem tárol.
-- **Meddig:** 6 hónapig, utána újra megkérdezünk. [TULAJ/JOGI: M8 – az élettartam; a kódban is ez legyen a süti neve]
+- **Mire:** megjegyzi, mit választottál a süti-ablakban (partnerenként) és melyik szövegváltozatra, hogy ne kérdezzünk minden oldalon újra; ha elfogadtad, a döntésed véletlen azonosítóját is, amellyel a regisztrációkor a döntésedet a fiókodhoz kötjük (Adatkezelési tájékoztató 2.18. pont). Mást nem tárol (időpontot sem).
+- **Meddig:** 180 napig, utána újra megkérdezünk. Ha elfogadtad, a weboldal minden látogatáskor megkérdezi a szerverünket, érvényes-e még a döntésed (például nem vontad-e vissza az appban); ha nem, a hirdetési sütiket törli, és újra megkérdez. [TULAJ/JOGI: M8 – az élettartam]
 - **Csoport:** feltétlenül szükséges (a döntésed tiszteletben tartásához). [JOGI: M8 – a magyar jogban nincs kifejezett szabály rá; a francia adatvédelmi hatóság (CNIL) iránymutatása kivételnek tekinti]
 
 **Meta (Facebook, Instagram) – hirdetési mérés, csak ha elfogadod**
@@ -119,11 +128,11 @@ Amíg a hirdetési mérés ki van kapcsolva, nincs mihez hozzájárulást kérn�
 
 ## 6. Hogyan döntesz, és hogyan vonod vissza (ha a hirdetési mérést bekapcsoljuk)
 
-- **Az első látogatáskor** egy ablakban kérdezünk, két egyforma gombbal: „Elfogadom” és „Elutasítom”; mellettük a „Beállítások”. A beállításokban partnerenként (Meta, Google) dönthetsz, ott alapból minden ki van kapcsolva. A feltétlenül szükséges tárolást tájékoztatásul látod, az nem kapcsolható ki.
+- **Az első látogatáskor** egy ablakban kérdezünk, két egyforma gombbal: „Elfogadom” és „Elutasítom”; mellettük a „Beállítások”. A beállításokban partnerenként (Meta, Google) dönthetsz, ott alapból minden ki van kapcsolva. A feltétlenül szükséges tárolást tájékoztatásul látod, az nem kapcsolható ki. Személyre szabott hirdetést (remarketinget) nem kínálunk fel.
 - **Amíg nem döntesz,** semmilyen hirdetési kód nem töltődik be. Az ablak bezárása, figyelmen kívül hagyása vagy az oldal görgetése nem hozzájárulás.
 - **Elutasítással is minden működik:** a weboldalt ugyanúgy használhatod, és ugyanúgy regisztrálhatsz.
-- **Ha regisztrálsz:** ha elfogadtad, és a weboldalunkról 7 napon belül regisztrálsz, a döntésedet a fiókodhoz kötjük, és a regisztrációdról és az első fizetésedről is jelzést küldünk annak a partnernek, amelyiknek hozzájárultál (Adatkezelési tájékoztató 2.18. pont). Az appban a Fiók oldalon látod és visszavonhatod.
-- **Visszavonás:** a weboldal minden oldalának alján ott a „Süti-beállítások” link; ugyanolyan egyszerű, mint az elfogadás. Visszavonáskor a weboldalunk címén lévő hirdetési sütiket (_fbp, _fbc, _gcl_…) töröljük, a hirdetési kódokat többé nem töltjük be, és a szerverünk sem küld rólad jelzést. A visszavonás a korábbi adatkezelés jogszerűségét nem érinti.
+- **Ha regisztrálsz:** ha elfogadtad, és a weboldalunkról 7 napon belül regisztrálsz, a döntésedet a fiókodhoz kötjük, és a regisztrációdról és az első fizetésedről is jelzést küldünk annak a partnernek, amelyiknek hozzájárultál (Adatkezelési tájékoztató 2.18. pont). Az appban a Fiók > Adataim oldalon látod és visszavonhatod.
+- **Visszavonás:** a weboldal minden oldalának alján ott a „Süti-beállítások” link; ugyanolyan egyszerű, mint az elfogadás. Visszavonáskor a weboldalunk címén lévő hirdetési sütiket (_fbp, _fbc, _gcl_…) töröljük, a hirdetési kódokat többé nem töltjük be, és a szerverünk sem küld rólad jelzést – akkor sem, ha a döntésedet már a fiókodhoz kötöttük. Ha az appban vonod vissza, a weboldal a következő megnyitáskor törli a hirdetési sütiket, és újra megkérdez. A visszavonás a korábbi adatkezelés jogszerűségét nem érinti.
 - **Újrakérdezés:** ha ez a tájékoztató vagy a partnerek listája változik, újra megkérdezünk; egyébként 6 hónap után.
 
 ## 7. Hogyan törölheted magad

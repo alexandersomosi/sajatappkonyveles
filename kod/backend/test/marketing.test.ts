@@ -8,8 +8,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { adConversionEvents, adSpend, callbackRequests, clients, marketingConsents, marketingTouches, payments, subscriptions, users } from '../src/db/schema.js';
-import { campaignLink, campaignSlug, channelOf, statisticsUrl } from '../src/_shared/marketing.js';
+import { adConversionEvents, adSpend, callbackRequests, clients, marketingConsents, marketingTouches, payments, signupAttribution, subscriptions, users } from '../src/db/schema.js';
+import { campaignLink, campaignSlug, channelOf, isPaidTouch, statisticsUrl } from '../src/_shared/marketing.js';
+import { eraseSourceDetails, jobMarketingRetention } from '../src/services/marketing.js';
 import { createDemoProvider } from '../src/payments/demo.js';
 import { googleEmail, googlePhone, jobAdConversions, metaEmail, metaPhone, resetGoogleTokenCache, sha } from '../src/services/hirdetes.js';
 import { createUmamiClient, UmamiUnavailable, type UmamiClient, type UmamiSummary } from '../src/services/umami.js';
@@ -63,6 +64,18 @@ describe('the channel rule (shared/src/marketing.ts)', () => {
     expect(channelOf({ referrerDomain: 'l.instagram.com' })).toBe('instagram');
     expect(channelOf({ referrerDomain: 'www.tiktok.com' })).toBe('tiktok');
     expect(channelOf({ referrerDomain: 'android-app://com.google.android.googlequicksearchbox/' })).toBe('google');
+    // Android apps: the YouTube app is YouTube, Gmail is not Google, the Facebook / Instagram / TikTok apps are themselves
+    expect(channelOf({ referrerDomain: 'android-app://com.google.android.youtube/' })).toBe('youtube');
+    expect(channelOf({ referrerDomain: 'android-app://com.google.android.gm/' })).toBe('egyeb');
+    expect(channelOf({ referrerDomain: 'android-app://com.facebook.katana/' })).toBe('facebook');
+    expect(channelOf({ referrerDomain: 'android-app://com.instagram.android/' })).toBe('instagram');
+    expect(channelOf({ referrerDomain: 'android-app://com.zhiliaoapp.musically/' })).toBe('tiktok');
+    // paid = the paid mediums of the link builder or an ad click id
+    expect(isPaidTouch({ utmMedium: 'cpc' })).toBe(true);
+    expect(isPaidTouch({ utmMedium: 'paid_social' })).toBe(true);
+    expect(isPaidTouch({ utmMedium: 'social' })).toBe(false);
+    expect(isPaidTouch({ utmMedium: null, clickIds: { gclid: 'x' } })).toBe(true);
+    expect(isPaidTouch({})).toBe(false);
     expect(channelOf({ referrerDomain: 'blog.example.com' })).toBe('egyeb');
     expect(channelOf({ referrerDomain: 'adozz.hu' })).toBe('kozvetlen');
     expect(channelOf({ referrerDomain: 'app.adozz.hu' })).toBe('kozvetlen');
@@ -360,7 +373,12 @@ describe('the Marketing tab (GET /admin/marketing)', () => {
     expect((await h.json('POST', '/admin/marketing/koltes', { token: admin.token, body: { day: '2027-01-01', platform: 'meta', amountHuf: 10 } })).status).toBe(400);
     expect((await h.json('POST', '/admin/marketing/koltes', { token: admin.token, body: { day: '2026-11-19', platform: 'meta', amountHuf: 0 } })).status).toBe(400);
     let s = (await h.json('GET', '/admin/marketing?nap=30', { token: admin.token })).body;
-    const meta = s.ads.rows.find((x: { platform: string }) => x.platform === 'meta');
+    let meta = s.ads.rows.find((x: { platform: string }) => x.platform === 'meta');
+    // the free Facebook post (utm_source=facebook, no paid medium) does not lower the cost of the ads
+    expect(meta).toMatchObject({ spendHuf: 10_000, registered: 0, costPerRegistrationHuf: null, paying: 0, costPerPayingHuf: null });
+    await signUp(h, 'hirdetesbol@demo.kezjegy.test', { utm: { source: 'meta', medium: 'paid_social', campaign: 'osz' } });
+    s = (await h.json('GET', '/admin/marketing?nap=30', { token: admin.token })).body;
+    meta = s.ads.rows.find((x: { platform: string }) => x.platform === 'meta');
     expect(meta).toMatchObject({ spendHuf: 10_000, registered: 1, costPerRegistrationHuf: 10_000, paying: 0, costPerPayingHuf: null });
     expect(s.ads).toMatchObject({ enabled: false, meta: false, google: false, spendHuf: 10_000, queued: 0, sent: 0 });
     const rv = await h.json('POST', `/admin/marketing/koltes/${add.body.id}/visszavonas`, { token: admin.token });
@@ -371,6 +389,38 @@ describe('the Marketing tab (GET /admin/marketing)', () => {
     expect(s.ads.spend).toHaveLength(1);
     expect(s.ads.spend[0].revokedAt).not.toBeNull();
     expect(await h.deps.db.select().from(adSpend)).toHaveLength(1);
+  });
+
+  it('a client from before the source was recorded is "Ismeretlen (a mérés előtt)", not "Közvetlen"', async () => {
+    umami = null;
+    const c = await signUp(h, 'regi-ugyfel@demo.kezjegy.test');
+    // as the 0021 backfill writes it: no campaign link, before_tracking = true
+    await h.deps.db.update(marketingTouches).set({ beforeTracking: true }).where(eq(marketingTouches.userId, c.userId));
+    const s = (await h.json('GET', '/admin/marketing?nap=30', { token: admin.token })).body;
+    const u = s.funnel.byChannel.find((x: { channel: string }) => x.channel === 'ismeretlen');
+    expect(u).toMatchObject({ label: 'Ismeretlen (a mérés előtt)', registered: 1, visitors: null });
+    expect(s.unknownClients).toBeGreaterThanOrEqual(1);
+  });
+
+  it('a campaign name used by two sources shows no visitor number (Umami counts by name only)', async () => {
+    umami = {
+      visitors: 50,
+      visits: 60,
+      pageviews: 70,
+      tags: [],
+      devices: [],
+      countries: [],
+      cities: [],
+      events: [],
+      campaigns: [{ x: 'kozos-nev', y: 40 }],
+    } as unknown as UmamiSummary;
+    await signUp(h, 'kozos-yt@demo.kezjegy.test', { utm: { source: 'youtube', medium: 'video', campaign: 'kozos-nev' } });
+    await signUp(h, 'kozos-fb@demo.kezjegy.test', { utm: { source: 'facebook', medium: 'social', campaign: 'kozos-nev' } });
+    const s = (await h.json('GET', '/admin/marketing?nap=30', { token: admin.token })).body;
+    const rows = s.campaigns.filter((x: { campaign: string }) => x.campaign === 'kozos-nev');
+    expect(rows).toHaveLength(2);
+    for (const r of rows) expect(r).toMatchObject({ visitors: null, sharedName: true, registered: 1 });
+    umami = null;
   });
 
   it('ads off: the first payment queued nothing', async () => {
@@ -541,6 +591,58 @@ describe('ads ON (prepared path): only with consent, only the whitelist, withdra
     expect(await h.deps.db.select().from(adConversionEvents).where(eq(adConversionEvents.userId, c.userId))).toHaveLength(0);
   });
 
+  it('personalised ads are never stored or sent; the Google consent is always "denied" for personalisation', async () => {
+    const yes = await h.json('POST', '/public/hozzajarulas', { body: { meta: false, google: true, personalization: true } });
+    const [row] = await h.deps.db.select().from(marketingConsents).where(eq(marketingConsents.id, yes.body.id));
+    expect(row!.personalization).toBe(false);
+    const c = await signUp(h, 'nincs-remarketing@demo.kezjegy.test', { utm: { source: 'google', medium: 'cpc' }, hirdetes: { hid: yes.body.id, gclid: 'Cj0-pers' } });
+    const rows = await h.deps.db.select().from(adConversionEvents).where(eq(adConversionEvents.userId, c.userId));
+    expect(rows.every((r) => r.payload.personalization === false)).toBe(true);
+    spy.calls.length = 0;
+    await jobAdConversions(h.deps);
+    const g = spy.calls.find((x) => x.url === 'https://datamanager.googleapis.com/v1/events:ingest')!;
+    expect(JSON.parse(g.body!).consent).toEqual({ adUserData: 'CONSENT_GRANTED', adPersonalization: 'CONSENT_DENIED' });
+  });
+
+  it('a new choice on the banner ends a decision that is already linked to an account; the landing check says so', async () => {
+    const yes = await h.json('POST', '/public/hozzajarulas', { body: { meta: true } });
+    const c = await signUp(h, 'banner-visszavon@demo.kezjegy.test', { hirdetes: { hid: yes.body.id } });
+    expect((await h.json('GET', `/public/hozzajarulas/${yes.body.id}`)).body).toEqual({ ervenyes: true });
+    const again = await h.json('POST', '/public/hozzajarulas', { body: { meta: false, google: false, previous: yes.body.id } });
+    expect(again.body).toEqual({ id: null });
+    const [row] = await h.deps.db.select().from(marketingConsents).where(eq(marketingConsents.id, yes.body.id));
+    expect(row!.withdrawnAt).not.toBeNull();
+    const { queueAdConversion } = await import('../src/services/hirdetes.js');
+    expect(await queueAdConversion(h.deps, h.deps.db, { event: 'fizetes', userId: c.userId, ref: 'p-banner', valueHuf: 1 })).toBe(0);
+    expect((await h.json('GET', `/public/hozzajarulas/${yes.body.id}`)).body).toEqual({ ervenyes: false });
+    expect((await h.json('GET', '/public/hozzajarulas/nem-uuid')).body).toEqual({ ervenyes: false });
+  });
+
+  it('a decision older than 180 days does not count; only the FIRST payment is signalled', async () => {
+    const yes = await h.json('POST', '/public/hozzajarulas', { body: { meta: true } });
+    const c = await signUp(h, 'regi-dontes@demo.kezjegy.test', { hirdetes: { hid: yes.body.id } });
+    const { queueAdConversion } = await import('../src/services/hirdetes.js');
+    expect(await queueAdConversion(h.deps, h.deps.db, { event: 'fizetes', userId: c.userId, ref: 'p1', valueHuf: 19_999 })).toBe(1);
+    // a restart after a cancellation: no second "fizetett"
+    expect(await queueAdConversion(h.deps, h.deps.db, { event: 'fizetes', userId: c.userId, ref: 'p2', valueHuf: 19_999 })).toBe(0);
+    await h.deps.db.update(marketingConsents).set({ createdAt: new Date('2026-05-01T00:00:00Z') }).where(eq(marketingConsents.id, yes.body.id));
+    expect((await h.json('GET', `/public/hozzajarulas/${yes.body.id}`)).body).toEqual({ ervenyes: false });
+    await h.deps.db.delete(adConversionEvents).where(eq(adConversionEvents.userId, c.userId));
+    expect(await queueAdConversion(h.deps, h.deps.db, { event: 'fizetes', userId: c.userId, ref: 'p3', valueHuf: 19_999 })).toBe(0);
+  });
+
+  it('a failing conversion queue never undoes the transaction around it (own savepoint)', async () => {
+    const { queueAdConversionSafe } = await import('../src/services/hirdetes.js');
+    const c = await signUp(h, 'mentopont@demo.kezjegy.test');
+    await h.deps.db.transaction(async (tx) => {
+      await tx.update(users).set({ displayName: 'Mentopont' }).where(eq(users.id, c.userId));
+      // a broken user id makes the insert fail inside the savepoint – logged, 0, the outer transaction goes on
+      expect(await queueAdConversionSafe(h.deps, tx, { event: 'regisztracio', userId: 'nem-uuid', ref: 'x' })).toBe(0);
+    });
+    const [u] = await h.deps.db.select({ n: users.displayName }).from(users).where(eq(users.id, c.userId));
+    expect(u!.n).toBe('Mentopont');
+  });
+
   it('a banner withdrawal ("previous") ends the unlinked decision', async () => {
     const yes = await h.json('POST', '/public/hozzajarulas', { body: { meta: true } });
     const again = await h.json('POST', '/public/hozzajarulas', { body: { meta: false, previous: yes.body.id } });
@@ -550,5 +652,54 @@ describe('ads ON (prepared path): only with consent, only the whitelist, withdra
     // the users table is untouched by all this
     expect((await h.deps.db.select().from(users)).length).toBeGreaterThan(0);
     expect(await h.deps.db.select().from(callbackRequests)).toBeDefined();
+  });
+});
+
+describe('source data: objection / erasure and the retention promised in the privacy notice (2.11., 8.)', () => {
+  let h: Harness;
+  beforeAll(async () => {
+    h = await setup({ now: '2026-11-21T09:00:00Z' });
+  });
+  afterAll(async () => h.close());
+
+  it('eraseSourceDetails keeps only the channel (marketing rows and the older signup_attribution)', async () => {
+    const c = await signUp(h, 'tiltakozik@demo.kezjegy.test', { utm: { source: 'youtube', medium: 'video', campaign: 'v1', content: 'leiras', term: 'ev' }, forras: { hivatkozo: 'youtube.com', erkezes: '/arak' } });
+    const before = (await touchOf(h, c.userId))[0]!;
+    expect(before).toMatchObject({ channel: 'youtube', utmCampaign: 'v1' });
+    const n = await eraseSourceDetails(h.deps.db, c.userId);
+    expect(n.touches).toBe(1);
+    const after = (await touchOf(h, c.userId))[0]!;
+    expect(after).toMatchObject({ channel: 'youtube', utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null, utmTerm: null, referrerDomain: null, landingPath: null, clickIds: null });
+    const [sa] = await h.deps.db.select().from(signupAttribution).where(eq(signupAttribution.userId, c.userId));
+    if (sa) expect(sa).toMatchObject({ utmSource: null, utmMedium: null, utmCampaign: null, utmContent: null });
+  });
+
+  it('the daily job: click ids go after 90 days, the source details after 2 years; nothing younger changes', async () => {
+    const c = await signUp(h, 'megorzes@demo.kezjegy.test', { utm: { source: 'facebook', medium: 'paid_social', campaign: 'regi' } });
+    const fresh = await signUp(h, 'friss@demo.kezjegy.test', { utm: { source: 'tiktok', campaign: 'uj' } });
+    await h.deps.db.update(marketingTouches).set({ clickIds: { fbclid: 'IwAR-regi' }, createdAt: new Date('2026-07-01T00:00:00Z') }).where(eq(marketingTouches.userId, c.userId));
+    let r = await jobMarketingRetention(h.deps);
+    expect(r.clickIds).toBe(1);
+    let t = (await touchOf(h, c.userId))[0]!;
+    expect(t).toMatchObject({ clickIds: null, utmCampaign: 'regi', channel: 'facebook' });
+    await h.deps.db.update(marketingTouches).set({ createdAt: new Date('2024-10-01T00:00:00Z') }).where(eq(marketingTouches.userId, c.userId));
+    r = await jobMarketingRetention(h.deps);
+    expect(r.touches).toBe(1);
+    t = (await touchOf(h, c.userId))[0]!;
+    expect(t).toMatchObject({ channel: 'facebook', utmSource: null, utmMedium: null, utmCampaign: null });
+    expect((await touchOf(h, fresh.userId))[0]).toMatchObject({ utmCampaign: 'uj' });
+    // again: nothing more to do
+    expect(await jobMarketingRetention(h.deps)).toEqual({ clickIds: 0, touches: 0, attribution: 0 });
+  });
+
+  it('the data export holds every source field and the two ad files', async () => {
+    const { touchesOfUser, adConsentsOfUser, adSignalsOfUser } = await import('../src/services/marketing.js');
+    const c = await signUp(h, 'export-forras@demo.kezjegy.test', { utm: { source: 'youtube', campaign: 'x' } });
+    const rows = await touchesOfUser(h.deps.db, c.userId);
+    expect(Object.keys(rows[0]!).sort()).toEqual(
+      ['aMeresElottiRegisztracio', 'aRegisztraciobolOrokolt', 'belepesiForras', 'cel', 'csatorna', 'erkezes', 'hirdetesiKattintasAzonositok', 'hivatkozo', 'hozzajarulasAzonosito', 'ido', 'platform', 'tipus', 'utmCampaign', 'utmContent', 'utmMedium', 'utmSource', 'utmTerm'].sort(),
+    );
+    expect(await adConsentsOfUser(h.deps.db, c.userId)).toEqual([]);
+    expect(await adSignalsOfUser(h.deps.db, c.userId)).toEqual([]);
   });
 });

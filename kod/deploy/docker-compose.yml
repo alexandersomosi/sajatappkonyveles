@@ -189,8 +189,12 @@ services:
       DISABLE_TELEMETRY: "1"
       DISABLE_UPDATES: "1"
       PRIVATE_MODE: "1"
-      # the client address comes ONLY from the header the proxy sets from the connection (adozz.caddy)
+      # the client address comes from the header the proxy sets from the connection (adozz.caddy)
       CLIENT_IP_HEADER: X-Kj-Client-Ip
+      # Adatkezelési tájékoztató 2.17.: the visitor code changes EVERY DAY (UTC midnight); the default would be monthly
+      SALT_ROTATION: day
+      # the place comes only from the local geo database, never from CDN headers a client could send
+      SKIP_LOCATION_HEADERS: "1"
       TZ: UTC
     networks: [kezjegy_edge, kezjegy_umami]
     depends_on:

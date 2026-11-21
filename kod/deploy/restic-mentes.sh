@@ -10,7 +10,8 @@
 #   db     – pg_dump -Fp (sima SQL) a kezjegy-db-ből, stdinen → /kezjegy.sql
 #   umami  – ha fut a kezjegy-umami-db, annak a pg_dump-ja → /umami.sql
 #   files  – /srv/kezjegy/data/files (a feltöltött fájlok; a blobok már AES-256-GCM-mel titkosak)
-#   config – .env, .env.db, nyilvanos.env, .backup_pass, deploy/, proxy/ (a helyreállításhoz kell)
+#   config – .env, .env.db, nyilvanos.env, .backup_pass, deploy/, proxy/ (a helyreállításhoz kell); ha megvannak (SPEC §31):
+#            .env.umami, .env.umami-db, .umami_beallitas (a statisztika-szerver titkai) és hirdetes/ (a Google-kulcs mappája)
 #   app    – src/ és web/ (a futó kód és a webes felületek, médiával) – így a tulaj gépe nélkül is újraépíthető
 # (files/config/app: --skip-if-unchanged – ha semmi nem változott, nem készül új pillanatkép.)
 # Félkész állapot nincs: ha a pg_dump hibával áll le, a restic NEM ír pillanatképet (--stdin-from-command); ha a
@@ -111,6 +112,10 @@ else
   CFG=()
   for p in "$R/.env" "$R/.env.db" "$R/nyilvanos.env" "$R/.backup_pass" "$R/deploy" "$R/proxy"; do
     if [ -e "$p" ]; then CFG+=("$p"); else log "figyelem config: hiányzik $p"; fi
+  done
+  # SPEC §31: the statistics server's secrets and the ad key folder – only when they exist (no warning: optional)
+  for p in "$R/.env.umami" "$R/.env.umami-db" "$R/.umami_beallitas" "$R/hirdetes"; do
+    if [ -e "$p" ]; then CFG+=("$p"); fi
   done
   mentes config --skip-if-unchanged "${CFG[@]}"
   # 5) a futó kód és a webes felületek

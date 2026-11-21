@@ -7,12 +7,14 @@
 <meta name="description" content="Saját, nyilvántartásba vett könyvelő átalányadózó és katás, alanyi áfamentes egyéni vállalkozóknak. Havi 19 999 Ft bruttó, hűségidő nélkül. Az appban látod, mennyit tegyél félre adóra.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="kepek/favicon.png">
+
 <link rel="stylesheet" href="stilus.css">
 <script src="mozgas.js" defer></script>
 </head>
 <body id="top">
 
 <a class="ugras" href="#tartalom">Ugrás a tartalomra</a>
+
 
 <header class="fejlec">
   <div class="kontener fejlec-sor">
@@ -44,6 +46,7 @@
 
 <main id="tartalom">
 
+
 <section class="hos">
   <div class="kontener hos-racs">
     <div class="hos-szoveg">
@@ -54,18 +57,25 @@
         <a class="gomb gomb-fo" href="https://app.adozz.hu/regisztracio">Regisztrálok</a>
         <a class="szoveglink" href="#hogyan">Így indul a könyvelésed</a>
       </div>
-      <p class="hos-ar"><b>19&nbsp;999&nbsp;Ft/hó</b> bruttó · éves zárás 14&nbsp;999&nbsp;Ft/év · <a href="#arak">a többi díj</a></p>
+      <p class="hos-ar"><b>19&nbsp;999&nbsp;Ft/hó</b> bruttó · éves zárás 14&nbsp;999&nbsp;Ft/év · <a href="#arak">a&nbsp;többi díj</a></p>
       <p class="hos-mikro">Regisztrálni kártya nélkül tudsz. Hűségidő nincs.</p>
     </div>
+
     <div class="hos-kep">
       <figure class="kompo kompo-hos" data-hos aria-label="Az Adózz.hu app telefonon és gépen, böngészőben. A képek bemutató adatokkal készültek.">
         <div class="bongeszo">
           <div class="bongeszo-sav" aria-hidden="true"><i></i><i></i><i></i><span>app.adozz.hu</span></div>
           <div class="valto">
-            <img class="aktiv" src="kepek/app_gep_fooldal.webp" width="1600" height="1000" alt="Ugyanez gépen, böngészőben: a főoldal, oldalt a menüvel">
-            <img src="kepek/app_gep_dosszie.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: a novemberi dosszié, a beküldött iratok listája">
-            <img src="kepek/app_gep_feltoltes.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: papír beküldése, a fájlt a gépedről választod ki">
-            <img src="kepek/app_gep_uzenetek.webp" width="1600" height="1000" fetchpriority="low" alt="Gépen: üzenetek a könyvelődnek és igazoláskérés">
+            <img class="aktiv" src="kepek/app_gep_fooldal.webp" srcset="kepek/app_gep_fooldal_800.webp 800w, kepek/app_gep_fooldal.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="high" alt="Az app főoldala gépen, böngészőben, oldalt a menüvel">
+            <img src="kepek/app_gep_dosszie.webp" srcset="kepek/app_gep_dosszie_800.webp 800w, kepek/app_gep_dosszie.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: a novemberi dosszié, a beküldött iratok listája">
+            <img src="kepek/app_gep_feltoltes.webp" srcset="kepek/app_gep_feltoltes_800.webp 800w, kepek/app_gep_feltoltes.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: papír beküldése, a fájlt a gépedről választod ki, vagy a telefonodon lefotózod">
+            <img src="kepek/app_gep_uzenetek.webp" srcset="kepek/app_gep_uzenetek_800.webp 800w, kepek/app_gep_uzenetek.webp 1600w" sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 980px) 580px, 620px" width="1600" height="1000" fetchpriority="low" alt="Gépen: üzenetek a könyvelődnek és igazoláskérés">
+            <div class="gep-menu" aria-hidden="true">
+              <button type="button" class="g0" tabindex="-1"></button>
+              <button type="button" class="g1" tabindex="-1"></button>
+              <button type="button" class="g2" tabindex="-1"></button>
+              <button type="button" class="g3" tabindex="-1"></button>
+            </div>
           </div>
         </div>
         <div class="kompo-tel">
@@ -75,20 +85,20 @@
               <img src="kepek/app_dosszie.webp" width="780" height="1688" fetchpriority="low" alt="A novemberi dosszié telefonon: a könyvelőd átnézte az iratokat, 5 irat rendben">
               <img src="kepek/app_fotozas.webp" width="780" height="1688" fetchpriority="low" alt="Fotózás az appban: a papírt lefotózod, vagy a galériából, fájlból választod ki">
               <img src="kepek/app_uzenetek.webp" width="780" height="1688" fetchpriority="low" alt="Üzenetek az appban: igazolást kérsz egy gombnyomással, vagy írsz a könyvelődnek">
-              <div class="hos-menu" role="group" aria-label="Próbáld ki az app menüjét">
+              <div class="hos-menu" role="group" aria-label="Az app képernyői">
                 <button type="button" class="m0" aria-label="Főoldal" aria-pressed="true"></button>
                 <button type="button" class="m1" aria-label="Dosszié" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
-                <button type="button" class="m2" aria-label="Fotózás" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
-                <button type="button" class="m3" aria-label="Üzenetek" aria-pressed="false"><span class="hos-kopp" aria-hidden="true"></span></button>
+                <button type="button" class="m2" aria-label="Fotózás" aria-pressed="false"></button>
+                <button type="button" class="m3" aria-label="Üzenetek" aria-pressed="false"></button>
               </div>
             </div>
           </div>
         </div>
-        <p class="hos-tipp"><span>Próbáld ki: <span class="szo-erintes">koppints</span><span class="szo-eger">kattints</span> a menüre</span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h11m-4-4.5L15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
       </figure>
     </div>
   </div>
 </section>
+
 
 <section class="bizalom" aria-labelledby="bizalom-cim">
   <div class="kontener">
@@ -101,6 +111,7 @@
     </ul>
   </div>
 </section>
+
 
 <section class="szakasz" id="kinek">
   <div class="kontener">
@@ -130,6 +141,7 @@
     </div>
   </div>
 </section>
+
 
 <section class="szakasz szakasz-papir" id="hogyan">
   <div class="kontener">
@@ -161,6 +173,7 @@
   </div>
 </section>
 
+
 <section class="szakasz szakasz-sotet" id="mit-kapsz">
   <div class="kontener">
     <div class="fej fej-szeles">
@@ -170,6 +183,7 @@
 
     <div class="bemutato" data-bemutato>
       <ol class="blepesek">
+
 
         <li class="blepes">
           <div class="blepes-szoveg">
@@ -191,6 +205,7 @@
             </div>
           </div>
         </li>
+
 
         <li class="blepes">
           <div class="blepes-szoveg">
@@ -216,6 +231,7 @@
           </div>
         </li>
 
+
         <li class="blepes">
           <div class="blepes-szoveg">
             <p class="blepes-cimke">Határidők</p>
@@ -235,6 +251,7 @@
             </div>
           </div>
         </li>
+
 
         <li class="blepes">
           <div class="blepes-szoveg">
@@ -258,6 +275,7 @@
           </div>
         </li>
 
+
         <li class="blepes">
           <div class="blepes-szoveg">
             <p class="blepes-cimke">Dosszié</p>
@@ -279,6 +297,7 @@
           </div>
         </li>
 
+
         <li class="blepes">
           <div class="blepes-szoveg">
             <p class="blepes-cimke">Üzenetek</p>
@@ -299,6 +318,7 @@
             </div>
           </div>
         </li>
+
 
         <li class="blepes">
           <div class="blepes-szoveg">
@@ -325,9 +345,10 @@
           </div>
         </li>
 
+
         <li class="blepes blepes-gep">
           <div class="blepes-szoveg">
-            <p class="blepes-cimke">Gépen is</p>
+            <p class="blepes-cimke">Böngészőben</p>
             <h3>Gépen is ugyanez</h3>
             <p>Böngészőből is megnyitod, ugyanazzal a belépéssel. Ugyanazt látod, mint a telefonodon, és a papírokat a gépedről is feltöltheted.</p>
           </div>
@@ -357,6 +378,7 @@
   </div>
 </section>
 
+
 <section class="szakasz" id="konyvelo">
   <div class="kontener">
     <div class="konyvelo-fej">
@@ -376,6 +398,7 @@
     </dl>
   </div>
 </section>
+
 
 <section class="szakasz szakasz-vonal" id="biztonsag">
   <div class="kontener">
@@ -409,6 +432,7 @@
     </div>
   </div>
 </section>
+
 
 <section class="szakasz szakasz-papir" id="arak">
   <div class="kontener">
@@ -474,6 +498,7 @@
   </div>
 </section>
 
+
 <section class="szakasz" id="osszevetes">
   <div class="kontener">
     <div class="fej">
@@ -497,6 +522,9 @@
     <p class="labjegyzet">A hagyományos irodák gyakorlata eltérő. A jobb oszlop általános tapasztalatot mutat, nem egy konkrét irodát.</p>
   </div>
 </section>
+
+
+
 
 <section class="szakasz szakasz-vonal" id="gyik">
   <div class="kontener gyik-racs">
@@ -549,6 +577,7 @@
   </div>
 </section>
 
+
 <section class="zaro" id="visszahivas">
   <div class="kontener zaro-racs">
     <div class="zaro-szoveg">
@@ -566,6 +595,7 @@
 </section>
 
 </main>
+
 
 <footer class="lablec">
   <div class="kontener">

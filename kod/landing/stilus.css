@@ -1,6 +1,6 @@
 /* adozz.hu – SPEC §29.3.6, C kinézet (dizajn/C4_atlathato/C_VEGLEGES): kék fejlécsáv rozettával, fehér szakaszok,
    köztük 10 px-es teljes szélességű #D3DAFC sáv. Mobil először (390 / 320 px), asztalon középre, max. 720 px.
-   Nincs szkript, nincs süti, nincs külső betöltés (CSP: default-src 'self'). */
+   SPEC §31: egy saját szkript (js/meres.js) – a forrás továbbadása és a süti nélküli statisztika; nincs süti, nincs külső betöltés (CSP: default-src 'self'). */
 @font-face { font-family: 'Geist'; src: url('fonts/Geist-W400.ttf') format('truetype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Geist'; src: url('fonts/Geist-W600.ttf') format('truetype'); font-weight: 600; font-display: swap; }
 @font-face { font-family: 'Geist'; src: url('fonts/Geist-W650.ttf') format('truetype'); font-weight: 650; font-display: swap; }
@@ -100,3 +100,7 @@ img { display: block; }
 .hj-beallitasok { margin-top: 12px; border-top: 1px solid var(--hajszal); padding-top: 12px; }
 .hj-doboz { display: block; margin-bottom: 8px; }
 .hj-beallitasok .hj-gomb { margin-top: 4px; }
+.hj-beall-cim { font-size: 16px; font-weight: 650; margin-bottom: 4px; }
+.hj-kicsi { font-size: 14px; margin-bottom: 8px; }
+.hj-szukseges { color: var(--halvany, #5b6380); }
+#meres-visszajelzes:empty { display: none; }
