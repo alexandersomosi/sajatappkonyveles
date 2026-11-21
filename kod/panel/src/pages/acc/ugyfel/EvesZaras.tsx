@@ -14,6 +14,7 @@ import { ANNUAL_BALL, OTHER_INCOME_KNOWN_TO_NAV, type AnnualCheckItem, type Annu
 import { datum, ft, idopont } from '../../../lib/format';
 import { evesGombok } from '../../../lib/k28';
 import { today } from '../../../lib/today';
+import { BeadasKartya, HipaKartya, KulonbozetKartya, LezarasSor, MegnyitasSor, OsszegekKartya } from './EvesCiklus';
 
 const ALLAPOT: Record<AnnualStatus, { szo: string; cls: string }> = {
   nem_indult: { szo: 'Még nem nyílt meg (január 5.)', cls: '' },
@@ -81,6 +82,9 @@ function Zaras({ c, a }: FulProps & { a: AccAnnualView }) {
   return (
     <div className="racs fo-mellek">
       <div className="oszlop" style={{ gap: 16 }}>
+        <MegnyitasSor c={c} a={a} frissit={frissit} zarolt={zarolt} />
+        {/* SPEC §32.B: the numbers of the return (the client approves them with the draft) */}
+        {(a.status === 'konyvelonel' || a.status === 'jovahagyasra_var' || a.amounts) && <OsszegekKartya key={`${a.id}-${a.amounts ? 'm' : 'u'}`} c={c} a={a} frissit={frissit} zarolt={zarolt} />}
         <div className="lap k28">
           <div className="szak">
             <div className="szak-fej">
@@ -245,26 +249,30 @@ function Zaras({ c, a }: FulProps & { a: AccAnnualView }) {
             </div>
           </div>
           <div className="szak">
-            {g.tervezet && <Feltolto cim={ANNUAL_TEXTS.panel.draftUpload} sugo="PDF – az ügyfél az appban átnézi és jóváhagyja." datumKell={false} zarolt={zarolt} fut={(f) => ep.accAnnualDraft(c.id, a.id, f!)} kesz={frissit} ok="Feltöltötted. Az ügyfél értesítést kapott: hagyja jóvá." />}
-            {g.szja && (
+            {g.tervezet && (
               <Feltolto
-                cim={g.szjaFelirat}
-                sugo={a.status === 'konyvelonel' ? 'Az ügyfél még nem hagyta jóvá: csak akkor add be, ha telefonon megbeszéltétek (és ezt a naplóba írd).' : 'A NAV-visszaigazolás PDF-je.'}
-                datumKell
+                cim={ANNUAL_TEXTS.panel.draftUpload}
+                sugo={a.amounts?.matchesDraft ? 'PDF – az ügyfél az appban átnézi a számokkal együtt, és jóváhagyja.' : 'Előbb mentsd az összegeket, és jelöld be, hogy egyeznek a tervezettel.'}
+                datumKell={false}
                 zarolt={zarolt}
-                fut={(f, d) => ep.accAnnualFiledSzja(c.id, a.id, f!, d)}
+                fut={(f) => ep.accAnnualDraft(c.id, a.id, f!)}
                 kesz={frissit}
-                ok="Rögzítetted a beadást. Most a HIPA-bevallás jön."
+                ok="Feltöltötted. Az ügyfél értesítést kapott: hagyja jóvá."
               />
             )}
-            {g.hipa && <Feltolto cim={ANNUAL_TEXTS.panel.filedHipa} sugo="Az önkormányzati visszaigazolás (nem kötelező)." datumKell fajlNemKell zarolt={zarolt} fut={(f, d) => ep.accAnnualFiledHipa(c.id, a.id, f, d)} kesz={frissit} ok="Kész: minden bevallás beadva. Az ügyfél értesítést kapott." />}
-            {!g.tervezet && !g.szja && !g.hipa && (
+            {/* SPEC §32.B: the filing with the NAV iktatószám and the two documents */}
+            {g.szja && <BeadasKartya c={c} a={a} frissit={frissit} zarolt={zarolt} />}
+            {!g.tervezet && !g.szja && a.status !== 'beadva' && (
               <p className="halvany">
-                {a.status === 'kesz' ? 'Minden beadva.' : a.status === 'dijra_var' ? 'A díj kifizetése után kezdhetsz bele (előre fizetendő).' : 'Most az ügyfélen a sor.'}
+                {a.status === 'kesz' ? 'Minden beadva és rendezve.' : a.status === 'dijra_var' ? 'A díj kifizetése után kezdhetsz bele (előre fizetendő).' : 'Most az ügyfélen a sor.'}
               </p>
             )}
+            <LezarasSor c={c} a={a} frissit={frissit} zarolt={zarolt} />
           </div>
         </div>
+        {/* SPEC §32.B: the difference / refund after filing, and the yearly HIPA */}
+        <KulonbozetKartya c={c} a={a} frissit={frissit} zarolt={zarolt} />
+        {c.taxProfile?.hipa?.method !== 'nincs' && <HipaKartya c={c} a={a} frissit={frissit} zarolt={zarolt} />}
       </div>
     </div>
   );

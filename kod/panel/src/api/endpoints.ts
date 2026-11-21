@@ -426,3 +426,40 @@ export const adminChargeRefunded = (id: string, note?: string) => api.post<unkno
 export const accKata = (id: string, year: number) => api.get<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata${q({ year })}`);
 export const accKataBreaks = (id: string, body: import('../_shared/kata').KataBreaksInput) => api.put<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata/breaks`, body);
 export const accKataVerify = (id: string, body: import('../_shared/kata').KataVerifyInput) => api.post<import('../_shared/kata').KataYearView>(`/acc/clients/${e(id)}/kata/verify`, body);
+/** SPEC §32.B – éves ciklus (backend routes/acc-ev.ts): amounts, filings, refund, HIPA, close / open, önellenőrzés, folyószámla, áttekintő. */
+export const accAnnualAmounts = (id: string, aid: string, body: import('../_shared/eves').AnnualAmountsInput) => api.put<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/amounts`, body);
+export const accAnnualFile = (id: string, aid: string, what: 'filed-szja' | 'filed-hipa', fields: Record<string, string>, files: { file?: File | null; receipt?: File | null }) => {
+  const form = new FormData();
+  for (const [k, v] of Object.entries(fields)) if (v) form.append(k, v);
+  if (files.file) form.append('file', files.file);
+  if (files.receipt) form.append('receipt', files.receipt);
+  return upload<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/${what}`, form);
+};
+export const accAnnualRefund = (id: string, aid: string, body: import('../_shared/eves').AnnualRefundInput) => api.post<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/refund`, body);
+export const accAnnualHipa = (id: string, aid: string, body: import('../_shared/eves').AnnualHipaInput) => api.put<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/hipa`, body);
+export const accAnnualClose = (id: string, aid: string, reason: string) => api.post<AccAnnualView>(`/acc/clients/${e(id)}/annual/${e(aid)}/close`, { reason });
+export const accAnnualOpen = (id: string, year: number) => api.post<AccAnnualView>(`/acc/clients/${e(id)}/annual/open`, { year });
+export const accCorrections = (id: string) => api.get<{ items: import('../_shared/eves').AccTaxCorrection[] }>(`/acc/clients/${e(id)}/corrections`);
+export const accCorrectionCreate = (id: string, body: import('../_shared/eves').CorrectionInput) => api.post<import('../_shared/eves').AccTaxCorrection>(`/acc/clients/${e(id)}/corrections`, body);
+export const accCorrectionUpdate = (cid: string, body: import('../_shared/eves').CorrectionInput) => api.put<import('../_shared/eves').AccTaxCorrection>(`/acc/corrections/${e(cid)}`, body);
+export const accCorrectionPotlek = (cid: string, body: { huf: number; reason?: string | null; payer?: 'ugyfel' | 'iroda' }) => api.post<import('../_shared/eves').AccTaxCorrection>(`/acc/corrections/${e(cid)}/potlek`, body);
+export const accCorrectionSend = (cid: string) => api.post<import('../_shared/eves').AccTaxCorrection>(`/acc/corrections/${e(cid)}/send`, {});
+export const accCorrectionCancel = (cid: string, reason: string) => api.post<import('../_shared/eves').AccTaxCorrection>(`/acc/corrections/${e(cid)}/cancel`, { reason });
+export const accCorrectionFiled = (cid: string, fields: { filedOn: string; filingRef: string; accountNumber?: string }, files: { file: File; receipt: File }) => {
+  const form = new FormData();
+  for (const [k, v] of Object.entries(fields)) if (v) form.append(k, v);
+  form.append('file', files.file);
+  form.append('receipt', files.receipt);
+  return upload<import('../_shared/eves').AccTaxCorrection>(`/acc/corrections/${e(cid)}/filed`, form);
+};
+export const accReconciliations = (id: string) => api.get<{ items: import('../_shared/eves').ReconciliationView[] }>(`/acc/clients/${e(id)}/reconciliations`);
+export const accReconExpected = (id: string, asOf: string) => api.get<import('../_shared/eves').ReconExpectedView>(`/acc/clients/${e(id)}/reconciliations/expected${q({ asOf })}`);
+export const accReconSave = (id: string, body: import('../_shared/eves').ReconciliationInput, file?: File | null) => {
+  if (!file) return api.post<import('../_shared/eves').ReconciliationView>(`/acc/clients/${e(id)}/reconciliations`, body);
+  const form = new FormData();
+  form.append('data', JSON.stringify(body));
+  form.append('file', file);
+  return upload<import('../_shared/eves').ReconciliationView>(`/acc/clients/${e(id)}/reconciliations`, form);
+};
+export const accReconResolve = (rid: string, note?: string) => api.post<import('../_shared/eves').ReconciliationView>(`/acc/reconciliations/${e(rid)}/resolve`, note ? { note } : {});
+export const accYearOverview = (year: number, filter?: string, accountantId?: string) => api.get<import('../_shared/eves').YearOverview>(`/acc/overview/year${q({ year, filter, accountantId })}`);

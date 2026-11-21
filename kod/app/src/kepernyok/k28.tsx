@@ -248,7 +248,10 @@ export function HaviKartya({ c }: { c: CheckinView }) {
 export function EvesKartya({ a, fn }: { a: AnnualView; fn: string }) {
   const gomb = a.nextAction === 'kitoltes' ? ANNUAL_TEXTS.buttons.kerdoiv : a.nextAction === 'fizetes' ? ANNUAL_TEXTS.buttons.dijra_var : a.nextAction === 'jovahagyas' ? 'Átnézem' : 'Megnézem';
   void fn;
-  return <TeendoSzakasz ikon="bevallas" cim={fillPlaceholders(ANNUAL_TEXTS.card.title, { ev: String(a.year) })} szoveg={a.statusText} gomb={gomb} onPress={() => router.push(a.nextAction === 'kitoltes' ? '/eves-zaras/kerdoiv' : '/eves-zaras')} />;
+  // SPEC §32.B: after the filing the difference / refund sentence; the next step of the timeline as a second line
+  const szoveg = [a.settlement?.text ?? a.statusText, a.timelineNext].filter(Boolean).join('\n');
+  const ut = a.nextAction === 'kitoltes' ? '/eves-zaras/kerdoiv' : a.nextAction === 'jovahagyas' && a.summary ? '/eves-zaras/jovahagyas' : '/eves-zaras';
+  return <TeendoSzakasz ikon="bevallas" cim={fillPlaceholders(ANNUAL_TEXTS.card.title, { ev: String(a.year) })} szoveg={szoveg} gomb={gomb} onPress={() => router.push(ut as never)} />;
 }
 
 export function SzunetelKartya({ p }: { p: PauseView }) {

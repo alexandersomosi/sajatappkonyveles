@@ -122,6 +122,9 @@ export const KIND_DEFAULTS: Record<NotificationKind, { push: boolean; email: boo
   guided_continue: { push: true, email: false, to: 'client' },
   // SPEC §32 – staff: the accountant's tax tasks (panel badge + the daily digest e-mail)
   tax_task: { push: false, email: false, to: 'accountant' },
+  // SPEC §32.B – client: the önellenőrzés steps (approve, filed, settled). Push + e-mail; the client's own setting wins
+  // (Fiók → Értesítések; REMINDER_GROUP_KINDS.befizetes), every step goes once.
+  correction_status: { push: true, email: true, to: 'client' },
 };
 
 /** SPEC §28.2.3: the defaults when a user has no user_notification_settings row. */

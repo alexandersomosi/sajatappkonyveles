@@ -173,6 +173,8 @@ export function buborekOldal(m: Pick<Message, 'sender' | 'senderName'>): { sajat
 export type MenuKulcs =
   | 'ugyfelek'
   | 'hatarido'
+  // SPEC §32.B: the year overview (who is missing what)
+  | 'eves_attekinto'
   | 'keresek'
   | 'visszahivasok'
   | 'helyettunk'
@@ -218,6 +220,7 @@ export interface MenuCsoport {
 const E: Record<MenuKulcs, Omit<MenuElem, 'kulcs'>> = {
   ugyfelek: { to: '/ugyfelek', felirat: 'Ügyfelek', ikon: 'dosszie' },
   hatarido: { to: '/hatarido-figyelo', felirat: 'Határidő-figyelő', ikon: 'hataridok' },
+  eves_attekinto: { to: '/eves-attekinto', felirat: 'Éves áttekintő', ikon: 'bevallas' },
   keresek: { to: '/keresek', felirat: 'Kérések', ikon: 'igazolas' },
   visszahivasok: { to: '/visszahivasok', felirat: 'Visszahívások', ikon: 'ora' },
   // SPEC §27.6.1: the assisted path ("Intézzük helyette"), between Visszahívások and Vállalkozás-indítás.
@@ -274,7 +277,7 @@ export function menuCsoportok(o: {
     return out;
   }
   if (o.konyvelo) {
-    const munka = [el('ugyfelek'), el('hatarido'), el('keresek'), el('igazolasok'), el('havi')];
+    const munka = [el('ugyfelek'), el('hatarido'), el('eves_attekinto'), el('keresek'), el('igazolasok'), el('havi')];
     if (o.konyvelonekVoltVisszahivasa) munka.push(el('visszahivasok'));
     if (o.konyvelonekVoltHelyettunk) munka.push(el('helyettunk'));
     out.push({ cim: 'Munka', elemek: munka });
@@ -291,6 +294,7 @@ export function menuCsoportok(o: {
       el('admin'),
       el('admin_konzol'),
       el('admin_ugyfelek'),
+      ...(o.konyvelo ? [] : [el('eves_attekinto')]),
       el('admin_elofizetesek'),
       el('admin_fizetesek'),
       el('admin_dijszamlak'),

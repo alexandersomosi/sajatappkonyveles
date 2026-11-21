@@ -33,7 +33,7 @@ export {
 export { csaladiFrameHuf, fiatal25Months } from './engine/allowances.js';
 export type { AllowanceRules } from './rules/types.js';
 export { deadlinesFor, quarterDueDate, hipaDates, isWorkingDay, nextWorkingDay } from './calendar.js';
-export { RULES_2026, RULES_2027, NAV_ACCOUNTS, rulesForYear, SUPPORTED_YEARS, kataRulesFor, KATA_RULES_REGI_2026, KATA_RULES_REGI_2027_DRAFT, KATA_RULES_UJ_2027_DRAFT, T928_SOURCE } from './rules/index.js';
+export { RULES_2026, RULES_2027, NAV_ACCOUNTS, NAV_ACCOUNTS_EV, rulesForYear, SUPPORTED_YEARS, kataRulesFor, KATA_RULES_REGI_2026, KATA_RULES_REGI_2027_DRAFT, KATA_RULES_UJ_2027_DRAFT, T928_SOURCE } from './rules/index.js';
 export type { KataRules, KataVariant } from './rules/types.js';
 // SPEC §32 – KATA months, keret meter, deadlines
 export {
@@ -79,3 +79,17 @@ export function costRatioForActivity(answer: ActivityAnswer): CostRatio {
     }
   }
 }
+// SPEC §32 (éves ciklus, F3) – önellenőrzési pótlék suggestion (Art. 209. § (2), 211. § (3), 212. §), refund date (Art. 64. § (1))
+export {
+  selfRevisionSurcharge,
+  refundExpectedBy,
+  baseRateOn,
+  BASE_RATES,
+  BASE_RATES_SOURCE,
+  SELF_REVISION_CAP_HUF,
+  type BaseRate,
+  type SelfRevisionInput,
+  type SelfRevisionResult,
+  type SelfRevisionRow,
+  type SelfRevisionReason,
+} from './engine/potlek.js';

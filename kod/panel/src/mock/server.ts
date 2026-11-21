@@ -450,7 +450,7 @@ on('GET', '/acc/clients', ({ q }) => {
   const filter = (q.get('filter') ?? 'mind') as ClientFilter;
   const s = (q.get('q') ?? '').toLowerCase();
   const all = clients.map(row);
-  const counts = { mind: all.length, bekotes_alatt: 0, rendben: 0, hianyzik_valami: 0, hatar_kozel: 0, dij_elmaradt: 0, zarolva: 0, kata_figyelem: 0 };
+  const counts = { mind: all.length, bekotes_alatt: 0, rendben: 0, hianyzik_valami: 0, hatar_kozel: 0, dij_elmaradt: 0, zarolva: 0, kata_figyelem: 0, folyoszamla_elteres: 0, onellenorzes_nyitott: 0 };
   for (const r of all) for (const f of r.flags) counts[f]++;
   const kedv = q.get('kedvezmeny') === 'var';
   const items = all.filter((r) => (filter === 'mind' || r.flags.includes(filter)) && (!s || r.name.toLowerCase().includes(s)) && (!kedv || (r.allowancesPending ?? 0) > 0));

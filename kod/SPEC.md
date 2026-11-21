@@ -5183,3 +5183,122 @@ shows no fee (`AnnualView.feeHuf` null) until the ÁSZF is fixed [T1, JOGI].
 `KATA_EXEMPT_LABELS`) → content keys `kata.f1.*`, `fizetes.*`, `kata.mentes_ok.*`, `kata.panel.*`,
 `notif.tax_due_soon.kata*`, `notif.limit_warning.kata*`, `notif.tax_task.*`, `notif.tax_payment_(verified|mismatch).kata`,
 `email.tax_due_soon.kata_ev_vege.body` (`backend/src/content/kata.ts`; editable in /admin/szovegek).
+
+## 32.B Éves ciklus – F2/F3 build (ÉPÍTŐ B, 2026-11-21; NOT deployed)
+
+Builds on §32 (ÉPÍTŐ A). Plans: `_munka/TERV_EVES_CIKLUS_KATA.md` (3.1–3.7, 4.1–4.6, 5.x, 6.x, 7) and the critique (2.2–2.5,
+which wins). The app never files and never pays: the accountant enters the final numbers from the return, files as
+meghatalmazott and records it; the client transfers and marks; the engine only estimates and suggests.
+
+### 32.B.1 Rules used (sourced in the plans; checked 2026-11-21)
+- **Visszajáró szja** (Art. 64. § (1)): within 30 days of the return, at the earliest from 1 March of the next year →
+  `refundExpectedBy(filedOn, year) = max(filedOn, (year+1)-03-01) + 30 days` (ado-motor `engine/potlek.ts`). The client
+  card says "Ha {datum} után sem érkezett meg, írj nekünk" (switch `refundDatumUgyfelnek`) – a legal date, not a promise.
+- **Önellenőrzési pótlék** (Art. 209. § (2), 211. § (3) a), 212. § (1)–(3), (5)): daily 1/365 of the base rate valid that
+  day, the daily percentage truncated to 3 decimals; × 1.5 for a repeated correction; tax originally paid in full → at most
+  5 000 Ft; employer / payer certificate error → 0; made up in a later return (212. § (3)) or consecutive periods chained
+  (212. § (5), [DÁVID K6]) → NO suggestion (by hand). The days run from the day after the original due date to the filing
+  day (both counted) [DÁVID D12]; the forint amount is `Math.round` of the exact sum. Base-rate table `BASE_RATES`: only
+  5,5 % from 2026-08-26 (mnb.hu, still current on 2026-11-21); an earlier day → no suggestion ("NAV pótlékkalkulátor").
+  The suggestion is panel-only; **the accountant approves the final pótlék** (a different number needs a reason) before
+  the correction can go to the client.
+- **Accounts** (NAV list from 2026-11-01): szja 103 10032000-06056353; kata 288 10032000-01076349; önellenőrzési pótlék
+  215 "NAV Bírság, mulasztási bírság és önellenőrzéssel kapcsolatos befizetések bevételi számla" 10032000-01076301 (IBAN
+  HU49100320000107630100000000); késedelmi pótlék 138 10032000-01076985 (HU75100320000107698500000000) – `NAV_ACCOUNTS_EV`.
+  The HIPA pótlék goes to the municipality: never an item on 215, no suggestion [DÁVID K7].
+- **Due dates**: the szja difference 20 May (next working day); the KATA különadó 25 February or kataTo + 30 days
+  (`kataDeclarationDue`); the HIPA difference 31 May; an önellenőrzés is due on its filing day (Art. 54–57. §); a
+  correction of at most 1 000 Ft is refused [DÁVID D11]. The client's approval due: 10 May / 18 February [DÁVID D2].
+- **TB / szocho** are settled in the quarterly 2658 (NAV 100 6.1): the summary shows them for information only, with the
+  plan's sentence; no unsourced nyugdíjas sentence (critique 2.2) – a block of zero amounts is simply left out.
+
+### 32.B.2 Data (migrations 0024 = enum values, 0025 = additive columns + 2 tables)
+- Enums: `payment_item_kind` + `szja_kulonbozet`, `onellenorzesi_potlek`, `egyeb_ado`; `document_category` +
+  `adoszamla_kivonat`; `notification_kind` + `correction_status`.
+- `tax_periods` + `filing_ref`, `correction_id`; new kinds (text): `eves_szja` ('YYYY-SZJA'), `kata_eves` ('YYYY-KATA'),
+  `hipa_eves` ('YYYY-HIPA-EVES'), `onellenorzes` ('ONELL-<id>') – always made by a "Beadtam", always approved.
+  `tax_payment_items` + `reconciliation_id`. `client_tax_profiles` + `hipa_prior_year_huf`, `hipa_prior_year_source`.
+- `annual_closings` + the amounts (`amounts` jsonb, `diff_huf`, `engine_estimate`, `letter_text`), the approved summary,
+  the filing (`filed_szja_on`, `szja_filing_ref`, the two document ids, `filed_without_approval_note`), the settlement
+  (`settlement_period_id`, `refund_*` with CHECKs), the yearly HIPA (`hipa_needed`, `hipa_amounts`, `filed_hipa_on`,
+  `hipa_filing_ref`, `hipa_period_id`), `closed_manually_reason`, `opened_manually_by/at`. Status CHECK unchanged.
+- `tax_corrections` (form, subject, seq, status tervezet → ugyfelre_var → jovahagyva → beadva → rendezve | visszavonva,
+  cause, reason, diffs jsonb, pótlék suggestion / basis / approved amount / payer, approval hash + summary, filing, payment
+  period) and `account_reconciliations` (as_of, balances jsonb per adónem with the app's expectation and the difference,
+  totals, status, follow-up, `seen_rows` = the statement rows, verified item ids, document, request, next check,
+  resolved). Nothing is deleted.
+
+### 32.B.3 Annual closing (`services/eves-ciklus.ts`, `eves-zaras.ts`)
+- `PUT /acc/clients/:id/annual/:aid/amounts` (konyvelonel / jovahagyasra_var): átalány A (szja), B (advances, prefilled
+  from the approved quarters), C (csjk ±), ≤ 5 other lines, revenue / income / taxable (prefilled from the engine; a
+  changed prefilled number needs a reason), refund mode; KATA revenue / months / keret / különadó. Difference
+  = A − B + C + Σ (KATA: the különadó). "Az összegek egyeznek a bevallás tervezetével" is required for the draft step. A
+  change while the client has the draft voids his approval and tells him (`annual_status.valtozott`, once a day).
+- The client sees `AnnualView.summary` (income, szja, the advances by quarter with their check state, the result with the
+  NAV account and közlemény, contributions, HIPA, letter) and `approvalHash` = sha256(draftDocId + ':' + numbersHash)
+  (canonical JSON of the amounts, difference and HIPA). `POST /client/annual/:id/approve {hash}` – old hash → 409; the
+  approved summary is stored; the accountant gets `tax_task.eves_jovahagyva`. Older drafts without numbers keep the
+  draft-only hash.
+- `POST …/filed-szja` (multipart: `filedOn`, `filingRef` ≤ 40, `file` = the return, `receipt` = the NAV confirmation; all
+  required; without the app approval only with `noApprovalNote` ≥ 10 characters): difference > 0 → `eves_szja` / `kata_eves`
+  period with one item (103 / 288, közlemény = adószám); < 0 → `refund_expected_by`, `refund_status 'var'`; = 0 → settled.
+  `annual_status.fizetendo | visszajar | nulla | kata_kulonado | kata_beadva` (push + e-mail with its own body).
+- **Kész is automatic** (`maybeCloseAnnual`): filed + difference settled (payment verified / refund arrived, set off or
+  transferred / nothing) + HIPA filed, not needed or no return needed. "Lezárom" with a reason (`…/close`).
+- **Refund**: `POST /client/annual/:id/refund-received {receivedOn, amountHuf}` (client, only "megérkezett", accountant
+  told) and `POST …/refund {status: megerkezett|beszamitva|atvezetve, on, amountHuf?, note?}` (accountant). Job
+  `refund_watch` 09:10: `tax_task.visszajaro_kesik` once the expected date passed.
+- **Yearly HIPA**: `PUT …/hipa {notNeeded | taxHuf, advancesHuf, returnNeeded}`, `POST …/filed-hipa` (date, iktatószám,
+  optional document): H − E > 0 → `hipa_eves` on the municipality account (31 May); H goes into next year's profile as
+  `hipa_prior_year_huf` (Htv. 39/A. § (9)).
+- **Timeline** (`AnnualView.timeline`, `timelineNext`, `GET /client/annual/timeline?year=`): átalány – opens 5 Jan, Q4
+  payment, questionnaire, the accountant prepares (from 15 March), approval (10 May), filing + difference (20 May), refund
+  (if any), HIPA (31 May); KATA – year end (until 31 Dec), opens, questionnaire, approval (18 Feb), '26KATA + különadó,
+  HIPA. Labels Kész / Most / Lejárt; a future row is only its date.
+- **Reminders / e-mails**: the approval 7 / 3 / 1 days before its due (`annual_due.jovahagyas`); 7 / 3 / 1 days before a
+  difference (`tax_due_soon.eves | kata_kulonado | hipa_eves | onell`, → `/fizetes/{id}`), the due day and +1 day as for
+  quarters. `annual_status` and `correction_status` have push + e-mail; they belong to the client's "Befizetési
+  határidők" group (`REMINDER_GROUP_KINDS`) and to Fiók → Értesítések – the client's setting wins; every step goes once.
+- **Former client's last year** (`lemondottEvesZaras`, default **'ki'** = the behaviour so far, TULAJ T4): 'kezi' – the
+  accountant opens it (`POST /acc/clients/:id/annual/open {year}`, not before 5 January), 'automatikus' – it opens on
+  5 January for a 'megszunt' / 'felfuggesztve' client with a profile. While open, a 'megszunt' client may write only these:
+  annual answers / submit / approve / refund mark, mark-paid, önellenőrzés approve, fee pay.
+- **Annual fee** (§32.5): the flow stays prepared (`createFeeCharge` → `dijra_var` → payment → `konyvelonel`, the 14-day
+  lock); `evesZarasDij` stays OFF until the ÁSZF is fixed [T1, JOGI].
+
+### 32.B.4 Önellenőrzés (`services/onellenorzes.ts`)
+`GET/POST /acc/clients/:id/corrections`, `GET/PUT /acc/corrections/:cid`, `POST /acc/corrections/:cid/potlek {huf,
+reason?, payer?}`, `…/send`, `…/filed` (multipart: filedOn, filingRef, file, receipt), `…/cancel {reason}`,
+`GET /acc/corrections/potlek?amountHuf&dueDate&filedOn&repeated`; client `GET /client/corrections`, `GET/POST
+/client/corrections/:id(/approve {hash})`. Only a filed return (2658 quarter filed; SZJA / KATA / HIPA filed on the annual
+closing); seq per (client, form, subject) → × 1.5 from the 2nd. Filed → one 'onellenorzes' payment period due on the filing
+day: 103 → szja account, 406 → TB, 258 → szocho, 288 → kata, HIPA → the municipality account, the pótlék → 215 when the
+client pays it (`potlek_payer 'iroda'` → no item [T3]); lines in the client's favour are no items (the folyószámla shows
+them). Verified → `rendezve`. The original period is untouched (the Adó tab shows "Önellenőrizve (n×)"). Notifications
+`correction_status.jovahagyasra_var(_javara) | beadva_fizetendo | beadva_javara | beadva | rendezve`.
+
+### 32.B.5 NAV folyószámla (`services/folyoszamla.ts`)
+`GET /acc/clients/:id/reconciliations`, `…/reconciliations/expected?asOf=`, `POST …/reconciliations` (JSON or multipart
+`data` + `file`), `POST /acc/reconciliations/:rid/resolve`. Rows 103, 406, 258, (288), 138, 215, 224, 226 + egyéb. The
+payments seen on the extract are **never ticked by default** (critique 2.4): each needs the statement row's day and amount;
+"rendben" only with the item's exact amount, otherwise "eltérés" with a note; then the same `verifyPayment` as a single
+"Rendben" (+ `reconciliation_id`). The next check defaults to the next payment day + 7 working days (KATA + 5; in November
+15 December) [DÁVID D14]. Flag `folyoszamla_elteres` (latest check 'hatralek' / 'elteres', not resolved); job
+`account_checks` 07:30 → `tax_task.folyoszamla`; Határidő-figyelő row `fsz:<clientId>`. "Szólok az ügyfélnek" → a request.
+
+### 32.B.6 Éves áttekintő (`services/ev-attekinto.ts`)
+`GET /acc/overview/year?year=&filter=&accountantId=` (own clients; the admin everybody or one accountant): quarters / KATA
+months, last check, annual status and whose turn, difference, HIPA, open önellenőrzések, "mi hiányzik" lines; filters
+mind / hianyzik / ram_var / ugyfelre_var / lejart / kata / atalany; a few aggregate queries (no per-client year
+calculation). Panel page `/eves-attekinto` (CSV download).
+
+### 32.B.7 Screens and texts
+App: `/eves-zaras` (timeline, settlement / refund card with "Megjelölöm, hogy megérkezett", open önellenőrzések; the
+screen and the questionnaire now ask the server's default year – the closing in progress), `/eves-zaras/jovahagyas`,
+`/onellenorzes/[id]`; the Főoldal card shows the difference sentence and "Következő: …". Panel: Éves zárás tab cards
+(Összegek, Beadtam, Különbözet / Visszajáró, Iparűzési adó, Lezárom, the former client's open), tabs Folyószámla and
+Önellenőrzés, page Éves áttekintő. Texts `kod/shared/src/eves.ts` → content `eves.ciklus.*`, `eves.panel.*`,
+`onell.panel.*`, `folyoszamla.panel.*`, `ev_attekinto.*`, `notif.annual_status.*`, `notif.correction_status.*`,
+`notif.tax_due_soon.*`, `notif.tax_payment_verified.*`, `notif.tax_task.*`, `email.(annual_status|correction_status).*.body`
+(`backend/src/content/eves.ts`). Switches (§32.5 + `lemondottEvesZaras`, `refundDatumUgyfelnek`, `reszletfizetesSzoveg`,
+`csjkBirsagTetel`).

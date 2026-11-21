@@ -169,6 +169,20 @@
       "when": 1795455720000,
       "tag": "0023_kata",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795455780000,
+      "tag": "0024_ev_ciklus_enumok",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795455840000,
+      "tag": "0025_ev_ciklus",
+      "breakpoints": true
     }
   ]
 }

@@ -57,6 +57,11 @@ export async function evesKapcsolok(db: DbOrTx): Promise<EvesKapcsolok> {
   if (typeof v.kataElorejelzesUgyfelnek === 'boolean') out.kataElorejelzesUgyfelnek = v.kataElorejelzesUgyfelnek;
   if (v.kataEvVegeUgyfelnek === 'jeloletlen' || v.kataEvVegeUgyfelnek === 'ki') out.kataEvVegeUgyfelnek = v.kataEvVegeUgyfelnek;
   if (typeof v.evesZarasDij === 'boolean') out.evesZarasDij = v.evesZarasDij;
+  // SPEC §32.B (éves ciklus F2/F3)
+  if (v.lemondottEvesZaras === 'ki' || v.lemondottEvesZaras === 'kezi' || v.lemondottEvesZaras === 'automatikus') out.lemondottEvesZaras = v.lemondottEvesZaras;
+  if (typeof v.refundDatumUgyfelnek === 'boolean') out.refundDatumUgyfelnek = v.refundDatumUgyfelnek;
+  if (typeof v.reszletfizetesSzoveg === 'boolean') out.reszletfizetesSzoveg = v.reszletfizetesSzoveg;
+  if (typeof v.csjkBirsagTetel === 'boolean') out.csjkBirsagTetel = v.csjkBirsagTetel;
   return out;
 }
 

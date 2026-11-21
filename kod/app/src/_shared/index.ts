@@ -12,3 +12,5 @@ export * from './k29g';
 export * from './marketing';
 // SPEC §32 (éves ciklus és KATA, F0 + F1a): KATA months, payment sheet, switches.
 export * from './kata';
+// SPEC §32.B (éves ciklus, F2/F3): annual amounts and approval, settlement, timeline, önellenőrzés, folyószámla, overview.
+export * from './eves';

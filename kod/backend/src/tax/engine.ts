@@ -48,4 +48,13 @@ export {
   type KataMonth,
   type KataRules,
   type KataLimitMeter,
+  // SPEC §32.B – éves ciklus: önellenőrzési pótlék suggestion, refund date, the 215 / 138 accounts
+  selfRevisionSurcharge,
+  refundExpectedBy,
+  baseRateOn,
+  BASE_RATES,
+  BASE_RATES_SOURCE,
+  NAV_ACCOUNTS_EV,
+  nextWorkingDay,
+  type SelfRevisionResult,
 } from '@kezjegy/ado-motor';

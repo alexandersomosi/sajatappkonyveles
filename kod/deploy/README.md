@@ -13,6 +13,34 @@
 > A tulaj gépén át futó „Adozz mentes kulso” feladat KIKAPCSOLVA (Disabled, nem törölve).
 
 
+## Éves ciklus F2/F3 (SPEC §32.B) – ÉPÍTŐ B, 2026-11-21: KÉSZ HELYBEN, **MÉG NINCS TELEPÍTVE** (az F0 + F1a-val együtt megy)
+
+- **Migráció (csak hozzáadó), sorrendben az F1a után:** `0024_ev_ciklus_enumok.sql` (enumértékek: `payment_item_kind` +
+  `szja_kulonbozet`, `onellenorzesi_potlek`, `egyeb_ado`; `document_category` + `adoszamla_kivonat`; `notification_kind` +
+  `correction_status` – ebben a futásban semmi nem használja őket) és `0025_ev_ciklus.sql` (`tax_periods` + `filing_ref`,
+  `correction_id`; `tax_payment_items.reconciliation_id`; `client_tax_profiles` + `hipa_prior_year_huf`,
+  `hipa_prior_year_source`; `annual_closings` + az összegek, a beadás, a különbözet, a visszajáró, az éves HIPA, a kézi
+  lezárás / megnyitás oszlopai (új oszlopokon két CHECK); két új tábla: `tax_corrections`, `account_reconciliations`
+  indexekkel). Meglévő sort és oszlopot nem módosít; adatlépés nincs.
+- **Előtte pg_dump** (az `up.sh` titkosított mentése + kézi `_regi/pg_dump_elotte_ev_ciklus_<idő>.dump.gpg`,
+  `pg_restore -l` próbával). Soha nem újraseedelés.
+- **Ellenőrzés telepítés után:** `\d tax_corrections`, `\d account_reconciliations`, `select count(*) from annual_closings
+  where amounts is not null;` (0), a 2026-os éves zárások állapota változatlan.
+- **Új jobok:** `account_checks` (07:30: esedékes folyószámla-ellenőrzés → `tax_task.folyoszamla`), `refund_watch`
+  (09:10: késő visszajáró → `tax_task.visszajaro_kesik`). Mindkettő csak könyvelői feladatot ad.
+- **Új kapcsolók** (ugyanabban a `system_state['kapcsolok.ev_ciklus']` JSON-ban): `lemondottEvesZaras`
+  (`ki` = alapérték, a mostani viselkedés: megszűnt / felfüggesztett ügyfélnek nem nyílik éves zárás; `kezi` = a könyvelő a
+  panelen megnyithatja; `automatikus` = január 5-én magától megnyílik) – **tulaj-döntés (T4)**; `refundDatumUgyfelnek`
+  (igaz), `reszletfizetesSzoveg` (hamis), `csjkBirsagTetel` (hamis). Bekapcsolás pl.:
+  `insert into system_state(key, value) values ('kapcsolok.ev_ciklus', '{"lemondottEvesZaras": "kezi"}') on conflict (key) do update set value = excluded.value;`
+  (A kulcsok egy JSON-ban élnek: ha már van benne más kapcsoló, azt is írd bele.)
+- **Viselkedésváltozás a DEMO-n:** a tervezet csak elmentett összegekkel és „egyeznek” jelöléssel mehet ki jóváhagyásra;
+  a „Beadtam” (szja / kata) NAV-iktatószámot, bevallást és NAV-visszaigazolást kér; a `beadva → kesz` automatikus (a
+  különbözet rendezése és a HIPA után); a panel Adó füle nem mutatja az éves különbözet és az önellenőrzés befizetéseit
+  (azok az Éves zárás / Önellenőrzés fülön vannak); az app éves zárás képernyője és kérdőíve a folyamatban lévő évet kéri
+  (javítás: eddig a naptári év üres zárását nyitotta meg januárban).
+
+
 ## Éves ciklus és KATA, F0 + F1a (SPEC §32) – ÉPÍTŐ A, 2026-11-21: KÉSZ HELYBEN, **MÉG NINCS TELEPÍTVE**
 
 - **Migráció (csak hozzáadó):** `0022_kata_enumok.sql` (enumértékek: `payment_item_kind` + `kata_teteles`, `kata_kulonado`;

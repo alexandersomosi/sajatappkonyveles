@@ -72,12 +72,23 @@ export const KATA_F1_RULES = {
  *  - kataElorejelzesUgyfelnek: the client sees the year-end projection of the keret (off: only the accountant) [D28].
  *  - kataEvVegeUgyfelnek: the December notice to the client – 'jeloletlen' = only for unmarked overdue KATA items.
  *  - evesZarasDij: the 14 999 Ft annual-closing fee at questionnaire submit – OFF until the ÁSZF is fixed [T1, JOGI].
+ * SPEC §32.B (éves ciklus, F2/F3):
+ *  - lemondottEvesZaras: the last year of a client whose service ended / is suspended – 'ki' (default, the behaviour so
+ *    far: the closing opens only for an active client), 'kezi' (the accountant opens it by hand), 'automatikus' (opens on
+ *    5 January like for an active client) [TULAJ T4]. See eves.ts LEMONDOTT_EVES_ZARAS.
+ *  - refundDatumUgyfelnek: the "Ha {datum} után sem érkezett meg, írj nekünk" sentence of the refund card (Art. 64. § (1)).
+ *  - reszletfizetesSzoveg: "Ha egyszerre nem tudod kifizetni, írj nekünk…" under the amount to pay [T6] – off.
+ *  - csjkBirsagTetel: the 12 % különbözeti bírság as its own payment item [DÁVID D4] – off (it stays in the difference).
  */
 export const EVES_KAPCSOLOK_DEFAULT = {
   kata2027: false,
   kataElorejelzesUgyfelnek: false,
   kataEvVegeUgyfelnek: 'jeloletlen' as 'jeloletlen' | 'ki',
   evesZarasDij: false,
+  lemondottEvesZaras: 'ki' as 'ki' | 'kezi' | 'automatikus',
+  refundDatumUgyfelnek: true,
+  reszletfizetesSzoveg: false,
+  csjkBirsagTetel: false,
 };
 export type EvesKapcsolok = typeof EVES_KAPCSOLOK_DEFAULT;
 export const EVES_KAPCSOLOK_KEY = 'kapcsolok.ev_ciklus';

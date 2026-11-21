@@ -2,7 +2,7 @@
 // payment verification, "Beadva" with the 2658 PDF + NAV receipt (FUNKCIOK 8, 22, 23; SPEC §6.3, §7).
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { LOCK_TEXTS } from '../../../_shared/bekotes';
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as ep from '../../../api/endpoints';
 import type { FulProps } from '../UgyfelAdatlap';
@@ -1046,8 +1046,15 @@ function Beadas({ p, c }: { p: AccTaxPeriod; c: FulProps['c'] }) {
           <I3 n="bevallas" s={36} />
           <div>
             <h2>Beadva {datum(p.filed.filedOn)}</h2>
-            <div className="megj">{szamRag(p.filed.form)} bevallás. {c.firstName} látja a dossziéban.</div>
+            <div className="megj">
+              {szamRag(p.filed.form)} bevallás. {c.firstName} látja a dossziéban.
+              {/* SPEC §32.B: the filed period stays untouched; a correction is an önellenőrzés */}
+              {(p.correctionCount ?? 0) > 0 && <> Önellenőrizve ({p.correctionCount}×).</>}
+            </div>
           </div>
+          <Link className="gomb-m kicsi" style={{ marginLeft: 'auto' }} to={`/ugyfelek/${c.id}/onellenorzes?form=2658&targy=${p.year}&idoszak=${p.id}`}>
+            Önellenőrzést indítok
+          </Link>
         </div>
         {p.filed.documents.map((d) => (
           <div className="ikonsor" key={d.id}>

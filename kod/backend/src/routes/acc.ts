@@ -71,12 +71,13 @@ import {
 import { clientDeadlines, computeFlags } from '../services/flags.js';
 import { credsFor, syncClient } from '../services/navsync.js';
 import { pickAccountant } from '../services/accounts.js';
-import { callbackRequests } from '../db/schema.js';
+import { callbackRequests, taxCorrections } from '../db/schema.js';
 import { teamRows } from '../services/callbacks.js';
 import { currentRegistrationOf } from '../services/registration.js';
 import { teamViews } from './team.js';
 import { openAssistOf } from '../services/assist.js';
 import { accDetailK28, hasResponseTimePromise, registerAccK28Routes } from './acc-k28.js';
+import { registerAccEvRoutes } from './acc-ev.js';
 import { registerAccK29fRoutes } from './acc-k29f.js';
 import { pendingAllowances } from '../services/kedvezmeny.js';
 import { RESPONSE_TIME_SETTINGS_ERROR } from '../_shared/bekotes.js';
@@ -101,6 +102,8 @@ export function accRoutes(deps: Deps) {
   r.use('*', (c, next) => (c.req.method === 'GET' && /\/acc\/checkin-items\/?$/.test(c.req.path) ? queueAuth : accAuth)(c, next));
   // SPEC §28 / §28.K (reserve, earnings, allowances, check-in queue, annual closing, EFO, regime) + the service lock
   registerAccK28Routes(r, deps);
+  // SPEC §32.B: annual amounts / refund / HIPA / close / open, önellenőrzés, NAV folyószámla, Éves áttekintő
+  registerAccEvRoutes(r, deps);
   // SPEC §29 F1 certificate queue + F2 income statement check
   registerAccK29fRoutes(r, deps);
 
@@ -960,7 +963,10 @@ export function accRoutes(deps: Deps) {
     const [tp] = await deps.db.select().from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
     if (tp) await ensurePeriods(deps.db, cl.id, year, tp.hipaMethod, tp.status);
     // SPEC §32: hidden rows (a KATA year's quarters) never; the KATA months have their own endpoint (GET /acc/clients/:id/kata)
-    const periods = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), periodVisible, sql`${taxPeriods.kind} <> 'kata'`)).orderBy(asc(taxPeriods.dueDate));
+    // SPEC §32.B: the yearly differences and the önellenőrzés payments live on the Éves zárás / Önellenőrzés tabs
+    const periods = await deps.db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, cl.id), eq(taxPeriods.year, year), periodVisible, sql`${taxPeriods.kind} not in ('kata', 'eves_szja', 'kata_eves', 'hipa_eves', 'onellenorzes')`)).orderBy(asc(taxPeriods.dueDate));
+    // SPEC §32.B: "Önellenőrizve (n×)" – the filed önellenőrzések of a period (the period itself stays untouched)
+    const corr = await deps.db.select({ pid: taxCorrections.originalPeriodId }).from(taxCorrections).where(and(eq(taxCorrections.clientId, cl.id), inArray(taxCorrections.status, ['beadva', 'rendezve'])));
     // The engine's iparűzési adó estimate (band, base, yearly tax, note) for the HIPA cards.
     const yearComp = tp ? await computeYear(deps.db, cl.id, year, todayBudapest(deps.now())) : null;
     const hipaEstimate = yearComp?.result.hipa ?? null;
@@ -979,6 +985,7 @@ export function accRoutes(deps: Deps) {
         approvedCalculationId: p.approvedCalculationId,
         filed: p.filingStatus === 'beadva' ? { filedOn: p.filedOn, form: p.filingForm, documents: await accDocs(cl, acc.firstName, docs) } : null,
         filing: p.filingStatus === 'beadva' ? null : await filingCheck(deps.db, p, todayBudapest(deps.now())),
+        correctionCount: corr.filter((x) => x.pid === p.id).length,
         ...(p.kind === 'hipa'
           ? {
               hipa: {

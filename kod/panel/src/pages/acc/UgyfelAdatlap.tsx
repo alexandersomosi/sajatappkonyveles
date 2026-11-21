@@ -26,6 +26,9 @@ const Naplo = lazy(() => import('./ugyfel/Naplo'));
 const Kedvezmenyek = lazy(() => import('./ugyfel/Kedvezmenyek'));
 const EvesZaras = lazy(() => import('./ugyfel/EvesZaras'));
 const Kimutatas = lazy(() => import('./ugyfel/Kimutatas'));
+// SPEC §32.B
+const Folyoszamla = lazy(() => import('./ugyfel/Folyoszamla'));
+const Onellenorzes = lazy(() => import('./ugyfel/Onellenorzes'));
 
 export type FulProps = { c: AccClientDetail };
 const FULEK: { kulcs: string; felirat: string; db?: (c: AccClientDetail) => number; rejtve?: (c: AccClientDetail) => boolean }[] = [
@@ -42,6 +45,9 @@ const FULEK: { kulcs: string; felirat: string; db?: (c: AccClientDetail) => numb
   { kulcs: 'kedvezmenyek', felirat: 'Kedvezmények', db: (c) => c.allowancesPending ?? 0, rejtve: (c) => c.taxRegime === 'kata' || c.lifecycle === 'bekotes_alatt' && !(c.allowancesPending ?? 0) },
   // SPEC §28.K.3
   { kulcs: 'eves', felirat: 'Éves zárás', db: (c) => (c.annual && ['konyvelonel'].includes(c.annual.status) ? 1 : 0), rejtve: (c) => c.lifecycle === 'bekotes_alatt' },
+  // SPEC §32.B: the NAV folyószámla checks and the önellenőrzések
+  { kulcs: 'folyoszamla', felirat: 'Folyószámla', db: (c) => (c.flags.includes('folyoszamla_elteres') ? 1 : 0), rejtve: (c) => c.lifecycle === 'bekotes_alatt' },
+  { kulcs: 'onellenorzes', felirat: 'Önellenőrzés', db: (c) => (c.flags.includes('onellenorzes_nyitott') ? 1 : 0), rejtve: (c) => c.lifecycle === 'bekotes_alatt' },
   { kulcs: 'uzenetek', felirat: 'Üzenetek', db: (c) => c.unreadMessages },
   { kulcs: 'keresek', felirat: 'Kérések', db: (c) => c.openRequestsFromClient },
   { kulcs: 'visszahivasok', felirat: 'Visszahívások' },
@@ -95,6 +101,10 @@ export default function UgyfelAdatlap() {
         return <Kedvezmenyek c={c} />;
       case 'eves':
         return <EvesZaras c={c} />;
+      case 'folyoszamla':
+        return <Folyoszamla c={c} />;
+      case 'onellenorzes':
+        return <Onellenorzes c={c} />;
       default:
         return <Attekintes c={c} />;
     }

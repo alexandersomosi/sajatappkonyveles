@@ -83,6 +83,7 @@ import {
 import type { AllowanceAnswers, AllowanceParams, AnnualAnswers, ChangeData, CheckinItemAnswer } from '../_shared/api.js';
 import type { BusinessRegistrationAnswers } from '../_shared/api.js';
 import type { KataExemptKind } from '../_shared/kata.js';
+import type { AnnualAmounts, AnnualSummary, CorrectionCause, CorrectionDiff, CorrectionForm, CorrectionPotlekFlags, CorrectionStatus, ReconBalanceView, ReconFollowUp, ReconSeenRow, ReconStatus } from '../_shared/eves.js';
 
 const ts = (name?: string) => (name ? timestamp(name, { withTimezone: true }) : timestamp({ withTimezone: true }));
 const createdAt = () => timestamp({ withTimezone: true }).notNull().defaultNow();
@@ -419,6 +420,9 @@ export const clientTaxProfiles = pgTable(
     kataVariant: text().$type<'regi' | 'uj'>(),
     /** SPEC §32: főfoglalkozású (the old KATA requires it; the new one has two amounts). */
     kataFofoglalkozasu: boolean(),
+    /** SPEC §32.B: the previous year's HIPA (the sávos advance = last year's tax, Htv. 39/A. § (9)) and where it came from. */
+    hipaPriorYearHuf: integer(),
+    hipaPriorYearSource: text().$type<'eves_zaras' | 'atvetel' | 'kezi'>(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -724,7 +728,8 @@ export const taxPeriods = pgTable(
     clientId: uuid()
       .notNull()
       .references(() => clients.id),
-    kind: text().$type<'negyedev' | 'hipa' | 'kata'>().notNull(),
+    /** SPEC §32.B: + 'eves_szja' | 'kata_eves' | 'hipa_eves' | 'onellenorzes' (text, no DB enum; TAX_PERIOD_KINDS). */
+    kind: text().$type<'negyedev' | 'hipa' | 'kata' | 'eves_szja' | 'kata_eves' | 'hipa_eves' | 'onellenorzes'>().notNull(),
     periodKey: text().notNull(),
     year: integer().notNull(),
     quarter: integer(),
@@ -747,6 +752,10 @@ export const taxPeriods = pgTable(
     exemptReason: text(),
     /** SPEC §32: made after its due date (before the app): no reminder, the client sees it only once the accountant verified it. */
     backfilled: boolean().notNull().default(false),
+    /** SPEC §32.B: the NAV iktatószám of the filing. */
+    filingRef: text(),
+    /** SPEC §32.B: the tax_corrections row of an 'onellenorzes' payment period. */
+    correctionId: uuid(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
@@ -803,6 +812,8 @@ export const taxPaymentItems = pgTable(
     voidedAt: ts(),
     /** SPEC §32: NAV adónem (288 kata, 103 szja, 406 TB, 258 szocho; HIPA: null). */
     adonem: text(),
+    /** SPEC §32.B: the folyószámla reconciliation that verified the item. */
+    reconciliationId: uuid(),
     createdAt: createdAt(),
   },
   (t) => [index().on(t.taxPeriodId)],
@@ -1731,10 +1742,146 @@ export const annualClosings = pgTable(
     filedSzjaAt: ts(),
     filedHipaAt: ts(),
     checklist: jsonb().$type<Record<string, { at: string; by: string }>>().notNull().default({}),
+    // ---- SPEC §32.B (0025_ev_ciklus.sql) ----
+    amounts: jsonb().$type<AnnualAmounts | null>(),
+    amountsSetBy: uuid(),
+    amountsSetAt: ts(),
+    engineEstimate: jsonb().$type<Record<string, unknown> | null>(),
+    letterText: text(),
+    approvedSummary: jsonb().$type<AnnualSummary | null>(),
+    /** + to pay / − refund (szja), KATA: the különadó. */
+    diffHuf: integer(),
+    filedSzjaOn: day(),
+    szjaFilingRef: text(),
+    szjaReturnDocumentId: uuid(),
+    szjaReceiptDocumentId: uuid(),
+    filedWithoutApprovalNote: text(),
+    settlementPeriodId: uuid(),
+    refundMode: text().$type<'kiutalas' | 'atvezetes'>(),
+    refundExpectedBy: day(),
+    refundStatus: text().$type<'var' | 'megerkezett' | 'beszamitva' | 'atvezetve'>(),
+    refundReceivedOn: day(),
+    refundReceivedHuf: integer(),
+    refundMarkedBy: text().$type<'ugyfel' | 'konyvelo'>(),
+    refundNote: text(),
+    hipaNeeded: boolean().notNull().default(true),
+    hipaAmounts: jsonb().$type<{ taxHuf: number | null; advancesHuf: number | null; returnNeeded: boolean | null } | null>(),
+    filedHipaOn: day(),
+    hipaFilingRef: text(),
+    hipaReturnDocumentId: uuid(),
+    hipaReceiptDocumentId: uuid(),
+    hipaPeriodId: uuid(),
+    closedManuallyReason: text(),
+    openedManuallyBy: uuid(),
+    openedManuallyAt: ts(),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [uniqueIndex().on(t.clientId, t.taxYear), check('annual_closings_status_chk', sql`${t.status} in ${inList(ANNUAL_STATUSES)}`), check('annual_closings_regime_chk', sql`${t.regime} in ${inList(TAX_REGIMES)}`)],
+  (t) => [
+    uniqueIndex().on(t.clientId, t.taxYear),
+    check('annual_closings_status_chk', sql`${t.status} in ${inList(ANNUAL_STATUSES)}`),
+    check('annual_closings_regime_chk', sql`${t.regime} in ${inList(TAX_REGIMES)}`),
+    check('annual_closings_refund_mode_chk', sql`${t.refundMode} in ('kiutalas', 'atvezetes')`),
+    check('annual_closings_refund_status_chk', sql`${t.refundStatus} in ('var', 'megerkezett', 'beszamitva', 'atvezetve')`),
+  ],
+);
+
+/** SPEC §32.B: önellenőrzés – the original period stays untouched; the correction is its own row (0025_ev_ciklus.sql). */
+export const taxCorrections = pgTable(
+  'tax_corrections',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    form: text().$type<CorrectionForm>().notNull(),
+    formLabel: text().notNull(),
+    subjectKey: text().notNull(),
+    subjectLabel: text().notNull(),
+    originalPeriodId: uuid(),
+    annualClosingId: uuid(),
+    seq: integer().notNull().default(1),
+    status: text().$type<CorrectionStatus>().notNull().default('tervezet'),
+    cause: text().$type<CorrectionCause>().notNull(),
+    initiatedBy: text().$type<'konyvelo' | 'ugyfel' | 'nav'>().notNull().default('konyvelo'),
+    reason: text().notNull(),
+    internalNote: text(),
+    diffs: jsonb().$type<CorrectionDiff[]>().notNull().default([]),
+    potlekFlags: jsonb().$type<CorrectionPotlekFlags>().notNull().default({}),
+    potlekSuggestedHuf: integer(),
+    potlekBasis: jsonb().$type<Record<string, unknown> | null>(),
+    potlekHuf: integer().notNull().default(0),
+    potlekOverrideReason: text(),
+    potlekApprovedBy: uuid(),
+    potlekApprovedAt: ts(),
+    potlekPayer: text().$type<'ugyfel' | 'iroda'>().notNull().default('ugyfel'),
+    plannedFiledOn: day(),
+    onellbOn: day(),
+    needsClientApproval: boolean().notNull().default(true),
+    noApprovalNote: text(),
+    approvalHash: text(),
+    approvedAt: ts(),
+    approvedBy: uuid(),
+    approvedSummary: jsonb().$type<Record<string, unknown> | null>(),
+    filedOn: day(),
+    filingRef: text(),
+    returnDocumentId: uuid(),
+    receiptDocumentId: uuid(),
+    filedBy: uuid(),
+    paymentPeriodId: uuid(),
+    cancelledReason: text(),
+    createdBy: uuid().notNull(),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    index('tax_corrections_client_idx').on(t.clientId, t.createdAt),
+    check('tax_corrections_form_chk', sql`${t.form} in ('2658', 'SZJA', 'KATA', 'HIPA', 'egyeb')`),
+    check('tax_corrections_status_chk', sql`${t.status} in ('tervezet', 'ugyfelre_var', 'jovahagyva', 'beadva', 'rendezve', 'visszavonva')`),
+    check('tax_corrections_cause_chk', sql`${t.cause} in ('kesoi_irat', 'ugyfel_adat', 'konyvelo_hiba', 'nav_felhivas', 'egyeb')`),
+    check('tax_corrections_initiated_by_chk', sql`${t.initiatedBy} in ('konyvelo', 'ugyfel', 'nav')`),
+    check('tax_corrections_potlek_payer_chk', sql`${t.potlekPayer} in ('ugyfel', 'iroda')`),
+  ],
+);
+
+/** SPEC §32.B: the NAV folyószámla (adószámla) check, recorded by hand (M2M later). */
+export const accountReconciliations = pgTable(
+  'account_reconciliations',
+  {
+    id: id(),
+    clientId: uuid()
+      .notNull()
+      .references(() => clients.id),
+    kind: text().$type<'rendes' | 'nyito'>().notNull().default('rendes'),
+    source: text().$type<'kezi' | 'm2m'>().notNull().default('kezi'),
+    asOf: day().notNull(),
+    periodEnd: day(),
+    balances: jsonb().$type<ReconBalanceView[]>().notNull(),
+    totalDebtHuf: integer().notNull().default(0),
+    totalOverpaymentHuf: integer().notNull().default(0),
+    status: text().$type<ReconStatus>().notNull(),
+    followUp: text().$type<ReconFollowUp>().notNull().default('nincs'),
+    followUpNote: text(),
+    resolvedAt: ts(),
+    resolvedBy: uuid(),
+    verifiedItemIds: uuid().array().notNull().default(sql`'{}'::uuid[]`),
+    seenRows: jsonb().$type<ReconSeenRow[]>().notNull().default([]),
+    documentId: uuid(),
+    correctionId: uuid(),
+    requestId: uuid(),
+    note: text(),
+    nextCheckOn: day(),
+    checkedBy: uuid().notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('account_reconciliations_client_idx').on(t.clientId, t.asOf),
+    index('account_reconciliations_next_idx').on(t.nextCheckOn),
+    check('account_reconciliations_kind_chk', sql`${t.kind} in ('rendes', 'nyito')`),
+    check('account_reconciliations_source_chk', sql`${t.source} in ('kezi', 'm2m')`),
+    check('account_reconciliations_status_chk', sql`${t.status} in ('rendben', 'hatralek', 'tulfizetes', 'elteres')`),
+    check('account_reconciliations_follow_up_chk', sql`${t.followUp} in ('nincs', 'befizetes_kerve', 'atvezetes_kerve', 'kiutalas_kerve', 'eszrevetel', 'onellenorzes')`),
+  ],
 );
 
 /** SPEC §28.K.7: employees / EFO answer and the accountant's decision. */

@@ -24,11 +24,12 @@ const URES: AnnualAnswers = { otherIncomes: [], otherIncomeNote: null, allowance
 
 export default function EvesKerdoiv() {
   const p = useLocalSearchParams<{ lap?: string }>();
-  const ev = Number(maiNap().slice(0, 4));
-  const q = useEvesZaras(ev);
+  // SPEC §32.B: the closing in progress (the server picks the year: last year while it is open), not this calendar year
+  const q = useEvesZaras();
+  const ev = q.data?.year ?? Number(maiNap().slice(0, 4)) - 1;
   const me = useMe();
   const fn = me.data?.accountant?.firstName ?? 'a könyvelőd';
-  const kedv = useKedvezmenyek(ev);
+  const kedv = useKedvezmenyek(ev, Boolean(q.data));
   const ment = useEvesValasz();
   const bekuld = useEvesBekuld();
   const jelez = useJelzes();

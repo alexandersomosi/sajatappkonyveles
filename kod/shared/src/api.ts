@@ -2026,6 +2026,20 @@ export interface AnnualView {
    * is fixed [T1, JOGI]). Absent (older servers / the app's sample data) = the fee of FEE_DEFAULTS.
    */
   feeHuf?: number | null;
+  // ---- SPEC §32.B (éves ciklus F2/F3; all optional, filled by servers from 2026-11-21) ----
+  /** The numbers the accountant entered, as the client approves them (null until the accountant saved them). */
+  summary?: import('./eves').AnnualSummary | null;
+  /** The hash the client sends with "Jóváhagyom" (covers the draft document AND the numbers). */
+  approvalHash?: string | null;
+  /** After the filing: the difference, its payment period or the refund card. */
+  settlement?: import('./eves').AnnualSettlementView | null;
+  /** "Mikor mi jön" – the year's to-dos. */
+  timeline?: import('./eves').AnnualTimelineItem[];
+  /** "Következő: {datum} – {mi}" for the Főoldal card (null when everything is done). */
+  timelineNext?: string | null;
+  hipa?: import('./eves').AnnualHipaView | null;
+  /** Önellenőrzések of the client that are open (approve, pay). */
+  corrections?: import('./eves').CorrectionListItem[];
 }
 /** PUT /client/annual/:id/answers (draft save; every field optional). */
 export interface AnnualAnswersInput {
@@ -2040,6 +2054,19 @@ export interface AccAnnualView extends AnnualView {
   documents: DocumentListItem[];
   /** The full refund account – the client's accountant and admins only (audited). */
   refundAccount: string | null;
+  // ---- SPEC §32.B (staff; optional) ----
+  /** The saved amounts (null = not entered yet). */
+  amounts?: import('./eves').AnnualAmounts | null;
+  /** The app's estimate at the time (the "Motor-összevetés" line). */
+  engineEstimate?: { diffHuf: number; szjaHuf: number; advancesHuf: number; byQuarter: { key: string; amountHuf: number; state: 'ellenorizve' | 'jelolve' | 'nincs' }[]; kulonadoHuf?: number; revenueHuf?: number; liableMonths?: number; limitHuf?: number } | null;
+  /** The prefill of the amounts form (from the engine and the approved quarters). */
+  prefill?: Partial<import('./eves').AnnualAmountsInput> | null;
+  /** The panel's warnings ("Előbb egyeztesd a folyószámlát…", "Vegyes év…"). */
+  warnings?: string[];
+  /** The client's service ended / is suspended: whether the accountant may open the closing by hand (switch lemondottEvesZaras). */
+  manualOpen?: { allowed: boolean; reason: string } | null;
+  closedManuallyReason?: string | null;
+  approvedSummary?: import('./eves').AnnualSummary | null;
 }
 /** POST /acc/clients/:id/annual/:aid/check */
 export interface AnnualCheckInput {

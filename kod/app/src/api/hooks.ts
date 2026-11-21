@@ -272,12 +272,21 @@ export const useHaviEllenorzes = (enabled = true) =>
   useQuery({ queryKey: K28.havi, queryFn: () => get<CheckinView | null>('/client/checkins/current'), enabled, retry: 0 });
 export const useHaviValasz = () =>
   useValtoztat((v: { id: string; input: CheckinAnswerInput }) => post<CheckinView>(`/client/checkins/${v.id}`, v.input), [K28.havi, K.home, K28.dijak, K28.valtozasok, K.segitseg]);
-export const useEvesZaras = (ev: number) => useQuery({ queryKey: K28.eves(ev), queryFn: () => get<AnnualView | null>(`/client/annual?year=${ev}`), retry: 0 });
+/** SPEC §32.B: without a year the server picks it (last year when the client had a profile then – the closing in progress). */
+export const useEvesZaras = (ev?: number) => useQuery({ queryKey: ev ? K28.eves(ev) : ['eves', 'alap'], queryFn: () => get<AnnualView | null>(ev ? `/client/annual?year=${ev}` : '/client/annual'), retry: 0 });
 export const useEvesValasz = () =>
   useValtoztat((v: { id: string } & AnnualAnswersInput) => put<AnnualView>(`/client/annual/${v.id}/answers`, { answers: v.answers }), [['eves']]);
 export const useEvesBekuld = () => useValtoztat((id: string) => post<AnnualView>(`/client/annual/${id}/submit`, {}), [['eves'], K.home, K28.dijak]);
 export const useEvesJovahagy = () =>
   useValtoztat((v: { id: string } & AnnualApproveInput) => post<AnnualView>(`/client/annual/${v.id}/approve`, { hash: v.hash }), [['eves'], K.home]);
+/** SPEC §32.B: „Megjelölöm, hogy megérkezett” (a visszajáró adó). */
+export const useVisszajaroMegjott = () =>
+  useValtoztat((v: { id: string; receivedOn: string; amountHuf?: number | null }) => post<AnnualView>(`/client/annual/${v.id}/refund-received`, { receivedOn: v.receivedOn, amountHuf: v.amountHuf ?? null }), [['eves'], K.home, K.hataridok]);
+/** SPEC §32.B: az önellenőrzés (lista, részletek, jóváhagyás a látott tartalom hash-ével). */
+export const useOnellenorzes = (id?: string) =>
+  useQuery({ queryKey: ['onell', id ?? ''], queryFn: () => get<import('../_shared/eves').TaxCorrectionView>(`/client/corrections/${encodeURIComponent(id ?? '')}`), enabled: !!id, retry: 0 });
+export const useOnellenorzesJovahagy = () =>
+  useValtoztat((v: { id: string; hash: string }) => post<import('../_shared/eves').TaxCorrectionView>(`/client/corrections/${v.id}/approve`, { hash: v.hash }), [['onell'], ['eves'], K.home]);
 export const useDijak = () => useQuery({ queryKey: K28.dijak, queryFn: () => get<FeesView>('/client/fees'), retry: 0 });
 export const useDijFizet = () => useMutation({ mutationFn: (v: { id: string } & FeePayInput) => post<FeePayStart>(`/client/fees/${v.id}/pay`, { platform: v.platform }) });
 export const useAlkalmazottValasz = () => useValtoztat((v: EmployerAnswerInput) => put<OnboardingState>('/client/onboarding/employer', v), [K.onboarding, K.home]);

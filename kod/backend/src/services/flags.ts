@@ -11,7 +11,7 @@ import { deadlinesFor } from '../tax/engine.js';
 import { fill } from '../content.js';
 import { accountantParams } from '../notify/notify.js';
 import { fmt } from './kedvezmeny.js';
-import { computeYear, kataRangeOfProfile, periodLabel, periodTotal, periodVisible, quarterFullyKata } from './tax.js';
+import { computeYear, isAnnualPeriodKind, kataRangeOfProfile, periodLabel, periodTotal, periodVisible, quarterFullyKata } from './tax.js';
 
 export async function computeFlags(deps: Deps, db: DbOrTx, clientId: string): Promise<ClientFlag[]> {
   const today = todayBudapest(deps.now());
@@ -49,6 +49,11 @@ export async function computeFlags(deps: Deps, db: DbOrTx, clientId: string): Pr
     const { kataRisksOf } = await import('./szamla-ertesites.js');
     if ((await kataRisksOf(deps, cl, { limit: 1 })).length) flags.add('kata_figyelem');
   }
+  // SPEC §32.B: an unsettled backlog on the last NAV folyószámla check; an open önellenőrzés
+  const { reconFlag } = await import('./folyoszamla.js');
+  if (await reconFlag(db, clientId)) flags.add('folyoszamla_elteres');
+  const { openCorrectionCount } = await import('./onellenorzes.js');
+  if ((await openCorrectionCount(db, clientId)) > 0) flags.add('onellenorzes_nyitott');
   const [sub] = await db.select({ status: subscriptions.status }).from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
   if (sub && (sub.status === 'past_due' || sub.status === 'suspended')) flags.add('dij_elmaradt');
   if (flags.size === 0 && cl.lifecycle === 'aktiv') flags.add('rendben');
@@ -130,7 +135,11 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
       if (!nyugdijas) out.push(dl(today, `per:${p.id}:bevallas`, 'bevallas', `${periodLabel(p)}: bevallás (${acc ? 'te adod be' : 'a könyvelőd adja be'})`, p.dueDate, p.filingStatus === 'beadva', '/dosszie'));
     } else if (p.calcStatus === 'jovahagyva') {
       // SPEC §32: an approved payment opens the shared payment sheet
-      out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, acc ? '/' : `/fizetes/${p.id}`, total ?? undefined, verified));
+      // SPEC §32.B: the yearly differences and the önellenőrzés show their amount ("Szja-különbözet 2026: 120 000 Ft")
+      if (isAnnualPeriodKind(p.kind)) {
+        const accLink = p.kind === 'onellenorzes' ? `/ugyfelek/${clientId}/onellenorzes` : `/ugyfelek/${clientId}/eves`;
+        out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', total ? `${periodLabel(p)}: ${fmt(total)} Ft` : periodLabel(p), p.dueDate, paid, acc ? accLink : `/fizetes/${p.id}`, total ?? undefined, verified));
+      } else out.push(dl(today, `per:${p.id}:befizetes`, 'befizetes', periodLabel(p), p.dueDate, paid, acc ? '/' : `/fizetes/${p.id}`, total ?? undefined, verified));
     } else if (acc || p.dueDate >= today) {
       // Not approved yet: the date is known, the amount (= last year's tax) comes from the accountant.
       // An overdue unapproved advance is the accountant's to-do, so only the panel shows it as lejárt.
@@ -144,10 +153,30 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
   // k7b (KONYVELO_LEFEDETTSEG, 2. hiba): the annual returns are "kész" once the accountant recorded the filing on the
   // Éves zárás page (annual_closings.filed_szja_at / filed_hipa_at) – never "lejárt" in the Határidő-figyelő after that.
   const closings = await db
-    .select({ taxYear: annualClosings.taxYear, filedSzjaAt: annualClosings.filedSzjaAt, filedHipaAt: annualClosings.filedHipaAt })
+    .select({
+      id: annualClosings.id,
+      taxYear: annualClosings.taxYear,
+      filedSzjaAt: annualClosings.filedSzjaAt,
+      filedHipaAt: annualClosings.filedHipaAt,
+      diffHuf: annualClosings.diffHuf,
+      hipaNeeded: annualClosings.hipaNeeded,
+      hipaAmounts: annualClosings.hipaAmounts,
+      refundStatus: annualClosings.refundStatus,
+      refundExpectedBy: annualClosings.refundExpectedBy,
+    })
     .from(annualClosings)
     .where(eq(annualClosings.clientId, clientId));
   const closingOf = (year: number) => closings.find((x) => x.taxYear === year);
+  // SPEC §32.B: once the accountant recorded the numbers, the difference is its own row (per:<id>) – the return row is
+  // "kész" for the client as soon as it is filed; a HIPA that needs no return is "kész" too.
+  const szjaDone = (year: number, due: string) => {
+    const a = closingOf(year);
+    return Boolean(a?.filedSzjaAt) && (acc || due < today || a?.diffHuf != null);
+  };
+  const hipaFiled = (year: number) => {
+    const a = closingOf(year);
+    return a && (a.hipaNeeded === false || a.hipaAmounts?.returnNeeded === false) ? new Date(0) : a?.filedHipaAt;
+  };
   // The client's item also says "és a különbözet befizetése": we do not track that transfer, so for the client a filed
   // return stays open until its due date (the Főoldal keeps the payment reminder) and turns "kész" – not "lejárt" – after.
   const annualDone = (filedAt: Date | null | undefined, dueDate: string) => Boolean(filedAt) && (acc || dueDate < today);
@@ -161,9 +190,9 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
         // no 26SZJA for a KATA year: EVERY KATA client files the yearly declaration instead ('26KATA, Kata tv. 10. §) – below
         if (prof.regime === 'kata') continue;
         // "Éves SZJA-bevallás (26SZJA) a 2026-os évről" + what the client has to do about it
-        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, annualDone(closingOf(y)?.filedSzjaAt, d.dueDate), '/hataridok'));
+        out.push(dl(today, `ev:${y}:szja`, 'bevallas', `${d.title} és a különbözet befizetése (${who})`, d.dueDate, szjaDone(y, d.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
       } else if (d.periodKey === `${y}-HIPA`) {
-        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, annualDone(closingOf(y)?.filedHipaAt, d.dueDate), '/hataridok'));
+        out.push(dl(today, `ev:${y}:hipa`, 'bevallas', `Iparűzési adó ${y}: éves bevallás és különbözet (${who})`, d.dueDate, annualDone(hipaFiled(y), d.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
       }
     }
   }
@@ -177,7 +206,7 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
     const decl = deadlinesFor(y, { regime: 'kata', kataFrom: kr.from, kataTo: kr.to, kataVariant: prof.kataVariant ?? 'regi', hipaMethod: 'nincs' }).find((d) => d.periodKey === `${y}-KATA`);
     if (decl && decl.dueDate >= from && decl.dueDate <= to && decl.dueDate >= serviceStart) {
       const form = `'${String(y).slice(2)}KATA`;
-      out.push(dl(today, `ev:${y}:kata`, 'bevallas', fill(await content.get('kata.f1.hatarido_nyilatkozat'), { form, who: acc ? 'te adod be' : 'a könyvelőd adja be' }), decl.dueDate, annualDone(closingOf(y)?.filedSzjaAt, decl.dueDate), '/hataridok'));
+      out.push(dl(today, `ev:${y}:kata`, 'bevallas', fill(await content.get('kata.f1.hatarido_nyilatkozat'), { form, who: acc ? 'te adod be' : 'a könyvelőd adja be' }), decl.dueDate, szjaDone(y, decl.dueDate), acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
     }
     if (acc) {
       const { kataCompute } = await import('./kata.js');
@@ -189,6 +218,21 @@ export async function clientDeadlines(deps: Deps, db: DbOrTx, clientId: string, 
         out.push(dl(today, `kata-bej:${clientId}:${m.monthKey}`, 'egyeb', `Mentesség bejelentése: ${monthName(m.month)} (Kata tv. 7. § (10))`, m.dueDate, reported, `/ugyfelek/${clientId}/ado`));
       }
     }
+  }
+  // SPEC §32.B: the szja refund (Art. 64. § (1): 30 days after the return, not before 1 March) – the NAV pays it; for the
+  // accountant it is "lejárt" once the expected date passed, the client sees it only until then (the card tells what to do).
+  for (const a of closings) {
+    if (!a.refundStatus || !a.refundExpectedBy || a.diffHuf == null || a.diffHuf >= 0) continue;
+    if (a.refundExpectedBy < from || a.refundExpectedBy > to) continue;
+    const done = a.refundStatus !== 'var';
+    if (!acc && !done && a.refundExpectedBy < today) continue;
+    out.push(dl(today, `refund:${a.id}`, 'egyeb', `Visszajáró szja: ${fmt(-a.diffHuf)} Ft – a NAV utalja`, a.refundExpectedBy, done, acc ? `/ugyfelek/${clientId}/eves` : '/eves-zaras'));
+  }
+  // SPEC §32.B: the next NAV folyószámla check (accountant only)
+  if (acc) {
+    const { latestReconciliations } = await import('./folyoszamla.js');
+    const rec = (await latestReconciliations(db, [clientId])).get(clientId);
+    if (rec?.nextCheckOn && rec.nextCheckOn >= from && rec.nextCheckOn <= to) out.push(dl(today, `fsz:${clientId}`, 'egyeb', 'NAV-folyószámla egyeztetése', rec.nextCheckOn, false, `/ugyfelek/${clientId}/folyoszamla`));
   }
   const reqs = await db
     .select()

@@ -48,6 +48,9 @@ const CSOPORTOK: { cim: string; ikon: Ikon3dNev; elemek: Fajta[] }[] = [
       { kind: 'upload_reminder', cim: REMINDER_TEXTS.groups.feltoltes, al: REMINDER_TEXTS.groupSubs.feltoltes },
       { kind: 'nudge', cim: REMINDER_TEXTS.groups.ra_var, al: REMINDER_TEXTS.groupSubs.ra_var },
       { kind: 'annual_due', cim: 'Éves zárás', al: 'A kérdőív és a bevallások határideje előtt.' },
+      // SPEC §32.B: the yearly return's steps and the önellenőrzés (the client's own setting wins)
+      { kind: 'annual_status', cim: 'Az éves bevallásod', al: 'Ha jóvá kell hagynod, ha beadtuk, és ha fizetned kell vagy visszajár.' },
+      { kind: 'correction_status', cim: 'Önellenőrzés', al: 'Ha egy beadott bevallásodat javítani kell.' },
     ],
   },
   {

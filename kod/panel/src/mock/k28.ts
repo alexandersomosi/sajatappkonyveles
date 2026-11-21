@@ -837,6 +837,51 @@ export function installK28(x: K28Ctx): K28Hooks {
   };
   on('POST', '/acc/clients/:id/annual/:aid/filed-szja', beadas('szja'));
   on('POST', '/acc/clients/:id/annual/:aid/filed-hipa', beadas('hipa'));
+  // SPEC §32.B (mock): amounts, HIPA, refund, close / open, önellenőrzés, folyószámla, áttekintő – enough for the screens
+  on('PUT', '/acc/clients/:id/annual/:aid/amounts', ({ p, body }) => {
+    const a = findAnnual(p.id!, p.aid!);
+    if (a.status !== 'konyvelonel' && a.status !== 'jovahagyasra_var') throw x.hiba(409, 'annual_wrong_status', 'Ebben az állapotban nem írhatod be az összegeket.');
+    const b = body as Record<string, unknown>;
+    const n = (k: string) => (typeof b[k] === 'number' ? (b[k] as number) : 0);
+    const diffHuf = a.regime === 'kata' ? n('kulonadoHuf') : n('szjaHuf') - n('advancesHuf') + n('csjkHuf');
+    (a as AccAnnualView).amounts = { ...(b as object), regime: a.regime, diffHuf, matchesDraft: Boolean(b.matchesDraft) } as AccAnnualView['amounts'];
+    if (a.status === 'jovahagyasra_var') a.approval = null;
+    return kiAnnual(a);
+  });
+  on('PUT', '/acc/clients/:id/annual/:aid/hipa', ({ p, body }) => {
+    const a = findAnnual(p.id!, p.aid!);
+    const b = body as { notNeeded?: boolean; taxHuf?: number; advancesHuf?: number; returnNeeded?: boolean };
+    (a as AccAnnualView).hipa = b.notNeeded
+      ? { needed: false, taxHuf: null, advancesHuf: null, diffHuf: null, returnNeeded: null, filedOn: null, filingRef: null, periodId: null }
+      : { needed: true, taxHuf: b.taxHuf ?? null, advancesHuf: b.advancesHuf ?? 0, diffHuf: (b.taxHuf ?? 0) - (b.advancesHuf ?? 0), returnNeeded: b.returnNeeded ?? null, filedOn: null, filingRef: null, periodId: null };
+    return kiAnnual(a);
+  });
+  on('POST', '/acc/clients/:id/annual/:aid/refund', ({ p }) => kiAnnual(findAnnual(p.id!, p.aid!)));
+  on('POST', '/acc/clients/:id/annual/:aid/close', ({ p, body }) => {
+    const a = findAnnual(p.id!, p.aid!);
+    a.status = 'kesz';
+    (a as AccAnnualView).closedManuallyReason = String((body as { reason?: string }).reason ?? '');
+    return kiAnnual(a);
+  });
+  on('POST', '/acc/clients/:id/annual/open', () => {
+    throw x.hiba(409, 'annual_wrong_status', 'A megszűnt ügyfél éves zárása ki van kapcsolva (MINTA).');
+  });
+  on('GET', '/acc/clients/:id/corrections', () => ({ items: [] }));
+  on('POST', '/acc/clients/:id/corrections', () => {
+    throw x.hiba(409, 'correction_wrong_status', 'MINTA: csak beadott bevallást lehet önellenőrzéssel javítani.');
+  });
+  on('GET', '/acc/clients/:id/reconciliations', () => ({ items: [] }));
+  on('GET', '/acc/clients/:id/reconciliations/expected', ({ q }) => ({
+    asOf: q.get('asOf') ?? today(),
+    adonemek: ['103', '406', '258', '138', '215', '224', '226'].map((a) => ({ adonem: a, label: { '103': 'Szja', '406': 'TB-járulék', '258': 'Szocho', '138': 'Késedelmi pótlék', '215': 'Önellenőrzési pótlék', '224': 'Bírság', '226': 'Mulasztási bírság' }[a]!, expectedUnmarkedHuf: 0, expectedMarkedHuf: 0 })),
+    openItems: [],
+    suggestedNextCheckOn: today(),
+    kata: false,
+  }));
+  on('POST', '/acc/clients/:id/reconciliations', () => {
+    throw x.hiba(409, 'conflict', 'MINTA: az egyeztetést itt nem mentjük.');
+  });
+  on('GET', '/acc/overview/year', ({ q }) => ({ year: Number(q.get('year') ?? 2026), rows: [], counts: { mind: 0, hianyzik: 0, ram_var: 0, ugyfelre_var: 0, lejart: 0, kata: 0, atalany: 0 } }));
 
   // ---------- employer / adószám / regime ----------
   on('POST', '/acc/clients/:id/employer', ({ p, body }) => {

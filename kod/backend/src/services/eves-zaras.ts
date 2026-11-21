@@ -8,6 +8,7 @@ import { z } from 'zod';
 import type { AccAnnualView, AnnualAnswers, AnnualView } from '../_shared/api.js';
 import { ANNUAL_CHECK_LABELS } from '../_shared/bekotes.js';
 import { ANNUAL_CHECK_ITEMS, ANNUAL_HIPA_PLACES, ANNUAL_RULES, OTHER_INCOME_KINDS, type AnnualCheckItem, type AnnualStatus } from '../_shared/enums.js';
+import { EV_RULES } from '../_shared/eves.js';
 import type { Deps } from '../deps.js';
 import type { DbOrTx } from '../db/client.js';
 import { annualClosings, clients, clientTaxProfiles, documents } from '../db/schema.js';
@@ -21,6 +22,7 @@ import { accountantUserOf, staffRefs } from './team.js';
 import { clientName, type ClientRow } from './people.js';
 import { fmt } from './kedvezmeny.js';
 import { evesKapcsolok } from './kata.js';
+import { annualExtras, annualStaffExtras, approvalDueOf, approvalHashFor, buildSummary, fileAnnual, fileAnnualHipa, latestDraft, type AnnualFilingInput } from './eves-ciklus.js';
 
 export type AnnualRow = typeof annualClosings.$inferSelect;
 const AAD = 'annual_closings.refund_account';
@@ -87,6 +89,8 @@ async function view(deps: Deps, db: DbOrTx, cl: ClientRow, r: AnnualRow): Promis
     nextAction: r.status === 'kerdoiv' ? 'kitoltes' : r.status === 'dijra_var' ? 'fizetes' : r.status === 'jovahagyasra_var' ? 'jovahagyas' : null,
     canEdit: r.status === 'kerdoiv' && !cl.serviceLock,
     feeHuf: feeOn ? fee.amountHuf : null,
+    // SPEC §32.B: the numbers to approve (+ hash), the settlement after filing, the timeline, the HIPA, the önellenőrzések
+    ...(await annualExtras(deps, db, cl, r)),
   };
 }
 
@@ -154,14 +158,19 @@ export function draftHash(docId: string, sha: string | null): string {
 export async function approveAnnual(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, hash: string, ctx: { userId: string; ipHmac: string; ua: string }): Promise<AnnualView> {
   const r = await own(db, cl, id);
   if (r.status !== 'jovahagyasra_var') throw annualErr.wrongStatus();
-  const [draft] = await db.select().from(documents).where(and(eq(documents.clientId, cl.id), eq(documents.category, 'bevallas'), eq(documents.visibility, 'kozos'))).orderBy(desc(documents.createdAt)).limit(1);
+  const draft = await latestDraft(db, cl.id);
   if (!draft) throw annualErr.wrongStatus('Még nincs feltöltött tervezet.');
-  const expect = draftHash(draft.id, null);
+  // SPEC §32.B: the hash covers the draft AND the numbers the accountant entered (older closings: the draft only)
+  const expect = r.amounts ? approvalHashFor(draft.id, r) : draftHash(draft.id, null);
   if (hash !== expect) throw new ApiError(409, 'assist_consent_stale', 'A tervezet változott. Nyisd meg újra, és nézd át.');
   const now = deps.now();
   const checklist = { ...(r.checklist ?? {}), ugyfel_jovahagyta: { at: now.toISOString(), by: ctx.userId } };
-  const [u] = await db.update(annualClosings).set({ approvedAt: now, approvalHash: hash, checklist, updatedAt: now }).where(eq(annualClosings.id, r.id)).returning();
-  await audit(db, { action: 'annual.approved', actorUserId: ctx.userId, actorRole: 'client', targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { ipHmac: ctx.ipHmac.slice(0, 12) } });
+  const approvedSummary = r.amounts ? await buildSummary(deps, db, cl, r) : null;
+  const [u] = await db.update(annualClosings).set({ approvedAt: now, approvalHash: hash, checklist, approvedSummary, updatedAt: now }).where(eq(annualClosings.id, r.id)).returning();
+  await audit(db, { action: 'annual.approved', actorUserId: ctx.userId, actorRole: 'client', targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { ipHmac: ctx.ipHmac.slice(0, 12), withNumbers: Boolean(r.amounts) } });
+  const acc = await accountantUserOf(db, cl);
+  if (acc)
+    await notify(deps, db, { userId: acc.userId, kind: 'tax_task', variant: 'eves_jovahagyva', params: { clientName: clientName(cl), form: r.regime === 'kata' ? `'${String(r.taxYear).slice(2)}KATA` : `${String(r.taxYear).slice(2)}SZJA` }, link: `/ugyfelek/${cl.id}/eves`, data: { clientId: cl.id } });
   return view(deps, db, cl, u!);
 }
 
@@ -188,6 +197,8 @@ export async function accAnnualView(deps: Deps, db: DbOrTx, cl: ClientRow, year:
     checklist: items.map((item) => ({ item, label: ANNUAL_CHECK_LABELS[item], done: Boolean(r.checklist?.[item]), doneAt: r.checklist?.[item]?.at ?? null, by: r.checklist?.[item] ? (refs.get(r.checklist[item]!.by) ?? null) : null })),
     documents: await listItems(db, docs.slice(0, 30), { firstName: '', staff: true }),
     refundAccount: refund,
+    // SPEC §32.B: the amounts form, the engine comparison, the warnings, the manual open of a former client
+    ...(await annualStaffExtras(deps, db, cl, r)),
   };
 }
 
@@ -201,30 +212,25 @@ export async function annualCheck(deps: Deps, db: DbOrTx, cl: ClientRow, id: str
   await audit(db, { action: 'annual.check', actorUserId: actor.userId, actorRole: actor.role, targetType: 'annual_closing', targetId: r.id, clientId: cl.id, details: { item, done } });
 }
 
-/** Status steps the panel buttons drive (the document upload happens in the route). */
-export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, step: 'draft' | 'filed-szja' | 'filed-hipa', actor: { userId: string; role: string }): Promise<AnnualRow> {
+/**
+ * Status steps the panel buttons drive (the document upload happens in the route). SPEC §32.B: the draft goes to the
+ * client only with the amounts saved and "Az összegek egyeznek a bevallás tervezetével" ticked; the filings are in
+ * services/eves-ciklus.ts (iktatószám, the two documents, the difference / refund, the HIPA difference).
+ */
+export async function annualStep(deps: Deps, db: DbOrTx, cl: ClientRow, id: string, step: 'draft' | 'filed-szja' | 'filed-hipa', actor: { userId: string; role: string }, filing?: AnnualFilingInput & { accountNumber?: string | null }): Promise<AnnualRow> {
+  if (step === 'filed-szja') return fileAnnual(deps, db, cl, id, filing ?? { filedOn: todayBudapest(deps.now()) }, actor);
+  if (step === 'filed-hipa') return fileAnnualHipa(deps, db, cl, id, filing ?? { filedOn: todayBudapest(deps.now()) }, actor);
   const [r] = await db.select().from(annualClosings).where(and(eq(annualClosings.id, id), eq(annualClosings.clientId, cl.id))).limit(1);
   if (!r) throw E.notFound();
   const now = deps.now();
   const params = await accountantParams(db, cl.accountantId);
-  let patch: Partial<AnnualRow>;
-  if (step === 'draft') {
-    if (r.status !== 'konyvelonel' && r.status !== 'jovahagyasra_var') throw annualErr.wrongStatus();
-    patch = { status: 'jovahagyasra_var', approvedAt: null, approvalHash: null, checklist: { ...(r.checklist ?? {}), tervezet_feltoltve: { at: now.toISOString(), by: actor.userId } } };
-  } else if (step === 'filed-szja') {
-    if (r.status !== 'jovahagyasra_var' && r.status !== 'konyvelonel') throw annualErr.wrongStatus();
-    if (!r.approvedAt) throw annualErr.wrongStatus('Az ügyfél még nem hagyta jóvá a tervezetet. Jóváhagyás nélkül csak a hívásban rögzített egyeztetés után adhatod be.');
-    // H8 (SPEC §32): without iparűzési adó (the profile's HIPA method 'nincs') the closing is done once the return is filed
-    const [tp] = await db.select({ hipaMethod: clientTaxProfiles.hipaMethod }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, r.taxYear))).limit(1);
-    patch = { status: tp?.hipaMethod === 'nincs' ? 'kesz' : 'beadva', filedSzjaAt: now, checklist: { ...(r.checklist ?? {}), [r.regime === 'kata' ? 'kata_beadva' : 'szja_beadva']: { at: now.toISOString(), by: actor.userId } } };
-  } else {
-    if (r.status !== 'beadva') throw annualErr.wrongStatus();
-    patch = { status: 'kesz', filedHipaAt: now, checklist: { ...(r.checklist ?? {}), hipa_beadva: { at: now.toISOString(), by: actor.userId } } };
-  }
+  if (r.status !== 'konyvelonel' && r.status !== 'jovahagyasra_var') throw annualErr.wrongStatus();
+  if (!r.amounts) throw annualErr.wrongStatus('Előbb rögzítsd az összegeket az Összegek kártyán: az ügyfél ezeket hagyja jóvá.');
+  if (!r.amounts.matchesDraft) throw annualErr.wrongStatus('Jelöld be: „Az összegek egyeznek a bevallás tervezetével.”');
+  const patch: Partial<AnnualRow> = { status: 'jovahagyasra_var', approvedAt: null, approvalHash: null, approvedSummary: null, checklist: { ...(r.checklist ?? {}), tervezet_feltoltve: { at: now.toISOString(), by: actor.userId } } };
   const [u] = await db.update(annualClosings).set({ ...patch, updatedAt: now }).where(eq(annualClosings.id, r.id)).returning();
   await audit(db, { action: `annual.${step}`, actorUserId: actor.userId, actorRole: actor.role, targetType: 'annual_closing', targetId: r.id, clientId: cl.id });
-  const variant = u!.status === 'jovahagyasra_var' ? 'jovahagyasra_var' : u!.status === 'beadva' ? 'beadva' : 'kesz';
-  await notify(deps, db, { userId: cl.userId, kind: 'annual_status', variant, params, link: '/eves-zaras' });
+  await notify(deps, db, { userId: cl.userId, kind: 'annual_status', variant: 'jovahagyasra_var', params, link: '/eves-zaras/jovahagyas' });
   return u!;
 }
 
@@ -234,7 +240,10 @@ export async function jobAnnualOpen(deps: Deps): Promise<number> {
   const today = todayBudapest(deps.now());
   if (today.slice(5) < ANNUAL_RULES.openMonthDay) return 0;
   const year = Number(today.slice(0, 4)) - 1;
-  const rows = await db.select().from(clients).where(eq(clients.lifecycle, 'aktiv'));
+  // SPEC §32.B (HIANYLISTA 1.7, TULAJ T4): a client whose service ended / is suspended gets his last year's closing only
+  // with the switch lemondottEvesZaras = 'automatikus' (default 'ki': active clients only, the behaviour so far)
+  const k = await evesKapcsolok(db);
+  const rows = await db.select().from(clients).where(inArray(clients.lifecycle, k.lemondottEvesZaras === 'automatikus' ? ['aktiv', 'felfuggesztve', 'megszunt'] : ['aktiv']));
   let n = 0;
   for (const cl of rows) {
     const [tp] = await db.select({ regime: clientTaxProfiles.regime }).from(clientTaxProfiles).where(and(eq(clientTaxProfiles.clientId, cl.id), eq(clientTaxProfiles.year, year))).limit(1);
@@ -258,11 +267,16 @@ export async function jobAnnualReminders(deps: Deps): Promise<number> {
   const { notifyOnce } = await import('./emlekezteto.js');
   let n = 0;
   for (const { a, c } of rows) {
-    const days = Math.round((Date.parse(`${a.questionnaireDue}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000);
-    if (!(ANNUAL_RULES.reminderDaysBefore as readonly number[]).includes(days)) continue;
+    // SPEC §32.B: the approval has its own due date (EV_RULES.approvalDue [DÁVID D2]) and rhythm (7 / 3 / 1 days before)
+    const approval = a.status === 'jovahagyasra_var';
+    const due = approval ? approvalDueOf(a) : a.questionnaireDue;
+    const days = Math.round((Date.parse(`${due}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000);
+    const rhythm: readonly number[] = approval ? EV_RULES.approvalReminderDaysBefore : ANNUAL_RULES.reminderDaysBefore;
+    if (!rhythm.includes(days)) continue;
+    if (approval && a.approvedAt) continue;
     const variant = a.status === 'kerdoiv' ? 'kerdoiv' : a.status === 'dijra_var' ? 'fizetes' : 'jovahagyas';
     const fee = await feeSetting(db, 'eves_zaras');
-    if (await notifyOnce(deps, `rem:annual_due:${a.id}:${variant}:${days}`, { userId: c.userId, kind: 'annual_due', variant, params: { ...(await accountantParams(db, c.accountantId)), hatarido: huDayMonthIg(a.questionnaireDue), dij: fmt(fee.amountHuf) }, link: '/eves-zaras' })) n++;
+    if (await notifyOnce(deps, `rem:annual_due:${a.id}:${variant}:${days}`, { userId: c.userId, kind: 'annual_due', variant, params: { ...(await accountantParams(db, c.accountantId)), hatarido: huDayMonthIg(due), dij: fmt(fee.amountHuf) }, link: approval ? '/eves-zaras/jovahagyas' : '/eves-zaras' })) n++;
   }
   return n;
 }

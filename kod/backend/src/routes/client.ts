@@ -50,6 +50,8 @@ import { clientLegalPdf, filledLegalText } from '../services/contracts.js';
 import { markdownToPdf } from '../lib/pdf.js';
 import { pepAad } from '../services/kyc.js';
 import { augmentHome, invoiceReserves, registerClientK28Routes } from './client-k28.js';
+import { registerClientEvRoutes } from './client-ev.js';
+import { lastYearClosingWrite } from '../services/eves-ciklus.js';
 import { registerClientPaymentsK29 } from './payments-k29.js';
 import { registerClientK29gRoutes } from './client-k29g.js';
 import { registerClientK29fRoutes } from './client-k29f.js';
@@ -93,8 +95,11 @@ export function clientRoutes(deps: Deps) {
   // writes nothing any more; a disabled account is refused at sign-in and by requireAuth (users.status).
   r.use('*', async (c, next) => {
     if (c.req.method !== 'GET' && c.req.method !== 'HEAD') {
-      const [cl] = await deps.db.select({ lifecycle: clients.lifecycle }).from(clients).where(eq(clients.userId, auth(c).userId)).limit(1);
-      if (cl?.lifecycle === 'megszunt') throw new ApiError(403, 'megszunt', 'A szolgáltatásod megszűnt, ezért itt már nem tudsz módosítani. Az irataidat továbbra is látod és letöltheted.');
+      const [cl] = await deps.db.select({ id: clients.id, lifecycle: clients.lifecycle }).from(clients).where(eq(clients.userId, auth(c).userId)).limit(1);
+      // SPEC §32.B (switch lemondottEvesZaras, default 'ki'): the last year's closing of a former client may be finished –
+      // the questionnaire, the approval, the payment marks, the önellenőrzés approval and the annual fee – while it is open.
+      if (cl?.lifecycle === 'megszunt' && !(await lastYearClosingWrite(deps, cl.id, c.req.path)))
+        throw new ApiError(403, 'megszunt', 'A szolgáltatásod megszűnt, ezért itt már nem tudsz módosítani. Az irataidat továbbra is látod és letöltheted.');
     }
     await next();
   });
@@ -106,6 +111,8 @@ export function clientRoutes(deps: Deps) {
   // SPEC §29.1 / §29.4.4 (B1): Stripe / DEMO card flows, fees with the saved card, taxpayer lookup (legacy bodies fall through).
   registerClientPaymentsK29(r, deps);
   registerClientK28Routes(r, deps);
+  // SPEC §32.B: the annual timeline, the refund mark, the önellenőrzés approval
+  registerClientEvRoutes(r, deps);
   // SPEC §29.10 G: the guided first run (GET/POST /client/guided).
   registerClientK29gRoutes(r, deps);
   // SPEC §29 F1/F2/F4: certificates, income statement, calendar (+ the label-only /deadlines/:id/ics).

@@ -33,6 +33,9 @@ export const FLAG_LABEL: Record<ClientFlag | 'mind', string> = {
   // SPEC §28.K.5 / §28.K.11
   zarolva: 'Zárolva',
   kata_figyelem: 'Kata: cégnek számlázott',
+  // SPEC §32.B
+  folyoszamla_elteres: 'Folyószámla: hátralék',
+  onellenorzes_nyitott: 'Nyitott önellenőrzés',
   mind: 'Mind',
 };
 export const FILTER_ORDER: (ClientFlag | 'mind')[] = ['bekotes_alatt', 'rendben', 'hianyzik_valami', 'hatar_kozel', 'dij_elmaradt', 'zarolva', 'mind'];
@@ -130,6 +133,7 @@ export const CATEGORY_LABEL: Record<DocumentCategory, string> = {
   meghatalmazas: 'Meghatalmazás',
   szerzodes_alairt: 'Aláírt szerződés',
   ev_bejelentes: 'NAV-os igazolás a vállalkozás bejelentéséről',
+  adoszamla_kivonat: 'NAV-folyószámla kivonat',
   egyeb: 'Egyéb',
 };
 export const CATEGORY_ICON: Record<DocumentCategory, Icon3dName> = {
@@ -146,6 +150,7 @@ export const CATEGORY_ICON: Record<DocumentCategory, Icon3dName> = {
   meghatalmazas: 'irat',
   szerzodes_alairt: 'irat',
   ev_bejelentes: 'bevallas',
+  adoszamla_kivonat: 'irat',
   egyeb: 'irat',
 };
 
@@ -173,6 +178,10 @@ export const PAYMENT_KIND_LABEL: Record<PaymentItemKind, string> = {
   // SPEC §28.K.11
   kata_teteles: 'Kata (tételes adó)',
   kata_kulonado: 'Kata különadó (40%)',
+  // SPEC §32.B
+  szja_kulonbozet: 'Szja-különbözet',
+  onellenorzesi_potlek: 'Önellenőrzési pótlék',
+  egyeb_ado: 'Egyéb adó',
 };
 
 export const REQUEST_TYPE_LABEL: Record<RequestType, string> = {

@@ -348,6 +348,8 @@ export interface AccTaxPeriod extends TaxPeriodSummary {
   filed: { filedOn: string; form: string; documents: DocumentListItem[] } | null;
   /** Whether "Beadottnak jelölöm" is allowed now (the server enforces the same rules). null once filed. */
   filing?: { canFile: boolean; reason: string | null; periodEnd: string; openDocuments: number } | null;
+  /** SPEC §32.B: the filed önellenőrzések of this period ("Önellenőrizve (n×)"). */
+  correctionCount?: number;
 }
 export interface AccTaxPeriods {
   year: number;

@@ -36,8 +36,19 @@ type ProfileRow = typeof clientTaxProfiles.$inferSelect;
  */
 export const periodVisible = isNull(taxPeriods.hiddenAt);
 
-export function periodLabel(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'>): string {
+/** SPEC §32.B: the payment periods that follow a filed yearly return or an önellenőrzés (always approved, made by hand). */
+export const ANNUAL_PERIOD_KINDS = ['eves_szja', 'kata_eves', 'hipa_eves', 'onellenorzes'] as const;
+export function isAnnualPeriodKind(k: string): k is (typeof ANNUAL_PERIOD_KINDS)[number] {
+  return (ANNUAL_PERIOD_KINDS as readonly string[]).includes(k);
+}
+
+export function periodLabel(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'> & { filingForm?: string | null }): string {
   if (p.kind === 'negyedev' && p.quarter) return quarterLabel(p.quarter);
+  // SPEC §32.B
+  if (p.kind === 'eves_szja') return `Szja-különbözet ${p.year}`;
+  if (p.kind === 'kata_eves') return `Kata-különadó ${p.year}`;
+  if (p.kind === 'hipa_eves') return `Iparűzési adó ${p.year}: különbözet`;
+  if (p.kind === 'onellenorzes') return p.filingForm ? `Önellenőrzés: ${p.filingForm}` : 'Önellenőrzés';
   // SPEC §32: "Kata – november" (key 'YYYY-MM-KATA')
   if (p.kind === 'kata') return `Kata – ${monthName(Number(p.periodKey.slice(5, 7)))}`;
   // No unexplained "HIPA" for the client. Sávos (the usual case) has one advance a year; only the
@@ -48,8 +59,13 @@ export function periodLabel(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' 
 }
 
 /** "III. negyedévi" */
-export function periodAdj(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'>): string {
+export function periodAdj(p: Pick<PeriodRow, 'kind' | 'quarter' | 'periodKey' | 'year'> & { filingForm?: string | null }): string {
   if (p.kind === 'kata') return `${MONTHS_ADJ_HU[Number(p.periodKey.slice(5, 7)) - 1] ?? ''} kata`;
+  // SPEC §32.B
+  if (p.kind === 'eves_szja') return `${p.year}. évi szja-különbözet`;
+  if (p.kind === 'kata_eves') return `${p.year}. évi kata-különadó`;
+  if (p.kind === 'hipa_eves') return `${p.year}. évi iparűzésiadó-különbözet`;
+  if (p.kind === 'onellenorzes') return 'önellenőrzési';
   return p.kind === 'negyedev' ? `${periodLabel(p)}i` : periodLabel(p);
 }
 
@@ -414,6 +430,71 @@ export function transfersText(n: number): string {
   return `${['', '', 'két', 'három', 'négy', 'öt'][n] ?? String(n)} külön utalással`;
 }
 
+export interface ManualPeriodItem {
+  kind: PaymentItemKind;
+  label: string;
+  sublabel?: string | null;
+  amountHuf: number;
+  account: { name: string; number: string; iban?: string | null };
+  adonem: string | null;
+}
+
+/**
+ * SPEC §32.B: a payment period made by hand (the difference of a filed yearly return, an önellenőrzés): approved at once,
+ * with its items; idempotent by (client, periodKey) – an existing row with live items is returned as it is.
+ */
+export async function createManualPeriod(
+  deps: Deps,
+  db: DbOrTx,
+  i: {
+    clientId: string;
+    kind: (typeof ANNUAL_PERIOD_KINDS)[number];
+    periodKey: string;
+    year: number;
+    dueDate: string;
+    items: ManualPeriodItem[];
+    reference: string;
+    filingForm?: string | null;
+    filingRef?: string | null;
+    correctionId?: string | null;
+  },
+): Promise<PeriodRow> {
+  const now = deps.now();
+  // visible-ok: the lookup by the unique key of the row this function makes
+  const [existing] = await db.select().from(taxPeriods).where(and(eq(taxPeriods.clientId, i.clientId), eq(taxPeriods.periodKey, i.periodKey))).limit(1);
+  if (existing && (await activeItems(db, existing.id)).length) return existing;
+  const items = i.items.filter((x) => x.amountHuf > 0);
+  const status = items.length ? ('fizetendo' as const) : ('nincs_fizetendo' as const);
+  const [p] = existing
+    ? await db
+        .update(taxPeriods)
+        .set({ calcStatus: 'jovahagyva', paymentStatus: status, dueDate: i.dueDate, hiddenAt: null, hiddenReason: null, filingForm: i.filingForm ?? existing.filingForm, filingRef: i.filingRef ?? existing.filingRef, correctionId: i.correctionId ?? existing.correctionId, updatedAt: now })
+        .where(eq(taxPeriods.id, existing.id))
+        .returning()
+    : await db
+        .insert(taxPeriods)
+        .values({ clientId: i.clientId, kind: i.kind, periodKey: i.periodKey, year: i.year, quarter: null, dueDate: i.dueDate, calcStatus: 'jovahagyva', paymentStatus: status, filingForm: i.filingForm ?? null, filingRef: i.filingRef ?? null, correctionId: i.correctionId ?? null, createdAt: now, updatedAt: now })
+        .returning();
+  for (const it of items)
+    await db.insert(taxPaymentItems).values({
+      taxPeriodId: p!.id,
+      calculationId: null,
+      kind: it.kind,
+      label: it.label,
+      sublabel: it.sublabel ?? null,
+      amountHuf: it.amountHuf,
+      dueDate: i.dueDate,
+      accountName: it.account.name,
+      accountNumber: it.account.number,
+      iban: it.account.iban ?? ibanHu(it.account.number),
+      reference: i.reference,
+      adonem: it.adonem,
+      createdAt: now,
+    });
+  await audit(db, { action: 'tax.manual_period', actorRole: 'system', targetType: 'tax_period', targetId: p!.id, clientId: i.clientId, details: { kind: i.kind, periodKey: i.periodKey, totalHuf: items.reduce((a, b) => a + b.amountHuf, 0) } });
+  return p!;
+}
+
 export interface HipaApproveInput {
   amountHuf: number;
   /** The municipality's iparűzési adó beszedési számla (GIRO, 2×8 or 3×8 digits). Default: the tax profile's. */
@@ -493,7 +574,8 @@ export async function reopenPeriod(deps: Deps, db: DbOrTx, periodId: string, acc
   const [cl] = await db.select().from(clients).where(and(eq(clients.id, p.clientId), eq(clients.accountantId, accountantId))).limit(1);
   if (!cl) throw E.notFound();
   if (p.calcStatus !== 'jovahagyva') throw E.conflict('Ez a negyedév nincs jóváhagyva.');
-  if (p.filingStatus === 'beadva') throw E.conflict('A bevallás már be van adva; ezt a NAV-nál kell önellenőrzéssel javítani.');
+  if (p.filingStatus === 'beadva') throw E.conflict('A bevallás már be van adva; ezt a NAV-nál kell önellenőrzéssel javítani. Az Önellenőrzés fülön indíthatod.');
+  if (isAnnualPeriodKind(p.kind)) throw E.conflict('Ez egy beadott bevallás befizetése, nem nyitható újra. Ha javítani kell, indíts önellenőrzést.');
   const now = deps.now();
   await db.update(taxPaymentItems).set({ voidedAt: now }).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt)));
   await db.update(taxPeriods).set({ calcStatus: p.kind === 'hipa' ? 'nincs' : 'becsles', approvedCalculationId: null, paymentStatus: 'nincs_fizetendo', updatedAt: now }).where(eq(taxPeriods.id, p.id));
@@ -703,11 +785,16 @@ export async function verifyPayment(
   await audit(db, { action: 'tax.payment_verified', actorUserId: accountantUserId, actorRole: 'accountant', targetType: 'tax_period', targetId: p.id, clientId: cl.id, details: { status } });
   const ap = await accountantParams(db, accountantId);
   // The iparűzési adóelőleg goes to the önkormányzat, not to NAV: its own wording (variant 'hipa').
-  const hv = p.kind === 'hipa' ? { variant: 'hipa' } : p.kind === 'kata' ? { variant: 'kata' } : {};
+  // SPEC §32.B: the yearly differences and the önellenőrzés have their own "látta" wording too.
+  const variants: Record<string, string> = { hipa: 'hipa', kata: 'kata', eves_szja: 'eves', kata_eves: 'kata_kulonado', hipa_eves: 'hipa_eves', onellenorzes: 'onell' };
+  const okVariant = variants[p.kind] ? { variant: variants[p.kind]! } : {};
+  const mismatchVariant = p.kind === 'hipa' || p.kind === 'kata' ? okVariant : {};
   const honap = p.kind === 'kata' ? monthName(Number(p.periodKey.slice(5, 7))) : undefined;
-  const link = p.kind === 'hipa' ? '/hataridok' : p.kind === 'kata' ? `/fizetes/${p.id}` : '/';
-  if (status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link });
-  if (status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...hv, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link: '/uzenetek' });
+  const link = p.kind === 'hipa' ? '/hataridok' : p.kind === 'kata' || isAnnualPeriodKind(p.kind) ? `/fizetes/${p.id}` : '/';
+  if (status === 'ellenorizve') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_verified', ...okVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link });
+  if (status === 'elteres') await notify(deps, db, { userId: cl.userId, kind: 'tax_payment_mismatch', ...mismatchVariant, params: { ...ap, period: periodLabel(p), periodAdj: periodAdj(p), honap }, link: '/uzenetek' });
+  // SPEC §32.B: a verified difference may finish the annual closing or settle the önellenőrzés
+  if (isAnnualPeriodKind(p.kind) && status === 'ellenorizve') await (await import('./eves-ciklus.js')).afterSettlementVerified(deps, db, updated!);
   return updated!;
 }
 
@@ -760,6 +847,7 @@ export async function filingCheck(db: DbOrTx, p: PeriodRow, today: string): Prom
   if (p.filingStatus === 'beadva') reason = 'Ez az időszak már be van adva.';
   else if (p.kind === 'hipa') reason = 'Az iparűzési adóelőleghez nincs külön bevallás. Az éves iparűzésiadó-bevallást a következő év május végéig adod be.';
   else if (p.kind === 'kata') reason = 'A katához nincs havi bevallás: a havi összeget csak be kell fizetni. Az éves kata-nyilatkozatot az Éves zárás fülön rögzíted.';
+  else if (isAnnualPeriodKind(p.kind)) reason = 'Ehhez nincs külön bevallás ezen a lapon: az éves bevallást az Éves zárás fül, az önellenőrzést az Önellenőrzés fül rögzíti.';
   else if (p.kind === 'negyedev' && p.filingForm === null) reason = 'Nyugdíjas átalányadózónak nincs negyedéves járulékbevallása (2658), csak az SZJA-előleget fizeti be.';
   else if (today <= periodEnd) reason = `Az időszak még tart (${huFullDate(periodEnd)} a vége), ezért még nem adható be.`;
   else if (p.calcStatus !== 'jovahagyva') reason = 'Előbb hagyd jóvá az összeget, utána jelöld beadottnak.';

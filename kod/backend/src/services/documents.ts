@@ -29,6 +29,7 @@ export const CATEGORY_TITLES: Record<DocumentCategory, string> = {
   szerzodes_alairt: 'Aláírt szerződés',
   egyeb: 'Egyéb irat',
   ev_bejelentes: 'NAV-igazolás a vállalkozás bejelentéséről',
+  adoszamla_kivonat: 'NAV-folyószámla kivonat',
 };
 
 export function statusLabel(s: DocumentStatus, firstName: string, nav = false): string {

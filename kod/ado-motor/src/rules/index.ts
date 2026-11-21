@@ -2,7 +2,7 @@ import { RULES_2026 } from './2026.js';
 import { RULES_2027 } from './2027.js';
 import type { KataRules, KataVariant, TaxRules } from './types.js';
 
-export { RULES_2026, NAV_ACCOUNTS, KATA_RULES_REGI_2026 } from './2026.js';
+export { RULES_2026, NAV_ACCOUNTS, NAV_ACCOUNTS_EV, KATA_RULES_REGI_2026 } from './2026.js';
 export { RULES_2027, KATA_RULES_REGI_2027_DRAFT, KATA_RULES_UJ_2027_DRAFT, T928_SOURCE } from './2027.js';
 export type { TaxRules, NavAccount, RuleSource, MonthDay, KataRules, KataVariant } from './types.js';
 

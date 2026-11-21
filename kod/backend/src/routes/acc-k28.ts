@@ -253,27 +253,51 @@ export function registerAccK28Routes(r: Hono<Env>, deps: Deps): void {
     r.post(`/clients/:id/annual/:aid/${step}`, async (c) => {
       const { actor, cl } = await staffClient(deps, c);
       const ct = (c.req.header('content-type') ?? '').toLowerCase();
+      // SPEC §32.B: the filings carry the date, the NAV iktatószám and two documents ('file' = the return, 'receipt' = the
+      // NAV confirmation; both required for the szja / kata return, optional for the HIPA). JSON bodies keep working for
+      // the fields (then without documents).
+      const body: Record<string, unknown> = ct.startsWith('multipart/') ? await c.req.parseBody({ all: true }) : ct.includes('json') ? ((await c.req.json().catch(() => ({}))) as Record<string, unknown>) : {};
+      const str = (k: string) => (typeof body[k] === 'string' ? (body[k] as string).trim() : '');
+      const filesIn = ct.startsWith('multipart/') ? await collectFiles(body, 'file') : [];
+      const receiptIn = ct.startsWith('multipart/') ? await collectFiles(body, 'receipt') : [];
+      if (step === 'draft' && !filesIn.length) throw E.validation({ file: 'Töltsd fel a tervezetet (PDF).' });
       const row = await deps.db.transaction(async (tx) => {
-        if (ct.startsWith('multipart/')) {
-          const body = await c.req.parseBody({ all: true });
-          const filesIn = await collectFiles(body, 'file');
-          if (filesIn.length) {
-            await createDocument(deps, tx, {
-              clientId: cl.id,
-              source: 'konyvelo',
-              category: step === 'draft' ? 'bevallas' : 'nav_visszaigazolas',
-              dossierMonth: todayBudapest(deps.now()).slice(0, 7),
-              title: step === 'draft' ? 'Bevallás tervezete – jóváhagyásra' : step === 'filed-szja' ? 'Éves bevallás – NAV-visszaigazolás' : 'Iparűzési adó bevallás – visszaigazolás',
-              createdBy: actor.userId,
-              files: filesIn.slice(0, 1),
-              pages: [],
-              actorRole: actor.role,
-              visibility: 'kozos',
-            } as Parameters<typeof createDocument>[2]);
-          } else if (step === 'draft') throw E.validation({ file: 'Töltsd fel a tervezetet (PDF).' });
-        } else if (step === 'draft') throw E.validation({ file: 'Töltsd fel a tervezetet (PDF).' });
-        return annualStep(deps, tx, cl, param(c, 'aid'), step, actor);
+        const y = Number(todayBudapest(deps.now()).slice(0, 4));
+        const doc = async (files: typeof filesIn, category: 'bevallas' | 'nav_visszaigazolas', title: string) =>
+          files.length
+            ? (
+                await createDocument(deps, tx, {
+                  clientId: cl.id,
+                  source: 'konyvelo',
+                  category,
+                  dossierMonth: todayBudapest(deps.now()).slice(0, 7),
+                  title,
+                  createdBy: actor.userId,
+                  files: files.slice(0, 1),
+                  pages: [],
+                  actorRole: actor.role,
+                  visibility: 'kozos',
+                  ...(step === 'draft' ? {} : { status: 'beadva' as const }),
+                } as Parameters<typeof createDocument>[2])
+              ).id
+            : null;
+        if (step === 'draft') {
+          await doc(filesIn, 'bevallas', 'Bevallás tervezete – jóváhagyásra');
+          return annualStep(deps, tx, cl, param(c, 'aid'), step, actor);
+        }
+        const szja = step === 'filed-szja';
+        const returnDocumentId = await doc(filesIn, szja ? 'bevallas' : 'nav_visszaigazolas', szja ? `Éves bevallás – beadva (${y - 1})` : `Iparűzési adó bevallás – beadva (${y - 1})`);
+        const receiptDocumentId = await doc(receiptIn, 'nav_visszaigazolas', szja ? 'Éves bevallás – NAV-visszaigazolás' : 'Iparűzési adó bevallás – visszaigazolás');
+        return annualStep(deps, tx, cl, param(c, 'aid'), step, actor, {
+          filedOn: str('filedOn') || todayBudapest(deps.now()),
+          filingRef: str('filingRef') || null,
+          returnDocumentId,
+          receiptDocumentId,
+          noApprovalNote: str('noApprovalNote') || null,
+          accountNumber: str('accountNumber') || null,
+        });
       });
+      await computeFlags(deps, deps.db, cl.id);
       return c.json(await accAnnualView(deps, deps.db, cl, row.taxYear, false, actor));
     });
   }

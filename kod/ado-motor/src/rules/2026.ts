@@ -34,6 +34,27 @@ export const NAV_ACCOUNTS: { szja: NavAccount; tb: NavAccount; szocho: NavAccoun
 };
 
 /**
+ * SPEC §32 (éves ciklus, F3) – the two further NAV accounts of the annual cycle. NAV list in force from 2026-11-01 (checked
+ * 2026-11-21 by the plan and the critique) [nav-szamlaszamok-2026]. The 215 account is a group account: the önellenőrzési
+ * pótlék is booked on adónem 215, a bírság on 224, a mulasztási bírság on 226 (critique 1., row 3). The HIPA pótlék goes to
+ * the municipality, never here [DÁVID K7].
+ */
+export const NAV_ACCOUNTS_EV: { onellenorzes: NavAccount; kesedelmiPotlek: NavAccount } = {
+  onellenorzes: {
+    name: 'NAV Bírság, mulasztási bírság és önellenőrzéssel kapcsolatos befizetések bevételi számla',
+    shortName: 'NAV önellenőrzési számla',
+    number: '10032000-01076301',
+    iban: 'HU49100320000107630100000000',
+  },
+  kesedelmiPotlek: {
+    name: 'NAV Késedelmi pótlék bevételi számla',
+    shortName: 'NAV késedelmi pótlék számla',
+    number: '10032000-01076985',
+    iban: 'HU75100320000107698500000000',
+  },
+};
+
+/**
  * SPEC §32 – KATA (Kata tv. = 2022. évi XIII. törvény), 2026. Checked 2026-11-21 against the njt text (7. § (8)–(10),
  * 5. § (1) e)) and the NAV 99. füzet; the critique of 2026-11-21 confirmed 7. § (4)–(10) and 10. § [katv, nav-99].
  */

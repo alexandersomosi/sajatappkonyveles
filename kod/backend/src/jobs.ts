@@ -15,6 +15,7 @@ import { runBillingJob } from './services/subscription.js';
 import { computeYear, ensurePeriods, periodAdj, periodLabel, periodVisible, ft } from './services/tax.js';
 import { evesKapcsolok, jobKataPeriods, jobKataYearEnd, kataLimitWarnings, syncKataPeriods } from './services/kata.js';
 import { clientName } from './services/people.js';
+import { fmt as fmtHuf } from './services/kedvezmeny.js';
 import { jobCallbackSla } from './services/callbacks.js';
 import { businessRegistrations, callbackRequests, teamMembers } from './db/schema.js';
 import { unreadTeamThreads } from './services/team.js';
@@ -56,11 +57,15 @@ export async function jobReminders(deps: Deps): Promise<Record<string, number>> 
       const items = await db.select().from(taxPaymentItems).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt)));
       if (!items.length) continue;
       const amount = items.reduce((a, b) => a + b.amountHuf, 0);
+      // SPEC §32.B: the yearly differences and the önellenőrzés have their own wording and open the payment sheet
+      const annualVariant: Record<string, string> = { eves_szja: 'eves', kata_eves: 'kata_kulonado', hipa_eves: 'hipa_eves', onellenorzes: 'onell' };
+      const v = annualVariant[p.kind];
       const ok = await notifyOnce(deps, `due:${p.id}:${days}`, {
         userId: c.userId,
         kind: 'tax_due_soon',
-        params: { ...(await accountantParams(db, c.accountantId)), days, dueDateText: huDayMonth(p.dueDate).replace(/\.$/, ''), period: periodLabel(p), periodAdj: periodAdj(p), amount: ft(amount) },
-        link: '/',
+        ...(v ? { variant: v } : {}),
+        params: { ...(await accountantParams(db, c.accountantId)), days, dueDateText: huDayMonth(p.dueDate).replace(/\.$/, ''), period: periodLabel(p), periodAdj: periodAdj(p), amount: ft(amount), osszeg: fmtHuf(amount), datum: huDayMonth(p.dueDate) },
+        link: v ? `/fizetes/${p.id}` : '/',
       });
       if (ok) out.tax++;
     }
@@ -380,6 +385,9 @@ export function jobDefs(deps: Deps): JobDef[] {
     { name: 'kata_periods', slot: at(3, 10), run: (d) => jobKataPeriods(d) },
     // SPEC §32: KATA year end (10 / 16 / 22 December) and the free-month notices (3 days before the 12th)
     { name: 'kata_year_end', slot: at(9, 0), run: (d) => jobKataYearEnd(d) },
+    // SPEC §32.B: the NAV folyószámla checks that came due (07:30) and the late szja refunds (09:10) – staff tasks only
+    { name: 'account_checks', slot: at(7, 30), run: async (d) => (await import('./services/folyoszamla.js')).jobAccountChecks(d) },
+    { name: 'refund_watch', slot: at(9, 10), run: async (d) => (await import('./services/eves-ciklus.js')).jobRefundWatch(d) },
     // SPEC §31 / Adatkezelési tájékoztató 2.11., 8.: click ids after 90 days, source details after 2 years (fields emptied)
     { name: 'marketing_retention', slot: at(3, 40), run: async (d) => (await import('./services/marketing.js')).jobMarketingRetention(d) },
     {

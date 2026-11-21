@@ -12,6 +12,8 @@ import { kezdolap } from './lib/csapat';
 const UgyfelLista = lazy(() => import('./pages/acc/UgyfelLista'));
 const UgyfelAdatlap = lazy(() => import('./pages/acc/UgyfelAdatlap'));
 const HataridoFigyelo = lazy(() => import('./pages/acc/HataridoFigyelo'));
+// SPEC §32.B
+const EvesAttekinto = lazy(() => import('./pages/acc/EvesAttekinto'));
 const KeresekSor = lazy(() => import('./pages/acc/KeresekSor'));
 const Sablonok = lazy(() => import('./pages/acc/Sablonok'));
 const Export = lazy(() => import('./pages/acc/Export'));
@@ -123,6 +125,7 @@ export function App() {
                 <Route path="/ugyfelek/:id" element={<Csak szerep={K}><UgyfelAdatlap /></Csak>} />
                 <Route path="/ugyfelek/:id/:ful" element={<Csak szerep={K}><UgyfelAdatlap /></Csak>} />
                 <Route path="/hatarido-figyelo" element={<Csak szerep={K}><HataridoFigyelo /></Csak>} />
+                <Route path="/eves-attekinto" element={<Csak szerep={[...K, ...AD]}><EvesAttekinto /></Csak>} />
                 <Route path="/keresek" element={<Csak szerep={K}><KeresekSor /></Csak>} />
                 <Route path="/sablonok" element={<Csak szerep={K}><Sablonok /></Csak>} />
                 {/* SPEC §26.2.9: booking is retired; old links land on the callback queue. */}

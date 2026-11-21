@@ -50,7 +50,7 @@ export async function jobRemindersK28(deps: Deps): Promise<Record<string, number
       const items = await db.select().from(taxPaymentItems).where(and(eq(taxPaymentItems.taxPeriodId, p.id), isNull(taxPaymentItems.voidedAt), isNull(taxPaymentItems.markedPaidAt)));
       if (!items.length) continue;
       const osszeg = fmt(items.reduce((a, b) => a + b.amountHuf, 0));
-      if (await notifyOnce(deps, `rem:tax_due_soon:${p.id}:${variant}`, { userId: cl.userId, kind: 'tax_due_soon', variant, params: { ...(await accountantParams(db, cl.accountantId)), osszeg }, link: '/' }))
+      if (await notifyOnce(deps, `rem:tax_due_soon:${p.id}:${variant}`, { userId: cl.userId, kind: 'tax_due_soon', variant, params: { ...(await accountantParams(db, cl.accountantId)), osszeg }, link: ['eves_szja', 'kata_eves', 'hipa_eves', 'onellenorzes', 'hipa'].includes(p.kind) ? `/fizetes/${p.id}` : '/' }))
         variant === 'ma' ? out.taxToday++ : out.taxLate++;
     }
   }

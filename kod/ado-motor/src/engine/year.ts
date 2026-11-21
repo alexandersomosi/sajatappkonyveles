@@ -23,7 +23,7 @@ import { buildExplanation } from './explanation.js';
 import { hipaEstimate } from './hipa.js';
 import { adomentesMeter, afaMeter, atalanyCapMeter, type Projection } from './meters.js';
 
-export const ENGINE_VERSION = '1.4.0';
+export const ENGINE_VERSION = '1.5.0';
 export const DISCLAIMER = 'Becslés. A végleges összeget a könyvelőd hagyja jóvá.';
 
 function dedupeWarnings(ws: EngineWarning[]): EngineWarning[] {
